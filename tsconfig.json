@@ -1,0 +1,15 @@
+{
+  "moduleResolution": "node16",
+  "extends": [
+    "@react-native/typescript-config/tsconfig.json",
+    "expo/tsconfig.base"
+  ],
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": "./",
+    "paths": {
+      "src/*": ["./src/*"]
+    }
+  },
+  "typeRoots": ["./types"]
+}
