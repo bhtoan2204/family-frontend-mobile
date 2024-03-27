@@ -1,155 +1,82 @@
-import {COLORS} from 'src/constants';
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
+
 
 const styles = StyleSheet.create({
-  content: {
-    padding: 24,
-    paddingTop: 200,
-    backgroundColor: '#fff',
-  },
-  /** Header */
   header: {
-    position: 'absolute',
-    width: '100%',
-    zIndex: 1,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    height: 200,
-    alignItems: 'stretch',
-    justifyContent: 'flex-end',
     backgroundColor: '#05141c',
-    height: 180,
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   headerTitle: {
-    fontSize: 26,
-    lineHeight: 34,
+    color: 'white',
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
     textAlign: 'center',
-    marginBottom: 12,
+    padding: 10,
   },
-  /** Input */
-  input: {
-    height: 44,
-    backgroundColor: '#fff',
-    paddingLeft: 44,
-    paddingRight: 24,
-    borderRadius: 12,
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#222',
-    width: 350,
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   inputWrapper: {
-    marginTop: 10,
-    position: 'relative',
-    width: '100%',
-  },
-  inputIcon: {
-    position: 'absolute',
-    width: 44,
-    height: 44,
-    top: 0,
-    left: 0,
-    bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  /** Card */
-  // card: {
-  //   flexDirection: 'row',
-  //   alignItems: 'stretch',
-  //   borderRadius: 12,
-  //   marginBottom: 16,
-  //   backgroundColor: '#fff',
-  // },
-  card: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    borderRadius: 12,
-    marginBottom: 16,
-    marginRight: 26,
+    alignItems: 'center',
     backgroundColor: '#fff',
-    //padding: 16,
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    flex: 1,
   },
-  cardImg: {
-    width: 120,
-    height: 154,
-    borderRadius: 12,
-  },
-  cardBody: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+  input: {
+    flex: 1,
     paddingVertical: 8,
     paddingHorizontal: 16,
+    color: '#333',
+  },
+  inputIcon: {
+    marginRight: 10,
+  },
+  addButton: {
+    marginLeft: 10,
+  },
+  content: {
+    flexGrow: 1,
+    backgroundColor: 'white',
+    padding: 20,
+  },
+  familyCard: {
+    marginBottom: 20,
+  },
+  card: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    padding: 20,
+    position: 'relative', // Ensure the card container is relative for absolute positioning of the delete button
+  },
+  cardBody: {
+    flexDirection: 'column',
   },
   cardTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#173153',
-    marginRight: 8,
-  },
-  cardAirport: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#5f697d',
-  },
-  cardRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: -8,
-    flexWrap: 'wrap',
-  },
-  cardRowItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 6,
-  },
-  cardRowItemText: {
-    marginLeft: 4,
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#5f697d',
-  },
-  cardPrice: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: '#5f697d',
-  },
-  cardPriceValue: {
-    fontSize: 21,
-    fontWeight: '700',
-    color: '#173153',
-  },
-  cardPriceCurrency: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#6f61c4',
+    marginBottom: 10,
   },
-  /** Button */
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-    paddingVertical: 6,
-    paddingHorizontal: 14,
-    borderWidth: 1,
-    backgroundColor: '#173153',
-    borderColor: '#173153',
+  cardDescription: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  deleteButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
   },
   btnText: {
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: '600',
-    color: '#fff',
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
-
-export default styles;

@@ -31,7 +31,6 @@ type Profile = {
   id_user: string;
   firstname: string;
   lastname: string;
-  //name: string;
   email: string;
   phone: string;
 };

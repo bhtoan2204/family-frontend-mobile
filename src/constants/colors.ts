@@ -26,6 +26,8 @@ const COLORS = {
   RomanSilver: '#848a96',
   SilverFoil: '#b0b0b0',
   Azure: '#0095FF',
+  BlueLight: '#87CEEB',
+  Blue: 'fff',
 };
 
 export default COLORS;

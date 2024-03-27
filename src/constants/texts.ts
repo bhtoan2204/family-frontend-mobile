@@ -79,6 +79,7 @@ const TEXTS = {
   CHOOSE_COLOR: 'Choose Color',
   CREATE: 'Create',
   PACKAGE_TITLE: 'Choose the package',
+  PURCHASED_TITLE: 'Purchased',
   PACKAGE_REGISTER: 'Register',
   NAME_REQUIRED: 'Name is required',
   AGE_REQUIRED: 'Age is required',

@@ -13,6 +13,11 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 1,
   },
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center', // Căn giữa các phần tử theo chiều dọc
+  },
+  
   headerText: {
     fontSize: 20,
     textAlign: 'center',
@@ -43,7 +48,19 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: COLORS.primary,
     padding: 3,
-  }
+  },
+  iconDetail: {
+    backgroundColor: COLORS.primaryLite,
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 10,
+    width: 100,
+    height: 100, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    borderWidth: 1, 
+    borderColor: 'white', 
+  },
 });
 
 export default styles;

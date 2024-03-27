@@ -16,9 +16,8 @@ import * as Yup from 'yup';
 import CustomButton from 'src/components/Button';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import {HomePageScreenProps} from 'src/navigation/NavigationTypes';
+import {HomeScreenProps} from 'src/navigation/NavigationTypes';
 import ConfirmButton from 'src/components/Button/ButtonConfirm';
-
 interface FormValues {
   id_family: number;
   submit: null;
@@ -32,7 +31,7 @@ type Member = {
   phone: string;
 };
 
-const ViewAllMemberScreen = ({navigation}: HomePageScreenProps) => {
+const ViewAllMemberScreen = ({navigation}: HomeScreenProps) => {
   const [members, setMembers] = useState<Member[]>([]);
   const tableHead = ['User ID', 'Last Name', 'First Name', 'Email', 'Phone'];
   const handleViewAllMember = async (
@@ -79,7 +78,7 @@ const ViewAllMemberScreen = ({navigation}: HomePageScreenProps) => {
                     <View style={styles.headerAction}>
                       <TouchableOpacity
                         onPress={() => {
-                          navigation.navigate('HomePageScreen');
+                          navigation.navigate('HomeScreen');
                         }}>
                         <FeatherIcon name="chevron-left" size={24} />
                       </TouchableOpacity>

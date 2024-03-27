@@ -30,7 +30,7 @@ interface Event {
 const BankInfoScreen = ({route}: BankInfoScreenProps) => {
   const [banks, setBanks] = useState<Bank[]>([]);
   const [searchValue, setSearchValue] = useState('');
-  const {id_user, id_family, id_package, amount} = route.params;
+  const { id_family, id_package, amount} = route.params;
 
   const handleSearchChange = (text: string) => {
     setSearchValue(text);
@@ -52,7 +52,6 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
   };
 
   const handleSelectBank = async (
-    id_user: string,
     id_package: number,
     id_family: number,
     bankCode: string,
@@ -62,7 +61,6 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
   ) => {
     try {
       const paymentURL = await handleCreatePaymentURL(
-        id_user,
         id_package,
         id_family,
         bankCode,
@@ -82,7 +80,6 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
   };
 
   const handleCreatePaymentURL = async (
-    id_user: string,
     id_package: number,
     id_family: number,
     bankCode: string,
@@ -92,7 +89,6 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
   ) => {
     try {
       const response = await PackageServices.createPaymentURL({
-        // id_user, đợi backend cung cấp
         id_package,
         id_family,
         bankCode,
@@ -199,7 +195,6 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
           <TouchableOpacity
             onPress={() =>
               handleSelectBank(
-                id_user,
                 id_package,
                 id_family,
                 bank.code,

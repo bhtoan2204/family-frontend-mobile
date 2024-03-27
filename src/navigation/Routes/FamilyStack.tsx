@@ -4,7 +4,7 @@ import CreateFamilyScreen from 'src/screens/CreateFamilyScreen';
 import InviteNewMemberScreen from 'src/screens/InviteNewMemberScreen';
 import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
 import ViewAllMemberScreen from 'src/screens/ViewAllMember/ViewAllMember';
-
+import ViewFamilyScreen from 'src/screens/FamilyScreen';
 const Stack = createNativeStackNavigator();
 
 const FamilyStack = () => {
@@ -21,6 +21,8 @@ const FamilyStack = () => {
       <Stack.Screen name="InviteNewMember" component={InviteNewMemberScreen} />
       <Stack.Screen name="ViewAllFamily" component={ViewAllFamilyScreen} />
       <Stack.Screen name="ViewAllMember" component={ViewAllMemberScreen} />
+      <Stack.Screen name="ViewFamily" component={ViewFamilyScreen} />
+
     </Stack.Navigator>
   );
 };

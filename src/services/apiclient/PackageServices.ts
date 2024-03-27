@@ -183,7 +183,27 @@ const PackageServices = {
       }
     }
   },
-
+  getOrderSucessful: async () => {
+    try {
+      console.log('getPurchased called');
+      const response: AxiosResponse = await instance.get(
+        PackageUrl.getOrderSucessful,
+        {
+          headers: {
+            Authorization: `Bearer ${await LocalStorage.GetAccessToken()}`,
+          },
+        },
+      );
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+      }
+    } catch (error: any) {
+      console.error('Error in getAllPackages:', error.message);
+      throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+    }
+  },
   // getUrl: () => {
   //   console.log('getUrl called');
   //   setWebViewUrl(`${PaymentUrl}/payment/vnpay_return`);
