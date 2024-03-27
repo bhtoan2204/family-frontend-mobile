@@ -1,37 +1,75 @@
 import { StyleSheet } from 'react-native';
+import { COLORS } from 'src/constants';
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+    flex: 1,
+    padding: 20,
   },
-
-  familyItem: {
-    marginBottom: 10,
-    padding: 10,
-    backgroundColor: '#ffffff',
+  headerfile: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  backButton: {
+    color: COLORS.black,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 20,
+  },
+  familyContainer: {
+    backgroundColor: COLORS.AliceBlue,
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
+  },
+  text: {
+    fontSize: 16,
+    color: COLORS.black,
+    marginBottom: 5,
+  },
+  editForm: {
+    backgroundColor: COLORS.white,
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 20,
+  },
+  editInput: {
+    height: 40,
+    borderColor: COLORS.gray,
+    borderWidth: 1,
     borderRadius: 5,
-    shadowColor: '#000000',
-    shadowOpacity: 0.3,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    elevation: 2,
+    marginBottom: 10,
+    paddingHorizontal: 10,
   },
-  familyName: {
+  saveButton: {
+    backgroundColor: COLORS.Blue,
+    paddingVertical: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  saveButtonText: {
+    color: COLORS.white,
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333333',
-    marginBottom: 5,
   },
-  familyQuantity: {
-    fontSize: 14,
-    color: '#666666',
-    marginBottom: 5,
+  settingContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
   },
-  familyDescription: {
-    fontSize: 14,
-    color: '#666666',
+  settingItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  settingText: {
+    marginLeft: 5,
+    fontSize: 16,
+    color: COLORS.black,
   },
 });
 

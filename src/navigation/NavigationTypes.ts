@@ -31,7 +31,7 @@ export type FamilyStackParamList = {
     id_family: number;
 
   };
-
+ 
 };
 
 export type PackStackParamList = {
@@ -191,6 +191,22 @@ export interface ViewFamilyScreenProps {
   };
 }
 
+export type UpdateFamilyNavigationProps = NativeStackNavigationProp<
+ModelScreenParamsList,
+  'UpdateFamily'
+>;
+
+export interface UpdateFamilyScreenProps {
+  navigation: UpdateFamilyNavigationProps;
+  route: RouteProp<ModelScreenParamsList, 'UpdateFamily'> & {
+    params: {
+      id_user: string;
+      id_family: number;
+      name: string;
+      description: string;
+    };
+  };
+}
 
 type CreateFamilyNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
@@ -330,6 +346,12 @@ export type ModelScreenParamsList = {
   ProfileDetail: undefined;
   ChangePassword: undefined;
   MainProfile: undefined;
+  UpdateFamily: {
+    id_user: string;
+    id_family: number;
+    name: string;
+    description: string;
+  };
 };
 
 type ProfileDetailNavigationProp = NativeStackNavigationProp<

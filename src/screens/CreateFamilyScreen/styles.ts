@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     fontSize: 15,
     fontWeight: '500',
-    color: '#222',
+    color: COLORS.black,
     borderWidth: 1,
     borderColor: COLORS.ColumbiaBlue,
     borderStyle: 'solid',

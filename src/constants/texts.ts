@@ -55,6 +55,7 @@ const TEXTS = {
   FAMILY_MEMBER_AGE_PLACEHOLDER: 'Choose age',
   FAMILY_MEMBER_RELATION: 'Enter Relation with Member',
   SELECT_COLOR_PLACEHOLDER: 'Select a color...',
+  FAMILY_DETAIL: 'Family detail',
   ADD: 'Add',
   SELECT_COLOR_TITLE: `Select profile color`,
   PROFILE_NAME: 'TG',
@@ -88,6 +89,8 @@ const TEXTS = {
   FAMILY_ID_REQUIRED: 'Family ID is required',
   FAMILY_ID_LABEL: 'Family ID',
   FAMILY_ID_PLACEHOLDER: 'Enter family ID',
+  MEMBER: 'Member',
+
   EDIT_FAMILY_TITLE: 'Edit Family',
   EDIT_FAMILY_NAME_LABEL: 'Change Family Name',
   EDIT_FAMILY_NAME_PLACEHOLDER: 'Enter New Family Name',
