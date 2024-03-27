@@ -1,82 +1,91 @@
 import { StyleSheet } from 'react-native';
 
-
 const styles = StyleSheet.create({
   header: {
     backgroundColor: '#05141c',
     padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
   headerTitle: {
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
-    padding: 10,
   },
   inputContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 10,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 20,
+    backgroundColor: 'white',
+    borderRadius: 5,
     paddingHorizontal: 10,
     flex: 1,
+    marginRight: 10,
   },
   input: {
     flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    color: '#333',
+    height: 40,
   },
   inputIcon: {
-    marginRight: 10,
+    marginLeft: 5,
   },
   addButton: {
-    marginLeft: 10,
+    backgroundColor: '#4884D3',
+    borderRadius: 20,
+    padding: 10,
   },
   content: {
     flexGrow: 1,
-    backgroundColor: 'white',
-    padding: 20,
+    paddingBottom: 20,
   },
   familyCard: {
-    marginBottom: 20,
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
   },
   card: {
-    borderWidth: 1,
-    borderColor: '#ccc',
+    backgroundColor: 'white',
     borderRadius: 10,
-    padding: 20,
-    position: 'relative', // Ensure the card container is relative for absolute positioning of the delete button
+    padding: 10,
   },
   cardBody: {
-    flexDirection: 'column',
+    marginBottom: 10,
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   cardDescription: {
     fontSize: 16,
-    marginBottom: 10,
+    color: '#555',
   },
-  deleteButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    backgroundColor: 'red',
-    padding: 10,
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  viewButton: {
+    backgroundColor: '#4884D3',
     borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
   },
   btnText: {
     color: 'white',
-    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  iconContainer: {
+    flexDirection: 'row',
+  },
+  iconWrapper: {
+    marginLeft: 10,
   },
 });
+
+export default styles;
