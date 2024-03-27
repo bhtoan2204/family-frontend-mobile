@@ -21,9 +21,19 @@ export type FamilyStackParamList = {
   InviteMembers: undefined;
   ViewAllFamily: undefined;
   ViewAllMember: undefined;
+  ViewFamilyScreen: {
+    id_user: string;
+    id_family: number;
+
+  };
+
 };
 
 export type PackStackParamList = {
+
+  ViewAllPurchased: {
+    id_user: string;
+  };
   ViewAllPackage: {
     id_user: string;
     id_family: number;
@@ -41,6 +51,7 @@ export type PackStackParamList = {
     id_package: number;
     amount: number;
   };
+
   ZaloPayScreen: undefined;
 };
 
@@ -131,6 +142,20 @@ export interface ViewAllMemberScreenProps {
   navigation: ViewAllMemberNavigationProp;
 }
 
+type PurchasedNavigationProp = NativeStackNavigationProp<
+  PackStackParamList,
+  'ViewAllPurchased'
+>;
+export interface PurchasedScreenProps {
+  navigation: PurchasedNavigationProp;
+  route: RouteProp<PackStackParamList, 'ViewAllPurchased'> & {
+    params: {
+      id_user: string;
+      id_family: number;
+    };
+  };
+}
+
 type ViewAllFamilyNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'ViewAllFamily'
@@ -138,6 +163,21 @@ type ViewAllFamilyNavigationProp = NativeStackNavigationProp<
 
 export interface ViewAllFamilyScreenProps {
   navigation: ViewAllFamilyNavigationProp;
+}
+
+export type ViewFamilyNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'ViewFamilyScreen'
+>;
+
+export interface ViewFamilyScreenProps {
+  navigation: ViewFamilyNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'ViewFamilyScreen'> & {
+    params: {
+      id_user: string;
+      id_family: number;
+    };
+  };
 }
 
 type CreateFamilyNavigationProp = NativeStackNavigationProp<
@@ -205,7 +245,7 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 
 export interface HomeScreenProps {
   navigation: HomeScreenNavigationProp;
-  route: RouteProp<HomeTabParamList, 'HomeScreen'> & {
+  route: {
     params: {
       id_user: string;
     };

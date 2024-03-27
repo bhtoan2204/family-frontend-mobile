@@ -14,7 +14,8 @@ import {FamilyStackProps} from 'src/navigation/NavigationTypes';
 import {PackageServices} from 'src/services/apiclient';
 import BottonSheetContent from './BottomSheetContent';
 import styles from './styles';
-
+import navigation from 'src/navigation';
+import PurchasedScreen from '../PurchasedScreen';
 type Profile = {
   id_user: string;
   firstname: string;
@@ -38,22 +39,15 @@ const HomeScreen = ({navigation}: FamilyStackProps) => {
 
   const handleOpenModal = () => bottomSheetRef.current?.open();
 
-  const handleViewAllPackage = () => {
-    if (profile) {
-      navigation.navigate('PackStack', {
-        screen: 'ViewAllPackage',
-        params: {
-          id_user: profile.id_user, // replace with actual user id
-          id_family: 0, // replace with actual family id
-        },
-      });
-      console.log('id_user', profile.id_user);
-    } else {
-      console.log('profile is undefined');
-    }
+
+
+
+  const handleViewPurchased = () => {
+    navigation.navigate('PackStack', { screen: 'ViewAllPurchased', params: { id_user: profile?.id_user || '' } });
   };
-  const handleViewAllFamily = () => {
-    navigation.navigate('FamilyStack', {screen: 'ViewAllFamily'});
+
+  const handlePackage = () => {
+    navigation.navigate('PackStack', { screen: 'ViewAllPurchased', params: { id_user: profile?.id_user || '' } });
   };
 
   /////Goi tu homescreen
@@ -115,7 +109,7 @@ const HomeScreen = ({navigation}: FamilyStackProps) => {
             <Text>Bank Info</Text>
           </TouchableOpacity> */}
           <View style={{padding: 10}}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={handleViewAllPackage}
               style={{
                 backgroundColor: '#4884D3',
@@ -126,9 +120,9 @@ const HomeScreen = ({navigation}: FamilyStackProps) => {
               <Text style={{color: '#fff', textAlign: 'center'}}>
                 Buy package
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleViewAllFamily}
+            </TouchableOpacity> */}
+            {/* <TouchableOpacity
+              onPress={handleViewPurchased}
               style={{
                 backgroundColor: '#4884D3',
                 padding: 10,
@@ -136,7 +130,19 @@ const HomeScreen = ({navigation}: FamilyStackProps) => {
                 marginBottom: 10,
               }}>
               <Text style={{color: '#fff', textAlign: 'center'}}>
-                View all family
+                Purchased
+              </Text>
+            </TouchableOpacity> */}
+            <TouchableOpacity
+              onPress={handlePackage}
+              style={{
+                backgroundColor: '#4884D3',
+                padding: 10,
+                borderRadius: 5,
+                marginBottom: 10,
+              }}>
+              <Text style={{color: '#fff', textAlign: 'center'}}>
+                Packages
               </Text>
             </TouchableOpacity>
             {/* <TouchableOpacity

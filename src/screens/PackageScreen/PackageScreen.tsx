@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import {PackageServices} from 'src/services/apiclient';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import {Row, Table} from 'react-native-table-component';
+import { PurchasedScreenProps } from 'src/navigation/NavigationTypes';
 import {
   OrderDetailScreenProps,
   ViewAllPackageScreenProps,
@@ -22,7 +22,7 @@ type Package = {
   expired: number;
 };
 
-const PackageScreen = ({navigation, route}: OrderDetailScreenProps) => {
+const PackageScreen = ({navigation, route}: PurchasedScreenProps) => {
   const [value, setValue] = React.useState(0);
   const {id_user, id_family} = route.params;
   // const [keyPackage, setIdPackage] = useState(1);
@@ -46,9 +46,9 @@ const PackageScreen = ({navigation, route}: OrderDetailScreenProps) => {
 
   const handleGetPackages = async () => {
     try {
-      console.log('Hello World');
+      //console.log('Hello World');
       const result = await PackageServices.getAllPackage();
-      console.log('PackageServices.getPackage result:', result);
+      //console.log('PackageServices.getPackage result:', result);
       setPackages(result);
     } catch (error: any) {
       console.log('PackageServices.getPackage error:', error);
