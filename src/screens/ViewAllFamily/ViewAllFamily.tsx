@@ -1,18 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  Animated,
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  FlatList,
-} from 'react-native';
+import { Animated, View, Text, TouchableOpacity, TextInput, FlatList, Alert } from 'react-native';
 import { FamilyServices } from 'src/services/apiclient';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Feather as FeatherIcon } from '@expo/vector-icons';
 import { Formik, FormikHelpers } from 'formik';
 import { ViewAllFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import styles from './styles';
+import { number } from 'yup';
 
 type Family = {
   id_family: number;
@@ -62,7 +56,50 @@ const ViewAllFamilyScreen = ({ navigation, route }: ViewAllFamilyScreenProps) =>
   }, []);
 
   const handleDeleteFamily = async (id_family: number) => {
-    // Implement delete functionality here
+    try {
+      Alert.alert(
+        'Confirm Delete',
+        'Are you sure you want to delete this family?',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: async () => {
+              const result = await FamilyServices.deleteFamily(id_family);
+              Alert.alert(
+                'Success',
+                'Successfully deleted family'
+              );
+              // Refresh the list after deletion
+              handleGetAllFamily();
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    } catch (error: any) {
+      Alert.alert(
+        'Fail',
+        'Failed deleted family'
+      );
+      console.log('Error deleting family:', error);
+    }
+  };
+  
+
+  const handleUpdateFamily = async (id_family: number) => {
+    try {
+      // Implement update functionality here
+      console.log('Updating family with id:', id_family);
+      // Navigate to the update family screen with the id
+      navigation.navigate('UpdateFamily', { id_family });
+    } catch (error) {
+      console.error('Error updating family:', error);
+    }
   };
 
   return (
@@ -121,9 +158,17 @@ const ViewAllFamilyScreen = ({ navigation, route }: ViewAllFamilyScreenProps) =>
                         <Text style={styles.btnText}>View details</Text>
                       </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleDeleteFamily(family.id_family)}>
-                      <FeatherIcon name="trash" size={20} color="red" />
-                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleUpdateFamily(family.id_family)}>
+                  <View style={styles.iconWrapper}>
+                    <FeatherIcon name="edit-2" size={20} color="blue" />
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleDeleteFamily(family.id_family)}>
+                  <View style={styles.iconWrapper}>
+                    <FeatherIcon name="trash" size={20} color="red" />
+                  </View>
+                </TouchableOpacity>
+
                   </View>
                 </View>
               </View>

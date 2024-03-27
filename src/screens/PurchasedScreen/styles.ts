@@ -15,7 +15,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: 'black',
   }
-,  
+,  buttonContainer: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginTop: 10,
+  padding: 10,
+},
   /** Radio */
   radio: {
     position: 'relative',
@@ -80,6 +86,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end', 
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  viewButton: {
+    backgroundColor: '#4884D3',
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
   },
   radioInput: {
     position: 'absolute',

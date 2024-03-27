@@ -55,8 +55,13 @@ const CreateFamilyScreen = ({ navigation, route }: CreateFamilyScreenProps) => {
           },
         ],
         { cancelable: false }
-      );    } catch (error: any) {
-      console.error('FamilyServices.createFamily error:', error);
+      );    
+    } catch (error: any) {
+      Alert.alert(
+        'Fail',
+        'Faild to create family'
+        )
+      //console.error('FamilyServices.createFamily error:', error);
     }
   };
 

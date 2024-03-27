@@ -99,23 +99,33 @@ const PurchasedScreen = ({ navigation, route }: HomeScreenProps) => {
                     </View>
                   )}
 
-                  {pkg.order_family_id ? (
-                    <>
+                  <View style={styles.buttonContainer}>
+                    {pkg.order_family_id ? (
+                      <>
+                        <TouchableOpacity
+                          onPress={() => navigation.navigate('FamilyStack', { screen: 'ViewFamily', params: { id_user: id_user, id_family: pkg.order_family_id}})}>
+                          <View style={styles.viewButton}>
+                            <Text style={styles.viewfamilybtn}>View details</Text>
+                          </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                          onPress={() => navigation.navigate('PackStack', { screen: 'ViewAllPackage', params: { id_user: id_user, id_family: pkg.order_family_id}})}>
+                          <View style={styles.viewButton}>
+                            <Text style={styles.viewfamilybtn}>Extend family</Text>
+                          </View>                        
+                        </TouchableOpacity>
+                      </>
+                    ) : (
                       <TouchableOpacity
-                        onPress={() => navigation.navigate('FamilyStack', { screen: 'ViewFamily', params: { id_user: id_user, id_family: pkg.order_family_id}})}>
-                        <Text style={styles.viewfamilybtn}>View details</Text>
+                        onPress={() => navigation.navigate('FamilyStack', {  screen: 'CreateFamily', params: { id_user: id_user, id_order: pkg.id_order }})}>
+                          <View style={styles.viewButton}>
+                            <Text style={styles.viewfamilybtn}>Create family</Text>
+                          </View>                        
                       </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate('PackStack', { screen: 'ViewAllPackage', params: { id_user: id_user, id_family: pkg.order_family_id}})}>
-                        <Text style={styles.Extendbtn}>Extend Family</Text>
-                      </TouchableOpacity>
-                    </>
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate('FamilyStack', {  screen: 'CreateFamily', params: { id_user: id_user, id_order: pkg.id_order }})}>
-                      <Text style={styles.radioBadgeText}>Create Family</Text>
-                    </TouchableOpacity>
-                  )}
+                    )}
+                  </View>
+
                 </View>
               </TouchableOpacity>
             );
