@@ -80,6 +80,26 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
     }
   };
 
+  const handleFacebookLogin = async () => {
+    try {
+      Linking.openURL(AuthUrl.facebookLogin);
+
+      const handleOpenUrl = async (event: {url: string}) => {
+        console.log(event.url);
+      };
+
+      Linking.addEventListener('url', handleOpenUrl);
+
+      navigation.navigate('HomeTab', {screen: 'HomeScreen'});
+
+      return () => {
+        Linking.removeAllListeners('url');
+      };
+    } catch (error: any) {
+      console.log(error);
+    }
+  }
+
   return (
     <KeyboardAvoidingView className="flex-1 bg-white" behavior="padding">
       <ScrollView>
@@ -226,7 +246,8 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   resizeMode="contain"
                 />
               </TouchableOpacity>
-              <TouchableOpacity className="flex-1 h-[52px] flex-row justify-center items-center border-[1px] rounded-[10px] mr-1 border-gray-00">
+              <TouchableOpacity className="flex-1 h-[52px] flex-row justify-center items-center border-[1px] rounded-[10px] mr-1 border-gray-00"
+              onPress={handleFacebookLogin}>
                 <Image
                   className="h-9 w-9"
                   source={FacebookImage}
