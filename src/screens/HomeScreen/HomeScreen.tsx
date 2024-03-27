@@ -49,6 +49,10 @@ const HomeScreen = ({navigation}: FamilyStackProps) => {
   const handlePackage = () => {
     navigation.navigate('PackStack', { screen: 'ViewAllPurchased', params: { id_user: profile?.id_user || '' } });
   };
+  const handleFamily =() => {
+    navigation.navigate('FamilyStack', { screen: 'ViewAllFamily', params: { id_user: profile?.id_user || '' } });
+
+  }
 
   /////Goi tu homescreen
   // const handleProfile;
@@ -79,7 +83,9 @@ const HomeScreen = ({navigation}: FamilyStackProps) => {
             },
           ],
         }}>
-        <Text style={styles.headerText}>Home</Text>
+
+      <Text style={styles.headerText}>home</Text>
+
       </Animated.View>
       <ScrollView
         style={styles.scrollView}
@@ -90,7 +96,12 @@ const HomeScreen = ({navigation}: FamilyStackProps) => {
         }}>
         <View style={styles.content}>
           <View style={styles.subContent}>
+          <View style={styles.container}>
+            <Material name="home" size={30} color="blue" />
             <Text style={styles.title}>Home</Text>
+          </View>
+
+
             <TouchableOpacity
               style={styles.touchableOpacity}
               onPress={handleOpenModal}>
@@ -99,63 +110,30 @@ const HomeScreen = ({navigation}: FamilyStackProps) => {
               </View>
             </TouchableOpacity>
           </View>
-          {/* <TouchableOpacity onPress={handleViewAllPackage}>
-            <Text>Buy package</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleViewAllFamily}>
-            <Text>View all family</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleViewAllFamily}>
-            <Text>Bank Info</Text>
-          </TouchableOpacity> */}
-          <View style={{padding: 10}}>
-            {/* <TouchableOpacity
-              onPress={handleViewAllPackage}
-              style={{
-                backgroundColor: '#4884D3',
-                padding: 10,
-                borderRadius: 5,
-                marginBottom: 10,
-              }}>
-              <Text style={{color: '#fff', textAlign: 'center'}}>
-                Buy package
-              </Text>
-            </TouchableOpacity> */}
-            {/* <TouchableOpacity
-              onPress={handleViewPurchased}
-              style={{
-                backgroundColor: '#4884D3',
-                padding: 10,
-                borderRadius: 5,
-                marginBottom: 10,
-              }}>
-              <Text style={{color: '#fff', textAlign: 'center'}}>
-                Purchased
-              </Text>
-            </TouchableOpacity> */}
+    
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            
             <TouchableOpacity
               onPress={handlePackage}
-              style={{
-                backgroundColor: '#4884D3',
-                padding: 10,
-                borderRadius: 5,
-                marginBottom: 10,
-              }}>
-              <Text style={{color: '#fff', textAlign: 'center'}}>
-                Packages
+              style={styles.iconDetail}>
+              <Material name="package" size={50} color="blue" /> 
+
+              <Text style={{color: COLORS.black, textAlign: 'center', fontWeight: 'bold'}}>
+                Package
               </Text>
             </TouchableOpacity>
-            {/* <TouchableOpacity
-              onPress={handleViewAllFamily}
-              style={{
-                backgroundColor: '#4884D3',
-                padding: 10,
-                borderRadius: 5,
-              }}>
-              <Text style={{color: '#fff', textAlign: 'center'}}>
-                Bank Info
+            <TouchableOpacity
+              onPress={handleFamily}
+              style={styles.iconDetail}>
+              
+              <Material name="heart" size={50} color="blue" /> 
+
+              <Text style={{color: COLORS.black, textAlign: 'center',     fontWeight: 'bold',
+}}>
+                Family
               </Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
+            
           </View>
         </View>
       </ScrollView>

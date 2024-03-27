@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, View, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { TEXTS } from 'src/constants';
+import { COLORS, TEXTS } from 'src/constants';
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import { PackageServices, FamilyServices } from 'src/services/apiclient';
@@ -13,8 +13,8 @@ type Purchased = {
   package_name: string;
   package_price: number;
   package_description: string;
-  order_id_family: number;
-  order_expired_at: Date; // Ensure order_expired_at is of Date type
+  order_family_id: number;
+  order_expired_at: Date; 
   family_name: string;
   family_quantity: number;
 };
@@ -27,7 +27,7 @@ const PurchasedScreen = ({ navigation, route }: HomeScreenProps) => {
   const handleGetPurchased = async () => {
     try {
       const result = await PackageServices.getOrderSucessful();
-      result.forEach(item => {
+      result.forEach((item: { order_expired_at: string | number | Date; }) => {
         item.order_expired_at = new Date(item.order_expired_at); // Convert order_expired_at to Date object
       });
       setPurchasedItems(result);
@@ -88,25 +88,31 @@ const PurchasedScreen = ({ navigation, route }: HomeScreenProps) => {
                   </View>
                   
                   {pkg.family_name && pkg.family_quantity && (
-                    <Text style={styles.radioBadgeText}>
-                      Family's name: {pkg.family_name} Quantity: {pkg.family_quantity}
-                    </Text>
+                    <View>
+                      <Text style={styles.smallText}>
+                        Family's name: {pkg.family_name}
+                      </Text>
+                      <Text style={styles.smallText}>
+                        Quantity: {pkg.family_quantity}
+                      </Text>
+                      
+                    </View>
                   )}
 
-                  {pkg.order_id_family ? (
+                  {pkg.order_family_id ? (
                     <>
                       <TouchableOpacity
-                        onPress={() => navigation.navigate('ViewFamilySccreen', { id_user: id_user, id_family: pkg.order_id_family })}>
-                        <Text style={styles.radioBadgeText}>View Family</Text>
+                        onPress={() => navigation.navigate('FamilyStack', { screen: 'ViewFamily', params: { id_user: id_user, id_family: pkg.order_family_id}})}>
+                        <Text style={styles.viewfamilybtn}>View details</Text>
                       </TouchableOpacity>
                       <TouchableOpacity
-                        onPress={() => handleExtendFamily(pkg)}>
-                        <Text style={styles.radioBadgeText}>Extend Family</Text>
+                        onPress={() => navigation.navigate('PackStack', { screen: 'ViewAllPackage', params: { id_user: id_user, id_family: pkg.order_family_id}})}>
+                        <Text style={styles.Extendbtn}>Extend Family</Text>
                       </TouchableOpacity>
                     </>
                   ) : (
                     <TouchableOpacity
-                      onPress={() => navigation.navigate('CreateFamily', { id_user, id_package: pkg.id_package })}>
+                      onPress={() => navigation.navigate('FamilyStack', {  screen: 'CreateFamily', params: { id_user: id_user, id_order: pkg.id_order }})}>
                       <Text style={styles.radioBadgeText}>Create Family</Text>
                     </TouchableOpacity>
                   )}

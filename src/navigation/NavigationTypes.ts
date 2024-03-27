@@ -16,12 +16,17 @@ export type AuthStackParamList = {
 };
 
 export type FamilyStackParamList = {
-  CreateFamily: undefined;
+  CreateFamily: {
+    id_user: string;
+    id_order: number;
+  };
   AddMembers: undefined;
   InviteMembers: undefined;
-  ViewAllFamily: undefined;
+  ViewAllFamily:{
+    id_user:string;
+  };
   ViewAllMember: undefined;
-  ViewFamilyScreen: {
+  ViewFamily: {
     id_user: string;
     id_family: number;
 
@@ -163,22 +168,29 @@ type ViewAllFamilyNavigationProp = NativeStackNavigationProp<
 
 export interface ViewAllFamilyScreenProps {
   navigation: ViewAllFamilyNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'ViewAllFamily'> & {
+    params: {
+      id_user: string;
+    };
 }
+}
+
 
 export type ViewFamilyNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
-  'ViewFamilyScreen'
+  'ViewFamily'
 >;
 
 export interface ViewFamilyScreenProps {
   navigation: ViewFamilyNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'ViewFamilyScreen'> & {
+  route: RouteProp<FamilyStackParamList, 'ViewFamily'> & {
     params: {
       id_user: string;
       id_family: number;
     };
   };
 }
+
 
 type CreateFamilyNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
@@ -187,6 +199,12 @@ type CreateFamilyNavigationProp = NativeStackNavigationProp<
 
 export interface CreateFamilyScreenProps {
   navigation: CreateFamilyNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'CreateFamily'> & {
+    params: {
+      id_user: string;
+      id_order: number;
+    };
+  };
 }
 
 type AddMembersNavigationProp = NativeStackNavigationProp<

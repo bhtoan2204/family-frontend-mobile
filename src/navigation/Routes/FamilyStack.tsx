@@ -21,7 +21,7 @@ const FamilyStack = () => {
       <Stack.Screen name="InviteNewMember" component={InviteNewMemberScreen} />
       <Stack.Screen name="ViewAllFamily" component={ViewAllFamilyScreen} />
       <Stack.Screen name="ViewAllMember" component={ViewAllMemberScreen} />
-      <Stack.Screen name="ViewFamilyScreen" component={ViewFamilyScreen} />
+      <Stack.Screen name="ViewFamily" component={ViewFamilyScreen} />
 
     </Stack.Navigator>
   );

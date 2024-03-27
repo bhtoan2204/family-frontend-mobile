@@ -8,12 +8,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginVertical: 36,
   },
+  headerfile: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 27,
+  },
   title: {
     fontSize: 31,
     fontWeight: '700',
     color: COLORS.DarkGunmetal,
     marginBottom: 6,
   },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  exampleText: {
+    width: 80, 
+    marginRight: 10,
+  },
+ 
   container: {
     paddingVertical: 24,
     paddingHorizontal: 0,
@@ -59,15 +74,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  headerfile: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 24,
-  },
+
   inputControl: {
     height: 50,
     backgroundColor: COLORS.white,
-    paddingHorizontal: 16,
+    paddingHorizontal: 75,
     borderRadius: 12,
     fontSize: 15,
     fontWeight: '500',

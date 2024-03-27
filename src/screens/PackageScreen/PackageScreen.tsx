@@ -83,7 +83,7 @@ const PackageScreen = ({navigation, route}: PurchasedScreenProps) => {
                 <View style={[styles.radio, isActive && styles.radioActive]}>
                   <Text style={styles.radioLabel}>{pkg.name}</Text>
 
-                  <Text style={styles.radioPrice}>{pkg.price} VNĐ</Text>
+                  <Text style={styles.radioPrice}>{pkg.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Text>
 
                   <View style={styles.radioBadge}>
                     <Text style={styles.radioBadgeText}>

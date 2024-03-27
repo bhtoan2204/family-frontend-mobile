@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  Alert,
   SafeAreaView,
   ScrollView,
   Text,
@@ -17,15 +18,15 @@ import { Formik, FormikHelpers } from 'formik';
 import { FamilyServices } from 'src/services/apiclient';
 import * as Yup from 'yup';
 import CustomButton from 'src/components/Button';
-import { PurchasedScreenProps } from 'src/navigation/NavigationTypes';
+import { CreateFamilyScreenProps } from 'src/navigation/NavigationTypes';
 
 interface FormValues {
   description: string;
   name: string;
 }
 
-const CreateFamilyScreen = ({ navigation, route }: PurchasedScreenProps) => {
-  const { id_user, id_package } = route.params;
+const CreateFamilyScreen = ({ navigation, route }: CreateFamilyScreenProps) => {
+  const { id_user, id_order } = route.params;
   const profile_colors = Object.values(profile_color);
   const [value, setValue] = useState(profile_colors[0]);
   const sheet = useRef<RBSheet>(null);
@@ -35,30 +36,42 @@ const CreateFamilyScreen = ({ navigation, route }: PurchasedScreenProps) => {
     actions: FormikHelpers<FormValues>,
   ) => {
     try {
-      await FamilyServices.createFamily({
+      const response = await FamilyServices.createFamily({
         description: values.description,
         name: values.name,
-        id_order: 0, // Chú ý: id_order nên được cung cấp từ đâu đó
+        id_order: id_order, 
       });
-      actions.resetForm(); // Đặt lại form sau khi tạo thành công
-      // Thực hiện bất kỳ hành động khác sau khi tạo gia đình thành công
-    } catch (error: any) {
+      actions.resetForm();
+      const message = 'Successfully created family: ' + values.name; 
+      Alert.alert(
+        'Success',
+        message,
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              navigation.navigate('HomeScreen');
+            },
+          },
+        ],
+        { cancelable: false }
+      );    } catch (error: any) {
       console.error('FamilyServices.createFamily error:', error);
-      // Xử lý lỗi khi tạo gia đình
     }
   };
 
   return (
     <SafeAreaView>
       <ScrollView>
-        <View style={styles.header}>
+        <View style={styles.headerfile}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Icon name="arrow-back" size={24} style={styles.backButton} />
           </TouchableOpacity>
+        </View>
+          
+        <View style={styles.header}> 
           <Text style={styles.title}>{TEXTS.CREATE_FAMILY_TITLE}</Text>
-          <TouchableOpacity onPress={() => {}}>
-            <Text style={styles.saveButton}>{TEXTS.SAVE}</Text>
-          </TouchableOpacity>
+          
         </View>
 
         <Formik
@@ -81,25 +94,30 @@ const CreateFamilyScreen = ({ navigation, route }: PurchasedScreenProps) => {
             setFieldValue,
           }) => (
             <View style={styles.form}>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.exampleText}>Name: </Text>
               <TextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                onChangeText={handleChange('name')}
-                placeholder={TEXTS.CREATE_FAMILY_NAME_PLACEHOLDER}
-                placeholderTextColor={COLORS.darkgray}
-                style={styles.inputControl}
-                value={values.name}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChange('name')}
+              placeholder={TEXTS.CREATE_FAMILY_NAME_PLACEHOLDER}
+              placeholderTextColor={COLORS.darkgray}
+              style={styles.inputControl}
+              value={values.name}
               />
-
+            </View>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.exampleText}>Description: </Text>
               <TextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                onChangeText={handleChange('description')}
-                placeholder={TEXTS.CREATE_FAMILY_DESCRIPTION_PLACEHOLDER}
-                placeholderTextColor={COLORS.darkgray}
-                style={styles.inputControl}
-                value={values.description}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChange('description')}
+              placeholder={TEXTS.CREATE_FAMILY_DESCRIPTION_PLACEHOLDER}
+              placeholderTextColor={COLORS.darkgray}
+              style={styles.inputControl}
+              value={values.description}
               />
+            </View>
 
               <TouchableOpacity onPress={() => sheet.current?.open()}>
                 <Text style={styles.saveButton}>{TEXTS.CHOOSE_COLOR}</Text>

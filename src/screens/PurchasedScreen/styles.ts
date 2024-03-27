@@ -11,6 +11,11 @@ const styles = StyleSheet.create({
     color: COLORS.EerieBlack,
     marginBottom: 12,
   },
+  smallText: {
+    fontSize: 15,
+    color: 'black',
+  }
+,  
   /** Radio */
   radio: {
     position: 'relative',
@@ -48,7 +53,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   radioBadge: {
-    backgroundColor: COLORS.AzureishWhite,
+    backgroundColor: COLORS.AliceBlue,
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 6,
@@ -63,6 +68,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     color: '#848a96',
+  },
+  viewfamilybtn: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  Extendbtn: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.Coral,
+    justifyContent: 'flex-end', 
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   radioInput: {
     position: 'absolute',
