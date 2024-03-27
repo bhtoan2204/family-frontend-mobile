@@ -20,13 +20,13 @@ const ProfileServices = {
   updateProfile: async ({
     firstname,
     lastname,
-    phone,
-    email,
+    // phone,
+    // email,
   }: {
     firstname: string;
     lastname: string;
-    phone: string;
-    email: string;
+    // phone: string;
+    // email: string;
   }) => {
     try {
       const response: AxiosResponse = await instance.put(
@@ -34,8 +34,8 @@ const ProfileServices = {
         {
           firstname,
           lastname,
-          phone,
-          email,
+          // phone,
+          // email,
         },
       );
 
@@ -44,7 +44,8 @@ const ProfileServices = {
       } else {
         throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.log('Update Error', error);
       throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
@@ -57,23 +58,22 @@ const ProfileServices = {
     newPassword: string;
     confirmPassword: string;
   }) => {
-    try {
-      const response: AxiosResponse = await instance.post(
-        ProfileUrl.changePassword,
-        {
-          oldPassword,
-          newPassword,
-          confirmPassword
-        },
-      );
+    console.log('oldPassword', oldPassword);
+    const response: AxiosResponse = await instance.post(
+      ProfileUrl.changePassword,
+      {
+        oldPassword,
+        newPassword,
+        confirmPassword,
+      },
+    );
 
-      if (response.status === 200) {
-        return response.data;
-      } else {
-        throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
-      }
-    } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+    console.log(response.status)
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error(response.data.statusCode);
     }
   },
 };

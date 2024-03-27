@@ -86,8 +86,9 @@ const MainProfile = ({
               {profile.firstname} {profile.lastname}
             </Text>
             <Card
-              className="mt-10 mx-5 mb-1 z-[1]">
-              <Card.Content className="flex-col mx-2">
+              className="mt-10 mx-5 mb-1 z-[1]"
+              onPress={() => navigation.navigate('ProfileDetail')}>
+              <Card.Actions className="flex-col mx-2">
                 <Button
                   className="w-full rounded-xl z-[2]"
                   contentStyle={{
@@ -99,7 +100,12 @@ const MainProfile = ({
                   onPress={() => navigation.navigate('ProfileDetail')}>
                   {TEXTS.PROFILE_DETAILS}
                 </Button>
-                <View className="h-[1px] my-2 bg-gray-300 w-full" />
+              </Card.Actions>
+            </Card>
+            <Card
+              className="mx-5 mb-1 z-[1]"
+              onPress={() => navigation.navigate('ChangePassword')}>
+              <Card.Actions className="flex-col mx-2">
                 <Button
                   className="w-full rounded-xl z-[2]"
                   contentStyle={{
@@ -107,11 +113,11 @@ const MainProfile = ({
                   }}
                   mode="text"
                   icon="lock"
-                  textColor={COLORS.primary}
-                  onPress={() => navigation.navigate('ChangePassword')}>
+                  onPress={() => navigation.navigate('ChangePassword')}
+                  textColor={COLORS.primary}>
                   {TEXTS.CHANGE_PASSWORD}
                 </Button>
-              </Card.Content>
+              </Card.Actions>
             </Card>
             <Button
               className="mt-20 rounded-xl mx-5"

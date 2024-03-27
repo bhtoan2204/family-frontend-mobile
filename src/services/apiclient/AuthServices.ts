@@ -83,6 +83,33 @@ const AuthServices = {
       throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
+  googleLogin: async () => {
+    try {
+      const response: AxiosResponse = await axios.post(AuthUrl.googleLogin);
+
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        throw new Error(ERROR_TEXTS.API_ERROR);
+      }
+    } catch (error) {
+      throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+    }
+  },
+  facebookLogin: async () => {
+    try {
+      const response: AxiosResponse = await axios.post(AuthUrl.facebookLogin);
+
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        throw new Error(ERROR_TEXTS.API_ERROR);
+      }
+    } catch (error:any) {
+      console.log(error);
+      throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+    }
+  }
 };
 
 export default AuthServices;

@@ -5,6 +5,7 @@ import React, {useState} from 'react';
 import {
   Image,
   KeyboardAvoidingView,
+  Linking,
   Pressable,
   ScrollView,
   Text,
@@ -13,14 +14,17 @@ import {
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import FacebookImage from 'src/assets/images/facebook.png';
 import GoogleImage from 'src/assets/images/google.png';
 import CustomButton from 'src/components/Button';
 import {COLORS, TEXTS} from 'src/constants';
 import {HomeTabProps, SignupScreenProps} from 'src/navigation/NavigationTypes';
 import {AuthServices} from 'src/services/apiclient';
+import {AuthUrl} from 'src/services/urls';
 import LocalStorage from 'src/store/localstorage';
 import * as Yup from 'yup';
 import styles from './styles';
+import { Button } from 'react-native-paper';
 
 interface FormValues {
   email: string;
@@ -53,6 +57,26 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
         success: false,
       });
       actions.setErrors({submit: error.message});
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      Linking.openURL(AuthUrl.googleLogin);
+
+      const handleOpenUrl = async (event: {url: string}) => {
+        console.log(event.url);
+      };
+
+      Linking.addEventListener('url', handleOpenUrl);
+
+      navigation.navigate('HomeTab', {screen: 'HomeScreen'});
+
+      return () => {
+        Linking.removeAllListeners('url');
+      };
+    } catch (error: any) {
+      console.log(error);
     }
   };
 
@@ -192,14 +216,22 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
               <Text className="text-[14px]">{TEXTS.LOGIN_OR}</Text>
               <View className="h-[1px] bg-gray-300 flex-1 mx-[10px]" />
             </View>
-            <View className="flex-row justify-center">
-              <TouchableOpacity className="flex-1 h-[52px] flex-row justify-center items-center border-[1px] rounded-[10px] mr-1 border-gray-00">
+            <View className="flex-row justify-center space-x-1">
+              <TouchableOpacity
+                className="flex-1 h-[52px] flex-row justify-center items-center border-[1px] rounded-[10px] mr-1 border-gray-00"
+                onPress={handleGoogleLogin}>
                 <Image
                   className="h-9 w-9"
                   source={GoogleImage}
                   resizeMode="contain"
                 />
-                <Text>{TEXTS.LOGIN_WITH_GOOGLE}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity className="flex-1 h-[52px] flex-row justify-center items-center border-[1px] rounded-[10px] mr-1 border-gray-00">
+                <Image
+                  className="h-9 w-9"
+                  source={FacebookImage}
+                  resizeMode="contain"
+                />
               </TouchableOpacity>
             </View>
             <View className="flex-row justify-center my-5">
