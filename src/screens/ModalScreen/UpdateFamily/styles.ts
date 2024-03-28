@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { COLORS } from 'src/constants';
 
 const styles = StyleSheet.create({
     modalContainer: {
@@ -25,12 +26,10 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 10,
       },
-      button: {
-        backgroundColor: 'blue',
-        padding: 10,
-        borderRadius: 5,
-        alignItems: 'center',
-        marginBottom: 10,
+      button: { 
+        color: COLORS.AliceBlue,
+        width: '100%', 
+        borderRadius: 20 
       },
       buttonText: {
         color: 'white',
@@ -46,6 +45,9 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
       },
+      textError:{
+        color: 'red' ,
+      }
     });
     
 export default styles;

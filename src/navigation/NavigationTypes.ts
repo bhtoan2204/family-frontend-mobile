@@ -167,7 +167,7 @@ type ViewAllFamilyNavigationProp = NativeStackNavigationProp<
 >;
 
 export interface ViewAllFamilyScreenProps {
-  navigation: ViewAllFamilyNavigationProp;
+  navigation: ViewAllFamilyNavigationProp & ViewFamilyNavigationProp;
   route: RouteProp<FamilyStackParamList, 'ViewAllFamily'> & {
     params: {
       id_user: string;
@@ -198,8 +198,9 @@ ModelScreenParamsList,
 >;
 
 export interface UpdateFamilyScreenProps {
-  navigation: UpdateFamilyNavigationProps;
-  route: RouteProp<ModelScreenParamsList, 'UpdateFamily'> & {
+  //navigation: UpdateFamilyNavigationProps;
+  navigation: ViewFamilyNavigationProp;
+  route: {
     params: {
       id_user: string;
       id_family: number;

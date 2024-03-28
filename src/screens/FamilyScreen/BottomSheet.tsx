@@ -15,6 +15,7 @@ interface BottomSheetProps {
   }
   
   const BottomSheet: React.FC<BottomSheetProps> = ({ id_user, id_family, name, description }) => {
+
   return (
     <SafeAreaProvider>
       <PaperProvider>
@@ -22,7 +23,7 @@ interface BottomSheetProps {
           <Stack.Screen
             name="UpdateFamily"
             component={UpdateFamilyScreen}
-            initialParams={{ id_user, id_family, name, description }} // Truyền params vào initialParams
+            initialParams={{ id_user, id_family, name, description }} 
             options={{
               headerShown: false,
             }}

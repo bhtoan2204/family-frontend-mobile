@@ -19,7 +19,7 @@ type Family = {
 const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }) => {
   const { id_user, id_family } = route.params;
   const [family, setFamily] = useState<Family[]>([]);
-  const bottomSheetRef = useRef<RBSheet>(null); // Ref for RBSheet component
+  const bottomSheetRef = useRef<RBSheet>(null); 
 
   const handleGetFamily = async () => {
     try {
@@ -68,8 +68,12 @@ const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }
   };
 
   useEffect(() => {
-    handleGetFamily();
-  }, []);
+    // Reload data when returning to this screen
+    const unsubscribe = navigation.addListener('focus', () => {
+      handleGetFamily();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

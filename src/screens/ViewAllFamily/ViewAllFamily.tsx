@@ -24,12 +24,7 @@ type FamilyDetail = {
   updated_at: string;
 };
 
-interface FormValues {
-  id_family: number;
-  description: string;
-  name: string;
-  submit: null;
-}
+
 
 const ViewAllFamilyScreen = ({ navigation, route }: ViewAllFamilyScreenProps) => {
   const { id_user } = route.params;
@@ -90,16 +85,18 @@ const ViewAllFamilyScreen = ({ navigation, route }: ViewAllFamilyScreenProps) =>
 
   const handleUpdateFamily = async (id_family: number, name: string, description: string) => {
     try {
-      // Implement update functionality here
       console.log('Updating family with id:', id_family);
-      // Navigate to the update family screen with the id
     } catch (error) {
       console.error('Error updating family:', error);
     }
   };
   useEffect(() => {
-    handleGetAllFamily();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      handleGetAllFamily();
+    });
+  
+    return unsubscribe;
+  }, [navigation]);
   return (
     <View style={{ flex: 1 }}>
       <Animated.View style={[styles.header]}>
@@ -150,7 +147,7 @@ const ViewAllFamilyScreen = ({ navigation, route }: ViewAllFamilyScreenProps) =>
                   <Text style={styles.cardTitle}>{family.name}</Text>
                   <Text style={styles.cardDescription}>{family.description}</Text>
                   <View style={styles.buttonContainer}>
-                  <TouchableOpacity onPress={() => navigation.navigate('FamilyStack', { screen: 'ViewFamily', params: { id_user: id_user, id_family: family.id_family}})}>
+                  <TouchableOpacity onPress={() => navigation.navigate('ViewFamily', { id_user, id_family: family?.id_family })}>
                     <View style={styles.viewButton}>
                       <Text style={styles.btnText}>View details</Text>
                     </View>
