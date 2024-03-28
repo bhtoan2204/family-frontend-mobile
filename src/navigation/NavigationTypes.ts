@@ -191,6 +191,7 @@ export interface ViewFamilyScreenProps {
   };
 }
 
+
 export type UpdateFamilyNavigationProps = NativeStackNavigationProp<
 ModelScreenParamsList,
   'UpdateFamily'
@@ -266,6 +267,7 @@ export interface ViewAllPackageScreenProps {
 export type HomeTabParamList = {
   HomeScreen: undefined;
   ProfileScreen: undefined;
+
   EditProfileScreen: undefined;
   ReportScreen: undefined;
   AddScreen: undefined;

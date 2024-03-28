@@ -6,7 +6,6 @@ import {ModelScreenParamsList} from 'src/navigation/NavigationTypes';
 import ChangePassword from '../ModalScreen/ChangePassword';
 import MainProfile from '../ModalScreen/MainProfile';
 import ProfileDetail from '../ModalScreen/ProfileDetail';
-import UpdateFamilyScreen from '../ModalScreen/UpdateFamily';
 
 const Stack = createNativeStackNavigator<ModelScreenParamsList>();
 

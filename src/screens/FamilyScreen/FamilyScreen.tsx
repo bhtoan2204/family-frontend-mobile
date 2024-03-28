@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { ScrollView, Text, View, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
-import { FamilyServices } from 'src/services/apiclient';
-import { UpdateFamilyNavigationProps } from 'src/navigation/NavigationTypes';
-import styles from './styles';
-import { COLORS, TEXTS } from 'src/constants';
+import React, { useState, useEffect, useRef } from 'react';
+import { ScrollView, Text, View, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import RBSheet from 'react-native-raw-bottom-sheet'; // Import RBSheet
+import { FamilyServices } from 'src/services/apiclient';
 import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
+import { COLORS, TEXTS } from 'src/constants';
+import styles from './styles';
+import BottomSheet from './BottomSheet';
+
 type Family = {
   id_family: number;
   quantity: number;
@@ -17,7 +19,7 @@ type Family = {
 const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }) => {
   const { id_user, id_family } = route.params;
   const [family, setFamily] = useState<Family[]>([]);
-  const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
+  const bottomSheetRef = useRef<RBSheet>(null); // Ref for RBSheet component
 
   const handleGetFamily = async () => {
     try {
@@ -60,9 +62,9 @@ const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }
       console.log('Error deleting family:', error);
     }
   };
-  
-  const handleUpdateFamily = (name: string, description: string) => {
-    navigation.navigate('ModalStack', { screen: 'UpdateFamily', params: { id_user: id_user, id_family: family.id_family, name: name, description: description}})
+
+  const handleOpenBottomSheet = () => {
+    bottomSheetRef.current?.open(); 
   };
 
   useEffect(() => {
@@ -88,17 +90,29 @@ const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }
         ))}
       </View>
       <View style={styles.settingContainer}>
-        <TouchableOpacity 
-          onPress={() => handleUpdateFamily(family[0].name, family[0].description) }>
+        <TouchableOpacity onPress={handleOpenBottomSheet} style={styles.settingItem}>
           <Material name="pencil" size={24} color="black" />
           <Text style={styles.settingText}>Edit Family</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => handleDeleteFamily(family[0].id_family)} style={styles.settingItem}>
+        <TouchableOpacity onPress={() => handleDeleteFamily(family[0]?.id_family)} style={styles.settingItem}>
           <Material name="delete" size={24} color="red" />
           <Text style={styles.settingText}>Delete Family</Text>
         </TouchableOpacity>
       </View>
+      <RBSheet
+        ref={bottomSheetRef}
+        closeOnDragDown={true}
+        height={300} 
+        customStyles={{
+          container: {
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+          },
+        }}
+      >
+        <BottomSheet id_user={id_user} id_family={id_family} name={family[0]?.name} description={family[0]?.description} />
+      </RBSheet>
     </ScrollView>
   );
 };
