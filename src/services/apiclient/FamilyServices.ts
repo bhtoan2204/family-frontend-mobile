@@ -121,7 +121,7 @@ const FamilyServices = {
         },
       );
       if (response.status === 200) {
-        return response.data;
+        return response;
       } else {
         console.error('Error in deleteFamily: response is', response);
         throw new Error(ERROR_TEXTS.DELETE_FAMILY_ERROR);

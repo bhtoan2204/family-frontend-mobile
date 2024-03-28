@@ -109,6 +109,7 @@ const CreateFamilyScreen = ({ navigation, route }: CreateFamilyScreenProps) => {
               placeholderTextColor={COLORS.darkgray}
               style={styles.inputControl}
               value={values.name}
+              multiline={true} 
               />
             </View>
             <View style={styles.inputWrapper}>
@@ -121,6 +122,8 @@ const CreateFamilyScreen = ({ navigation, route }: CreateFamilyScreenProps) => {
               placeholderTextColor={COLORS.darkgray}
               style={styles.inputControl}
               value={values.description}
+              multiline={true} 
+
               />
             </View>
 

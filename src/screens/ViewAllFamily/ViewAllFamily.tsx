@@ -51,9 +51,7 @@ const ViewAllFamilyScreen = ({ navigation, route }: ViewAllFamilyScreenProps) =>
     }
   };
 
-  useEffect(() => {
-    handleGetAllFamily();
-  }, []);
+  
 
   const handleDeleteFamily = async (id_family: number) => {
     try {
@@ -69,13 +67,12 @@ const ViewAllFamilyScreen = ({ navigation, route }: ViewAllFamilyScreenProps) =>
           {
             text: 'OK',
             onPress: async () => {
-              const result = await FamilyServices.deleteFamily(id_family);
+              const result = await FamilyServices.deleteFamily({ id_family });
               Alert.alert(
                 'Success',
                 'Successfully deleted family'
               );
-              // Refresh the list after deletion
-              handleGetAllFamily();
+           
             },
           },
         ],
@@ -91,17 +88,18 @@ const ViewAllFamilyScreen = ({ navigation, route }: ViewAllFamilyScreenProps) =>
   };
   
 
-  const handleUpdateFamily = async (id_family: number) => {
+  const handleUpdateFamily = async (id_family: number, name: string, description: string) => {
     try {
       // Implement update functionality here
       console.log('Updating family with id:', id_family);
       // Navigate to the update family screen with the id
-      navigation.navigate('UpdateFamily', { id_family });
     } catch (error) {
       console.error('Error updating family:', error);
     }
   };
-
+  useEffect(() => {
+    handleGetAllFamily();
+  }, []);
   return (
     <View style={{ flex: 1 }}>
       <Animated.View style={[styles.header]}>
@@ -152,24 +150,25 @@ const ViewAllFamilyScreen = ({ navigation, route }: ViewAllFamilyScreenProps) =>
                   <Text style={styles.cardTitle}>{family.name}</Text>
                   <Text style={styles.cardDescription}>{family.description}</Text>
                   <View style={styles.buttonContainer}>
-                    <TouchableOpacity 
-                      onPress={() => navigation.navigate('FamilyStack', { screen: 'ViewFamily', params: { id_user: id_user, id_family: family.id_family}})}>
-                      <View style={styles.viewButton}>
-                        <Text style={styles.btnText}>View details</Text>
+                  <TouchableOpacity onPress={() => navigation.navigate('FamilyStack', { screen: 'ViewFamily', params: { id_user: id_user, id_family: family.id_family}})}>
+                    <View style={styles.viewButton}>
+                      <Text style={styles.btnText}>View details</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <View style={styles.editDeleteContainer}>
+                    <TouchableOpacity onPress={() => handleUpdateFamily(family.id_family, family.name, family.description)}>
+                      <View style={styles.iconWrapper}>
+                        <FeatherIcon name="edit-2" size={20} color="blue" />
                       </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleUpdateFamily(family.id_family)}>
-                  <View style={styles.iconWrapper}>
-                    <FeatherIcon name="edit-2" size={20} color="blue" />
+                    <TouchableOpacity onPress={() => handleDeleteFamily(family.id_family)}>
+                      <View style={styles.iconWrapper}>
+                        <FeatherIcon name="trash" size={20} color="red" />
+                      </View>
+                    </TouchableOpacity>
                   </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDeleteFamily(family.id_family)}>
-                  <View style={styles.iconWrapper}>
-                    <FeatherIcon name="trash" size={20} color="red" />
                   </View>
-                </TouchableOpacity>
 
-                  </View>
                 </View>
               </View>
             </TouchableOpacity>

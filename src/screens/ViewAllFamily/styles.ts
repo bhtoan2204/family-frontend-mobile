@@ -11,6 +11,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  editDeleteContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   inputContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
