@@ -15,7 +15,7 @@ import {PackageServices} from 'src/services/apiclient';
 import BottonSheetContent from './BottomSheetContent';
 import styles from './styles';
 import navigation from 'src/navigation';
-import PurchasedScreen from '../PurchasedScreen';
+import { PurchasedScreenProps, ViewAllFamilyScreenProps } from 'src/navigation/NavigationTypes';
 type Profile = {
   id_user: string;
   firstname: string;
@@ -24,7 +24,7 @@ type Profile = {
   phone: string;
 };
 
-const HomeScreen = ({navigation}: FamilyStackProps) => {
+const HomeScreen = ({navigation}: PurchasedScreenProps & ViewAllFamilyScreenProps) => {
   const scrollY = new Animated.Value(0);
   const bottomSheetRef = useRef<RBSheet>(null);
   const screenHeight = Dimensions.get('screen').height;
@@ -43,14 +43,14 @@ const HomeScreen = ({navigation}: FamilyStackProps) => {
 
 
   const handleViewPurchased = () => {
-    navigation.navigate('PackStack', { screen: 'ViewAllPurchased', params: { id_user: profile?.id_user || '' } });
+    navigation.navigate('PackStack', { screen: 'ViewAllPurchased', params: { id_user: profile?.id_user ?? '' } });
   };
 
   const handlePackage = () => {
     navigation.navigate('PackStack', { screen: 'ViewAllPurchased', params: { id_user: profile?.id_user || '' } });
   };
   const handleFamily =() => {
-    navigation.navigate('FamilyStack', { screen: 'ViewAllFamily', params: { id_user: profile?.id_user || '' } });
+    navigation.navigate('FamilyStack', { screen: 'ViewAllFamily', params: { id_user: profile?.id_user || ''}});
 
   }
 

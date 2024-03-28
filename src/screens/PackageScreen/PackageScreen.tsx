@@ -8,11 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import {PackageServices} from 'src/services/apiclient';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import { PurchasedScreenProps } from 'src/navigation/NavigationTypes';
-import {
-  OrderDetailScreenProps,
-  ViewAllPackageScreenProps,
-} from 'src/navigation/NavigationTypes';
+import { ViewAllPackageScreenProps } from 'src/navigation/NavigationTypes';
 import {RouteProp} from '@react-navigation/native';
 type Package = {
   id_package: number;
@@ -22,19 +18,17 @@ type Package = {
   expired: number;
 };
 
-const PackageScreen = ({navigation, route}: PurchasedScreenProps) => {
+const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
   const [value, setValue] = React.useState(0);
-  const {id_user, id_family} = route.params;
-  // const [keyPackage, setIdPackage] = useState(1);
-  // const [keyAmount, setAmountPackage] = useState(1); // Giả sử ban đầu id_package là 1
+  const {id_user, id_family} = route.params || {};
   const [selectedPackage, setSelectedPackage] = useState<null | Package>(null);
   const [selectedMount, setSelectedMount] = useState<number>(0);
   const [packages, setPackages] = useState<Package[]>([]);
   const handleSelectPackage = (
-    id_user: string,
-    id_family: number,
-    id_package: number,
-    amount: number,
+    id_user?: string,
+    id_family?: number,
+    id_package?: number,
+    amount?: number,
   ) => {
     navigation.navigate('OrderDetailScreen', {
       id_user,

@@ -28,7 +28,7 @@ const FamilyServices = {
   },
 
   //da xong
-  getFamily: async ({id_family}: {id_family: number}) => {
+  getFamily: async ({id_family}: {id_family?: number}) => {
     try {
       const response: AxiosResponse = await instance.get(FamilyUrl.getFamily, {
         params: {
@@ -51,9 +51,9 @@ const FamilyServices = {
     name,
     id_order,
   }: {
-    description: string;
-    name: string;
-    id_order: number;
+    description?: string;
+    name?: string;
+    id_order?: number;
   }) => {
     try {
       console.log('createFamily called with:', {description, name});
@@ -83,9 +83,9 @@ const FamilyServices = {
     description,
     name,
   }: {
-    id_family: number;
-    description: string;
-    name: string;
+    id_family?: number;
+    description?: string;
+    name?: string;
   }) => {
     try {
       const response: AxiosResponse = await instance.put(
@@ -107,7 +107,7 @@ const FamilyServices = {
   },
 
   //dang lam
-  deleteFamily: async ({id_family}: {id_family: number}) => {
+  deleteFamily: async ({id_family}: {id_family?: number}) => {
     try {
       // const response: AxiosResponse = await instance.delete(
       //   `${FamilyUrl.deleteFamily}/${id_family}`,
@@ -133,7 +133,7 @@ const FamilyServices = {
   },
 
   //da xong
-  getAllMembers: async ({id_family}: {id_family: number}) => {
+  getAllMembers: async ({ id_family }: { id_family?: number }) => {
     try {
       const response: AxiosResponse = await instance.get(
         FamilyUrl.getAllMembers,
@@ -153,7 +153,7 @@ const FamilyServices = {
     }
   },
 
-  getMember: async (familyId: string, memberId: string) => {
+  getMember: async (familyId?: string, memberId?: string) => {
     try {
       const response: AxiosResponse = await axios.get(
         `${FamilyUrl.getMember}/${familyId}/${memberId}`,
@@ -201,7 +201,7 @@ const FamilyServices = {
     }
   },
 
-  deleteMember: async (familyId: string, memberId: string) => {
+  deleteMember: async (familyId?: string, memberId?: string) => {
     try {
       const response: AxiosResponse = await axios.delete(
         `${FamilyUrl.deleteMember}/${familyId}/${memberId}`,

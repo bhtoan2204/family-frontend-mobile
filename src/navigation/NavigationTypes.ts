@@ -16,45 +16,52 @@ export type AuthStackParamList = {
 };
 
 export type FamilyStackParamList = {
-  CreateFamily: {
+  ViewAllFamily: {
     id_user: string;
-    id_order: number;
+  };
+  CreateFamily: {
+    id_user: string | undefined;
+    id_order: number |undefined;
   };
   AddMembers: undefined;
   InviteMembers: undefined;
-  ViewAllFamily:{
-    id_user:string;
-  };
-  ViewAllMember: undefined;
-  ViewFamily: {
-    id_user: string;
-    id_family: number;
 
+  
+  ViewFamily: {
+    id_user: string | undefined;
+    id_family: number | undefined;
   };
- 
+  
+  
+  AllMember: {
+    id_family: number;
+  };
 };
 
 export type PackStackParamList = {
 
   ViewAllPurchased: {
-    id_user: string;
+    id_user: string | undefined;
+
   };
   ViewAllPackage: {
-    id_user: string;
-    id_family: number;
+    id_user: string | undefined;
+    id_family: number | undefined;
   };
   BankInfoScreen: {
-    code: string;
-    id_user: string;
-    id_family: number;
-    id_package: number;
-    amount: number;
+    id_user: string | undefined;
+    id_family: number | undefined;
+    id_package: number | undefined;
+    bankCode: string | undefined;
+    amount: number | undefined;
+    language: 'vn' | undefined;
+    method: string | undefined;
   };
   OrderDetailScreen: {
-    id_user: string;
-    id_family: number;
-    id_package: number;
-    amount: number;
+    id_user: string | undefined;
+      id_family: number | undefined;
+      id_package: number | undefined;
+      amount: number | undefined;
   };
 
   ZaloPayScreen: undefined;
@@ -91,14 +98,7 @@ type OrderDetailScreenNavigationProp = NativeStackNavigationProp<
 
 export type OrderDetailScreenProps = {
   navigation: OrderDetailScreenNavigationProp;
-  route: RouteProp<PackStackParamList, 'OrderDetailScreen'> & {
-    params: {
-      id_user: string;
-      id_family: number;
-      id_package: number;
-      amount: number;
-    };
-  };
+  route: RouteProp<PackStackParamList, 'OrderDetailScreen'> ;
 };
 
 type BankInfoScreenNavigationProp = NativeStackNavigationProp<
@@ -108,17 +108,7 @@ type BankInfoScreenNavigationProp = NativeStackNavigationProp<
 
 export interface BankInfoScreenProps {
   navigation: BankInfoScreenNavigationProp;
-  route: RouteProp<PackStackParamList, 'BankInfoScreen'> & {
-    params: {
-      id_user: string;
-      id_family: number;
-      id_package: number;
-      bankCode: string;
-      amount: number;
-      language: 'vn';
-      method: string;
-    };
-  };
+  route: RouteProp<PackStackParamList, 'BankInfoScreen'> ;
 }
 
 type SignupScreenNavigationProp = NativeStackNavigationProp<
@@ -139,26 +129,15 @@ export interface LoginScreenProps {
   navigation: LoginScreenNavigationProp;
 }
 
-type ViewAllMemberNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'ViewAllMember'
->;
-export interface ViewAllMemberScreenProps {
-  navigation: ViewAllMemberNavigationProp;
-}
+
 
 type PurchasedNavigationProp = NativeStackNavigationProp<
   PackStackParamList,
   'ViewAllPurchased'
 >;
 export interface PurchasedScreenProps {
-  navigation: PurchasedNavigationProp;
-  route: RouteProp<PackStackParamList, 'ViewAllPurchased'> & {
-    params: {
-      id_user: string;
-      id_family: number;
-    };
-  };
+  navigation:   ViewAllFamilyNavigationProp & FamilyStackNavigationProp;
+  route: RouteProp<PackStackParamList, 'ViewAllPurchased'> ;
 }
 
 type ViewAllFamilyNavigationProp = NativeStackNavigationProp<
@@ -167,30 +146,25 @@ type ViewAllFamilyNavigationProp = NativeStackNavigationProp<
 >;
 
 export interface ViewAllFamilyScreenProps {
-  navigation: ViewAllFamilyNavigationProp & ViewFamilyNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'ViewAllFamily'> & {
+  navigation: ViewAllFamilyNavigationProp ;
+  route:  {
     params: {
       id_user: string;
-    };
-}
+    }
+  } ;
 }
 
 
-export type ViewFamilyNavigationProp = NativeStackNavigationProp<
+type ViewFamilyNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'ViewFamily'
 >;
 
 export interface ViewFamilyScreenProps {
   navigation: ViewFamilyNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'ViewFamily'> & {
-    params: {
-      id_user: string;
-      id_family: number;
-    };
-  };
-}
+  route: RouteProp<FamilyStackParamList, 'ViewFamily'> ;
 
+}
 
 export type UpdateFamilyNavigationProps = NativeStackNavigationProp<
 ModelScreenParamsList,
@@ -198,17 +172,21 @@ ModelScreenParamsList,
 >;
 
 export interface UpdateFamilyScreenProps {
-  //navigation: UpdateFamilyNavigationProps;
-  navigation: ViewFamilyNavigationProp;
-  route: {
-    params: {
-      id_user: string;
-      id_family: number;
-      name: string;
-      description: string;
-    };
-  };
+  navigation: UpdateFamilyNavigationProps;
+  route: RouteProp<ModelScreenParamsList, 'UpdateFamily'>;
 }
+export type AllMemberNavigationProp = NativeStackNavigationProp<
+FamilyStackParamList,
+  'AllMember'
+>;
+
+export interface AllMemberScreenProps {
+  navigation: AllMemberNavigationProp & HomeScreenNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'AllMember'>;
+  
+}
+
+
 
 type CreateFamilyNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
@@ -216,13 +194,9 @@ type CreateFamilyNavigationProp = NativeStackNavigationProp<
 >;
 
 export interface CreateFamilyScreenProps {
-  navigation: CreateFamilyNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'CreateFamily'> & {
-    params: {
-      id_user: string;
-      id_order: number;
-    };
-  };
+  navigation: CreateFamilyNavigationProp & HomeScreenNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'CreateFamily'>;
+
 }
 
 type AddMembersNavigationProp = NativeStackNavigationProp<
@@ -257,18 +231,11 @@ type ViewAllPackageNavigationProp = NativeStackNavigationProp<
 >;
 export interface ViewAllPackageScreenProps {
   navigation: ViewAllPackageNavigationProp;
-  route: RouteProp<PackStackParamList, 'ViewAllPackage'> & {
-    params: {
-      id_user: string;
-      id_family: number;
-    };
-  };
+  route: RouteProp<PackStackParamList, 'ViewAllPackage'>;
 }
-// Define the types for the navigation stack of the HomeTab
 export type HomeTabParamList = {
   HomeScreen: undefined;
   ProfileScreen: undefined;
-
   EditProfileScreen: undefined;
   ReportScreen: undefined;
   AddScreen: undefined;
@@ -284,7 +251,7 @@ export interface HomeScreenProps {
   navigation: HomeScreenNavigationProp;
   route: {
     params: {
-      id_user: string;
+      id_user: string | undefined;
     };
   };
 }
@@ -355,6 +322,10 @@ export type ModelScreenParamsList = {
     name: string;
     description: string;
   };
+  // AllMember: {
+  //   id_user: string;
+  //   id_family: number;
+  // };
 };
 
 type ProfileDetailNavigationProp = NativeStackNavigationProp<

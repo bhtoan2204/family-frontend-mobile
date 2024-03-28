@@ -61,7 +61,6 @@ const UpdateFamilyScreen: React.FC<UpdateFamilyScreenProps> = ({ route, navigati
         <ScrollView>
           <View>
             <View style={{ flex: 1 }}>
-              {/* Your image component */}
             </View>
             <View style={{ flex: 1, marginHorizontal: 5, marginTop: 5 }}>
               <Formik

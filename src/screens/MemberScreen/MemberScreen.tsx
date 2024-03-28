@@ -16,7 +16,7 @@ type Member = {
 };
 
 const ViewMemberScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }) => {
-  const { id_user, id_family } = route.params;
+  const { id_user, id_family } = route.params || {};
   const [member, setMember] = useState<Member[]>([]);
 
 

@@ -5,8 +5,8 @@ import { COLORS, TEXTS } from 'src/constants';
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import { PackageServices, FamilyServices } from 'src/services/apiclient';
-import { PurchasedScreenProps, HomeScreenProps } from 'src/navigation/NavigationTypes';
-
+import { PurchasedScreenProps } from 'src/navigation/NavigationTypes';
+import { FamilyStackProps } from 'src/navigation/NavigationTypes';
 type Purchased = {
   id_order: number;
   id_package: number;
@@ -19,8 +19,8 @@ type Purchased = {
   family_quantity: number;
 };
 
-const PurchasedScreen = ({ navigation, route }: HomeScreenProps) => {
-  const { id_user } = route.params;
+const PurchasedScreen = ({ navigation, route }: PurchasedScreenProps) => {
+  const { id_user } = route.params || {};
   const [value, setValue] = useState(0);
   const [purchasedItems, setPurchasedItems] = useState<Purchased[]>([]);
 
@@ -28,17 +28,18 @@ const PurchasedScreen = ({ navigation, route }: HomeScreenProps) => {
     try {
       const result = await PackageServices.getOrderSucessful();
       result.forEach((item: { order_expired_at: string | number | Date; }) => {
-        item.order_expired_at = new Date(item.order_expired_at); // Convert order_expired_at to Date object
+        item.order_expired_at = new Date(item.order_expired_at); 
       });
       setPurchasedItems(result);
+
     } catch (error: any) {
       console.log('PackageServices.getPackage error:', error);
     }
   };
 
   const handleViewAllPackage = () => {
-    navigation.navigate('PackStack', { screen: 'ViewAllPackage', params: { id_user, id_family: 0 } });
-  };
+    const id_family = undefined;
+    navigation.navigate('PackStack', { screen: 'ViewAllPackage', params: { id_user: id_user, id_family: 0}})  };
 
   const handleExtendFamily = (pkg: Purchased) => {
     console.log('Extend family for package:', pkg);
@@ -104,6 +105,7 @@ const PurchasedScreen = ({ navigation, route }: HomeScreenProps) => {
                       <>
                         <TouchableOpacity
                           onPress={() => navigation.navigate('FamilyStack', { screen: 'ViewFamily', params: { id_user: id_user, id_family: pkg.order_family_id}})}>
+                            
                           <View style={styles.viewButton}>
                             <Text style={styles.viewfamilybtn}>View details</Text>
                           </View>
@@ -118,8 +120,8 @@ const PurchasedScreen = ({ navigation, route }: HomeScreenProps) => {
                       </>
                     ) : (
                       <TouchableOpacity
-                        onPress={() => navigation.navigate('FamilyStack', {  screen: 'CreateFamily', params: { id_user: id_user, id_order: pkg.id_order }})}>
-                          <View style={styles.viewButton}>
+                      onPress={() => navigation.navigate('FamilyStack', {  screen: 'CreateFamily', params: { id_user: id_user, id_order: pkg.id_order }})}>
+                      <View style={styles.viewButton}>
                             <Text style={styles.viewfamilybtn}>Create family</Text>
                           </View>                        
                       </TouchableOpacity>
