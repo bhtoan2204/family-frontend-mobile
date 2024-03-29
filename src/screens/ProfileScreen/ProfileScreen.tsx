@@ -1,17 +1,52 @@
-import {MaterialIcons} from '@expo/vector-icons';
-import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {COLORS} from 'src/constants';
-import {EditProfileScreenProps} from 'src/navigation/NavigationTypes';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { COLORS } from 'src/constants';
+import { EditProfileScreenProps } from 'src/navigation/NavigationTypes';
 import styles from './styles';
+import { useEffect, useRef } from 'react';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import { getHeight } from 'src/utils/device/screen';
+import LocalStorage from 'src/store/localstorage';
+import useUserProfile from 'src/hooks/user/useUserProfile';
 
-const ProfileScreen = ({navigation}: EditProfileScreenProps) => {
+const ProfileScreen = ({ navigation }: EditProfileScreenProps) => {
+  const sheetRef = useRef<RBSheet>(null);
+  const { userProfile, loading, error } = useUserProfile();
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     const userData = await LocalStorage.GetAccessToken();
+  //     console.log("hâha")
+
+  //     console.log(userData)
+  //   }
+  //   fetchUserData()
+  // }, [])
+  useEffect(() => {
+    console.log("cout<<")
+    console.log(userProfile)
+  }, [userProfile])
+  const openRBSheet = () => {
+    sheetRef.current?.open();
+  };
+
   const handleSignOut = () => {
     // Sign out logic
   };
   return (
     <ScrollView style={styles.safeView}>
       <SafeAreaView style={styles.safeView}>
+        <RBSheet ref={sheetRef} height={getHeight(0.8)} useNativeDriver={true}
+          dragFromTopOnly={true}
+          dragOnContent={true}
+          disableOverlay={false}
+        >
+
+          {/* Content of your RBSheet */}
+          <View style={{ padding: 20 }}>
+            <Text>RBSheet Content</Text>
+          </View>
+        </RBSheet>
         <View style={styles.backgroundImageView}>
           <Image style={styles.backgroundImage} resizeMode="cover" />
         </View>
@@ -48,7 +83,12 @@ const ProfileScreen = ({navigation}: EditProfileScreenProps) => {
           <View style={styles.buttonView}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('EditProfileScreen')}>
+              onPress={() => {
+                openRBSheet();
+              }}
+            // onPress={() => navigation.navigate('EditProfileScreen')}
+
+            >
               <Text style={styles.buttonText}>Edit Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}>

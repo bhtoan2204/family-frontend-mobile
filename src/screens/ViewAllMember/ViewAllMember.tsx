@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -6,17 +6,17 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {FamilyServices} from 'src/services/apiclient';
-import {Table, Row} from 'react-native-table-component';
+import { FamilyServices } from 'src/services/apiclient';
+import { Table, Row } from 'react-native-table-component';
 import styles from './styles';
-import {SwipeListView} from 'react-native-swipe-list-view';
-import {COLORS, TEXTS} from 'src/constants';
-import {Formik, FormikHelpers} from 'formik';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import { COLORS, TEXTS } from 'src/constants';
+import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from 'src/components/Button';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import {HomeScreenProps} from 'src/navigation/NavigationTypes';
+import { HomeScreenProps, ViewAllMemberScreenProps } from 'src/navigation/NavigationTypes';
 import ConfirmButton from 'src/components/Button/ButtonConfirm';
 interface FormValues {
   id_family: number;
@@ -31,11 +31,11 @@ type Member = {
   phone: string;
 };
 
-const ViewAllMemberScreen = ({navigation}: HomeScreenProps) => {
+const ViewAllMemberScreen = ({ navigation }: ViewAllMemberScreenProps) => {
   const [members, setMembers] = useState<Member[]>([]);
   const tableHead = ['User ID', 'Last Name', 'First Name', 'Email', 'Phone'];
   const handleViewAllMember = async (
-    values: FormValues = {id_family: 0, submit: null},
+    values: FormValues = { id_family: 0, submit: null },
     actions?: FormikHelpers<FormValues>,
   ) => {
     try {
@@ -50,7 +50,7 @@ const ViewAllMemberScreen = ({navigation}: HomeScreenProps) => {
   };
   return (
     <ScrollView>
-      <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
         <ScrollView>
           <View>
             <Formik
@@ -78,7 +78,7 @@ const ViewAllMemberScreen = ({navigation}: HomeScreenProps) => {
                     <View style={styles.headerAction}>
                       <TouchableOpacity
                         onPress={() => {
-                          navigation.navigate('HomeScreen');
+                          navigation.navigate('HomeScreen' as never);
                         }}>
                         <FeatherIcon name="chevron-left" size={24} />
                       </TouchableOpacity>
@@ -102,7 +102,7 @@ const ViewAllMemberScreen = ({navigation}: HomeScreenProps) => {
                     </View>
 
                     <View
-                      style={[styles.headerAction, {alignItems: 'flex-end'}]}>
+                      style={[styles.headerAction, { alignItems: 'flex-end' }]}>
                       <TouchableOpacity
                         onPress={() => {
                           // handle onPress
@@ -132,7 +132,7 @@ const ViewAllMemberScreen = ({navigation}: HomeScreenProps) => {
                 </View>
               )}
             </Formik>
-            <Table borderStyle={{borderWidth: 1, borderColor: 'black'}}>
+            <Table borderStyle={{ borderWidth: 1, borderColor: 'black' }}>
               <Row
                 data={tableHead}
                 style={styles.head}
@@ -141,8 +141,8 @@ const ViewAllMemberScreen = ({navigation}: HomeScreenProps) => {
             </Table>
             <SwipeListView
               data={members}
-              renderItem={({item: member}) => (
-                <Table borderStyle={{borderWidth: 1, borderColor: 'black'}}>
+              renderItem={({ item: member }) => (
+                <Table borderStyle={{ borderWidth: 1, borderColor: 'black' }}>
                   <Row
                     data={[
                       member.id_user,
@@ -156,30 +156,30 @@ const ViewAllMemberScreen = ({navigation}: HomeScreenProps) => {
                   />
                 </Table>
               )}
-              // renderHiddenItem={({item: family}) => (
-              //   // <View
-              //   //   style={[
-              //   //     styles.rowBack,
-              //   //     {justifyContent: 'flex-end', flexDirection: 'row'},
-              //   //   ]}>
-              //   //   <TouchableOpacity
-              //   //     style={[styles.button, {backgroundColor: '#006AFF'}]}
-              //   //     onPress={() => refRBSheet.current?.open()}>
-              //   //     <Text style={styles.buttonText}>Edit</Text>
-              //   //   </TouchableOpacity>
-              //   //   <TouchableOpacity
-              //   //     style={[styles.button, {backgroundColor: '#FE3A2F'}]}
-              //   //     onPress={() => {
-              //   //       console.log('Deleting family with id:', family.id_family);
-              //   //       handleDeleteFamily(family.id_family);
-              //   //     }}>
-              //   //     <Text style={styles.buttonText}>Delete</Text>
-              //   //   </TouchableOpacity>
-              //   // </View>
-              // )}
-              // rightOpenValue={-150.5}
-              // leftOpenValue={0}
-              // keyExtractor={family => family.id_family.toString()}
+            // renderHiddenItem={({item: family}) => (
+            //   // <View
+            //   //   style={[
+            //   //     styles.rowBack,
+            //   //     {justifyContent: 'flex-end', flexDirection: 'row'},
+            //   //   ]}>
+            //   //   <TouchableOpacity
+            //   //     style={[styles.button, {backgroundColor: '#006AFF'}]}
+            //   //     onPress={() => refRBSheet.current?.open()}>
+            //   //     <Text style={styles.buttonText}>Edit</Text>
+            //   //   </TouchableOpacity>
+            //   //   <TouchableOpacity
+            //   //     style={[styles.button, {backgroundColor: '#FE3A2F'}]}
+            //   //     onPress={() => {
+            //   //       console.log('Deleting family with id:', family.id_family);
+            //   //       handleDeleteFamily(family.id_family);
+            //   //     }}>
+            //   //     <Text style={styles.buttonText}>Delete</Text>
+            //   //   </TouchableOpacity>
+            //   // </View>
+            // )}
+            // rightOpenValue={-150.5}
+            // leftOpenValue={0}
+            // keyExtractor={family => family.id_family.toString()}
             />
           </View>
         </ScrollView>

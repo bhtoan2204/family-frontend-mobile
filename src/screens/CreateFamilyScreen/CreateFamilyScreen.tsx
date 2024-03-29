@@ -50,7 +50,7 @@ const CreateFamilyScreen = ({ navigation, route }: CreateFamilyScreenProps) => {
           {
             text: 'OK',
             onPress: () => {
-              navigation.navigate('HomeScreen');
+              navigation.navigate('HomeScreen' as never);
             },
           },
         ],

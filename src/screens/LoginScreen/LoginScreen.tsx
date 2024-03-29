@@ -1,7 +1,7 @@
-import {Ionicons} from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import Checkbox from 'expo-checkbox';
-import {Formik, FormikHelpers} from 'formik';
-import React, {useState} from 'react';
+import { Formik, FormikHelpers } from 'formik';
+import React, { useState } from 'react';
 import {
   Image,
   KeyboardAvoidingView,
@@ -13,14 +13,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import FacebookImage from 'src/assets/images/facebook.png';
 import GoogleImage from 'src/assets/images/google.png';
 import CustomButton from 'src/components/Button';
-import {COLORS, TEXTS} from 'src/constants';
-import {HomeTabProps, SignupScreenProps} from 'src/navigation/NavigationTypes';
-import {AuthServices} from 'src/services/apiclient';
-import {AuthUrl} from 'src/services/urls';
+import { COLORS, TEXTS } from 'src/constants';
+import { HomeTabProps, SignupScreenProps } from 'src/navigation/NavigationTypes';
+import { AuthServices } from 'src/services/apiclient';
+import { AuthUrl } from 'src/services/urls';
 import LocalStorage from 'src/store/localstorage';
 import * as Yup from 'yup';
 import styles from './styles';
@@ -33,7 +33,7 @@ interface FormValues {
 }
 type CombinedScreenProps = SignupScreenProps & HomeTabProps;
 
-const LoginScreen = ({navigation}: CombinedScreenProps) => {
+const LoginScreen = ({ navigation }: CombinedScreenProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
@@ -46,17 +46,17 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
         email: values.email,
         password: values.password,
       });
-
+      console.log(values.email, values.password)
       await LocalStorage.StoreAccessToken(response.accessToken);
       await LocalStorage.StoreRefreshToken(response.refreshToken);
 
-      navigation.navigate('HomeTab', {screen: 'HomeScreen'});
-      actions.setStatus({success: true});
+      navigation.navigate('HomeTab', { screen: 'HomeScreen' });
+      actions.setStatus({ success: true });
     } catch (error: any) {
       actions.setStatus({
         success: false,
       });
-      actions.setErrors({submit: error.message});
+      actions.setErrors({ submit: error.message });
     }
   };
 
@@ -64,13 +64,13 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
     try {
       Linking.openURL(AuthUrl.googleLogin);
 
-      const handleOpenUrl = async (event: {url: string}) => {
+      const handleOpenUrl = async (event: { url: string }) => {
         console.log(event.url);
       };
 
       Linking.addEventListener('url', handleOpenUrl);
 
-      navigation.navigate('HomeTab', {screen: 'HomeScreen'});
+      navigation.navigate('HomeTab', { screen: 'HomeScreen' });
 
       return () => {
         Linking.removeAllListeners('url');
@@ -84,13 +84,13 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
     try {
       Linking.openURL(AuthUrl.facebookLogin);
 
-      const handleOpenUrl = async (event: {url: string}) => {
+      const handleOpenUrl = async (event: { url: string }) => {
         console.log(event.url);
       };
 
       Linking.addEventListener('url', handleOpenUrl);
 
-      navigation.navigate('HomeTab', {screen: 'HomeScreen'});
+      navigation.navigate('HomeTab', { screen: 'HomeScreen' });
 
       return () => {
         Linking.removeAllListeners('url');
@@ -114,7 +114,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
               </Text>
             </View>
             <Formik
-              initialValues={{email: '', password: '', submit: null}}
+              initialValues={{ email: '', password: '', submit: null }}
               onSubmit={handleLogin}
               validationSchema={Yup.object().shape({
                 email: Yup.string()
@@ -247,7 +247,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                 />
               </TouchableOpacity>
               <TouchableOpacity className="flex-1 h-[52px] flex-row justify-center items-center border-[1px] rounded-[10px] mr-1 border-gray-00"
-              onPress={handleFacebookLogin}>
+                onPress={handleFacebookLogin}>
                 <Image
                   className="h-9 w-9"
                   source={FacebookImage}

@@ -22,20 +22,18 @@ export type FamilyStackParamList = {
   };
   AddMembers: undefined;
   InviteMembers: undefined;
-  ViewAllFamily:{
-    id_user:string;
+  ViewAllFamily: {
+    id_user: string;
   };
   ViewAllMember: undefined;
   ViewFamily: {
     id_user: string;
     id_family: number;
-
   };
-
+  AddEditFamilyMember: undefined;
 };
 
 export type PackStackParamList = {
-
   ViewAllPurchased: {
     id_user: string;
   };
@@ -172,9 +170,8 @@ export interface ViewAllFamilyScreenProps {
     params: {
       id_user: string;
     };
+  };
 }
-}
-
 
 export type ViewFamilyNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
@@ -190,7 +187,6 @@ export interface ViewFamilyScreenProps {
     };
   };
 }
-
 
 type CreateFamilyNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,

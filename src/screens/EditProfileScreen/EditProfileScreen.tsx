@@ -1,4 +1,4 @@
-import {MaterialIcons} from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import {
   Image,
   ScrollView,
@@ -7,14 +7,27 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {COLORS} from 'src/constants';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { COLORS } from 'src/constants';
+import { EditProfileScreenProps } from 'src/navigation/NavigationTypes';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import { useRef } from 'react';
+import React from 'react';
 
-const EditProfileScreen = () => {
+const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
+  const sheetRef = useRef<RBSheet>(null);
+
+  const openRBSheet = () => {
+    sheetRef.current?.open();
+  };
+
   return (
     <SafeAreaView>
       <View>
-        <TouchableOpacity>
+
+        <TouchableOpacity onPress={() => {
+          navigation.goBack();
+        }}>
           <MaterialIcons
             name="keyboard-arrow-left"
             size={24}
@@ -112,6 +125,7 @@ const EditProfileScreen = () => {
           <Text>Save Change</Text>
         </TouchableOpacity>
       </ScrollView>
+      
     </SafeAreaView>
   );
 };
