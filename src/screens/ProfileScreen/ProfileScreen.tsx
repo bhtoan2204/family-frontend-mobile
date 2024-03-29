@@ -13,15 +13,7 @@ import useUserProfile from 'src/hooks/user/useUserProfile';
 const ProfileScreen = ({ navigation }: EditProfileScreenProps) => {
   const sheetRef = useRef<RBSheet>(null);
   const { userProfile, loading, error } = useUserProfile();
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     const userData = await LocalStorage.GetAccessToken();
-  //     console.log("hâha")
 
-  //     console.log(userData)
-  //   }
-  //   fetchUserData()
-  // }, [])
   useEffect(() => {
     console.log("cout<<")
     console.log(userProfile)
@@ -34,19 +26,9 @@ const ProfileScreen = ({ navigation }: EditProfileScreenProps) => {
     // Sign out logic
   };
   return (
-    <ScrollView style={styles.safeView}>
+    <ScrollView className='flex-1 bg-white'>
       <SafeAreaView style={styles.safeView}>
-        <RBSheet ref={sheetRef} height={getHeight(0.8)} useNativeDriver={true}
-          dragFromTopOnly={true}
-          dragOnContent={true}
-          disableOverlay={false}
-        >
 
-          {/* Content of your RBSheet */}
-          <View style={{ padding: 20 }}>
-            <Text>RBSheet Content</Text>
-          </View>
-        </RBSheet>
         <View style={styles.backgroundImageView}>
           <Image style={styles.backgroundImage} resizeMode="cover" />
         </View>

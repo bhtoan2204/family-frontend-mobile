@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 100,
     position: 'absolute',
-    backgroundColor: COLORS.primary,
+    backgroundColor: 'black',
   },
   button: {
     width: 50,
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: COLORS.primary,
+    color: 'black',
     position: 'absolute',
     bottom: 20,
   },

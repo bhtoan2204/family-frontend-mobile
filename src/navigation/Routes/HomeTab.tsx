@@ -2,15 +2,19 @@ import {
   BottomTabBarButtonProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import {StyleSheet} from 'react-native';
+import React, { useRef } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import RBSheet from 'react-native-raw-bottom-sheet';
 import TabButton from 'src/components/TabButton';
-import {TEXTS} from 'src/constants';
+import { TEXTS } from 'src/constants';
 import EditProfileScreen from 'src/screens/EditProfileScreen/EditProfileScreen';
 import HomeScreen from 'src/screens/HomeScreen';
 import PackageScreen from 'src/screens/PackageScreen';
 import ProfileScreen from 'src/screens/ProfileScreen';
+import ProfileScreen2 from 'src/screens/ProfileScreen/ProfileScreenV2';
 import ReportScreen from 'src/screens/ReportScreen';
 import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
+import { getHeight } from 'src/utils/device/screen';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,7 +46,7 @@ const TabList = [
   {
     id: TEXTS.ADD_TAB,
     title: TEXTS.ADD_TAB,
-    component: ProfileScreen,
+    component: ProfileScreen2,
     screen: 'AddScreen',
     icon: 'plus',
     visible: true,
@@ -59,7 +63,7 @@ const TabList = [
   {
     id: TEXTS.MORE_TAB,
     title: TEXTS.MORE_TAB,
-    component: ProfileScreen,
+    component: ProfileScreen2,
     screen: 'MoreScreen',
     icon: 'view-list',
     visible: true,
@@ -77,6 +81,7 @@ const TabBarButton = (props: BottomTabBarButtonProps, tab: any) => {
 };
 
 const HomeTab = () => {
+  const sheetRef = useRef<RBSheet>(null);
   return (
     <Tab.Navigator
       initialRouteName="AddScreen"
@@ -99,6 +104,7 @@ const HomeTab = () => {
         );
       })}
     </Tab.Navigator>
+
   );
 };
 
