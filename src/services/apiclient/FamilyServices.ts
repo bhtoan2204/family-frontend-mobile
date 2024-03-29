@@ -174,10 +174,10 @@ const FamilyServices = {
     phone,
     role,
   }: {
-    id_family: number;
-    gmail: string;
-    phone: string;
-    role: string;
+    id_family?: number;
+    gmail?: string;
+    phone?: string;
+    role?: string;
   }) => {
     console.log('addMember called with:', {id_family, gmail, phone, role});
     try {

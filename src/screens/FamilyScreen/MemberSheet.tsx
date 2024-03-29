@@ -2,7 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import ViewAllMemberScreen from '../ModalScreen/AllMember';
+import ViewAllMemberScreen from '../AllMember';
 
 const Stack = createNativeStackNavigator();
 

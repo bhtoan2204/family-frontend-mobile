@@ -23,7 +23,7 @@ export type FamilyStackParamList = {
     id_user: string | undefined;
     id_order: number |undefined;
   };
-  AddMembers: undefined;
+
   InviteMembers: undefined;
 
   
@@ -35,8 +35,13 @@ export type FamilyStackParamList = {
   
   AllMember: {
     id_user: string| undefined;
-    id_family: number;
+    id_family: number |undefined;
   };
+
+  AddEditFamilyMember:{
+    id_user:string | undefined;
+    id_family: number | undefined;
+  }
 };
 
 export type PackStackParamList = {
@@ -200,13 +205,29 @@ export interface CreateFamilyScreenProps {
 
 }
 
-type AddMembersNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'AddMembers'
+type AddMemberNavigationProp = NativeStackNavigationProp<
+  ModelScreenParamsList,
+  'AddMember'
 >;
 
-export interface AddMembersScreenProps {
-  navigation: AddMembersNavigationProp;
+export interface AddMemberScreenProps {
+  navigation: AddMemberNavigationProp;
+  route: {
+    params: {
+      id_user: string;
+      id_family: number;
+    }
+  };
+}
+
+type AddEditFamilyMemberNavigationProp = NativeStackNavigationProp<
+FamilyStackParamList,
+  'AddEditFamilyMember'
+>;
+
+export interface AddEditFamilyMemberScreenProps {
+  navigation: AddEditFamilyMemberNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'AddEditFamilyMember'>;
 }
 
 type InviteMembersNavigationProp = NativeStackNavigationProp<
@@ -323,10 +344,10 @@ export type ModelScreenParamsList = {
     name: string;
     description: string;
   };
-  // AllMember: {
-  //   id_user: string;
-  //   id_family: number;
-  // };
+  AddMember: {
+    id_user: string;
+    id_family: number;
+  };
 };
 
 type ProfileDetailNavigationProp = NativeStackNavigationProp<

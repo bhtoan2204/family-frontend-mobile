@@ -26,7 +26,7 @@ interface FormValues {
 }
 
 const CreateFamilyScreen = ({ navigation, route }: CreateFamilyScreenProps) => {
-  const { id_user, id_order } = route.params;
+  const { id_user, id_order } = route.params || {};;
   const profile_colors = Object.values(profile_color);
   const [value, setValue] = useState(profile_colors[0]);
   const sheet = useRef<RBSheet>(null);

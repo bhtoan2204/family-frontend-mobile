@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TextInput, SafeAreaView, Dimensions, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, TextInput, SafeAreaView, Dimensions, Image } from 'react-native';
 import { FamilyServices } from 'src/services/apiclient';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { COLORS, TEXTS } from 'src/constants';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { AllMemberScreenProps } from 'src/navigation/NavigationTypes';
 import styles from './styles';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import BottomSheet from './BottomSheet'; 
 
 interface FormValues {
   id_family: number;
@@ -19,13 +21,11 @@ type Member = {
 };
 
 const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
-  const { id_user, id_family } = route.params;
+  const { id_user, id_family } = route.params || {};
   const [members, setMembers] = useState<Member[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
-
-  useEffect(() => {
-    handleViewAllMember();
-  }, []);
+  const bottomSheetRef = useRef<RBSheet>(null); 
+  const screenHeight = Dimensions.get('screen').height;
 
   const handleViewAllMember = async () => {
     try {
@@ -37,12 +37,23 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
     }
   };
 
+  const handleAddMember = () => {
+    bottomSheetRef.current?.open(); 
+  }
+
   const filteredMembers = members.filter(member =>
     member.lastname.toLowerCase().includes(searchQuery.toLowerCase()) ||
     member.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
     member.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
     member.phone.includes(searchQuery)
   );
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      handleViewAllMember();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -64,9 +75,8 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
               value={searchQuery}
             />
           </View>
-
-          <TouchableOpacity onPress={() => { }}>
-            <FeatherIcon name="more-vertical" size={24} />
+          <TouchableOpacity onPress={() => handleAddMember()}>
+            <FeatherIcon name="plus" size={24} /> 
           </TouchableOpacity>
         </View>
 
@@ -85,6 +95,19 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
           )}
         />
       </View>
+      <RBSheet
+        ref={bottomSheetRef}
+        closeOnDragDown={true}
+        height={screenHeight*0.9} 
+        customStyles={{
+          container: {
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+          },
+        }}
+      >
+        <BottomSheet id_user={id_user} id_family={id_family} />
+      </RBSheet>
     </SafeAreaView>
   );
 };

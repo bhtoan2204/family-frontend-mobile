@@ -1,11 +1,10 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import AddEditFamilyMemberScreen from 'src/screens/AddEditFamilyMemberScreen';
+import AddEditFamilyMemberScreen from 'src/screens/ModalScreen/AddEditFamilyMemberScreen';
 import CreateFamilyScreen from 'src/screens/CreateFamilyScreen';
 import InviteNewMemberScreen from 'src/screens/InviteNewMemberScreen';
 import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
 import ViewFamilyScreen from 'src/screens/FamilyScreen';
-import ViewAllMemberScreen from 'src/screens/ModalScreen/AllMember';
-
+import ViewAllMemberScreen from 'src/screens/AllMember';
 const Stack = createNativeStackNavigator();
 
 const FamilyStack = () => {
@@ -21,7 +20,6 @@ const FamilyStack = () => {
       <Stack.Screen name="CreateFamily" component={CreateFamilyScreen} />
       <Stack.Screen name="InviteNewMember" component={InviteNewMemberScreen} />
       <Stack.Screen name="ViewAllFamily" component={ViewAllFamilyScreen} />
-      <Stack.Screen name="ViewAllMember" component={ViewAllMemberScreen} />
       <Stack.Screen name="ViewFamily" component={ViewFamilyScreen} />
       <Stack.Screen name="AllMember" component={ViewAllMemberScreen} />
 

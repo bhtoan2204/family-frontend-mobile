@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   SafeAreaView,
@@ -12,13 +12,16 @@ import {
 import CustomButton from 'src/components/Button';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {COLORS, TEXTS} from 'src/constants';
+import { COLORS, TEXTS } from 'src/constants';
 import profile_color from 'src/constants/profile_colors';
 import ColorPickerStyles from './ColorPickerStyle';
 import styles from './styles';
-import {FamilyServices} from 'src/services/apiclient';
-import {Formik, FormikHelpers} from 'formik';
+import { FamilyServices } from 'src/services/apiclient';
+import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
+import { AddEditFamilyMemberScreenProps } from 'src/navigation/NavigationTypes';
+import RoleService from 'src/services/apiclient/RoleServices';
+import DropDownPicker from 'react-native-dropdown-picker'; // Import DropDownPicker
 
 interface FormValues {
   id_family: number;
@@ -28,11 +31,20 @@ interface FormValues {
   color: string;
   submit: null;
 }
+interface Role {
+  label: string;
+  value: string;
+}
 
-const AddFamilyMemberScreen = () => {
-  const sheet = useRef();
+const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({ navigation, route }) => {
+  const sheet = useRef<RBSheet>(null);
+  const { id_user, id_family } = route.params || {};
   const profile_colors = Object.values(profile_color);
   const [value, setValue] = useState(profile_colors[0]);
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [selectedRole, setSelectedRole] = useState<string>(''); // Add selectedRole state
+  const [isPickerOpen, setIsPickerOpen] = useState(true); // Use isPickerOpen instead of open
+
   const handleAddMember = async (
     values: FormValues,
     actions: FormikHelpers<FormValues>,
@@ -40,22 +52,46 @@ const AddFamilyMemberScreen = () => {
     try {
       console.log('Hello World');
       const result = await FamilyServices.addMember({
-        id_family: values.id_family,
+        id_family: id_family,
         gmail: values.gmail,
         phone: values.phone,
         role: values.role,
       });
       console.log('FamilyServices.addMember result:', result);
 
-      actions.setStatus({success: true});
+      actions.setStatus({ success: true });
     } catch (error: any) {
       console.log('FamilyServices.addMember error:', error);
       actions.setStatus({
         success: false,
       });
-      actions.setErrors({submit: error.message});
+      actions.setErrors({ submit: error.message });
     }
   };
+
+  const getRole = async () => {
+    try {
+      const result = await RoleService.getAllRole();
+      if (result && Array.isArray(result)) {
+        const roles = result.map((role: any) => ({ label: role.name, value: role.role }));
+        setRoles(roles);
+        console.log('Role data found in response:', result);
+      } else {
+        console.log('Role data not found or invalid in response:', result);
+      }
+    } catch (error: any) {
+      console.log('Failed to get roles', error);
+    }
+  };
+
+  // Fetch roles when component mounts
+  useEffect(() => {
+    getRole();
+  }, []);
+
+  // function setOpen(value: SetStateValue<boolean>): void {
+  //   throw new Error('Function not implemented.');
+  // }
 
   return (
     <KeyboardAvoidingView style={styles.keyboardView} behavior="padding">
@@ -106,27 +142,6 @@ const AddFamilyMemberScreen = () => {
               }) => (
                 <View style={styles.form}>
                   <View style={styles.input}>
-                    <Text style={styles.inputLabel}>
-                      {TEXTS.FAMILY_ID_LABEL}l
-                    </Text>
-                    <View
-                      style={{
-                        borderColor: errors.id_family
-                          ? COLORS.red
-                          : COLORS.black,
-                      }}>
-                      <TextInput
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        keyboardType="default"
-                        onChangeText={handleChange('id_family')}
-                        onBlur={handleBlur('id_family')}
-                        placeholder={TEXTS.FAMILY_ID_PLACEHOLDER}
-                        placeholderTextColor={COLORS.darkgray}
-                        style={styles.inputControl}
-                        value={values.id_family.toString()}
-                      />
-                    </View>
                     {errors.id_family && touched.id_family && (
                       <View>
                         <Text style={styles.errorText}>{errors.id_family}</Text>
@@ -150,7 +165,7 @@ const AddFamilyMemberScreen = () => {
 
                   <View style={styles.input}>
                     <Text style={styles.inputLabel}>
-                      {TEXTS.FAMILY_MEMBER_EMAIL_LABEL}l
+                      {TEXTS.FAMILY_MEMBER_EMAIL_LABEL}
                     </Text>
                     <View
                       style={{
@@ -184,15 +199,18 @@ const AddFamilyMemberScreen = () => {
                       style={{
                         borderColor: errors.role ? COLORS.red : COLORS.black,
                       }}>
-                      <TextInput
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        keyboardType="default"
-                        onChangeText={handleChange('role')}
-                        placeholder={TEXTS.FAMILY_MEMBERS_RELATION_PLACEHOLDER}
-                        placeholderTextColor={COLORS.darkgray}
-                        style={styles.inputControl}
-                        value={values.role}
+                      <DropDownPicker
+                        open={isPickerOpen} // Sử dụng isPickerOpen thay vì open
+                        setOpen={setIsPickerOpen}
+                        value={selectedRole} // Use selectedRole instead of values.role
+                        items={roles.map(role => ({ label: role.label, value: role.value }))}
+                        setValue={(value) => {
+                          setSelectedRole(value); // Update selectedRole when value changes
+                          setFieldValue('role', value);
+                        }}
+                        placeholder="Select Relationship"
+                        containerStyle={{ height: 40 }}
+                        style={{ backgroundColor: COLORS.white }}
                       />
                     </View>
                     {errors.role && touched.role && (
@@ -212,13 +230,13 @@ const AddFamilyMemberScreen = () => {
                       <View
                         style={[
                           styles.profile,
-                          {backgroundColor: value},
+                          { backgroundColor: value },
                         ]}></View>
                     </TouchableOpacity>
                   </View>
 
                   <RBSheet
-                    customStyles={{container: ColorPickerStyles.sheet}}
+                    customStyles={{ container: ColorPickerStyles.sheet }}
                     height={440}
                     openDuration={250}
                     ref={sheet}>
@@ -231,7 +249,7 @@ const AddFamilyMemberScreen = () => {
                       <View
                         style={[
                           ColorPickerStyles.profile,
-                          {backgroundColor: value},
+                          { backgroundColor: value },
                         ]}>
                         <Text style={ColorPickerStyles.profileText}>
                           {TEXTS.PROFILE_NAME}
@@ -249,12 +267,12 @@ const AddFamilyMemberScreen = () => {
                                 <View
                                   style={[
                                     ColorPickerStyles.circle,
-                                    isActive && {borderColor: color},
+                                    isActive && { borderColor: color },
                                   ]}>
                                   <View
                                     style={[
                                       ColorPickerStyles.circleInside,
-                                      {backgroundColor: color},
+                                      { backgroundColor: color },
                                     ]}
                                   />
                                 </View>
@@ -286,4 +304,4 @@ const AddFamilyMemberScreen = () => {
   );
 };
 
-export default AddFamilyMemberScreen;
+export default AddMemberScreen;

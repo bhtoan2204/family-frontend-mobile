@@ -8,7 +8,6 @@ import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import { COLORS, TEXTS } from 'src/constants';
 import styles from './styles';
 import BottomSheet from './BottomSheet'; 
-import AllMemberModal from './MemberSheet';
 
 type Family = {
   id_family: number;
@@ -70,7 +69,7 @@ const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }
     bottomSheetRef.current?.open(); 
   };
 
-  const handleOpenAllMemberModal = (id_user: string, id_family: number) => {
+  const handleOpenAllMemberModal = (id_user: string | undefined, id_family: number) => {
       navigation.navigate('AllMember', {id_user, id_family});
   };
 
@@ -103,7 +102,7 @@ const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }
         keyExtractor={(item) => item.id_family.toString()}
       />
       <View style={styles.functionContainer}>
-      <TouchableOpacity onPress={() => handleOpenAllMemberModal(id_user,family[0].id_family)} style={styles.settingItem}>
+      <TouchableOpacity onPress={() => handleOpenAllMemberModal(id_user, family[0].id_family)} style={styles.settingItem}>
         <View style={styles.iconContainer}>
           <Material name="account" size={65} color="black" />
           <Text style={styles.fucntionText}>Members</Text>
@@ -128,7 +127,7 @@ const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }
       <RBSheet
         ref={bottomSheetRef}
         closeOnDragDown={true}
-        height={300} 
+        height={screenHeight*0.3} 
         customStyles={{
           container: {
             borderTopLeftRadius: 20,
