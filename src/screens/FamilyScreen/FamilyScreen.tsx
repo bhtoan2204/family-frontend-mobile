@@ -70,8 +70,8 @@ const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }
     bottomSheetRef.current?.open(); 
   };
 
-  const handleOpenAllMemberModal = (id_family: number) => {
-      navigation.navigate('AllMember', {id_family});
+  const handleOpenAllMemberModal = (id_user: string, id_family: number) => {
+      navigation.navigate('AllMember', {id_user, id_family});
   };
 
   useEffect(() => {
@@ -102,6 +102,15 @@ const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }
         ListHeaderComponent={<Text style={styles.title}>{TEXTS.FAMILY_DETAIL}</Text>}
         keyExtractor={(item) => item.id_family.toString()}
       />
+      <View style={styles.functionContainer}>
+      <TouchableOpacity onPress={() => handleOpenAllMemberModal(id_user,family[0].id_family)} style={styles.settingItem}>
+        <View style={styles.iconContainer}>
+          <Material name="account" size={65} color="black" />
+          <Text style={styles.fucntionText}>Members</Text>
+        </View>
+
+        </TouchableOpacity>
+      </View>
       <View style={styles.settingContainer}>
         <TouchableOpacity onPress={handleOpenBottomSheet} style={styles.settingItem}>
           <Material name="pencil" size={24} color="black" />
@@ -113,10 +122,7 @@ const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }
           <Text style={styles.settingText}>Delete Family</Text>
         </TouchableOpacity>
         
-        <TouchableOpacity onPress={() => handleOpenAllMemberModal(family[0].id_family)} style={styles.settingItem}>
-          <Material name="account" size={24} color="blue" />
-          <Text style={styles.settingText}>Members</Text>
-        </TouchableOpacity>
+        
       </View>
 
       <RBSheet

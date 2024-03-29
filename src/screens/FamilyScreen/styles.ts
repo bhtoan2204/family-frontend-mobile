@@ -1,6 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { COLORS } from 'src/constants';
 
+const screenHeight = Dimensions.get('screen').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -13,7 +14,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   backButton: {
-    color: 'black',
+    color: COLORS.AliceBlue,
   },
   title: {
     fontSize: 20,
@@ -24,6 +25,25 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
+  },
+  functionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginBottom: screenHeight*0.5,
+
+  },
+  fucntionText :{
+    fontWeight: 'bold',
+    fontSize: 16,
+    padding:10,
+    flexDirection: 'row',
+
+  },
+  iconContainer:{
+    alignItems: 'center',
+
   },
   settingContainer: {
     flexDirection: 'row',

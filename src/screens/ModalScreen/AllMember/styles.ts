@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#e3e3e3',
   },
+  iconContainer:{
+
+  },
   headerAction: {
     width: 40,
     alignItems: 'flex-start',
@@ -70,6 +73,23 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#FFF',
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginRight: 10,
+  },
+  card: {
+    backgroundColor: COLORS.AliceBlue,
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 5,
+  },
+  cardText: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 5,
   },
   rowFront: {
     backgroundColor: '#FFF',

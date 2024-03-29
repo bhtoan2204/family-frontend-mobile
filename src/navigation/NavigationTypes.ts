@@ -34,6 +34,7 @@ export type FamilyStackParamList = {
   
   
   AllMember: {
+    id_user: string| undefined;
     id_family: number;
   };
 };
