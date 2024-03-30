@@ -1,12 +1,16 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, Image, StatusBar, ScrollView, TextInput, TouchableWithoutFeedback, Animated } from 'react-native'
+import { View, Text, TouchableOpacity, Image, StatusBar, ScrollView, TextInput, TouchableWithoutFeedback, Animated, PermissionsAndroid } from 'react-native'
 
 import RBSheet from 'react-native-raw-bottom-sheet'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/redux/store';
 import { getHeight } from 'src/utils/device/screen';
+import * as ImagePicker from 'expo-image-picker';
 
-const ProfileModal = ({ bottomSheetRef, sheetHeight, profile }: { bottomSheetRef: React.RefObject<RBSheet>, sheetHeight: number, profile: any }) => {
+const ProfileModal = ({ bottomSheetRef, sheetHeight }: { bottomSheetRef: React.RefObject<RBSheet>, sheetHeight: number }) => {
     const editProfileSheetRef = React.useRef<RBSheet>(null);
+    const profile = useSelector((state: RootState) => state.profile.profile);
     return (
         <RBSheet
             ref={bottomSheetRef}
@@ -95,21 +99,39 @@ const ProfileModal = ({ bottomSheetRef, sheetHeight, profile }: { bottomSheetRef
                     </View>
                 </ScrollView>
             </View>
-            <EditProfileModal editProfileSheetRef={editProfileSheetRef} sheetHeight={sheetHeight} profile={profile} />
+            <EditProfileModal editProfileSheetRef={editProfileSheetRef} sheetHeight={sheetHeight} />
         </RBSheet>
     )
 }
 
-const EditProfileModal = ({ editProfileSheetRef, sheetHeight, profile }: { editProfileSheetRef: React.RefObject<RBSheet>, sheetHeight: number, profile: any }) => {
-    const [personalInfoCollapsed, setPersonalInfoCollapsed] = React.useState(true);
-    const [contactInfoCollapsed, setContactInfoCollapsed] = React.useState(true);
-    const togglePersonalInfoCollapse = () => {
-        setPersonalInfoCollapsed(!personalInfoCollapsed);
-    };
+const EditProfileModal = ({ editProfileSheetRef, sheetHeight }: { editProfileSheetRef: React.RefObject<RBSheet>, sheetHeight: number }) => {
+    const profile = useSelector((state: RootState) => state.profile.profile);
+    const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
+    const requestPermission = async () => {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+            );
 
-    const toggleContactInfoCollapse = () => {
-        setContactInfoCollapsed(!contactInfoCollapsed);
-    };
+        } catch (err) {
+            console.warn(err);
+        }
+    }
+    const handleChangePhoto = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+        console.log(result);
+
+        if (!result.canceled) {
+            console.log(result.assets[0].uri)
+            // setImage(result.assets[0].uri);
+        }
+    }
+
     return <RBSheet
         ref={editProfileSheetRef}
         height={sheetHeight}
@@ -165,8 +187,9 @@ const EditProfileModal = ({ editProfileSheetRef, sheetHeight, profile }: { editP
                 <View className='mt-4  z-11' >
                     <View className='flex justify-center items-center'>
                         <Image source={{ uri: "https://www.w3schools.com/howto/img_avatar.png" }} className='rounded-lg' style={{ height: getHeight(0.2), width: getHeight(0.2) }} />
-                        <TouchableOpacity className='m-0 p-0' onPress={() => {
+                        <TouchableOpacity className='m-0 p-0' onPress={async() => {
                             console.log("handleChangePhoto")
+                            await handleChangePhoto()
                         }}>
                             <View className={`my-3 px-5 py-3 rounded-lg  border-[1px] border-gray-600 `} style={{ width: getHeight(0.2) }}>
                                 <Text className='w-full text-center text-base font-bold'>Edit Photo</Text>

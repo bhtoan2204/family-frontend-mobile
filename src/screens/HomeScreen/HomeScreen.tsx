@@ -21,6 +21,9 @@ import PurchasedScreen from '../PurchasedScreen';
 import ProfileModal from './ProfileModal/ProfileModal';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from 'src/redux/store';
+import { setProfileSlice } from 'src/redux/slices/profileSlice';
 
 type Profile = {
   id_user: string;
@@ -35,7 +38,7 @@ const HomeScreen = ({ navigation }: FamilyStackProps) => {
   const scrollY = new Animated.Value(0);
   const bottomSheetRef = useRef<RBSheet>(null);
   const screenHeight = Dimensions.get('screen').height;
-
+  const dispatch = useDispatch<AppDispatch>();
   const sheetHeight = screenHeight * 0.9;
   const [profile, setProfile] = useState<Profile>();
   const translateY = scrollY.interpolate({
@@ -66,6 +69,7 @@ const HomeScreen = ({ navigation }: FamilyStackProps) => {
       console.log('handleGetProfile called');
       const result = await PackageServices.getProfile();
       console.log('ProfileServices.getProfile result:', result.data);
+      dispatch(setProfileSlice(result.data));
       //const arr = Object.entries(result.data);
       // const id_user = result.data.id_user;
       setProfile(result.data);
@@ -145,7 +149,7 @@ const HomeScreen = ({ navigation }: FamilyStackProps) => {
         </View>
       </ScrollView>
       {/* @ts-ignore */}
-      <ProfileModal bottomSheetRef={bottomSheetRef} sheetHeight={sheetHeight} profile={profile}/>
+      <ProfileModal bottomSheetRef={bottomSheetRef} sheetHeight={sheetHeight} profile={profile} />
     </View>
   );
 };
