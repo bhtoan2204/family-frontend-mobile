@@ -12,6 +12,14 @@ const styles = StyleSheet.create({
     borderColor: '#e3e3e3',
   },
   iconContainer:{
+    flexDirection: 'row',
+
+  },
+  backButton: {
+    color: COLORS.black,
+  },
+  InforContainer:{
+    paddingVertical: 20,
 
   },
   headerAction: {
@@ -86,10 +94,26 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 5,
   },
+  nameText: {
+    fontSize: 16,
+    color: COLORS.black,
+    marginBottom: 5,
+    fontWeight: 'bold',
+
+  },
+
   cardText: {
     fontSize: 16,
-    color: '#333',
+    color: COLORS.black,
     marginBottom: 5,
+
+  },
+  RoleText: {
+    fontSize: 16,
+    color: COLORS.PhilippineSilver,
+    marginBottom: 5,
+    fontWeight: 'bold',
+
   },
   rowFront: {
     backgroundColor: '#FFF',

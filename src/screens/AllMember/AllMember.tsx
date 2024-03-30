@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, TextInput, SafeAreaView, Dimensions, Image } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, SafeAreaView, Dimensions, Image, FlatList, Modal } from 'react-native';
 import { FamilyServices } from 'src/services/apiclient';
-import { SwipeListView } from 'react-native-swipe-list-view';
 import { COLORS, TEXTS } from 'src/constants';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { AllMemberScreenProps } from 'src/navigation/NavigationTypes';
 import styles from './styles';
+
 import RBSheet from 'react-native-raw-bottom-sheet';
-import BottomSheet from './BottomSheet'; 
+import Icon from 'react-native-vector-icons/Ionicons';
 
 interface FormValues {
   id_family: number;
@@ -18,14 +18,18 @@ type Member = {
   firstname: string;
   email: string;
   phone: string;
+  avatar: string;
+  role: string;
 };
 
-const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
+const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps ) => {
   const { id_user, id_family } = route.params || {};
   const [members, setMembers] = useState<Member[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const bottomSheetRef = useRef<RBSheet>(null); 
+  const [isAddMemberModalVisible, setAddMemberModalVisible] = useState<boolean>(false); // State to control modal visibility
   const screenHeight = Dimensions.get('screen').height;
+  const bottomSheetRef = useRef<RBSheet>(null); 
+
 
   const handleViewAllMember = async () => {
     try {
@@ -38,7 +42,8 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
   };
 
   const handleAddMember = () => {
-    bottomSheetRef.current?.open(); 
+    //bottomSheetRef.current?.open(); 
+    navigation.navigate('AddEditFamilyMember', {id_user, id_family});
   }
 
   const filteredMembers = members.filter(member =>
@@ -59,9 +64,9 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <View style={{ flex: 1 }}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => { navigation.navigate('ViewFamily', { id_user,id_family }); }}>
-            <FeatherIcon name="chevron-left" size={24} />
-          </TouchableOpacity>
+        <TouchableOpacity onPress={() => { navigation.navigate('ViewFamily', { id_user, id_family }); }}>
+        <Icon name="arrow-back" size={24} style={styles.backButton} />
+        </TouchableOpacity>
 
           <View style={styles.headerSearch}>
             <FeatherIcon color="#778599" name="search" size={17} />
@@ -75,30 +80,37 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
               value={searchQuery}
             />
           </View>
-          <TouchableOpacity onPress={() => handleAddMember()}>
-            <FeatherIcon name="plus" size={24} /> 
+          <TouchableOpacity onPress={handleAddMember}>
+            <FeatherIcon name="plus" size={24} />
           </TouchableOpacity>
         </View>
 
-        <SwipeListView
+        <FlatList
           data={filteredMembers}
           renderItem={({ item: member }) => (
             <TouchableOpacity style={styles.card}>
               <View style={styles.iconContainer}>
-                <Image source={{ uri: 'https://pethouse.com.vn/wp-content/uploads/2023/06/meo-anh-long-ngan-833x800.jpg' }} style={styles.avatar} />
+                <View>
+                  <Image source={{ uri: member.avatar }} style={styles.avatar} />
+                  <Text style={styles.RoleText}>{member.role}</Text>
 
-                <Text style={styles.cardText}>{member.firstname} {member.lastname}</Text>
-                <Text style={styles.cardText}>{member.email}</Text>
-                <Text style={styles.cardText}>{member.phone}</Text>
+                </View>
+                <View style={styles.InforContainer}>
+                  <Text style={styles.nameText}>{member.firstname} {member.lastname}</Text>
+                  <Text style={styles.cardText}>{member.email}</Text>
+                  <Text style={styles.cardText}>{member.phone}</Text>
+                </View>
               </View>
             </TouchableOpacity>
           )}
+          keyExtractor={(item, index) => index.toString()}
         />
       </View>
-      <RBSheet
+      
+      {/* <RBSheet
         ref={bottomSheetRef}
         closeOnDragDown={true}
-        height={screenHeight*0.9} 
+        height={screenHeight*0.3} 
         customStyles={{
           container: {
             borderTopLeftRadius: 20,
@@ -106,8 +118,8 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
           },
         }}
       >
-        <BottomSheet id_user={id_user} id_family={id_family} />
-      </RBSheet>
+        <BottomSh id_user={id_user} id_family={id_family} />
+      </RBSheet> */}
     </SafeAreaView>
   );
 };

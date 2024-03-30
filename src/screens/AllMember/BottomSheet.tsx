@@ -10,8 +10,7 @@ interface BottomSheetProps {
     id_family?: number;
   }
   
-  const BottomSheet: React.FC<BottomSheetProps> = ({ id_user, id_family }) => {
-
+  const BottomSh: React.FC<BottomSheetProps> = ({ id_user, id_family }) => {
   return (
     <SafeAreaProvider>
       <PaperProvider>
@@ -20,7 +19,7 @@ interface BottomSheetProps {
             options={{
               headerShown: false,
             }}
-            name="AddMember"
+            name="AddEditFamilyMember"
             component={AddMemberScreen}
             initialParams={{ id_user, id_family}} 
             
@@ -33,4 +32,4 @@ interface BottomSheetProps {
   );
 };
 
-export default BottomSheet;
+export default BottomSh;

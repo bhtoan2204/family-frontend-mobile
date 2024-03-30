@@ -7,6 +7,15 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginRight: 10,
+  },
+  textContainer: {
+    flex: 1, 
+  },
   headerfile: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -20,23 +29,50 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-  familyContainer: {
-    marginBottom: 20,
+  cardContainer: {
+    backgroundColor: COLORS.AliceBlue,
+    borderRadius: 10,
+    marginVertical: 12,
+    marginHorizontal: 10,
+    shadowColor: COLORS.Blue,
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 1,
+    borderWidth: 1,
+    borderColor: COLORS.gray,
+    alignItems: 'center',
+    padding: 16,
+    flexDirection: 'row',
+
+  },
+  cardBackground: {
+    flex: 1,
+    resizeMode: 'cover', 
+    justifyContent: 'center', 
   },
   text: {
     fontSize: 16,
+  },
+  nameText: {
+    fontSize: 20,
+    fontWeight: 'bold'
+
   },
   functionContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    marginBottom: screenHeight*0.5,
+    paddingHorizontal: 0,
+    marginBottom: screenHeight*0.55,
 
   },
   fucntionText :{
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 14,
     padding:10,
     flexDirection: 'row',
 

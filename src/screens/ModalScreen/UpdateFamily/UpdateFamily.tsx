@@ -6,7 +6,6 @@ import { FamilyServices } from 'src/services/apiclient';
 import { UpdateFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import * as Yup from 'yup';
 import styles from './styles';
-import navigation from 'src/navigation';
 
 
 interface FormValues {

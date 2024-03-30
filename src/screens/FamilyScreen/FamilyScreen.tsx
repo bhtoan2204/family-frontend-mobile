@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, TouchableOpacity, Alert, SafeAreaView, Dimensions, FlatList } from 'react-native';
+import { Text, View, TouchableOpacity, Alert, SafeAreaView, Dimensions, FlatList, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -68,7 +68,15 @@ const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }
   const handleOpenBottomSheet = () => {
     bottomSheetRef.current?.open(); 
   };
+  const handleChatPress =()=> {
 
+  }
+  const handleEducationPress =()=> {
+
+  }
+  const handleCalendarPress=() => {
+
+  }
   const handleOpenAllMemberModal = (id_user: string | undefined, id_family: number) => {
       navigation.navigate('AllMember', {id_user, id_family});
   };
@@ -81,11 +89,15 @@ const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }
   }, [navigation]);
 
   const renderItem = ({ item }: { item: Family }) => (
-    <View key={item.id_family} style={styles.familyContainer}>
-      <Text style={styles.text}>Name: {item.name}</Text>
-      <Text style={styles.text}>Quantity: {item.quantity}</Text>
-      <Text style={styles.text}>Description: {item.description}</Text>
+    <View key={item.id_family} style={styles.cardContainer}>
+      <Image source={{ uri: 'https://pethouse.com.vn/wp-content/uploads/2023/06/meo-anh-long-ngan-833x800.jpg' }} style={styles.avatar} />
+      <View style={styles.textContainer}>
+        <Text style={styles.nameText}>Family: {item.name}</Text>
+        <Text style={styles.text}>Quantity: {item.quantity}</Text>
+        <Text style={styles.text}>Description: {item.description}</Text>
+      </View>
     </View>
+
   );
 
   return (
@@ -98,16 +110,34 @@ const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }
       <FlatList
         data={family}
         renderItem={renderItem}
-        ListHeaderComponent={<Text style={styles.title}>{TEXTS.FAMILY_DETAIL}</Text>}
+        //ListHeaderComponent={<Text style={styles.title}>{TEXTS.FAMILY_DETAIL}</Text>}
         keyExtractor={(item) => item.id_family.toString()}
       />
       <View style={styles.functionContainer}>
-      <TouchableOpacity onPress={() => handleOpenAllMemberModal(id_user, family[0].id_family)} style={styles.settingItem}>
-        <View style={styles.iconContainer}>
-          <Material name="account" size={65} color="black" />
-          <Text style={styles.fucntionText}>Members</Text>
-        </View>
+        <TouchableOpacity onPress={() => handleOpenAllMemberModal(id_user, family[0].id_family)} style={styles.settingItem}>
+          <View style={styles.iconContainer}>
+            <Material name="account" size={60} color="black" />
+            <Text style={styles.fucntionText}>Members</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleChatPress} style={styles.settingItem}>
+          <View style={styles.iconContainer}>
+            <Material name="chat" size={60} color="lightblue" />
+            <Text style={styles.fucntionText}>Chat</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleEducationPress} style={styles.settingItem}>
+          <View style={styles.iconContainer}>
+            <Material name="book" size={60} color="brown" />
+            <Text style={styles.fucntionText}>Education</Text>
+          </View>
+        </TouchableOpacity>
 
+        <TouchableOpacity onPress={handleCalendarPress} style={styles.settingItem}>
+          <View style={styles.iconContainer}>
+            <Material name="calendar" size={60} color="gray" />
+            <Text style={styles.fucntionText}>Calendar</Text>
+          </View>
         </TouchableOpacity>
       </View>
       <View style={styles.settingContainer}>

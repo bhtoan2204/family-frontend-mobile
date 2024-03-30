@@ -1,5 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { COLORS } from 'src/constants';
+const screenHeight = Dimensions.get('screen').height;
 
 const styles = StyleSheet.create({
   keyboardView: {
@@ -9,6 +10,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 20,
+    height: screenHeight*0.3,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'space-between',
   },
   headerfile: {
     flexDirection: 'row',
@@ -41,7 +47,7 @@ const styles = StyleSheet.create({
   },
   inputControl: {
     borderWidth: 1,
-    borderColor: COLORS.black,
+    borderColor: COLORS.EerieBlack,
     borderRadius: 5,
     paddingVertical: 10,
     paddingHorizontal: 15,
@@ -83,7 +89,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   btn: {
-    backgroundColor: COLORS.Blue,
+    color: COLORS.AliceBlue,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -91,9 +97,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnText: {
-    color: COLORS.white,
+    color: COLORS.black,
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  addButtonContainer: {
+    // Định nghĩa kiểu cho addButtonContainer tại đây
   },
   sheetHeader: {
     backgroundColor: COLORS.darkgray,
