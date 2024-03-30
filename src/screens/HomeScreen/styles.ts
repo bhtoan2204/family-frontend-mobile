@@ -50,16 +50,11 @@ const styles = StyleSheet.create({
     padding: 3,
   },
   iconDetail: {
-    backgroundColor: COLORS.primaryLite,
-    padding: 10,
-    borderRadius: 10,
-    marginBottom: 10,
-    width: 100,
-    height: 100, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    borderWidth: 1, 
-    borderColor: 'white', 
+    shadowColor: COLORS.AuroMetalSaurus, 
+    shadowOffset: { width: 1, height: 1 }, 
+    shadowOpacity: 10,
+    shadowRadius: 2, 
+    padding: 15
   },
 });
 

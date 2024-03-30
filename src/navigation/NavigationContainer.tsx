@@ -7,6 +7,7 @@ import AuthStack from './Routes/AuthStack';
 import HomeTab from './Routes/HomeTab';
 import FamilyStack from './Routes/FamilyStack';
 import PackStack from './Routes/PackStack';
+import CalendarStack from './Routes/CalendarStack';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,8 @@ const Navigation = () => {
           <Stack.Screen name="HomeTab" component={HomeTab} />
           <Stack.Screen name="FamilyStack" component={FamilyStack} />
           <Stack.Screen name="PackStack" component={PackStack} />
+          <Stack.Screen name="CalendarStack" component={CalendarStack} />
+
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

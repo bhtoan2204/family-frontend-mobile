@@ -16,7 +16,7 @@ type Family = {
   name: string;
 };
 
-const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }) => {
+const ViewFamilyScreen= ({navigation, route}: ViewFamilyScreenProps) => {
   const { id_user, id_family } = route.params || {};
   const [family, setFamily] = useState<Family[]>([]);
   const bottomSheetRef = useRef<RBSheet>(null); 
@@ -75,7 +75,7 @@ const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }
 
   }
   const handleCalendarPress=() => {
-
+     navigation.navigate('CalendarStack', {screen:  'CalendarScreen', params: {id_family: id_family}});
   }
   const handleOpenAllMemberModal = (id_user: string | undefined, id_family: number) => {
       navigation.navigate('AllMember', {id_user, id_family});
@@ -88,71 +88,81 @@ const ViewFamilyScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }
     return unsubscribe;
   }, [navigation]);
 
-  const renderItem = ({ item }: { item: Family }) => (
-    <View key={item.id_family} style={styles.cardContainer}>
-      <Image source={{ uri: 'https://pethouse.com.vn/wp-content/uploads/2023/06/meo-anh-long-ngan-833x800.jpg' }} style={styles.avatar} />
-      <View style={styles.textContainer}>
-        <Text style={styles.nameText}>Family: {item.name}</Text>
-        <Text style={styles.text}>Quantity: {item.quantity}</Text>
-        <Text style={styles.text}>Description: {item.description}</Text>
-      </View>
-    </View>
 
-  );
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerfile}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={24} style={styles.backButton} />
+          <Icon name="arrow-back" size={30} style={styles.backButton} />
         </TouchableOpacity>
-      </View>
-      <FlatList
-        data={family}
-        renderItem={renderItem}
-        //ListHeaderComponent={<Text style={styles.title}>{TEXTS.FAMILY_DETAIL}</Text>}
-        keyExtractor={(item) => item.id_family.toString()}
-      />
-      <View style={styles.functionContainer}>
-        <TouchableOpacity onPress={() => handleOpenAllMemberModal(id_user, family[0].id_family)} style={styles.settingItem}>
-          <View style={styles.iconContainer}>
-            <Material name="account" size={60} color="black" />
-            <Text style={styles.fucntionText}>Members</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleChatPress} style={styles.settingItem}>
-          <View style={styles.iconContainer}>
-            <Material name="chat" size={60} color="lightblue" />
-            <Text style={styles.fucntionText}>Chat</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleEducationPress} style={styles.settingItem}>
-          <View style={styles.iconContainer}>
-            <Material name="book" size={60} color="brown" />
-            <Text style={styles.fucntionText}>Education</Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={handleCalendarPress} style={styles.settingItem}>
-          <View style={styles.iconContainer}>
-            <Material name="calendar" size={60} color="gray" />
-            <Text style={styles.fucntionText}>Calendar</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.settingContainer}>
+        <View style={styles.headerfile}>
         <TouchableOpacity onPress={handleOpenBottomSheet} style={styles.settingItem}>
           <Material name="pencil" size={24} color="black" />
-          <Text style={styles.settingText}>Edit Family</Text>
-        </TouchableOpacity>
+          {/* <Text style={styles.settingText}>Edit Family</Text> */}
+      </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => handleDeleteFamily(family[0].id_family)} style={styles.settingItem}>
-          <Material name="delete" size={24} color="red" />
-          <Text style={styles.settingText}>Delete Family</Text>
-        </TouchableOpacity>
-        
-        
+
       </View>
+
+
+      </View>
+
+      <View style={styles.container}>
+          {family.map((item: Family) => (
+            <View key={item.id_family} style={styles.cardContainer}>
+              <Image source={{ uri: 'https://pethouse.com.vn/wp-content/uploads/2023/06/meo-anh-long-ngan-833x800.jpg' }} style={styles.avatar} />
+              <View style={styles.textContainer}>
+                <Text style={styles.nameText}>Family: {item.name}</Text>
+                <Text style={styles.text}>Quantity: {item.quantity}</Text>
+                <Text style={styles.text}>Description: {item.description}</Text>
+              </View>
+            </View>
+          ))}
+
+        </View>
+        <View style={styles.functionContainer}>
+          <View style={styles.rowContainer}>
+            <TouchableOpacity onPress={() => handleOpenAllMemberModal(id_user, family[0].id_family)} style={styles.settingItem}>
+              <View style={styles.iconContainer}>
+                <Material name="account" size={50} color="black" style={[styles.icon]} />
+                <Text style={styles.fucntionText}>Members</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleChatPress} style={styles.settingItem}>
+              <View style={styles.iconContainer}>
+              <Material name="chat" size={50} color="lightblue" style={[styles.icon]} /> 
+                <Text style={styles.fucntionText}>Chat</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleEducationPress} style={styles.settingItem}>
+              <View style={styles.iconContainer}>
+                <Material name="book" size={50} color="brown" style={[styles.icon]}/>
+                <Text style={styles.fucntionText}>Education</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleCalendarPress} style={styles.settingItem}>
+              <View style={styles.iconContainer}>
+              <Material name="calendar" size={50} color="gray" style={[styles.icon]} /> 
+                <Text style={styles.fucntionText}>Calendar</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.rowContainer}>
+            <TouchableOpacity onPress={() => handleDeleteFamily(family[0].id_family)} style={styles.settingItem}>
+              <View style={styles.iconContainer}>
+                <Material name="delete" size={50} color="gray" style={[styles.icon]}/>
+                <Text style={styles.fucntionText}>Delete</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        
+
+
+
 
       <RBSheet
         ref={bottomSheetRef}

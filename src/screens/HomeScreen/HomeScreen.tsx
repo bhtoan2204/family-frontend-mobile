@@ -115,8 +115,8 @@ const HomeScreen = ({navigation}: PurchasedScreenProps & ViewAllFamilyScreenProp
             
             <TouchableOpacity
               onPress={handlePackage}
-              style={styles.iconDetail}>
-              <Material name="package" size={50} color="blue" /> 
+              >
+              <Material name="package" size={50} color="black"  style={styles.iconDetail} /> 
 
               <Text style={{color: COLORS.black, textAlign: 'center', fontWeight: 'bold'}}>
                 Package
@@ -126,7 +126,7 @@ const HomeScreen = ({navigation}: PurchasedScreenProps & ViewAllFamilyScreenProp
               onPress={handleFamily}
               style={styles.iconDetail}>
               
-              <Material name="heart" size={50} color="blue" /> 
+              <Material name="heart" size={50} color="black" style={styles.iconDetail}/> 
 
               <Text style={{color: COLORS.black, textAlign: 'center',     fontWeight: 'bold',
 }}>

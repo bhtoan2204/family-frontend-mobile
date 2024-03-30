@@ -7,12 +7,19 @@ export type RootParamList = {
   FamilyStack: NavigatorScreenParams<FamilyStackParamList>;
   PackStack: NavigatorScreenParams<PackStackParamList>;
   HomeTab: NavigatorScreenParams<HomeTabParamList>;
+  CalendarStack: NavigatorScreenParams<CalendarStackParamList>;
 };
 
 export type AuthStackParamList = {
   LoginScreen: undefined;
   SignupScreen: undefined;
   ForgotPasswordScreen: undefined;
+};
+
+export type CalendarStackParamList = {
+  CalendarScreen: {
+    id_family: number;
+  };
 };
 
 export type FamilyStackParamList = {
@@ -71,6 +78,26 @@ export type PackStackParamList = {
 };
 
 /////
+type CalendarStackNavigationProp = NativeStackNavigationProp<
+RootParamList,
+  'CalendarStack'
+>;
+export interface CalendarStackProps {
+  navigation: CalendarStackNavigationProp;
+}
+type CalendarScreenNavigationProp = NativeStackNavigationProp<
+   CalendarStackParamList,
+  'CalendarScreen'
+>;
+
+export interface CalendarScreenProps {
+  navigation: CalendarScreenNavigationProp;
+  route: RouteProp<CalendarStackParamList, 'CalendarScreen'>
+}
+
+
+
+
 type FamilyStackNavigationProp = NativeStackNavigationProp<
   RootParamList,
   'FamilyStack'
@@ -164,7 +191,7 @@ type ViewFamilyNavigationProp = NativeStackNavigationProp<
 >;
 
 export interface ViewFamilyScreenProps {
-  navigation: ViewFamilyNavigationProp;
+  navigation: ViewFamilyNavigationProp & CalendarScreenNavigationProp;
   route: RouteProp<FamilyStackParamList, 'ViewFamily'> ;
 
 }

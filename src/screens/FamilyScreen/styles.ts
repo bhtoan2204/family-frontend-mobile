@@ -5,7 +5,12 @@ const screenHeight = Dimensions.get('screen').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 10,
+  },
+  settingItemContainer: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+    marginBottom: 10, 
   },
   avatar: {
     width: 100,
@@ -16,14 +21,31 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1, 
   },
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', 
+    marginBottom: 15,
+    padding: 0,
+    paddingHorizontal: 20
+
+  },
+  
   headerfile: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: 0,
+  },
+  icon: {
+    shadowColor: COLORS.AuroMetalSaurus, 
+    shadowOffset: { width: 1, height: 1 }, 
+    shadowOpacity: 10,
+    shadowRadius: 2, 
+    padding: 15
   },
   backButton: {
-    color: COLORS.AliceBlue,
+    color: COLORS.black,
+    padding: 10,
   },
   title: {
     fontSize: 20,
@@ -31,18 +53,18 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     backgroundColor: COLORS.AliceBlue,
-    borderRadius: 10,
-    marginVertical: 12,
-    marginHorizontal: 10,
+    borderRadius: 50,
+    marginVertical: 0,
+    marginHorizontal: 0,
     shadowColor: COLORS.Blue,
     shadowOffset: {
-      width: 0,
+      width: 20,
       height: 1,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 1,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: COLORS.gray,
     alignItems: 'center',
     padding: 16,
@@ -63,11 +85,11 @@ const styles = StyleSheet.create({
 
   },
   functionContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 0,
-    marginBottom: screenHeight*0.55,
+    paddingHorizontal: 1,
+    marginBottom: screenHeight*0.35,
 
   },
   fucntionText :{
