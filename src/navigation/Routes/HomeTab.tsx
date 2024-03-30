@@ -46,7 +46,7 @@ const TabList = [
   {
     id: TEXTS.ADD_TAB,
     title: TEXTS.ADD_TAB,
-    component: ProfileScreen2,
+    component: ProfileScreen,
     screen: 'AddScreen',
     icon: 'plus',
     visible: true,
@@ -63,7 +63,7 @@ const TabList = [
   {
     id: TEXTS.MORE_TAB,
     title: TEXTS.MORE_TAB,
-    component: ProfileScreen2,
+    component: ProfileScreen,
     screen: 'MoreScreen',
     icon: 'view-list',
     visible: true,

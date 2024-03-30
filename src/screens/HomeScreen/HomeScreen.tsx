@@ -28,6 +28,7 @@ type Profile = {
   lastname: string;
   email: string;
   phone: string;
+  avatar: string;
 };
 
 const HomeScreen = ({ navigation }: FamilyStackProps) => {
@@ -144,88 +145,7 @@ const HomeScreen = ({ navigation }: FamilyStackProps) => {
         </View>
       </ScrollView>
       {/* @ts-ignore */}
-      <RBSheet
-        ref={bottomSheetRef}
-        height={sheetHeight}
-        closeOnDragDown
-        closeOnPressBack
-        closeOnPressMask
-        customStyles={{
-          // wrapper: {
-          //   backgroundColor: 'rgba(0,0,0,0.5)',
-          // },
-          container: {
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
-          },
-        }}>
-        <View className='flex-1'>
-          <View className='h-14 bg-white flex-row items-center mt-[-4] '>
-            <View className='text-black text-lg font-normal p-4 absolute '>
-              {/* <Ionicons name='close' size={24} className='font-normal' onPress={()=>{
-                console.log("back to prev")
-              }}  /> */}
-              <Icon name='close' size={24} onPress={() => {
-                console.log("op")
-              }} />
-
-            </View>
-            <Text className='text-black text-base font-semibold w-full flex absolute text-center '>
-              You
-            </Text>
-          </View>
-          <ScrollView
-            alwaysBounceVertical
-            scrollEventThrottle={16}
-            removeClippedSubviews={true}
-            showsVerticalScrollIndicator={false}
-            overScrollMode="never"
-          >
-            <View className='mx-4 flex-row items-center'>
-              <Image source={{ uri: "https://www.w3schools.com/howto/img_avatar2.png" }} className='rounded-lg' style={{ height: 55, width: 55 }} />
-              <View className='ml-4'>
-                <Text className='text-black text-lg font-semibold'>
-                  {profile?.firstname} {profile?.lastname}
-                </Text>
-                <Text className='text-black text-sm font-normal'>
-                  {profile?.email}
-                </Text>
-              </View>
-            </View>
-
-            <View className='p-4 mx-4 flex-row mt-4 h-auto bg-blue-100 rounded-lg justify-start items-start'>
-              <View className='mt-1'>
-                <Icon name='camera' size={17} />
-              </View>
-              <View className='ml-3 text-lg'>
-                <Text className='font-semibold text-base'>Add a profile photo</Text>
-                <Text className='font-normal text-sm'>Help your family know they're talking to the right person</Text>
-              </View>
-            </View>
-
-            <View className=' mx-4 mt-4 flex-row items-center'>
-              <Icon name='bell-outline' size={17} />
-
-              <Text className='font-normal ml-3 text-base'>Notifications</Text>
-            </View>
-            <View className=' mx-4 mt-4 flex-row items-center'>
-              <Icon name='bell-outline' size={17} />
-
-              <Text className='font-normal ml-3 text-base'>Notifications</Text>
-            </View>
-            <View className=' mx-4 mt-4 flex-row items-center'>
-              <Icon name='bell-outline' size={17} />
-
-              <Text className='font-normal ml-3 text-base'>Notifications</Text>
-            </View>
-            <View className=' mx-4 mt-4 flex-row items-center'>
-              <Icon name='bell-outline' size={17} />
-
-              <Text className='font-normal ml-3 text-base'>Notifications</Text>
-            </View>
-          </ScrollView>
-        </View>
-      </RBSheet>
+      <ProfileModal bottomSheetRef={bottomSheetRef} sheetHeight={sheetHeight} profile={profile}/>
     </View>
   );
 };
