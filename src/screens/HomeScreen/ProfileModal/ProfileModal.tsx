@@ -1,12 +1,15 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, Image, StatusBar, ScrollView, TextInput, TouchableWithoutFeedback, Animated, PermissionsAndroid } from 'react-native'
+import { View, Text, TouchableOpacity, Image, StatusBar, ScrollView, TextInput, TouchableWithoutFeedback, Animated, PermissionsAndroid, Platform } from 'react-native'
 
 import RBSheet from 'react-native-raw-bottom-sheet'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useSelector } from 'react-redux';
-import { RootState } from 'src/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from 'src/redux/store';
 import { getHeight } from 'src/utils/device/screen';
 import * as ImagePicker from 'expo-image-picker';
+import { ActivityIndicator } from 'react-native-paper';
+import { ProfileServices } from 'src/services/apiclient';
+import { updateProfileSlice } from 'src/redux/slices/profileSlice';
 
 const ProfileModal = ({ bottomSheetRef, sheetHeight }: { bottomSheetRef: React.RefObject<RBSheet>, sheetHeight: number }) => {
     const editProfileSheetRef = React.useRef<RBSheet>(null);
@@ -106,28 +109,27 @@ const ProfileModal = ({ bottomSheetRef, sheetHeight }: { bottomSheetRef: React.R
 
 const EditProfileModal = ({ editProfileSheetRef, sheetHeight }: { editProfileSheetRef: React.RefObject<RBSheet>, sheetHeight: number }) => {
     const profile = useSelector((state: RootState) => state.profile.profile);
-    const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
-    const requestPermission = async () => {
-        try {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-            );
+    const [isUploadingImage, setIsUploadingImage] = React.useState<boolean>(false);
+    const dispatch = useDispatch<AppDispatch>()
 
-        } catch (err) {
-            console.warn(err);
-        }
-    }
     const handleChangePhoto = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [4, 3],
+            aspect: [3, 3],
             quality: 1,
         });
+        console.log('image')
         console.log(result);
 
         if (!result.canceled) {
-            console.log(result.assets[0].uri)
+            const a = result.assets[0]!
+            const uri = a.uri
+            setIsUploadingImage(true)
+            const fileUrl = await ProfileServices.changeAvatar(uri)
+            dispatch(updateProfileSlice({ ...profile, avatar: fileUrl }))
+            setIsUploadingImage(false)
+            console.log("fileUrl", fileUrl)
             // setImage(result.assets[0].uri);
         }
     }
@@ -186,8 +188,13 @@ const EditProfileModal = ({ editProfileSheetRef, sheetHeight }: { editProfileShe
             >
                 <View className='mt-4  z-11' >
                     <View className='flex justify-center items-center'>
-                        <Image source={{ uri: "https://www.w3schools.com/howto/img_avatar.png" }} className='rounded-lg' style={{ height: getHeight(0.2), width: getHeight(0.2) }} />
-                        <TouchableOpacity className='m-0 p-0' onPress={async() => {
+                        <View className={`${isUploadingImage ? 'opacity-20' : null} flex justify-center items-center`}>
+                            {
+                                isUploadingImage && <ActivityIndicator className='z-10 absolute' />
+                            }
+                            <Image source={{ uri: profile.avatar }} className='rounded-lg' style={{ height: getHeight(0.2), width: getHeight(0.2) }} />
+                        </View>
+                        <TouchableOpacity className='m-0 p-0' onPress={async () => {
                             console.log("handleChangePhoto")
                             await handleChangePhoto()
                         }}>

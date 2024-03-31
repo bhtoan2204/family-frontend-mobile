@@ -53,6 +53,7 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
       navigation.navigate('HomeTab', { screen: 'HomeScreen' });
       actions.setStatus({ success: true });
     } catch (error: any) {
+      console.log(error.message)
       actions.setStatus({
         success: false,
       });

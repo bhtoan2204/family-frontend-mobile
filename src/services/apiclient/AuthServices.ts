@@ -9,10 +9,12 @@ const AuthServices = {
         email,
         password,
       });
-
+      console.log(AuthUrl.login)
+      console.log(response.data)
       const userData = response.data;
 
       if (response.status === 200) {
+        console.log("hello")
         return userData;
       } else {
         throw new Error(ERROR_TEXTS.USER_NOT_FOUND);
