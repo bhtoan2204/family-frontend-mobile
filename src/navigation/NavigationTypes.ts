@@ -23,8 +23,9 @@ export type CalendarStackParamList = {
 };
 
 export type FamilyStackParamList = {
+  
   ViewAllFamily: {
-    id_user: string;
+    id_user: string | undefined;
   };
   CreateFamily: {
     id_user: string | undefined;
@@ -177,11 +178,8 @@ type ViewAllFamilyNavigationProp = NativeStackNavigationProp<
 
 export interface ViewAllFamilyScreenProps {
   navigation: ViewAllFamilyNavigationProp ;
-  route:  {
-    params: {
-      id_user: string;
-    }
-  } ;
+  route: RouteProp<FamilyStackParamList, 'ViewAllFamily'> ;
+
 }
 
 

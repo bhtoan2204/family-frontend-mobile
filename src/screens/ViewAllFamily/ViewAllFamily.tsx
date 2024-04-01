@@ -13,7 +13,7 @@ type Family = {
 };
 
 const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({ navigation, route }) => {
-  const { id_user } = route.params;
+  const { id_user } = route.params || {};
   const RBEdit = useRef<RBSheet>(null);
   const RBDetail = useRef<RBSheet>(null);
   const [families, setFamilies] = useState<Family[]>([]);

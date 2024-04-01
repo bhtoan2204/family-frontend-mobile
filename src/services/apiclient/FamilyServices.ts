@@ -66,7 +66,7 @@ const FamilyServices = {
         },
       );
       if (response.status === 200) {
-        alert('Create family successfully');
+        //alert('Create family successfully');
         return response.data;
       } else {
         throw new Error(ERROR_TEXTS.CREATE_FAMILY_ERROR);
