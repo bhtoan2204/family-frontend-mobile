@@ -3,17 +3,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import UpdateEventScreen from '../ModalScreen/UpdateEvent';
+
 const Stack = createNativeStackNavigator();
 
 interface BottomSheetProps {
     id_calendar?: number;
     title?: string;
     description?: string;
-    datetime?: string;
+    datetime?: Date;
   }
   
   const BottomSheet: React.FC<BottomSheetProps> = ({ id_calendar, title, description, datetime }) => {
-    console.log(id_calendar, title);
   return (
     <SafeAreaProvider>
       <PaperProvider>

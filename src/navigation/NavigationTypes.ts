@@ -369,7 +369,7 @@ export type ModelScreenParamsList = {
     id_calendar?: number;
     title?: string;
     description?: string;
-    datetime?: string;
+    datetime?: Date;
   };
   AddEditFamilyMember: {
     id_user: string;

@@ -1,131 +1,109 @@
-import { Formik, FormikHelpers } from 'formik';
-import React, { useEffect } from 'react';
-import { Alert, KeyboardAvoidingView, ScrollView, View } from 'react-native';
-import { Button, Card, PaperProvider, Text, TextInput } from 'react-native-paper';
+import React, { useEffect, useState } from 'react';
+import { Alert, KeyboardAvoidingView, ScrollView, View, TextInput } from 'react-native';
+import { Button, Card, PaperProvider, Text } from 'react-native-paper';
 import { UpdateEventScreenProps } from 'src/navigation/NavigationTypes';
-import * as Yup from 'yup';
 import styles from './styles';
 import CalendarServices from 'src/services/apiclient/CalendarService';
-
-interface FormValues {
-  id_calendar: number | undefined;
-  title: string;
-  description: string;
-  datetime: string;
-}
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route }) => {
   const { id_calendar: initialId, title: initialTitle, description: initialDescription, datetime: initialDatetime } = route.params || {};
+  const [chosenDate, setChosenDate] = useState(new Date());
+  const [title, setTitle] = useState(initialTitle || '');
+  const [description, setDescription] = useState(initialDescription || '');
+  const [showDatePicker, setShowDatePicker] = useState(true);
 
-  const handleUpdateEvent = async (values: FormValues, actions: FormikHelpers<FormValues>) => {
+  const handleUpdateEvent = async () => {
     try {
       const response = await CalendarServices.UpdateEvent(
-        values.id_calendar || 0,
-        values.title || '',
-        values.description || '',
-        values.datetime || ''
+        initialId || 0,
+        title || '',
+        description || '',
+        chosenDate.toISOString() 
       );
       Alert.alert(
         'Success',
-        'Successfully updated family',
+        'Successfully updated event',
         [
           {
             text: 'OK',
-            onPress: () => {
-              actions.setStatus({ success: true });
-              navigation.goBack();
-            }
+            onPress: () => navigation.goBack()
           }
         ]
       );
     } catch (error: any) {
-      actions.setStatus({ success: false });
-      actions.setErrors({ submit: error.message } as any );
+      Alert.alert('Error', error.message);
+    }
+  };
+
+  const handleDeleteEvent = async () => {
+    try {
+      await CalendarServices.DeleteEvent(initialId);
+      Alert.alert('Success', 'Event deleted successfully');
+      //navigation.goBack();
+    } catch (error: any) {
+      Alert.alert('Error', 'Failed to delete event');
     }
   };
 
   useEffect(() => {
+
   }, []);
 
   return (
     <PaperProvider>
       <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
         <ScrollView>
-          <View>
-            <View style={{ flex: 1 }}>
-            </View>
-            <View style={{ flex: 1, marginHorizontal: 5, marginTop: 5 }}>
-              <Formik
-                initialValues={{
-                  id_calendar: initialId || undefined,
-                  title: initialTitle || '',
-                  description: initialDescription || '',
-                  datetime: initialDatetime || '',
-                }}
-                validationSchema={Yup.object().shape({
-                  title: Yup.string().required('Title is required'),
-                  description: Yup.string().required('Description is required'),
-                  datetime: Yup.string().required('Datetime is required'),
-                })}
-                onSubmit={(values, actions) => handleUpdateEvent(values, actions)}
-              >
-                {({
-                  errors,
-                  handleBlur,
-                  handleChange,
-                  handleSubmit,
-                  touched,
-                  values,
-                }) => (
-                  <View>
-                    <TextInput
-                      label="Title"
-                      mode="outlined"
-                      value={values.title}
-                      onChangeText={handleChange('title')}
-                      onBlur={handleBlur('title')}
-                    />
-                    {errors.title && touched.title && (
-                      <Text style={styles.textError}>{errors.title}</Text>
-                    )}
-                    <TextInput
-                      style={{ marginTop: 5 }}
-                      label="Description"
-                      mode="outlined"
-                      value={values.description}
-                      onChangeText={handleChange('description')}
-                      onBlur={handleBlur('description')}
-                    />
-                    {errors.description && touched.description && (
-                      <Text style={styles.textError}>{errors.description}</Text>
-                    )}
-                    <TextInput
-                      style={{ marginTop: 5 }}
-                      label="Datetime"
-                      mode="outlined"
-                      value={values.datetime}
-                      onChangeText={handleChange('datetime')}
-                      onBlur={handleBlur('datetime')}
-                    />
-                    {errors.datetime && touched.datetime && (
-                      <Text style={styles.textError}>{errors.datetime}</Text>
-                    )}
-                    <Card onPress={() => handleSubmit()} style={{ marginTop: 10, marginBottom: 1 }}>
-                      <Card.Actions style={{ flexDirection: 'column', marginHorizontal: 2 }}>
-                        <Button
-                          style={styles.button}
-                          mode="contained"
-                          onPress={() => handleSubmit()}
-                        >
-                          Save
-                        </Button>
-                      </Card.Actions>
-                    </Card>
+        <Text style={styles.text}>Title</Text>
 
-                  </View>
-                )}
-              </Formik>
+          <View style={{ flex: 1, marginHorizontal: 5, marginTop: 5 }}>
+            <TextInput
+              placeholder="Title"
+              style={styles.input}
+              value={title}
+              onChangeText={(text) => setTitle(text)}
+            />
+          <Text style={styles.text}>Description</Text>
+
+            <TextInput
+              placeholder="Description"
+              style={[styles.input, { marginTop: 5 }]}
+              value={description}
+              onChangeText={(text) => setDescription(text)}
+            />
+            <View>
+              <Text style={styles.text}>Datetime:</Text>
+              {showDatePicker && (
+                <DateTimePicker
+                  value={chosenDate}
+                  mode="datetime"
+                  display="default"
+                  onChange={(event, selectedDate) => {
+                    if (selectedDate) {
+                      setChosenDate(selectedDate);
+                    }
+                  }}
+                />
+              )}
             </View>
+            <Card onPress={handleUpdateEvent} style={{ marginTop: 10, marginBottom: 1 }}>
+              <Card.Actions style={{ flexDirection: 'row', marginHorizontal: 1 }}>
+                <Button
+                  style={styles.button}
+                  mode="contained"
+                  onPress={handleDeleteEvent}
+                >
+                  Delete
+                </Button>
+                <Button
+                  style={styles.button}
+                  mode="contained"
+                  onPress={handleUpdateEvent}
+                >
+                  Save
+                </Button>
+              </Card.Actions>
+            </Card>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

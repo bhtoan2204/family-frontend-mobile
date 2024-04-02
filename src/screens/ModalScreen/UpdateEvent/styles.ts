@@ -19,6 +19,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
       },
+      text: {
+        fontSize: 15,
+        marginBottom: 0,
+
+      },
       input: {
         borderWidth: 1,
         borderColor: 'gray',
@@ -28,7 +33,7 @@ const styles = StyleSheet.create({
       },
       button: { 
         color: COLORS.AliceBlue,
-        width: '100%', 
+        width: '50%', 
         borderRadius: 20 
       },
       buttonText: {
@@ -47,7 +52,13 @@ const styles = StyleSheet.create({
       },
       textError:{
         color: 'red' ,
-      }
+      },
+      container: {
+        flex: 1,
+        marginHorizontal: 5,
+        marginTop: 5,
+      },
+
     });
     
 export default styles;

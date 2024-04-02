@@ -65,7 +65,6 @@ const CalendarScreen = ({ navigation, route }: CalendarScreenProps) => {
     };
 
     const handleAddEvent = () => {
-        // Handle adding event
     };
     const updateEvent = (id_calendar: number, title: string, description: string, datetime: Date) => {
       bottomSheetRef.current?.open(); 
@@ -89,8 +88,8 @@ const CalendarScreen = ({ navigation, route }: CalendarScreenProps) => {
                 <View style={styles.modalView}>
                     <View style={styles.modalIcon}>
                         <Text style={styles.modalTitle}> {format(selectedDate, 'yyyy-MM-dd')} </Text>
-                        <TouchableOpacity onPress={handleAddEvent}>
-                            <Icon name="plus" size={20} color="black" />
+                        <TouchableOpacity onPress={handleAddEvent} style={styles.plusIcon}>
+                            <Icon name="plus" size={18} color="black" />
                         </TouchableOpacity>
                     </View>
 
@@ -131,7 +130,7 @@ const CalendarScreen = ({ navigation, route }: CalendarScreenProps) => {
                   id_calendar={event.id_calendar}
                   title={event.event_title}
                   description={event.event_description}
-                  datetime={event.event_datetime.toString()}
+                  datetime={event.event_datetime}
                 />
               ))}
             </RBSheet>

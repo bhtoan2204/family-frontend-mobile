@@ -50,13 +50,37 @@ const CalendarServices = {
 
   UpdateEvent: async (id_calendar: number, title: string, description: string, datetime: string) => {
     try {
-      const response: AxiosResponse = await instance.post(CalendarUrls.updateCalender, 
+      console.log(datetime);
+      const response: AxiosResponse = await instance.put(CalendarUrls.updateCalender, 
         {
           id_calendar,
           title,
           description,
           datetime,
         },
+      );
+      
+      if (response) {
+        if (response.status === 200) {
+          return response.data;
+        } else {
+          console.error('Error in getEventOnDate');
+        }
+      } else {
+        console.error('Error: No response received');
+      }
+    } catch (error: any) {
+      console.error('Error in getEventOnDate', error.message);
+    }
+  },
+
+  DeleteEvent: async (id_calendar?: number) => {
+    try {
+      const response: AxiosResponse = await instance.delete(`${baseUrl}/api/v1/calendar/deleteCalendar/{id_calendar}`, {
+        params: {
+          id_calendar,
+        }
+      }
       );
       
       if (response) {
