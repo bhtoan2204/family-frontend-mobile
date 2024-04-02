@@ -3,6 +3,7 @@ import {ERROR_TEXTS} from 'src/constants';
 import { CalendarUrls } from '../urls';
 import instance from '../httpInterceptor';
 import baseUrl from '../urls/baseUrl';
+import { date } from 'yup';
 
 const CalendarServices = {
     getCalendar: async ({ id_family }: { id_family?: number }) => {
@@ -80,6 +81,29 @@ const CalendarServices = {
         params: {
           id_calendar,
         }
+      }
+      );
+      
+      if (response) {
+        if (response.status === 200) {
+          return response.data;
+        } else {
+          console.error('Error in getEventOnDate');
+        }
+      } else {
+        console.error('Error: No response received');
+      }
+    } catch (error: any) {
+      console.error('Error in getEventOnDate', error.message);
+    }
+  },
+
+  CreateEvent: async (id_family: number, title: string, description: string, datetime: string) => {
+    try {
+      const response: AxiosResponse = await instance.post(CalendarUrls.createCalendar, {
+
+          title, description, id_family, datetime,
+        
       }
       );
       

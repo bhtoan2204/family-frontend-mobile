@@ -6,7 +6,7 @@ import styles from './styles';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route }) => {
+const UpdateEventModal: React.FC<UpdateEventScreenProps> = ({ navigation, route }) => {
   const { id_calendar: initialId, title: initialTitle, description: initialDescription, datetime: initialDatetime } = route.params || {};
   const [chosenDate, setChosenDate] = useState(new Date());
   const [title, setTitle] = useState(initialTitle || '');
@@ -27,7 +27,7 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
         [
           {
             text: 'OK',
-            onPress: () => navigation.goBack()
+            //onPress: () => navigation.goBack()
           }
         ]
       );
@@ -38,9 +38,8 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
 
   const handleDeleteEvent = async () => {
     try {
-      await CalendarServices.DeleteEvent(initialId);
-      Alert.alert('Success', 'Event deleted successfully');
-      //navigation.goBack();
+      const response= await CalendarServices.DeleteEvent(initialId);
+      Alert.alert('Success', response.data.message);
     } catch (error: any) {
       Alert.alert('Error', 'Failed to delete event');
     }
@@ -86,24 +85,23 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
                 />
               )}
             </View>
-            <Card onPress={handleUpdateEvent} style={{ marginTop: 10, marginBottom: 1 }}>
               <Card.Actions style={{ flexDirection: 'row', marginHorizontal: 1 }}>
                 <Button
                   style={styles.button}
                   mode="contained"
-                  onPress={handleDeleteEvent}
+                  onPress={handleDeleteEvent} 
                 >
                   Delete
                 </Button>
+                
                 <Button
                   style={styles.button}
                   mode="contained"
-                  onPress={handleUpdateEvent}
+                  onPress={handleUpdateEvent} 
                 >
                   Save
                 </Button>
               </Card.Actions>
-            </Card>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -111,4 +109,4 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
   );
 };
 
-export default UpdateEventScreen;
+export default UpdateEventModal;

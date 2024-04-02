@@ -20,6 +20,9 @@ export type CalendarStackParamList = {
   CalendarScreen: {
     id_family: number;
   };
+  CreateEvent: {
+    id_family: number;
+  }
 };
 
 export type FamilyStackParamList = {
@@ -92,7 +95,7 @@ type CalendarScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export interface CalendarScreenProps {
-  navigation: CalendarScreenNavigationProp;
+  navigation: CalendarScreenNavigationProp & CreateEventNavigationProps;
   route: RouteProp<CalendarStackParamList, 'CalendarScreen'>
 }
 
@@ -213,6 +216,18 @@ export interface UpdateEventScreenProps {
   navigation: UpdateEventNavigationProps;
   route: RouteProp<ModelScreenParamsList, 'UpdateEvent'>;
 }
+
+export type CreateEventNavigationProps = NativeStackNavigationProp<
+ CalendarStackParamList,
+  'CreateEvent'
+>;
+
+export interface CreateEventScreenProps {
+  navigation: CreateEventNavigationProps;
+  route: RouteProp<CalendarStackParamList, 'CreateEvent'>;
+
+}
+
 export type AllMemberNavigationProp = NativeStackNavigationProp<
 FamilyStackParamList,
   'AllMember'
@@ -375,6 +390,9 @@ export type ModelScreenParamsList = {
     id_user: string;
     id_family: number;
   };
+  CreateEvent: {
+    id_family: number;
+  }
 };
 
 type ProfileDetailNavigationProp = NativeStackNavigationProp<
