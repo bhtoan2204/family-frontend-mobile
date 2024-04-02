@@ -23,9 +23,58 @@ const CalendarServices = {
     }
   } catch (error: any) {
     console.error('Error in getCalendar', error.message);
-  }
-}
+  }},
+
+  getEventOnDate: async (id_family?: number, date?: String) => {
+    try {
+      const response: AxiosResponse = await instance.post(`${baseUrl}/api/v1/calendar/getEventOnDate/${id_family}`, 
+        {
+          id_family,
+          date
+        },
+      );
+      
+      if (response) {
+        if (response.status === 200) {
+          return response.data;
+        } else {
+          console.error('Error in getEventOnDate');
+        }
+      } else {
+        console.error('Error: No response received');
+      }
+    } catch (error: any) {
+      console.error('Error in getEventOnDate', error.message);
+    }
+  },
+
+  UpdateEvent: async (id_calendar: number, title: string, description: string, datetime: string) => {
+    try {
+      const response: AxiosResponse = await instance.post(CalendarUrls.updateCalender, 
+        {
+          id_calendar,
+          title,
+          description,
+          datetime,
+        },
+      );
+      
+      if (response) {
+        if (response.status === 200) {
+          return response.data;
+        } else {
+          console.error('Error in getEventOnDate');
+        }
+      } else {
+        console.error('Error: No response received');
+      }
+    } catch (error: any) {
+      console.error('Error in getEventOnDate', error.message);
+    }
+  },
+  
+};
 
     
-};
+
 export default CalendarServices;

@@ -203,6 +203,16 @@ export interface UpdateFamilyScreenProps {
   navigation: UpdateFamilyNavigationProps;
   route: RouteProp<ModelScreenParamsList, 'UpdateFamily'>;
 }
+
+export type UpdateEventNavigationProps = NativeStackNavigationProp<
+ModelScreenParamsList,
+  'UpdateEvent'
+>;
+
+export interface UpdateEventScreenProps {
+  navigation: UpdateEventNavigationProps;
+  route: RouteProp<ModelScreenParamsList, 'UpdateEvent'>;
+}
 export type AllMemberNavigationProp = NativeStackNavigationProp<
 FamilyStackParamList,
   'AllMember'
@@ -354,6 +364,12 @@ export type ModelScreenParamsList = {
     id_family: number;
     name: string;
     description: string;
+  };
+  UpdateEvent: {
+    id_calendar?: number;
+    title?: string;
+    description?: string;
+    datetime?: string;
   };
   AddEditFamilyMember: {
     id_user: string;

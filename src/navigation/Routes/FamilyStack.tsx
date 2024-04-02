@@ -4,7 +4,8 @@ import InviteNewMemberScreen from 'src/screens/InviteNewMemberScreen';
 import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
 import ViewFamilyScreen from 'src/screens/FamilyScreen';
 import ViewAllMemberScreen from 'src/screens/AllMember';
-import { AllMemberScreenProps, CreateFamilyScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
+import AddMemberScreen from 'src/screens/ModalScreen/AddEditFamilyMemberScreen';
+import { AddEditFamilyMemberScreenProps, AllMemberScreenProps, CreateFamilyScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
 const Stack = createNativeStackNavigator();
 
 const FamilyStack = () => {
@@ -14,7 +15,8 @@ const FamilyStack = () => {
         headerShown: false,
       }}>
      
-      
+     <Stack.Screen name="AddEditFamilyMember">{(props) => <AddMemberScreen {...props as AddEditFamilyMemberScreenProps} />}</Stack.Screen>
+
       <Stack.Screen name="CreateFamily">{(props) => <CreateFamilyScreen {...props as CreateFamilyScreenProps} />}</Stack.Screen>
       
       <Stack.Screen name="InviteNewMember" component={InviteNewMemberScreen} />
