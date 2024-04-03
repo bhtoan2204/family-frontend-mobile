@@ -11,9 +11,10 @@ import PackageScreen from 'src/screens/PackageScreen';
 import ProfileScreen from 'src/screens/ProfileScreen';
 import ReportScreen from 'src/screens/ReportScreen';
 import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
+import BottomSheet from 'src/screens/FamilyScreen/BottomSheet';
+import BottomSheetChild from 'src/screens/HomeScreen/BottomSheetContent';
 
 const Tab = createBottomTabNavigator();
-
 const TabList = [
   {
     id: TEXTS.HOME_TAB,
@@ -59,9 +60,9 @@ const TabList = [
   {
     id: TEXTS.MORE_TAB,
     title: TEXTS.MORE_TAB,
-    component: ProfileScreen,
-    screen: 'MoreScreen',
-    icon: 'view-list',
+    component: BottomSheetChild,
+    screen: 'BottomSheetChild',
+    icon: 'account-circle',
     visible: true,
   },
 ];

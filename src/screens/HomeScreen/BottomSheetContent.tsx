@@ -9,7 +9,7 @@ import ProfileDetail from '../ModalScreen/ProfileDetail';
 
 const Stack = createNativeStackNavigator<ModelScreenParamsList>();
 
-const BottonSheetChild = () => {
+const BottomSheetChild = () => {
   return (
     <SafeAreaProvider>
       <PaperProvider>
@@ -39,11 +39,10 @@ const BottonSheetChild = () => {
             name="ChangePassword"
             component={ChangePassword}
           />
-          
         </Stack.Navigator>
       </PaperProvider>
     </SafeAreaProvider>
   );
 };
 
-export default BottonSheetChild;
+export default BottomSheetChild;
