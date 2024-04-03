@@ -71,7 +71,6 @@ const HomeScreen = ({
       console.log('handleGetProfile called');
       const result = await PackageServices.getProfile();
       console.log('ProfileServices.getProfile result:', result.data);
-      //const arr = Object.entries(result.data);
       const id_user = result.data.id_user;
       setProfile(result.data);
     } catch (error: any) {
