@@ -46,6 +46,9 @@ export type FamilyStackParamList = {
     id_user: string | undefined;
     id_family: number | undefined;
   };
+  Contact: {
+    id_family: number| undefined;
+  };
 };
 
 export type PackStackParamList = {
@@ -225,6 +228,16 @@ export interface AllMemberScreenProps {
   route: RouteProp<FamilyStackParamList, 'AllMember'>;
 }
 
+export type ContactNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'Contact'
+>;
+
+export interface ContactScreenProps {
+  navigation: ContactNavigationProp & AddEditFamilyMemberNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'Contact'>;
+}
+
 type CreateFamilyNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'CreateFamily'
@@ -240,7 +253,7 @@ export type AddEditFamilyMemberNavigationProp = NativeStackNavigationProp<
   'AddEditFamilyMember'
 >;
 export interface AddEditFamilyMemberScreenProps {
-  navigation: AddEditFamilyMemberNavigationProp;
+  navigation: AddEditFamilyMemberNavigationProp & ContactNavigationProp;
   route: RouteProp<ModelScreenParamsList, 'AddEditFamilyMember'>;
 }
 
@@ -371,8 +384,8 @@ export type ModelScreenParamsList = {
     datetime?: Date;
   };
   AddEditFamilyMember: {
-    id_user: string;
-    id_family: number;
+    id_family: number | undefined;
+    phone: string | undefined;
   };
   CreateEvent: {
     id_family: number;
