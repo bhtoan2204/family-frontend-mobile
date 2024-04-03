@@ -3,12 +3,14 @@ import { FlatList, Text, View, TouchableOpacity } from 'react-native';
 import * as Contacts from 'expo-contacts';
 import { useNavigation } from '@react-navigation/native';
 import { ContactScreenProps } from 'src/navigation/NavigationTypes';
+import styles from '../ForgotPassword/styles';
 
 interface Contact {
     id?: string;
     name: string;
     phoneNumbers?: Contacts.PhoneNumber[] | undefined;
 }
+
 const ContactListScreen: React.FC<ContactScreenProps> = ({ navigation, route }) => {
     const [contacts, setContacts] = useState<Contact[]>([]);
     const { id_family } = route.params;
@@ -40,16 +42,24 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({ navigation, route }) 
             }
         }
     };
-    
 
     const renderContactItem = ({ item }: { item: Contact }) => {
         return (
             <TouchableOpacity onPress={() => handleContactPress(item.phoneNumbers)}>
                 <View style={{ padding: 16, borderBottomWidth: 1, borderBottomColor: '#ccc' }}>
-                    <Text>Name: {item.name}</Text>
-                    {item.phoneNumbers && item.phoneNumbers.length > 0 && (
-                        <Text>Phone: {item.phoneNumbers[0].number}</Text>
-                    )}
+                    <View style={styles.contactCon}>
+                        <View style={styles.imgCon}>
+                            <View style={styles.placeholder}>
+                                <Text style={styles.txt}>{item.name[0]}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.contactDat}>
+                            <Text style={styles.name}>{item.name}</Text>
+                            <Text style={styles.phoneNumber}>
+                                {item.phoneNumbers && item.phoneNumbers.length > 0 ? item.phoneNumbers[0].number : ''}
+                            </Text>
+                        </View>
+                    </View>
                 </View>
             </TouchableOpacity>
         );
@@ -66,5 +76,4 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({ navigation, route }) 
         </View>
     );
 };
-
 export default ContactListScreen;
