@@ -18,20 +18,26 @@ import FacebookImage from 'src/assets/images/facebook.png';
 import GoogleImage from 'src/assets/images/google.png';
 import CustomButton from 'src/components/Button';
 import {COLORS, TEXTS} from 'src/constants';
-import {HomeTabProps, SignupScreenProps} from 'src/navigation/NavigationTypes';
+import {
+  HomeTabProps,
+  LandingPageScreenProps,
+  SignupScreenProps,
+} from 'src/navigation/NavigationTypes';
 import {AuthServices} from 'src/services/apiclient';
 import {AuthUrl} from 'src/services/urls';
 import LocalStorage from 'src/store/localstorage';
 import * as Yup from 'yup';
 import styles from './styles';
-import { Button } from 'react-native-paper';
+import {Button} from 'react-native-paper';
 
 interface FormValues {
   email: string;
   password: string;
   submit: null;
 }
-type CombinedScreenProps = SignupScreenProps & HomeTabProps;
+type CombinedScreenProps = SignupScreenProps &
+  HomeTabProps &
+  LandingPageScreenProps;
 
 const LoginScreen = ({navigation}: CombinedScreenProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -50,7 +56,8 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
       await LocalStorage.StoreAccessToken(response.accessToken);
       await LocalStorage.StoreRefreshToken(response.refreshToken);
 
-      navigation.navigate('HomeTab', {screen: 'HomeScreen'});
+      //navigation.navigate('HomeTab', {screen: 'HomeScreen'});
+      navigation.navigate('LandingPage');
       actions.setStatus({success: true});
     } catch (error: any) {
       actions.setStatus({
@@ -98,7 +105,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
     } catch (error: any) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <KeyboardAvoidingView className="flex-1 bg-white" behavior="padding">
@@ -246,8 +253,9 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   resizeMode="contain"
                 />
               </TouchableOpacity>
-              <TouchableOpacity className="flex-1 h-[52px] flex-row justify-center items-center border-[1px] rounded-[10px] mr-1 border-gray-00"
-              onPress={handleFacebookLogin}>
+              <TouchableOpacity
+                className="flex-1 h-[52px] flex-row justify-center items-center border-[1px] rounded-[10px] mr-1 border-gray-00"
+                onPress={handleFacebookLogin}>
                 <Image
                   className="h-9 w-9"
                   source={FacebookImage}

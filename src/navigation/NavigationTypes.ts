@@ -14,6 +14,7 @@ export type AuthStackParamList = {
   LoginScreen: undefined;
   SignupScreen: undefined;
   ForgotPasswordScreen: undefined;
+  LandingPage: undefined;
 };
 
 export type CalendarStackParamList = {
@@ -22,41 +23,34 @@ export type CalendarStackParamList = {
   };
   CreateEvent: {
     id_family: number;
-  }
+  };
 };
 
 export type FamilyStackParamList = {
-  
   ViewAllFamily: {
     id_user: string | undefined;
   };
   CreateFamily: {
     id_user: string | undefined;
-    id_order: number |undefined;
+    id_order: number | undefined;
   };
 
   InviteMembers: undefined;
 
-  
   ViewFamily: {
     id_user: string | undefined;
     id_family: number | undefined;
   };
-  
-  
-  AllMember: {
-    id_user: string| undefined;
-    id_family: number |undefined;
-  };
 
-  
+  AllMember: {
+    id_user: string | undefined;
+    id_family: number | undefined;
+  };
 };
 
 export type PackStackParamList = {
-
   ViewAllPurchased: {
     id_user: string | undefined;
-
   };
   ViewAllPackage: {
     id_user: string | undefined;
@@ -73,9 +67,9 @@ export type PackStackParamList = {
   };
   OrderDetailScreen: {
     id_user: string | undefined;
-      id_family: number | undefined;
-      id_package: number | undefined;
-      amount: number | undefined;
+    id_family: number | undefined;
+    id_package: number | undefined;
+    amount: number | undefined;
   };
 
   ZaloPayScreen: undefined;
@@ -83,24 +77,21 @@ export type PackStackParamList = {
 
 /////
 type CalendarStackNavigationProp = NativeStackNavigationProp<
-RootParamList,
+  RootParamList,
   'CalendarStack'
 >;
 export interface CalendarStackProps {
   navigation: CalendarStackNavigationProp;
 }
 type CalendarScreenNavigationProp = NativeStackNavigationProp<
-   CalendarStackParamList,
+  CalendarStackParamList,
   'CalendarScreen'
 >;
 
 export interface CalendarScreenProps {
   navigation: CalendarScreenNavigationProp & CreateEventNavigationProps;
-  route: RouteProp<CalendarStackParamList, 'CalendarScreen'>
+  route: RouteProp<CalendarStackParamList, 'CalendarScreen'>;
 }
-
-
-
 
 type FamilyStackNavigationProp = NativeStackNavigationProp<
   RootParamList,
@@ -132,7 +123,7 @@ type OrderDetailScreenNavigationProp = NativeStackNavigationProp<
 
 export type OrderDetailScreenProps = {
   navigation: OrderDetailScreenNavigationProp;
-  route: RouteProp<PackStackParamList, 'OrderDetailScreen'> ;
+  route: RouteProp<PackStackParamList, 'OrderDetailScreen'>;
 };
 
 type BankInfoScreenNavigationProp = NativeStackNavigationProp<
@@ -142,7 +133,7 @@ type BankInfoScreenNavigationProp = NativeStackNavigationProp<
 
 export interface BankInfoScreenProps {
   navigation: BankInfoScreenNavigationProp;
-  route: RouteProp<PackStackParamList, 'BankInfoScreen'> ;
+  route: RouteProp<PackStackParamList, 'BankInfoScreen'>;
 }
 
 type SignupScreenNavigationProp = NativeStackNavigationProp<
@@ -163,15 +154,13 @@ export interface LoginScreenProps {
   navigation: LoginScreenNavigationProp;
 }
 
-
-
 type PurchasedNavigationProp = NativeStackNavigationProp<
   PackStackParamList,
   'ViewAllPurchased'
 >;
 export interface PurchasedScreenProps {
-  navigation:   ViewAllFamilyNavigationProp & FamilyStackNavigationProp;
-  route: RouteProp<PackStackParamList, 'ViewAllPurchased'> ;
+  navigation: ViewAllFamilyNavigationProp & FamilyStackNavigationProp;
+  route: RouteProp<PackStackParamList, 'ViewAllPurchased'>;
 }
 
 type ViewAllFamilyNavigationProp = NativeStackNavigationProp<
@@ -180,11 +169,9 @@ type ViewAllFamilyNavigationProp = NativeStackNavigationProp<
 >;
 
 export interface ViewAllFamilyScreenProps {
-  navigation: ViewAllFamilyNavigationProp ;
-  route: RouteProp<FamilyStackParamList, 'ViewAllFamily'> ;
-
+  navigation: ViewAllFamilyNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'ViewAllFamily'>;
 }
-
 
 type ViewFamilyNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
@@ -193,12 +180,11 @@ type ViewFamilyNavigationProp = NativeStackNavigationProp<
 
 export interface ViewFamilyScreenProps {
   navigation: ViewFamilyNavigationProp & CalendarScreenNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'ViewFamily'> ;
-
+  route: RouteProp<FamilyStackParamList, 'ViewFamily'>;
 }
 
 export type UpdateFamilyNavigationProps = NativeStackNavigationProp<
-ModelScreenParamsList,
+  ModelScreenParamsList,
   'UpdateFamily'
 >;
 
@@ -208,7 +194,7 @@ export interface UpdateFamilyScreenProps {
 }
 
 export type UpdateEventNavigationProps = NativeStackNavigationProp<
-ModelScreenParamsList,
+  ModelScreenParamsList,
   'UpdateEvent'
 >;
 
@@ -218,28 +204,26 @@ export interface UpdateEventScreenProps {
 }
 
 export type CreateEventNavigationProps = NativeStackNavigationProp<
- CalendarStackParamList,
+  CalendarStackParamList,
   'CreateEvent'
 >;
 
 export interface CreateEventScreenProps {
   navigation: CreateEventNavigationProps;
   route: RouteProp<CalendarStackParamList, 'CreateEvent'>;
-
 }
 
 export type AllMemberNavigationProp = NativeStackNavigationProp<
-FamilyStackParamList,
+  FamilyStackParamList,
   'AllMember'
 >;
 
 export interface AllMemberScreenProps {
-  navigation: AllMemberNavigationProp & HomeScreenNavigationProp & AddEditFamilyMemberNavigationProp;
+  navigation: AllMemberNavigationProp &
+    HomeScreenNavigationProp &
+    AddEditFamilyMemberNavigationProp;
   route: RouteProp<FamilyStackParamList, 'AllMember'>;
-  
 }
-
-
 
 type CreateFamilyNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
@@ -249,22 +233,16 @@ type CreateFamilyNavigationProp = NativeStackNavigationProp<
 export interface CreateFamilyScreenProps {
   navigation: CreateFamilyNavigationProp & HomeScreenNavigationProp;
   route: RouteProp<FamilyStackParamList, 'CreateFamily'>;
-
 }
 
-
-
 export type AddEditFamilyMemberNavigationProp = NativeStackNavigationProp<
-   ModelScreenParamsList,
+  ModelScreenParamsList,
   'AddEditFamilyMember'
 >;
 export interface AddEditFamilyMemberScreenProps {
   navigation: AddEditFamilyMemberNavigationProp;
   route: RouteProp<ModelScreenParamsList, 'AddEditFamilyMember'>;
-
 }
-
-
 
 type InviteMembersNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
@@ -282,7 +260,13 @@ type ForgotPasswordScreenNavigationProp = NativeStackNavigationProp<
 export interface ForgotPasswordScreenProps {
   navigation: ForgotPasswordScreenNavigationProp;
 }
-
+type LandingPageNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'LandingPage'
+>;
+export interface LandingPageScreenProps {
+  navigation: LandingPageNavigationProp;
+}
 type ViewAllPackageNavigationProp = NativeStackNavigationProp<
   PackStackParamList,
   'ViewAllPackage'
@@ -392,7 +376,7 @@ export type ModelScreenParamsList = {
   };
   CreateEvent: {
     id_family: number;
-  }
+  };
 };
 
 type ProfileDetailNavigationProp = NativeStackNavigationProp<
