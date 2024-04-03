@@ -5,7 +5,7 @@ import {HomeTabProps, SignupScreenProps} from 'src/navigation/NavigationTypes';
 
 type CombinedScreenProps = SignupScreenProps & HomeTabProps;
 
-const LandingPage = ({navigation}: CombinedScreenProps) => {
+const ChatScreen = ({navigation}: CombinedScreenProps) => {
   const handleGoButtonPress = () => {
     navigation.navigate('HomeTab', {screen: 'HomeScreen'});
   };
@@ -42,4 +42,4 @@ const LandingPage = ({navigation}: CombinedScreenProps) => {
   );
 };
 
-export default LandingPage;
+export default ChatScreen;
