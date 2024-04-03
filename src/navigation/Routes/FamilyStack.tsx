@@ -4,8 +4,9 @@ import InviteNewMemberScreen from 'src/screens/InviteNewMemberScreen';
 import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
 import ViewFamilyScreen from 'src/screens/FamilyScreen';
 import ViewAllMemberScreen from 'src/screens/AllMember';
-import AddMemberScreen from 'src/screens/ModalScreen/AddEditFamilyMemberScreen';
-import { AddEditFamilyMemberScreenProps, AllMemberScreenProps, CreateFamilyScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
+import AddMemberScreen from 'src/screens/AddEditFamilyMemberScreen';
+import { AddEditFamilyMemberScreenProps, AllMemberScreenProps, ContactScreenProps, CreateFamilyScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
+import ContactListScreen from 'src/screens/ContactList/ContactList';
 const Stack = createNativeStackNavigator();
 
 const FamilyStack = () => {
@@ -31,6 +32,8 @@ const FamilyStack = () => {
           
       <Stack.Screen name="AllMember">
         {(props) => <ViewAllMemberScreen {...props as AllMemberScreenProps} />}
+      </Stack.Screen>  
+      <Stack.Screen name="Contact" >{(props) => <ContactListScreen {...props as ContactScreenProps} />}
       </Stack.Screen>  
 
     </Stack.Navigator>

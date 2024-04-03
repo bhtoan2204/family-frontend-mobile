@@ -2,7 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import AddMemberScreen from '../ModalScreen/AddEditFamilyMemberScreen';
+import AddMemberScreen from '../AddEditFamilyMemberScreen';
 const Stack = createNativeStackNavigator();
 
 interface BottomSheetProps {

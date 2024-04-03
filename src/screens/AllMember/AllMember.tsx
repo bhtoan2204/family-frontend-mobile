@@ -42,10 +42,12 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps ) => {
   };
 
   const handleAddMember = () => {
-    //bottomSheetRef.current?.open(); 
-    navigation.navigate('AddEditFamilyMember', {id_user, id_family});
+    const phone = undefined;
+    navigation.navigate('AddEditFamilyMember', {id_family, phone });
   }
-
+  const handleSettingIconPress = (member: Member) => {
+    console.log('Settings icon pressed for member:', member);
+  };
   const filteredMembers = members.filter(member =>
     member.lastname.toLowerCase().includes(searchQuery.toLowerCase()) ||
     member.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -100,6 +102,7 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps ) => {
                   <Text style={styles.cardText}>{member.email}</Text>
                   <Text style={styles.cardText}>{member.phone}</Text>
                 </View>
+         
               </View>
             </TouchableOpacity>
           )}

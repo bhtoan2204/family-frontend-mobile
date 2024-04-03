@@ -40,10 +40,19 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 20,
+    width : 380
   },
   inputLabel: {
     fontSize: 16,
     marginBottom: 5,
+  },
+  inputPhone: {
+    borderWidth: 1,
+    borderColor: COLORS.EerieBlack,
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    flex:1,
   },
   inputControl: {
     borderWidth: 1,
@@ -68,6 +77,12 @@ const styles = StyleSheet.create({
   },
   dropDownStyle: {
     backgroundColor: COLORS.white,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    
   },
   itemStyle: {
     justifyContent: 'flex-start',
@@ -102,7 +117,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   addButtonContainer: {
-    // Định nghĩa kiểu cho addButtonContainer tại đây
+  },
+  contactIcon: {
   },
   sheetHeader: {
     backgroundColor: COLORS.darkgray,
@@ -124,6 +140,57 @@ const styles = StyleSheet.create({
   group: {
     flexDirection: 'row',
     marginBottom: 20,
+  },
+  Contactcontainer: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  phone: {
+    fontSize: 14,
+    color: '#666',
+  },
+  contactCon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  imgCon: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#ccc',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  placeholder: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#ccc',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  txt: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  contactDat: {
+    flex: 1,
+    marginLeft: 20,
+  },
+
+  phoneNumber: {
+    fontSize: 14,
+    color: '#666',
   },
 });
 
