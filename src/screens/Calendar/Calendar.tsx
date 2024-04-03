@@ -8,8 +8,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { format } from 'date-fns';
 import BottomSheet from './BottomSheet'; 
 import RBSheet from 'react-native-raw-bottom-sheet';
-import CreateEventModal from '../ModalScreen/CreateEvent';
-import UpdateEventModal from '../ModalScreen/UpdateEventmodal';
 
 type Event = {
     id_calendar: number;

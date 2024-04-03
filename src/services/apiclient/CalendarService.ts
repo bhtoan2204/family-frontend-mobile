@@ -77,7 +77,7 @@ const CalendarServices = {
 
   DeleteEvent: async (id_calendar?: number) => {
     try {
-      const response: AxiosResponse = await instance.delete(`${baseUrl}/api/v1/calendar/deleteCalendar/{id_calendar}`, {
+      const response: AxiosResponse = await instance.delete(`${baseUrl}/api/v1/calendar/deleteCalendar/${id_calendar}`, {
         params: {
           id_calendar,
         }

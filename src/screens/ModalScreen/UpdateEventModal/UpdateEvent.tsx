@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, KeyboardAvoidingView, ScrollView, View, TextInput } from 'react-native';
-import { Button, Card, PaperProvider, Text } from 'react-native-paper';
+import { Alert, ScrollView, View, TextInput, StyleSheet } from 'react-native';
+import { Button, Text, Card } from 'react-native-paper';
 import { UpdateEventScreenProps } from 'src/navigation/NavigationTypes';
-import styles from './styles';
+import styles from './styles'; // Import styles file here
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const UpdateEventModal: React.FC<UpdateEventScreenProps> = ({ navigation, route }) => {
+const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route }) => {
   const { id_calendar: initialId, title: initialTitle, description: initialDescription, datetime: initialDatetime } = route.params || {};
   const [chosenDate, setChosenDate] = useState(new Date());
   const [title, setTitle] = useState(initialTitle || '');
   const [description, setDescription] = useState(initialDescription || '');
-  const [showDatePicker, setShowDatePicker] = useState(true);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const handleUpdateEvent = async () => {
+  const handleSubmit = async () => { 
     try {
+      console.log('Update event');
       const response = await CalendarServices.UpdateEvent(
         initialId || 0,
         title || '',
@@ -27,7 +28,7 @@ const UpdateEventModal: React.FC<UpdateEventScreenProps> = ({ navigation, route 
         [
           {
             text: 'OK',
-            //onPress: () => navigation.goBack()
+            onPress: () => navigation.goBack() 
           }
         ]
       );
@@ -35,78 +36,86 @@ const UpdateEventModal: React.FC<UpdateEventScreenProps> = ({ navigation, route 
       Alert.alert('Error', error.message);
     }
   };
-
-  const handleDeleteEvent = async () => {
+  
+  const handleDeleteEvent = async () => { 
     try {
-      const response= await CalendarServices.DeleteEvent(initialId);
+      console.log('Delete event');
+      const response = await CalendarServices.DeleteEvent(initialId);
       Alert.alert('Success', response.data.message);
+      navigation.goBack(); 
     } catch (error: any) {
       Alert.alert('Error', 'Failed to delete event');
     }
   };
 
   useEffect(() => {
-
+    setShowDatePicker(true); 
   }, []);
 
   return (
-    <PaperProvider>
-      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-        <ScrollView>
+    <View style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Text style={styles.text}>Title</Text>
+        <TextInput
+          placeholder="Title"
+          style={styles.input}
+          value={title}
+          onChangeText={(text) => setTitle(text)}
+        />
+        <Text style={styles.text}>Description</Text>
+        <TextInput
+          placeholder="Description"
+          style={[styles.input, { marginTop: 5 }]}
+          value={description}
+          onChangeText={(text) => setDescription(text)}
+        />
+          <Text style={styles.text}>Datetime:</Text>
+          <View style={{ alignItems: 'center' }}>
 
-          <View style={{ flex: 1, marginHorizontal: 5, marginTop: 5 }}>
-            <TextInput
-              placeholder="Title"
-              style={styles.input}
-              value={title}
-              onChangeText={(text) => setTitle(text)}
-            />
-          <Text style={styles.text}>Description</Text>
-
-            <TextInput
-              placeholder="Description"
-              style={[styles.input, { marginTop: 5 }]}
-              value={description}
-              onChangeText={(text) => setDescription(text)}
-            />
-            <View>
-              <Text style={styles.text}>Datetime:</Text>
-              {showDatePicker && (
-                <DateTimePicker
-                  value={chosenDate}
-                  mode="datetime"
-                  display="default"
-                  onChange={(event, selectedDate) => {
-                    if (selectedDate) {
-                      setChosenDate(selectedDate);
-                    }
-                  }}
-                />
-              )}
+          {showDatePicker && (
+            <View style={styles.dateTimePickerContainer}>
+              <DateTimePicker
+                value={chosenDate}
+                mode="datetime"
+                display="default"
+                onChange={(event, selectedDate) => {
+                  if (selectedDate) {
+                    setChosenDate(selectedDate);
+                  }
+                }}
+              />
             </View>
-              <Card.Actions style={{ flexDirection: 'row', marginHorizontal: 1 }}>
-                <Button
-                  style={styles.button}
-                  mode="contained"
-                  onPress={handleDeleteEvent} 
-                >
-                  Delete
-                </Button>
-                
-                <Button
-                  style={styles.button}
-                  mode="contained"
-                  onPress={handleUpdateEvent} 
-                >
-                  Save
-                </Button>
-              </Card.Actions>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </PaperProvider>
+          )}
+        </View>
+        <View style={styles.buttonContainer}>
+          <Card onPress={handleDeleteEvent} style={styles.buttonCard}>
+            <Card.Actions style={styles.buttonCardActions}>
+              <Button
+                style={styles.button}
+                mode="contained"
+                onPress={handleDeleteEvent} 
+              >
+                Delete
+              </Button>
+            </Card.Actions>
+          </Card>
+          <Card onPress={handleSubmit} style={styles.buttonCard}>
+            <Card.Actions style={styles.buttonCardActions}>
+              <Button
+                style={styles.button}
+                mode="contained"
+                onPress={handleSubmit} 
+              >
+                Save
+              </Button>
+            </Card.Actions>
+          </Card>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
-export default UpdateEventModal;
+export default UpdateEventScreen;
+
+

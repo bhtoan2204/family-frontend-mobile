@@ -1,2 +1,3 @@
-import UpdateEventModal from "./UpdateEvent";
-export default UpdateEventModal;
+import UpdateEventScreen from "./UpdateEvent";
+
+export default UpdateEventScreen;
