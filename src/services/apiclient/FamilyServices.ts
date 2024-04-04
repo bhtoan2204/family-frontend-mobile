@@ -44,6 +44,22 @@ const FamilyServices = {
       throw new Error(ERROR_TEXTS.FAMILY_NOT_FOUND);
     }
   },
+  checkphone: async ({phone}: {phone?: string}) => {
+    // try {
+    //   const response: AxiosResponse = await instance.get(FamilyUrl.getFamily, {
+    //     params: {
+    //       id_family,
+    //     },
+    //   });
+    //   if (response.status === 200) {
+    //     return response.data;
+    //   } else {
+    //     throw new Error(ERROR_TEXTS.FAMILY_NOT_FOUND);
+    //   }
+    // } catch (error) {
+    //   throw new Error(ERROR_TEXTS.FAMILY_NOT_FOUND);
+    // }
+  },
 
   //da xong
   createFamily: async ({

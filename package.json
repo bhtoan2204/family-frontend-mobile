@@ -59,6 +59,7 @@
     "react-native-unimodules": "^0.14.10",
     "react-native-vector-icons": "^10.0.3",
     "react-native-webview": "^13.8.1",
+    "socket.io-client": "^4.7.5",
     "vietqr": "^1.1.9",
     "yup": "^1.3.3"
   },

@@ -69,11 +69,11 @@ const ViewFamilyScreen= ({navigation, route}: ViewFamilyScreenProps) => {
     bottomSheetRef.current?.open(); 
   };
   const handleChatPress =()=> {
-
-  }
+    navigation.navigate('ChatStack', {screen: 'ChatFamily', params: {id_user: id_user, id_family: id_family}});
+  };
   const handleEducationPress =()=> {
 
-  }
+  };
   const handleCalendarPress=() => {
      navigation.navigate('CalendarStack', {screen:  'CalendarScreen', params: {id_family: id_family}});
   }
