@@ -18,7 +18,9 @@ export type ChatStackParamList = {
     id_user: string|undefined;
     id_family: number|undefined;
   };
-
+  ChatUser: {
+    id_user: string|undefined;
+  };
 };
 
 export type AuthStackParamList = {
@@ -445,4 +447,15 @@ type ChatFamilyScreenNavigationProp = NativeStackNavigationProp<
 export interface ChatFamilyScreenProps {
   navigation: ChatFamilyScreenNavigationProp;
   route: RouteProp<ChatStackParamList, 'ChatFamily'>;
+}
+
+
+type ChatScreenNavigationProp = NativeStackNavigationProp<
+  ChatStackParamList,
+  'ChatUser'
+>;
+
+export interface ChatScreenProps {
+  navigation: ChatScreenNavigationProp;
+  route: RouteProp<ChatStackParamList, 'ChatUser'>;
 }

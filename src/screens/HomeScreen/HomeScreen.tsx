@@ -44,12 +44,7 @@ const HomeScreen = ({
 
   const handleOpenModal = () => bottomSheetRef.current?.open();
 
-  const handleViewPurchased = () => {
-    navigation.navigate('PackStack', {
-      screen: 'ViewAllPurchased',
-      params: {id_user: profile?.id_user ?? ''},
-    });
-  };
+
 
   const handlePackage = () => {
     navigation.navigate('PackStack', {
@@ -63,6 +58,14 @@ const HomeScreen = ({
       params: {id_user: profile?.id_user || ''},
     });
   };
+  const handleChat = () => {
+    navigation.navigate('ChatStack', {
+      screen: 'ChatUser',
+      params: { id_user: profile?.id_user || '' }
+    });
+    
+  };
+  
 
   /////Goi tu homescreen
   // const handleProfile;
@@ -125,6 +128,18 @@ const HomeScreen = ({
             />
             <Text style={styles.buttonText}>Family</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={handleChat}>
+            <Material
+              name="chat"
+              size={50}
+              color="#56409e"
+              style={styles.buttonIcon}
+            />
+            <Text style={styles.buttonText}>Chat</Text>
+          </TouchableOpacity>
+
+          
         </View>
       </ScrollView>
 

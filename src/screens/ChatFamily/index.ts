@@ -1,3 +1,3 @@
-import ChatFamilyScreen from "./ChatScreen";
+import ChatFamilyScreen from "./ChatFamilyScreen";
 
 export default ChatFamilyScreen;

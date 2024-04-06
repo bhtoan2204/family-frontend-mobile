@@ -169,13 +169,18 @@ const FamilyServices = {
     }
   },
 
-  getMember: async (familyId?: string, memberId?: string) => {
+  getMember: async ({ id_user }: { id_user?: string }) => {
     try {
-      const response: AxiosResponse = await axios.get(
-        `${FamilyUrl.getMember}/${familyId}/${memberId}`,
+      const response: AxiosResponse = await instance.get(
+        FamilyUrl.getMember,
+        {
+          params: {
+            id_user
+          },
+        },
       );
-      if (response.status === 200) {
-        return response.data;
+      if (response ) {
+        return response;
       } else {
         throw new Error(ERROR_TEXTS.MEMBER_NOT_FOUND);
       }
