@@ -24,6 +24,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginRight: 10,
   },
+  contentContainer: {
+
+  },
   messageContainer: {
     marginVertical: 5,
     marginHorizontal: 10,

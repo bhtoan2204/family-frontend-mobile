@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, Image } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, Text, View, TextInput, Button, FlatList, TouchableOpacity, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import io from 'socket.io-client';
 import styles from './styles';
 import { ChatScreenProps } from 'src/navigation/NavigationTypes';
 import ChatServices from 'src/services/apiclient/ChatServices';
 import LocalStorage from 'src/store/localstorage';
 import { FamilyServices } from 'src/services/apiclient';
-import { useMessageContext } from 'stream-chat-react-native';
 import { AxiosResponse } from 'axios';
+import Icon from 'react-native-vector-icons/Ionicons';
+import * as ImagePicker from 'expo-image-picker';
+import RNFS from 'react-native-fs';
 
 interface Message {
   senderId: string;
@@ -28,20 +30,26 @@ interface Member {
 
 const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   const [message, setMessage] = useState('');
+  const [image, setImage] = useState('');
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0); 
   const [receiver, setReceiver] = useState<Member>();
   const [sender, setSender] = useState<Member>();
   const [accessToken, setAccessToken] = useState<string>('');
-
   const { id_user } = route.params || {};
   const receiverId = '28905675-858b-4a93-a283-205899779622';
-  
+  const flatListRef = useRef<FlatList>(null);
+
   useEffect(() => {
     fetchMember(receiverId, id_user);
-    fetchMessages(currentIndex);
+    fetchMessages();
     fetchAccessToken();
   }, [currentIndex]); 
+
+ 
+  
+ 
 
   const fetchMember = async (receiverId: string, id_user?: string) => {
     try {
@@ -58,11 +66,11 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
     }
   };
 
-  const fetchMessages = async (index: number) => {
+  const fetchMessages = async () => {
     try {
-      const response = await ChatServices.GetMessages({ id_user: receiverId, index: index });
+      const response = await ChatServices.GetMessages({ id_user: receiverId, index: currentIndex });
       if (response) {
-          setMessages(response); 
+        setMessages(prevMessages => [...prevMessages, ...response]);
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -74,13 +82,15 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
       const token = await LocalStorage.GetAccessToken();
       if (token) {
         setAccessToken(token);
-      }    } catch (error) {
+      }    
+    } catch (error) {
       console.error('Error fetching access token:', error);
     }
   };
 
   const loadMoreMessages = () => {
     setCurrentIndex(currentIndex + 1); 
+    fetchMessages(); 
   };
 
   const sendMessage = async () => {
@@ -99,58 +109,137 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
       console.error('Error sending message:', error);
     }
   };
+  const sendImage = async () => {
+    try {
+      const socket = io('https://api.rancher.io.vn/chat', {
+        transports: ['websocket'],
+        extraHeaders: { Authorization:  `Bearer ${accessToken}` } 
+      });  
 
-  
+      socket.emit('newImageMessage', {
+        receiverId: receiverId,
+        imageData: image,
+      });
+      console.log('Message sent!'); 
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
+  const handleSendImage = async () => {
+    await sendImage();
+    setImage('');
+    fetchMessages(); 
+  };
   const handleSendMessage = async () => {
     await sendMessage();
+    setMessage('');
+    fetchMessages(); 
+
+  };
+  const imageToBase64 = async (imageUrl: string): Promise<string> => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => {
+          const base64Data = reader.result as string;
+          if (base64Data) {
+            resolve(base64Data); 
+          } else {
+            reject(new Error('Failed to read image data.'));
+          }
+        };
+        reader.onerror = (error) => {
+          reject(error);
+        };
+      });
+    } catch (error) {
+      throw new Error('Error fetching image data: ' + error);
+    }
   };
   
+  // const base64ToUint8Array = async (base64: string): Promise<Uint8Array> => {
+  //   const buffer = Buffer.from(base64, 'base64');
+  //   return new Uint8Array(buffer);
+  // }
+  
+
+  const handleOpenImageLibrary = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      //console.log(result.assets[0].uri)
+      const base64Image = await imageToBase64(result.assets[0].uri);
+      if (base64Image !== null) {
+        //console.log(base64ToUint8Array(base64Image));
+        //console.log(base64Image)
+        setImage(base64Image);
+        handleSendImage();
+      } else {
+        console.log('Error converting image to base64');
+      }
+
+  }
+  
+
+
+};
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={styles.header}>
-        {/* <TouchableOpacity onPress={() => console.log('Call video')}>
-          <Image source={require('./video-call-icon.png')} style={styles.videoCallIcon} />
-        </TouchableOpacity> */}
         <View style={styles.receiverInfo}>
           <Text>{receiver?.firstname} {receiver?.lastname}</Text>
         </View>
       </View>
-      <ScrollView
+      <FlatList
+        ref={flatListRef}
         style={styles.messagesContainer}
         contentContainerStyle={styles.contentContainer}
-        keyboardShouldPersistTaps="handled"
-        onScroll={(event) => {
-          const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-          if (layoutMeasurement.height + contentOffset.y >= contentSize.height - 20) {
-            loadMoreMessages();
+        data={messages}
+        inverted
+        renderItem={({ item }) => {
+          if (item.type === 'photo') {
+            return (
+              <View
+                style={[
+                  styles.messageContainer,
+                  item.senderId === id_user
+                    ? styles.senderMessageContainer
+                    : styles.receiverMessageContainer,
+                ]}
+              >
+                <View style={styles.messageContentContainer}>
+                  {/* <Image source={{ uri: item.content }} style={styles.imageMessage} /> */}
+                  <Text> {item.content}</Text>
+                </View>
+              </View>
+            );
+          } else {
+            return (
+              <View
+                style={[
+                  styles.messageContainer,
+                  item.senderId === id_user
+                    ? styles.senderMessageContainer
+                    : styles.receiverMessageContainer,
+                ]}
+              >
+                <Text style={styles.senderMessageContent}>{item.content}</Text>
+              </View>
+            );
           }
         }}
-      >
-        {messages && messages.length > 0 ? (
-          messages.map((msg, index) => (
-            <View
-              key={index}
-              style={[
-                styles.messageContainer,
-                msg.senderId === id_user ? styles.senderMessageContainer : styles.receiverMessageContainer
-              ]}
-            >
-              {msg.senderId === id_user ? (
-                <Text style={styles.senderMessageContent}>{msg.content}</Text>
-              ) : (
-                <>
-                  <Image source={{ uri: receiver?.avatar }} style={styles.avatar} />
-                    <Text style={styles.receiverMessageSenderName}>{`${receiver?.firstname} ${receiver?.lastname}`}</Text>
-                    <Text>{msg.content}</Text>
-                </>
-              )}
+        keyExtractor={(item, index) => index.toString()}
+        keyboardShouldPersistTaps="handled"
+        onEndReached={loadMoreMessages}
+        onEndReachedThreshold={0.1}
+        />
 
-            </View>
-          ))
-        ) : (
-          <Text>No messages</Text>
-        )}
-      </ScrollView>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -158,10 +247,17 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
           onChangeText={setMessage}
           placeholder="Type your message here"
         />
+        <TouchableOpacity onPress={handleOpenImageLibrary}>
+          <Icon name="images" size={36} />
+        </TouchableOpacity>
         <Button title="Send" onPress={handleSendMessage} />
       </View>
     </KeyboardAvoidingView>
   );
 };
+
 export default ChatScreen;
+
+
+
 
