@@ -59,11 +59,7 @@ const HomeScreen = ({
     });
   };
   const handleChat = () => {
-    navigation.navigate('ChatStack', {
-      screen: 'ChatUser',
-      params: { id_user: profile?.id_user || '' }
-    });
-    
+    navigation.navigate('ChatStack', {screen: 'ChatList'});
   };
   
 

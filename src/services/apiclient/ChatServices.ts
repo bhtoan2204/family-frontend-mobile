@@ -34,6 +34,20 @@ const ChatServices = {
       console.error('Error in getMessages:', error.message);
     }
   },
+
+  GetUserChat: async ({index }: {index: number }) => {
+    try {
+      const response: AxiosResponse = await instance.get(
+        `${baseUrl}/api/v1/chat/getUsersChat/${index}`
+      );
+      
+      if ( response) {
+        return response.data; 
+      }
+    } catch (error: any) {
+      console.error('Error in getUsersChat:', error.message);
+    }
+  },
   
   
 }

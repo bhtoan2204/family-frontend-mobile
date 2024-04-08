@@ -21,6 +21,10 @@ export type ChatStackParamList = {
   ChatUser: {
     id_user: string|undefined;
   };
+  ChatList: undefined;
+
+  
+  
 };
 
 export type AuthStackParamList = {
@@ -458,4 +462,14 @@ type ChatScreenNavigationProp = NativeStackNavigationProp<
 export interface ChatScreenProps {
   navigation: ChatScreenNavigationProp;
   route: RouteProp<ChatStackParamList, 'ChatUser'>;
+}
+
+
+type ChatListNavigationProp = NativeStackNavigationProp<
+  ChatStackParamList,
+  'ChatList'
+>;
+
+export interface ChatListProps {
+  navigation: ChatListNavigationProp & ChatScreenNavigationProp;
 }
