@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   },
   senderMessageContainer: {
     alignSelf: 'flex-end',
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.AliceBlue,
     padding: 10,
     margin: 10,
     borderRadius: 10,
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     width: '50%',
   },
   senderMessageContent: {
-    color: COLORS.white,
+    color: COLORS.black,
   },
   receiverMessageSenderName: {
     fontWeight: 'bold',
