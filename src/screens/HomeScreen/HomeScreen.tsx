@@ -44,8 +44,6 @@ const HomeScreen = ({
 
   const handleOpenModal = () => bottomSheetRef.current?.open();
 
-
-
   const handlePackage = () => {
     navigation.navigate('PackStack', {
       screen: 'ViewAllPurchased',
@@ -61,7 +59,6 @@ const HomeScreen = ({
   const handleChat = () => {
     navigation.navigate('ChatStack', {screen: 'ChatList'});
   };
-  
 
   /////Goi tu homescreen
   // const handleProfile;
@@ -76,7 +73,6 @@ const HomeScreen = ({
       console.log('ProfileServices.getProfile error:', error);
     }
   };
-  // const handleFamily;
   useEffect(() => {
     handleGetProfile();
   }, []);
@@ -93,18 +89,7 @@ const HomeScreen = ({
         onScroll={e => {
           scrollY.setValue(e.nativeEvent.contentOffset.y);
         }}>
-        {/* onScroll={handleScroll}> */}
         <View style={styles.content}>
-          {/* <TouchableOpacity style={styles.button} onPress={handleOpenModal}>
-            <Material
-              name="account"
-              size={30}
-              color={COLORS.primary}
-              style={styles.buttonIcon}
-            />
-            <Text style={styles.buttonText}>Account</Text>
-          </TouchableOpacity> */}
-
           <TouchableOpacity style={styles.button} onPress={handlePackage}>
             <Material
               name="package"
@@ -134,8 +119,6 @@ const HomeScreen = ({
             />
             <Text style={styles.buttonText}>Chat</Text>
           </TouchableOpacity>
-
-          
         </View>
       </ScrollView>
 
@@ -153,104 +136,6 @@ const HomeScreen = ({
       </RBSheet>
     </View>
   );
-  // return (
-  //   <View>
-  //     <Animated.View
-  //       style={{
-  //         ...styles.animatedView,
-  //         transform: [
-  //           {
-  //             translateY: translateY,
-  //           },
-  //         ],
-  //       }}>
-  //       <Text style={styles.headerText}>home</Text>
-  //     </Animated.View>
-  //     <ScrollView
-  //       style={styles.scrollView}
-  //       showsVerticalScrollIndicator={false}
-  //       scrollEventThrottle={16}
-  // onScroll={e => {
-  //   scrollY.setValue(e.nativeEvent.contentOffset.y);
-  // }}>
-  //       <View style={styles.content}>
-  //         <View style={styles.subContent}>
-  //           <View style={styles.container}>
-  //             <Material name="home" size={30} color="blue" />
-  //             <Text style={styles.title}>Home</Text>
-  //           </View>
-
-  //           <TouchableOpacity
-  //             style={styles.touchableOpacity}
-  //             onPress={handleOpenModal}>
-  //             <View style={styles.iconBorder}>
-  //               <Material name="account" size={30} color={COLORS.primary} />
-  //             </View>
-  //           </TouchableOpacity>
-  //         </View>
-
-  //         <View
-  //           style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-  //           <TouchableOpacity onPress={handlePackage}>
-  //             <Material
-  //               name="package"
-  //               size={50}
-  //               color="black"
-  //               style={styles.iconDetail}
-  //             />
-
-  //             <Text
-  //               style={{
-  //                 color: COLORS.black,
-  //                 textAlign: 'center',
-  //                 fontWeight: 'bold',
-  //               }}>
-  //               Package
-  //             </Text>
-  //           </TouchableOpacity>
-  //           <TouchableOpacity onPress={handleFamily} style={styles.iconDetail}>
-  //             <Material
-  //               name="heart"
-  //               size={50}
-  //               color="black"
-  //               style={styles.iconDetail}
-  //             />
-
-  //             <Text
-  //               style={{
-  //                 color: COLORS.black,
-  //                 textAlign: 'center',
-  //                 fontWeight: 'bold',
-  //               }}>
-  //               Family
-  //             </Text>
-  //           </TouchableOpacity>
-  //         </View>
-  //       </View>
-  //     </ScrollView>
-  //     {/* @ts-ignore */}
-  // <RBSheet
-  //   ref={bottomSheetRef}
-  //   height={sheetHeight}
-  //   closeOnPressBack
-  //   closeOnPressMask
-  //   customStyles={{
-  //     wrapper: {
-  //       backgroundColor: 'rgba(0,0,0,0.5)',
-  //     },
-  //     draggableIcon: {
-  //       height: 0,
-  //       backgroundColor: 'transparent',
-  //     },
-  //     container: {
-  //       borderTopLeftRadius: 20,
-  //       borderTopRightRadius: 20,
-  //     },
-  //   }}>
-  //   <BottonSheetContent />
-  // </RBSheet>
-  //   </View>
-  // );
 };
 
 export default HomeScreen;
