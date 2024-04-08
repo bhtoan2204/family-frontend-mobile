@@ -7,7 +7,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, 
-    }).concat(socketMiddleware),
+    }).prepend(socketMiddleware),
 });
 
 export default store;

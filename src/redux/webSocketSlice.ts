@@ -39,11 +39,9 @@ const webSocketSlice = createSlice({
     receiveMessage(state, action: PayloadAction<Message>) {
         state.messages.unshift(action.payload); 
       },
-    sendMessage: (state, action: PayloadAction<{ message: string; receiverId: string }>) => {
-      const { message, receiverId } = action.payload;
-      if (state.socket) {
-        state.socket.emit('newMessage', { message, receiverId });
-      }
+
+    addMessage: (state, action: PayloadAction<Message>) => {
+      state.messages.push(action.payload);
     },
     },
     

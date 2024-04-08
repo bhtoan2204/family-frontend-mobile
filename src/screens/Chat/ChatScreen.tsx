@@ -10,8 +10,8 @@ import { AxiosResponse } from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'src/redux/rootReducer';
 import { connectWebSocket } from 'src/redux/webSocketSlice';
+import { RootState } from 'src/redux/rootReducer';
 
 interface Message {
   senderId: string;
@@ -182,7 +182,14 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
     dispatch(connectWebSocket());
 
   }, [message]); 
-
+  useEffect(() => {
+    if (socket) {
+      socket.once('newMessage', function(data: any) {
+        console.log('Received new message:', data);
+        setMessages(prevMessages => [data, ...prevMessages]);
+      });
+    }
+  }, [socket]);
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={styles.header}>
