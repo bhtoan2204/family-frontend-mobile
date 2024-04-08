@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { COLORS } from 'src/constants';
+import {StyleSheet} from 'react-native';
+import {COLORS} from 'src/constants';
 
 const styles = StyleSheet.create({
   messagesContainer: {
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   },
   senderMessageContainer: {
     alignSelf: 'flex-end',
-    backgroundColor: COLORS.AliceBlue, 
+    backgroundColor: COLORS.primary,
     padding: 10,
     margin: 10,
     borderRadius: 10,
@@ -26,14 +26,14 @@ const styles = StyleSheet.create({
   },
   receiverMessageContainer: {
     alignSelf: 'flex-start',
-    backgroundColor: '#EDEDED', 
+    backgroundColor: '#EDEDED',
     padding: 10,
     margin: 10,
     borderRadius: 10,
     width: '50%',
   },
   senderMessageContent: {
-    color: COLORS.black,
+    color: COLORS.white,
   },
   receiverMessageSenderName: {
     fontWeight: 'bold',
@@ -62,12 +62,13 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 8,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    //arginRight: 10,
   },
   header: {
+    backgroundColor: COLORS.white,
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
@@ -75,9 +76,12 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
   },
   receiverInfo: {
-    marginLeft: 10,
+    backgroundColor: COLORS.white,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  messageContentContainer:{
+  messageContentContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -85,9 +89,25 @@ const styles = StyleSheet.create({
     color: COLORS.black,
   },
   imageMessage: {
-    width: 200, 
-    height: 200, 
+    width: 200,
+    height: 200,
     borderRadius: 10,
   },
-  });
+  receiverName: {
+    fontWeight: '600',
+    fontSize: 16,
+    color: COLORS.black,
+  },
+  avatarContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  avatarText: {
+    fontSize: 20,
+  },
+});
 export default styles;

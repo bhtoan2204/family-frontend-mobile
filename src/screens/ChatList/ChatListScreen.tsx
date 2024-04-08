@@ -102,7 +102,11 @@ const ChatListScreen = ({navigation}: ChatListProps) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={24} style={styles.backButton} />
+          <Icon
+            name="chevron-back-outline"
+            size={24}
+            style={styles.backButton}
+          />
         </TouchableOpacity>
         <View style={{flex: 1, alignItems: 'center'}}>
           <Text style={styles.headerText}>Message</Text>

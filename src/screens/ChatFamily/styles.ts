@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
-
+import {StyleSheet} from 'react-native';
+import {COLORS} from 'src/constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -24,9 +24,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginRight: 10,
   },
-  contentContainer: {
-
-  },
+  contentContainer: {},
   messageContainer: {
     marginVertical: 5,
     marginHorizontal: 10,
@@ -40,14 +38,34 @@ const styles = StyleSheet.create({
   },
   receiverContainer: {
     alignSelf: 'flex-start',
-    backgroundColor: '#E5E5EA',
+    backgroundColor: COLORS.BrandeisBlue,
   },
   senderName: {
+    color: COLORS.primary,
     fontWeight: 'bold',
     marginBottom: 5,
   },
   messageContent: {
     fontSize: 16,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  backButton: {
+    marginRight: 10,
+  },
+  headerTitle: {
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  senderInfoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
   },
 });
 export default styles;
