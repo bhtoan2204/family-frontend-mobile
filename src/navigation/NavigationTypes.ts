@@ -47,7 +47,14 @@ export type FamilyStackParamList = {
     id_family: number | undefined;
   };
   Contact: {
-    id_family: number| undefined;
+    id_family: number | undefined;
+  };
+  GuildLine: {
+    id_family: number | undefined;
+  };
+  GuildLineDetail: {
+    id_family: number | undefined;
+    id_item: number;
   };
 };
 
@@ -184,6 +191,25 @@ type ViewFamilyNavigationProp = NativeStackNavigationProp<
 export interface ViewFamilyScreenProps {
   navigation: ViewFamilyNavigationProp & CalendarScreenNavigationProp;
   route: RouteProp<FamilyStackParamList, 'ViewFamily'>;
+}
+
+type GuildLineNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'GuildLine'
+>;
+type GuildLineDetailNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'GuildLineDetail'
+>;
+
+export interface GuildLineScreenProps {
+  navigation: GuildLineNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'GuildLine'>;
+}
+
+export interface GuildLineDetailScreenProps {
+  navigation: GuildLineDetailNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'GuildLineDetail'>;
 }
 
 export type UpdateFamilyNavigationProps = NativeStackNavigationProp<

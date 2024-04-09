@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, TouchableOpacity, Alert, SafeAreaView, Dimensions, FlatList, Image } from 'react-native';
+import { Text, View, TouchableOpacity, Alert, SafeAreaView, Dimensions, FlatList, Image, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -7,26 +7,26 @@ import { FamilyServices } from 'src/services/apiclient';
 import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import { COLORS, TEXTS } from 'src/constants';
 import styles from './styles';
-import BottomSheet from './BottomSheet'; 
-
-type Family = {
-  id_family: number;
-  quantity: number;
-  description: string;
-  name: string;
-};
-
-const ViewFamilyScreen= ({navigation, route}: ViewFamilyScreenProps) => {
+import BottomSheet from './BottomSheet';
+import { Family } from 'src/interface/family/family';
+import GuildLineImage from 'src/assets/images/guildline.png';
+import CalenderImage from 'src/assets/images/calendar.png';
+import EducationImage from 'src/assets/images/education.png';
+import ChatImage from 'src/assets/images/speak.png';
+import MemberImage from 'src/assets/images/diversity.png';
+import DeleteImage from 'src/assets/images/remove.png';
+const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const { id_user, id_family } = route.params || {};
-  const [family, setFamily] = useState<Family[]>([]);
-  const bottomSheetRef = useRef<RBSheet>(null); 
-  const allMemberRef = useRef<RBSheet>(null); 
+  const [family, setFamily] = useState<Family>();
+  const bottomSheetRef = useRef<RBSheet>(null);
+  const allMemberRef = useRef<RBSheet>(null);
   const screenHeight = Dimensions.get('screen').height;
 
   const handleGetFamily = async () => {
     try {
       const familyInfo = await FamilyServices.getFamily({ id_family });
-      setFamily(familyInfo);
+      console.log("familyInfo", familyInfo)
+      setFamily(familyInfo[0]);
     } catch (error: any) {
       console.log('FamilyServices.getFamily error:', error);
     }
@@ -46,7 +46,7 @@ const ViewFamilyScreen= ({navigation, route}: ViewFamilyScreenProps) => {
           {
             text: 'OK',
             onPress: async () => {
-              const result = await FamilyServices.deleteFamily({ id_family});
+              const result = await FamilyServices.deleteFamily({ id_family });
               Alert.alert(
                 'Success',
                 'Successfully deleted family'
@@ -66,21 +66,23 @@ const ViewFamilyScreen= ({navigation, route}: ViewFamilyScreenProps) => {
   };
 
   const handleOpenBottomSheet = () => {
-    bottomSheetRef.current?.open(); 
+    bottomSheetRef.current?.open();
   };
-  const handleChatPress =()=> {
+  const handleChatPress = () => {
 
   }
-  const handleEducationPress =()=> {
+  const handleEducationPress = () => {
 
   }
-  const handleCalendarPress=() => {
-     navigation.navigate('CalendarStack', {screen:  'CalendarScreen', params: {id_family: id_family}});
+  const handleCalendarPress = () => {
+    navigation.navigate('CalendarStack', { screen: 'CalendarScreen', params: { id_family: id_family } });
   }
   const handleOpenAllMemberModal = (id_user: string | undefined, id_family: number) => {
-      navigation.navigate('AllMember', {id_user, id_family});
+    navigation.navigate('AllMember', { id_user, id_family });
   };
-
+  const handleNavigateGuildLine = () => {
+    navigation.navigate('GuildLine', { id_family: id_family })
+  }
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       handleGetFamily();
@@ -91,75 +93,104 @@ const ViewFamilyScreen= ({navigation, route}: ViewFamilyScreenProps) => {
 
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerfile}>
+    <SafeAreaView className='bg-[#F7F7F7] flex-1'>
+      <View className='w-full  flex-row justify-between items-center'>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={30} style={styles.backButton} />
+          <Icon name="arrow-back" size={24} style={styles.backButton} />
         </TouchableOpacity>
-        <View style={styles.headerfile}>
-        <TouchableOpacity onPress={handleOpenBottomSheet} style={styles.settingItem}>
-          <Material name="pencil" size={24} color="black" />
-          {/* <Text style={styles.settingText}>Edit Family</Text> */}
-      </TouchableOpacity>
-
-
+        <View className='mr-2'>
+          <TouchableOpacity onPress={handleOpenBottomSheet} style={styles.settingItem}>
+            <Material name="pencil" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
       </View>
 
+      {
+        family != null && <ScrollView className='h-full w-full'>
+          <View className='flex-col justify-center items-center pt-4 ' >
+            <Image source={{ uri: 'https://pethouse.com.vn/wp-content/uploads/2023/06/meo-anh-long-ngan-833x800.jpg' }} width={300} height={200} className='rounded-lg' />
+            <Text className='text-2xl font-semibold mt-3'>{family.name}</Text>
 
-      </View>
+            <Text className='text-lg font-semibold mt-3'>Edit Photo</Text>
+          </View>
+          <View className=''>
+            <View className='mt-2'>
+              <TouchableOpacity onPress={() => handleOpenAllMemberModal(id_user, family!.id_family)} >
+                <View className='flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white'>
+                  <Image
+                    className="h-12 w-12"
+                    source={MemberImage}
+                    resizeMode="contain"
+                  />
+                  <Text className='ml-4 text-lg'>Family Member</Text>
+                  
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleChatPress} >
+                <View className='flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white'>
+                  <Image
+                    className="h-12 w-12"
+                    source={ChatImage}
+                    resizeMode="contain"
+                  />
+                  <Text className='ml-4 text-lg'>Chat with members</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleEducationPress} >
+                <View className='flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white'>
+                  <Image
+                    className="h-12 w-12"
+                    source={EducationImage}
+                    resizeMode="contain"
+                  />
+                  <Text className='ml-4 text-lg'>Manage Education</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleCalendarPress} >
+                <View className='flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white'>
+                  <Image
+                    className="h-12 w-12"
+                    source={CalenderImage}
+                    resizeMode="contain"
+                  />
+                  <Text className='ml-4 text-lg'>Calendar & Scheduling</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleNavigateGuildLine()} >
+                <View className='flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white'>
 
-      <View style={styles.container}>
-          {family.map((item: Family) => (
-            <View key={item.id_family} style={styles.cardContainer}>
-              <Image source={{ uri: 'https://pethouse.com.vn/wp-content/uploads/2023/06/meo-anh-long-ngan-833x800.jpg' }} style={styles.avatar} />
-              <View style={styles.textContainer}>
-                <Text style={styles.nameText}>Family: {item.name}</Text>
-                <Text style={styles.text}>Quantity: {item.quantity}</Text>
-                <Text style={styles.text}>Description: {item.description}</Text>
+                  <Image
+                    className="h-12 w-12"
+                    source={GuildLineImage}
+                    resizeMode="contain"
+                  />
+                  <Text className='ml-4 text-lg' >Guideline </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleDeleteFamily(family!.id_family)} >
+                <View className='flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white'>
+                  <Image
+                    className="h-12 w-12"
+                    source={DeleteImage}
+                    resizeMode="contain"
+                  />
+                  <Text className='ml-4 text-lg text-red-600' >Delete</Text>
+                </View>
+              </TouchableOpacity>
+              <View className='h-5'>
+
               </View>
             </View>
-          ))}
 
-        </View>
-        <View style={styles.functionContainer}>
-          <View style={styles.rowContainer}>
-            <TouchableOpacity onPress={() => handleOpenAllMemberModal(id_user, family[0].id_family)} style={styles.settingItem}>
-              <View style={styles.iconContainer}>
-                <Material name="account" size={50} color="black" style={[styles.icon]} />
-                <Text style={styles.fucntionText}>Members</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleChatPress} style={styles.settingItem}>
-              <View style={styles.iconContainer}>
-              <Material name="chat" size={50} color="lightblue" style={[styles.icon]} /> 
-                <Text style={styles.fucntionText}>Chat</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleEducationPress} style={styles.settingItem}>
-              <View style={styles.iconContainer}>
-                <Material name="book" size={50} color="brown" style={[styles.icon]}/>
-                <Text style={styles.fucntionText}>Education</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleCalendarPress} style={styles.settingItem}>
-              <View style={styles.iconContainer}>
-              <Material name="calendar" size={50} color="gray" style={[styles.icon]} /> 
-                <Text style={styles.fucntionText}>Calendar</Text>
-              </View>
-            </TouchableOpacity>
+
           </View>
 
-          <View style={styles.rowContainer}>
-            <TouchableOpacity onPress={() => handleDeleteFamily(family[0].id_family)} style={styles.settingItem}>
-              <View style={styles.iconContainer}>
-                <Material name="delete" size={50} color="gray" style={[styles.icon]}/>
-                <Text style={styles.fucntionText}>Delete</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
+        </ScrollView>
 
-        
+      }
+
+
+
 
 
 
@@ -167,7 +198,7 @@ const ViewFamilyScreen= ({navigation, route}: ViewFamilyScreenProps) => {
       <RBSheet
         ref={bottomSheetRef}
         closeOnDragDown={true}
-        height={screenHeight*0.3} 
+        height={screenHeight * 0.3}
         customStyles={{
           container: {
             borderTopLeftRadius: 20,
@@ -175,11 +206,11 @@ const ViewFamilyScreen= ({navigation, route}: ViewFamilyScreenProps) => {
           },
         }}
       >
-        <BottomSheet id_user={id_user} id_family={id_family} name={family[0]?.name} description={family[0]?.description} />
+        <BottomSheet id_user={id_user} id_family={id_family} name={family?.name} description={family?.description} />
       </RBSheet>
 
-      
-    </SafeAreaView>
+
+    </SafeAreaView >
   );
 };
 

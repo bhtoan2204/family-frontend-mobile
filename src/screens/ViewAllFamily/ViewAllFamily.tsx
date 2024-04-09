@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Animated, View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { Animated, View, Text, TouchableOpacity, TextInput, Alert, ScrollView, Image, SafeAreaView } from 'react-native';
 import { FamilyServices } from 'src/services/apiclient';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Feather as FeatherIcon } from '@expo/vector-icons';
 import { ViewAllFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import styles from './styles';
+import { Family } from 'src/interface/family/family';
 
-type Family = {
-  id_family?: number;
-  name?: string;
-  description?: string;
-};
+
 
 const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({ navigation, route }) => {
   const { id_user } = route.params || {};
@@ -18,15 +15,8 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({ navigation, r
   const RBDetail = useRef<RBSheet>(null);
   const [families, setFamilies] = useState<Family[]>([]);
   const scrollY = useRef(new Animated.Value(0)).current;
+  const [search, setSearch] = useState('');
 
-  const handleGetAllFamily = async () => {
-    try {
-      const result = await FamilyServices.getAllFamily();
-      setFamilies(result);
-    } catch (error: any) {
-      console.log('FamilyServices.getAllFamily error:', error);
-    }
-  };
 
   const handleDeleteFamily = async (id_family?: number) => {
     try {
@@ -47,7 +37,8 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({ navigation, r
                 'Success',
                 'Successfully deleted family'
               );
-              handleGetAllFamily(); 
+              // handleGetAllFamily();
+              setFamilies(families.filter((family) => family.id_family !== id_family));
             },
           },
         ],
@@ -63,15 +54,53 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({ navigation, r
   };
 
   useEffect(() => {
+    const handleGetAllFamily = async () => {
+      try {
+        const result = await FamilyServices.getAllFamily();
+        setFamilies(result);
+      } catch (error: any) {
+        console.log('FamilyServices.getAllFamily error:', error);
+      }
+    };
     const unsubscribe = navigation.addListener('focus', () => {
       handleGetAllFamily();
     });
-  
+
     return unsubscribe;
   }, [navigation]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView>
+      <View className='h-full'>
+        <ScrollView className='flex-1  pt-4'>
+          <View className='mb-3 py-4 px-3 mx-3 rounded-lg border-[1px] border-[#FAFAFA] bg-[#FAFAFA] '>
+            <TextInput
+              placeholder="Search Family"
+              placeholderTextColor="#9A9A9A"
+
+              onChangeText={(text) => setSearch(text)} />
+          </View>
+          {
+            families.map((family, index) => {
+              return <TouchableOpacity key={index} onPress={() => navigation.navigate('ViewFamily', { id_user, id_family: family.id_family })}>
+                <View key={index} className=' mb-3 py-4 px-3 mx-3 rounded-lg border-[1px] border-[#d5d5d5] bg-[#FAFAFA] '>
+                  <View className='flex flex-row w-full'>
+                    <Image source={{ uri: family.avatar != null ? family.avatar : "https://picsum.photos/200/300" }} style={{ width: 75, height: 75 }} className='rounded-lg' />
+                    <View className='ml-2 flex-col justify-evenly w-full' >
+                      <Text className=' text-xl font-semibold'>{family.name}</Text>
+                      <Text className='text-ellipsis text-[#707070]'>Owner: {family.quantity}</Text>
+                    </View>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            })
+          }
+        </ScrollView>
+      </View>
+    </SafeAreaView>
+  );
+};
+{/* <View style={{ flex: 1 }}>
       <Animated.View style={[styles.header]}>
         <Text style={styles.headerTitle}>
           Family Hub
@@ -114,7 +143,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({ navigation, r
       >
         {families.map((family, index) => (
           <View key={index} style={styles.familyCard}>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={() => { }}>
               <View style={styles.card}>
                 <View style={styles.cardBody}>
                   <Text style={styles.cardTitle}>{family.name}</Text>
@@ -144,8 +173,5 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({ navigation, r
           </View>
         ))}
       </Animated.ScrollView>
-    </View>
-  );
-};
-
+    </View> */}
 export default ViewAllFamilyScreen;
