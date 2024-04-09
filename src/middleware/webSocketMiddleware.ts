@@ -13,6 +13,9 @@ const socketMiddleware = (storeAPI: MiddlewareAPI) => (next: Dispatch<AnyAction>
       });
 
       socket.on('connect', () => {
+        socket.on('newMessage', function(msg){
+          console.log('Tin nhắn từ phía máy khách: ' + msg)
+        });
         
         storeAPI.dispatch(connectWebSocket()); 
       });

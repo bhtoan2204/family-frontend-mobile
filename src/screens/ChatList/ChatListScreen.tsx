@@ -35,23 +35,42 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const {id_user} = route.params; 
+  const { id_user } = route.params;
+
+  const formatDateTime = (dateTime: Date) => {
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    if (dateTime.getDate() === today.getDate() && dateTime.getMonth() === today.getMonth() && dateTime.getFullYear() === today.getFullYear()) {
+      return `${dateTime.getHours()}:${dateTime.getMinutes().toString().padStart(2, '0')}`;
+    } else if (dateTime.getDate() === yesterday.getDate() && dateTime.getMonth() === yesterday.getMonth() && dateTime.getFullYear() === yesterday.getFullYear()) {
+      return `Yesterday ${dateTime.getHours()}:${dateTime.getMinutes().toString().padStart(2, '0')}`;
+    } else {
+      return `${dateTime.getDate()}/${dateTime.getMonth() + 1}/${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes().toString().padStart(2, '0')}`;
+    }
+  };
 
   const fetchData = async (page: number) => {
     try {
       setLoading(true);
       const response = await ChatServices.GetUserChat({ index: page });
-      response.forEach((item: {timestamp: Date}) => {
-        item.timestamp = new Date(item.timestamp);
-      })
-      setChats(prevChats => [...prevChats, ...response]);
-      setTotalPages(response.length > 0 ? page + 1 : page);
+      const formattedResponse = response.map((item: ChatItem) => ({
+        ...item,
+        lastMessage: {
+          ...item.lastMessage,
+          timestamp: new Date(item.lastMessage.timestamp), 
+        },
+      }));
+      setChats(prevChats => [...prevChats, ...formattedResponse]);
+      setTotalPages(formattedResponse.length > 0 ? page + 1 : page);
     } catch (error) {
       console.error('Error fetching chat data:', error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   const loadMoreMessages = () => {
     if (!loading && currentPage < totalPages) {
@@ -64,7 +83,7 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
   }, [currentPage]);
 
   const handlePressChat = (receiverId?: string) => {
-    navigation.navigate('ChatUser', { id_user: id_user, receiverId:  receiverId});
+    navigation.navigate('ChatUser', { id_user: id_user, receiverId: receiverId });
   };
 
   const renderChatItem = ({ item }: { item: ChatItem }) => (
@@ -85,8 +104,7 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
             <Text style={styles.messageText}>{item.lastMessage.content}</Text>
           )}
         </View>
-        <Text style={styles.messageText}>{item.lastMessage.timestamp.toLocaleString()}</Text>
-
+        <Text style={styles.messageTimestamp}>{formatDateTime(item.lastMessage.timestamp)}</Text>
       </View>
     </TouchableOpacity>
   );

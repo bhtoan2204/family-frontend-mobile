@@ -167,14 +167,12 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
 
   useEffect(() => {
     if (socket) {
-      socket.on('onNewMessage', function (data: any) {
-        console.log('new message');
-        console.log('Received new message:', data);
-        setMessages(prevMessages => [data, ...prevMessages]); 
+      socket.on('newMessage', function(msg) {
+        console.log('Tin nhắn từ phía máy chủ: ', msg);
+        setMessages(prevMessages => [...prevMessages, msg]);
       });
     }
   }, [socket]);
-  
 
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>

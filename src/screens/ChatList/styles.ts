@@ -71,6 +71,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#777',
   },
+  messageTimestamp: {
+    fontSize: 12,
+    color: '#999',
+  },
 });
 
 export default styles;

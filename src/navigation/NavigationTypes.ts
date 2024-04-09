@@ -25,10 +25,42 @@ export type ChatStackParamList = {
   ChatList: {
     id_user: string |undefined;
   };
-
-
   
 };
+
+type ChatFamilyScreenNavigationProp = NativeStackNavigationProp<
+  ChatStackParamList,
+  'ChatFamily'
+>;
+
+export interface ChatFamilyScreenProps {
+  navigation: ChatFamilyScreenNavigationProp;
+  route: RouteProp<ChatStackParamList, 'ChatFamily'>;
+}
+
+
+type ChatScreenNavigationProp = NativeStackNavigationProp<
+  ChatStackParamList,
+  'ChatUser'
+>;
+
+export interface ChatScreenProps {
+  navigation: ChatScreenNavigationProp;
+  route: RouteProp<ChatStackParamList, 'ChatUser'>;
+}
+
+
+type ChatListNavigationProp = NativeStackNavigationProp<
+  ChatStackParamList,
+  'ChatList'
+>;
+
+export interface ChatListProps {
+  navigation: ChatListNavigationProp & ChatScreenNavigationProp;
+  route: RouteProp<ChatStackParamList, 'ChatList'>;
+
+}
+
 
 export type AuthStackParamList = {
   LoginScreen: undefined;
@@ -445,37 +477,3 @@ type MainProfileNavigationProp = NativeStackNavigationProp<
 export interface MainProfileScreenProps {
   navigation: MainProfileNavigationProp;
 }
-
-type ChatFamilyScreenNavigationProp = NativeStackNavigationProp<
-  ChatStackParamList,
-  'ChatFamily'
->;
-
-export interface ChatFamilyScreenProps {
-  navigation: ChatFamilyScreenNavigationProp;
-  route: RouteProp<ChatStackParamList, 'ChatFamily'>;
-}
-
-
-type ChatScreenNavigationProp = NativeStackNavigationProp<
-  ChatStackParamList,
-  'ChatUser'
->;
-
-export interface ChatScreenProps {
-  navigation: ChatScreenNavigationProp;
-  route: RouteProp<ChatStackParamList, 'ChatUser'>;
-}
-
-
-type ChatListNavigationProp = NativeStackNavigationProp<
-  ChatStackParamList,
-  'ChatList'
->;
-
-export interface ChatListProps {
-  navigation: ChatListNavigationProp & ChatScreenNavigationProp;
-  route: RouteProp<ChatStackParamList, 'ChatList'>;
-
-}
-
