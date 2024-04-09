@@ -26,7 +26,7 @@ export type ChatStackParamList = {
     id_user: string |undefined;
   };
 
-  
+
   
 };
 
@@ -478,3 +478,4 @@ export interface ChatListProps {
   route: RouteProp<ChatStackParamList, 'ChatList'>;
 
 }
+

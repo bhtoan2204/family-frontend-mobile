@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
     borderBottomColor: '#ccc',
   },
   receiverInfo: {
@@ -108,6 +108,18 @@ const styles = StyleSheet.create({
   },
   avatarText: {
     fontSize: 20,
+    fontWeight: 'bold'
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  },
+  modalImage: {
+    width: '80%',
+    height: '80%',
+    resizeMode: 'contain',
   },
 });
 export default styles;

@@ -11,7 +11,7 @@ interface LastMessage {
   type: string;
   content: string;
   isRead: boolean;
-  timestamp: string;
+  timestamp: Date;
   _id: string;
   createdAt: string;
   updatedAt: string;
@@ -41,6 +41,9 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
     try {
       setLoading(true);
       const response = await ChatServices.GetUserChat({ index: page });
+      response.forEach((item: {timestamp: Date}) => {
+        item.timestamp = new Date(item.timestamp);
+      })
       setChats(prevChats => [...prevChats, ...response]);
       setTotalPages(response.length > 0 ? page + 1 : page);
     } catch (error) {
@@ -82,6 +85,8 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
             <Text style={styles.messageText}>{item.lastMessage.content}</Text>
           )}
         </View>
+        <Text style={styles.messageText}>{item.lastMessage.timestamp.toLocaleString()}</Text>
+
       </View>
     </TouchableOpacity>
   );

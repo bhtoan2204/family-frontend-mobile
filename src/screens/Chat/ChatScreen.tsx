@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, TextInput, Button, FlatList, TouchableOpacity, KeyboardAvoidingView, Platform, Image } from 'react-native';
+import { Text, View, TextInput, Button, FlatList, TouchableOpacity, KeyboardAvoidingView, Platform, Image, Dimensions } from 'react-native';
 import styles from './styles';
 import { ChatScreenProps } from 'src/navigation/NavigationTypes';
 import ChatServices from 'src/services/apiclient/ChatServices';
@@ -12,7 +12,7 @@ import { RootState } from 'src/redux/rootReducer';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
-
+import ImageView from "react-native-image-viewing";
 
 interface Message {
   senderId: string;
@@ -30,30 +30,24 @@ interface Member {
   lastname: string;
   avatar: string;
 }
-interface ImageResultWithoutCancelled {
-  uri?: string;
-  base64?: string;
-}
+
 const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [receiver, setReceiver] = useState<Member>();
-  const [sender, setSender] = useState<Member>();
   const { id_user, receiverId } = route.params || {};
-  const flatListRef = useRef<FlatList>(null);
   const dispatch = useDispatch();
   const socket = useSelector((state: RootState) => state.webSocket.socket);
-  
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+  const [images, setImages] = useState<string[]>([]);
+  const [isTextInputEmpty, setIsTextInputEmpty] = useState(true);
+
   const fetchMember = async (receiverId?: string, id_user?: string) => {
     try {
       const response1: AxiosResponse<Member[]> = await FamilyServices.getMember({ id_user: receiverId });
       if (response1) {
         setReceiver(response1.data[0]);
-      }
-      const response2: AxiosResponse<Member[]> = await FamilyServices.getMember({ id_user: id_user });
-      if (response2) {
-        setSender(response2.data[0]);
       }
     } catch (error) {
       console.error('Error fetching member:', error);
@@ -64,7 +58,13 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
     try {
       const response = await ChatServices.GetMessages({ id_user: receiverId, index: currentIndex });
       if (response) {
-        setMessages(prevMessages => [...prevMessages, ...response]);
+        const newMessages = response.map((message: any) => {
+          if (message.type === 'photo') {
+            setImages(prevImages => [...prevImages, message.content]);
+          }
+          return message;
+        });
+        setMessages(prevMessages => [...prevMessages, ...newMessages]);
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -84,8 +84,10 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
         receiverId: receiverId,
       });
       console.log('Message sent!');
+
     }
   };
+
   const sendImage = async (base64Image: string) => {
     try {
       if (socket) {
@@ -99,22 +101,19 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
       console.error('Error sending image:', error);
     }
   };
-  
 
   const handleSendImage = async (base64Image: string) => {
     await sendImage(base64Image);
     await fetchMessages();
   };
-  
+
   const handleSendMessage = async () => {
     await sendMessage();
     setMessage('');
     await fetchMessages();
+
   };
 
-  
-
- 
   const handleOpenImageLibrary = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -122,61 +121,67 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
         aspect: [4, 3],
         quality: 1,
       });
-  
+
       if (!result.canceled) {
-        // Nén hình ảnh
         const compressedImage = await ImageManipulator.manipulateAsync(result.assets[0].uri, [], { compress: 0.5 });
-        const base64 = await FileSystem.readAsStringAsync(compressedImage.uri, { encoding: 'base64' });
-  
-        // Gửi base64 qua socket
-        await handleSendImage(base64);
+        const fileInfo = await FileSystem.getInfoAsync(compressedImage.uri);
+
+        if (fileInfo.exists && fileInfo.size) {
+          if (fileInfo.size < 50000) {
+            const base64 = await FileSystem.readAsStringAsync(compressedImage.uri, { encoding: 'base64' });
+            await handleSendImage(base64);
+          } else {
+            alert('Selected image size exceeds 50KB limit');
+          }
+        } else {
+          console.error('File does not exist or size cannot be determined');
+        }
       }
     } catch (error) {
       console.error('Error opening image library:', error);
     }
   };
 
-  const renderMessageItem = ({ item }: { item: Message }) => {
-    return (
-      <View
-        style={[
-          styles.messageContainer,
-          item.senderId === id_user ? styles.senderMessageContainer : styles.receiverMessageContainer,
-          { flex: 1 }, 
-        ]}
-      >
-        {item.type === 'photo' ? (
-          <View style={styles.messageContentContainer}>
-            <Image source={{ uri: item.content }} style={styles.imageMessage} />
-          </View>
-        ) : (
-          <Text style={styles.senderMessageContent}>{item.content}</Text>
-        )}
-      </View>
-    );
+  const handleImagePress = (item: Message) => {
+    const itemIndex = messages.findIndex(message => message === item);
+    if (itemIndex !== -1) {
+      const newIndex = Math.max(0, itemIndex - 4);
+      setSelectedImageIndex(newIndex);
+    }
   };
   
+  
+  
+  
+
+  const handleCloseModal = () => {
+    setSelectedImageIndex(null);
+  };
 
   useEffect(() => {
     fetchMessages();
     fetchMember(receiverId, id_user);
     dispatch(connectWebSocket());
+    setIsTextInputEmpty(message.trim() === '');
   }, [message]);
 
   useEffect(() => {
     if (socket) {
-      socket.on('newMessage', function(data: any) {
+      socket.on('onNewMessage', function (data: any) {
+        console.log('new message');
         console.log('Received new message:', data);
-        setMessages(prevMessages => [data, ...prevMessages]);
-        if (flatListRef.current) {
-          flatListRef.current.scrollToEnd();
-        }
+        setMessages(prevMessages => [data, ...prevMessages]); 
       });
     }
   }, [socket]);
+  
+
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-    <View style={styles.header}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={24} style={styles.backButton} />
+        </TouchableOpacity>
         <View style={styles.receiverInfo}>
           {receiver && (
             <>
@@ -191,7 +196,23 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
         contentContainerStyle={styles.contentContainer}
         data={messages}
         inverted
-        renderItem={renderMessageItem}
+        renderItem={({ item, index }) => (
+          <View style={[
+            styles.messageContainer,
+            item.senderId === id_user ? styles.senderMessageContainer : styles.receiverMessageContainer,
+            { flex: 1 },
+          ]}>
+            {item.type === 'photo' ? (
+              <TouchableOpacity onPress={() => handleImagePress(item)}>
+                <View style={styles.messageContentContainer}>
+                  <Image source={{ uri: item.content }} style={styles.imageMessage} />
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <Text style={styles.senderMessageContent}>{item.content}</Text>
+            )}
+          </View>
+        )}
         keyExtractor={(item, index) => index.toString()}
         keyboardShouldPersistTaps="handled"
         onEndReached={loadMoreMessages}
@@ -199,20 +220,30 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
       />
       <View style={styles.inputContainer}>
         <TextInput
-        style={[styles.input, { flexGrow: 1, marginBottom: Platform.OS === 'ios' ? 0 : 10 }]}
-        value={message}
+          style={[styles.input, { flexGrow: 1, marginBottom: Platform.OS === 'ios' ? 0 : 10 }]}
+          value={message}
           onChangeText={setMessage}
           placeholder="Type your message here"
         />
         <TouchableOpacity onPress={handleOpenImageLibrary}>
           <Icon name="images" size={36} />
         </TouchableOpacity>
-        <Button title="Send" onPress={handleSendMessage} />
+        <Button title="Send" onPress={handleSendMessage} disabled={isTextInputEmpty} />
       </View>
+      
+      <ImageView
+        images={images.map(image => ({ uri: image }))}
+        imageIndex={selectedImageIndex || 0}
+        visible={selectedImageIndex !== null}
+        onRequestClose={handleCloseModal}
+        backgroundColor="rgba(0, 0, 0, 0.8)" 
+      />
+
+
+      
+
     </KeyboardAvoidingView>
   );
-  
-  
 };
 
 export default ChatScreen;
