@@ -1,20 +1,54 @@
-import {StyleSheet} from 'react-native';
-import {COLORS} from 'src/constants';
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    backgroundColor: '#fff',
+  },
+  backButton: {
+    color: 'black',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f2f2f2',
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    flex: 1,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+  },
+  searchIcon: {
+    color: '#999',
+  },
   chatItem: {
     flexDirection: 'row',
+    alignItems: 'center',
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   },
   avatarContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 10,
     width: 50,
     height: 50,
     borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ccc',
+    marginRight: 10,
   },
   avatar: {
     width: 50,
@@ -22,39 +56,20 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   avatarText: {
-    fontSize: 20,
+    fontSize: 18,
+    color: '#fff',
   },
   messageContainer: {
     flex: 1,
   },
   username: {
+    fontSize: 16,
     fontWeight: 'bold',
+    marginBottom: 5,
   },
   messageText: {
-    marginTop: 5,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.white,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D3D3D3',
-  },
-  backButton: {
-    color: COLORS.primary,
-  },
-  headerText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: COLORS.black,
-  },
-  addButton: {
-    color: COLORS.primary,
+    fontSize: 14,
+    color: '#777',
   },
 });
 

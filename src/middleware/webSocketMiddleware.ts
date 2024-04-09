@@ -21,14 +21,14 @@ const socketMiddleware = (storeAPI: MiddlewareAPI) => (next: Dispatch<AnyAction>
         console.log('WebSocket connected newMessage', message);
         //storeAPI.dispatch(receiveMessage(message)); // Dispatch an action to store the new message
       });
-   
+    
       socket.on('connect_error', (error) => {
-        console.error('WebSocket connection error:', error);
+        //console.error('WebSocket connection error:', error);
       });
 
       storeAPI.dispatch(setSocket(socket));
     } catch (error) {
-      console.error('Error connecting to WebSocket:', error);
+      //console.error('Error connecting to WebSocket:', error);
     }
   }
 

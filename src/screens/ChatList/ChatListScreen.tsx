@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, Text, View, TouchableOpacity, SafeAreaView } from 'react-native';
+import { ActivityIndicator, FlatList, Image, Text, View, TouchableOpacity, SafeAreaView, TextInput } from 'react-native';
 import { ChatListProps } from 'src/navigation/NavigationTypes';
 import ChatServices from 'src/services/apiclient/ChatServices';
 import styles from './styles';
@@ -34,7 +34,9 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
   const {id_user} = route.params; 
+
   const fetchData = async (page: number) => {
     try {
       setLoading(true);
@@ -90,6 +92,16 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={24} style={styles.backButton} />
         </TouchableOpacity>
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search..."
+            placeholderTextColor="#999"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          <Icon name="search" size={20} style={styles.searchIcon} />
+        </View>
       </View>
       <FlatList
         data={chats}

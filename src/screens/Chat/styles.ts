@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 10,
     borderRadius: 10,
-    width: '50%',
+    width: 'auto',
   },
   receiverMessageContainer: {
     alignSelf: 'flex-start',
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 10,
     borderRadius: 10,
-    width: '50%',
+    width: 'auto',
   },
   senderMessageContent: {
     color: COLORS.black,
