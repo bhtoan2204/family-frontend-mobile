@@ -24,10 +24,22 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
                 setGuildLineDetail(response);
                 if (response && response.steps) {
                     setGuildLineSteps(response.steps)
+                } else {
+                    console.log("cc")
+                    setGuildLineSteps(
+                        [
+                            {
+                                name: "",
+                                description: "",
+                                imageUrl: ""
+                            }
+                        ]
+                    )
                 }
                 console.log(response)
                 setLoading(false);
             } catch (error) {
+
                 console.error('Error fetching guildline detail:', error);
             }
         };
@@ -65,11 +77,11 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
 
     const handleSaveAddStep = async () => {
         setIsAdding(false);
-        setCurrentStep(guildLineSteps!.length - 1);
+        setCurrentStep(previousStep);
         const newStep = guildLineSteps?.filter((step, index) => index === guildLineSteps.length - 1)[0];
-        if (newStep) {
-            await GuildLineService.addStepGuildLine(id_family, id_item, newStep);
-        }
+        // if (newStep) {
+        //     await GuildLineService.addStepGuildLine(id_family, id_item, newStep);
+        // }
         console.log(newStep)
     }
     if (loading) {
@@ -89,21 +101,21 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
 
             if (!result.canceled) {
                 console.log(result.assets[0].uri);
-                if (!isAdding) {
-                    setGuildLineSteps((prev) => {
-                        return prev?.map((step, index) => {
-                            if (index === currentStep) {
-                                return {
-                                    ...step,
-                                    imageUrl: result.assets[0].uri
-                                }
-                            }
-                            return step
-                        })
+                // if (!isAdding) {
+                //     setGuildLineSteps((prev) => {
+                //         return prev?.map((step, index) => {
+                //             if (index === currentStep) {
+                //                 return {
+                //                     ...step,
+                //                     imageUrl: result.assets[0].uri
+                //                 }
+                //             }
+                //             return step
+                //         })
 
-                    })
-                    await GuildLineService.updateImageStepGuildLine(result.assets[0].uri, id_family, id_item, guildLineSteps![currentStep], currentStep)
-                }
+                //     })
+                //     await GuildLineService.updateImageStepGuildLine(result.assets[0].uri, id_family, id_item, guildLineSteps![currentStep], currentStep)
+                // }
                 setGuildLineSteps((prev) => {
                     return prev?.map((step, index) => {
                         if (index === currentStep) {
@@ -135,21 +147,21 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
 
             if (!result.canceled) {
                 console.log(currentStep)
-                if (!isAdding) {
-                    setGuildLineSteps((prev) => {
-                        return prev?.map((step, index) => {
-                            if (index === currentStep) {
-                                return {
-                                    ...step,
-                                    imageUrl: result.assets[0].uri
-                                }
-                            }
-                            return step
-                        })
+                // if (!isAdding) {
+                //     setGuildLineSteps((prev) => {
+                //         return prev?.map((step, index) => {
+                //             if (index === currentStep) {
+                //                 return {
+                //                     ...step,
+                //                     imageUrl: result.assets[0].uri
+                //                 }
+                //             }
+                //             return step
+                //         })
 
-                    })
-                    await GuildLineService.updateImageStepGuildLine(result.assets[0].uri, id_family, id_item, guildLineSteps![currentStep], currentStep)
-                }
+                //     })
+                //     await GuildLineService.updateImageStepGuildLine(result.assets[0].uri, id_family, id_item, guildLineSteps![currentStep], currentStep)
+                // }
                 setGuildLineSteps((prev) => {
                     return prev?.map((step, index) => {
                         if (index === currentStep) {
