@@ -25,9 +25,9 @@ const initialState: WebSocketState = {
 };
 
 const webSocketSlice = createSlice({
-  name: 'webSocket',
-  initialState,
-  reducers: {
+    name: 'webSocket',
+    initialState,
+    reducers: {
     setSocket: (state, action: PayloadAction<Socket<DefaultEventsMap, DefaultEventsMap>>) => {
       state.socket = action.payload as any; 
       state.isConnected = false;
@@ -35,18 +35,32 @@ const webSocketSlice = createSlice({
     connectWebSocket(state) {
       state.isConnected = true;
     },
-
+    disconnectWebSocket(state) {
+      if (state.socket) {
+        state.socket.disconnect();
+        state.socket = null; 
+        state.isConnected = false;
+        console.log('WebSocket disconnected');
+      } else {
+        console.warn('No WebSocket connection to disconnect');
+      }
+    },    
     receiveMessage(state, action: PayloadAction<Message>) {
         state.messages.unshift(action.payload); 
       },
 
-    addMessage: (state, action: PayloadAction<Message>) => {
-      state.messages.push(action.payload);
+    sendFamilyMessage: (state, action: PayloadAction<{ message: string; familyId?: number }>) => {
+      state.socket?.emit('newFamilyMessage', { message: action.payload.message, familyId: action.payload.familyId });
     },
+      
+    sendFamilyImage: (state, action: PayloadAction<{ familyId?: number, imageData: string}>) => {
+      state.socket?.emit('newFamilyImageMessage', { familyId: action.payload.familyId, imageData: action.payload.imageData});
+    }
+
     },
     
   });
   
-  export const { connectWebSocket, setSocket, receiveMessage } = webSocketSlice.actions;
+  export const { connectWebSocket, setSocket, receiveMessage, sendFamilyMessage, sendFamilyImage, disconnectWebSocket} = webSocketSlice.actions;
   
   export default webSocketSlice.reducer;

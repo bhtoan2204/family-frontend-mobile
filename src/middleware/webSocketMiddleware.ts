@@ -1,34 +1,50 @@
 import { AnyAction, Dispatch, MiddlewareAPI } from '@reduxjs/toolkit';
-import { connectWebSocket, setSocket } from '../redux/webSocketSlice'; 
-import io from 'socket.io-client';
+import { connectWebSocket, setSocket, disconnectWebSocket } from '../redux/webSocketSlice'; 
+import { io, Socket } from "socket.io-client";
 import LocalStorage from 'src/store/localstorage';
   
+let isSocketConnected = false;
+type ServerToClientEvents = {
+  onNewMessage: (msg: string) => void;
+  onNewImageMessage: (image: string) => void;
+};
+
+type ClientToServerEvents = {
+  sendMessage: (msg: string) => void;
+  sendImage: (image: string) => void;
+  newMessage: (msg: string) => void;
+  newImageMessage: (image: string) => void;
+};
+
 const socketMiddleware = (storeAPI: MiddlewareAPI) => (next: Dispatch<AnyAction>) => async (action: AnyAction) => {
+
   const accessToken = await LocalStorage.GetAccessToken();
-  if (action.type === 'webSocket/connectWebSocket' && !storeAPI.getState().webSocket.isConnected) {
+
+  if (action.type === 'webSocket/connectWebSocket' && !isSocketConnected) {
     try {
-      const socket = io('https://api.rancher.io.vn/chat', {
+      const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('https://api.rancher.io.vn/chat', {
         transports: ['websocket'],
         extraHeaders: { Authorization:  `Bearer ${accessToken}` } 
       });
 
       socket.on('connect', () => {
-        socket.on('newMessage', function(msg){
-          console.log('Tin nhắn từ phía máy khách: ' + msg)
-        });
-        
+        console.log('socket connect')
         storeAPI.dispatch(connectWebSocket()); 
+        isSocketConnected = true; 
       });
+      storeAPI.dispatch(setSocket(socket));
 
-      socket.on('newMessage', (message) => {
-        console.log('WebSocket connected newMessage', message);
+      socket.on('onNewMessage', (msg) => {
+        console.log('Received new message:', msg);
+
+      });
+      socket.on('onNewImageMessage', (msg) => {
+        console.log('Received new message:', msg);
+
       });
     
-      socket.on('connect_error', (error) => {
-      });
-
-      storeAPI.dispatch(setSocket(socket));
     } catch (error) {
+      console.error('Socket connection error:', error);
     }
   }
 

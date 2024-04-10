@@ -86,6 +86,9 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
       console.log('Message sent!');
 
     }
+    else {
+      console.log('socket error');
+    }
   };
 
   const sendImage = async (base64Image: string) => {
@@ -104,12 +107,14 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
 
   const handleSendImage = async (base64Image: string) => {
     await sendImage(base64Image);
+    setCurrentIndex(0);
     await fetchMessages();
   };
 
   const handleSendMessage = async () => {
     await sendMessage();
     setMessage('');
+    setCurrentIndex(0);
     await fetchMessages();
 
   };
@@ -144,10 +149,9 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
 
   const handleImagePress = (item: Message) => {
     const itemIndex = messages.findIndex(message => message === item);
-    if (itemIndex !== -1) {
-      const newIndex = Math.max(0, itemIndex - 4);
-      setSelectedImageIndex(newIndex);
-    }
+
+      setSelectedImageIndex(itemIndex);
+    
   };
   
   
@@ -161,18 +165,14 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   useEffect(() => {
     fetchMessages();
     fetchMember(receiverId, id_user);
-    dispatch(connectWebSocket());
+
     setIsTextInputEmpty(message.trim() === '');
   }, [message]);
+  
 
-  useEffect(() => {
-    if (socket) {
-      socket.on('newMessage', function(msg) {
-        console.log('Tin nhắn từ phía máy chủ: ', msg);
-        setMessages(prevMessages => [...prevMessages, msg]);
-      });
-    }
-  }, [socket]);
+  
+  
+
 
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
