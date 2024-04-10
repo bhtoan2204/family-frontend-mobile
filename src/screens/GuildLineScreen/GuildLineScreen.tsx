@@ -57,7 +57,20 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
     if (loading) {
         return <ActivityIndicator style={{ flex: 1, justifyContent: 'center' }} size="small" />;
     }
-
+    const handleAddGuildLine = () => {
+        console.log("add guildline")
+        setGuidelines((prev: Guildline[]) => {
+            return [...prev, {
+                id_item: Math.floor(Math.random()) * 100,
+                name: name,
+                description: description,
+                created_at: "",
+                updated_at: ""
+            }];
+        });
+        setName("");
+        setDescription("");
+    }
     return (
         <View className="flex-1 bg-[#F7F7F7]">
             <View className='w-full  flex-row justify-between items-center py-3'>
@@ -140,6 +153,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                     }}
                     onPress={() => {
                         // Xử lý logic khi nhấn nút "Save"
+                        handleAddGuildLine()
                         refRBSheet.current?.close();
                     }}
                 >

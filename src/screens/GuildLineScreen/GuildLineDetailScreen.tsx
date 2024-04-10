@@ -5,6 +5,9 @@ import Img from 'src/assets/images/guildline.png';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { GuildLineDetail, Step } from 'src/interface/guideline/guideline';
 import GuildLineService from 'src/services/apiclient/GuildLineService';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import * as ImagePicker from 'expo-image-picker';
+
 interface NewStepAttr {
     step: Step;
     index: number;
@@ -17,14 +20,7 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
     const [loading, setLoading] = useState(true)
     const [previousStep, setPreviousStep] = useState(0)
     const [isAdding, setIsAdding] = useState(false)
-    const [newStep, setNewStep] = useState<NewStepAttr>({
-        step: {
-            name: "",
-            description: "",
-            imageUrl: ""
-        },
-        index: 0
-    })
+    const bottomSheetRef = React.useRef<RBSheet>(null);
     useEffect(() => {
         const fetchGuildLineDetail = async () => {
             try {
@@ -84,6 +80,64 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
     if (loading) {
         return <ActivityIndicator style={{ flex: 1, justifyContent: 'center' }} size="small" />;
     }
+
+    const handleTakePhoto = async () => {
+        console.log("Take photo")
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status === 'granted') {
+            const result = await ImagePicker.launchCameraAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [3, 3],
+                quality: 1,
+            });
+
+            if (!result.canceled) {
+                console.log(result.assets[0].uri);
+                setGuildLineSteps((prev) => {
+                    return prev?.map((step, index) => {
+                        if (index === currentStep) {
+                            return {
+                                ...step,
+                                imageUrl: result.assets[0].uri
+                            }
+                        }
+                        return step
+                    })
+
+                })
+            }
+        } else {
+            alert('Permission to access camera was denied');
+        }
+    }
+
+    const handlePickImage = async () => {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [3, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            console.log(currentStep - 1)
+            setGuildLineSteps((prev) => {
+                return prev?.map((step, index) => {
+                    if (index === currentStep) {
+                        return {
+                            ...step,
+                            imageUrl: result.assets[0].uri
+                        }
+                    }
+                    return step
+                })
+
+            })
+            console.log(result.assets[0].uri);
+        }
+    }
+
     return (
         <View className='flex-1 bg-[#fff] items-center '>
             <View className='w-full  flex-row justify-between items-center py-3 z-10' >
@@ -118,14 +172,20 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
                 {
                     guildLineSteps && <>
                         <View className='h-[50%] w-[90%] flex-col justify-center items-center mb-10  rounded-full mx-4 '>
-                            {/* <Image source={guildLineSteps[currentStep].imageUrl ? { uri: guildLineSteps[currentStep].imageUrl } : Img} resizeMode="cover" style={{ height: "100%", width: "100%" }} /> */}
+                            <TouchableOpacity onPress={() => {
+                                console.log(currentStep)
+                                bottomSheetRef.current?.open()
+                            }}>
+                                <Image source={guildLineSteps[currentStep].imageUrl == null || guildLineSteps[currentStep].imageUrl == "" ? Img : { uri: guildLineSteps[currentStep].imageUrl }} resizeMode='contain' style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }}  />
+                            </TouchableOpacity>
 
-                            <Image source={Img} resizeMode='contain' style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} />
+
                             {
-                                isAdding && <TouchableOpacity>
-                                    <View style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} className='absolute bg-white opacity-90 flex justify-center items-center rounded'>
-                                        <Material name="file-image-plus" size={40} style={{ color: "gray" }} className='' />
-                                    </View>
+                                guildLineSteps[currentStep].imageUrl == null || guildLineSteps[currentStep].imageUrl == "" && <TouchableOpacity style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} className='absolute bg-white opacity-90 flex justify-center items-center rounded' onPress={() => {
+                                    console.log("handle change photo here")
+                                    bottomSheetRef.current?.open()
+                                }}>
+                                    <Material name="file-image-plus" size={40} style={{ color: "gray" }} className='' />
                                 </TouchableOpacity>
                             }
                         </View>
@@ -214,9 +274,42 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
                     </>
                 }
             </KeyboardAvoidingView>
+            <RBSheet
+                ref={bottomSheetRef}
+                closeOnDragDown={true}
+                closeOnPressMask={true}
+                customStyles={{
+                    container: {
+                        backgroundColor: "white",
+
+                        height: Dimensions.get("window").height / 3,
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                    },
+                    draggableIcon: {
+                        display: "none",
+                    }
+                }}
+            >
+                <View className='flex-col p-6 h-full bg-[#fafafa] justify-center'>
+                    <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
+                        await handleTakePhoto()
+                        bottomSheetRef.current?.close()
+                    }}>
+                        <Text className='text-lg font-semibold'>Take a photo</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity className='h-16 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
+                        await handlePickImage()
+                        bottomSheetRef.current?.close()
+                    }}>
+                        <Text className='text-lg font-semibold'>Choose Image from Library</Text>
+                    </TouchableOpacity>
+                </View>
+            </RBSheet>
         </View>
     );
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
