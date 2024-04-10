@@ -109,9 +109,9 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
         family != null && <ScrollView className='h-full w-full'>
           <View className='flex-col justify-center items-center pt-4 ' >
             <Image source={{ uri: 'https://pethouse.com.vn/wp-content/uploads/2023/06/meo-anh-long-ngan-833x800.jpg' }} width={300} height={200} className='rounded-lg' />
-            <Text className='text-2xl font-semibold mt-3'>{family.name}</Text>
+            <Text className='text-xl font-semibold mt-3' style={{ color: COLORS.primary }}>{family.name}</Text>
 
-            <Text className='text-lg font-semibold mt-3'>Edit Photo</Text>
+            <Text className='text-base font-semibold mt-1' style={{ color: COLORS.primary }}>Edit Photo</Text>
           </View>
           <View className=''>
             <View className='mt-2'>
@@ -123,7 +123,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
                     resizeMode="contain"
                   />
                   <Text className='ml-4 text-lg'>Family Member</Text>
-                  
+
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleChatPress} >

@@ -1,17 +1,30 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Animated, SafeAreaView, TouchableOpacity, ScrollView, Image, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, Text, Animated, SafeAreaView, TouchableOpacity, ScrollView, Image, StyleSheet, ActivityIndicator, Dimensions, TextInput, KeyboardAvoidingView, Platform } from 'react-native'
 import { COLORS } from 'src/constants';
 import Img from 'src/assets/images/guildline.png';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { GuildLineDetail, Step } from 'src/interface/guideline/guideline';
 import GuildLineService from 'src/services/apiclient/GuildLineService';
+interface NewStepAttr {
+    step: Step;
+    index: number;
+}
 const GuildLineDetailScreen = ({ navigation, route }: any) => {
     const { id_item, id_family } = route.params
-    console.log(id_item, id_family)
     const [currentStep, setCurrentStep] = useState(0)
     const [guildLineDetail, setGuildLineDetail] = useState<GuildLineDetail>()
     const [guildLineSteps, setGuildLineSteps] = useState<Step[]>()
     const [loading, setLoading] = useState(true)
+    const [previousStep, setPreviousStep] = useState(0)
+    const [isAdding, setIsAdding] = useState(false)
+    const [newStep, setNewStep] = useState<NewStepAttr>({
+        step: {
+            name: "",
+            description: "",
+            imageUrl: ""
+        },
+        index: 0
+    })
     useEffect(() => {
         const fetchGuildLineDetail = async () => {
             try {
@@ -36,75 +49,171 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
     const prevStep = () => {
         setCurrentStep(currentStep <= 0 ? 0 : currentStep - 1)
     }
+    const handleIsAddingGuildLine = async () => {
+        // Thêm bước mới vào mảng
+        const newStep: Step = {
+            name: "",
+            description: "",
+            imageUrl: ""
+        }
+        setGuildLineSteps([...(guildLineSteps || []), newStep]);
+        console.log([...(guildLineSteps || []), newStep]);
+
+        // Đặt prevStep là currentStep
+        setPreviousStep(currentStep);
+        // Đặt currentStep là index của bước mới thêm vào
+        setCurrentStep(guildLineSteps ? guildLineSteps.length : 0);
+        // Ẩn form thêm bước
+        setIsAdding(true);
+    };
+
+    const handleCancelAddStep = () => {
+        // Đặt lại currentStep về prevStep
+        console.log(guildLineSteps?.filter((step, index) => index !== guildLineSteps.length - 1));
+
+        setGuildLineSteps(guildLineSteps?.filter((step, index) => index !== guildLineSteps.length - 1));
+        setCurrentStep(previousStep);
+        // Ẩn form thêm bước
+        setIsAdding(false);
+    };
+
+    const handleSaveAddStep = async () => {
+        setIsAdding(false);
+        setCurrentStep(previousStep);
+    }
     if (loading) {
         return <ActivityIndicator style={{ flex: 1, justifyContent: 'center' }} size="small" />;
     }
     return (
         <View className='flex-1 bg-[#fff] items-center '>
-            <View className='w-full  flex-row justify-between items-center py-3'>
-                <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
-                    <Material name="chevron-left" size={30} style={{ color: COLORS.primary, fontWeight: "bold" }} />
-                    <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Back</Text>
-                </TouchableOpacity>
+            <View className='w-full  flex-row justify-between items-center py-3 z-10' >
+                {
+                    isAdding ? <TouchableOpacity
+                        onPress={() => {
+                            handleCancelAddStep()
+                        }}
+                    ><Text className='text-red-600 text-lg ml-3'>Cancel</Text></TouchableOpacity> : <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
+                        <Material name="chevron-left" size={30} style={{ color: COLORS.primary, fontWeight: "bold" }} />
+                        <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Back</Text>
+                    </TouchableOpacity>
+                }
                 <View className='mr-3'>
-                    <TouchableOpacity >
-                        <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' />
+                    <TouchableOpacity onPress={() => {
+                        if (isAdding) {
+                            handleSaveAddStep();
+                        }
+                        else {
+                            handleIsAddingGuildLine()
+                        }
+
+                    }}>
+                        {
+                            isAdding ? <Text className=' text-lg ' style={{ color: COLORS.primary }}>Save</Text> : <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' />
+                        }
 
                     </TouchableOpacity>
                 </View>
             </View>
-            {
-                guildLineSteps && <>
-                    <Image source={Img} className='w-[90%] h-[50%] mb-5' resizeMode="cover" />
-                    <View className='flex-row'>
-                        {guildLineSteps.map((step, index) => {
-                            return (
-                                <View style={{
-                                    ...styles.stepIndicator,
-                                    width: currentStep === index ? 40 : 30,
-                                    backgroundColor: currentStep === index ? COLORS.primary : "#d1d1d1"
-                                }} key={index}></View>
-                            )
-                        })}
-                    </View>
-                    <Text className='text-center px-4 text-2xl font-bold mt-5 ' style={{ color: COLORS.primary }}>{guildLineSteps[currentStep].name != null ? guildLineSteps[currentStep].name : "Add name"}</Text>
-                    <Text className='text-center px-4 text-base my-6'>{guildLineSteps[currentStep].description != null ? `Description: ${guildLineSteps[currentStep].description}` : "Add description"}</Text>
-                </>
-            }
-            {
-                guildLineSteps && <>
-                    <View style={styles.navigationView}>
-                        {
-                            currentStep > 0 ?
-                                <TouchableOpacity
-                                    onPress={() => prevStep()}
-                                    style={{ ...styles.navigationBtn, borderTopEndRadius: 20, borderBottomEndRadius: 20, }} className='flex-row items-center py-2'>
-                                    <Material name="chevron-left" size={20} color={"white"} />
-                                    <Text className='text-white text-base font-semibold'>Back</Text>
+            <KeyboardAvoidingView className=' h-full flex flex-col items-center mt-3 ' behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                {
+                    guildLineSteps && <>
+                        <View className='h-[50%] w-[90%] flex-col justify-center items-center mb-10  rounded-full mx-4 '>
+                            {/* <Image source={guildLineSteps[currentStep].imageUrl ? { uri: guildLineSteps[currentStep].imageUrl } : Img} resizeMode="cover" style={{ height: "100%", width: "100%" }} /> */}
+
+                            <Image source={Img} resizeMode='contain' style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} />
+                            {
+                                isAdding && <TouchableOpacity>
+                                    <View style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} className='absolute bg-white opacity-90 flex justify-center items-center rounded'>
+                                        <Material name="file-image-plus" size={40} style={{ color: "gray" }} className='' />
+                                    </View>
                                 </TouchableOpacity>
-                                :
-                                <View></View>
-                        }
-
+                            }
+                        </View>
+                        <View className='flex-row'>
+                            {guildLineSteps.map((step, index) => {
+                                return (
+                                    <View style={{
+                                        ...styles.stepIndicator,
+                                        width: currentStep === index ? 40 : 30,
+                                        backgroundColor: currentStep === index ? COLORS.primary : "#d1d1d1"
+                                    }} key={index}></View>
+                                )
+                            })}
+                        </View>
                         {
-                            currentStep < guildLineSteps.length ? <TouchableOpacity
-                                onPress={() => nextStep()}
-                                style={{
-                                    backgroundColor: COLORS.primary,
-                                    height: "auto",
-                                    width: 80,
+                            !isAdding ? <Text className='text-center px-4 text-2xl font-bold mt-5 ' style={{ color: COLORS.primary }}>Step {currentStep + 1}: {guildLineSteps[currentStep].name != "" && guildLineSteps[currentStep].name != null ? guildLineSteps[currentStep].name : "Add name"}</Text> : <TextInput className='text-center px-4 text-2xl font-bold mt-5 ' style={{ color: COLORS.primary }} placeholder='Enter name of step' onChangeText={(text) => {
+                                setGuildLineSteps((prev) => {
+                                    return prev?.map((step, index) => {
+                                        if (index === guildLineSteps.length - 1) {
+                                            return {
+                                                ...step,
+                                                name: text
+                                            }
+                                        }
+                                        return step
+                                    })
 
-                                    borderTopStartRadius: 20, borderBottomStartRadius: 20
-                                }}
-                                className='flex-row items-center py-2 justify-end'
-                            >
-                                <Text className='text-white text-base font-semibold ml-2'>Next</Text>
-                                <Material name="chevron-right" size={20} color={"white"} />
-                            </TouchableOpacity> : <View></View>
+                                })
+                                // guildLineSteps[currentStep].name = e.nativeEvent.text
+
+                            }} />
                         }
-                    </View>
-                </>
-            }
+                        {
+                            !isAdding ? <Text className='text-center px-4 text-lg mt-5 text-[#a1a1a1]' >{guildLineSteps[currentStep].description != "" && guildLineSteps[currentStep].description != null ? guildLineSteps[currentStep].description : "Add description"}</Text> : <TextInput className='text-center px-4 text-lg mt-5' placeholder='enter' onChangeText={(text) => {
+                                setGuildLineSteps((prev) => {
+                                    return prev?.map((step, index) => {
+                                        if (index === guildLineSteps.length - 1) {
+                                            return {
+                                                ...step,
+                                                description: text
+                                            }
+                                        }
+                                        return step
+                                    })
+
+                                })
+                            }}
+
+                            />
+                        }
+
+                    </>
+                }
+                {
+                    guildLineSteps && !isAdding && <>
+                        <View style={styles.navigationView}>
+                            {
+                                currentStep > 0 ?
+                                    <TouchableOpacity
+                                        onPress={() => prevStep()}
+                                        style={{ ...styles.navigationBtn, borderTopEndRadius: 20, borderBottomEndRadius: 20, }} className='flex-row items-center py-2'>
+                                        <Material name="chevron-left" size={20} color={"white"} />
+                                        <Text className='text-white text-base font-semibold'>Back</Text>
+                                    </TouchableOpacity>
+                                    :
+                                    <View></View>
+                            }
+
+                            {
+                                currentStep < guildLineSteps.length - 1 ? <TouchableOpacity
+                                    onPress={() => nextStep()}
+                                    style={{
+                                        backgroundColor: COLORS.primary,
+                                        height: "auto",
+                                        width: 80,
+
+                                        borderTopStartRadius: 20, borderBottomStartRadius: 20
+                                    }}
+                                    className='flex-row items-center py-2 justify-end'
+                                >
+                                    <Text className='text-white text-base font-semibold ml-2'>Next</Text>
+                                    <Material name="chevron-right" size={20} color={"white"} />
+                                </TouchableOpacity> : <View></View>
+                            }
+                        </View>
+                    </>
+                }
+            </KeyboardAvoidingView>
         </View>
     );
 }
@@ -142,6 +251,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         width: "100%",
+        paddingTop: 30,
     },
     navigationBtn: {
         backgroundColor: COLORS.primary,
