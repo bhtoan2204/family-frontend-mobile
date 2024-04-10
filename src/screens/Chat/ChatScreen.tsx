@@ -125,13 +125,13 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
     setCurrentIndex(0); 
     await fetchMessages();
     setRefreshFlatList(prevState => !prevState); 
+    await fetchNewMessages(); 
+
   };
   
   const handleSendMessage = async () => {
     await sendMessage();
     setMessage('');
-    const newMessage = { senderId: id_user, type: 'text', content: message, receiverId: receiverId };
-    //setMessages(prevMessages => [newMessage, ...prevMessages]); 
     setCurrentIndex(0);
     await fetchNewMessages(); 
   };
