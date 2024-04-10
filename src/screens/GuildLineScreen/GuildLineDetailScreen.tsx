@@ -7,11 +7,7 @@ import { GuildLineDetail, Step } from 'src/interface/guideline/guideline';
 import GuildLineService from 'src/services/apiclient/GuildLineService';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import * as ImagePicker from 'expo-image-picker';
-
-interface NewStepAttr {
-    step: Step;
-    index: number;
-}
+const screenWidth = Dimensions.get('window').width;
 const GuildLineDetailScreen = ({ navigation, route }: any) => {
     const { id_item, id_family } = route.params
     const [currentStep, setCurrentStep] = useState(0)
@@ -37,11 +33,9 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
         };
         fetchGuildLineDetail();
     }, [])
-
     const nextStep = () => {
         setCurrentStep(currentStep + 1)
     }
-
     const prevStep = () => {
         setCurrentStep(currentStep <= 0 ? 0 : currentStep - 1)
     }
@@ -55,27 +49,28 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
         setGuildLineSteps([...(guildLineSteps || []), newStep]);
         console.log([...(guildLineSteps || []), newStep]);
 
-        // Đặt prevStep là currentStep
         setPreviousStep(currentStep);
-        // Đặt currentStep là index của bước mới thêm vào
+
         setCurrentStep(guildLineSteps ? guildLineSteps.length : 0);
-        // Ẩn form thêm bước
+
         setIsAdding(true);
     };
 
     const handleCancelAddStep = () => {
-        // Đặt lại currentStep về prevStep
         console.log(guildLineSteps?.filter((step, index) => index !== guildLineSteps.length - 1));
-
         setGuildLineSteps(guildLineSteps?.filter((step, index) => index !== guildLineSteps.length - 1));
         setCurrentStep(previousStep);
-        // Ẩn form thêm bước
         setIsAdding(false);
     };
 
     const handleSaveAddStep = async () => {
         setIsAdding(false);
         setCurrentStep(previousStep);
+        const newStep = guildLineSteps?.filter((step, index) => index === guildLineSteps.length - 1)[0];
+        if (newStep) {
+            await GuildLineService.addStepGuildLine(id_family, id_item, newStep);
+        }
+        console.log(newStep)
     }
     if (loading) {
         return <ActivityIndicator style={{ flex: 1, justifyContent: 'center' }} size="small" />;
@@ -107,34 +102,42 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
 
                 })
             }
+            bottomSheetRef.current?.close()
         } else {
             alert('Permission to access camera was denied');
         }
     }
 
     const handlePickImage = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [3, 3],
-            quality: 1,
-        });
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status === 'granted') {
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [3, 3],
+                quality: 1,
+            });
 
-        if (!result.canceled) {
-            console.log(currentStep - 1)
-            setGuildLineSteps((prev) => {
-                return prev?.map((step, index) => {
-                    if (index === currentStep) {
-                        return {
-                            ...step,
-                            imageUrl: result.assets[0].uri
+            if (!result.canceled) {
+                console.log(currentStep - 1)
+                setGuildLineSteps((prev) => {
+                    return prev?.map((step, index) => {
+                        if (index === currentStep) {
+                            return {
+                                ...step,
+                                imageUrl: result.assets[0].uri
+                            }
                         }
-                    }
-                    return step
-                })
+                        return step
+                    })
 
-            })
-            console.log(result.assets[0].uri);
+                })
+                console.log(result.assets[0].uri);
+            }
+            bottomSheetRef.current?.close()
+        }
+        else {
+            alert('Permission to access camera was denied');
         }
     }
 
@@ -152,20 +155,17 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
                     </TouchableOpacity>
                 }
                 <View className='mr-3'>
-                    <TouchableOpacity onPress={() => {
-                        if (isAdding) {
-                            handleSaveAddStep();
-                        }
-                        else {
+                    {
+                        isAdding ? <TouchableOpacity onPress={() => {
+                            handleSaveAddStep()
+                        }}>
+                            <Text className=' text-lg ' style={{ color: COLORS.primary }}>Save</Text>
+                        </TouchableOpacity> : <TouchableOpacity onPress={() => {
                             handleIsAddingGuildLine()
-                        }
-
-                    }}>
-                        {
-                            isAdding ? <Text className=' text-lg ' style={{ color: COLORS.primary }}>Save</Text> : <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' />
-                        }
-
-                    </TouchableOpacity>
+                        }}>
+                            <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' />
+                        </TouchableOpacity>
+                    }
                 </View>
             </View>
             <KeyboardAvoidingView className=' h-full flex flex-col items-center mt-3 ' behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -175,17 +175,17 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
                             <TouchableOpacity onPress={() => {
                                 console.log(currentStep)
                                 bottomSheetRef.current?.open()
-                            }}>
-                                <Image source={guildLineSteps[currentStep].imageUrl == null || guildLineSteps[currentStep].imageUrl == "" ? Img : { uri: guildLineSteps[currentStep].imageUrl }} resizeMode='contain' style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }}  />
+                            }} >
+                                <Image source={guildLineSteps[currentStep].imageUrl == null || guildLineSteps[currentStep].imageUrl == "" ? Img : { uri: guildLineSteps[currentStep].imageUrl }} resizeMode='contain' style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} />
                             </TouchableOpacity>
 
 
                             {
-                                guildLineSteps[currentStep].imageUrl == null || guildLineSteps[currentStep].imageUrl == "" && <TouchableOpacity style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} className='absolute bg-white opacity-90 flex justify-center items-center rounded' onPress={() => {
+                                guildLineSteps[currentStep].imageUrl == null || guildLineSteps[currentStep].imageUrl == "" && <TouchableOpacity style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} className='absolute bg-white opacity-80 flex justify-center items-center rounded' onPress={() => {
                                     console.log("handle change photo here")
                                     bottomSheetRef.current?.open()
-                                }}>
-                                    <Material name="file-image-plus" size={40} style={{ color: "gray" }} className='' />
+                                }} activeOpacity={1}>
+                                    <Material name="file-image-plus" size={30} style={{ color: "gray" }} className='' />
                                 </TouchableOpacity>
                             }
                         </View>
@@ -194,7 +194,7 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
                                 return (
                                     <View style={{
                                         ...styles.stepIndicator,
-                                        width: currentStep === index ? 40 : 30,
+                                        width: currentStep === index ? screenWidth / guildLineSteps.length - 5 : screenWidth / guildLineSteps.length - 12,
                                         backgroundColor: currentStep === index ? COLORS.primary : "#d1d1d1"
                                     }} key={index}></View>
                                 )
@@ -294,13 +294,13 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
                 <View className='flex-col p-6 h-full bg-[#fafafa] justify-center'>
                     <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
                         await handleTakePhoto()
-                        bottomSheetRef.current?.close()
+
                     }}>
                         <Text className='text-lg font-semibold'>Take a photo</Text>
                     </TouchableOpacity>
                     <TouchableOpacity className='h-16 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
                         await handlePickImage()
-                        bottomSheetRef.current?.close()
+
                     }}>
                         <Text className='text-lg font-semibold'>Choose Image from Library</Text>
                     </TouchableOpacity>
@@ -323,9 +323,11 @@ const styles = StyleSheet.create({
         marginVertical: 30
     },
     stepIndicatorView: {
-        flexDirection: "row"
+        flexDirection: "row",
+        width: Dimensions.get("window").width,
     },
     stepIndicator: {
+
         height: 10,
         marginHorizontal: 5,
         borderRadius: 10

@@ -45,6 +45,56 @@ const GuildLineService = {
       console.log('Error fetching guildline detail:', error);
     }
   },
+  addGuildLine: async (
+    id_family: number,
+    name: string,
+    description: string,
+  ) => {
+    const url = baseUrl + GuildlineUrl.addGuildLine;
+    const data = {
+      id_family: id_family,
+      name: name,
+      description: description,
+    };
+    try {
+      const res = await instance.post(url, data);
+      return res.data;
+    } catch (error) {
+      console.log('Error adding guildline:', error);
+    }
+  },
+  addStepGuildLine: async (
+    id_guideline: number,
+    id_family: number,
+    step: Step,
+  ) => {
+    const url = baseUrl + GuildlineUrl.addStepGuildLine;
+    const createFormData = (uri: string): FormData => {
+      let formData = new FormData();
+      if (uri != null) {
+        let filename = uri.split('/').pop()!;
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+        const file = {
+          uri,
+          name: filename,
+          type,
+        };
+        formData.append('stepImage', file);
+      }
+      formData.append('id_family', id_family.toString());
+      formData.append('id_guideline', id_guideline.toString());
+      formData.append('name', step.name);
+      formData.append('description', step.description);
+      return formData;
+    };
+    try {
+      const res = await axios.post(url, createFormData(step.imageUrl));
+      return res.data;
+    } catch (error) {
+      console.log('Error adding step guildline:', error);
+    }
+  },
 };
 
 export default GuildLineService;
