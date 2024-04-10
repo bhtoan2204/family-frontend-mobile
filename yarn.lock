@@ -10095,10 +10095,10 @@
   "resolved" "https://registry.npmjs.org/slugify/-/slugify-1.6.6.tgz"
   "version" "1.6.6"
 
-"socket.io-client@^4.7.5":
-  "integrity" "sha512-sJ/tqHOCe7Z50JCBCXrsY3I2k03iOiUe+tj1OmKeD2lXPiGH/RUCdTZFoqVyN7l1MnpIzPrGtLcijffmeouNlQ=="
-  "resolved" "https://registry.npmjs.org/socket.io-client/-/socket.io-client-4.7.5.tgz"
-  "version" "4.7.5"
+"socket.io-client@^4.7.4":
+  "integrity" "sha512-wh+OkeF0rAVCrABWQBaEjLfb7DVPotMbu0cgWgyR0v6eA4EoVnAwcIeIbcdTE3GT/H3kbdLl7OoH2+asoDRIIg=="
+  "resolved" "https://registry.npmjs.org/socket.io-client/-/socket.io-client-4.7.4.tgz"
+  "version" "4.7.4"
   dependencies:
     "@socket.io/component-emitter" "~3.1.0"
     "debug" "~4.3.2"

@@ -7,7 +7,6 @@ import { FamilyServices } from 'src/services/apiclient';
 import { AxiosResponse } from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
-import { connectWebSocket } from 'src/redux/webSocketSlice';
 import { RootState } from 'src/redux/rootReducer';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
@@ -42,7 +41,8 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [isTextInputEmpty, setIsTextInputEmpty] = useState(true);
-
+  const [listKey, setListKey] = useState(0);
+  const [refreshFlatList, setRefreshFlatList] = useState(false); 
   const fetchMember = async (receiverId?: string, id_user?: string) => {
     try {
       const response1: AxiosResponse<Member[]> = await FamilyServices.getMember({ id_user: receiverId });
@@ -104,21 +104,39 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
       console.error('Error sending image:', error);
     }
   };
-
+  const fetchNewMessages = async () => {
+    try {
+      const response = await ChatServices.GetMessages({ id_user: receiverId, index: 0 }); // Fetch tin nhắn mới từ index 0
+      if (response) {
+        const newMessages = response.map((message: any) => {
+          if (message.type === 'photo') {
+            setImages(prevImages => [...prevImages, message.content]);
+          }
+          return message;
+        });
+        setMessages(newMessages);
+      }
+    } catch (error) {
+      console.error('Error fetching new messages:', error);
+    }
+  };
   const handleSendImage = async (base64Image: string) => {
     await sendImage(base64Image);
-    setCurrentIndex(0);
+    setCurrentIndex(0); 
     await fetchMessages();
+    setRefreshFlatList(prevState => !prevState); 
   };
-
+  
   const handleSendMessage = async () => {
     await sendMessage();
     setMessage('');
+    const newMessage = { senderId: id_user, type: 'text', content: message, receiverId: receiverId };
+    //setMessages(prevMessages => [newMessage, ...prevMessages]); 
     setCurrentIndex(0);
-    await fetchMessages();
-
+    await fetchNewMessages(); 
   };
-
+  
+  
   const handleOpenImageLibrary = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -165,9 +183,19 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   useEffect(() => {
     fetchMessages();
     fetchMember(receiverId, id_user);
-
     setIsTextInputEmpty(message.trim() === '');
-  }, [message]);
+    if (socket) {
+      socket.onAny((eventName, ...args) => {
+        console.log('Received new image message:', eventName);
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('onNewMessage');
+      }
+    };
+  }, [socket, message]);
   
 
   
@@ -190,32 +218,33 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
         </View>
       </View>
       <FlatList
-        style={styles.messagesContainer}
-        contentContainerStyle={styles.contentContainer}
-        data={messages}
-        inverted
-        renderItem={({ item, index }) => (
-          <View style={[
-            styles.messageContainer,
-            item.senderId === id_user ? styles.senderMessageContainer : styles.receiverMessageContainer,
-            { flex: 1 },
-          ]}>
-            {item.type === 'photo' ? (
-              <TouchableOpacity onPress={() => handleImagePress(item)}>
-                <View style={styles.messageContentContainer}>
-                  <Image source={{ uri: item.content }} style={styles.imageMessage} />
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <Text style={styles.senderMessageContent}>{item.content}</Text>
-            )}
+ key={refreshFlatList ? 'refresh' : 'no-refresh'}
+  style={styles.messagesContainer}
+  contentContainerStyle={styles.contentContainer}
+  data={messages}
+  inverted
+  renderItem={({ item, index }) => (
+    <View style={[
+      styles.messageContainer,
+      item.senderId === id_user ? styles.senderMessageContainer : styles.receiverMessageContainer,
+      { flex: 1 },
+    ]}>
+      {item.type === 'photo' ? (
+        <TouchableOpacity onPress={() => handleImagePress(item)}>
+          <View style={styles.messageContentContainer}>
+            <Image source={{ uri: item.content }} style={styles.imageMessage} />
           </View>
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        keyboardShouldPersistTaps="handled"
-        onEndReached={loadMoreMessages}
-        onEndReachedThreshold={0.1}
-      />
+        </TouchableOpacity>
+      ) : (
+        <Text style={styles.senderMessageContent}>{item.content}</Text>
+      )}
+    </View>
+  )}
+  keyExtractor={(item, index) => index.toString()}
+  keyboardShouldPersistTaps="handled"
+  onEndReached={loadMoreMessages}
+  onEndReachedThreshold={0.1}
+/>
       <View style={styles.inputContainer}>
         <TextInput
           style={[styles.input, { flexGrow: 1, marginBottom: Platform.OS === 'ios' ? 0 : 10 }]}
