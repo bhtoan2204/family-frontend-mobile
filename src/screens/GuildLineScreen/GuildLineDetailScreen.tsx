@@ -65,7 +65,7 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
 
     const handleSaveAddStep = async () => {
         setIsAdding(false);
-        setCurrentStep(previousStep);
+        setCurrentStep(guildLineSteps!.length - 1);
         const newStep = guildLineSteps?.filter((step, index) => index === guildLineSteps.length - 1)[0];
         if (newStep) {
             await GuildLineService.addStepGuildLine(id_family, id_item, newStep);
@@ -89,6 +89,21 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
 
             if (!result.canceled) {
                 console.log(result.assets[0].uri);
+                if (!isAdding) {
+                    setGuildLineSteps((prev) => {
+                        return prev?.map((step, index) => {
+                            if (index === currentStep) {
+                                return {
+                                    ...step,
+                                    imageUrl: result.assets[0].uri
+                                }
+                            }
+                            return step
+                        })
+
+                    })
+                    await GuildLineService.updateImageStepGuildLine(result.assets[0].uri, id_family, id_item, guildLineSteps![currentStep], currentStep)
+                }
                 setGuildLineSteps((prev) => {
                     return prev?.map((step, index) => {
                         if (index === currentStep) {
@@ -119,7 +134,22 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
             });
 
             if (!result.canceled) {
-                console.log(currentStep - 1)
+                console.log(currentStep)
+                if (!isAdding) {
+                    setGuildLineSteps((prev) => {
+                        return prev?.map((step, index) => {
+                            if (index === currentStep) {
+                                return {
+                                    ...step,
+                                    imageUrl: result.assets[0].uri
+                                }
+                            }
+                            return step
+                        })
+
+                    })
+                    await GuildLineService.updateImageStepGuildLine(result.assets[0].uri, id_family, id_item, guildLineSteps![currentStep], currentStep)
+                }
                 setGuildLineSteps((prev) => {
                     return prev?.map((step, index) => {
                         if (index === currentStep) {
@@ -132,7 +162,7 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
                     })
 
                 })
-                console.log(result.assets[0].uri);
+
             }
             bottomSheetRef.current?.close()
         }

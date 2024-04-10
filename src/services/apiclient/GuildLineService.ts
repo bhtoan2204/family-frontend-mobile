@@ -89,10 +89,56 @@ const GuildLineService = {
       return formData;
     };
     try {
-      const res = await axios.post(url, createFormData(step.imageUrl));
+      const res = await instance.post(url, createFormData(step.imageUrl), {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          accept: '*/*',
+        },
+      });
       return res.data;
     } catch (error) {
       console.log('Error adding step guildline:', error);
+    }
+  },
+  updateImageStepGuildLine: async (
+    fileUri: string,
+    id_family: number,
+    id_guideline: number,
+    step: Step,
+    index: number,
+  ) => {
+    const url = baseUrl + GuildlineUrl.updateStepGuildLine;
+    const createFormData = (uri: string): FormData => {
+      let formData = new FormData();
+      if (uri != null) {
+        let filename = uri.split('/').pop()!;
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+        const file = {
+          uri,
+          name: filename,
+          type,
+        };
+        formData.append('stepImage', file);
+      }
+      formData.append('id_family', id_family.toString());
+      formData.append('id_guideline', id_guideline.toString());
+      formData.append('name', step.name);
+      formData.append('description', step.description);
+      formData.append('index', index.toString());
+      return formData;
+    };
+    try {
+      const res = await instance.put(url, createFormData(fileUri), {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          accept: '*/*',
+        },
+      });
+      console.log('result from update api');
+      console.log(res.data);
+    } catch (error) {
+      console.log('Error updating step guildline:', error);
     }
   },
 };
