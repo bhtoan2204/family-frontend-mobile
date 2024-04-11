@@ -8,7 +8,59 @@ export type RootParamList = {
   PackStack: NavigatorScreenParams<PackStackParamList>;
   HomeTab: NavigatorScreenParams<HomeTabParamList>;
   CalendarStack: NavigatorScreenParams<CalendarStackParamList>;
+  ChatStack: NavigatorScreenParams<ChatStackParamList>;
+
 };
+
+
+export type ChatStackParamList = {
+  ChatFamily: {
+    id_user: string|undefined;
+    id_family: number|undefined;
+  };
+  ChatUser: {
+    id_user: string|undefined;
+    receiverId: string|undefined;
+  };
+  ChatList: {
+    id_user: string |undefined;
+  };
+  
+};
+
+type ChatFamilyScreenNavigationProp = NativeStackNavigationProp<
+  ChatStackParamList,
+  'ChatFamily'
+>;
+
+export interface ChatFamilyScreenProps {
+  navigation: ChatFamilyScreenNavigationProp;
+  route: RouteProp<ChatStackParamList, 'ChatFamily'>;
+}
+
+
+type ChatScreenNavigationProp = NativeStackNavigationProp<
+  ChatStackParamList,
+  'ChatUser'
+>;
+
+export interface ChatScreenProps {
+  navigation: ChatScreenNavigationProp;
+  route: RouteProp<ChatStackParamList, 'ChatUser'>;
+}
+
+
+type ChatListNavigationProp = NativeStackNavigationProp<
+  ChatStackParamList,
+  'ChatList'
+>;
+
+export interface ChatListProps {
+  navigation: ChatListNavigationProp & ChatScreenNavigationProp;
+  route: RouteProp<ChatStackParamList, 'ChatList'>;
+
+}
+
 
 export type AuthStackParamList = {
   LoginScreen: undefined;
@@ -119,6 +171,13 @@ export interface PackStackProps {
   navigation: PackStackNavigationProp;
 }
 
+type ChatStackNavigationProp = NativeStackNavigationProp<
+  RootParamList,
+  'ChatStack'
+>;
+export interface ChattackProps {
+  navigation: ChatStackNavigationProp;
+}
 //
 type ZaloPayScreenNavigationProp = NativeStackNavigationProp<
   PackStackParamList,
@@ -189,7 +248,7 @@ type ViewFamilyNavigationProp = NativeStackNavigationProp<
 >;
 
 export interface ViewFamilyScreenProps {
-  navigation: ViewFamilyNavigationProp & CalendarScreenNavigationProp;
+  navigation: ViewFamilyNavigationProp & CalendarScreenNavigationProp & ChatFamilyScreenNavigationProp;
   route: RouteProp<FamilyStackParamList, 'ViewFamily'>;
 }
 

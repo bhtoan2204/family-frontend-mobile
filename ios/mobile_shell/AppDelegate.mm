@@ -1,7 +1,10 @@
 #import "AppDelegate.h"
 #import "ZaloPaySDK/ZaloPaySDK.h"
-
 #import <React/RCTBundleURLProvider.h>
+#import <React/RCTBridge.h> 
+#import <React/RCTRootView.h> 
+#import <UserNotifications/UserNotifications.h> 
+#import <RNNotifications/RNNotifications.h> 
 
 @implementation AppDelegate
 
@@ -56,6 +59,28 @@
 #else
     return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+ // Handle local notifications
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+    [RNNotifications didReceiveLocalNotification:notification];
+}
+
+// Handle remote notifications
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [RNNotifications didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    [RNNotifications didReceiveRemoteNotification:userInfo];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    [RNNotifications didFailToRegisterForRemoteNotificationsWithError:error];
+}
+
+// Handle iOS 14+ user notifications
+- (void)application:(UIApplication *)application didReceiveUserNotification:(UNNotification *)notification {
+    [RNNotifications didReceiveNotificationExtensionRequest:[notification request]];
 }
 
 @end

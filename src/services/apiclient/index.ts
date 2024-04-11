@@ -3,10 +3,14 @@ import FamilyServices from './FamilyServices';
 import ProfileServices from './ProfileServices';
 import PackageServices from './PackageServices';
 import GuideLineService from './GuildLineService';
-export {
-  AuthServices,
-  FamilyServices,
-  ProfileServices,
-  PackageServices,
-  GuideLineService,
-};
+import ChatServices from './ChatServices';
+export {AuthServices, FamilyServices, ProfileServices, PackageServices};
+
+// export {
+//   AuthServices,
+//   FamilyServices,
+//   ProfileServices,
+//   PackageServices,
+//   ChatServices,
+//   GuideLineService,
+// };

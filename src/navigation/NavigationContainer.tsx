@@ -8,6 +8,7 @@ import HomeTab from './Routes/HomeTab';
 import FamilyStack from './Routes/FamilyStack';
 import PackStack from './Routes/PackStack';
 import CalendarStack from './Routes/CalendarStack';
+import ChatStack from './Routes/ChatStack';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,7 @@ const Navigation = () => {
           <Stack.Screen name="FamilyStack" component={FamilyStack} />
           <Stack.Screen name="PackStack" component={PackStack} />
           <Stack.Screen name="CalendarStack" component={CalendarStack} />
+          <Stack.Screen name="ChatStack" component={ChatStack} />
 
         </Stack.Navigator>
       </NavigationContainer>
