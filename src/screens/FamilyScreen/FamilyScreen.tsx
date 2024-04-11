@@ -94,7 +94,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
 
   return (
     <SafeAreaView className='bg-[#F7F7F7] flex-1'>
-      <View className='w-full  flex-row justify-between items-center'>
+      <View className='w-full  flex-row justify-between items-center bg-white '>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={24} style={styles.backButton} />
         </TouchableOpacity>

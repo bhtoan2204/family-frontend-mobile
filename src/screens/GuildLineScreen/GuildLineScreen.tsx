@@ -68,7 +68,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
 
     return (
         <View className="flex-1 bg-[#F7F7F7]">
-            <View className='w-full  flex-row justify-between items-center py-3'>
+            <View className='w-full  flex-row justify-between items-center py-3 bg-white'>
                 <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
                     <Material name="chevron-left" size={30} style={{ color: COLORS.primary, fontWeight: "bold" }} />
                     <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Back</Text>
@@ -87,7 +87,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                 data={guidelines}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id_item.toString()}
-                className='mt-2'
+                className='pt-2'
             />
             <AddGuildLineSheet refRBSheet={refRBSheet} setGuidelines={setGuidelines} />
         </View>
