@@ -103,7 +103,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
       if (response) {
         const newMessages = response.map((message: any) => {
           if (message.type === 'photo') {
-            setImages(prevImages => [...prevImages, message.content]);
+            setImages(prevImages => [message.content, ...prevImages]);
           }
           return message;
         });
@@ -299,12 +299,13 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         </TouchableOpacity>
       </View>
       <ImageView
-        images={messages.filter(msg => msg.type === 'photo').map(msg => ({ uri: msg.content }))}
+        images={images.map(image => ({ uri: image }))}
         imageIndex={selectedImageIndex || 0}
         visible={selectedImageIndex !== null}
         onRequestClose={handleCloseModal}
         backgroundColor="rgba(0, 0, 0, 0.8)"
       />
+
     </KeyboardAvoidingView>
   );
 };

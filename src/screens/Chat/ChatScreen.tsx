@@ -73,6 +73,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
       console.error('Error fetching messages:', error);
     }
   };
+  
 
   const loadMoreMessages = () => {
     setCurrentIndex(currentIndex + 1);
@@ -166,9 +167,9 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   };
 
   const handleImagePress = (item: Message) => {
-    const itemIndex = messages.findIndex(message => message === item);
-      setSelectedImageIndex(itemIndex);
-    
+    const itemIndex = messages.findIndex(message => message.senderId === item.senderId && message.content === item.content);
+    setSelectedImageIndex(itemIndex-1);
+    console.log(itemIndex)
   };
   
   
@@ -236,8 +237,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
         renderItem={({ item, index }) => (
           <View style={[
             styles.messageContainer,
-            item.senderId === id_user ? styles.senderMessageContainer : styles.receiverMessageContainer,
-            { flex: 1 },
+            item.senderId === id_user ? styles.senderMessageContainer : styles.receiverMessageContainer
           ]}>
             {item.type === 'photo' ? (
               <TouchableOpacity onPress={() => handleImagePress(item)}>
@@ -273,11 +273,11 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
 
       
       <ImageView
-        images={messages.filter(msg => msg.type === 'photo').map(msg => ({ uri: msg.content }))}
+        images={images.map(image => ({ uri: image }))}
         imageIndex={selectedImageIndex || 0}
         visible={selectedImageIndex !== null}
         onRequestClose={handleCloseModal}
-        backgroundColor="rgba(0, 0, 0, 0.8)" 
+        backgroundColor="rgba(0, 0, 0, 0.8)"
       />
 
     </KeyboardAvoidingView>
