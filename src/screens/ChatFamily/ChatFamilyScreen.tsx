@@ -52,7 +52,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
     fetchMessages();
     dispatch(connectWebSocket());
     setIsTextInputEmpty(message.trim() === '');
-  }, [currentIndex, message]);
+  }, [ message]);
 
   useEffect(() => {
     const lookup: { [key: string]: Member } = {};
@@ -104,20 +104,18 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   const fetchNewMessages = async () => {
     try {
       const response = await ChatServices.GetFamilyMessages({ id_family: id_family, index: 0 });
-      if (response) {
-        const newMessages = response.map((message: any) => {
-          if (message.type === 'photo') {
-            setImages(message.content);
-          }
-          return message;
-        });
-  
-        setMessages(newMessages);
+      if (response && response.length > 0) { 
+        const firstMessage = response[0]; 
+        if (firstMessage.type === 'photo') {
+          setImages(prevImages => [firstMessage.content, ...prevImages]); 
+        }
+        setMessages(prevMessages => [firstMessage, ...prevMessages]);
       }
     } catch (error) {
       console.error('Error fetching new messages:', error);
     }
   };
+  
   
   const loadMoreMessages = () => {
     setCurrentIndex(currentIndex + 1);
