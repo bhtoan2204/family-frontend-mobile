@@ -7,6 +7,8 @@ import { GuildLineDetail, Step } from 'src/interface/guideline/guideline';
 import GuildLineService from 'src/services/apiclient/GuildLineService';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import * as ImagePicker from 'expo-image-picker';
+import PickImageSheet from './PickImageSheet/PickImageSheet';
+import { useKeyboardVisible } from 'src/hooks/useKeyboardVisible';
 const screenWidth = Dimensions.get('window').width;
 const GuildLineDetailScreen = ({ navigation, route }: any) => {
     const { id_item, id_family } = route.params
@@ -16,7 +18,13 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
     const [loading, setLoading] = useState(true)
     const [previousStep, setPreviousStep] = useState(0)
     const [isAdding, setIsAdding] = useState(false)
+    const [isEditing, setIsEditing] = useState(false)
+    const [isUploading, setIsUploading] = useState(false)
+    const isKeyboardVisible = useKeyboardVisible();
     const bottomSheetRef = React.useRef<RBSheet>(null);
+    const [inputName, setInputName] = useState("");
+    const [inputDescription, setInputDescription] = useState("");
+
     useEffect(() => {
         const fetchGuildLineDetail = async () => {
             try {
@@ -45,14 +53,15 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
         };
         fetchGuildLineDetail();
     }, [])
+
     const nextStep = () => {
         setCurrentStep(currentStep + 1)
     }
     const prevStep = () => {
         setCurrentStep(currentStep <= 0 ? 0 : currentStep - 1)
     }
-    const handleIsAddingGuildLine = async () => {
-        // Thêm bước mới vào mảng
+
+    const handleIsAddingStep = async () => {
         const newStep: Step = {
             name: "",
             description: "",
@@ -71,19 +80,66 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
     const handleCancelAddStep = () => {
         console.log(guildLineSteps?.filter((step, index) => index !== guildLineSteps.length - 1));
         setGuildLineSteps(guildLineSteps?.filter((step, index) => index !== guildLineSteps.length - 1));
+        setInputDescription("");
+        setInputName("");
         setCurrentStep(previousStep);
         setIsAdding(false);
     };
 
     const handleSaveAddStep = async () => {
         setIsAdding(false);
-        setCurrentStep(previousStep);
-        const newStep = guildLineSteps?.filter((step, index) => index === guildLineSteps.length - 1)[0];
-        // if (newStep) {
-        //     await GuildLineService.addStepGuildLine(id_family, id_item, newStep);
-        // }
+        setCurrentStep(currentStep);
+        const newStep = guildLineSteps?.filter((step, index) => index === currentStep)[0];
+        if (newStep) {
+            setGuildLineSteps((prev) => {
+                return prev?.map((step, index) => {
+                    if (index === currentStep) {
+                        return {
+                            imageUrl: newStep.imageUrl || "",
+                            name: inputName,
+                            description: inputDescription,
+                        }
+                    }
+                    return step
+                })
+            })
+        }
+        setInputDescription("");
+        setInputName("");
+        console.log("cout<<")
         console.log(newStep)
     }
+
+    const handleSaveEdit = async () => {
+        setIsEditing(false);
+        const newStep = guildLineSteps?.filter((step, index) => index === currentStep)[0];
+        console.log(newStep)
+        if (newStep) {
+            setGuildLineSteps((prev) => {
+                return prev?.map((step, index) => {
+                    if (index === currentStep) {
+                        return {
+                            imageUrl: newStep.imageUrl,
+                            name: inputName,
+                            description: inputDescription,
+                        }
+                    }
+                    return step
+                })
+
+
+            })
+        }
+        setInputDescription("");
+        setInputName("");
+    }
+    const handleCancelEdit = () => {
+        setIsEditing(false);
+        setInputDescription("");
+        setInputName("");
+    }
+
+
     if (loading) {
         return <ActivityIndicator style={{ flex: 1, justifyContent: 'center' }} size="small" />;
     }
@@ -101,21 +157,7 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
 
             if (!result.canceled) {
                 console.log(result.assets[0].uri);
-                // if (!isAdding) {
-                //     setGuildLineSteps((prev) => {
-                //         return prev?.map((step, index) => {
-                //             if (index === currentStep) {
-                //                 return {
-                //                     ...step,
-                //                     imageUrl: result.assets[0].uri
-                //                 }
-                //             }
-                //             return step
-                //         })
 
-                //     })
-                //     await GuildLineService.updateImageStepGuildLine(result.assets[0].uri, id_family, id_item, guildLineSteps![currentStep], currentStep)
-                // }
                 setGuildLineSteps((prev) => {
                     return prev?.map((step, index) => {
                         if (index === currentStep) {
@@ -147,21 +189,7 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
 
             if (!result.canceled) {
                 console.log(currentStep)
-                // if (!isAdding) {
-                //     setGuildLineSteps((prev) => {
-                //         return prev?.map((step, index) => {
-                //             if (index === currentStep) {
-                //                 return {
-                //                     ...step,
-                //                     imageUrl: result.assets[0].uri
-                //                 }
-                //             }
-                //             return step
-                //         })
 
-                //     })
-                //     await GuildLineService.updateImageStepGuildLine(result.assets[0].uri, id_family, id_item, guildLineSteps![currentStep], currentStep)
-                // }
                 setGuildLineSteps((prev) => {
                     return prev?.map((step, index) => {
                         if (index === currentStep) {
@@ -185,105 +213,154 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
 
     return (
         <View className='flex-1 bg-[#fff] items-center '>
-            <View className='w-full  flex-row justify-between items-center py-3 z-10' >
+            <View className='w-full  flex-row justify-between items-center py-3 z-10 bg-white' >
                 {
-                    isAdding ? <TouchableOpacity
-                        onPress={() => {
-                            handleCancelAddStep()
-                        }}
-                    ><Text className='text-red-600 text-lg ml-3'>Cancel</Text></TouchableOpacity> : <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
-                        <Material name="chevron-left" size={30} style={{ color: COLORS.primary, fontWeight: "bold" }} />
-                        <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Back</Text>
-                    </TouchableOpacity>
+                    isAdding || isEditing ?
+                        <TouchableOpacity
+                            onPress={() => {
+                                if (isAdding) {
+                                    handleCancelAddStep()
+                                } else {
+                                    handleCancelEdit()
+                                }
+                            }}
+                        ><Text className='text-red-600 text-lg ml-3'>Cancel</Text>
+                        </TouchableOpacity>
+                        : <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
+                            <Material name="chevron-left" size={30} style={{ color: COLORS.primary, fontWeight: "bold" }} />
+                            <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Back</Text>
+                        </TouchableOpacity>
                 }
                 <View className='mr-3'>
                     {
-                        isAdding ? <TouchableOpacity onPress={() => {
-                            handleSaveAddStep()
-                        }}>
-                            <Text className=' text-lg ' style={{ color: COLORS.primary }}>Save</Text>
-                        </TouchableOpacity> : <TouchableOpacity onPress={() => {
-                            handleIsAddingGuildLine()
-                        }}>
-                            <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' />
-                        </TouchableOpacity>
+                        isAdding || isEditing
+                            ? <TouchableOpacity onPress={() => {
+                                if (isAdding) {
+                                    handleSaveAddStep()
+                                }
+                                else {
+                                    handleSaveEdit()
+                                }
+                            }}>
+                                <Text className=' text-lg ' style={{ color: COLORS.primary }}>Save</Text>
+                            </TouchableOpacity>
+
+                            : <TouchableOpacity onPress={() => {
+                                handleIsAddingStep()
+                            }}>
+                                <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' />
+                            </TouchableOpacity>
                     }
                 </View>
             </View>
-            <KeyboardAvoidingView className=' h-full flex flex-col items-center mt-3 ' behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <KeyboardAvoidingView className=' h-full flex flex-col items-center mt-3  ' behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
                 {
                     guildLineSteps && <>
                         <View className='h-[50%] w-[90%] flex-col justify-center items-center mb-10  rounded-full mx-4 '>
-                            <TouchableOpacity onPress={() => {
+                            <TouchableOpacity disabled={isKeyboardVisible == true} onPress={() => {
                                 console.log(currentStep)
                                 bottomSheetRef.current?.open()
                             }} >
-                                <Image source={guildLineSteps[currentStep].imageUrl == null || guildLineSteps[currentStep].imageUrl == "" ? Img : { uri: guildLineSteps[currentStep].imageUrl }} resizeMode='contain' style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} />
+                                <Image source={guildLineSteps[currentStep].imageUrl == null || guildLineSteps[currentStep].imageUrl == "" || guildLineSteps[currentStep].imageUrl == undefined
+                                    ? Img
+                                    : { uri: guildLineSteps[currentStep].imageUrl }} resizeMode='cover' style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} />
                             </TouchableOpacity>
 
-
                             {
-                                guildLineSteps[currentStep].imageUrl == null || guildLineSteps[currentStep].imageUrl == "" && <TouchableOpacity style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} className='absolute bg-white opacity-80 flex justify-center items-center rounded' onPress={() => {
-                                    console.log("handle change photo here")
+                                guildLineSteps[currentStep].imageUrl == null || guildLineSteps[currentStep].imageUrl == ""
+                                &&
+                                <TouchableOpacity style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} className='absolute' activeOpacity={1.0} disabled={isKeyboardVisible == true} onPress={() => {
+                                    console.log(currentStep)
                                     bottomSheetRef.current?.open()
-                                }} activeOpacity={1}>
-                                    <Material name="file-image-plus" size={30} style={{ color: "gray" }} className='' />
+                                }}>
+                                    <View className='opacity-80 bg-white h-full w-full flex justify-center items-center rounded'>
+
+                                        <Material name="file-image-plus" size={30} style={{ color: "gray" }} className='' />
+                                    </View>
                                 </TouchableOpacity>
                             }
                         </View>
-                        <View className='flex-row'>
-                            {guildLineSteps.map((step, index) => {
-                                return (
-                                    <View style={{
-                                        ...styles.stepIndicator,
-                                        width: currentStep === index ? screenWidth / guildLineSteps.length - 5 : screenWidth / guildLineSteps.length - 12,
-                                        backgroundColor: currentStep === index ? COLORS.primary : "#d1d1d1"
-                                    }} key={index}></View>
-                                )
-                            })}
+                        <View className='bg-white  w-full'>
+                            <View className='flex-row'>
+                                {guildLineSteps.map((step, index) => {
+                                    return (
+                                        <TouchableOpacity style={{
+                                            ...styles.stepIndicator,
+                                            width: currentStep === index ? screenWidth / guildLineSteps.length - 5 : screenWidth / guildLineSteps.length - 12,
+                                            backgroundColor: currentStep === index ? COLORS.primary : "#d1d1d1"
+                                        }} key={index}></TouchableOpacity>
+                                    )
+                                })}
+                            </View>
+                            {
+                                !isAdding && !isEditing ?
+                                    <TouchableOpacity onPress={() => {
+                                        setIsEditing(true)
+                                        setInputName(guildLineSteps[currentStep].name)
+                                        setInputDescription(guildLineSteps[currentStep].description)
+                                    }}>
+                                        <Text className='text-center px-4 text-2xl font-bold mt-5 ' style={{ color: COLORS.primary }}>Step {currentStep + 1}: {guildLineSteps[currentStep].name != ""
+                                            &&
+                                            guildLineSteps[currentStep].name != null
+                                            ? guildLineSteps[currentStep].name : "Add name"}</Text>
+                                    </TouchableOpacity>
+                                    : <TextInput className='text-center px-4 text-2xl font-bold mt-5 ' style={{ color: COLORS.primary }} placeholder='Enter name of step' autoFocus onChangeText={(text) => {
+                                        // setGuildLineSteps((prev) => {
+                                        //     return prev?.map((step, index) => {
+                                        //         if (index === currentStep) {
+                                        //             return {
+                                        //                 ...step,
+                                        //                 name: text
+                                        //             }
+                                        //         }
+                                        //         return step
+                                        //     })
+
+                                        // })
+                                        setInputName(text)
+                                        // guildLineSteps[currentStep].name = e.nativeEvent.text
+
+                                    }
+                                    }
+                                        value={inputName}
+                                    />
+                            }
+                            {
+                                !isAdding && !isEditing
+                                    ?
+                                    <TouchableOpacity onPress={() => {
+                                        setIsEditing(true)
+                                        setInputName(guildLineSteps[currentStep].name)
+                                        setInputDescription(guildLineSteps[currentStep].description)
+                                    }}>
+                                        <Text className='text-center px-4 text-lg mt-5 text-[#a1a1a1]' >{guildLineSteps[currentStep].description != "" && guildLineSteps[currentStep].description != null ? guildLineSteps[currentStep].description : "Add description"}</Text>
+                                    </TouchableOpacity>
+                                    :
+                                    <TextInput className='text-center px-4 text-lg mt-5' placeholder='Enter description (optional)' onChangeText={(text) => {
+                                        setInputDescription(text)
+                                        // setGuildLineSteps((prev) => {
+                                        //     return prev?.map((step, index) => {
+                                        //         if (index === currentStep) {
+                                        //             return {
+                                        //                 ...step,
+                                        //                 description: text
+                                        //             }
+                                        //         }
+                                        //         return step
+                                        //     })
+
+                                        // })
+                                    }}
+                                        value={inputDescription}
+                                    />
+                            }
                         </View>
-                        {
-                            !isAdding ? <Text className='text-center px-4 text-2xl font-bold mt-5 ' style={{ color: COLORS.primary }}>Step {currentStep + 1}: {guildLineSteps[currentStep].name != "" && guildLineSteps[currentStep].name != null ? guildLineSteps[currentStep].name : "Add name"}</Text> : <TextInput className='text-center px-4 text-2xl font-bold mt-5 ' style={{ color: COLORS.primary }} placeholder='Enter name of step' onChangeText={(text) => {
-                                setGuildLineSteps((prev) => {
-                                    return prev?.map((step, index) => {
-                                        if (index === guildLineSteps.length - 1) {
-                                            return {
-                                                ...step,
-                                                name: text
-                                            }
-                                        }
-                                        return step
-                                    })
-
-                                })
-                                // guildLineSteps[currentStep].name = e.nativeEvent.text
-
-                            }} />
-                        }
-                        {
-                            !isAdding ? <Text className='text-center px-4 text-lg mt-5 text-[#a1a1a1]' >{guildLineSteps[currentStep].description != "" && guildLineSteps[currentStep].description != null ? guildLineSteps[currentStep].description : "Add description"}</Text> : <TextInput className='text-center px-4 text-lg mt-5' placeholder='enter' onChangeText={(text) => {
-                                setGuildLineSteps((prev) => {
-                                    return prev?.map((step, index) => {
-                                        if (index === guildLineSteps.length - 1) {
-                                            return {
-                                                ...step,
-                                                description: text
-                                            }
-                                        }
-                                        return step
-                                    })
-
-                                })
-                            }}
-
-                            />
-                        }
 
                     </>
                 }
                 {
                     guildLineSteps && !isAdding && <>
-                        <View style={styles.navigationView}>
+                        <View style={styles.navigationView} className=''>
                             {
                                 currentStep > 0 ?
                                     <TouchableOpacity
@@ -316,72 +393,16 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
                     </>
                 }
             </KeyboardAvoidingView>
-            <RBSheet
-                ref={bottomSheetRef}
-                closeOnDragDown={true}
-                closeOnPressMask={true}
-                customStyles={{
-                    container: {
-                        backgroundColor: "white",
-
-                        height: Dimensions.get("window").height / 3,
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                    },
-                    draggableIcon: {
-                        display: "none",
-                    }
-                }}
-            >
-                <View className='flex-col p-6 h-full bg-[#fafafa] justify-center'>
-                    <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
-                        await handleTakePhoto()
-
-                    }}>
-                        <Text className='text-lg font-semibold'>Take a photo</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity className='h-16 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
-                        await handlePickImage()
-
-                    }}>
-                        <Text className='text-lg font-semibold'>Choose Image from Library</Text>
-                    </TouchableOpacity>
-                </View>
-            </RBSheet>
+            <PickImageSheet bottomSheetRef={bottomSheetRef} handlePickImage={handlePickImage} handleTakePhoto={handleTakePhoto} />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    stepImage: {
-        width: "90%",
-        height: "40%",
-        marginVertical: 30
-    },
-    stepIndicatorView: {
-        flexDirection: "row",
-        width: Dimensions.get("window").width,
-    },
     stepIndicator: {
-
         height: 10,
         marginHorizontal: 5,
         borderRadius: 10
-    },
-    title: {
-        fontWeight: "bold",
-        fontSize: 30,
-        marginVertical: 20,
-    },
-    description: {
-        textAlign: "center",
-        paddingHorizontal: 10
     },
     navigationView: {
         flexDirection: "row",
