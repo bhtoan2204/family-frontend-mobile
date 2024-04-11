@@ -14,7 +14,7 @@ const socketMiddleware = (storeAPI: MiddlewareAPI) => (next: Dispatch<AnyAction>
       const socket = io('https://api.rancher.io.vn/chat', {
         transports: ['polling', 'websocket'],
 
-        extraHeaders: { Authorization:  `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhbmhoYW90b2FuMjAwMkBnbWFpbC5jb20iLCJpZF91c2VyIjoiYmQ5NGJhM2EtYjA0Ni00YTA1LWEyNjAtODkwOTEzZTA5ZGY5IiwicGhvbmUiOiIwOTcxMzA4NjIzIiwiaXNhZG1pbiI6dHJ1ZSwiaWF0IjoxNzEyNzY3NjQ1LCJleHAiOjE3MTI4NTQwNDV9.IJ9YF1Wl_PE1apx5PSseGsOs1iPQUb238-i2HWs1Tso` } 
+        extraHeaders: { Authorization:  `Bearer ${accessToken}` } 
       });
 
       socket.on('connect', () => {

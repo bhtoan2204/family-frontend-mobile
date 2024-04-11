@@ -13,6 +13,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import ImageView from "react-native-image-viewing";
 
+
 interface Message {
   senderId: string;
   type: string;
@@ -41,7 +42,6 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [isTextInputEmpty, setIsTextInputEmpty] = useState(true);
-  const [listKey, setListKey] = useState(0);
   const [refreshFlatList, setRefreshFlatList] = useState(false); 
   const fetchMember = async (receiverId?: string, id_user?: string) => {
     try {
@@ -106,11 +106,11 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   };
   const fetchNewMessages = async () => {
     try {
-      const response = await ChatServices.GetMessages({ id_user: receiverId, index: 0 }); // Fetch tin nhắn mới từ index 0
+      const response = await ChatServices.GetMessages({ id_user: receiverId, index: 0 });
       if (response) {
         const newMessages = response.map((message: any) => {
           if (message.type === 'photo') {
-            setImages(prevImages => [...prevImages, message.content]);
+            setImages(message.content);
           }
           return message;
         });
@@ -122,7 +122,6 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   };
   const handleSendImage = async (base64Image: string) => {
     await sendImage(base64Image);
-    setCurrentIndex(0); 
     await fetchMessages();
     setRefreshFlatList(prevState => !prevState); 
     await fetchNewMessages(); 
@@ -132,7 +131,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   const handleSendMessage = async () => {
     await sendMessage();
     setMessage('');
-    setCurrentIndex(0);
+    setRefreshFlatList(prevState => !prevState); 
     await fetchNewMessages(); 
   };
   
@@ -167,7 +166,6 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
 
   const handleImagePress = (item: Message) => {
     const itemIndex = messages.findIndex(message => message === item);
-
       setSelectedImageIndex(itemIndex);
     
   };
@@ -190,15 +188,12 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
       });
     }
 
-    return () => {
-      if (socket) {
-        socket.off('onNewMessage');
-      }
-    };
   }, [socket, message]);
   
 
-  
+  const handleVideoCall = () =>{
+
+  }
   
 
 
@@ -216,58 +211,62 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
             </>
           )}
         </View>
+        <TouchableOpacity onPress={handleVideoCall}>
+          <Icon name="videocam" size={36} style={styles.videoCallButton} />
+        </TouchableOpacity>
       </View>
       <FlatList
- key={refreshFlatList ? 'refresh' : 'no-refresh'}
-  style={styles.messagesContainer}
-  contentContainerStyle={styles.contentContainer}
-  data={messages}
-  inverted
-  renderItem={({ item, index }) => (
-    <View style={[
-      styles.messageContainer,
-      item.senderId === id_user ? styles.senderMessageContainer : styles.receiverMessageContainer,
-      { flex: 1 },
-    ]}>
-      {item.type === 'photo' ? (
-        <TouchableOpacity onPress={() => handleImagePress(item)}>
-          <View style={styles.messageContentContainer}>
-            <Image source={{ uri: item.content }} style={styles.imageMessage} />
+        key={refreshFlatList ? 'refresh' : 'no-refresh'}
+        style={styles.messagesContainer}
+        contentContainerStyle={styles.contentContainer}
+        data={messages}
+        inverted
+        renderItem={({ item, index }) => (
+          <View style={[
+            styles.messageContainer,
+            item.senderId === id_user ? styles.senderMessageContainer : styles.receiverMessageContainer,
+            { flex: 1 },
+          ]}>
+            {item.type === 'photo' ? (
+              <TouchableOpacity onPress={() => handleImagePress(item)}>
+                <View style={styles.messageContentContainer}>
+                  <Image source={{ uri: item.content }} style={styles.imageMessage} />
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <Text style={styles.senderMessageContent}>{item.content}</Text>
+            )}
           </View>
-        </TouchableOpacity>
-      ) : (
-        <Text style={styles.senderMessageContent}>{item.content}</Text>
-      )}
-    </View>
-  )}
-  keyExtractor={(item, index) => index.toString()}
-  keyboardShouldPersistTaps="handled"
-  onEndReached={loadMoreMessages}
-  onEndReachedThreshold={0.1}
-/>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={[styles.input, { flexGrow: 1, marginBottom: Platform.OS === 'ios' ? 0 : 10 }]}
-          value={message}
-          onChangeText={setMessage}
-          placeholder="Type your message here"
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          keyboardShouldPersistTaps="handled"
+          onEndReached={loadMoreMessages}
+          onEndReachedThreshold={0.1}
         />
-        <TouchableOpacity onPress={handleOpenImageLibrary}>
-          <Icon name="images" size={36} />
+      <View style={[styles.inputContainer]}>
+        <View style={{ flex: 1 }}>
+          <TextInput
+            style={[styles.input, { marginBottom: Platform.OS === 'ios' ? 0 : 10 }]}
+            value={message}
+            onChangeText={setMessage}
+            placeholder="Type your message here"
+          />
+        </View>
+        <TouchableOpacity onPress={handleOpenImageLibrary} style={{ marginLeft: 10 }}>
+          <Icon name="images" size={30} />
         </TouchableOpacity>
-        <Button title="Send" onPress={handleSendMessage} disabled={isTextInputEmpty} />
+        <TouchableOpacity onPress={handleSendMessage} disabled={isTextInputEmpty} style={{ marginLeft: 10 }}>
+          <Icon name="send" size={30} />
+        </TouchableOpacity>
       </View>
       
       <ImageView
-        images={images.map(image => ({ uri: image }))}
+        images={messages.filter(msg => msg.type === 'photo').map(msg => ({ uri: msg.content }))}
         imageIndex={selectedImageIndex || 0}
         visible={selectedImageIndex !== null}
         onRequestClose={handleCloseModal}
         backgroundColor="rgba(0, 0, 0, 0.8)" 
       />
-
-
-      
 
     </KeyboardAvoidingView>
   );

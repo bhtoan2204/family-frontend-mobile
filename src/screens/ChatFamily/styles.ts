@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   avatar: {
-    width: 60,
-    height: 60,
+    width: 40,
+    height: 40,
     borderRadius: 30,
     //arginRight: 10,
   },
@@ -121,5 +121,11 @@ const styles = StyleSheet.create({
     height: '80%',
     resizeMode: 'contain',
   },
+  videoCallButton: {
+    marginLeft: 10,
+  },
+  nameText: {
+
+  }
 });
 export default styles;

@@ -121,5 +121,8 @@ const styles = StyleSheet.create({
     height: '80%',
     resizeMode: 'contain',
   },
+  videoCallButton: {
+    marginLeft: 10,
+  },
 });
 export default styles;

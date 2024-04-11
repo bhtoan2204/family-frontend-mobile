@@ -1,23 +1,19 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, TextInput, Button, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, Image, FlatList} from 'react-native';
-import io from 'socket.io-client';
-import styles from './styles';
-import {ChatFamilyScreenProps} from 'src/navigation/NavigationTypes';
-import ChatServices from 'src/services/apiclient/ChatServices';
-import LocalStorage from 'src/store/localstorage';
-import {FamilyServices} from 'src/services/apiclient';
-import {useMessageContext} from 'stream-chat-react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { sendFamilyMessage, sendFamilyImage, connectWebSocket } from 'src/redux/webSocketSlice';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'src/redux/rootReducer';
-import ImageView from "react-native-image-viewing";
+import { connectWebSocket } from 'src/redux/webSocketSlice';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
-import Icon from 'react-native-vector-icons/Ionicons';
+import ImageView from 'react-native-image-viewing';
+import { FamilyServices, ChatServices } from 'src/services/apiclient';
+import { ChatFamilyScreenProps } from 'src/navigation/NavigationTypes';
+import styles from './styles';
 
 interface Message {
-  senderID: string;
+  senderId: string;
   type: string;
   content: string;
 }
@@ -28,58 +24,59 @@ interface Member {
   lastname: string;
   avatar: string;
 }
+
 interface Family {
-  id_family: string;
+  id_family: number;
   name: string;
 }
-const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
+
+const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [members, setMembers] = useState<Member[]>([]);
-  const {id_user, id_family} = route.params || {};
-  const [family, setFamily] = useState<Family | null>(null);
-  const [isSocketConnected, setIsSocketConnected] = useState(false);
-  const dispatch = useDispatch();
-  const socket = useSelector((state: RootState) => state.webSocket.socket);
+  const [family, setFamily] = useState<Family>();
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [isTextInputEmpty, setIsTextInputEmpty] = useState(true);
-  const avatar= 'https://storage.googleapis.com/famfund-bucket/chat/chat_28905675-858b-4a93-a283-205899779622_1712683096675';
-  
+  const dispatch = useDispatch();
+  const socket = useSelector((state: RootState) => state.webSocket.socket);
+  const { id_user, id_family } = route.params || {};
+  const [memberLookup, setMemberLookup] = useState<{ [key: string]: Member }>({});
+  const avatar = 'https://storage.googleapis.com/famfund-bucket/chat/chat_28905675-858b-4a93-a283-205899779622_1712683096675';
+  const [refreshFlatList, setRefreshFlatList] = useState(false); 
+
   useEffect(() => {
     fetchMember();
-    fetchFamily()
+    fetchFamily();
     fetchMessages();
     dispatch(connectWebSocket());
     setIsTextInputEmpty(message.trim() === '');
-    if (!isSocketConnected) {
-      dispatch(connectWebSocket());
-      setIsSocketConnected(true);
-      if (socket) {
-        setIsSocketConnected(true);
-      }
-    }    
-  }, [ currentIndex, message]);
+  }, [currentIndex, message]);
+
+  useEffect(() => {
+    const lookup: { [key: string]: Member } = {};
+    members.forEach(member => {
+      lookup[member.id_user] = member;
+    });
+    setMemberLookup(lookup);
+  }, [members]);
 
   const fetchFamily = async () => {
     try {
-      const response = await FamilyServices.getFamily({
-        id_family: id_family,
-      });
-      if (response) {
-        setFamily(response);
+      const response = await FamilyServices.getFamily({ id_family: id_family });
+      if (response[0]) {
+        setFamily(response[0]);
       }
     } catch (error) {
       console.error('Error fetching family:', error);
     }
   };
+
   const fetchMember = async () => {
     try {
-      const response = await FamilyServices.getAllMembers({
-        id_family: id_family,
-      });
-      if (response) {
+      const response = await FamilyServices.getAllMembers({ id_family: id_family });
+      if (Array.isArray(response)) {
         setMembers(response);
       }
     } catch (error) {
@@ -89,10 +86,7 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
 
   const fetchMessages = async () => {
     try {
-      const response = await ChatServices.GetFamilyMessages({
-        id_family: id_family,
-        index: currentIndex,
-      });
+      const response = await ChatServices.GetFamilyMessages({ id_family: id_family, index: currentIndex });
       if (response) {
         const newMessages = response.map((message: any) => {
           if (message.type === 'photo') {
@@ -107,41 +101,73 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
     }
   };
 
+  const fetchNewMessages = async () => {
+    try {
+      const response = await ChatServices.GetFamilyMessages({ id_family: id_family, index: 0 });
+      if (response) {
+        const newMessages = response.map((message: any) => {
+          if (message.type === 'photo') {
+            setImages(message.content);
+          }
+          return message;
+        });
+  
+        setMessages(newMessages);
+      }
+    } catch (error) {
+      console.error('Error fetching new messages:', error);
+    }
+  };
+  
   const loadMoreMessages = () => {
     setCurrentIndex(currentIndex + 1);
     fetchMessages();
   };
+  
+  const sendImage = async (base64Image: string) => {
+    try {
+      if (socket) {
+        socket.emit('newFamilyImageMessage', {
+          familyId: id_family,
+          imageData: base64Image,
+        });
+        console.log('Message sent!');
+      }
+    } catch (error) {
+      console.error('Error sending image:', error);
+    }
+  };
 
-  const handleSendMessage = async () => {
+  const sendMessage = async () => {
     if (socket) {
-      console.log(message);
       socket.emit('newFamilyMessage', {
         message: message,
         familyId: id_family,
       });
       console.log('Message sent!');
-
+    } else {
+      console.log('socket error');
     }
   };
-  const handleSendImage= async (imageData: string) => {
-    if (socket) {
-      socket.emit('newFamilyImageMessage', {
-        familyId: id_family,
 
-        imageData: imageData,
-      });
-      console.log('Message sent!');
-      setMessage('');
-
-    }
+  const handleSendMessage = async () => {
+    await sendMessage();
+    setMessage('');
+    setRefreshFlatList(prevState => !prevState); 
+    await fetchNewMessages(); 
   };
+
+  const handleSendImage = async (imageData: string) => {
+    await sendImage(imageData);
+    setRefreshFlatList(prevState => !prevState); 
+    await fetchNewMessages(); 
+  };
+  
   const handleImagePress = (item: Message) => {
     const itemIndex = messages.findIndex(message => message === item);
-    if (itemIndex !== -1) {
-      const newIndex = Math.max(0, itemIndex - 4);
-      setSelectedImageIndex(newIndex);
-    }
+    setSelectedImageIndex(itemIndex);
   };
+
   const handleOpenImageLibrary = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -169,11 +195,37 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
       console.error('Error opening image library:', error);
     }
   };
+
+  const renderMemberMessage = (item: Message) => {
+    const member = memberLookup[item.senderId];
+    if (member) {
+      return (
+        <View style={{ flexDirection: 'row', marginVertical: 4 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+            <Image source={{ uri: member.avatar }} style={styles.avatar} />
+          </View>
+          <View style={[styles.messageContainer, styles.receiverMessageContainer]}>
+            {item.type === 'photo' ? (
+              <TouchableOpacity onPress={() => handleImagePress(item)}>
+                <View style={styles.messageContentContainer}>
+                  <Image source={{ uri: item.content }} style={styles.imageMessage} />
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <Text style={styles.senderMessageContent}>{item.content}</Text>
+            )}
+          </View>
+        </View>
+      );
+    }
+    return null;
+  };
+
   const handleCloseModal = () => {
     setSelectedImageIndex(null);
   };
 
-  
+  const handleVideoCall = () => {};
 
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
@@ -185,30 +237,34 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
           {family && (
             <>
               <Image source={{ uri: avatar }} style={styles.avatar} />
-              <Text>{family.name}</Text>
+              <Text style={styles.nameText}> {family.name}</Text>
             </>
           )}
         </View>
+        <TouchableOpacity onPress={handleVideoCall}>
+          <Icon name="videocam" size={36} style={styles.videoCallButton} />
+        </TouchableOpacity>
       </View>
       <FlatList
+        key={refreshFlatList ? 'refresh' : 'no-refresh'}
         style={styles.messagesContainer}
         contentContainerStyle={styles.contentContainer}
         data={messages}
         inverted
         renderItem={({ item, index }) => (
-          <View style={[
-            styles.messageContainer,
-            item.senderID === id_user ? styles.senderMessageContainer : styles.receiverMessageContainer,
-            { flex: 1 },
-          ]}>
-            {item.type === 'photo' ? (
-              <TouchableOpacity onPress={() => handleImagePress(item)}>
-                <View style={styles.messageContentContainer}>
-                  <Image source={{ uri: item.content }} style={styles.imageMessage} />
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <Text style={styles.senderMessageContent}>{item.content}</Text>
+          <View>
+            {item.senderId !== id_user ? renderMemberMessage(item) : (
+              <View style={[styles.messageContainer, styles.senderMessageContainer]}>
+                {item.type === 'photo' ? (
+                  <TouchableOpacity onPress={() => handleImagePress(item)}>
+                    <View style={styles.messageContentContainer}>
+                      <Image source={{ uri: item.content }} style={styles.imageMessage} />
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <Text style={styles.senderMessageContent}>{item.content}</Text>
+                )}
+              </View>
             )}
           </View>
         )}
@@ -218,19 +274,19 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
         onEndReachedThreshold={0.1}
       />
       <View style={styles.inputContainer}>
-        
         <TextInput
           style={[styles.input, { flexGrow: 1, marginBottom: Platform.OS === 'ios' ? 0 : 10 }]}
           value={message}
           onChangeText={setMessage}
           placeholder="Type your message here"
         />
-        <TouchableOpacity onPress={handleOpenImageLibrary}>
-          <Icon name="images" size={36} />
+        <TouchableOpacity onPress={handleOpenImageLibrary} style={{ marginLeft: 10 }}>
+          <Icon name="images" size={30} />
         </TouchableOpacity>
-        <Button title="Send" onPress={handleSendMessage} disabled={isTextInputEmpty} />
+        <TouchableOpacity onPress={handleSendMessage} disabled={isTextInputEmpty} style={{ marginLeft: 10 }}>
+          <Icon name="send" size={30} />
+        </TouchableOpacity>
       </View>
-
       <ImageView
         images={messages.filter(msg => msg.type === 'photo').map(msg => ({ uri: msg.content }))}
         imageIndex={selectedImageIndex || 0}
