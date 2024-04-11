@@ -124,5 +124,9 @@ const styles = StyleSheet.create({
   videoCallButton: {
     marginLeft: 10,
   },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'space-between',
+  },
 });
 export default styles;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, TextInput, Button, FlatList, TouchableOpacity, KeyboardAvoidingView, Platform, Image, Dimensions } from 'react-native';
+import { Text, View, TextInput, Button, FlatList, TouchableOpacity, KeyboardAvoidingView, Platform, Image, Dimensions, ScrollView } from 'react-native';
 import styles from './styles';
 import { ChatScreenProps } from 'src/navigation/NavigationTypes';
 import ChatServices from 'src/services/apiclient/ChatServices';
@@ -12,6 +12,7 @@ import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import ImageView from "react-native-image-viewing";
+import { Keyboard } from 'react-native';
 
 
 interface Message {
@@ -43,6 +44,8 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   const [images, setImages] = useState<string[]>([]);
   const [isTextInputEmpty, setIsTextInputEmpty] = useState(true);
   const [refreshFlatList, setRefreshFlatList] = useState(false); 
+  const [keyboardIsOpen, setKeyboardIsOpen] = useState(false); 
+
   const fetchMember = async (receiverId?: string, id_user?: string) => {
     try {
       const response1: AxiosResponse<Member[]> = await FamilyServices.getMember({ id_user: receiverId });
@@ -185,6 +188,17 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
         console.log('Received new image message:', eventName);
       });
     }
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardIsOpen(true);
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardIsOpen(false);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
 
   }, [socket, message]);
   
@@ -196,7 +210,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
 
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+<KeyboardAvoidingView behavior="padding" style={{ flex: 1, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={24} style={styles.backButton} />
@@ -241,22 +255,22 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
           onEndReached={loadMoreMessages}
           onEndReachedThreshold={0.1}
         />
-      <View style={[styles.inputContainer]}>
-        <View style={{ flex: 1 }}>
+      
+        <View style={[styles.inputContainer, keyboardIsOpen && { paddingBottom: 60 }]}>
           <TextInput
-            style={[styles.input, { marginBottom: Platform.OS === 'ios' ? 0 : 10 }]}
+            style={styles.input}
             value={message}
             onChangeText={setMessage}
             placeholder="Type your message here"
           />
+          <TouchableOpacity onPress={handleOpenImageLibrary} style={{ marginLeft: 10 }}>
+            <Icon name="images" size={30} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleSendMessage} disabled={isTextInputEmpty} style={{ marginLeft: 10 }}>
+            <Icon name="send" size={30} />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handleOpenImageLibrary} style={{ marginLeft: 10 }}>
-          <Icon name="images" size={30} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleSendMessage} disabled={isTextInputEmpty} style={{ marginLeft: 10 }}>
-          <Icon name="send" size={30} />
-        </TouchableOpacity>
-      </View>
+
       
       <ImageView
         images={messages.filter(msg => msg.type === 'photo').map(msg => ({ uri: msg.content }))}

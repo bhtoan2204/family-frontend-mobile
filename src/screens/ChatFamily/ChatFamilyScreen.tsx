@@ -11,6 +11,7 @@ import ImageView from 'react-native-image-viewing';
 import { FamilyServices, ChatServices } from 'src/services/apiclient';
 import { ChatFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import styles from './styles';
+import { Keyboard } from 'react-native';
 
 interface Message {
   senderId: string;
@@ -45,6 +46,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   const [memberLookup, setMemberLookup] = useState<{ [key: string]: Member }>({});
   const avatar = 'https://storage.googleapis.com/famfund-bucket/chat/chat_28905675-858b-4a93-a283-205899779622_1712683096675';
   const [refreshFlatList, setRefreshFlatList] = useState(false); 
+  const [keyboardIsOpen, setKeyboardIsOpen] = useState(false); 
 
   useEffect(() => {
     fetchMember();
@@ -52,6 +54,17 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
     fetchMessages();
     dispatch(connectWebSocket());
     setIsTextInputEmpty(message.trim() === '');
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardIsOpen(true);
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardIsOpen(false);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
   }, [ message]);
 
   useEffect(() => {
@@ -271,7 +284,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         onEndReached={loadMoreMessages}
         onEndReachedThreshold={0.1}
       />
-      <View style={styles.inputContainer}>
+      <View style={[styles.inputContainer, keyboardIsOpen && { paddingBottom: 60 }]}>
         <TextInput
           style={[styles.input, { flexGrow: 1, marginBottom: Platform.OS === 'ios' ? 0 : 10 }]}
           value={message}
