@@ -9,16 +9,13 @@ import {
 } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import {COLORS} from 'src/constants';
-import {FamilyStackProps} from 'src/navigation/NavigationTypes';
 import {PackageServices} from 'src/services/apiclient';
 import BottonSheetContent from './BottomSheetContent';
 import styles from './styles';
-import navigation from 'src/navigation';
-import {
-  PurchasedScreenProps,
-  ViewAllFamilyScreenProps,
-} from 'src/navigation/NavigationTypes';
+import {PurchasedScreenProps,ViewAllFamilyScreenProps,} from 'src/navigation/NavigationTypes';
+import { Profile } from 'src/redux/slices/ProfileSclice';
+import { useDispatch } from 'react-redux';
+
 type Profile = {
   id_user: string;
   firstname: string;
@@ -27,13 +24,11 @@ type Profile = {
   phone: string;
 };
 
-const HomeScreen = ({
-  navigation,
-}: PurchasedScreenProps & ViewAllFamilyScreenProps) => {
+const HomeScreen = ({navigation,}: PurchasedScreenProps & ViewAllFamilyScreenProps) => {
   const scrollY = new Animated.Value(0);
   const bottomSheetRef = useRef<RBSheet>(null);
   const screenHeight = Dimensions.get('screen').height;
-
+  const dispatch = useDispatch();
   const sheetHeight = screenHeight * 0.9;
   const [profile, setProfile] = useState<Profile>();
   const translateY = scrollY.interpolate({
@@ -64,11 +59,10 @@ const HomeScreen = ({
   // const handleProfile;
   const handleGetProfile = async () => {
     try {
-      console.log('handleGetProfile called');
       const result = await PackageServices.getProfile();
-      console.log('ProfileServices.getProfile result:', result.data);
       const id_user = result.data.id_user;
       setProfile(result.data);
+      dispatch(Profile(result.data));
     } catch (error: any) {
       console.log('ProfileServices.getProfile error:', error);
     }
@@ -139,3 +133,5 @@ const HomeScreen = ({
 };
 
 export default HomeScreen;
+
+

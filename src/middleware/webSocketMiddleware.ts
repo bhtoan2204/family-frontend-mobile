@@ -1,45 +1,35 @@
-import { AnyAction, Dispatch, MiddlewareAPI } from '@reduxjs/toolkit';
-import { connectWebSocket, setSocket, disconnectWebSocket } from '../redux/webSocketSlice'; 
-import { io, Socket } from "socket.io-client";
-import LocalStorage from 'src/store/localstorage';
-  
-let isSocketConnected = false;
+// import { AnyAction, Dispatch, Middleware, MiddlewareAPI } from '@reduxjs/toolkit';
+// import { connectWebSocket, setSocket, disconnectWebSocket } from '../redux/webSocketSlice'; 
+// import { io, Socket } from "socket.io-client";
+// import LocalStorage from 'src/store/localstorage';
 
-const socketMiddleware = (storeAPI: MiddlewareAPI) => (next: Dispatch<AnyAction>) => async (action: AnyAction) => {
+// const socketMiddleware: Middleware = (storeAPI) => (next) => async (action: any) => {
 
-  const accessToken = await LocalStorage.GetAccessToken();
+//   const accessToken = await LocalStorage.GetAccessToken();
+//   if (action.type === 'webSocket/connectWebSocket' ) {
+//     if (storeAPI.getState().webSocket.isConnected === false) {
 
-  if (action.type === 'webSocket/connectWebSocket' && !isSocketConnected) {
-    try {
-      const socket = io('https://api.rancher.io.vn/chat', {
-        transports: ['polling', 'websocket'],
+//     try {
+//       const socket = io('https://api.rancher.io.vn/chat', {
+//         extraHeaders: { Authorization:  `Bearer ${accessToken}` } 
+//       });
 
-        extraHeaders: { Authorization:  `Bearer ${accessToken}` } 
-      });
+//       socket.on('connect', () => {
+//         storeAPI.dispatch(setSocket(socket));
 
-      socket.on('connect', () => {
-        storeAPI.dispatch(setSocket(socket));
+//         console.log('socket connect')
+//         storeAPI.dispatch(connectWebSocket()); 
+//       });
 
-        console.log('socket connect')
-        storeAPI.dispatch(connectWebSocket()); 
-        isSocketConnected = true; 
-      });
 
-      socket.on('onNewMessage', (msg) => {
-        console.log('Received new message:', msg);
-
-      });
-      socket.on('onNewImageMessage', (msg) => {
-        console.log('Received new message:', msg);
-
-      });
     
-    } catch (error) {
-      console.error('Socket connection error:', error);
-    }
-  }
+//     } catch (error) {
+//       console.error('Socket connection error:', error);
+//     }
+//   };
 
-  return next(action);
-};
+//   return next(action);
+// };
+// };
 
-export default socketMiddleware;
+// export default socketMiddleware;

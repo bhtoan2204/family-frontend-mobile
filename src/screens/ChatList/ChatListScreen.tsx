@@ -82,12 +82,12 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
     fetchData(currentPage);
   }, [currentPage]);
 
-  const handlePressChat = (receiverId?: string) => {
+  const handlePressChat = (id_user?: string, receiverId?: string) => {
     navigation.navigate('ChatUser', { id_user: id_user, receiverId: receiverId });
   };
 
   const renderChatItem = ({ item }: { item: ChatItem }) => (
-    <TouchableOpacity onPress={() => handlePressChat(item._id)}>
+    <TouchableOpacity onPress={() => handlePressChat(id_user,item._id)}>
       <View style={styles.chatItem}>
         <View style={styles.avatarContainer}>
           {item.user.avatar ? (

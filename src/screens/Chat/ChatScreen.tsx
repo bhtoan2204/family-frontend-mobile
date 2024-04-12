@@ -6,14 +6,12 @@ import ChatServices from 'src/services/apiclient/ChatServices';
 import { FamilyServices } from 'src/services/apiclient';
 import { AxiosResponse } from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'src/redux/rootReducer';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import ImageView from "react-native-image-viewing";
 import { Keyboard } from 'react-native';
-
+import { getSocket } from '../../services/apiclient/Socket';
 
 interface Message {
   senderId: string;
@@ -38,13 +36,13 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [receiver, setReceiver] = useState<Member>();
   const { id_user, receiverId } = route.params || {};
-  const dispatch = useDispatch();
-  const socket = useSelector((state: RootState) => state.webSocket.socket);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [isTextInputEmpty, setIsTextInputEmpty] = useState(true);
   const [refreshFlatList, setRefreshFlatList] = useState(false); 
   const [keyboardIsOpen, setKeyboardIsOpen] = useState(false); 
+  let socket = getSocket();
+
 
   const fetchMember = async (receiverId?: string, id_user?: string) => {
     try {
@@ -172,10 +170,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
     console.log(itemIndex)
   };
   
-  
-  
-  
-
+ 
   const handleCloseModal = () => {
     setSelectedImageIndex(null);
   };
@@ -184,11 +179,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
     fetchMessages();
     fetchMember(receiverId, id_user);
     setIsTextInputEmpty(message.trim() === '');
-    if (socket) {
-      socket.onAny((eventName, ...args) => {
-        console.log('Received new image message:', eventName);
-      });
-    }
+
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
       setKeyboardIsOpen(true);
     });
@@ -201,9 +192,24 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
       keyboardDidHideListener.remove();
     };
 
-  }, [socket, message]);
+  }, [message]);
+
+   
+
+  useEffect(() => {
+    const handleNewMessage = (message: any) => {
+      console.log('New message received:', message);
+    };
+  
+    if (socket) {
+      socket.onAny((eventName, ...args) => {
+        console.log(`Received event '${eventName}':`, args);
+      });
+      socket.on('onNewMessage', handleNewMessage);
+    }
   
 
+  }); 
   const handleVideoCall = () =>{
 
   }
