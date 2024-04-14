@@ -5,6 +5,7 @@ import { AxiosResponse } from "axios";
 import { FamilyServices } from "src/services/apiclient";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProfile, selectProfile } from "src/redux/slices/ProfileSclice";
+import * as Permissions from 'expo-permissions';
 
 interface Member {
     id_user: string;
@@ -39,42 +40,55 @@ const Notification = () => {
     };
     
     const handleNewMessage = (message: Message) => {
-        try{
+        try {
+            console.log("New message received:", message);
             fetchMember(message.senderId);
 
-        if (profile.id_user === message.receiverId && sender) {
-            console.log('hi')
-            const notificationContent: Notifications.NotificationContentInput = {
-                title: `${sender?.firstname || ''} ${sender?.lastname || ''}`,
-                subtitle: null, 
-                body: message.content, 
-                data: {},
-                sound: 'default', 
-            };
+            if (profile.id_user === message.receiverId && sender) {
+ 
+                console.log("Creating notification...");
+                const notificationContent: Notifications.NotificationContentInput = {
+                    title: `${sender?.firstname || ''} ${sender?.lastname || ''}`,
+                    subtitle: null, 
+                    body: message.content, 
+                    data: {},
+                    sound: 'default', 
+                };
 
-            Notifications.scheduleNotificationAsync({
-                content: notificationContent,
-                trigger: null,
-            });
+                Notifications.scheduleNotificationAsync({
+                    content: notificationContent,
+                    trigger: { seconds: 1 },
+                });
+            }
+        } catch(error) {
+            console.log("Error handling new message:", error);
         }
-    }catch(error){
-        console.log(error);
-    }
     };
     
     useEffect(() => {
+        const checkNotificationPermission = async () => {
+            const { status } = await Notifications.getPermissionsAsync();
+            if (status !== 'granted') {
+                const { status: newStatus } = await Notifications.requestPermissionsAsync();
+                if (newStatus !== 'granted') {
+                    console.log('Notification permission not granted');
+                    return;
+                }
+            }
+
+            console.log('Notification permission granted');
+        };
+
+        checkNotificationPermission();
         dispatch(fetchProfile());
     }, []);
 
     useEffect(() => {
+        console.log("Setting up socket listener...");
         if (socket) {
             socket.on('onNewMessage', handleNewMessage);
-
-            return () => {
-                socket.off('onNewMessage', handleNewMessage);
-            }
         }
-    }, [socket]);
+    });
 
     return null; 
 };

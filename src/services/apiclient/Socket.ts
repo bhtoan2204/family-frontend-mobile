@@ -23,9 +23,7 @@ const SocketConnection = async () => {
     console.log('Socket connected');
   });
 
-  socket.on('onNewMessage', (data: any) => {
-    console.log('New message received:', data);
-  });
+
 
 
   return socket;

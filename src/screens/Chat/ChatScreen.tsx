@@ -196,20 +196,20 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
 
    
 
-  useEffect(() => {
-    const handleNewMessage = (message: any) => {
-      console.log('New message received:', message);
-    };
+  // useEffect(() => {
+  //   const handleNewMessage = (message: any) => {
+  //     console.log('New message received:', message);
+  //   };
   
-    if (socket) {
-      socket.onAny((eventName, ...args) => {
-        console.log(`Received event '${eventName}':`, args);
-      });
-      socket.on('onNewMessage', handleNewMessage);
-    }
+  //   if (socket) {
+  //     socket.onAny((eventName, ...args) => {
+  //       console.log(`Received event '${eventName}':`, args);
+  //     });
+  //     socket.on('onNewMessage', handleNewMessage);
+  //   }
   
 
-  }); 
+  // }); 
   const handleVideoCall = () =>{
 
   }

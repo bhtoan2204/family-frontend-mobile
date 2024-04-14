@@ -60,12 +60,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
       setKeyboardIsOpen(false);
     });
 
-    const handleNewMessage = (message: any) => {
-      console.log('New message received:', message);
-    };
-    if (socket) {
-      socket.on('onNewMessage', handleNewMessage);
-    }
+
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
