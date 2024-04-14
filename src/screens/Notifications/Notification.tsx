@@ -1,96 +1,104 @@
-import React, { useEffect, useState } from "react";
-import { getSocket } from "src/services/apiclient/Socket";
+import { useState, useEffect, useRef } from 'react';
+import { Text, View, Button, Platform } from 'react-native';
+import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import { AxiosResponse } from "axios";
-import { FamilyServices } from "src/services/apiclient";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProfile, selectProfile } from "src/redux/slices/ProfileSclice";
-import * as Permissions from 'expo-permissions';
 
-interface Member {
-    id_user: string;
-    firstname: string;
-    lastname: string;
-    avatar: string;
-}
-  
-interface Message {
-    senderId: string;
-    type: string;
-    content: string;
-    receiverId: string;
-}
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 const Notification = () => {
-    const socket = getSocket();
-    const [sender, setSender] = useState<Member>();
-    const [receiver, setReceiver] = useState<Member>();
-    const dispatch = useDispatch();
-    const profile = useSelector(selectProfile);
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef<Notifications.Subscription | undefined>();
+  const responseListener = useRef();
 
-    const fetchMember = async (receiverId?: string) => {
-        try {
-            const response1: AxiosResponse<Member[]> = await FamilyServices.getMember({ id_user: receiverId });
-            if (response1 && response1.data.length > 0) {
-                setSender(response1.data[0]);
-            }
-        } catch (error) {
-            console.error('Error fetching member:', error);
-        }
-    };
-    
-    const handleNewMessage = (message: Message) => {
-        try {
-            console.log("New message received:", message);
-            fetchMember(message.senderId);
+  useEffect(() => {
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token || ""));
+    console.log(expoPushToken);
+    // notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+    //   setNotification(notification);
+    // });
 
-            if (profile.id_user === message.receiverId && sender) {
- 
-                console.log("Creating notification...");
-                const notificationContent: Notifications.NotificationContentInput = {
-                    title: `${sender?.firstname || ''} ${sender?.lastname || ''}`,
-                    subtitle: null, 
-                    body: message.content, 
-                    data: {},
-                    sound: 'default', 
-                };
+    // responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+    //   console.log(response);
+    // });
 
-                Notifications.scheduleNotificationAsync({
-                    content: notificationContent,
-                    trigger: { seconds: 1 },
-                });
-            }
-        } catch(error) {
-            console.log("Error handling new message:", error);
-        }
-    };
-    
-    useEffect(() => {
-        const checkNotificationPermission = async () => {
-            const { status } = await Notifications.getPermissionsAsync();
-            if (status !== 'granted') {
-                const { status: newStatus } = await Notifications.requestPermissionsAsync();
-                if (newStatus !== 'granted') {
-                    console.log('Notification permission not granted');
-                    return;
-                }
-            }
+    // return () => {
+    //   Notifications.removeNotificationSubscription(notificationListener.current);
+    //   Notifications.removeNotificationSubscription(responseListener.current);
+    // };
+  }, []);
 
-            console.log('Notification permission granted');
-        };
-
-        checkNotificationPermission();
-        dispatch(fetchProfile());
-    }, []);
-
-    useEffect(() => {
-        console.log("Setting up socket listener...");
-        if (socket) {
-            socket.on('onNewMessage', handleNewMessage);
-        }
-    });
-
-    return null; 
-};
-
+  return (
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'space-around',
+      }}>
+      <Text>Your expo push token: {expoPushToken}</Text>
+      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+        {/* <Text>Title: {notification && notification.request.content.title} </Text>
+        <Text>Body: {notification && notification.request.content.body}</Text>
+        <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text> */}
+      </View>
+      <Button
+        title="Press to schedule a notification"
+        onPress={async () => {
+          await schedulePushNotification();
+        }}
+      />
+    </View>
+  );
+}
 export default Notification;
+
+async function schedulePushNotification() {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: "You've got mail! 📬",
+      body: 'Here is the notification body',
+      data: { data: 'goes here' },
+    },
+    trigger: { seconds: 2 },
+  });
+}
+
+async function registerForPushNotificationsAsync() {
+  let token;
+
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    // Learn more about projectId:
+    // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
+    token = (await Notifications.getExpoPushTokenAsync({ projectId: 'your-project-id' })).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  return token;
+}
