@@ -18,14 +18,16 @@
     "ios": {
       "supportsTablet": true
     },
-    "notification":
+    "plugins": [
+      [
+        "expo-notifications",
         {
           "icon": "src/assets/images/notification-icon.png",
-          "color": "#CA2C92",
-          "sounds": [],
-          "androidMode": "default",
-          "androidCollapsedTitle": "Famfund",
-          "iosDisplayInForeground": true
+          "color": "#ffffff",
+          "sounds": [
+          ]
         }
+      ]
+    ]
   }
 }

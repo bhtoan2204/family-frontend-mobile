@@ -1,104 +1,187 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, Button, Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import { getSocket } from "src/services/apiclient/Socket";
+import { AxiosResponse } from 'axios';
+import { FamilyServices } from 'src/services/apiclient';
+import { ChatScreenProps } from 'src/navigation/NavigationTypes';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
-    shouldPlaySound: false,
+    shouldPlaySound: true,
     shouldSetBadge: false,
   }),
 });
 
-const Notification = () => {
+const Notification =  ({ navigation, route }: ChatScreenProps) => {
   const [expoPushToken, setExpoPushToken] = useState('');
-  const [notification, setNotification] = useState(false);
+  const [notificationQueue, setNotificationQueue] = useState<Message[]>([]);
+  const socket = getSocket();
   const notificationListener = useRef<Notifications.Subscription | undefined>();
-  const responseListener = useRef();
+
+  interface Member {
+    id_user: string;
+    firstname: string;
+    lastname: string;
+    avatar: string;
+  }
+
+  interface Message {
+    senderId: string;
+    type: string;
+    content: string;
+    receiverId?: string;
+    _id: string;
+    isRead: boolean;
+    category: string; //user, family
+    familyId?: number;
+  }
+
+  interface Family {
+    id_family: number;
+    quantity: number;
+    description: string;
+    name: string;
+  }
+
+  const fetchMember = async (receiverId?: string) => {
+    try {
+      const response: AxiosResponse<Member[]> = await FamilyServices.getMember({ id_user: receiverId });
+      if (response && response.data.length > 0) {
+        return response.data[0];
+      }
+    } catch (error) {
+      console.error('Error fetching member:', error);
+    }
+  };
+
+  const fetchFamily = async (id_family?: number) => {
+    try {
+      const familyInfo = await FamilyServices.getFamily({ id_family });
+      if (familyInfo) {
+        return familyInfo.data[0];
+      }
+    } catch (error) {
+      console.error('Error fetching family:', error);
+    }
+  };
+
+  const handleNewImage = async (message: Message) => {
+    //console.log('hi')
+    //if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
+      const sender: Member | undefined = await fetchMember(message.senderId);
+      if (sender) {
+        await Notifications.scheduleNotificationAsync({
+          content: {
+            title: `${sender.firstname} ${sender.lastname}`,
+            body: 'Sent image',
+            data: { data: 'goes here' },
+          },
+          trigger: { seconds: 1 },
+        });
+        setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'User' }]);
+      }
+   //}
+  };
+
+  const handleNewMessage = async (message: Message) => {
+    //if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
+      const sender: Member | undefined = await fetchMember(message.senderId);
+      if (sender) {
+        await Notifications.scheduleNotificationAsync({
+          content: {
+            title: `${sender.firstname} ${sender.lastname}`,
+            body: message.content,
+            data: {
+              screen: 'ChatUser',
+              id_user: message.receiverId,
+              receiverId: message.senderId,
+            },
+          },
+          trigger: { seconds: 1 },
+        });
+        setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'User' }]);
+      }
+   // }
+  };
+
+  const handleNewMessageFamily = async (message: Message) => {
+    const sender: Member | undefined = await fetchMember(message.senderId);
+    const family: Family | undefined = await fetchFamily(message.familyId);
+    if (sender && family) {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: `${sender.firstname} ${sender.lastname}`,
+          subtitle: `${family.name}`,
+          body: message.content,
+          data: { data: 'goes here' },
+        },
+        trigger: { seconds: 1 },
+      });
+      setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'Family' }]);
+    }
+  };
+
+  const handleNewImageFamily = async (message: Message) => {
+    if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
+      const sender: Member | undefined = await fetchMember(message.senderId);
+      const family: Family | undefined = await fetchFamily(message.familyId);
+      if (sender && family) {
+        await Notifications.scheduleNotificationAsync({
+          content: {
+            title: `${sender.firstname} ${sender.lastname}`,
+            subtitle: `${family.name}`,
+            body: 'Sent image',
+            data: { data: 'goes here' },
+          },
+          trigger: { seconds: 1 },
+        });
+        setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'Family' }]);
+      }
+    }
+  };
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token || ""));
-    console.log(expoPushToken);
-    // notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-    //   setNotification(notification);
-    // });
+    if (socket) {
+      socket.on('onNewMessage', handleNewMessage);
+      socket.on('onNewImageMessage', handleNewImage);
+      socket.on('onNewFamilyMessage', handleNewMessageFamily);
+      socket.on('onNewFamilyImageMessage', handleNewImageFamily);
+    }
 
-    // responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-    //   console.log(response);
-    // });
+    return () => {
+      if (socket) {
+        socket.off('onNewMessage', handleNewMessage);
+        socket.off('onNewImageMessage', handleNewImage);
+        socket.off('onNewFamilyMessage', handleNewMessageFamily);
+        socket.off('onNewFamilyImageMessage', handleNewImageFamily);
+      }
+    };
+  }, [socket]);
 
-    // return () => {
-    //   Notifications.removeNotificationSubscription(notificationListener.current);
-    //   Notifications.removeNotificationSubscription(responseListener.current);
-    // };
-  }, []);
+  useEffect(() => {
+    const notificationResponseListener = Notifications.addNotificationResponseReceivedListener(response => {
+      const screen = response.notification.request.content.data.screen;
+      const id_user = response.notification.request.content.data.id_user;
+      const receiverId = response.notification.request.content.data.receiverId;
 
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-around',
-      }}>
-      <Text>Your expo push token: {expoPushToken}</Text>
-      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-        {/* <Text>Title: {notification && notification.request.content.title} </Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text> */}
-      </View>
-      <Button
-        title="Press to schedule a notification"
-        onPress={async () => {
-          await schedulePushNotification();
-        }}
-      />
-    </View>
-  );
-}
-export default Notification;
-
-async function schedulePushNotification() {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "You've got mail! 📬",
-      body: 'Here is the notification body',
-      data: { data: 'goes here' },
-    },
-    trigger: { seconds: 2 },
-  });
-}
-
-async function registerForPushNotificationsAsync() {
-  let token;
-
-  if (Platform.OS === 'android') {
-    await Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
+      if (screen === 'ChatUser' && id_user && receiverId) {
+        navigation.navigate('ChatUser', { id_user: id_user, receiverId: receiverId });
+      }
     });
-  }
 
-  if (Device.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return;
-    }
-    // Learn more about projectId:
-    // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
-    token = (await Notifications.getExpoPushTokenAsync({ projectId: 'your-project-id' })).data;
-    console.log(token);
-  } else {
-    alert('Must use physical device for Push Notifications');
-  }
+    return () => {
+      Notifications.removeNotificationSubscription(notificationResponseListener);
+    };
+  }, [navigation]);
 
-  return token;
-}
+  // return (
+  //   <View>
+  //     <Text>Notification Component</Text>
+  //   </View>
+  // );
+};
+
+export default Notification;

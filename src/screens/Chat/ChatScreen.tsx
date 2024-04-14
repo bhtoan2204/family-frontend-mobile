@@ -107,6 +107,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
     }
   };
   const fetchNewMessages = async () => {
+    setRefreshFlatList(prevState => !prevState); 
     try {
       const response = await ChatServices.GetMessages({ id_user: receiverId, index: 0 });
       if (response && response.length > 0) { 
@@ -123,7 +124,6 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   const handleSendImage = async (base64Image: string) => {
     await sendImage(base64Image);
     await fetchMessages();
-    setRefreshFlatList(prevState => !prevState); 
     await fetchNewMessages(); 
 
   };
@@ -131,7 +131,6 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   const handleSendMessage = async () => {
     await sendMessage();
     setMessage('');
-    setRefreshFlatList(prevState => !prevState); 
     await fetchNewMessages(); 
   };
   
@@ -196,20 +195,22 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
 
    
 
-  // useEffect(() => {
-  //   const handleNewMessage = (message: any) => {
-  //     console.log('New message received:', message);
-  //   };
-  
-  //   if (socket) {
-  //     socket.onAny((eventName, ...args) => {
-  //       console.log(`Received event '${eventName}':`, args);
-  //     });
-  //     socket.on('onNewMessage', handleNewMessage);
-  //   }
-  
+  useEffect(() => {
+    if (socket) {
+      socket.on('onNewMessage', fetchNewMessages);
+      socket.on('onNewImageMessage', fetchNewMessages);
 
-  // }); 
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('onNewMessage', fetchNewMessages);
+        socket.off('onNewImageMessage', fetchNewMessages);
+
+      }
+    };
+  }, [socket]);
+
   const handleVideoCall = () =>{
 
   }
