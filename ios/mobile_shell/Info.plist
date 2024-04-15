@@ -5,7 +5,9 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
+		<string>fetch</string>
 	</array>
+
 
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>We would like to send you notifications for important updates and messages.</string>

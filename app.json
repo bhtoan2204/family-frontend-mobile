@@ -16,18 +16,21 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "backgroundModes": ["fetch"] 
     },
-    "plugins": [
-      [
-        "expo-notifications",
-        {
-          "icon": "src/assets/images/notification-icon.png",
-          "color": "#ffffff",
-          "sounds": [
-          ]
-        }
-      ]
-    ]
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "backgroundFetch": {
+      "enabled": true,
+      "minimumInterval": 15 
+    },
+    "notification": {
+      "icon": "src/assets/images/notification-icon.png",
+      "color": "#ffffff",
+      "iosDisplayInForeground": true
+    }
   }
 }

@@ -1,5 +1,6 @@
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {COLORS} from 'src/constants';
+const screenHeight = Dimensions.get('screen').height;
 
 const styles = StyleSheet.create({
   container: {
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
   },
   heroImage: {
     width: '100%',
-    height: 400,
+    height: screenHeight*0.3,
   },
   /** Content */
   content: {

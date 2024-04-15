@@ -5,7 +5,35 @@ import * as Notifications from 'expo-notifications';
 import { getSocket } from "src/services/apiclient/Socket";
 import { AxiosResponse } from 'axios';
 import { FamilyServices } from 'src/services/apiclient';
+import navigation from 'src/navigation';
+import { useNavigation } from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import { ChatScreenProps } from 'src/navigation/NavigationTypes';
+
+interface Member {
+  id_user: string;
+  firstname: string;
+  lastname: string;
+  avatar: string;
+}
+
+interface Message {
+  senderId: string;
+  type: string;
+  content: string;
+  receiverId?: string;
+  _id: string;
+  isRead: boolean;
+  category: string; //user, family
+  familyId?: number;
+}
+
+interface Family {
+  id_family: number;
+  quantity: number;
+  description: string;
+  name: string;
+}
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -15,36 +43,11 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const Notification =  ({ navigation, route }: ChatScreenProps) => {
+const Notification =  () => {
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notificationQueue, setNotificationQueue] = useState<Message[]>([]);
   const socket = getSocket();
   const notificationListener = useRef<Notifications.Subscription | undefined>();
-
-  interface Member {
-    id_user: string;
-    firstname: string;
-    lastname: string;
-    avatar: string;
-  }
-
-  interface Message {
-    senderId: string;
-    type: string;
-    content: string;
-    receiverId?: string;
-    _id: string;
-    isRead: boolean;
-    category: string; //user, family
-    familyId?: number;
-  }
-
-  interface Family {
-    id_family: number;
-    quantity: number;
-    description: string;
-    name: string;
-  }
 
   const fetchMember = async (receiverId?: string) => {
     try {
@@ -87,6 +90,7 @@ const Notification =  ({ navigation, route }: ChatScreenProps) => {
   };
 
   const handleNewMessage = async (message: Message) => {
+    console.log(message);
     //if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
       const sender: Member | undefined = await fetchMember(message.senderId);
       if (sender) {
@@ -142,9 +146,21 @@ const Notification =  ({ navigation, route }: ChatScreenProps) => {
       }
     }
   };
-
+  const checkNotificationPermission = async () => {
+    const { status } = await Notifications.getPermissionsAsync();
+    if (status !== 'granted') {
+        const { status: newStatus } = await Notifications.requestPermissionsAsync();
+        if (newStatus !== 'granted') {
+            console.log('Notification permission not granted');
+            return;
+        }
+    }
+};
   useEffect(() => {
+    checkNotificationPermission();
     if (socket) {
+      console.log('hi')
+
       socket.on('onNewMessage', handleNewMessage);
       socket.on('onNewImageMessage', handleNewImage);
       socket.on('onNewFamilyMessage', handleNewMessageFamily);
@@ -168,7 +184,7 @@ const Notification =  ({ navigation, route }: ChatScreenProps) => {
       const receiverId = response.notification.request.content.data.receiverId;
 
       if (screen === 'ChatUser' && id_user && receiverId) {
-        navigation.navigate('ChatUser', { id_user: id_user, receiverId: receiverId });
+        //navigation.navigate('ChatUser', { id_user: id_user, receiverId: receiverId });
       }
     });
 
@@ -177,11 +193,10 @@ const Notification =  ({ navigation, route }: ChatScreenProps) => {
     };
   }, [navigation]);
 
-  // return (
-  //   <View>
-  //     <Text>Notification Component</Text>
-  //   </View>
-  // );
+  return (
+    <View>
+    </View>
+  );
 };
 
 export default Notification;

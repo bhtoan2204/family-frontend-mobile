@@ -5496,6 +5496,13 @@
     "invariant" "^2.2.4"
     "md5-file" "^3.2.3"
 
+"expo-background-fetch@^11.8.1":
+  "integrity" "sha512-WkWgj1RZsBjIt/J2HvYhfNi+8WEM6vEptuUj6r/vW9w+kXzDo5z/+pkr7YnPgQIhc4P7Z/j7TlM43azUpIEFZA=="
+  "resolved" "https://registry.npmjs.org/expo-background-fetch/-/expo-background-fetch-11.8.1.tgz"
+  "version" "11.8.1"
+  dependencies:
+    "expo-task-manager" "~11.7.2"
+
 "expo-checkbox@^2.7.0":
   "integrity" "sha512-1wYgoOZ9pBg64PPPULbdD7jEVFX354dpJdUZRmkrO/7ybI668qO4r4+9777CUQ+2JoZEEJBBQzN6UiAl0Uodkg=="
   "resolved" "https://registry.npmjs.org/expo-checkbox/-/expo-checkbox-2.7.0.tgz"
@@ -5642,6 +5649,13 @@
   "integrity" "sha512-ddQEtCOgYHTLlFUe/yH67dDBIoct5VIULthyT3LRJbEwdpzAgueKsX2FYK02ldh440V87PWKCamh7R9evk1rrg=="
   "resolved" "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-1.11.1.tgz"
   "version" "1.11.1"
+
+"expo-task-manager@~11.7.2":
+  "integrity" "sha512-cmn7xg8+mGP7gX6deYZhvrCkKMkoBRJ+E4o5aL17Z/4ihXMfo/PFcQsrpuSYRLXzgidEw0kpppxhmYm21Jswwg=="
+  "resolved" "https://registry.npmjs.org/expo-task-manager/-/expo-task-manager-11.7.2.tgz"
+  "version" "11.7.2"
+  dependencies:
+    "unimodules-app-loader" "~4.5.0"
 
 "expo@*", "expo@^50.0.14":
   "integrity" "sha512-yLPdxCMVAbmeEIpzzyAuJ79wvr6ToDDtQmuLDMAgWtjqP8x3CGddXxUe07PpKEQgzwJabdHvCLP5Bv94wMFIjQ=="
@@ -9106,6 +9120,16 @@
   dependencies:
     "prop-types" "^15.7.2"
 
+"react-native-background-fetch@^4.2.4", "react-native-background-fetch@2.0.x":
+  "integrity" "sha512-3e4/8AEO0UZ5I0UvsrJGQOQB85tY4Rvx8kztEF6gBZvfuAS/hMLW05CgOGAENYCIgQG+B6wXTZgrmTFXl0f8og=="
+  "resolved" "https://registry.npmjs.org/react-native-background-fetch/-/react-native-background-fetch-4.2.4.tgz"
+  "version" "4.2.4"
+
+"react-native-background-task@^0.2.1":
+  "integrity" "sha512-t5NvHWiqdIRf+KRUbeYH0QYSF3TTTe67g9TuOy/KbfU0KWqK1igLbQB/vw1o8nXZrWWIzSl9mSTG+2V/57TRzw=="
+  "resolved" "https://registry.npmjs.org/react-native-background-task/-/react-native-background-task-0.2.1.tgz"
+  "version" "0.2.1"
+
 "react-native-calendars@^1.1304.1":
   "integrity" "sha512-D1aU5lLhi7KCCCeHhKOkcC41K8s3paiiIfMaOQx6NezCbgKHelqT01WPpAZLh3Cm0QTC5EZo0oDPD0mCdKrDgQ=="
   "resolved" "https://registry.npmjs.org/react-native-calendars/-/react-native-calendars-1.1304.1.tgz"
@@ -9152,6 +9176,11 @@
   "integrity" "sha512-T1XBHbE++M6aRU3wFYw3MvcOuabhWZ29RK/Ivdls2r1ZkZ62iEBZknLUPeVLMX3x6iUxj4Zgr3X2DGlEGXeHsA=="
   "resolved" "https://registry.npmjs.org/react-native-dropdown-picker/-/react-native-dropdown-picker-5.4.6.tgz"
   "version" "5.4.6"
+
+"react-native-foreground-service@^1.0.0":
+  "integrity" "sha512-lZTF0gFKVh4pnI8C0vXKxTBeZxlbfYCy4wPl5O7mkbBLr8F1vZJvmZYMhh4+P5oM285z/CaWB00ckMTZPG7G9w=="
+  "resolved" "https://registry.npmjs.org/react-native-foreground-service/-/react-native-foreground-service-1.0.0.tgz"
+  "version" "1.0.0"
 
 "react-native-fs@>=2.16.6":
   "integrity" "sha512-VkTBzs7fIDUiy/XajOSNk0XazFE9l+QlMAce7lGuebZcag5CnjszB+u4BdqzwaQOdcYb5wsJIsqq4kxInIRpJQ=="
@@ -9432,7 +9461,7 @@
     "escape-string-regexp" "2.0.0"
     "invariant" "2.2.4"
 
-"react-native@*", "react-native@^0.0.0-0 || >=0.60 <1.0", "react-native@>= 0.30.0", "react-native@>= 0.62", "react-native@>=0.23.1", "react-native@>=0.33", "react-native@>=0.40.0", "react-native@>=0.42.0", "react-native@>=0.48.4", "react-native@>=0.57", "react-native@>=0.58.4", "react-native@>=0.59", "react-native@>=0.60.0", "react-native@>=0.61.3", "react-native@>=0.64.0", "react-native@>=0.65.0", "react-native@>=0.69", "react-native@>=v0.40.0", "react-native@0.73.4":
+"react-native@*", "react-native@^0.0.0-0 || >=0.60 <1.0", "react-native@>= 0.30.0", "react-native@>= 0.62", "react-native@>=0.23.1", "react-native@>=0.33", "react-native@>=0.36.0", "react-native@>=0.40.0", "react-native@>=0.42.0", "react-native@>=0.48.4", "react-native@>=0.57", "react-native@>=0.58.4", "react-native@>=0.59", "react-native@>=0.59.0", "react-native@>=0.60.0", "react-native@>=0.61.3", "react-native@>=0.64.0", "react-native@>=0.65.0", "react-native@>=0.69", "react-native@>=v0.40.0", "react-native@0.73.4":
   "integrity" "sha512-VtS+Yr6OOTIuJGDECIYWzNU8QpJjASQYvMtfa/Hvm/2/h5GdB6W9H9TOmh13x07Lj4AOhNMx3XSsz6TdrO4jIg=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.73.4.tgz"
   "version" "0.73.4"
@@ -10886,6 +10915,11 @@
   "integrity" "sha512-porQWVWu7meIrCJ+c+H7eJyeC2rHioLUZiv4UcOs33SAyUhR4X05tCC8NIOuQJsF08Fj3a0ck7HUsd5xq+LqKA=="
   "resolved" "https://registry.npmjs.org/unimodules-app-loader/-/unimodules-app-loader-2.2.0.tgz"
   "version" "2.2.0"
+
+"unimodules-app-loader@~4.5.0":
+  "integrity" "sha512-q/Xug4K6/20876Xac+tjOLOOAeHEu2zF66LNN/5c8EV4WPEe/+RYZEljN/woQt17KPIB2eyel9dc+d6qUMjUOg=="
+  "resolved" "https://registry.npmjs.org/unimodules-app-loader/-/unimodules-app-loader-4.5.0.tgz"
+  "version" "4.5.0"
 
 "unimodules-task-manager-interface@~6.2.0":
   "integrity" "sha512-DrRVWF46TI93GbaDWAJ+bKd3vHjZq9pS8oJ6pZQN96qUTWkJ3yqa92yF118JxdGll+YtymxF/ZWCugBFMtISbA=="
