@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, Button, Platform } from 'react-native';
-import * as Device from 'expo-device';
+import {View } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { getSocket } from "src/services/apiclient/Socket";
 import { AxiosResponse } from 'axios';
 import { FamilyServices } from 'src/services/apiclient';
-import navigation from 'src/navigation';
-import { useNavigation } from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import { ChatScreenProps } from 'src/navigation/NavigationTypes';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCurrentNavigation } from 'src/redux/slices/NavigationSlice';
 
 interface Member {
   id_user: string;
@@ -43,8 +40,10 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const Notification =  () => {
-  const [expoPushToken, setExpoPushToken] = useState('');
+
+const Notification = () => {
+  const navigation = useSelector(selectCurrentNavigation);
+  
   const [notificationQueue, setNotificationQueue] = useState<Message[]>([]);
   const socket = getSocket();
   const notificationListener = useRef<Notifications.Subscription | undefined>();
@@ -80,7 +79,11 @@ const Notification =  () => {
           content: {
             title: `${sender.firstname} ${sender.lastname}`,
             body: 'Sent image',
-            data: { data: 'goes here' },
+            data: {
+              screen: 'ChatUser',
+              id_user: message.receiverId,
+              receiverId: message.senderId,
+            },
           },
           trigger: { seconds: 1 },
         });
@@ -120,7 +123,11 @@ const Notification =  () => {
           title: `${sender.firstname} ${sender.lastname}`,
           subtitle: `${family.name}`,
           body: message.content,
-          data: { data: 'goes here' },
+          data: {
+            screen: 'ChatFamily',
+            id_user: message.receiverId,
+            familyId: message.familyId,
+          },
         },
         trigger: { seconds: 1 },
       });
@@ -138,8 +145,12 @@ const Notification =  () => {
             title: `${sender.firstname} ${sender.lastname}`,
             subtitle: `${family.name}`,
             body: 'Sent image',
-            data: { data: 'goes here' },
-          },
+            data: {
+              screen: 'ChatFamily',
+              id_user: message.receiverId,
+              familyId: message.familyId,
+            },
+            },
           trigger: { seconds: 1 },
         });
         setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'Family' }]);
@@ -159,8 +170,6 @@ const Notification =  () => {
   useEffect(() => {
     checkNotificationPermission();
     if (socket) {
-      console.log('hi')
-
       socket.on('onNewMessage', handleNewMessage);
       socket.on('onNewImageMessage', handleNewImage);
       socket.on('onNewFamilyMessage', handleNewMessageFamily);
@@ -175,16 +184,21 @@ const Notification =  () => {
         socket.off('onNewFamilyImageMessage', handleNewImageFamily);
       }
     };
-  }, [socket]);
+  });
 
   useEffect(() => {
+    
     const notificationResponseListener = Notifications.addNotificationResponseReceivedListener(response => {
       const screen = response.notification.request.content.data.screen;
       const id_user = response.notification.request.content.data.id_user;
       const receiverId = response.notification.request.content.data.receiverId;
+      const familyId = response.notification.request.content.data.familyId;
 
-      if (screen === 'ChatUser' && id_user && receiverId) {
-        //navigation.navigate('ChatUser', { id_user: id_user, receiverId: receiverId });
+      if (navigation && screen === 'ChatUser' && id_user && receiverId) {
+        navigation.navigate('ChatStack', {screen: 'ChatUser', params: { id_user: id_user, receiverId: receiverId }});
+      }
+      if (navigation && screen === 'ChatFamily' && id_user && familyId) {
+        navigation.navigate('ChatStack', {screen: 'ChatFamily', params: { id_user: id_user, id_family: familyId }});
       }
     });
 

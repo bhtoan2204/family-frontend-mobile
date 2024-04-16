@@ -1,7 +1,7 @@
 import {Ionicons} from '@expo/vector-icons';
 import Checkbox from 'expo-checkbox';
 import {Formik, FormikHelpers} from 'formik';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   KeyboardAvoidingView,
@@ -28,7 +28,8 @@ import {AuthUrl} from 'src/services/urls';
 import LocalStorage from 'src/store/localstorage';
 import * as Yup from 'yup';
 import styles from './styles';
-import {Button} from 'react-native-paper';
+import { setCurrentNavigation } from 'src/redux/slices/NavigationSlice';
+import { useDispatch } from 'react-redux';
 
 interface FormValues {
   email: string;
@@ -42,7 +43,11 @@ type CombinedScreenProps = SignupScreenProps &
 const LoginScreen = ({navigation}: CombinedScreenProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const dispatch = useDispatch();
 
+  useEffect( () =>{
+    dispatch(setCurrentNavigation(navigation));
+  } );
   const handleLogin = async (
     values: FormValues,
     actions: FormikHelpers<FormValues>,

@@ -1,6 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {VietQR} from 'vietqr';
 import {Text, Image, View} from 'react-native';
 import {
   FlatList,
