@@ -26,6 +26,8 @@ interface User {
 interface ChatItem {
   _id: string;
   lastMessage: LastMessage;
+  receiverId: string;
+  lastUpdated: Date;
   user: User;
 }
 
@@ -87,7 +89,7 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
   };
 
   const renderChatItem = ({ item }: { item: ChatItem }) => (
-    <TouchableOpacity onPress={() => handlePressChat(id_user,item._id)}>
+    <TouchableOpacity onPress={() => handlePressChat(id_user,item.receiverId)}>
       <View style={styles.chatItem}>
         <View style={styles.avatarContainer}>
           {item.user.avatar ? (

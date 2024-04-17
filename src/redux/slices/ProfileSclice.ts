@@ -1,4 +1,3 @@
-// profileSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 
@@ -35,14 +34,11 @@ const profileSlice = createSlice({
         state.avatar = action.payload.avatar;
 
     },
-    fetchProfile(state) {
-        return state;
-    },
 
   },
 });
 
-export const { fetchProfile, Profile } = profileSlice.actions;
+export const { Profile } = profileSlice.actions;
 
 export const selectProfile = (state: RootState) => state.profile;
 

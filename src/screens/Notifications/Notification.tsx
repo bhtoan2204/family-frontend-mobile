@@ -6,6 +6,7 @@ import { AxiosResponse } from 'axios';
 import { FamilyServices } from 'src/services/apiclient';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentNavigation } from 'src/redux/slices/NavigationSlice';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
 
 interface Member {
   id_user: string;
@@ -30,6 +31,7 @@ interface Family {
   quantity: number;
   description: string;
   name: string;
+  avatar: string;
 }
 
 Notifications.setNotificationHandler({
@@ -43,7 +45,7 @@ Notifications.setNotificationHandler({
 
 const Notification = () => {
   const navigation = useSelector(selectCurrentNavigation);
-  
+  const profile = useSelector(selectProfile);
   const [notificationQueue, setNotificationQueue] = useState<Message[]>([]);
   const socket = getSocket();
   const notificationListener = useRef<Notifications.Subscription | undefined>();
@@ -61,14 +63,14 @@ const Notification = () => {
 
   const fetchFamily = async (id_family?: number) => {
     try {
-      const familyInfo = await FamilyServices.getFamily({ id_family });
-      if (familyInfo) {
-        return familyInfo.data[0];
-      }
+        const familyInfo: AxiosResponse<Family[]> = await FamilyServices.getFamily({ id_family });
+        console.log(familyInfo[0])
+        return familyInfo[0];
     } catch (error) {
-      console.error('Error fetching family:', error);
+        console.error('Error fetching family:', error);
     }
-  };
+};
+
 
   const handleNewImage = async (message: Message) => {
     //console.log('hi')
@@ -114,7 +116,8 @@ const Notification = () => {
    // }
   };
 
-  const handleNewMessageFamily = async (message: Message) => {
+  const handleNewMessageFamily = async (message: any) => {
+    console.log(message)
     const sender: Member | undefined = await fetchMember(message.senderId);
     const family: Family | undefined = await fetchFamily(message.familyId);
     if (sender && family) {
@@ -125,7 +128,6 @@ const Notification = () => {
           body: message.content,
           data: {
             screen: 'ChatFamily',
-            id_user: message.receiverId,
             familyId: message.familyId,
           },
         },
@@ -147,7 +149,6 @@ const Notification = () => {
             body: 'Sent image',
             data: {
               screen: 'ChatFamily',
-              id_user: message.receiverId,
               familyId: message.familyId,
             },
             },
@@ -163,41 +164,43 @@ const Notification = () => {
         const { status: newStatus } = await Notifications.requestPermissionsAsync();
         if (newStatus !== 'granted') {
             console.log('Notification permission not granted');
-            return;
+            return false;
         }
     }
+    return true;
 };
-  useEffect(() => {
+useEffect(() => {
     checkNotificationPermission();
-    if (socket) {
-      socket.on('onNewMessage', handleNewMessage);
-      socket.on('onNewImageMessage', handleNewImage);
-      socket.on('onNewFamilyMessage', handleNewMessageFamily);
-      socket.on('onNewFamilyImageMessage', handleNewImageFamily);
-    }
-
-    return () => {
       if (socket) {
-        socket.off('onNewMessage', handleNewMessage);
-        socket.off('onNewImageMessage', handleNewImage);
-        socket.off('onNewFamilyMessage', handleNewMessageFamily);
-        socket.off('onNewFamilyImageMessage', handleNewImageFamily);
+        socket.on('onNewMessage', handleNewMessage);
+        socket.on('onNewImageMessage', handleNewImage);
+        socket.on('onNewFamilyMessage', handleNewMessageFamily);
+        socket.on('onNewFamilyImageMessage', handleNewImageFamily);
       }
-    };
-  });
+
+  return () => {
+    if (socket) {
+      socket.off('onNewMessage', handleNewMessage);
+      socket.off('onNewImageMessage', handleNewImage);
+      socket.off('onNewFamilyMessage', handleNewMessageFamily);
+      socket.off('onNewFamilyImageMessage', handleNewImageFamily);
+    }
+  };
+}, []);
+
 
   useEffect(() => {
-    
+    console.log(navigation)
     const notificationResponseListener = Notifications.addNotificationResponseReceivedListener(response => {
       const screen = response.notification.request.content.data.screen;
-      const id_user = response.notification.request.content.data.id_user;
+      let id_user = response.notification.request.content.data.id_user;
       const receiverId = response.notification.request.content.data.receiverId;
       const familyId = response.notification.request.content.data.familyId;
-
-      if (navigation && screen === 'ChatUser' && id_user && receiverId) {
+      if (navigation && screen === 'ChatUser'  && receiverId) {
         navigation.navigate('ChatStack', {screen: 'ChatUser', params: { id_user: id_user, receiverId: receiverId }});
       }
-      if (navigation && screen === 'ChatFamily' && id_user && familyId) {
+      if (navigation && screen === 'ChatFamily' && familyId) {
+        id_user = profile.id_user;
         navigation.navigate('ChatStack', {screen: 'ChatFamily', params: { id_user: id_user, id_family: familyId }});
       }
     });

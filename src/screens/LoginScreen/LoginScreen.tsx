@@ -45,9 +45,11 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
   const [isChecked, setIsChecked] = useState(false);
   const dispatch = useDispatch();
 
-  useEffect( () =>{
-    dispatch(setCurrentNavigation(navigation));
-  } );
+  
+  useEffect(() => {
+      dispatch(setCurrentNavigation(navigation)); 
+  },[navigation]);
+  
   const handleLogin = async (
     values: FormValues,
     actions: FormikHelpers<FormValues>,
@@ -299,3 +301,4 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
 };
 
 export default LoginScreen;
+

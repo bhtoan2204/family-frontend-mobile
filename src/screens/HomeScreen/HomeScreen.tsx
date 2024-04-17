@@ -70,6 +70,7 @@ const HomeScreen = ({navigation,}: PurchasedScreenProps & ViewAllFamilyScreenPro
   useEffect(() => {
     handleGetProfile();
   }, []);
+  
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.header, {transform: [{translateY}]}]}>

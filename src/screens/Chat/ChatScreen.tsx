@@ -46,9 +46,10 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
 
   const fetchMember = async (receiverId?: string, id_user?: string) => {
     try {
-      const response1: AxiosResponse<Member[]> = await FamilyServices.getMember({ id_user: receiverId });
-      if (response1) {
-        setReceiver(response1.data[0]);
+      const response: AxiosResponse<Member[]> = await FamilyServices.getMember({ id_user: receiverId });
+      console.log(response)
+      if (response && response.data.length > 0) {
+        setReceiver( response.data[0]);
       }
     } catch (error) {
       console.error('Error fetching member:', error);
