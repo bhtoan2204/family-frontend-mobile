@@ -71,7 +71,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
             <View className='w-full  flex-row justify-between items-center py-3 bg-white'>
                 <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
                     <Material name="chevron-left" size={30} style={{ color: COLORS.primary, fontWeight: "bold" }} />
-                    <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Back</Text>
+                    <Text className='text-lg font-semibold text-gray-600' style={{ color: COLORS.primary }}>Back</Text>
                 </TouchableOpacity>
                 <View className='mr-3'>
                     <TouchableOpacity onPress={() => {

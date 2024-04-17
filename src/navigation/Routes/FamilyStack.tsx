@@ -5,10 +5,13 @@ import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
 import ViewFamilyScreen from 'src/screens/FamilyScreen';
 import ViewAllMemberScreen from 'src/screens/AllMember';
 import AddMemberScreen from 'src/screens/AddEditFamilyMemberScreen';
-import { AddEditFamilyMemberScreenProps, AllMemberScreenProps, ContactScreenProps, CreateFamilyScreenProps, GuildLineDetailScreenProps, GuildLineScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
+import { AddEditFamilyMemberScreenProps, AllMemberScreenProps, ContactScreenProps, CreateFamilyScreenProps, EducationDetailScreenProps, EducationScreenProps, GuildLineDetailScreenProps, GuildLineScreenProps, SubjectDetailScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
 import ContactListScreen from 'src/screens/ContactList/ContactList';
 import GuildLineScreen from 'src/screens/GuildLineScreen/GuildLineScreen';
 import GuildLineDetailScreen from 'src/screens/GuildLineScreen/GuildLineDetailScreen';
+import EducationScreen from 'src/screens/EducationScreen/EducationScreen';
+import EducationDetailScreen from 'src/screens/EducationScreen/EducationDetailScreen';
+import SubjectDetailScreen from 'src/screens/EducationScreen/SubjectDetailScreen';
 const Stack = createNativeStackNavigator();
 
 const FamilyStack = () => {
@@ -44,8 +47,15 @@ const FamilyStack = () => {
       <Stack.Screen name="GuildLineDetail">
         {(props) => <GuildLineDetailScreen {...props as GuildLineDetailScreenProps} />}
       </Stack.Screen>
-
-
+      <Stack.Screen name="Education">
+        {(props) => <EducationScreen {...props as EducationScreenProps} />}
+      </Stack.Screen>
+      <Stack.Screen name="EducationDetail">
+        {(props) => <EducationDetailScreen {...props as EducationDetailScreenProps} />}
+      </Stack.Screen>
+      <Stack.Screen name="SubjectDetail">
+        {(props) => <SubjectDetailScreen {...props as SubjectDetailScreenProps} />}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 };

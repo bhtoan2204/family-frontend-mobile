@@ -68,14 +68,14 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const handleOpenBottomSheet = () => {
     bottomSheetRef.current?.open();
   };
-  const handleChatPress =()=> {
-    navigation.navigate('ChatStack', {screen: 'ChatFamily', params: {id_user: id_user, id_family: id_family}});
+  const handleChatPress = () => {
+    navigation.navigate('ChatStack', { screen: 'ChatFamily', params: { id_user: id_user, id_family: id_family } });
   };
-  const handleEducationPress =()=> {
-
+  const handleEducationPress = () => {
+    navigation.navigate('Education', { id_family: id_family })
   };
-  const handleCalendarPress=() => {
-     navigation.navigate('CalendarStack', {screen:  'CalendarScreen', params: {id_family: id_family}});
+  const handleCalendarPress = () => {
+    navigation.navigate('CalendarStack', { screen: 'CalendarScreen', params: { id_family: id_family } });
   }
   const handleOpenAllMemberModal = (id_user: string | undefined, id_family: number) => {
     navigation.navigate('AllMember', { id_user, id_family });
