@@ -25,6 +25,10 @@ export type ChatStackParamList = {
   ChatList: {
     id_user: string |undefined;
   };
+
+  CallVideo: {
+    receiverId: string | undefined;
+  }
   
 };
 
@@ -61,7 +65,16 @@ export interface ChatListProps {
 
 }
 
+type CallVideoNavigationProp = NativeStackNavigationProp<
+  ChatStackParamList,
+  'CallVideo'
+>;
 
+export interface CallVideoProps {
+  navigation: CallVideoNavigationProp;
+  route: RouteProp<ChatStackParamList, 'CallVideo'>;
+
+}
 export type AuthStackParamList = {
   LoginScreen: undefined;
   SignupScreen: undefined;

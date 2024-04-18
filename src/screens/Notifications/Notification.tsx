@@ -64,7 +64,7 @@ const Notification = () => {
   const fetchFamily = async (id_family?: number) => {
     try {
         const familyInfo: AxiosResponse<Family[]> = await FamilyServices.getFamily({ id_family });
-        console.log(familyInfo[0])
+        //console.log(familyInfo[0])
         return familyInfo[0];
     } catch (error) {
         console.error('Error fetching family:', error);
@@ -95,7 +95,7 @@ const Notification = () => {
   };
 
   const handleNewMessage = async (message: Message) => {
-    console.log(message);
+    //console.log(message);
     //if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
       const sender: Member | undefined = await fetchMember(message.senderId);
       if (sender) {
@@ -190,7 +190,7 @@ useEffect(() => {
 
 
   useEffect(() => {
-    console.log(navigation)
+    //console.log(navigation)
     const notificationResponseListener = Notifications.addNotificationResponseReceivedListener(response => {
       const screen = response.notification.request.content.data.screen;
       let id_user = response.notification.request.content.data.id_user;

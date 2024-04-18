@@ -152,7 +152,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
           familyId: id_family,
           imageData: base64Image,
         });
-        console.log('Message sent!');
+        //console.log('Message sent!');
       }
     } catch (error) {
       console.error('Error sending image:', error);
@@ -165,7 +165,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         message: message,
         familyId: id_family,
       });
-      console.log('Message sent!');
+     // console.log('Message sent!');
     } else {
       console.log('socket error');
     }

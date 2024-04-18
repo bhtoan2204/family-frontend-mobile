@@ -47,7 +47,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   const fetchMember = async (receiverId?: string, id_user?: string) => {
     try {
       const response: AxiosResponse<Member[]> = await FamilyServices.getMember({ id_user: receiverId });
-      console.log(response)
+      //console.log(response)
       if (response && response.data.length > 0) {
         setReceiver( response.data[0]);
       }
@@ -81,12 +81,12 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
 
   const sendMessage = async () => {
     if (socket) {
-      console.log(message);
+      //console.log(message);
       socket.emit('newMessage', {
         message: message,
         receiverId: receiverId,
       });
-      console.log('Message sent!');
+      //console.log('Message sent!');
 
     }
     else {
@@ -101,7 +101,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
           receiverId: receiverId,
           imageData: base64Image,
         });
-        console.log('Message sent!');
+        //console.log('Message sent!');
       }
     } catch (error) {
       console.error('Error sending image:', error);
@@ -212,8 +212,8 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
     };
   }, [socket]);
 
-  const handleVideoCall = () =>{
-
+  const handleVideoCall = (receiverId?: string) =>{
+    navigation.navigate('ChatStack', {screen: 'CallVideo' , params: {receiverId: receiverId }});
   }
   
 
@@ -232,7 +232,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
             </>
           )}
         </View>
-        <TouchableOpacity onPress={handleVideoCall}>
+        <TouchableOpacity onPress={() =>handleVideoCall(receiverId)}>
           <Icon name="videocam" size={36} style={styles.videoCallButton} />
         </TouchableOpacity>
       </View>
