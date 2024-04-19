@@ -1,16 +1,14 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
   Animated,
-  Dimensions,
+  Image,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import RBSheet from 'react-native-raw-bottom-sheet';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {PackageServices} from 'src/services/apiclient';
-import BottonSheetContent from './BottomSheetContent';
 import styles from './styles';
 import {
   PurchasedScreenProps,
@@ -18,6 +16,9 @@ import {
 } from 'src/navigation/NavigationTypes';
 import {Profile} from 'src/redux/slices/ProfileSclice';
 import {useDispatch} from 'react-redux';
+import {MaterialIcons} from '@expo/vector-icons';
+import {COLORS} from 'src/constants';
+import {Icon} from 'react-native-paper';
 
 type Profile = {
   id_user: string;
@@ -31,10 +32,8 @@ const HomeScreen = ({
   navigation,
 }: PurchasedScreenProps & ViewAllFamilyScreenProps) => {
   const scrollY = new Animated.Value(0);
-  //const bottomSheetRef = useRef<RBSheet>(null);
-  const screenHeight = Dimensions.get('screen').height;
+  //const screenHeight = Dimensions.get('screen').height;
   const dispatch = useDispatch();
-  //const sheetHeight = screenHeight * 0.9;
   const [profile, setProfile] = useState<Profile>();
   const translateY = scrollY.interpolate({
     inputRange: [0, 200],
@@ -63,7 +62,6 @@ const HomeScreen = ({
     });
   };
 
-  /////Goi tu homescreen
   // const handleProfile;
   const handleGetProfile = async () => {
     try {
@@ -81,9 +79,9 @@ const HomeScreen = ({
 
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.header, {transform: [{translateY}]}]}>
-        <Text style={styles.headerText}>Home</Text>
-      </Animated.View>
+      {/* <Animated.View style={[styles.header, {transform: [{translateY}]}]}>
+          <Text style={styles.headerText}>Home</Text>
+        </Animated.View> */}
 
       <ScrollView
         style={styles.scrollView}
@@ -92,6 +90,15 @@ const HomeScreen = ({
         onScroll={e => {
           scrollY.setValue(e.nativeEvent.contentOffset.y);
         }}>
+        <View style={styles.circleContainer}>
+          <TouchableOpacity style={styles.circle}>
+            <Material name="menu" size={30} color="#56409e" />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.circle}>
+            <Material name="bell-badge-outline" size={30} color="#56409e" />
+          </TouchableOpacity>
+        </View>
         <View style={styles.content}>
           <TouchableOpacity style={styles.button} onPress={handlePackage}>
             <Material
@@ -124,19 +131,6 @@ const HomeScreen = ({
           </TouchableOpacity>
         </View>
       </ScrollView>
-
-      {/* <RBSheet
-        ref={bottomSheetRef}
-        height={sheetHeight}
-        closeOnPressBack
-        closeOnPressMask
-        customStyles={{
-          wrapper: {backgroundColor: 'rgba(0,0,0,0.5)'},
-          draggableIcon: {height: 0, backgroundColor: 'transparent'},
-          container: {borderTopLeftRadius: 20, borderTopRightRadius: 20},
-        }}>
-        <BottonSheetContent />
-      </RBSheet> */}
     </View>
   );
 };
