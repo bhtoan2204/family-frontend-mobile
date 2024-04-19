@@ -198,6 +198,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   pictureBox: {
+    width: 375,
     elevation: 5,
     padding: 15,
     margin: 20,
