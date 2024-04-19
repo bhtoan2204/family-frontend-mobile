@@ -12,9 +12,12 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {PackageServices} from 'src/services/apiclient';
 import BottonSheetContent from './BottomSheetContent';
 import styles from './styles';
-import {PurchasedScreenProps,ViewAllFamilyScreenProps,} from 'src/navigation/NavigationTypes';
-import { Profile } from 'src/redux/slices/ProfileSclice';
-import { useDispatch } from 'react-redux';
+import {
+  PurchasedScreenProps,
+  ViewAllFamilyScreenProps,
+} from 'src/navigation/NavigationTypes';
+import {Profile} from 'src/redux/slices/ProfileSclice';
+import {useDispatch} from 'react-redux';
 
 type Profile = {
   id_user: string;
@@ -24,12 +27,14 @@ type Profile = {
   phone: string;
 };
 
-const HomeScreen = ({navigation,}: PurchasedScreenProps & ViewAllFamilyScreenProps) => {
+const HomeScreen = ({
+  navigation,
+}: PurchasedScreenProps & ViewAllFamilyScreenProps) => {
   const scrollY = new Animated.Value(0);
-  const bottomSheetRef = useRef<RBSheet>(null);
+  //const bottomSheetRef = useRef<RBSheet>(null);
   const screenHeight = Dimensions.get('screen').height;
   const dispatch = useDispatch();
-  const sheetHeight = screenHeight * 0.9;
+  //const sheetHeight = screenHeight * 0.9;
   const [profile, setProfile] = useState<Profile>();
   const translateY = scrollY.interpolate({
     inputRange: [0, 200],
@@ -37,7 +42,7 @@ const HomeScreen = ({navigation,}: PurchasedScreenProps & ViewAllFamilyScreenPro
     extrapolate: 'clamp',
   });
 
-  const handleOpenModal = () => bottomSheetRef.current?.open();
+  //const handleOpenModal = () => bottomSheetRef.current?.open();
 
   const handlePackage = () => {
     navigation.navigate('PackStack', {
@@ -52,7 +57,10 @@ const HomeScreen = ({navigation,}: PurchasedScreenProps & ViewAllFamilyScreenPro
     });
   };
   const handleChat = () => {
-    navigation.navigate('ChatStack', {screen: 'ChatList' , params: { id_user: profile?.id_user || ''}});
+    navigation.navigate('ChatStack', {
+      screen: 'ChatList',
+      params: {id_user: profile?.id_user || ''},
+    });
   };
 
   /////Goi tu homescreen
@@ -70,7 +78,7 @@ const HomeScreen = ({navigation,}: PurchasedScreenProps & ViewAllFamilyScreenPro
   useEffect(() => {
     handleGetProfile();
   }, []);
-  
+
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.header, {transform: [{translateY}]}]}>
@@ -117,7 +125,7 @@ const HomeScreen = ({navigation,}: PurchasedScreenProps & ViewAllFamilyScreenPro
         </View>
       </ScrollView>
 
-      <RBSheet
+      {/* <RBSheet
         ref={bottomSheetRef}
         height={sheetHeight}
         closeOnPressBack
@@ -128,11 +136,9 @@ const HomeScreen = ({navigation,}: PurchasedScreenProps & ViewAllFamilyScreenPro
           container: {borderTopLeftRadius: 20, borderTopRightRadius: 20},
         }}>
         <BottonSheetContent />
-      </RBSheet>
+      </RBSheet> */}
     </View>
   );
 };
 
 export default HomeScreen;
-
-

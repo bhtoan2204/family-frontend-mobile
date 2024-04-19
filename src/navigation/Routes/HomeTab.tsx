@@ -5,14 +5,16 @@ import {
 import {StyleSheet} from 'react-native';
 import TabButton from 'src/components/TabButton';
 import {TEXTS} from 'src/constants';
-import EditProfileScreen from 'src/screens/EditProfileScreen/EditProfileScreen';
 import HomeScreen from 'src/screens/HomeScreen';
-import PackageScreen from 'src/screens/PackageScreen';
 import ProfileScreen from 'src/screens/ProfileScreen';
 import ReportScreen from 'src/screens/ReportScreen';
 import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
-import BottomSheet from 'src/screens/FamilyScreen/BottomSheet';
+
 import BottomSheetChild from 'src/screens/HomeScreen/BottomSheetContent';
+import {
+  PurchasedScreenProps,
+  ViewAllFamilyScreenProps,
+} from '../NavigationTypes';
 
 const Tab = createBottomTabNavigator();
 const TabList = [
@@ -33,26 +35,17 @@ const TabList = [
     visible: true,
   },
   {
-    id: TEXTS.EDIT_PROFILE,
-    title: TEXTS.EDIT_PROFILE,
-    component: EditProfileScreen,
-    screen: 'EditProfileScreen',
-    icon: 'account-edit',
-    visible: false,
-  },
-  {
-    id: TEXTS.ADD_TAB,
-    title: TEXTS.ADD_TAB,
+    id: TEXTS.QR_CODE_TAB,
+    title: TEXTS.QR_CODE_TAB,
     component: ProfileScreen,
-    screen: 'AddScreen',
-    icon: 'plus',
+    screen: 'QRCodeScreen',
+    icon: 'qrcode-scan',
     visible: true,
   },
   {
     id: TEXTS.REPORT_TAB,
     title: TEXTS.REPORT_TAB,
     component: ReportScreen,
-    //component: PackageScreen,
     screen: 'PackageScreen',
     icon: 'notebook',
     visible: true,
@@ -92,9 +85,10 @@ const HomeTab = () => {
             name={tab.screen}
             component={tab.component}
             options={{
-              tabBarShowLabel: false,
+              tabBarShowLabel: true,
               tabBarButton: props =>
                 tab.visible ? TabBarButton(props, tab) : null,
+              tabBarLabel: tab.title,
             }}
           />
         );

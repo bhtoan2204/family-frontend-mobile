@@ -23,7 +23,7 @@ const LandingPage = ({navigation}: CombinedScreenProps) => {
           <Text style={styles.title}>
             Plan your day{'\n'}with{' '}
             <View style={styles.appName}>
-              <Text style={styles.appNameText}>Family Hub</Text>
+              <Text style={styles.appNameText}>Fam Fund</Text>
             </View>
           </Text>
           <Text style={styles.text}>
