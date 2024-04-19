@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontWeight: 'bold',
     paddingRight: 10,
+    color: COLORS.primary,
   },
   balanceBox: {
     flexDirection: 'row',
@@ -178,6 +179,7 @@ const styles = StyleSheet.create({
   columnStyle: {
     flexDirection: 'column',
     justifyContent: 'space-between',
+    marginBottom: -14,
   },
   rowStyle: {
     flexDirection: 'row',
@@ -194,6 +196,32 @@ const styles = StyleSheet.create({
     //padding: 3,
     margin: 5,
     alignItems: 'center',
+  },
+  pictureBox: {
+    elevation: 5,
+    padding: 15,
+    margin: 20,
+    borderColor: '#000',
+    borderRadius: 10,
+    //backgroundColor: '#5785FD',
+    backgroundColor: '#9572A7',
+    justifyContent: 'space-between',
+    shadowRadius: 3.84,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    //overflow: 'hidden',
+  },
+  text: {
+    color: '#fff',
+    fontSize: 45,
+    fontWeight: 'bold',
+  },
+  familyImage: {
+    marginTop: -70,
+    width: 450,
+    height: 300,
+    marginLeft: -8,
   },
 });
 

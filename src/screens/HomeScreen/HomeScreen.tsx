@@ -104,6 +104,17 @@ const HomeScreen = ({
           </TouchableOpacity>
         </View>
 
+        <View style={styles.pictureBox}>
+          <View style={styles.columnStyle}>
+            <Text style={styles.text}>Managing anything is now easier</Text>
+            <Image
+              source={require('../../assets/images/family-picture.png')}
+              resizeMode="stretch"
+              style={styles.familyImage}
+            />
+          </View>
+        </View>
+
         <View style={styles.walletBox}>
           <View style={styles.rowStyle}>
             <View style={styles.columnStyle}>
