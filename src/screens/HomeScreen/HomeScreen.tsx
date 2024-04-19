@@ -40,6 +40,7 @@ const HomeScreen = ({
     outputRange: [-50, 0],
     extrapolate: 'clamp',
   });
+  const [isBalanceVisible, setIsBalanceVisible] = useState(true);
 
   //const handleOpenModal = () => bottomSheetRef.current?.open();
 
@@ -92,13 +93,61 @@ const HomeScreen = ({
         }}>
         <View style={styles.circleContainer}>
           <TouchableOpacity style={styles.circle}>
-            <Material name="menu" size={30} color="#56409e" />
+            <Image
+              source={require('../../assets/images/menu-icon.png')}
+              resizeMode="contain"
+              style={styles.image}
+            />
           </TouchableOpacity>
-
           <TouchableOpacity style={styles.circle}>
             <Material name="bell-badge-outline" size={30} color="#56409e" />
           </TouchableOpacity>
         </View>
+
+        <View style={styles.walletBox}>
+          <View style={styles.rowStyle}>
+            <View style={styles.columnStyle}>
+              <Text style={styles.balance}>Active Balance</Text>
+              <View style={styles.rowStyle}>
+                <Text style={styles.numberBalance}>
+                  {isBalanceVisible ? '******' : '500.00$'}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => setIsBalanceVisible(!isBalanceVisible)}>
+                  <Material
+                    name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'}
+                    size={24}
+                    color="#6C6D71"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={styles.rowStyle1}>
+              <View style={styles.columnStyle}>
+                <TouchableOpacity style={styles.buttonStyle}>
+                  <Material name="tray-arrow-up" size={20} color="#6C6D71" />
+                  <Text style={styles.buttonText}>Top Up</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.columnStyle}>
+                <TouchableOpacity style={styles.buttonStyle}>
+                  <Material name="tray-arrow-down" size={20} color="#6C6D71" />
+                  <Text style={styles.buttonText}>Request</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.columnStyle}>
+                <TouchableOpacity style={styles.buttonStyle}>
+                  <Material name="wallet-outline" size={20} color="#6C6D71" />
+                  <Text style={styles.buttonText}>Transfer</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+
         <View style={styles.content}>
           <TouchableOpacity style={styles.button} onPress={handlePackage}>
             <Material
