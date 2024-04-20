@@ -254,14 +254,14 @@ const styles = StyleSheet.create({
     marginLeft: -8,
   },
   familyImage2: {
-    //marginTop: 80,
-    transform: [{translateY: 28}, {translateX: 5}],
+    marginTop: 27,
+    transform: [{translateY: 15}, {translateX: 5}],
     width: 280,
     height: 350,
     marginLeft: -120,
   },
   familyImage3: {
-    //marginTop: 80,
+    marginTop: 3,
     transform: [{translateY: -30}, {translateX: 30}],
     width: 300,
     height: 280,

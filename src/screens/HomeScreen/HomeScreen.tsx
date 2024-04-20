@@ -35,7 +35,7 @@ const HomeScreen = ({
   const scrollY = new Animated.Value(0);
   const width = Dimensions.get('window').width;
   const scrollViewRef = useRef<ScrollView>(null);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const dispatch = useDispatch();
   const [profile, setProfile] = useState<Profile>();
   const translateY = scrollY.interpolate({
@@ -84,30 +84,63 @@ const HomeScreen = ({
       console.log('ProfileServices.getProfile error:', error);
     }
   };
+
+  const views = [
+    <View style={[styles.pictureBox, {backgroundColor: '#9572A7'}]}>
+      <View style={styles.columnStyle}>
+        <Text style={styles.text}>Managing anything is now easier</Text>
+        <Image
+          source={require('../../assets/images/family-picture.png')}
+          resizeMode="stretch"
+          style={styles.familyImage}
+        />
+      </View>
+    </View>,
+    <View style={[styles.pictureBox2, {backgroundColor: '#84C9FE'}]}>
+      <View style={styles.rowStyle2}>
+        <Text style={[styles.text2, {maxWidth: '68%'}]}>
+          Time managed dreams realized
+        </Text>
+        <View style={{flex: 1}}>
+          <Image
+            source={require('../../assets/images/family-picture-3.png')}
+            resizeMode="stretch"
+            style={styles.familyImage2}
+          />
+        </View>
+      </View>
+    </View>,
+    <View style={[styles.pictureBox, {backgroundColor: '#FD927B'}]}>
+      <View style={styles.columnStyle}>
+        <Image
+          source={require('../../assets/images/family-picture-2.png')}
+          resizeMode="stretch"
+          style={styles.familyImage3}
+        />
+        <Text style={styles.text}>Managing your finances work</Text>
+      </View>
+    </View>,
+  ];
+
+  const viewsWithFake = [views[views.length - 1], ...views, views[0]];
+
   useEffect(() => {
     handleGetProfile();
-    // const interval = setInterval(() => {
-    //   setCurrentPage(prevPage => {
-    //     const nextPage = prevPage + 1 === 3 ? 0 : prevPage + 1;
-    //     if (scrollViewRef.current) {
-    //       scrollViewRef.current.scrollTo({x: nextPage * width, animated: true});
-    //     }
-    //     return nextPage;
-    //   });
-    // }, 3000);
-    // return () => clearInterval(interval);
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({x: width, animated: false});
+    }
+
     const interval = setInterval(() => {
       setCurrentPage(prevPage => {
-        const nextPage = prevPage + 1 === 3 ? 0 : prevPage + 1;
-        if (scrollViewRef.current) {
-          if (nextPage === 0) {
-            scrollViewRef.current.scrollTo({x: 0, animated: false}); // cuộn về đầu danh sách mà không có hiệu ứng
-          } else {
-            scrollViewRef.current.scrollTo({
-              x: nextPage * width,
-              animated: true,
-            });
-          }
+        let nextPage = prevPage + 1;
+        if (nextPage === viewsWithFake.length) {
+          scrollViewRef.current?.scrollTo({x: width, animated: false});
+          nextPage = 1;
+        } else {
+          scrollViewRef.current?.scrollTo({
+            x: nextPage * width,
+            animated: true,
+          });
         }
         return nextPage;
       });
@@ -143,55 +176,15 @@ const HomeScreen = ({
 
         <ScrollView
           ref={scrollViewRef}
-          horizontal={true}
+          horizontal
+          pagingEnabled
           showsHorizontalScrollIndicator={false}
-          pagingEnabled={true}
-          style={{flex: 1}}
-          onScroll={handleScroll}>
-          <View style={[styles.pictureBox, {backgroundColor: '#9572A7'}]}>
-            <View style={styles.columnStyle}>
-              <Text style={styles.text}>Managing anything is now easier</Text>
-              <Image
-                source={require('../../assets/images/family-picture.png')}
-                resizeMode="stretch"
-                style={styles.familyImage}
-              />
+          style={{flex: 1}}>
+          {viewsWithFake.map((view, index) => (
+            <View key={index} style={{width}}>
+              {view}
             </View>
-          </View>
-          <View style={[styles.pictureBox2, {backgroundColor: '#84C9FE'}]}>
-            <View style={styles.rowStyle2}>
-              <Text style={[styles.text2, {maxWidth: '68%'}]}>
-                Time managed dreams realized
-              </Text>
-              <View style={{flex: 1}}>
-                <Image
-                  source={require('../../assets/images/family-picture-3.png')}
-                  resizeMode="stretch"
-                  style={styles.familyImage2}
-                />
-              </View>
-            </View>
-          </View>
-          <View style={[styles.pictureBox, {backgroundColor: '#FD927B'}]}>
-            <View style={styles.columnStyle}>
-              <Image
-                source={require('../../assets/images/family-picture-2.png')}
-                resizeMode="stretch"
-                style={styles.familyImage3}
-              />
-              <Text style={styles.text}>Managing your finances work</Text>
-            </View>
-          </View>
-          <View style={[styles.pictureBox, {backgroundColor: '#9572A7'}]}>
-            <View style={styles.columnStyle}>
-              <Text style={styles.text}>Managing anything is now easier</Text>
-              <Image
-                source={require('../../assets/images/family-picture.png')}
-                resizeMode="stretch"
-                style={styles.familyImage}
-              />
-            </View>
-          </View>
+          ))}
         </ScrollView>
         <View style={styles.dots}>
           {[...Array(3)].map((_, i) => (
