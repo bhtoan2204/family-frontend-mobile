@@ -243,36 +243,53 @@ const HomeScreen = ({
           </View>
         </View>
 
-        <View style={styles.content}>
-          <TouchableOpacity style={styles.button} onPress={handlePackage}>
-            <Material
-              name="package"
-              size={50}
-              color="#56409e"
-              style={styles.buttonIcon}
-            />
-            <Text style={styles.buttonText}>Package</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.button} onPress={handleFamily}>
-            <Material
-              name="heart"
-              size={50}
-              color="#56409e"
-              style={styles.buttonIcon}
-            />
-            <Text style={styles.buttonText}>Family</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.button} onPress={handleChat}>
-            <Material
-              name="chat"
-              size={50}
-              color="#56409e"
-              style={styles.buttonIcon}
-            />
-            <Text style={styles.buttonText}>Chat</Text>
-          </TouchableOpacity>
+        <View style={styles.containerBottom}>
+          <View>
+            <View style={styles.rowStyle}>
+              <View style={styles.columnStyle1}>
+                <TouchableOpacity
+                  style={styles.button1}
+                  onPress={handlePackage}>
+                  <Material
+                    name="package-variant-closed"
+                    size={30}
+                    style={styles.buttonIcon1}
+                  />
+                </TouchableOpacity>
+                <Text style={styles.buttonText1}>Package</Text>
+              </View>
+              <View style={styles.columnStyle1}>
+                <TouchableOpacity style={styles.button1} onPress={handleFamily}>
+                  <Material
+                    name="account-supervisor-outline"
+                    size={30}
+                    style={styles.buttonIcon1}
+                  />
+                </TouchableOpacity>
+                <Text style={styles.buttonText1}>Family</Text>
+              </View>
+              <View style={styles.columnStyle1}>
+                <TouchableOpacity style={styles.button1} onPress={handleChat}>
+                  <Material
+                    name="chat-outline"
+                    size={30}
+                    style={styles.buttonIcon1}
+                  />
+                </TouchableOpacity>
+                <Text style={styles.buttonText1}>Chat</Text>
+              </View>
+              <View style={styles.columnStyle1}>
+                <TouchableOpacity style={styles.button1} onPress={handleChat}>
+                  <Material
+                    name="chat-outline"
+                    size={30}
+                    style={styles.buttonIcon1}
+                  />
+                </TouchableOpacity>
+                <Text style={styles.buttonText1}>Chat</Text>
+              </View>
+            </View>
+          </View>
         </View>
       </ScrollView>
     </View>

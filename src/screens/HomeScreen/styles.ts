@@ -1,5 +1,6 @@
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {COLORS} from 'src/constants';
+const halfScreenHeight = Dimensions.get('window').height / 2;
 
 const styles = StyleSheet.create({
   safeView: {
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    width: '48%', // Đảm bảo không xếp chồng
+    width: '30%', // Đảm bảo không xếp chồng
     aspectRatio: 1, // Hình vuông
     backgroundColor: '#fff',
     borderRadius: 10,
@@ -180,6 +181,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     marginBottom: -15,
+  },
+  columnStyle1: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
   rowStyle: {
     flexDirection: 'row',
@@ -280,6 +285,45 @@ const styles = StyleSheet.create({
   activeDot: {
     color: '#000',
     transform: [{scale: 1.6}],
+  },
+  containerBottom: {
+    height: halfScreenHeight,
+    backgroundColor: 'white',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    shadowRadius: 3.84,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    marginTop: 25,
+    padding: 20, // Xếp hàng
+    justifyContent: 'space-between',
+  },
+  button1: {
+    width: 60, // Đảm bảo không xếp chồng
+    height: 60,
+    backgroundColor: COLORS.primary, // Màu primary
+    borderRadius: 100, // Hình tròn
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  buttonText1: {
+    fontSize: 15,
+    color: '#6C6D71',
+    textAlign: 'center', // Canh giữa văn bản
+  },
+  buttonIcon1: {
+    color: '#fff', // Màu trắng
+  },
+  buttonContainer: {
+    flexDirection: 'row', // Xếp hàng
+    justifyContent: 'space-between', // Khoảng cách giữa các nút
   },
 });
 
