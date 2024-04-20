@@ -36,6 +36,7 @@ const HomeScreen = ({
   const width = Dimensions.get('window').width;
   const scrollViewRef = useRef<ScrollView>(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const [displayedPage, setDisplayedPage] = useState(0);
   const dispatch = useDispatch();
   const [profile, setProfile] = useState<Profile>();
   const translateY = scrollY.interpolate({
@@ -130,6 +131,7 @@ const HomeScreen = ({
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({x: 0, animated: false});
     }
+
     const interval = setInterval(() => {
       setCurrentPage(prevPage => {
         let nextPage = prevPage + 1;
@@ -142,6 +144,7 @@ const HomeScreen = ({
             animated: true,
           });
         }
+        setDisplayedPage(nextPage < views.length ? nextPage : 0);
         return nextPage;
       });
     }, 3000);
@@ -190,7 +193,7 @@ const HomeScreen = ({
           {[...Array(3)].map((_, i) => (
             <Text
               key={i}
-              style={[styles.dot, currentPage === i && styles.activeDot]}>
+              style={[styles.dot, displayedPage === i && styles.activeDot]}>
               •
             </Text>
           ))}
