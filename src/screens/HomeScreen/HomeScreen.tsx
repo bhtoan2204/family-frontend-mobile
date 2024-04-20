@@ -35,7 +35,7 @@ const HomeScreen = ({
   const scrollY = new Animated.Value(0);
   const width = Dimensions.get('window').width;
   const scrollViewRef = useRef<ScrollView>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const dispatch = useDispatch();
   const [profile, setProfile] = useState<Profile>();
   const translateY = scrollY.interpolate({
@@ -122,20 +122,20 @@ const HomeScreen = ({
     </View>,
   ];
 
-  const viewsWithFake = [views[views.length - 1], ...views, views[0]];
+  const viewsWithFake = [...views, views[0]];
 
   useEffect(() => {
     handleGetProfile();
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollTo({x: width, animated: false});
-    }
 
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({x: 0, animated: false});
+    }
     const interval = setInterval(() => {
       setCurrentPage(prevPage => {
         let nextPage = prevPage + 1;
         if (nextPage === viewsWithFake.length) {
-          scrollViewRef.current?.scrollTo({x: width, animated: false});
-          nextPage = 1;
+          scrollViewRef.current?.scrollTo({x: 0, animated: false});
+          nextPage = 0;
         } else {
           scrollViewRef.current?.scrollTo({
             x: nextPage * width,
