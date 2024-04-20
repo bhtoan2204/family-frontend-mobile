@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   columnStyle: {
     flexDirection: 'column',
     justifyContent: 'space-between',
-    marginBottom: -14,
+    marginBottom: -15,
   },
   rowStyle: {
     flexDirection: 'row',
@@ -188,9 +188,17 @@ const styles = StyleSheet.create({
   },
   rowStyle1: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 20,
+  },
+  rowStyle2: {
+    //flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingHorizontal: 10,
+    flexWrap: 'wrap',
   },
   buttonStyle: {
     //padding: 3,
@@ -205,8 +213,22 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     borderRadius: 10,
     //backgroundColor: '#5785FD',
-    backgroundColor: '#9572A7',
     justifyContent: 'space-between',
+    shadowRadius: 3.84,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    //overflow: 'hidden',
+  },
+  pictureBox2: {
+    width: 375,
+    elevation: 5,
+    padding: 15,
+    margin: 20,
+    borderColor: '#000',
+    borderRadius: 10,
+    //backgroundColor: '#5785FD',
+    justifyContent: 'center',
     shadowRadius: 3.84,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
@@ -218,11 +240,46 @@ const styles = StyleSheet.create({
     fontSize: 45,
     fontWeight: 'bold',
   },
+  text2: {
+    color: '#fff',
+    fontSize: 50,
+    fontWeight: 'bold',
+    //marginRight: 10,
+    //marginTop: 10,
+  },
   familyImage: {
     marginTop: -70,
     width: 450,
     height: 300,
     marginLeft: -8,
+  },
+  familyImage2: {
+    //marginTop: 80,
+    transform: [{translateY: 28}, {translateX: 5}],
+    width: 280,
+    height: 350,
+    marginLeft: -120,
+  },
+  familyImage3: {
+    //marginTop: 80,
+    transform: [{translateY: -30}, {translateX: 30}],
+    width: 300,
+    height: 280,
+    //marginLeft: -120,
+  },
+  dots: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dot: {
+    margin: 5,
+    fontSize: 20,
+    color: '#888',
+  },
+  activeDot: {
+    color: '#000',
+    transform: [{scale: 1.6}],
   },
 });
 

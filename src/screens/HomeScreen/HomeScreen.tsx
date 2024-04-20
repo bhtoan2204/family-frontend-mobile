@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Image,
@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Dimensions,
 } from 'react-native';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {PackageServices} from 'src/services/apiclient';
@@ -32,7 +33,9 @@ const HomeScreen = ({
   navigation,
 }: PurchasedScreenProps & ViewAllFamilyScreenProps) => {
   const scrollY = new Animated.Value(0);
-  //const screenHeight = Dimensions.get('screen').height;
+  const width = Dimensions.get('window').width;
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [currentPage, setCurrentPage] = useState(0);
   const dispatch = useDispatch();
   const [profile, setProfile] = useState<Profile>();
   const translateY = scrollY.interpolate({
@@ -42,7 +45,14 @@ const HomeScreen = ({
   });
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
 
-  //const handleOpenModal = () => bottomSheetRef.current?.open();
+  //Trang thai cua pictures
+  const handleScroll = (event: {
+    nativeEvent: {layoutMeasurement: any; contentOffset: any};
+  }) => {
+    const {layoutMeasurement, contentOffset} = event.nativeEvent;
+    const pageNum = Math.floor(contentOffset.x / layoutMeasurement.width);
+    setCurrentPage(pageNum);
+  };
 
   const handlePackage = () => {
     navigation.navigate('PackStack', {
@@ -76,6 +86,33 @@ const HomeScreen = ({
   };
   useEffect(() => {
     handleGetProfile();
+    // const interval = setInterval(() => {
+    //   setCurrentPage(prevPage => {
+    //     const nextPage = prevPage + 1 === 3 ? 0 : prevPage + 1;
+    //     if (scrollViewRef.current) {
+    //       scrollViewRef.current.scrollTo({x: nextPage * width, animated: true});
+    //     }
+    //     return nextPage;
+    //   });
+    // }, 3000);
+    // return () => clearInterval(interval);
+    const interval = setInterval(() => {
+      setCurrentPage(prevPage => {
+        const nextPage = prevPage + 1 === 3 ? 0 : prevPage + 1;
+        if (scrollViewRef.current) {
+          if (nextPage === 0) {
+            scrollViewRef.current.scrollTo({x: 0, animated: false}); // cuộn về đầu danh sách mà không có hiệu ứng
+          } else {
+            scrollViewRef.current.scrollTo({
+              x: nextPage * width,
+              animated: true,
+            });
+          }
+        }
+        return nextPage;
+      });
+    }, 3000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -104,21 +141,14 @@ const HomeScreen = ({
           </TouchableOpacity>
         </View>
 
-        {/* <View style={styles.pictureBox}>
-          <View style={styles.columnStyle}>
-            <Text style={styles.text}>Managing anything is now easier</Text>
-            <Image
-              source={require('../../assets/images/family-picture.png')}
-              resizeMode="stretch"
-              style={styles.familyImage}
-            />
-          </View>
-        </View> */}
         <ScrollView
+          ref={scrollViewRef}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          style={{flex: 1}}>
-          <View style={styles.pictureBox}>
+          pagingEnabled={true}
+          style={{flex: 1}}
+          onScroll={handleScroll}>
+          <View style={[styles.pictureBox, {backgroundColor: '#9572A7'}]}>
             <View style={styles.columnStyle}>
               <Text style={styles.text}>Managing anything is now easier</Text>
               <Image
@@ -128,7 +158,31 @@ const HomeScreen = ({
               />
             </View>
           </View>
-          <View style={styles.pictureBox}>
+          <View style={[styles.pictureBox2, {backgroundColor: '#84C9FE'}]}>
+            <View style={styles.rowStyle2}>
+              <Text style={[styles.text2, {maxWidth: '68%'}]}>
+                Time managed dreams realized
+              </Text>
+              <View style={{flex: 1}}>
+                <Image
+                  source={require('../../assets/images/family-picture-3.png')}
+                  resizeMode="stretch"
+                  style={styles.familyImage2}
+                />
+              </View>
+            </View>
+          </View>
+          <View style={[styles.pictureBox, {backgroundColor: '#FD927B'}]}>
+            <View style={styles.columnStyle}>
+              <Image
+                source={require('../../assets/images/family-picture-2.png')}
+                resizeMode="stretch"
+                style={styles.familyImage3}
+              />
+              <Text style={styles.text}>Managing your finances work</Text>
+            </View>
+          </View>
+          <View style={[styles.pictureBox, {backgroundColor: '#9572A7'}]}>
             <View style={styles.columnStyle}>
               <Text style={styles.text}>Managing anything is now easier</Text>
               <Image
@@ -139,6 +193,15 @@ const HomeScreen = ({
             </View>
           </View>
         </ScrollView>
+        <View style={styles.dots}>
+          {[...Array(3)].map((_, i) => (
+            <Text
+              key={i}
+              style={[styles.dot, currentPage === i && styles.activeDot]}>
+              •
+            </Text>
+          ))}
+        </View>
 
         <View style={styles.walletBox}>
           <View style={styles.rowStyle}>
