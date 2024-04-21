@@ -9,6 +9,8 @@ import Notification from 'src/screens/Notifications';
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 const AuthStack = () => {
+
+
   return (
     <Stack.Navigator
       screenOptions={{

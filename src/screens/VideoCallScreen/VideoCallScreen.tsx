@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Button } from 'react-native';
-import { RTCPeerConnection, RTCView, mediaDevices } from 'react-native-webrtc';
+import { mediaDevices, RTCSessionDescription } from 'react-native-webrtc'; 
 import { CallVideoProps } from 'src/navigation/NavigationTypes';
 import { getSocket } from 'src/services/apiclient/Socket';
 
-const VideoCallScreen = ({navigation, route} : CallVideoProps) => {
-    const [localStream, setlocalStream] = useState(null);
+const VideoCallScreen = ({ navigation, route }: CallVideoProps) => {
+    const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+    const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null); 
     const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
-    const {receiverId} = route.params;
+    const { receiverId } = route.params;
     const socket = getSocket();
     let isFront = false;
 
@@ -33,40 +34,23 @@ const VideoCallScreen = ({navigation, route} : CallVideoProps) => {
     };
 
     const initializeMediaDevices = async () => {
-        
-        mediaDevices.enumerateDevices().then(sourceInfos => {
-            let videoSourceId;
-            for (let i = 0; i < sourceInfos.length; i++) {
-              const sourceInfo = sourceInfos[i];
-              if (
-                sourceInfo.kind == 'videoinput' &&
-                sourceInfo.facing == (isFront ? 'user' : 'environment')
-              ) {
-                videoSourceId = sourceInfo.deviceId;
-              }
-            }
-      
-      
-            mediaDevices
-              .getUserMedia({
+        try {
+            const stream = await mediaDevices.getUserMedia({
                 audio: true,
                 video: {
-                  mandatory: {
-                    minWidth: 500, 
-                    minHeight: 300,
-                    minFrameRate: 30,
-                  },
-                  facingMode: isFront ? 'user' : 'environment',
-                  optional: videoSourceId ? [{sourceId: videoSourceId}] : [],
+                    mandatory: {
+                        minWidth: 500,
+                        minHeight: 300,
+                        minFrameRate: 30,
+                    },
+                    facingMode: isFront ? 'user' : 'environment',
                 },
-              })
-              .then(stream => {
-                setlocalStream(stream);
-      
-                peerConnectionRef.current.addStream(stream);
-              })
-        } )
-    
+            });
+            setLocalStream(stream);
+            peerConnectionRef.current?.addStream(stream);
+        } catch (error) {
+            console.error('Error accessing media devices:', error);
+        }
     };
 
     const startCall = async () => {
@@ -75,12 +59,12 @@ const VideoCallScreen = ({navigation, route} : CallVideoProps) => {
         peerConnectionRef.current = peerConnection;
 
         localStream?.getTracks().forEach(track => {
-             peerConnection.addTrack(track, localStream!);
+            peerConnection.addTrack(track, localStream!);
         });
 
-        peerConnection.current.onaddstream = event => {
+        peerConnection.onaddstream = event => {
             setRemoteStream(event.stream);
-          };
+        };
 
         const offer = await peerConnection.createOffer();
         await peerConnection.setLocalDescription(offer);
@@ -92,9 +76,8 @@ const VideoCallScreen = ({navigation, route} : CallVideoProps) => {
 
     return (
         <View>
-            <RTCView style={{ width: 200, height: 200 }} streamURL={localStream?.toURL()} />
-            <RTCView style={{ width: 200, height: 200 }} streamURL={remoteStream?.toURL()} />
-
+            {/* <RTCView style={{ width: 200, height: 200 }} streamURL={localStream?.toURL()} />
+            <RTCView style={{ width: 200, height: 200 }} streamURL={remoteStream?.toURL()} /> */}
 
             <Button title="Start Call" onPress={startCall} />
         </View>
