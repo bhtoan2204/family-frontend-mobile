@@ -29,7 +29,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#F4F7FF',
+    //backgroundColor: '#F4F7FF',
+    backgroundColor: '#1D1441',
   },
   header: {
     height: 50,
@@ -106,7 +107,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 15,
-    color: '#6C6D71',
+    //color: '#6C6D71',
+    color: '#fff',
   },
   buttonIcon: {
     marginRight: 10, // Đảm bảo khoảng cách giữa biểu tượng và văn bản
@@ -120,7 +122,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#fff',
+    backgroundColor: '#332E59',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -144,7 +146,7 @@ const styles = StyleSheet.create({
     margin: 20,
     borderColor: '#000',
     borderRadius: 10,
-    backgroundColor: '#fff',
+    backgroundColor: '#332E59',
     justifyContent: 'space-between',
     shadowRadius: 3.84,
     shadowColor: '#000',
@@ -154,14 +156,15 @@ const styles = StyleSheet.create({
   balance: {
     fontSize: 16,
     marginBottom: 10,
-    color: '#6C6D71',
+    //color: '#6C6D71',
+    color: '#fff',
   },
   numberBalance: {
     fontSize: 24,
     marginBottom: 10,
     fontWeight: 'bold',
     paddingRight: 10,
-    color: COLORS.primary,
+    color: '#fff',
   },
   balanceBox: {
     flexDirection: 'row',
@@ -283,12 +286,13 @@ const styles = StyleSheet.create({
     color: '#888',
   },
   activeDot: {
-    color: '#000',
+    //color: '#000',
+    color: '#fff',
     transform: [{scale: 1.6}],
   },
   containerBottom: {
     height: halfScreenHeight,
-    backgroundColor: 'white',
+    backgroundColor: '#332E59',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     shadowRadius: 3.84,
@@ -315,7 +319,8 @@ const styles = StyleSheet.create({
   },
   buttonText1: {
     fontSize: 15,
-    color: '#6C6D71',
+    //color: '#6C6D71',
+    color: '#fff', // Màu trắng
     textAlign: 'center', // Canh giữa văn bản
   },
   buttonIcon1: {

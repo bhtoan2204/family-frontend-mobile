@@ -20,6 +20,7 @@ import {useDispatch} from 'react-redux';
 import {MaterialIcons} from '@expo/vector-icons';
 import {COLORS} from 'src/constants';
 import {Icon} from 'react-native-paper';
+import LinearGradient from 'react-native-linear-gradient';
 
 type Profile = {
   id_user: string;
@@ -173,7 +174,12 @@ const HomeScreen = ({
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.circle}>
-            <Material name="bell-badge-outline" size={30} color="#56409e" />
+            <Material
+              name="bell-badge-outline"
+              size={30}
+              //color="#56409e"
+              color="#fff"
+            />
           </TouchableOpacity>
         </View>
 
@@ -212,7 +218,8 @@ const HomeScreen = ({
                   <Material
                     name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'}
                     size={24}
-                    color="#6C6D71"
+                    //color="#6C6D71"
+                    color="#fff"
                   />
                 </TouchableOpacity>
               </View>
@@ -221,21 +228,22 @@ const HomeScreen = ({
             <View style={styles.rowStyle1}>
               <View style={styles.columnStyle}>
                 <TouchableOpacity style={styles.buttonStyle}>
-                  <Material name="tray-arrow-up" size={20} color="#6C6D71" />
+                  {/* <Material name="tray-arrow-up" size={20} color="#6C6D71" /> */}
+                  <Material name="tray-arrow-up" size={20} color="#fff" />
                   <Text style={styles.buttonText}>Top Up</Text>
                 </TouchableOpacity>
               </View>
 
               <View style={styles.columnStyle}>
                 <TouchableOpacity style={styles.buttonStyle}>
-                  <Material name="tray-arrow-down" size={20} color="#6C6D71" />
+                  <Material name="tray-arrow-down" size={20} color="#fff" />
                   <Text style={styles.buttonText}>Request</Text>
                 </TouchableOpacity>
               </View>
 
               <View style={styles.columnStyle}>
                 <TouchableOpacity style={styles.buttonStyle}>
-                  <Material name="wallet-outline" size={20} color="#6C6D71" />
+                  <Material name="wallet-outline" size={20} color="#fff" />
                   <Text style={styles.buttonText}>Transfer</Text>
                 </TouchableOpacity>
               </View>
