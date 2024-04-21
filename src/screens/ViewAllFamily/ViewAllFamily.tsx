@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  Image,
   Alert,
 } from 'react-native';
 import {FamilyServices} from 'src/services/apiclient';
@@ -13,6 +14,7 @@ import {Feather as FeatherIcon, MaterialIcons} from '@expo/vector-icons';
 import {ViewAllFamilyScreenProps} from 'src/navigation/NavigationTypes';
 import styles from './styles';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import {LinearGradient} from 'expo-linear-gradient';
 
 type Family = {
   id_family?: number;
@@ -193,10 +195,109 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                   </View>
                 </View>
               </View> */}
-              <View style={styles.row}>
-                {/* Hinh gia dinh
-                <Image></Image> */}
-                <View style={styles.column}></View>
+
+              {/* <View style={styles.row}>
+                <Image
+                  source={require('../../assets/images/menu-icon1.png')}
+                  resizeMode="contain"
+                  style={styles.image}
+                />
+
+                <View style={styles.description}>
+                  <Text style={styles.cardTitle}> Ten gia dinh</Text>
+                  <View style={styles.ColorAndDescription}>
+                    <TouchableOpacity style={styles.color}>
+                      <Material
+                        name="home-plus-outline"
+                        size={25}
+                        //color="#56409e"
+                        color="#fff"
+                      />
+                    </TouchableOpacity>
+                    <Text style={styles.cardDescription}>Mo ta</Text>
+                  </View>
+                  <View style={styles.buttonPos}>
+                    <View style={styles.column}>
+                      <LinearGradient
+                        // Array of colors for gradient
+                        colors={['#724DC9', '#5E4ABE', '#4748B2']}
+                        // Gradient style
+                        style={[styles.button, {marginLeft: 0}]}
+                        start={{x: 0, y: 0}}
+                        end={{x: 0, y: 1}}>
+                        <TouchableOpacity>
+                          <Text style={styles.buttonText}>Delete</Text>
+                        </TouchableOpacity>
+                      </LinearGradient>
+                    </View>
+
+                    <View style={styles.column}>
+                      <LinearGradient
+                        // Array of colors for gradient
+                        colors={['#724DC9', '#5E4ABE', '#4748B2']}
+                        // Gradient style
+                        style={[styles.button, {marginRight: 0}]}
+                        // Gradient direction
+                        start={{x: 0, y: 0}}
+                        end={{x: 0, y: 1}}>
+                        <TouchableOpacity>
+                          <Text style={styles.buttonText}>Edit</Text>
+                        </TouchableOpacity>
+                      </LinearGradient>
+                    </View>
+                  </View>
+                </View>
+                <MaterialIcons name="more-vert" size={30} color="#fff" />
+              </View> */}
+
+              <View style={styles.card}>
+                <TouchableOpacity>
+                  <Image
+                    source={require('../../assets/images/menu-icon1.png')}
+                    resizeMode="contain"
+                    style={styles.image}
+                  />
+                </TouchableOpacity>
+                <View style={styles.column}>
+                  <Text style={styles.cardTitle}>Ten gia dinh</Text>
+                  <View style={styles.ColorAndDescription}>
+                    <TouchableOpacity style={styles.color}>
+                      <Material
+                        name="home-plus-outline"
+                        size={25}
+                        //color="#56409e"
+                        color="#fff"
+                      />
+                    </TouchableOpacity>
+                    <Text style={styles.cardDescription}>Mo ta</Text>
+                  </View>
+                  <View style={styles.buttonPos}>
+                    <LinearGradient
+                      // Array of colors for gradient
+                      colors={['#724DC9', '#5E4ABE', '#4748B2']}
+                      // Gradient style
+                      style={[styles.button, {marginLeft: 0}]}
+                      start={{x: 0, y: 0}}
+                      end={{x: 0, y: 1}}>
+                      <TouchableOpacity>
+                        <Text style={styles.buttonText}>Delete</Text>
+                      </TouchableOpacity>
+                    </LinearGradient>
+
+                    <LinearGradient
+                      // Array of colors for gradient
+                      colors={['#724DC9', '#5E4ABE', '#4748B2']}
+                      // Gradient style
+                      style={[styles.button, {marginLeft: 0}]}
+                      start={{x: 0, y: 0}}
+                      end={{x: 0, y: 1}}>
+                      <TouchableOpacity>
+                        <Text style={styles.buttonText}>Delete</Text>
+                      </TouchableOpacity>
+                    </LinearGradient>
+                  </View>
+                </View>
+                <MaterialIcons name="more-vert" size={30} color="#fff" />
               </View>
             </TouchableOpacity>
           </View>

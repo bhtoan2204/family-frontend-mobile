@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {COLORS} from 'src/constants';
 
 const styles = StyleSheet.create({
   header: {
@@ -58,8 +59,9 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#332E59',
-    //borderRadius: 10,
-    padding: 10,
+    paddingTop: 20,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
   cardBody: {
     marginBottom: 10,
@@ -125,6 +127,63 @@ const styles = StyleSheet.create({
   column: {
     flexDirection: 'column',
     justifyContent: 'space-between',
+  },
+  buttonPos: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    padding: 10,
+  },
+  button: {
+    width: 100, // Đảm bảo không xếp chồng
+    height: 30,
+    backgroundColor: COLORS.primary, // Màu primary
+    borderRadius: 20, // Hình tròn
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  buttonText: {
+    fontWeight: '500', // Độ đậm của văn bản
+    //color: '#6C6D71',
+    color: '#fff', // Màu trắng
+    textAlign: 'center', // Canh giữa văn bản
+  },
+  image: {
+    padding: 10,
+    marginLeft: 20,
+    marginTop: 20,
+  },
+  color: {
+    width: 40,
+    height: 40,
+    borderRadius: 25,
+    backgroundColor: '#332E59',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    //overflow: 'hidden',
+  },
+  description: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    marginRight: 120,
+  },
+  ColorAndDescription: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
 });
 
