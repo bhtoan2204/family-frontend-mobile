@@ -66,10 +66,20 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   title: {
+    fontWeight: '400',
     fontSize: 30,
     textAlign: 'center',
-    alignSelf: 'center',
-    color: COLORS.primary,
+    alignSelf: 'flex-start',
+    color: COLORS.white,
+    padding: 20,
+  },
+  titleBottom: {
+    fontSize: 30,
+    textAlign: 'center',
+    alignSelf: 'flex-start',
+    color: COLORS.white,
+    padding: 5,
+    marginBottom: 15,
   },
   touchableOpacity: {
     alignItems: 'center',
@@ -318,17 +328,36 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   buttonText1: {
-    fontSize: 15,
+    fontWeight: '500', // Độ đậm của văn bản
     //color: '#6C6D71',
     color: '#fff', // Màu trắng
     textAlign: 'center', // Canh giữa văn bản
   },
   buttonIcon1: {
-    color: '#fff', // Màu trắng
+    color: '#fff',
   },
   buttonContainer: {
     flexDirection: 'row', // Xếp hàng
     justifyContent: 'space-between', // Khoảng cách giữa các nút
+  },
+  linearGradient: {
+    flex: 1,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5,
+  },
+  buttonTexttest: {
+    fontSize: 18,
+    fontFamily: 'Gill Sans',
+    textAlign: 'center',
+    margin: 10,
+    color: '#ffffff',
+    backgroundColor: 'transparent',
+  },
+  colorLayer: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#4c669f', // This is the color of each layer
+    opacity: 0.33,
   },
 });
 

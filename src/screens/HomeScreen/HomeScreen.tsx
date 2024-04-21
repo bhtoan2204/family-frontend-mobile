@@ -20,7 +20,7 @@ import {useDispatch} from 'react-redux';
 import {MaterialIcons} from '@expo/vector-icons';
 import {COLORS} from 'src/constants';
 import {Icon} from 'react-native-paper';
-import LinearGradient from 'react-native-linear-gradient';
+import {LinearGradient} from 'expo-linear-gradient';
 
 type Profile = {
   id_user: string;
@@ -168,7 +168,7 @@ const HomeScreen = ({
         <View style={styles.circleContainer}>
           <TouchableOpacity style={styles.circle}>
             <Image
-              source={require('../../assets/images/menu-icon.png')}
+              source={require('../../assets/images/menu-icon1.png')}
               resizeMode="contain"
               style={styles.image}
             />
@@ -182,6 +182,8 @@ const HomeScreen = ({
             />
           </TouchableOpacity>
         </View>
+
+        <Text style={styles.title}>Trending Search</Text>
 
         <ScrollView
           ref={scrollViewRef}
@@ -253,48 +255,86 @@ const HomeScreen = ({
 
         <View style={styles.containerBottom}>
           <View>
+            <Text style={styles.titleBottom}>Top Feature</Text>
             <View style={styles.rowStyle}>
               <View style={styles.columnStyle1}>
-                <TouchableOpacity
+                <LinearGradient
+                  // Array of colors for gradient
+                  colors={['#724DC9', '#5E4ABE', '#4748B2']}
+                  // Gradient style
                   style={styles.button1}
-                  onPress={handlePackage}>
-                  <Material
-                    name="package-variant-closed"
-                    size={30}
-                    style={styles.buttonIcon1}
-                  />
-                </TouchableOpacity>
+                  // Gradient direction
+                  start={{x: 0, y: 0}}
+                  end={{x: 0, y: 1}}>
+                  <TouchableOpacity onPress={handlePackage}>
+                    <Material
+                      name="package-variant-closed"
+                      size={30}
+                      style={styles.buttonIcon1}
+                    />
+                  </TouchableOpacity>
+                </LinearGradient>
                 <Text style={styles.buttonText1}>Package</Text>
               </View>
+
               <View style={styles.columnStyle1}>
-                <TouchableOpacity style={styles.button1} onPress={handleFamily}>
-                  <Material
-                    name="account-supervisor-outline"
-                    size={30}
-                    style={styles.buttonIcon1}
-                  />
-                </TouchableOpacity>
+                <LinearGradient
+                  // Array of colors for gradient
+                  colors={['#724DC9', '#5E4ABE', '#4748B2']}
+                  // Gradient style
+                  style={styles.button1}
+                  // Gradient direction
+                  start={{x: 0, y: 0}}
+                  end={{x: 0, y: 1}}>
+                  <TouchableOpacity onPress={handleFamily}>
+                    <Material
+                      name="account-supervisor-outline"
+                      size={30}
+                      style={styles.buttonIcon1}
+                    />
+                  </TouchableOpacity>
+                </LinearGradient>
                 <Text style={styles.buttonText1}>Family</Text>
               </View>
+
               <View style={styles.columnStyle1}>
-                <TouchableOpacity style={styles.button1} onPress={handleChat}>
-                  <Material
-                    name="chat-outline"
-                    size={30}
-                    style={styles.buttonIcon1}
-                  />
-                </TouchableOpacity>
+                <LinearGradient
+                  // Array of colors for gradient
+                  colors={['#724DC9', '#5E4ABE', '#4748B2']}
+                  // Gradient style
+                  style={styles.button1}
+                  // Gradient direction
+                  start={{x: 0, y: 0}}
+                  end={{x: 0, y: 1}}>
+                  <TouchableOpacity onPress={handleChat}>
+                    <Material
+                      name="chat-outline"
+                      size={30}
+                      style={styles.buttonIcon1}
+                    />
+                  </TouchableOpacity>
+                </LinearGradient>
                 <Text style={styles.buttonText1}>Chat</Text>
               </View>
+
               <View style={styles.columnStyle1}>
-                <TouchableOpacity style={styles.button1} onPress={handleChat}>
-                  <Material
-                    name="chat-outline"
-                    size={30}
-                    style={styles.buttonIcon1}
-                  />
-                </TouchableOpacity>
-                <Text style={styles.buttonText1}>Chat</Text>
+                <LinearGradient
+                  // Array of colors for gradient
+                  colors={['#724DC9', '#5E4ABE', '#4748B2']}
+                  // Gradient style
+                  style={styles.button1}
+                  // Gradient direction
+                  start={{x: 0, y: 0}}
+                  end={{x: 0, y: 1}}>
+                  <TouchableOpacity onPress={handleChat}>
+                    <Material
+                      name="chat-outline"
+                      size={30}
+                      style={styles.buttonIcon1}
+                    />
+                  </TouchableOpacity>
+                </LinearGradient>
+                <Text style={styles.buttonText1}>Test</Text>
               </View>
             </View>
           </View>
