@@ -154,10 +154,6 @@ const HomeScreen = ({
 
   return (
     <View style={styles.container}>
-      {/* <Animated.View style={[styles.header, {transform: [{translateY}]}]}>
-          <Text style={styles.headerText}>Home</Text>
-        </Animated.View> */}
-
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}

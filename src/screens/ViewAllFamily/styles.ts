@@ -1,9 +1,14 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   header: {
     backgroundColor: '#05141c',
     padding: 10,
+  },
+  rowStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'stretch',
   },
   headerTitle: {
     color: 'white',
@@ -15,7 +20,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  
+
   inputContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -23,13 +28,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   inputWrapper: {
+    justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    flex: 1,
-    marginRight: 10,
+    backgroundColor: '#332E59',
+    borderRadius: 15,
+    paddingHorizontal: 15,
+    width: '65%',
   },
   input: {
     flex: 1,
@@ -48,26 +53,26 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   familyCard: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    padding: 1,
+    paddingHorizontal: 0,
   },
   card: {
-    backgroundColor: 'white',
-    borderRadius: 10,
+    backgroundColor: '#332E59',
+    //borderRadius: 10,
     padding: 10,
   },
   cardBody: {
     marginBottom: 10,
   },
   cardTitle: {
+    color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
   },
   cardDescription: {
     fontSize: 16,
-    color: '#555',
+    color: '#fff',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -90,6 +95,36 @@ const styles = StyleSheet.create({
   },
   iconWrapper: {
     marginLeft: 10,
+  },
+  circleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 15,
+  },
+  circle: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#332E59',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    //overflow: 'hidden',
+  },
+  row: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  column: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
 });
 

@@ -1,10 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Animated, View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
-import { FamilyServices } from 'src/services/apiclient';
+import React, {useState, useEffect, useRef} from 'react';
+import {
+  Animated,
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  Alert,
+} from 'react-native';
+import {FamilyServices} from 'src/services/apiclient';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { Feather as FeatherIcon } from '@expo/vector-icons';
-import { ViewAllFamilyScreenProps } from 'src/navigation/NavigationTypes';
+import {Feather as FeatherIcon, MaterialIcons} from '@expo/vector-icons';
+import {ViewAllFamilyScreenProps} from 'src/navigation/NavigationTypes';
 import styles from './styles';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type Family = {
   id_family?: number;
@@ -12,8 +20,11 @@ type Family = {
   description?: string;
 };
 
-const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({ navigation, route }) => {
-  const { id_user } = route.params || {};
+const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
+  navigation,
+  route,
+}) => {
+  const {id_user} = route.params || {};
   const RBEdit = useRef<RBSheet>(null);
   const RBDetail = useRef<RBSheet>(null);
   const [families, setFamilies] = useState<Family[]>([]);
@@ -42,22 +53,16 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({ navigation, r
           {
             text: 'OK',
             onPress: async () => {
-              const result = await FamilyServices.deleteFamily({ id_family });
-              Alert.alert(
-                'Success',
-                'Successfully deleted family'
-              );
-              handleGetAllFamily(); 
+              const result = await FamilyServices.deleteFamily({id_family});
+              Alert.alert('Success', 'Successfully deleted family');
+              handleGetAllFamily();
             },
           },
         ],
-        { cancelable: false }
+        {cancelable: false},
       );
     } catch (error: any) {
-      Alert.alert(
-        'Fail',
-        'Failed to delete family'
-      );
+      Alert.alert('Fail', 'Failed to delete family');
       console.log('Error deleting family:', error);
     }
   };
@@ -66,13 +71,13 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({ navigation, r
     const unsubscribe = navigation.addListener('focus', () => {
       handleGetAllFamily();
     });
-  
+
     return unsubscribe;
   }, [navigation]);
 
   return (
-    <View style={{ flex: 1 }}>
-      <Animated.View style={[styles.header]}>
+    <View style={[{flex: 1, backgroundColor: '#1D1441'}]}>
+      {/* <Animated.View style={[styles.header]}>
         <Text style={styles.headerTitle}>
           Family Hub
         </Text>
@@ -101,37 +106,85 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({ navigation, r
             />
           </TouchableOpacity>
         </View>
-      </Animated.View>
+      </Animated.View> */}
+      <View style={styles.circleContainer}>
+        <TouchableOpacity style={styles.circle}>
+          <MaterialIcons
+            name="keyboard-arrow-left"
+            size={30}
+            //color="#56409e"
+            color="#fff"
+          />
+        </TouchableOpacity>
+        <View style={styles.inputWrapper}>
+          <TextInput
+            placeholder="Search Families"
+            placeholderTextColor="#9C9AAF"
+            style={styles.input}
+          />
+          <TouchableOpacity>
+            <Material
+              name="home-search-outline"
+              size={25}
+              //color="#56409e"
+              color="#fff"
+              style={styles.inputIcon}
+            />
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.circle}>
+          <Material
+            name="home-plus-outline"
+            size={25}
+            //color="#56409e"
+            color="#fff"
+          />
+        </TouchableOpacity>
+      </View>
       <Animated.ScrollView
         contentContainerStyle={styles.content}
         onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
           {
             useNativeDriver: true,
-          }
+          },
         )}
-        scrollEventThrottle={1}
-      >
+        scrollEventThrottle={1}>
         {families.map((family, index) => (
           <View key={index} style={styles.familyCard}>
             <TouchableOpacity onPress={() => {}}>
-              <View style={styles.card}>
+              {/* <View style={styles.card}>
                 <View style={styles.cardBody}>
                   <Text style={styles.cardTitle}>{family.name}</Text>
-                  <Text style={styles.cardDescription}>{family.description}</Text>
+                  <Text style={styles.cardDescription}>
+                    {family.description}
+                  </Text>
                   <View style={styles.buttonContainer}>
-                    <TouchableOpacity onPress={() => navigation.navigate('ViewFamily', { id_user, id_family: family.id_family })}>
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate('ViewFamily', {
+                          id_user,
+                          id_family: family.id_family,
+                        })
+                      }>
                       <View style={styles.viewButton}>
                         <Text style={styles.btnText}>View details</Text>
                       </View>
                     </TouchableOpacity>
                     <View style={styles.editDeleteContainer}>
-                      <TouchableOpacity onPress={() => navigation.navigate('ViewFamily', { id_user, id_family: family.id_family })}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate('ViewFamily', {
+                            id_user,
+                            id_family: family.id_family,
+                          })
+                        }>
                         <View style={styles.iconWrapper}>
                           <FeatherIcon name="edit-2" size={20} color="blue" />
                         </View>
                       </TouchableOpacity>
-                      <TouchableOpacity onPress={() => handleDeleteFamily(family.id_family)}>
+                      <TouchableOpacity
+                        onPress={() => handleDeleteFamily(family.id_family)}>
                         <View style={styles.iconWrapper}>
                           <FeatherIcon name="trash" size={20} color="red" />
                         </View>
@@ -139,6 +192,11 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({ navigation, r
                     </View>
                   </View>
                 </View>
+              </View> */}
+              <View style={styles.row}>
+                {/* Hinh gia dinh
+                <Image></Image> */}
+                <View style={styles.column}></View>
               </View>
             </TouchableOpacity>
           </View>
