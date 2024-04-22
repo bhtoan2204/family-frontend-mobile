@@ -226,6 +226,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     left: 20,
   },
+  menu: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    margin: 10,
+    elevation: 5,
+  },
 });
 
 export default styles;

@@ -6,7 +6,9 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  Modal,
   Alert,
+  Dimensions,
 } from 'react-native';
 import {FamilyServices} from 'src/services/apiclient';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -39,6 +41,8 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
   const [filteredFamilies, setFilteredFamilies] = useState<Family[]>([]);
   const [selectedButton, setSelectedButton] = useState('');
   const [isUp, setIsUp] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [buttonPosition, setButtonPosition] = useState({x: 0, y: 0});
 
   const Button = ({title, buttonStyle}: ButtonProps) => (
     <TouchableOpacity
@@ -213,7 +217,6 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                   <View style={styles.buttonPos}>
                     <LinearGradient
                       colors={['#A388DB', '#9186D2', '#8385CB']}
-                      //colors={['#724DC9', '#5E4ABE', '#4748B2']}
                       style={[styles.button, styles.detailButton]}
                       start={{x: 0, y: 0}}
                       end={{x: 0, y: 1}}>
@@ -228,7 +231,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                           style={[
                             styles.buttonText,
                             {color: '#272042'},
-                            //{color: '#fff'},
+                            {fontWeight: '600'},
                           ]}>
                           View Detail
                         </Text>
@@ -236,9 +239,93 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                     </LinearGradient>
                   </View>
                 </View>
-                <TouchableOpacity style={{right: 60}}>
+
+                <TouchableOpacity
+                  style={{right: 60}}
+                  onPressIn={event => {
+                    const locationX = event.nativeEvent.pageX;
+                    const locationY = event.nativeEvent.pageY;
+                    setButtonPosition({
+                      x: locationX,
+                      y: locationY,
+                    });
+                    setModalVisible(true);
+                  }}>
                   <MaterialIcons name="more-vert" size={30} color="#fff" />
                 </TouchableOpacity>
+
+                <Modal
+                  animationType="fade"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                  }}>
+                  <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                    <TouchableOpacity
+                      style={{flex: 1}}
+                      activeOpacity={1}
+                      onPressOut={() => setModalVisible(false)}>
+                      <View
+                        style={{
+                          position: 'absolute',
+                          top: buttonPosition.y + 15, // add 10 to y position
+                          left: buttonPosition.x - 108, // add 10 to x position
+                        }}>
+                        <View
+                          style={{
+                            backgroundColor: 'white',
+                            padding: 15,
+                            borderRadius: 10,
+                            width: 130,
+                          }}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setModalVisible(false);
+                              alert('Da bam Edit');
+                            }}>
+                            <View style={[styles.row, {alignItems: 'center'}]}>
+                              <Text
+                                style={[
+                                  {color: '#724DC9'},
+                                  {fontWeight: '700'},
+                                  {fontSize: 16},
+                                ]}>
+                                Edit
+                              </Text>
+                              <Material
+                                name="pencil-outline"
+                                size={30}
+                                color="#724DC9"
+                              />
+                            </View>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setModalVisible(false);
+                              alert('Da bam Delete');
+                            }}>
+                            <View style={[styles.row, {alignItems: 'center'}]}>
+                              <Text
+                                style={[
+                                  {color: '#724DC9'},
+                                  {fontWeight: '700'},
+                                  {fontSize: 16},
+                                ]}>
+                                Delete
+                              </Text>
+                              <MaterialIcons
+                                name="delete-outline"
+                                size={30}
+                                color="#724DC9"
+                              />
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </Modal>
               </View>
             </View>
           </View>
