@@ -44,7 +44,11 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
     <TouchableOpacity
       onPress={() => {
         if (selectedButton === title) {
-          setIsUp(!isUp);
+          if (isUp) {
+            setIsUp(false);
+          } else {
+            setSelectedButton('');
+          }
         } else {
           setSelectedButton(title);
           setIsUp(true);
@@ -52,18 +56,25 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
       }}>
       {selectedButton === title ? (
         <LinearGradient
-          colors={['#724DC9', '#5E4ABE', '#4748B2']}
+          colors={
+            isUp ? ['#724DC9', '#5E4ABE', '#4748B2'] : ['#fff', '#fff', '#fff']
+          }
           style={[styles.button1, buttonStyle]}
           start={{x: 0, y: 0}}
           end={{x: 0, y: 1}}>
           <View style={[styles.row, {alignItems: 'center'}]}>
-            <Text style={[styles.buttonText, {color: '#fff'}, {fontSize: 16}]}>
+            <Text
+              style={[
+                styles.buttonText,
+                {color: isUp ? '#fff' : '#724DC9'},
+                {fontSize: 16},
+              ]}>
               {title}
             </Text>
             <MaterialIcons
               name={isUp ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
               size={25}
-              color="#fff"
+              color={isUp ? '#fff' : '#724DC9'}
               style={styles.iconWrapper}
             />
           </View>
