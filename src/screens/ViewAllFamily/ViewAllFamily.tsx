@@ -184,7 +184,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
         )}
         scrollEventThrottle={1}>
         {families.map((family, index) => (
-          <View key={index} style={styles.familyCard}>
+          <View key={index} style={styles.familyBigCard}>
             <View style={styles.card}>
               <TouchableOpacity>
                 <Image
@@ -193,51 +193,53 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                   style={styles.image}
                 />
               </TouchableOpacity>
-              <View style={styles.cardContainer2}>
-                <Text style={styles.cardTitle}>{family.name}</Text>
-                <View style={styles.ColorAndDescription}>
-                  <TouchableOpacity style={styles.color}>
-                    <Material name="alien-outline" size={25} color="#fff" />
-                  </TouchableOpacity>
-                  <Text style={[styles.cardDescription, {marginLeft: 10}]}>
-                    {family.description}
-                  </Text>
-                </View>
-                <View style={styles.buttonPos}>
-                  <LinearGradient
-                    colors={['#A388DB', '#9186D2', '#8385CB']}
-                    style={[styles.button, styles.deleteButton]}
-                    start={{x: 0, y: 0}}
-                    end={{x: 0, y: 1}}>
-                    <TouchableOpacity>
-                      <Text style={[styles.buttonText, {color: '#272042'}]}>
-                        Delete
-                      </Text>
+              <View
+                style={[
+                  styles.row,
+                  {shadowColor: '#000'},
+                  {shadowOffset: {width: 0, height: 6}},
+                  {shadowOpacity: 0.25},
+                ]}>
+                <View style={styles.cardContainer2}>
+                  <Text style={styles.cardTitle}>{family.name}</Text>
+                  <View style={styles.ColorAndDescription}>
+                    <TouchableOpacity style={styles.color}>
+                      <Material name="alien-outline" size={25} color="#fff" />
                     </TouchableOpacity>
-                  </LinearGradient>
-
-                  <LinearGradient
-                    colors={['#724DC9', '#5E4ABE', '#4748B2']}
-                    style={[styles.button, styles.editButton]}
-                    start={{x: 0, y: 0}}
-                    end={{x: 0, y: 1}}>
-                    <TouchableOpacity>
-                      <Text style={[styles.buttonText, {color: '#fff'}]}>
-                        Edit
-                      </Text>
-                    </TouchableOpacity>
-                  </LinearGradient>
+                    <Text style={[styles.cardDescription, {marginLeft: 10}]}>
+                      {family.description}
+                    </Text>
+                  </View>
+                  <View style={styles.buttonPos}>
+                    <LinearGradient
+                      colors={['#A388DB', '#9186D2', '#8385CB']}
+                      //colors={['#724DC9', '#5E4ABE', '#4748B2']}
+                      style={[styles.button, styles.detailButton]}
+                      start={{x: 0, y: 0}}
+                      end={{x: 0, y: 1}}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate('ViewFamily', {
+                            id_user,
+                            id_family: family.id_family,
+                          })
+                        }>
+                        <Text
+                          style={[
+                            styles.buttonText,
+                            {color: '#272042'},
+                            //{color: '#fff'},
+                          ]}>
+                          View Detail
+                        </Text>
+                      </TouchableOpacity>
+                    </LinearGradient>
+                  </View>
                 </View>
+                <TouchableOpacity style={{right: 60}}>
+                  <MaterialIcons name="more-vert" size={30} color="#fff" />
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('ViewFamily', {
-                    id_user,
-                    id_family: family.id_family,
-                  })
-                }>
-                <MaterialIcons name="more-vert" size={30} color="#fff" />
-              </TouchableOpacity>
             </View>
           </View>
         ))}

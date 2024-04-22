@@ -60,15 +60,21 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 20,
   },
-  familyCard: {
-    padding: 1,
-    paddingHorizontal: 0,
+  familyBigCard: {
+    padding: 11,
+    paddingHorizontal: 11,
   },
   card: {
     backgroundColor: '#332E59',
     paddingTop: 20,
+    paddingHorizontal: 5,
     justifyContent: 'space-between',
     flexDirection: 'row',
+    borderRadius: 10,
+    marginHorizontal: 10,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 6},
+    shadowOpacity: 0.25,
   },
   cardBody: {
     marginBottom: 10,
@@ -141,9 +147,10 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   button: {
-    width: 120, // Đảm bảo không xếp chồng
+    //width: 120,
+    width: '75%',
     height: 30,
-    borderRadius: 20, // Hình tròn
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
@@ -167,8 +174,8 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   buttonText: {
-    fontWeight: '500', // Độ đậm của văn bản
-    textAlign: 'center', // Canh giữa văn bản
+    fontWeight: '500',
+    textAlign: 'center',
   },
   image: {
     padding: 10,
@@ -208,7 +215,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
-  deleteButton: {
+  detailButton: {
     right: 10,
   },
   editButton: {
