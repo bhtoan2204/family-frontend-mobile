@@ -29,14 +29,25 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
   const {id_user} = route.params || {};
   const [families, setFamilies] = useState<Family[]>([]);
   const scrollY = useRef(new Animated.Value(0)).current;
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredFamilies, setFilteredFamilies] = useState<Family[]>([]);
 
   const handleGetAllFamily = async () => {
     try {
       const result = await FamilyServices.getAllFamily();
       setFamilies(result);
+      setFilteredFamilies(result); // Initially, all families are displayed
     } catch (error: any) {
       console.log('FamilyServices.getAllFamily error:', error);
     }
+  };
+
+  const handleSearch = () => {
+    const result = families.filter(family =>
+      family.name?.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+
+    setFilteredFamilies(result); // Update the displayed families based on the search result
   };
 
   useEffect(() => {
@@ -63,8 +74,10 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
             placeholder="Search Families"
             placeholderTextColor="#9C9AAF"
             style={styles.input}
+            onChangeText={text => setSearchTerm(text)}
+            value={searchTerm}
           />
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleSearch}>
             <Material
               name="home-search-outline"
               size={25}
