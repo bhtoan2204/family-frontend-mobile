@@ -22,6 +22,12 @@ type Family = {
   description?: string;
 };
 
+type ButtonProps = {
+  title: string;
+  iconName: string;
+  buttonStyle?: object;
+};
+
 const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
   navigation,
   route,
@@ -31,6 +37,55 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
   const scrollY = useRef(new Animated.Value(0)).current;
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredFamilies, setFilteredFamilies] = useState<Family[]>([]);
+  const [selectedButton, setSelectedButton] = useState('');
+  const [isUp, setIsUp] = useState(true);
+
+  const Button = ({title, buttonStyle}: ButtonProps) => (
+    <TouchableOpacity
+      onPress={() => {
+        if (selectedButton === title) {
+          setIsUp(!isUp);
+        } else {
+          setSelectedButton(title);
+          setIsUp(true);
+        }
+      }}>
+      {selectedButton === title ? (
+        <LinearGradient
+          colors={['#724DC9', '#5E4ABE', '#4748B2']}
+          style={[styles.button1, buttonStyle]}
+          start={{x: 0, y: 0}}
+          end={{x: 0, y: 1}}>
+          <View style={[styles.row, {alignItems: 'center'}]}>
+            <Text style={[styles.buttonText, {color: '#fff'}, {fontSize: 16}]}>
+              {title}
+            </Text>
+            <MaterialIcons
+              name={isUp ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
+              size={25}
+              color="#fff"
+              style={styles.iconWrapper}
+            />
+          </View>
+        </LinearGradient>
+      ) : (
+        <View style={[styles.button1, buttonStyle, {backgroundColor: '#fff'}]}>
+          <View style={[styles.row, {alignItems: 'center'}]}>
+            <Text
+              style={[styles.buttonText, {color: '#724DC9'}, {fontSize: 16}]}>
+              {title}
+            </Text>
+            <MaterialIcons
+              name="keyboard-arrow-down"
+              size={25}
+              color="#724DC9"
+              style={styles.iconWrapper}
+            />
+          </View>
+        </View>
+      )}
+    </TouchableOpacity>
+  );
 
   const handleGetAllFamily = async () => {
     try {
@@ -60,6 +115,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
 
   return (
     <View style={[{flex: 1, backgroundColor: '#1D1441'}]}>
+      <Text style={styles.headerTitle1}>My Families</Text>
       <View style={styles.circleContainer}>
         <TouchableOpacity style={styles.circle}>
           <MaterialIcons
@@ -96,6 +152,17 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
           />
         </TouchableOpacity>
       </View>
+
+      <View style={[styles.row, {padding: 5}, {margin: 3}]}>
+        <Button title="Name" buttonStyle={{left: 10}} iconName={''} />
+        <Button
+          title="Date"
+          buttonStyle={{}} // Add an empty object or specify the desired style
+          iconName={''}
+        />
+        <Button title="Recently" buttonStyle={{right: 10}} iconName={''} />
+      </View>
+
       <Animated.ScrollView
         contentContainerStyle={styles.content}
         onScroll={Animated.event(

@@ -17,6 +17,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  headerTitle1: {
+    color: 'white',
+    fontSize: 40,
+    //fontWeight: 'bold',
+    textAlign: 'center',
+    padding: 10,
+  },
   editDeleteContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -134,6 +141,19 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   button: {
+    width: 120, // Đảm bảo không xếp chồng
+    height: 30,
+    borderRadius: 20, // Hình tròn
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  button1: {
     width: 120, // Đảm bảo không xếp chồng
     height: 30,
     borderRadius: 20, // Hình tròn
