@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 5,
   },
@@ -134,9 +134,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   button: {
-    width: 100, // Đảm bảo không xếp chồng
+    width: 120, // Đảm bảo không xếp chồng
     height: 30,
-    backgroundColor: COLORS.primary, // Màu primary
     borderRadius: 20, // Hình tròn
     justifyContent: 'center',
     alignItems: 'center',
@@ -149,25 +148,29 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: '500', // Độ đậm của văn bản
-    //color: '#6C6D71',
-    color: '#fff', // Màu trắng
     textAlign: 'center', // Canh giữa văn bản
   },
   image: {
     padding: 10,
-    marginLeft: 20,
-    marginTop: 20,
+    marginLeft: 15,
+    width: 100,
+    height: 100,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: {width: 5, height: 5},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   color: {
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
     borderRadius: 25,
-    backgroundColor: '#332E59',
+    backgroundColor: '#F81004',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
-      width: 0,
+      width: 3,
       height: 2,
     },
     shadowOpacity: 0.25,
@@ -184,6 +187,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
+  },
+  deleteButton: {
+    right: 10,
+  },
+  editButton: {
+    left: -2,
+  },
+  cardContainer2: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    left: 20,
   },
 });
 
