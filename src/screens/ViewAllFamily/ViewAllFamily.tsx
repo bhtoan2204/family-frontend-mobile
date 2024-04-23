@@ -307,17 +307,19 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                             }}>
                             <View style={[styles.row, {alignItems: 'center'}]}>
                               <Text
-                                style={[
-                                  {color: '#724DC9'},
-                                  {fontWeight: '700'},
-                                  {fontSize: 16},
-                                ]}>
+                                // style={[
+                                //   {color: '#724DC9'},
+                                //   {fontWeight: '700'},
+                                //   {fontSize: 16},
+                                // ]}
+                                style={styles.text}>
                                 Delete
                               </Text>
                               <MaterialIcons
                                 name="delete-outline"
                                 size={30}
                                 color="#724DC9"
+                                style={styles.icon}
                               />
                             </View>
                           </TouchableOpacity>

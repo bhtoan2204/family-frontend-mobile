@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
-    elevation: 3,
+    elevation: 5,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
@@ -233,6 +233,29 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 10,
     elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 6},
+    shadowOpacity: 0.25,
+  },
+  card: {
+    backgroundColor: '#332E59',
+    paddingTop: 20,
+    paddingHorizontal: 5,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    borderRadius: 10,
+    marginHorizontal: 10,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 6},
+    shadowOpacity: 0.25,
+  },
+  text: {
+    color: '#724DC9',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  icon: {
+    color: '#724DC9',
   },
 });
 
