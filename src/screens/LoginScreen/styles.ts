@@ -6,6 +6,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white,
   },
+  TextInput: {
+    height: 48,
+    width: '100%',
+    borderWidth: 1,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 30,
+  },
   scrollView: {
     flex: 1,
     backgroundColor: COLORS.white,
@@ -58,7 +67,11 @@ const styles = StyleSheet.create({
   },
   eyeIcon: {
     fontSize: 24,
-    color: COLORS.black,
+    color: '#747474',
+  },
+  Icon: {
+    fontSize: 24,
+    color: '#A3A3A3',
   },
   marginVerticalFlex: {
     flexDirection: 'row',
@@ -130,6 +143,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 5,
     marginLeft: 5,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  column: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
 });
 

@@ -1,4 +1,8 @@
-import {Ionicons} from '@expo/vector-icons';
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from '@expo/vector-icons';
 import Checkbox from 'expo-checkbox';
 import {Formik, FormikHelpers} from 'formik';
 import React, {useEffect, useState} from 'react';
@@ -166,7 +170,16 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                         {TEXTS.EMAIL}
                       </Text> */}
                       <View
-                        className={`h-12 w-full ${errors.email ? 'border-red-500' : 'border-gray-900'} border-[1px] rounded-lg items-center justify-center px-5`}>
+                        style={[
+                          styles.row,
+                          {alignItems: 'center'},
+                          styles.TextInput,
+                          {borderColor: errors.email ? 'red' : COLORS.gray},
+                        ]}>
+                        <MaterialCommunityIcons
+                          name="email-outline"
+                          style={styles.Icon}
+                        />
                         <TextInput
                           className="w-full"
                           placeholder={TEXTS.EMAIL_PLACEHOLDER}
@@ -177,6 +190,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                           onBlur={handleBlur('email')}
                           onChangeText={handleChange('email')}
                           value={values.email}
+                          style={{marginLeft: 10}}
                         />
                       </View>
                       {errors.email && touched.email && (
@@ -191,11 +205,17 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                       )}
                     </View>
                     <View className="mb-2" style={{marginTop: 20}}>
-                      {/* <Text className="text-base font-normal my-2">
-                        {TEXTS.PASSWORD}
-                      </Text> */}
                       <View
-                        className={`h-12 w-full ${errors.password ? 'border-red-500' : 'border-gray-900'} border-[1px] rounded-lg items-center justify-center px-5`}>
+                        style={[
+                          styles.row,
+                          {alignItems: 'center'},
+                          styles.TextInput,
+                          {borderColor: errors.email ? 'red' : COLORS.gray},
+                        ]}>
+                        <MaterialCommunityIcons
+                          name="lock-outline"
+                          style={styles.Icon}
+                        />
                         <TextInput
                           className="w-full"
                           placeholder={TEXTS.PASSWORD_PLACEHOLDER}
@@ -206,6 +226,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                           onBlur={handleBlur('password')}
                           onChangeText={handleChange('password')}
                           value={values.password}
+                          style={{marginLeft: 10}}
                         />
                         <TouchableOpacity
                           className="absolute right-3"
