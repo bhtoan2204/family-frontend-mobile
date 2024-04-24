@@ -292,26 +292,32 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   </View>
                 )}
               </Formik>
-              <View className="flex-row my-1 items-center">
-                <View className="h-[1px] bg-gray-300 flex-1 mx-[10px]" />
-                <Text className="text-[14px]">{TEXTS.LOGIN_OR}</Text>
-                <View className="h-[1px] bg-gray-300 flex-1 mx-[10px]" />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginVertical: 23,
+                }}>
+                <Text style={[{fontSize: 17}, {marginBottom: -20}]}>
+                  {TEXTS.LOGIN_OR}
+                </Text>
               </View>
-              <View className="flex-row justify-center space-x-1">
+              <View style={styles.container}>
                 <TouchableOpacity
-                  className="flex-1 h-[52px] flex-row justify-center items-center border-[1px] rounded-[10px] mr-1 border-gray-00"
+                  style={[styles.button, {right: 20}]}
                   onPress={handleGoogleLogin}>
                   <Image
-                    className="h-9 w-9"
+                    style={styles.image}
                     source={GoogleImage}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  className="flex-1 h-[52px] flex-row justify-center items-center border-[1px] rounded-[10px] mr-1 border-gray-00"
+                  style={[styles.button, {left: 20}]}
                   onPress={handleFacebookLogin}>
                   <Image
-                    className="h-9 w-9"
+                    style={styles.image}
                     source={FacebookImage}
                     resizeMode="contain"
                   />
@@ -321,14 +327,28 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                 <Text className="text-black text-base mr-1">
                   {TEXTS.DONT_HAVE_ACCOUNT}
                 </Text>
-                <Pressable
+                {/* <Pressable
                   onPress={() => {
                     navigation.navigate('SignupScreen');
                   }}>
-                  <Text className={`text-base text-[${COLORS.primary}]`}>
+                  <Text className={`text-base text-[${COLORS.login}]`}>
                     {TEXTS.SIGNUP}
                   </Text>
-                </Pressable>
+                </Pressable> */}
+                <TouchableOpacity
+                  style={{top: 2}}
+                  onPress={() => {
+                    navigation.navigate('SignupScreen');
+                  }}>
+                  <Text
+                    style={[
+                      {color: COLORS.login},
+                      {fontSize: 16},
+                      {fontWeight: 'bold'},
+                    ]}>
+                    {TEXTS.SIGNUP}
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </SafeAreaView>

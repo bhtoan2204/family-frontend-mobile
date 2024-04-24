@@ -22,7 +22,7 @@ const TEXTS = {
   TRY_AGAIN: 'Try again',
   BACK_TO_LOGIN: 'Back to login',
   LOGIN: 'Login',
-  LOGIN_OR: 'Or login with',
+  LOGIN_OR: 'or',
   LOGIN_WITH_GOOGLE: 'Login with Google',
   DONT_HAVE_ACCOUNT: "Don't have an account?",
   SIGNUP: 'Sign up',

@@ -152,6 +152,26 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
+  icon: {
+    flex: 1,
+    height: 52,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    marginRight: 1,
+    borderColor: 'gray',
+    //marginHorizontal: 10,
+  },
+
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  image: {
+    height: 36,
+    width: 36,
+  },
 });
 
 export default styles;
