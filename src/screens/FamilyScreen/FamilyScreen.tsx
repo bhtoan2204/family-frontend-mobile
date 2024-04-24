@@ -18,6 +18,7 @@ import {COLORS, TEXTS} from 'src/constants';
 import styles from './styles';
 import BottomSheet from './BottomSheet';
 import {MaterialIcons} from '@expo/vector-icons';
+import {LinearGradient} from 'expo-linear-gradient';
 
 type Family = {
   id_family: number;
@@ -32,7 +33,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const bottomSheetRef = useRef<RBSheet>(null);
   const allMemberRef = useRef<RBSheet>(null);
   const screenHeight = Dimensions.get('screen').height;
-  const [selectedButton, setSelectedButton] = useState(null);
+  const [selectedButton, setSelectedButton] = useState<number | null>(null);
   const buttons = ['Members', 'Calendar', 'Education'];
 
   const handleGetFamily = async () => {
@@ -148,6 +149,51 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         ))}
       </View>
       <View style={styles.functionContainer}>
+        <View
+          // style={{
+          //   flexDirection: 'row',
+          //   justifyContent: 'space-around',
+          //   marginTop: 0,
+          // }}
+          style={styles.menuContainer}>
+          {buttons.map((button, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => setSelectedButton(index)}
+              style={{
+                padding: 10,
+                borderRadius: 5,
+                alignItems: 'center',
+                paddingRight: 30,
+                paddingLeft: 10,
+              }}>
+              {selectedButton === index ? (
+                <LinearGradient
+                  colors={['#724DC9', '#5E4ABE', '#4748B2']}
+                  style={{
+                    padding: 10,
+                    alignItems: 'center',
+                    borderRadius: 20,
+                    width: 100,
+                  }}>
+                  <Text
+                    style={{
+                      backgroundColor: 'transparent',
+                      fontSize: 15,
+                      color: 'white',
+                    }}>
+                    {button}
+                  </Text>
+                </LinearGradient>
+              ) : (
+                <View
+                  style={{padding: 10, alignItems: 'center', borderRadius: 10}}>
+                  <Text style={{fontSize: 15, color: '#fff'}}>{button}</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          ))}
+        </View>
         <View style={styles.rowContainer}>
           <TouchableOpacity
             onPress={() =>

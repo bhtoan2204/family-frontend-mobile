@@ -71,6 +71,16 @@ const styles = StyleSheet.create({
     padding: 16,
     flexDirection: 'row',
   },
+  menuContainer: {
+    backgroundColor: '#332E59',
+    borderRadius: 20,
+    marginVertical: 0,
+    marginHorizontal: 10,
+    alignItems: 'center',
+    padding: 1,
+    flexDirection: 'row',
+    width: '90%',
+  },
   cardBackground: {
     flex: 1,
     resizeMode: 'cover',
@@ -90,7 +100,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 1,
-    marginBottom: screenHeight * 0.35,
+    //marginBottom: screenHeight * 0.35,
+    marginBottom: 240,
   },
   fucntionText: {
     fontWeight: 'bold',
