@@ -3,20 +3,20 @@ import {COLORS} from 'src/constants';
 
 const styles = StyleSheet.create({
   keyboardView: {
-    flex: 1,
-    backgroundColor: COLORS.white,
+    //flex: 1,
+    //backgroundColor: COLORS.white,
   },
   scrollView: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    //backgroundColor: COLORS.white,
   },
   safeAreaStyle: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    //backgroundColor: COLORS.white,
   },
   marginHorizontal: {
-    flex: 1,
-    marginHorizontal: 22,
+    //flex: 1,
+    marginHorizontal: 30,
   },
   marginVertical: {
     marginVertical: 22,

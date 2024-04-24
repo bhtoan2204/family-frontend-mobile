@@ -136,7 +136,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                 </Text> */}
                 <Text
                   style={[
-                    {marginTop: 100},
+                    {marginTop: 130},
                     {fontSize: 30},
                     {fontWeight: 'bold'},
                   ]}>
