@@ -116,7 +116,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
 
   return (
     <KeyboardAvoidingView className="flex-1 bg-white" behavior="padding">
-      <ScrollView>
+      <ScrollView keyboardShouldPersistTaps="handled">
         <SafeAreaView>
           <View className="mx-5">
             <View className="my-5">

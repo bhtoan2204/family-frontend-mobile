@@ -9,23 +9,20 @@ export type RootParamList = {
   HomeTab: NavigatorScreenParams<HomeTabParamList>;
   CalendarStack: NavigatorScreenParams<CalendarStackParamList>;
   ChatStack: NavigatorScreenParams<ChatStackParamList>;
-
 };
-
 
 export type ChatStackParamList = {
   ChatFamily: {
-    id_user: string|undefined;
-    id_family: number|undefined;
+    id_user: string | undefined;
+    id_family: number | undefined;
   };
   ChatUser: {
-    id_user: string|undefined;
-    receiverId: string|undefined;
+    id_user: string | undefined;
+    receiverId: string | undefined;
   };
   ChatList: {
-    id_user: string |undefined;
+    id_user: string | undefined;
   };
-  
 };
 
 type ChatFamilyScreenNavigationProp = NativeStackNavigationProp<
@@ -38,7 +35,6 @@ export interface ChatFamilyScreenProps {
   route: RouteProp<ChatStackParamList, 'ChatFamily'>;
 }
 
-
 type ChatScreenNavigationProp = NativeStackNavigationProp<
   ChatStackParamList,
   'ChatUser'
@@ -49,7 +45,6 @@ export interface ChatScreenProps {
   route: RouteProp<ChatStackParamList, 'ChatUser'>;
 }
 
-
 type ChatListNavigationProp = NativeStackNavigationProp<
   ChatStackParamList,
   'ChatList'
@@ -58,9 +53,7 @@ type ChatListNavigationProp = NativeStackNavigationProp<
 export interface ChatListProps {
   navigation: ChatListNavigationProp & ChatScreenNavigationProp;
   route: RouteProp<ChatStackParamList, 'ChatList'>;
-
 }
-
 
 export type AuthStackParamList = {
   LoginScreen: undefined;
@@ -100,7 +93,26 @@ export type FamilyStackParamList = {
     id_family: number | undefined;
   };
   Contact: {
-    id_family: number| undefined;
+    id_family: number | undefined;
+  };
+  GuildLine: {
+    id_family: number | undefined;
+  };
+  GuildLineDetail: {
+    id_family: number | undefined;
+    id_item: number;
+  };
+  Education: {
+    id_family: number | undefined;
+  };
+  EducationDetail: {
+    id_family: number | undefined;
+    id_education_progress: number;
+  };
+  SubjectDetail: {
+    id_family: number | undefined;
+    id_education_progress: number;
+    id_subject: number;
   };
 };
 
@@ -250,8 +262,58 @@ type ViewFamilyNavigationProp = NativeStackNavigationProp<
 >;
 
 export interface ViewFamilyScreenProps {
-  navigation: ViewFamilyNavigationProp & CalendarScreenNavigationProp & ChatFamilyScreenNavigationProp;
+  navigation: ViewFamilyNavigationProp &
+    CalendarScreenNavigationProp &
+    ChatFamilyScreenNavigationProp;
   route: RouteProp<FamilyStackParamList, 'ViewFamily'>;
+}
+
+type GuildLineNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'GuildLine'
+>;
+type GuildLineDetailNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'GuildLineDetail'
+>;
+type EducationNavigationprop = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'Education'
+>;
+
+type SubjectDetailNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'SubjectDetail'
+>;
+
+export interface SubjectDetailScreenProps {
+  navigation: SubjectDetailNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'SubjectDetail'>;
+}
+
+export interface EducationScreenProps {
+  navigation: EducationNavigationprop;
+  route: RouteProp<FamilyStackParamList, 'Education'>;
+}
+
+type EducationDetailNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'EducationDetail'
+>;
+
+export interface EducationDetailScreenProps {
+  navigation: EducationDetailNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'EducationDetail'>;
+}
+
+export interface GuildLineScreenProps {
+  navigation: GuildLineNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'GuildLine'>;
+}
+
+export interface GuildLineDetailScreenProps {
+  navigation: GuildLineDetailNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'GuildLineDetail'>;
 }
 
 export type UpdateFamilyNavigationProps = NativeStackNavigationProp<
