@@ -1,16 +1,17 @@
-import { Dimensions, StyleSheet } from 'react-native';
-import { COLORS } from 'src/constants';
+import {Dimensions, StyleSheet} from 'react-native';
+import {COLORS} from 'src/constants';
 
 const screenHeight = Dimensions.get('screen').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+    backgroundColor: '#1D1441',
   },
   settingItemContainer: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10, 
+    marginBottom: 10,
   },
   avatar: {
     width: 100,
@@ -19,29 +20,29 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   textContainer: {
-    flex: 1, 
+    flex: 1,
   },
   rowContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between', 
+    justifyContent: 'space-between',
     marginBottom: 15,
     padding: 0,
-    paddingHorizontal: 20
-
+    paddingHorizontal: 20,
   },
-  
+
   headerfile: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 0,
+    marginHorizontal: 20,
+    marginVertical: 10,
   },
   icon: {
-    shadowColor: COLORS.AuroMetalSaurus, 
-    shadowOffset: { width: 1, height: 1 }, 
+    shadowColor: COLORS.AuroMetalSaurus,
+    shadowOffset: {width: 1, height: 1},
     shadowOpacity: 10,
-    shadowRadius: 2, 
-    padding: 15
+    shadowRadius: 2,
+    padding: 15,
   },
   backButton: {
     color: COLORS.black,
@@ -52,10 +53,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   cardContainer: {
-    backgroundColor: COLORS.AliceBlue,
-    borderRadius: 50,
+    backgroundColor: '#332E59',
+    borderRadius: 20,
     marginVertical: 0,
-    marginHorizontal: 0,
+    marginHorizontal: 10,
     shadowColor: COLORS.Blue,
     shadowOffset: {
       width: 20,
@@ -69,39 +70,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
     flexDirection: 'row',
-
   },
   cardBackground: {
     flex: 1,
-    resizeMode: 'cover', 
-    justifyContent: 'center', 
+    resizeMode: 'cover',
+    justifyContent: 'center',
   },
   text: {
     fontSize: 16,
+    color: COLORS.white,
   },
   nameText: {
     fontSize: 20,
-    fontWeight: 'bold'
-
+    fontWeight: 'bold',
+    color: COLORS.white,
   },
   functionContainer: {
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 1,
-    marginBottom: screenHeight*0.35,
-
+    marginBottom: screenHeight * 0.35,
   },
-  fucntionText :{
+  fucntionText: {
     fontWeight: 'bold',
     fontSize: 14,
-    padding:10,
+    padding: 10,
     flexDirection: 'row',
-
   },
-  iconContainer:{
+  iconContainer: {
     alignItems: 'center',
-
   },
   settingContainer: {
     flexDirection: 'row',
@@ -142,6 +140,23 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
+  },
+  circle: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#332E59',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    //overflow: 'hidden',
   },
 });
 

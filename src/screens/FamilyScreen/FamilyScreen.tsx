@@ -17,6 +17,7 @@ import {ViewFamilyScreenProps} from 'src/navigation/NavigationTypes';
 import {COLORS, TEXTS} from 'src/constants';
 import styles from './styles';
 import BottomSheet from './BottomSheet';
+import {MaterialIcons} from '@expo/vector-icons';
 
 type Family = {
   id_family: number;
@@ -31,6 +32,8 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const bottomSheetRef = useRef<RBSheet>(null);
   const allMemberRef = useRef<RBSheet>(null);
   const screenHeight = Dimensions.get('screen').height;
+  const [selectedButton, setSelectedButton] = useState(null);
+  const buttons = ['Members', 'Calendar', 'Education'];
 
   const handleGetFamily = async () => {
     try {
@@ -101,17 +104,30 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerfile}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={30} style={styles.backButton} />
+        <TouchableOpacity style={styles.circle}>
+          <MaterialIcons
+            name="keyboard-arrow-left"
+            size={30}
+            //color="#56409e"
+            color="#fff"
+          />
         </TouchableOpacity>
-        <View style={styles.headerfile}>
+        <TouchableOpacity style={styles.circle}>
+          <Material
+            name="bell-badge-outline"
+            size={30}
+            //color="#56409e"
+            color="#fff"
+          />
+        </TouchableOpacity>
+        {/* <View style={styles.headerfile}>
           <TouchableOpacity
             onPress={handleOpenBottomSheet}
             style={styles.settingItem}>
             <Material name="pencil" size={24} color="black" />
             <Text style={styles.settingText}>Edit Family</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
 
       <View style={styles.container}>
