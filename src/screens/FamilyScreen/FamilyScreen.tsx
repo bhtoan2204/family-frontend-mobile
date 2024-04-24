@@ -17,7 +17,7 @@ import {ViewFamilyScreenProps} from 'src/navigation/NavigationTypes';
 import {COLORS, TEXTS} from 'src/constants';
 import styles from './styles';
 import BottomSheet from './BottomSheet';
-import {MaterialIcons} from '@expo/vector-icons';
+import {MaterialCommunityIcons, MaterialIcons} from '@expo/vector-icons';
 import {LinearGradient} from 'expo-linear-gradient';
 
 type Family = {
@@ -267,6 +267,15 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           </TouchableOpacity>
         </View>
       </View>
+
+      <TouchableOpacity style={styles.chat} onPress={handleChatPress}>
+        <MaterialCommunityIcons
+          name="chat"
+          size={40}
+          color="white"
+          style={[styles.icon]}
+        />
+      </TouchableOpacity>
 
       <RBSheet
         ref={bottomSheetRef}

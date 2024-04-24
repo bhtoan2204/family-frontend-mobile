@@ -169,6 +169,19 @@ const styles = StyleSheet.create({
     elevation: 5,
     //overflow: 'hidden',
   },
+  chat: {
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 70,
+    height: 70,
+    backgroundColor: '#332E59',
+    borderRadius: 100,
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+  },
 });
 
 export default styles;
