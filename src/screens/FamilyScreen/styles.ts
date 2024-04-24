@@ -1,12 +1,13 @@
 import {Dimensions, StyleSheet} from 'react-native';
 import {COLORS} from 'src/constants';
+const halfScreenHeight = Dimensions.get('window').height / 1.8;
 
 const screenHeight = Dimensions.get('screen').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#1D1441',
+    backgroundColor: '#1A222C',
   },
   settingItemContainer: {
     flexDirection: 'row',
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   cardContainer: {
-    backgroundColor: '#332E59',
+    backgroundColor: '#24303F',
     borderRadius: 20,
     marginVertical: 0,
     marginHorizontal: 10,
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   menuContainer: {
-    backgroundColor: '#332E59',
+    backgroundColor: '#24303F',
     borderRadius: 20,
     marginVertical: 0,
     marginHorizontal: 10,
@@ -80,6 +81,7 @@ const styles = StyleSheet.create({
     padding: 1,
     flexDirection: 'row',
     width: '90%',
+    bottom: 8,
   },
   cardBackground: {
     flex: 1,
@@ -101,7 +103,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 1,
     //marginBottom: screenHeight * 0.35,
-    marginBottom: 240,
+    //marginBottom: 240,
   },
   fucntionText: {
     fontWeight: 'bold',
@@ -156,7 +158,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#332E59',
+    backgroundColor: '#24303F',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -176,11 +178,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 70,
     height: 70,
-    backgroundColor: '#332E59',
+    backgroundColor: '#1D1441',
     borderRadius: 100,
     position: 'absolute',
     bottom: 10,
     right: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  containerBottom: {
+    height: halfScreenHeight,
+    backgroundColor: '#24303F',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    shadowRadius: 3.84,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    //marginTop: 25,
+    padding: 20, // Xếp hàng
+    justifyContent: 'space-between',
   },
 });
 

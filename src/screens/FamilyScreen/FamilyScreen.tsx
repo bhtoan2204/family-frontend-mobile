@@ -181,6 +181,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                       backgroundColor: 'transparent',
                       fontSize: 15,
                       color: 'white',
+                      fontWeight: '700',
                     }}>
                     {button}
                   </Text>
@@ -188,13 +189,36 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
               ) : (
                 <View
                   style={{padding: 10, alignItems: 'center', borderRadius: 10}}>
-                  <Text style={{fontSize: 15, color: '#fff'}}>{button}</Text>
+                  <Text
+                    style={{fontSize: 15, color: '#fff', fontWeight: '700'}}>
+                    {button}
+                  </Text>
                 </View>
               )}
             </TouchableOpacity>
           ))}
         </View>
-        <View style={styles.rowContainer}>
+        <View style={styles.rowContainer}></View>
+
+        {/* <View style={styles.rowContainer}>
+          <TouchableOpacity
+            onPress={() => handleDeleteFamily(family[0].id_family)}
+            style={styles.settingItem}>
+            <View style={styles.iconContainer}>
+              <Material
+                name="delete"
+                size={50}
+                color="gray"
+                style={[styles.icon]}
+              />
+              <Text style={styles.fucntionText}>Delete</Text>
+            </View>
+          </TouchableOpacity>
+        </View> */}
+      </View>
+
+      <View style={styles.containerBottom}>
+        <View style={styles.row}>
           <TouchableOpacity
             onPress={() =>
               handleOpenAllMemberModal(id_user, family[0].id_family)
@@ -210,19 +234,17 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
               <Text style={styles.fucntionText}>Members</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleChatPress}
-            style={styles.settingItem}>
-            <View style={styles.iconContainer}>
-              <Material
-                name="chat"
-                size={50}
-                color="lightblue"
-                style={[styles.icon]}
-              />
-              <Text style={styles.fucntionText}>Chat</Text>
-            </View>
-          </TouchableOpacity>
+          {/* <TouchableOpacity onPress={handleChatPress} style={styles.settingItem}>
+          <View style={styles.iconContainer}>
+            <Material
+              name="chat"
+              size={50}
+              color="lightblue"
+              style={[styles.icon]}
+            />
+            <Text style={styles.fucntionText}>Chat</Text>
+          </View>
+        </TouchableOpacity> */}
           <TouchableOpacity
             onPress={handleEducationPress}
             style={styles.settingItem}>
@@ -250,24 +272,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
             </View>
           </TouchableOpacity>
         </View>
-
-        <View style={styles.rowContainer}>
-          <TouchableOpacity
-            onPress={() => handleDeleteFamily(family[0].id_family)}
-            style={styles.settingItem}>
-            <View style={styles.iconContainer}>
-              <Material
-                name="delete"
-                size={50}
-                color="gray"
-                style={[styles.icon]}
-              />
-              <Text style={styles.fucntionText}>Delete</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
       </View>
-
       <TouchableOpacity style={styles.chat} onPress={handleChatPress}>
         <MaterialCommunityIcons
           name="chat"

@@ -129,7 +129,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
   }, [navigation]);
 
   return (
-    <View style={[{flex: 1, backgroundColor: '#1D1441'}]}>
+    <View style={[{flex: 1, backgroundColor: '#1A222C'}]}>
       <Text style={styles.headerTitle1}>My Families</Text>
       <View style={styles.circleContainer}>
         <TouchableOpacity style={styles.circle}>
