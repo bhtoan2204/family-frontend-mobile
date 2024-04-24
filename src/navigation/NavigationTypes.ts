@@ -60,6 +60,7 @@ export type AuthStackParamList = {
   SignupScreen: undefined;
   ForgotPasswordScreen: undefined;
   LandingPage: undefined;
+  Notification: undefined;
 };
 
 export type CalendarStackParamList = {
@@ -226,6 +227,14 @@ type LoginScreenNavigationProp = NativeStackNavigationProp<
 
 export interface LoginScreenProps {
   navigation: LoginScreenNavigationProp;
+}
+type NotificationNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'Notification'
+>;
+
+export interface NotificationScreenProps {
+  navigation: NotificationNavigationProp;
 }
 
 type PurchasedNavigationProp = NativeStackNavigationProp<

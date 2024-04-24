@@ -1,13 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from './rootReducer';
-import socketMiddleware from '../middleware/webSocketMiddleware';
+import profileReducer from './slices/ProfileSclice'
+import navigationReducer from './slices/NavigationSlice'
 
-const store = configureStore({
-  reducer: rootReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false, 
-    }).prepend(socketMiddleware),
+export const store = configureStore({
+  reducer: {
+    profile: profileReducer,
+    navigation: navigationReducer,
+
+  },
 });
 
-export default store;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
