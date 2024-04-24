@@ -122,13 +122,21 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
       <KeyboardAvoidingView behavior="padding">
         <ScrollView>
           <SafeAreaView>
-            <View className="mx-5">
+            <View className="mx-7">
               <View className="my-5">
-                <Text className="text-xl font-bold my-3 text-gray-900">
+                {/* <Text className="text-xl font-bold my-3 text-gray-900">
                   {TEXTS.LOGIN_WELCOME}
                 </Text>
                 <Text className="text-base text-gray-900">
                   {TEXTS.LOGIN_TITLE}
+                </Text> */}
+                <Text
+                  style={[
+                    {marginTop: 100},
+                    {fontSize: 30},
+                    {fontWeight: 'bold'},
+                  ]}>
+                  Log in
                 </Text>
               </View>
               <Formik
@@ -152,11 +160,11 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   touched,
                   values,
                 }) => (
-                  <View>
+                  <View style={{marginTop: 5}}>
                     <View className="mb-2">
-                      <Text className="text-base font-normal my-2">
+                      {/* <Text className="text-base font-normal my-2">
                         {TEXTS.EMAIL}
-                      </Text>
+                      </Text> */}
                       <View
                         className={`h-12 w-full ${errors.email ? 'border-red-500' : 'border-gray-900'} border-[1px] rounded-lg items-center justify-center px-5`}>
                         <TextInput
@@ -182,10 +190,10 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                         </View>
                       )}
                     </View>
-                    <View className="mb-2">
-                      <Text className="text-base font-normal my-2">
+                    <View className="mb-2" style={{marginTop: 20}}>
+                      {/* <Text className="text-base font-normal my-2">
                         {TEXTS.PASSWORD}
-                      </Text>
+                      </Text> */}
                       <View
                         className={`h-12 w-full ${errors.password ? 'border-red-500' : 'border-gray-900'} border-[1px] rounded-lg items-center justify-center px-5`}>
                         <TextInput
@@ -232,13 +240,27 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                         </Text>
                       </View>
                     )}
-                    <View className="flex-row my-1 items-center">
+                    {/* <View className="flex-row my-1 items-center">
                       <Checkbox
                         className="mr-2"
                         value={isChecked}
                         onValueChange={setIsChecked}
                       />
                       <Text>{TEXTS.REMEMBER_ME}</Text>
+                    </View> */}
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                      }}>
+                      <Pressable
+                        onPress={() => {
+                          navigation.navigate('ForgotPasswordScreen');
+                        }}>
+                        <Text style={[{color: '#8B7FBF'}, {fontSize: 16}]}>
+                          {TEXTS.FORGOT_PASSWORD}
+                        </Text>
+                      </Pressable>
                     </View>
                     <CustomButton
                       style={styles.button}
@@ -284,16 +306,6 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   }}>
                   <Text className={`text-base text-[${COLORS.primary}]`}>
                     {TEXTS.SIGNUP}
-                  </Text>
-                </Pressable>
-              </View>
-              <View className="flex-row justify-center">
-                <Pressable
-                  onPress={() => {
-                    navigation.navigate('ForgotPasswordScreen');
-                  }}>
-                  <Text className="text-base text-black underline font-bold">
-                    {TEXTS.FORGOT_PASSWORD}
                   </Text>
                 </Pressable>
               </View>

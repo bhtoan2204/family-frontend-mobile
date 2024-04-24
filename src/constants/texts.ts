@@ -14,7 +14,7 @@ const TEXTS = {
   PASSWORD: 'Password',
   PASSWORD_PLACEHOLDER: 'Enter your password',
   REMEMBER_ME: 'Remember me',
-  FORGOT_PASSWORD: 'Forgot your password?',
+  FORGOT_PASSWORD: 'Forget your Password?',
   FORGOT_PASSWORD_TITLE: 'Forgot your password?',
   FORGOT_PASSWORD_DESCRIPTION:
     'Please enter your email address to reset your password',
