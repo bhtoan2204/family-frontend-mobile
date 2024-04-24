@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from 'src/redux/rootReducer';
-import { connectWebSocket } from 'src/redux/webSocketSlice';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -12,6 +10,7 @@ import { FamilyServices, ChatServices } from 'src/services/apiclient';
 import { ChatFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import styles from './styles';
 import { Keyboard } from 'react-native';
+import { getSocket } from '../../services/apiclient/Socket';
 
 interface Message {
   senderId: string;
@@ -29,6 +28,7 @@ interface Member {
 interface Family {
   id_family: number;
   name: string;
+  avatar: string;
 }
 
 const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
@@ -41,18 +41,17 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   const [images, setImages] = useState<string[]>([]);
   const [isTextInputEmpty, setIsTextInputEmpty] = useState(true);
   const dispatch = useDispatch();
-  const socket = useSelector((state: RootState) => state.webSocket.socket);
   const { id_user, id_family } = route.params || {};
   const [memberLookup, setMemberLookup] = useState<{ [key: string]: Member }>({});
-  const avatar = 'https://storage.googleapis.com/famfund-bucket/chat/chat_28905675-858b-4a93-a283-205899779622_1712683096675';
   const [refreshFlatList, setRefreshFlatList] = useState(false); 
   const [keyboardIsOpen, setKeyboardIsOpen] = useState(false); 
+  let socket = getSocket();
 
   useEffect(() => {
     fetchMember();
     fetchFamily();
     fetchMessages();
-    dispatch(connectWebSocket());
+
     setIsTextInputEmpty(message.trim() === '');
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
       setKeyboardIsOpen(true);
@@ -60,8 +59,18 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
       setKeyboardIsOpen(false);
     });
+    if (socket) {
+    socket.on('onNewFamilyMessage', fetchNewMessages);
+    socket.on('onNewFamilyImageMessage', fetchNewMessages);
+
+    }
 
     return () => {
+      if (socket) {
+      socket.off('onNewFamilyMessage', fetchNewMessages);
+      socket.off('onNewFamilyImageMessage', fetchNewMessages);
+
+    }
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
@@ -103,7 +112,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
       if (response) {
         const newMessages = response.map((message: any) => {
           if (message.type === 'photo') {
-            setImages(prevImages => [message.content, ...prevImages]);
+            setImages(prevImages => [...prevImages, message.content]);
           }
           return message;
         });
@@ -115,6 +124,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   };
 
   const fetchNewMessages = async () => {
+    setRefreshFlatList(prevState => !prevState); 
     try {
       const response = await ChatServices.GetFamilyMessages({ id_family: id_family, index: 0 });
       if (response && response.length > 0) { 
@@ -164,13 +174,13 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   const handleSendMessage = async () => {
     await sendMessage();
     setMessage('');
-    setRefreshFlatList(prevState => !prevState); 
     await fetchNewMessages(); 
   };
 
   const handleSendImage = async (imageData: string) => {
     await sendImage(imageData);
-    setRefreshFlatList(prevState => !prevState); 
+    await fetchMessages();
+
     await fetchNewMessages(); 
   };
   
@@ -247,7 +257,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         <View style={styles.receiverInfo}>
           {family && (
             <>
-              <Image source={{ uri: avatar }} style={styles.avatar} />
+              <Image source={{ uri: family.avatar}} style={styles.avatar} />
               <Text style={styles.nameText}> {family.name}</Text>
             </>
           )}

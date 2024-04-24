@@ -32,7 +32,6 @@ const PackageServices = {
   //da xong
   getProfile: async () => {
     try {
-      console.log('getProfile called');
       const response: AxiosResponse = await instance.get(
         PackageUrl.getProfile,
         {

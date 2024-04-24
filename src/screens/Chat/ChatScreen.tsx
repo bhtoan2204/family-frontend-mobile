@@ -6,14 +6,12 @@ import ChatServices from 'src/services/apiclient/ChatServices';
 import { FamilyServices } from 'src/services/apiclient';
 import { AxiosResponse } from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'src/redux/rootReducer';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import ImageView from "react-native-image-viewing";
 import { Keyboard } from 'react-native';
-
+import { getSocket } from '../../services/apiclient/Socket';
 
 interface Message {
   senderId: string;
@@ -38,19 +36,20 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [receiver, setReceiver] = useState<Member>();
   const { id_user, receiverId } = route.params || {};
-  const dispatch = useDispatch();
-  const socket = useSelector((state: RootState) => state.webSocket.socket);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [isTextInputEmpty, setIsTextInputEmpty] = useState(true);
   const [refreshFlatList, setRefreshFlatList] = useState(false); 
   const [keyboardIsOpen, setKeyboardIsOpen] = useState(false); 
+  let socket = getSocket();
+
 
   const fetchMember = async (receiverId?: string, id_user?: string) => {
     try {
-      const response1: AxiosResponse<Member[]> = await FamilyServices.getMember({ id_user: receiverId });
-      if (response1) {
-        setReceiver(response1.data[0]);
+      const response: AxiosResponse<Member[]> = await FamilyServices.getMember({ id_user: receiverId });
+      console.log(response)
+      if (response && response.data.length > 0) {
+        setReceiver( response.data[0]);
       }
     } catch (error) {
       console.error('Error fetching member:', error);
@@ -109,6 +108,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
     }
   };
   const fetchNewMessages = async () => {
+    setRefreshFlatList(prevState => !prevState); 
     try {
       const response = await ChatServices.GetMessages({ id_user: receiverId, index: 0 });
       if (response && response.length > 0) { 
@@ -125,7 +125,6 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   const handleSendImage = async (base64Image: string) => {
     await sendImage(base64Image);
     await fetchMessages();
-    setRefreshFlatList(prevState => !prevState); 
     await fetchNewMessages(); 
 
   };
@@ -133,7 +132,6 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   const handleSendMessage = async () => {
     await sendMessage();
     setMessage('');
-    setRefreshFlatList(prevState => !prevState); 
     await fetchNewMessages(); 
   };
   
@@ -172,10 +170,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
     console.log(itemIndex)
   };
   
-  
-  
-  
-
+ 
   const handleCloseModal = () => {
     setSelectedImageIndex(null);
   };
@@ -184,11 +179,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
     fetchMessages();
     fetchMember(receiverId, id_user);
     setIsTextInputEmpty(message.trim() === '');
-    if (socket) {
-      socket.onAny((eventName, ...args) => {
-        console.log('Received new image message:', eventName);
-      });
-    }
+
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
       setKeyboardIsOpen(true);
     });
@@ -201,8 +192,25 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
       keyboardDidHideListener.remove();
     };
 
-  }, [socket, message]);
-  
+  }, [message]);
+
+   
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('onNewMessage', fetchNewMessages);
+      socket.on('onNewImageMessage', fetchNewMessages);
+
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('onNewMessage', fetchNewMessages);
+        socket.off('onNewImageMessage', fetchNewMessages);
+
+      }
+    };
+  }, [socket]);
 
   const handleVideoCall = () =>{
 
