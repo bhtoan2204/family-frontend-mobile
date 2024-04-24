@@ -29,10 +29,10 @@ const styles = StyleSheet.create({
   },
   accountTitle: {
     fontSize: 16,
-    color: COLORS.black,
+    color: '#747474',
   },
   marginBottom: {
-    marginBottom: 12,
+    marginBottom: 20,
   },
   title: {
     fontSize: 16,
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   placeholder: {
+    flexDirection: 'row',
     width: '100%',
     height: 48,
     borderColor: COLORS.black,
@@ -50,15 +51,19 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: 22,
+    paddingLeft: 30,
   },
   touchable: {
     position: 'absolute',
     right: 12,
   },
+  Icon: {
+    fontSize: 24,
+    color: '#A3A3A3',
+  },
   eyeIcon: {
     fontSize: 24,
-    color: COLORS.black,
+    color: '#747474',
   },
   marginVerticalFlex: {
     flexDirection: 'row',

@@ -299,7 +299,12 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   alignItems: 'center',
                   marginVertical: 23,
                 }}>
-                <Text style={[{fontSize: 17}, {marginBottom: -20}]}>
+                <Text
+                  style={[
+                    {fontSize: 17},
+                    {marginBottom: -20},
+                    {color: '#747474'},
+                  ]}>
                   {TEXTS.LOGIN_OR}
                 </Text>
               </View>
@@ -324,7 +329,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                 </TouchableOpacity>
               </View>
               <View className="flex-row justify-center my-5">
-                <Text className="text-black text-base mr-1">
+                <Text className="text-base mr-1" style={{color: '#747474'}}>
                   {TEXTS.DONT_HAVE_ACCOUNT}
                 </Text>
                 {/* <Pressable

@@ -1,4 +1,4 @@
-import {Ionicons} from '@expo/vector-icons';
+import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 import Checkbox from 'expo-checkbox';
 import {Formik, FormikHelpers} from 'formik';
 import React, {useState} from 'react';
@@ -131,10 +131,14 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           ...styles.placeholder,
                           borderColor: errors.firstName
                             ? COLORS.red
-                            : COLORS.black,
+                            : COLORS.gray,
                         }}>
+                        <MaterialCommunityIcons
+                          name="account"
+                          style={styles.Icon}
+                        />
                         <TextInput
-                          style={styles.textInput}
+                          style={[styles.textInput, {marginLeft: 10}]}
                           placeholder={TEXTS.FIRST_NAME_PLACEHOLDER}
                           placeholderTextColor={
                             errors.firstName ? COLORS.red : COLORS.gray
@@ -155,10 +159,14 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           ...styles.placeholder,
                           borderColor: errors.lastName
                             ? COLORS.red
-                            : COLORS.black,
+                            : COLORS.gray,
                         }}>
+                        <MaterialCommunityIcons
+                          name="account"
+                          style={styles.Icon}
+                        />
                         <TextInput
-                          style={styles.textInput}
+                          style={[styles.textInput, {marginLeft: 10}]}
                           placeholder={TEXTS.LAST_NAME_PLACEHOLDER}
                           placeholderTextColor={
                             errors.lastName ? COLORS.red : COLORS.gray
@@ -177,10 +185,14 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                       <View
                         style={{
                           ...styles.placeholder,
-                          borderColor: errors.email ? COLORS.red : COLORS.black,
+                          borderColor: errors.email ? COLORS.red : COLORS.gray,
                         }}>
+                        <MaterialCommunityIcons
+                          name="email-outline"
+                          style={styles.Icon}
+                        />
                         <TextInput
-                          style={styles.textInput}
+                          style={[styles.textInput, {marginLeft: 10}]}
                           placeholder={TEXTS.EMAIL_PLACEHOLDER}
                           placeholderTextColor={
                             errors.email ? COLORS.red : COLORS.gray
@@ -202,10 +214,14 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           ...styles.placeholder,
                           borderColor: errors.phoneNumber
                             ? COLORS.red
-                            : COLORS.black,
+                            : COLORS.gray,
                         }}>
+                        <MaterialCommunityIcons
+                          name="phone-outline"
+                          style={styles.Icon}
+                        />
                         <TextInput
-                          style={styles.textInput}
+                          style={[styles.textInput, {marginLeft: 10}]}
                           placeholder={TEXTS.PHONE_NUMBER_PLACEHOLDER}
                           placeholderTextColor={
                             errors.phoneNumber ? COLORS.red : COLORS.gray
@@ -229,10 +245,14 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           ...styles.placeholder,
                           borderColor: errors.password
                             ? COLORS.red
-                            : COLORS.black,
+                            : COLORS.gray,
                         }}>
+                        <MaterialCommunityIcons
+                          name="lock-outline"
+                          style={styles.Icon}
+                        />
                         <TextInput
-                          style={styles.textInput}
+                          style={[styles.textInput, {marginLeft: 10}]}
                           placeholder={TEXTS.PASSWORD_PLACEHOLDER}
                           placeholderTextColor={
                             errors.password ? COLORS.red : COLORS.gray
@@ -272,7 +292,9 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           handleChange('termsAndConditions');
                         }}
                       />
-                      <Text>{TEXTS.TERMS_AND_CONDITIONS}</Text>
+                      <Text style={{color: 'gray'}}>
+                        {TEXTS.TERMS_AND_CONDITIONS}
+                      </Text>
                     </View>
                     {errors.termsAndConditions &&
                       touched.termsAndConditions && (
