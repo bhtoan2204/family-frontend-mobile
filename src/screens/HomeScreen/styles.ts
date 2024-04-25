@@ -198,6 +198,8 @@ const styles = StyleSheet.create({
   columnStyle1: {
     flexDirection: 'column',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    alignContent: 'center',
   },
   rowStyle: {
     flexDirection: 'row',
@@ -312,6 +314,7 @@ const styles = StyleSheet.create({
     marginTop: 25,
     padding: 20, // Xếp hàng
     justifyContent: 'space-between',
+    alignContent: 'space-between',
   },
   button1: {
     width: 60, // Đảm bảo không xếp chồng

@@ -40,6 +40,10 @@ const HomeScreen = ({
   const [displayedPage, setDisplayedPage] = useState(0);
   const dispatch = useDispatch();
   const [profile, setProfile] = useState<Profile>();
+  const [isLightMode, setIsLightMode] = useState(true);
+  const handlePress = () => {
+    setIsLightMode(!isLightMode);
+  };
   const translateY = scrollY.interpolate({
     inputRange: [0, 200],
     outputRange: [-50, 0],
@@ -322,15 +326,15 @@ const HomeScreen = ({
                   // Gradient direction
                   start={{x: 0, y: 0}}
                   end={{x: 0, y: 1}}>
-                  <TouchableOpacity onPress={handleChat}>
-                    <Material
-                      name="chat-outline"
+                  <TouchableOpacity onPress={handlePress}>
+                    <MaterialIcons
+                      name={isLightMode ? 'light-mode' : 'nightlight'}
                       size={30}
                       style={styles.buttonIcon1}
                     />
                   </TouchableOpacity>
                 </LinearGradient>
-                <Text style={styles.buttonText1}>Test</Text>
+                <Text style={styles.buttonText1}>Change Mode</Text>
               </View>
             </View>
           </View>

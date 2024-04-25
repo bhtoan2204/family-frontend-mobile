@@ -120,7 +120,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/login-wall.png')}
+      source={require('../../assets/images/login-wall-light.png')}
       style={{flex: 1}}
       resizeMode="stretch">
       <KeyboardAvoidingView behavior="padding">
