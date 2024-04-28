@@ -25,7 +25,7 @@ const BottomSheetChild = () => {
             options={{
               headerShown: true,
               headerBackTitle: 'Back',
-              headerTintColor: COLORS.primary,
+              headerTintColor: '#66c0f4',
             }}
             name="ProfileDetail"
             component={ProfileDetail}
@@ -34,7 +34,7 @@ const BottomSheetChild = () => {
             options={{
               headerShown: true,
               headerBackTitle: 'Back',
-              headerTintColor: COLORS.primary,
+              headerTintColor: '#66c0f4',
             }}
             name="ChangePassword"
             component={ChangePassword}

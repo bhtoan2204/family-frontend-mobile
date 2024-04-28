@@ -1,8 +1,13 @@
 import {MouseEvent, useEffect, useRef} from 'react';
-import {AccessibilityState, Animated, GestureResponderEvent, TouchableOpacity} from 'react-native';
+import {
+  AccessibilityState,
+  Animated,
+  GestureResponderEvent,
+  TouchableOpacity,
+} from 'react-native';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from './styles';
-import { COLORS } from 'src/constants';
+import {COLORS} from 'src/constants';
 
 interface TabButtonProps {
   item: {
@@ -71,15 +76,10 @@ const TabButton = ({item, accessibilityState, onPress}: TabButtonProps) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       <Animated.View style={[styles.button, translateStyles]}>
-        <Animated.View
-          style={[
-            styles.animated,
-            scaleStyles,
-          ]}
-        />
+        <Animated.View style={[styles.animated, scaleStyles]} />
         <Material
           name={item.icon}
-          color={accessibilityState!.selected ? COLORS.white : COLORS.primary}
+          color={accessibilityState!.selected ? COLORS.white : '#66c0f4'}
           size={30}
         />
       </Animated.View>
