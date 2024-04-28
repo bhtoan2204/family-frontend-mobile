@@ -18,11 +18,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   headerTitle1: {
-    color: 'white',
+    color: '#66c0f4',
     fontSize: 40,
-    //fontWeight: 'bold',
+    fontWeight: 'bold',
     textAlign: 'center',
-    padding: 10,
+    padding: 8,
+    marginTop: 15,
   },
   editDeleteContainer: {
     flexDirection: 'row',
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     //backgroundColor: '#332E59',
-    backgroundColor: '#24303F',
+    backgroundColor: 'rgba(42, 71, 94, 0.5)',
     borderRadius: 15,
     paddingHorizontal: 15,
     width: '65%',
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 11,
   },
   card: {
-    backgroundColor: '#24303F',
+    backgroundColor: 'rgba(42, 71, 94, 0.5)',
     paddingTop: 20,
     paddingHorizontal: 5,
     justifyContent: 'space-between',
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#24303F',
+    backgroundColor: 'rgba(42, 71, 94, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -176,6 +177,10 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: '500',
+    textAlign: 'center',
+  },
+  buttonTextChoosen: {
+    fontWeight: '700',
     textAlign: 'center',
   },
   image: {
@@ -251,12 +256,12 @@ const styles = StyleSheet.create({
   //   shadowOpacity: 0.25,
   // },
   text: {
-    color: '#724DC9',
+    color: '#2a475e',
     fontWeight: '700',
     fontSize: 16,
   },
   icon: {
-    color: '#724DC9',
+    color: '#2a475e',
   },
 });
 

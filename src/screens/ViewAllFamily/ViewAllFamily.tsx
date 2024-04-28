@@ -61,7 +61,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
       {selectedButton === title ? (
         <LinearGradient
           colors={
-            isUp ? ['#724DC9', '#5E4ABE', '#4748B2'] : ['#fff', '#fff', '#fff']
+            isUp ? ['#1E3B70', '#29539B'] : ['#c7d5e0', '#c7d5e0', '#c7d5e0']
           }
           style={[styles.button1, buttonStyle]}
           start={{x: 0, y: 0}}
@@ -69,8 +69,8 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
           <View style={[styles.row, {alignItems: 'center'}]}>
             <Text
               style={[
-                styles.buttonText,
-                {color: isUp ? '#fff' : '#724DC9'},
+                styles.buttonTextChoosen,
+                {color: isUp ? '#c7d5e0' : '#1E3B70'},
                 {fontSize: 16},
               ]}>
               {title}
@@ -78,22 +78,23 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
             <MaterialIcons
               name={isUp ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
               size={25}
-              color={isUp ? '#fff' : '#724DC9'}
+              color={isUp ? '#c7d5e0' : '#1E3B70'}
               style={styles.iconWrapper}
             />
           </View>
         </LinearGradient>
       ) : (
-        <View style={[styles.button1, buttonStyle, {backgroundColor: '#fff'}]}>
+        <View
+          style={[styles.button1, buttonStyle, {backgroundColor: '#c7d5e0'}]}>
           <View style={[styles.row, {alignItems: 'center'}]}>
             <Text
-              style={[styles.buttonText, {color: '#724DC9'}, {fontSize: 16}]}>
+              style={[styles.buttonText, {color: '#1E3B70'}, {fontSize: 16}]}>
               {title}
             </Text>
             <MaterialIcons
               name="keyboard-arrow-down"
               size={25}
-              color="#724DC9"
+              color="#1E3B70"
               style={styles.iconWrapper}
             />
           </View>
@@ -129,8 +130,8 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
   }, [navigation]);
 
   return (
-    <View style={[{flex: 1, backgroundColor: '#1A222C'}]}>
-      <Text style={styles.headerTitle1}>My Families</Text>
+    <View style={[{flex: 1, backgroundColor: '#16202D'}]}>
+      <Text style={styles.headerTitle1}>FAMILIES</Text>
       <View style={styles.circleContainer}>
         <TouchableOpacity style={styles.circle}>
           <MaterialIcons
@@ -216,10 +217,10 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                   </View>
                   <View style={styles.buttonPos}>
                     <LinearGradient
-                      colors={['#A388DB', '#9186D2', '#8385CB']}
+                      colors={['#0D324D', '#7F5A83']}
                       style={[styles.button, styles.detailButton]}
-                      start={{x: 0, y: 0}}
-                      end={{x: 0, y: 1}}>
+                      start={{x: 0, y: 1}}
+                      end={{x: 0, y: 0}}>
                       <TouchableOpacity
                         onPress={() =>
                           navigation.navigate('ViewFamily', {
@@ -230,7 +231,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                         <Text
                           style={[
                             styles.buttonText,
-                            {color: '#272042'},
+                            {color: '#c7d5e0'},
                             {fontWeight: '600'},
                           ]}>
                           View Detail
@@ -251,7 +252,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                     });
                     setModalVisible(true);
                   }}>
-                  <MaterialIcons name="more-vert" size={30} color="#fff" />
+                  <MaterialIcons name="more-vert" size={30} color="#c7d5e0" />
                 </TouchableOpacity>
 
                 <Modal
@@ -274,7 +275,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                         }}>
                         <View
                           style={{
-                            backgroundColor: 'white',
+                            backgroundColor: '#c7d5e0',
                             padding: 15,
                             borderRadius: 10,
                             width: 130,
@@ -287,7 +288,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                             <View style={[styles.row, {alignItems: 'center'}]}>
                               <Text
                                 style={[
-                                  {color: '#724DC9'},
+                                  {color: '#2a475e'},
                                   {fontWeight: '700'},
                                   {fontSize: 16},
                                 ]}>
@@ -296,7 +297,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                               <Material
                                 name="pencil-outline"
                                 size={30}
-                                color="#724DC9"
+                                color="#2a475e"
                               />
                             </View>
                           </TouchableOpacity>
@@ -318,7 +319,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                               <MaterialIcons
                                 name="delete-outline"
                                 size={30}
-                                color="#724DC9"
+                                color="#2a475e"
                                 style={styles.icon}
                               />
                             </View>
