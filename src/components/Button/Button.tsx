@@ -14,12 +14,12 @@ type ButtonProps = {
 };
 
 const CustomButton = (props: ButtonProps) => {
-  const filledBackgroundColor = props.color ?? '#6756AA';
-  const outlinedBackgroundColor = props.outlinedColor ?? COLORS.white;
+  const filledBackgroundColor = props.color ?? '#66C0F4';
+  const outlinedBackgroundColor = props.outlinedColor ?? '#66C0F4';
   const backgroundColor = props.filled
     ? filledBackgroundColor
     : outlinedBackgroundColor;
-  const textColor = props.filled ? COLORS.white : '#6756AA';
+  const textColor = props.filled ? COLORS.white : '#66C0F4';
 
   return (
     <TouchableOpacity

@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   },
   Icon: {
     fontSize: 24,
-    color: '#A3A3A3',
+    color: '#7F7F7F',
   },
   marginVerticalFlex: {
     flexDirection: 'row',
@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 18,
     marginBottom: 4,
+    borderColor: '#66C0F4',
   },
   lineStyle: {
     flex: 1,

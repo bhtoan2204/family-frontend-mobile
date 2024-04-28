@@ -120,7 +120,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/login-wall-light.png')}
+      source={require('../../assets/images/login-wall-dark.png')}
       style={{flex: 1}}
       resizeMode="stretch">
       <KeyboardAvoidingView behavior="padding">
@@ -139,6 +139,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                     {marginTop: 130},
                     {fontSize: 30},
                     {fontWeight: 'bold'},
+                    {color: '#C7D5E0'},
                   ]}>
                   Log in
                 </Text>
@@ -174,7 +175,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                           styles.row,
                           {alignItems: 'center'},
                           styles.TextInput,
-                          {borderColor: errors.email ? 'red' : COLORS.gray},
+                          {borderColor: errors.email ? 'red' : '#66C0F4'},
                         ]}>
                         <MaterialCommunityIcons
                           name="email-outline"
@@ -184,7 +185,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                           className="w-full"
                           placeholder={TEXTS.EMAIL_PLACEHOLDER}
                           placeholderTextColor={
-                            errors.email ? COLORS.red : COLORS.gray
+                            errors.email ? COLORS.red : '#7F7F7F'
                           }
                           keyboardType="email-address"
                           onBlur={handleBlur('email')}
@@ -210,7 +211,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                           styles.row,
                           {alignItems: 'center'},
                           styles.TextInput,
-                          {borderColor: errors.email ? 'red' : COLORS.gray},
+                          {borderColor: errors.email ? 'red' : '#66C0F4'},
                         ]}>
                         <MaterialCommunityIcons
                           name="lock-outline"
@@ -220,7 +221,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                           className="w-full"
                           placeholder={TEXTS.PASSWORD_PLACEHOLDER}
                           placeholderTextColor={
-                            errors.password ? COLORS.red : COLORS.gray
+                            errors.password ? COLORS.red : '#7F7F7F'
                           }
                           secureTextEntry={!isPasswordVisible}
                           onBlur={handleBlur('password')}
@@ -278,7 +279,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                         onPress={() => {
                           navigation.navigate('ForgotPasswordScreen');
                         }}>
-                        <Text style={[{color: '#8B7FBF'}, {fontSize: 16}]}>
+                        <Text style={[{color: '#C7D5E0'}, {fontSize: 16}]}>
                           {TEXTS.FORGOT_PASSWORD}
                         </Text>
                       </Pressable>
@@ -303,7 +304,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   style={[
                     {fontSize: 17},
                     {marginBottom: -20},
-                    {color: '#747474'},
+                    {color: '#C7D5E0'},
                   ]}>
                   {TEXTS.LOGIN_OR}
                 </Text>
@@ -329,7 +330,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                 </TouchableOpacity>
               </View>
               <View className="flex-row justify-center my-5">
-                <Text className="text-base mr-1" style={{color: '#747474'}}>
+                <Text className="text-base mr-1" style={{color: '#C7D5E0'}}>
                   {TEXTS.DONT_HAVE_ACCOUNT}
                 </Text>
                 {/* <Pressable
@@ -347,7 +348,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   }}>
                   <Text
                     style={[
-                      {color: COLORS.login},
+                      {color: '#66C0F4'},
                       {fontSize: 16},
                       {fontWeight: 'bold'},
                     ]}>
