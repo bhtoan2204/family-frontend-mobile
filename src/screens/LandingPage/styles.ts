@@ -4,13 +4,13 @@ const screenHeight = Dimensions.get('screen').height;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.white,
+    backgroundColor: '#1b2838',
     flex: 1,
   },
   title: {
     fontSize: 28,
     fontWeight: '500',
-    color: '#281b52',
+    color: '#c7d5e0',
     textAlign: 'center',
     marginBottom: 12,
     lineHeight: 40,
@@ -19,19 +19,19 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 24,
     fontWeight: '400',
-    color: '#9992a7',
+    color: '#c7d5e0',
     textAlign: 'center',
   },
   /** Hero */
   hero: {
-    backgroundColor: '#d8dffe',
+    backgroundColor: '#2a475e',
     margin: 12,
     borderRadius: 16,
     padding: 16,
   },
   heroImage: {
     width: '100%',
-    height: screenHeight*0.3,
+    height: screenHeight * 0.3,
   },
   /** Content */
   content: {
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   appName: {
-    backgroundColor: '#fff2dd',
+    backgroundColor: '#66c0f4',
     transform: [
       {
         rotate: '-5deg',
@@ -55,11 +55,11 @@ const styles = StyleSheet.create({
   appNameText: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#281b52',
+    color: '#171a21',
   },
   /** Button */
   button: {
-    backgroundColor: '#56409e',
+    backgroundColor: '#66c0f4',
     paddingVertical: 12,
     paddingHorizontal: 14,
     alignItems: 'center',
