@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     //backgroundColor: '#F4F7FF',
-    backgroundColor: '#1D1441',
+    backgroundColor: '#16202D',
   },
   header: {
     height: 50,
@@ -66,11 +66,11 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   title: {
-    fontWeight: '400',
-    fontSize: 30,
+    fontWeight: 'bold',
+    fontSize: 25,
     textAlign: 'center',
     alignSelf: 'flex-start',
-    color: COLORS.white,
+    color: '#66c0f4',
     padding: 20,
   },
   titleBottom: {
@@ -132,7 +132,8 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#332E59',
+    //backgroundColor: '#2a475e',
+    backgroundColor: 'rgba(42, 71, 94, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -156,7 +157,8 @@ const styles = StyleSheet.create({
     margin: 20,
     borderColor: '#000',
     borderRadius: 10,
-    backgroundColor: '#332E59',
+    //backgroundColor: '#2a475e',
+    backgroundColor: 'rgba(42, 71, 94, 0.5)',
     justifyContent: 'space-between',
     shadowRadius: 3.84,
     shadowColor: '#000',
@@ -169,12 +171,19 @@ const styles = StyleSheet.create({
     //color: '#6C6D71',
     color: '#fff',
   },
-  numberBalance: {
+  numberBalanceVisible: {
     fontSize: 24,
     marginBottom: 10,
     fontWeight: 'bold',
     paddingRight: 10,
-    color: '#fff',
+    color: '#66c0f4',
+  },
+  numberBalanceHidden: {
+    fontSize: 24,
+    marginBottom: 10,
+    fontWeight: 'bold',
+    paddingRight: 10,
+    color: 'white',
   },
   balanceBox: {
     flexDirection: 'row',
@@ -304,7 +313,8 @@ const styles = StyleSheet.create({
   },
   containerBottom: {
     height: halfScreenHeight,
-    backgroundColor: '#332E59',
+    //backgroundColor: '#2a475e',
+    backgroundColor: 'rgba(42, 71, 94, 0.5)',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     shadowRadius: 3.84,

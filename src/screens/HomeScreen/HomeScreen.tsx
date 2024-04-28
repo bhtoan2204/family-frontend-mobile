@@ -183,7 +183,7 @@ const HomeScreen = ({
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.title}>Trending Search</Text>
+        <Text style={styles.title}>TRENDING SEARCH</Text>
 
         <ScrollView
           ref={scrollViewRef}
@@ -212,9 +212,11 @@ const HomeScreen = ({
             <View style={styles.columnStyle}>
               <Text style={styles.balance}>Active Balance</Text>
               <View style={styles.rowStyle}>
-                <Text style={styles.numberBalance}>
-                  {isBalanceVisible ? '******' : '500.00$'}
-                </Text>
+                {isBalanceVisible ? (
+                  <Text style={styles.numberBalanceHidden}>******</Text>
+                ) : (
+                  <Text style={styles.numberBalanceVisible}>500.00$</Text>
+                )}
                 <TouchableOpacity
                   onPress={() => setIsBalanceVisible(!isBalanceVisible)}>
                   <Material
@@ -260,7 +262,7 @@ const HomeScreen = ({
               <View style={styles.columnStyle1}>
                 <LinearGradient
                   // Array of colors for gradient
-                  colors={['#724DC9', '#5E4ABE', '#4748B2']}
+                  colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
                   // Gradient style
                   style={styles.button1}
                   // Gradient direction
@@ -280,7 +282,7 @@ const HomeScreen = ({
               <View style={styles.columnStyle1}>
                 <LinearGradient
                   // Array of colors for gradient
-                  colors={['#724DC9', '#5E4ABE', '#4748B2']}
+                  colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
                   // Gradient style
                   style={styles.button1}
                   // Gradient direction
@@ -300,7 +302,7 @@ const HomeScreen = ({
               <View style={styles.columnStyle1}>
                 <LinearGradient
                   // Array of colors for gradient
-                  colors={['#724DC9', '#5E4ABE', '#4748B2']}
+                  colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
                   // Gradient style
                   style={styles.button1}
                   // Gradient direction
@@ -320,7 +322,7 @@ const HomeScreen = ({
               <View style={styles.columnStyle1}>
                 <LinearGradient
                   // Array of colors for gradient
-                  colors={['#724DC9', '#5E4ABE', '#4748B2']}
+                  colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
                   // Gradient style
                   style={styles.button1}
                   // Gradient direction
