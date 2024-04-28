@@ -191,7 +191,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                           onBlur={handleBlur('email')}
                           onChangeText={handleChange('email')}
                           value={values.email}
-                          style={{marginLeft: 10}}
+                          style={[{marginLeft: 10, color: '#C7D5E0'}]}
                         />
                       </View>
                       {errors.email && touched.email && (
@@ -227,7 +227,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                           onBlur={handleBlur('password')}
                           onChangeText={handleChange('password')}
                           value={values.password}
-                          style={{marginLeft: 10}}
+                          style={[{marginLeft: 10, color: '#C7D5E0'}]}
                         />
                         <TouchableOpacity
                           className="absolute right-3"
