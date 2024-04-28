@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#1A222C',
+    backgroundColor: '#16202D',
   },
   settingItemContainer: {
     flexDirection: 'row',
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   cardContainer: {
-    backgroundColor: '#24303F',
+    backgroundColor: 'rgba(42, 71, 94, 0.5)',
     borderRadius: 20,
     marginVertical: 0,
     marginHorizontal: 10,
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   menuContainer: {
-    backgroundColor: '#24303F',
+    backgroundColor: 'rgba(42, 71, 94, 0.5)',
     borderRadius: 20,
     marginVertical: 0,
     marginHorizontal: 10,
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#24303F',
+    backgroundColor: 'rgba(42, 71, 94, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   },
   containerBottom: {
     height: halfScreenHeight,
-    backgroundColor: '#24303F',
+    backgroundColor: 'rgba(42, 71, 94, 0.5)',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     shadowRadius: 3.84,

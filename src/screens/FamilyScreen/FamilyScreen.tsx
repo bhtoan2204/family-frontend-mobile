@@ -169,7 +169,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
               }}>
               {selectedButton === index ? (
                 <LinearGradient
-                  colors={['#724DC9', '#5E4ABE', '#4748B2']}
+                  colors={['#1E3B70', '#29539B']}
                   style={{
                     padding: 10,
                     alignItems: 'center',
