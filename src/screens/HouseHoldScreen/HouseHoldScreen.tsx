@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import { HouseHoldCategoryScreenProps, HouseHoldScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants';
-
+import ImageComponent from 'src/components/Image/Image';
+import FamilyImage from 'src/assets/images/diversity.png';
 const household_category_dat = [
     {
         "id_category": 1,
@@ -118,11 +119,37 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
     const { id_family } = route.params
     const [householdCategory, setHouseholdCategory] = React.useState<HouseHoldCategoryInterface[]>(household_category_dat)
     const [householdItems, setHouseholdItems] = React.useState<HouseHoldItemInterface[]>(household_items)
-    const [choosenCategory, setChoosenCategory] = React.useState<number | null>(0)
+    const [choosenCategoryIndex, setChoosenCategoryIndex] = React.useState<number>(0)
+    const [choosenCategoryId, setChoosenCategoryId] = React.useState<number>(householdCategory[0].id_category)
 
-    const showCategoryItems = (id_category: number) => {
-        return <View>
+    const showCategoryItems = () => {
+        const categoryItems = householdItems.filter(item => item.id_category === choosenCategoryId);
+        return <View className='mt-2'>
+            {
+                categoryItems.map(item => (
+                    <TouchableOpacity key={item.id_household_item} onPress={() => { }} className='bg-white m-2'>
 
+                        <View className='m-4  flex-row items-center'>
+                            <ImageComponent imageUrl={item.item_imageurl} style={{ width: 70, height: 70 }} defaultImage={FamilyImage} className='rounded-lg ' />
+                            <View className='flex-1'>
+                                <Text className='ml-3' style={{
+                                    fontSize: 17, fontWeight: '400', color: COLORS.gray
+                                }}>
+                                    {item.item_name}
+                                </Text>
+                                <View className='line-clamp-1'>
+                                    <Text className='ml-3 ' style={{
+                                        fontSize: 17, fontWeight: '400', color: COLORS.gray,
+                                    }}  >
+                                        {item.description}
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>
+
+                    </TouchableOpacity>
+                ))
+            }
         </View>
     }
 
@@ -143,9 +170,28 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
                     </TouchableOpacity>
                 </View>
             </View>
+            <View>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+                    {householdCategory.map((category, index) => (
+                        <TouchableOpacity
+                            key={category.id_category}
+                            onPress={() => {
+                                setChoosenCategoryIndex(index)
+                                setChoosenCategoryId(category.id_category)
+                            }}
+                            style={{ paddingHorizontal: 20, paddingVertical: 10, borderBottomColor: COLORS.primary }}
+                            className={`${choosenCategoryIndex === index ? 'border-b-2 border-[#56409e]' : ''}`}
+                        >
+                            <Text style={choosenCategoryIndex == index ? { fontSize: 16, fontWeight: '600', color: COLORS.primary } : {
+                                fontSize: 16, fontWeight: '600', color: COLORS.gray
+                            }}>{category.category_name}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
+            </View>
             <ScrollView>
-                <View className='flex-col justify-center items-center pt-4 ' >
-
+                <View style={{ flex: 1 }}>
+                    {showCategoryItems()}
                 </View>
             </ScrollView>
 
