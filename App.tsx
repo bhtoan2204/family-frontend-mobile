@@ -7,6 +7,7 @@ import { store } from 'src/redux/store';
 import Notification from 'src/screens/Notifications';
 import * as BackgroundFetch from 'expo-background-fetch';
 import { connectSocket } from 'src/services/apiclient/Socket';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
 const App: React.FC = () => {
@@ -16,10 +17,13 @@ const App: React.FC = () => {
 
     return (
         <Provider store={store}>
+
             <SafeAreaProvider>
-                <PaperProvider>
-                    <NavigationContainer />
-                </PaperProvider>
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                    <PaperProvider>
+                        <NavigationContainer />
+                    </PaperProvider>
+                </GestureHandlerRootView>
             </SafeAreaProvider>
         </Provider>
     );

@@ -121,9 +121,18 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
   };
 
   useEffect(() => {
+    const handleGetAllFamily = async () => {
+      try {
+        const result = await FamilyServices.getAllFamily();
+        setFamilies(result);
+      } catch (error: any) {
+        console.log('FamilyServices.getAllFamily error:', error);
+      }
+    };
     const unsubscribe = navigation.addListener('focus', () => {
       handleGetAllFamily();
     });
+
 
     return unsubscribe;
   }, [navigation]);
@@ -332,10 +341,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
           </View>
         ))}
       </Animated.ScrollView>
-    </View>
-  );
-};
-
+    </View> */}
 export default ViewAllFamilyScreen;
 
 

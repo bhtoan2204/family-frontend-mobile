@@ -77,6 +77,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
 
   const handleOpenBottomSheet = () => {
     bottomSheetRef.current?.open();
+    bottomSheetRef.current?.open();
   };
   const handleChatPress = () => {
     navigation.navigate('ChatStack', {
@@ -96,7 +97,12 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   ) => {
     navigation.navigate('AllMember', {id_family});
   };
-
+  const handleNavigateGuildLine = () => {
+    navigation.navigate('GuildLine', { id_family: id_family })
+  }
+  const handleNavigateHouseHold = () => {
+    navigation.navigate('HouseHold', { id_family: id_family })
+  }
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       handleGetFamily();
@@ -287,6 +293,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
       <RBSheet
         ref={bottomSheetRef}
         closeOnDragDown={true}
+        height={screenHeight * 0.3}
         height={screenHeight * 0.3}
         customStyles={{
           container: {

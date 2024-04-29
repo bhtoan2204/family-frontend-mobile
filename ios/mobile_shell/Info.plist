@@ -22,7 +22,6 @@
 	<string>I would like to your microphone (for videos)</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow access to the photo library for selecting images</string>
-
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>

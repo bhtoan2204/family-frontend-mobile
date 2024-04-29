@@ -120,7 +120,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
       style={{flex: 1}}
       resizeMode="stretch">
       <KeyboardAvoidingView behavior="padding">
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps="handled">
           <SafeAreaView>
             <View className="mx-7">
               <View className="my-5">
