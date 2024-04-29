@@ -1,6 +1,6 @@
 import axios from 'axios';
-import {ERROR_TEXTS} from 'src/constants';
-import LocalStorage from 'src/store/localstorage';
+import {ERROR_TEXTS} from '../../constants';
+import LocalStorage from '../../store/localstorage';
 import {AuthServices} from '../apiclient';
 import baseUrl from '../urls/baseUrl';
 

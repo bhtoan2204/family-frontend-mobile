@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, Text, View, TouchableOpacity } from 'react-native';
 import * as Contacts from 'expo-contacts';
-import { ContactScreenProps } from 'src/navigation/NavigationTypes';
+import { ContactScreenProps } from '../../navigation/NavigationTypes';
 import styles from '../ForgotPassword/styles';
 
 interface Contact {

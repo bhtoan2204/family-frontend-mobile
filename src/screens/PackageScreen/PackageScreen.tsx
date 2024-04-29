@@ -2,13 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {ScrollView, Text, View, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {package_info} from './data';
-import {TEXTS} from 'src/constants';
+import {TEXTS} from '../../constants';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
-import {PackageServices} from 'src/services/apiclient';
+import {PackageServices} from '../../services/apiclient';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import { ViewAllPackageScreenProps } from 'src/navigation/NavigationTypes';
+import { ViewAllPackageScreenProps } from '../../navigation/NavigationTypes';
 import {RouteProp} from '@react-navigation/native';
 type Package = {
   id_package: number;

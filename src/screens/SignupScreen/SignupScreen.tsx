@@ -12,10 +12,10 @@ import {
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import CustomButton from 'src/components/Button';
-import {COLORS, TEXTS} from 'src/constants';
-import {LoginScreenProps} from 'src/navigation/NavigationTypes';
-import {AuthServices} from 'src/services/apiclient';
+import CustomButton from '../../components/Button';
+import {COLORS, TEXTS} from '../../constants';
+import {LoginScreenProps} from '../../navigation/NavigationTypes';
+import {AuthServices} from '../../services/apiclient';
 import * as Yup from 'yup';
 import styles from './styles';
 

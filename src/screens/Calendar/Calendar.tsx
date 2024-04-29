@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, Dimensions, Modal, Button } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import { CalendarScreenProps } from 'src/navigation/NavigationTypes';
+import { CalendarScreenProps } from '../../navigation/NavigationTypes';
 import styles from './style';
-import CalendarServices from 'src/services/apiclient/CalendarService';
+import CalendarServices from '../../services/apiclient/CalendarService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { format } from 'date-fns';
 import BottomSheet from './BottomSheet'; 

@@ -1,9 +1,9 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import ChatFamilyScreen from 'src/screens/ChatFamily';
+import ChatFamilyScreen from '../../screens/ChatFamily';
 import { CallVideoProps, ChatFamilyScreenProps, ChatListProps, ChatScreenProps } from '../NavigationTypes';
-import ChatScreen from 'src/screens/Chat';
-import ChatListScreen from 'src/screens/ChatList/ChatListScreen';
-import VideoCallScreen from 'src/screens/VideoCallScreen';
+import ChatScreen from '../../screens/Chat';
+import ChatListScreen from '../../screens/ChatList/ChatListScreen';
+import VideoCallScreen from '../../screens/VideoCallScreen';
 const Stack = createNativeStackNavigator();
 
 const ChatStack = () => {

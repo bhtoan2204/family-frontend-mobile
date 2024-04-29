@@ -13,12 +13,12 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { COLORS, TEXTS } from 'src/constants';
+import { COLORS, TEXTS } from '../../constants';
 import styles from './styles';
-import { FamilyServices } from 'src/services/apiclient';
-import RoleService from 'src/services/apiclient/RoleServices';
+import { FamilyServices } from '../../services/apiclient';
+import RoleService from '../../services/apiclient/RoleServices';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { AddEditFamilyMemberScreenProps } from 'src/navigation/NavigationTypes';
+import { AddEditFamilyMemberScreenProps } from '../../navigation/NavigationTypes';
 
 interface Role {
   label: string;

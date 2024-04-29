@@ -1,6 +1,6 @@
 import { Socket, io } from 'socket.io-client';
 import * as BackgroundFetch from 'expo-background-fetch';
-import LocalStorage from 'src/store/localstorage';
+import LocalStorage  from '../../store/localstorage';
 import * as TaskManager from 'expo-task-manager'; 
 
 let socket: Socket | null = null;

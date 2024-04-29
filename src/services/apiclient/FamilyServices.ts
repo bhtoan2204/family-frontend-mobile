@@ -1,8 +1,8 @@
 import axios, {AxiosResponse} from 'axios';
-import {ERROR_TEXTS} from 'src/constants';
+import {ERROR_TEXTS} from '../../constants';
 import {FamilyUrl} from '../urls';
 import instance from '../httpInterceptor';
-import LocalStorage from 'src/store/localstorage';
+import LocalStorage from '../../store/localstorage';
 
 const FamilyServices = {
   //da xong

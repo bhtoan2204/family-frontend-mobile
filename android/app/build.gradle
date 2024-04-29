@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
-apply plugin: "org.jetbrains.kotlin.android"
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-kapt"
 apply plugin: "com.facebook.react"
 
 /**
@@ -112,8 +113,10 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
     implementation("com.facebook.react:flipper-integration")
-    implementation project(':react-native-webrtc')
-
+    implementation("org.jitsi:webrtc:118.0.0") {
+        exclude group: 'org.webrtc'
+    }
+    
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
@@ -122,3 +125,4 @@ dependencies {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+ 

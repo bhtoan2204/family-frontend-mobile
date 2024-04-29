@@ -2,8 +2,8 @@ import {Formik, FormikHelpers} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {Image, KeyboardAvoidingView, ScrollView, View} from 'react-native';
 import {Button, Card, PaperProvider, Text, TextInput} from 'react-native-paper';
-import {COLORS} from 'src/constants';
-import {ProfileServices} from 'src/services/apiclient';
+import {COLORS} from '../../../constants';
+import {ProfileServices} from '../../../services/apiclient';
 import * as Yup from 'yup';
 
 const initialProfile = {

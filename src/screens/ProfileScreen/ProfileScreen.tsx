@@ -1,8 +1,8 @@
 import {MaterialIcons} from '@expo/vector-icons';
 import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {COLORS} from 'src/constants';
-import {EditProfileScreenProps} from 'src/navigation/NavigationTypes';
+import {COLORS} from '../../constants';
+import {EditProfileScreenProps} from '../../navigation/NavigationTypes';
 import styles from './styles';
 
 const ProfileScreen = ({navigation}: EditProfileScreenProps) => {

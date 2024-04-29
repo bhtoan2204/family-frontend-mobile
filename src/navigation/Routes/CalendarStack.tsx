@@ -1,7 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import CalendarScreen from 'src/screens/Calendar';
+import CalendarScreen from '../../screens/Calendar';
 import { CalendarScreenProps } from '../NavigationTypes';
-import CreateEventModal from 'src/screens/ModalScreen/CreateEvent';
+import CreateEventModal from '../../screens/ModalScreen/CreateEvent';
 
 const Stack = createNativeStackNavigator();
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, Text, View, TouchableOpacity, SafeAreaView, TextInput } from 'react-native';
-import { ChatListProps } from 'src/navigation/NavigationTypes';
-import ChatServices from 'src/services/apiclient/ChatServices';
+import { ChatListProps } from '../../navigation/NavigationTypes';
+import ChatServices from '../../services/apiclient/ChatServices';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 

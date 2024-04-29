@@ -2,9 +2,9 @@ import {Formik, FormikHelpers} from 'formik';
 import React from 'react';
 import {View} from 'react-native';
 import {Button, Card, PaperProvider, Text, TextInput} from 'react-native-paper';
-import {COLORS, TEXTS} from 'src/constants';
-import {MainProfileScreenProps} from 'src/navigation/NavigationTypes';
-import {ProfileServices} from 'src/services/apiclient';
+import {COLORS, TEXTS} from '../../../constants';
+import {MainProfileScreenProps} from '../../../navigation/NavigationTypes';
+import {ProfileServices} from '../../../services/apiclient';
 import * as Yup from 'yup';
 
 interface FormValues {

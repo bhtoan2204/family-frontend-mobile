@@ -7,15 +7,15 @@ import {
 } from 'react-native-gesture-handler';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {COLORS, TEXTS} from 'src/constants';
+import {COLORS, TEXTS} from '../../constants';
 
-import {PackageServices} from 'src/services/apiclient';
+import {PackageServices} from '../../services/apiclient';
 import styles from './styles';
 import {Button, TextInput} from 'react-native-paper';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import {OrderDetailScreenProps} from 'src/navigation/NavigationTypes';
+import {OrderDetailScreenProps} from '../../navigation/NavigationTypes';
 
 type PaymentMethod = {
   id: number;

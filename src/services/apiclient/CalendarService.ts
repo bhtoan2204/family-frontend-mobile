@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from 'axios';
-import {ERROR_TEXTS} from 'src/constants';
+import {ERROR_TEXTS} from '../../constants';
 import { CalendarUrls } from '../urls';
 import instance from '../httpInterceptor';
 import baseUrl from '../urls/baseUrl';

@@ -1,8 +1,8 @@
 import { AxiosResponse } from "axios";
 import instance from "../httpInterceptor";
 import RoleUrl from "../urls/roleUrls";
-import LocalStorage from "src/store/localstorage";
-import { ERROR_TEXTS } from "src/constants";
+import LocalStorage from "../../store/localstorage";
+import { ERROR_TEXTS } from "../../constants";
 
 
 const RoleService ={

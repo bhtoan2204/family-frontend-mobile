@@ -1,12 +1,12 @@
 import {useEffect, useState} from 'react';
 import {Animated, Image, ScrollView, View} from 'react-native';
 import {Button, Card, PaperProvider, Text} from 'react-native-paper';
-import {COLORS, TEXTS} from 'src/constants';
+import {COLORS, TEXTS} from '../../../constants';
 import {
   ChangePasswordScreenProps,
   ProfileDetailScreenProps,
-} from 'src/navigation/NavigationTypes';
-import {ProfileServices} from 'src/services/apiclient';
+} from '../../../navigation/NavigationTypes';
+import {ProfileServices} from '../../../services/apiclient';
 
 const initialProfile = {
   avatar: '',

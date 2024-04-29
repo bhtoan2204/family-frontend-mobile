@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, TextInput, SafeAreaView, Dimensions, Image, FlatList, Modal } from 'react-native';
-import { FamilyServices } from 'src/services/apiclient';
-import { COLORS, TEXTS } from 'src/constants';
+import { FamilyServices } from '../../services/apiclient';
+import { COLORS, TEXTS } from '../../constants';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { AllMemberScreenProps } from 'src/navigation/NavigationTypes';
+import { AllMemberScreenProps } from '../../navigation/NavigationTypes';
 import styles from './styles';
 
 import RBSheet from 'react-native-raw-bottom-sheet';

@@ -1,9 +1,9 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import PackageScreen from 'src/screens/PackageScreen';
-import BankInfoScreen from 'src/screens/BankInfoScreen';
-import OrderDetailScreen from 'src/screens/OrderDetailScreen';
-import ZaloPayScreen from 'src/screens/ZaloPayScreen';
-import PurchasedScreen from 'src/screens/PurchasedScreen';
+import PackageScreen from '../../screens/PackageScreen';
+import BankInfoScreen from '../../screens/BankInfoScreen';
+import OrderDetailScreen from '../../screens/OrderDetailScreen';
+import ZaloPayScreen from '../../screens/ZaloPayScreen';
+import PurchasedScreen from '../../screens/PurchasedScreen';
 import {PackStackParamList} from '../NavigationTypes';
 
 const Stack = createNativeStackNavigator<PackStackParamList>();

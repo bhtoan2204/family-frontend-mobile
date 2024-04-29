@@ -1,19 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import {VietQR} from 'vietqr';
-import {Text, Image, View, EmitterSubscription} from 'react-native';
+import {Text, Image, View} from 'react-native';
 import {FlatList, GestureHandlerRootView} from 'react-native-gesture-handler';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {PackageServices} from 'src/services/apiclient';
+import {PackageServices} from '../../services/apiclient';
 import styles from './styles';
 import {TextInput} from 'react-native-paper';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import {BankInfoScreenProps} from 'src/navigation/NavigationTypes';
+import {BankInfoScreenProps} from '../../navigation/NavigationTypes';
 
-import baseUrl from 'src/services/urls/baseUrl';
+import baseUrl from '../../services/urls/baseUrl';
 
 import {Linking} from 'react-native';
 

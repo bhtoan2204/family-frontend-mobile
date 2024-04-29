@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {COLORS} from 'src/constants';
+import {COLORS} from '../../constants';
 
 const CIRCLE_SIZE = 40;
 const CIRCLE_RING_SIZE = 2;

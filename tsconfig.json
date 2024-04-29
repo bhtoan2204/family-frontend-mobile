@@ -6,7 +6,6 @@
   ],
   "compilerOptions": {
     "module": "esnext",
-    "module": "esnext",
     "strict": true,
     "baseUrl": "./",
     "paths": {

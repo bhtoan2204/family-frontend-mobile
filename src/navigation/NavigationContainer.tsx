@@ -2,7 +2,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {COLORS} from 'src/constants';
+import {COLORS} from '../constants';
 import AuthStack from './Routes/AuthStack';
 import HomeTab from './Routes/HomeTab';
 import FamilyStack from './Routes/FamilyStack';

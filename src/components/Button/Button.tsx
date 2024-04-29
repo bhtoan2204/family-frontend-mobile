@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, TouchableOpacity} from 'react-native';
-import {COLORS} from 'src/constants';
+import {COLORS} from '../../constants';
 import styles from './styles';
 
 type ButtonProps = {

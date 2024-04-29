@@ -1,4 +1,7 @@
 {
   "java.configuration.updateBuildConfiguration": "automatic",
-  "cSpell.words": ["Viet"]
+  "cSpell.words": [
+    "Viet"
+  ],
+  "java.compile.nullAnalysis.mode": "disabled"
 }

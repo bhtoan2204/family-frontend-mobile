@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { FamilyServices } from 'src/services/apiclient';
-import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
+import { ScrollView, Text, View, TouchableOpacity } from 'react-native';
+import { FamilyServices } from '../../services/apiclient';
+import { ViewFamilyScreenProps } from '../../navigation/NavigationTypes';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { TEXTS } from 'src/constants';
+import { TEXTS } from '../../constants';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type Member = {

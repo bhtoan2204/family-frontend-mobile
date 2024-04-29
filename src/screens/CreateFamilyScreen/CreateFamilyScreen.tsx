@@ -10,15 +10,15 @@ import {
 } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { COLORS, TEXTS } from 'src/constants';
-import profile_color from 'src/constants/profile_colors';
+import { COLORS, TEXTS } from '../../constants';
+import profile_color from '../../constants/profile_colors';
 import ColorPickerStyles from './ColorPickerStyle';
 import styles from './styles';
 import { Formik, FormikHelpers } from 'formik';
-import { FamilyServices } from 'src/services/apiclient';
+import { FamilyServices } from '../../services/apiclient';
 import * as Yup from 'yup';
-import CustomButton from 'src/components/Button';
-import { CreateFamilyScreenProps } from 'src/navigation/NavigationTypes';
+import CustomButton from '../../components/Button';
+import { CreateFamilyScreenProps } from '../../navigation/NavigationTypes';
 
 interface FormValues {
   description: string;

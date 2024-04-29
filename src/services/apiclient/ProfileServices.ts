@@ -1,5 +1,5 @@
 import {AxiosResponse} from 'axios';
-import {ERROR_TEXTS} from 'src/constants';
+import {ERROR_TEXTS} from '../../constants';
 import instance from '../httpInterceptor';
 import {ProfileUrl} from '../urls';
 

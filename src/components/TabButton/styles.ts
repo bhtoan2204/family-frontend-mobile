@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {COLORS} from 'src/constants';
+import {COLORS} from '../../constants';
 
 const animate1 = {
   0: {scale: 0.5, translateY: 7},

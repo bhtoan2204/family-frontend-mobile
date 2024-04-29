@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from 'axios';
-import {ERROR_TEXTS} from 'src/constants';
+import {ERROR_TEXTS} from '../../constants';
 import {AuthUrl} from '../urls';
 
 const AuthServices = {

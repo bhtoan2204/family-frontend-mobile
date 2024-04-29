@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, View, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS, TEXTS } from 'src/constants';
+import { COLORS, TEXTS } from '../../constants';
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
-import { PackageServices, FamilyServices } from 'src/services/apiclient';
-import { PurchasedScreenProps } from 'src/navigation/NavigationTypes';
-import { FamilyStackProps } from 'src/navigation/NavigationTypes';
+import { PackageServices, FamilyServices } from '../../services/apiclient';
+import { PurchasedScreenProps } from '../../navigation/NavigationTypes';
 type Purchased = {
   id_order: number;
   id_package: number;

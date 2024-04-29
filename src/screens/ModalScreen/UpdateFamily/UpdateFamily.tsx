@@ -2,8 +2,8 @@ import { Formik, FormikHelpers } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Alert, KeyboardAvoidingView, ScrollView, View } from 'react-native';
 import { Button, Card, PaperProvider, Text, TextInput } from 'react-native-paper';
-import { FamilyServices } from 'src/services/apiclient';
-import { UpdateFamilyScreenProps } from 'src/navigation/NavigationTypes';
+import { FamilyServices } from '../../../services/apiclient';
+import { UpdateFamilyScreenProps } from '../../../navigation/NavigationTypes';
 import * as Yup from 'yup';
 import styles from './styles';
 

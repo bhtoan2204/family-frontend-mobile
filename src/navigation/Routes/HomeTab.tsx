@@ -3,16 +3,16 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import {StyleSheet} from 'react-native';
-import TabButton from 'src/components/TabButton';
-import {TEXTS} from 'src/constants';
-import EditProfileScreen from 'src/screens/EditProfileScreen/EditProfileScreen';
-import HomeScreen from 'src/screens/HomeScreen';
-import PackageScreen from 'src/screens/PackageScreen';
-import ProfileScreen from 'src/screens/ProfileScreen';
-import ReportScreen from 'src/screens/ReportScreen';
-import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
-import BottomSheet from 'src/screens/FamilyScreen/BottomSheet';
-import BottomSheetChild from 'src/screens/HomeScreen/BottomSheetContent';
+import TabButton from '../../components/TabButton';
+import {TEXTS} from '../../constants';
+import EditProfileScreen from '../../screens/EditProfileScreen/EditProfileScreen';
+import HomeScreen from '../../screens/HomeScreen';
+import PackageScreen from '../../screens/PackageScreen';
+import ProfileScreen from '../../screens/ProfileScreen';
+import ReportScreen from '../../screens/ReportScreen';
+import ViewAllFamilyScreen from '../../screens/ViewAllFamily';
+import BottomSheet from '../../screens/FamilyScreen/BottomSheet';
+import BottomSheetChild from '../../screens/HomeScreen/BottomSheetContent';
 
 const Tab = createBottomTabNavigator();
 const TabList = [

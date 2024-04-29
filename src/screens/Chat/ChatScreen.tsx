@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, TextInput, Button, FlatList, TouchableOpacity, KeyboardAvoidingView, Platform, Image, Dimensions, ScrollView } from 'react-native';
 import styles from './styles';
-import { ChatScreenProps } from 'src/navigation/NavigationTypes';
-import ChatServices from 'src/services/apiclient/ChatServices';
-import { FamilyServices } from 'src/services/apiclient';
+import { ChatScreenProps } from '../../navigation/NavigationTypes';
+import ChatServices from '../../services/apiclient/ChatServices';
+import { FamilyServices } from '../../services/apiclient';
 import { AxiosResponse } from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as FileSystem from 'expo-file-system';

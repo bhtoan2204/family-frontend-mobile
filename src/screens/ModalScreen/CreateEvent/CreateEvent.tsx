@@ -8,8 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import CalendarServices from 'src/services/apiclient/CalendarService';
-import {CreateEventScreenProps} from 'src/navigation/NavigationTypes';
+import {CreateEventScreenProps} from '../../../navigation/NavigationTypes';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 

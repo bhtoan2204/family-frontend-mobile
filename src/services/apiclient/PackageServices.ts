@@ -1,8 +1,8 @@
 import axios, {AxiosResponse} from 'axios';
 import instance from '../httpInterceptor';
 import {PackageUrl} from '../urls';
-import LocalStorage from 'src/store/localstorage';
-import {ERROR_TEXTS} from 'src/constants';
+import LocalStorage from '../../store/localstorage';
+import {ERROR_TEXTS} from '../../constants';
 import baseUrl from '../urls/baseUrl';
 
 const PackageServices = {

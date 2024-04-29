@@ -1,4 +1,4 @@
-package com.mobile_shell
+package com.exampe.mobile_shell
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

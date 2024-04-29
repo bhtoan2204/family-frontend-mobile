@@ -1,7 +1,7 @@
 import React from 'react';
 import {SafeAreaView, View, Image, Text, TouchableOpacity} from 'react-native';
 import styles from './styles';
-import {HomeTabProps, SignupScreenProps} from 'src/navigation/NavigationTypes';
+import {HomeTabProps, SignupScreenProps} from '../../navigation/NavigationTypes';
 
 type CombinedScreenProps = SignupScreenProps & HomeTabProps;
 

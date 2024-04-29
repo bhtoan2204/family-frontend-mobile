@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Animated, View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
-import { FamilyServices } from 'src/services/apiclient';
+import { FamilyServices } from '../../services/apiclient';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Feather as FeatherIcon } from '@expo/vector-icons';
-import { ViewAllFamilyScreenProps } from 'src/navigation/NavigationTypes';
+import { ViewAllFamilyScreenProps } from '../../navigation/NavigationTypes';
 import styles from './styles';
 
 type Family = {

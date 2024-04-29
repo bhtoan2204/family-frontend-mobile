@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {View } from 'react-native';
 import * as Notifications from 'expo-notifications';
-import { getSocket } from "src/services/apiclient/Socket";
+import { getSocket } from "../../services/apiclient/Socket";
 import { AxiosResponse } from 'axios';
-import { FamilyServices } from 'src/services/apiclient';
+import { FamilyServices } from '../../services/apiclient';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCurrentNavigation } from 'src/redux/slices/NavigationSlice';
-import { selectProfile } from 'src/redux/slices/ProfileSclice';
+import { selectCurrentNavigation } from '../../redux/slices/NavigationSlice';
+import { selectProfile } from '../../redux/slices/ProfileSclice';
 
 interface Member {
   id_user: string;

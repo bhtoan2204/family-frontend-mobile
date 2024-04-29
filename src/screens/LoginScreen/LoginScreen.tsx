@@ -14,21 +14,21 @@ import {
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import FacebookImage from 'src/assets/images/facebook.png';
-import GoogleImage from 'src/assets/images/google.png';
-import CustomButton from 'src/components/Button';
-import {COLORS, TEXTS} from 'src/constants';
+import FacebookImage from '../../assets/images/facebook.png';
+import GoogleImage from '../../assets/images/google.png';
+import CustomButton from '../../components/Button';
+import {COLORS, TEXTS} from '../../constants';
 import {
   HomeTabProps,
   LandingPageScreenProps,
   SignupScreenProps,
-} from 'src/navigation/NavigationTypes';
-import {AuthServices} from 'src/services/apiclient';
-import {AuthUrl} from 'src/services/urls';
-import LocalStorage from 'src/store/localstorage';
+} from '../../navigation/NavigationTypes';
+import {AuthServices} from '../../services/apiclient';
+import {AuthUrl} from '../../services/urls';
+import LocalStorage from '../../store/localstorage';
 import * as Yup from 'yup';
 import styles from './styles';
-import { setCurrentNavigation } from 'src/redux/slices/NavigationSlice';
+import { setCurrentNavigation } from '../../redux/slices/NavigationSlice';
 import { useDispatch } from 'react-redux';
 
 interface FormValues {

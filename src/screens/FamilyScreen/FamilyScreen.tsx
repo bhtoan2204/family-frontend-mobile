@@ -3,9 +3,8 @@ import { Text, View, TouchableOpacity, Alert, SafeAreaView, Dimensions, FlatList
 import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { FamilyServices } from 'src/services/apiclient';
-import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
-import { COLORS, TEXTS } from 'src/constants';
+import { FamilyServices } from '../../services/apiclient';
+import { ViewFamilyScreenProps } from '../../navigation/NavigationTypes';
 import styles from './styles';
 import BottomSheet from './BottomSheet'; 
 

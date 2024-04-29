@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, View, TextInput, StyleSheet } from 'react-native';
 import { Button, Text, Card } from 'react-native-paper';
-import { UpdateEventScreenProps } from 'src/navigation/NavigationTypes';
+import { UpdateEventScreenProps } from '../../../navigation/NavigationTypes';
 import styles from './styles'; // Import styles file here
-import CalendarServices from 'src/services/apiclient/CalendarService';
+import CalendarServices from '../../../services/apiclient/CalendarService';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route }) => {

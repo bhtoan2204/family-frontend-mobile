@@ -1,12 +1,12 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import CreateFamilyScreen from 'src/screens/CreateFamilyScreen';
-import InviteNewMemberScreen from 'src/screens/InviteNewMemberScreen';
-import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
-import ViewFamilyScreen from 'src/screens/FamilyScreen';
-import ViewAllMemberScreen from 'src/screens/AllMember';
-import AddMemberScreen from 'src/screens/AddEditFamilyMemberScreen';
+import CreateFamilyScreen from '../../screens/CreateFamilyScreen';
+import InviteNewMemberScreen from '../../screens/InviteNewMemberScreen';
+import ViewAllFamilyScreen from '../../screens/ViewAllFamily';
+import ViewFamilyScreen from '../../screens/FamilyScreen';
+import ViewAllMemberScreen from '../../screens/AllMember';
+import AddMemberScreen from '../../screens/AddEditFamilyMemberScreen';
 import { AddEditFamilyMemberScreenProps, AllMemberScreenProps, ContactScreenProps, CreateFamilyScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
-import ContactListScreen from 'src/screens/ContactList/ContactList';
+import ContactListScreen from '../../screens/ContactList/ContactList';
 const Stack = createNativeStackNavigator();
 
 const FamilyStack = () => {

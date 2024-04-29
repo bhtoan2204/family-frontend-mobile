@@ -9,11 +9,11 @@ import {
 } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import {PackageServices} from 'src/services/apiclient';
+import {PackageServices} from '../../services/apiclient';
 import BottonSheetContent from './BottomSheetContent';
 import styles from './styles';
-import {PurchasedScreenProps,ViewAllFamilyScreenProps,} from 'src/navigation/NavigationTypes';
-import { Profile } from 'src/redux/slices/ProfileSclice';
+import {PurchasedScreenProps,ViewAllFamilyScreenProps,} from '../../navigation/NavigationTypes';
+import { Profile } from '../../redux/slices/ProfileSclice';
 import { useDispatch } from 'react-redux';
 
 type Profile = {

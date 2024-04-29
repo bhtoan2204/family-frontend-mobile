@@ -2,7 +2,7 @@ import {MouseEvent, useEffect, useRef} from 'react';
 import {AccessibilityState, Animated, GestureResponderEvent, TouchableOpacity} from 'react-native';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from './styles';
-import { COLORS } from 'src/constants';
+import { COLORS } from '../../constants';
 
 interface TabButtonProps {
   item: {

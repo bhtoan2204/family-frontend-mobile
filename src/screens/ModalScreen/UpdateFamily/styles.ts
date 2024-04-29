@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { COLORS } from 'src/constants';
+import { COLORS } from '../../../constants';
 
 const styles = StyleSheet.create({
     modalContainer: {

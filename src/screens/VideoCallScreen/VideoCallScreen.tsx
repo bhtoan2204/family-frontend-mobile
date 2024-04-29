@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Button } from 'react-native';
 import { mediaDevices, RTCSessionDescription } from 'react-native-webrtc'; 
-import { CallVideoProps } from 'src/navigation/NavigationTypes';
-import { getSocket } from 'src/services/apiclient/Socket';
-
+import { CallVideoProps } from '../../navigation/NavigationTypes';
+import { getSocket } from '../../services/apiclient/Socket';
 const VideoCallScreen = ({ navigation, route }: CallVideoProps) => {
     const [localStream, setLocalStream] = useState<MediaStream | null>(null);
     const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null); 
