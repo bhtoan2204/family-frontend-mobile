@@ -5,7 +5,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import NavigationContainer from 'src/navigation';
 import { store } from 'src/redux/store';
 import Notification from 'src/screens/Notifications';
-import * as BackgroundFetch from 'expo-background-fetch';
 import { connectSocket } from 'src/services/apiclient/Socket';
 
 
