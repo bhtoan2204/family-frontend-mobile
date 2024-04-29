@@ -341,7 +341,8 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
           </View>
         ))}
       </Animated.ScrollView>
-    </View> */}
+    </View> 
+   ) }
 export default ViewAllFamilyScreen;
 
 
