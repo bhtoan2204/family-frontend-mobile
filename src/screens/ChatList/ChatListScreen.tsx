@@ -37,7 +37,6 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const { id_user } = route.params;
 
   const formatDateTime = (dateTime: Date) => {
     const today = new Date();
@@ -84,12 +83,12 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
     fetchData(currentPage);
   }, [currentPage]);
 
-  const handlePressChat = (id_user?: string, receiverId?: string) => {
-    navigation.navigate('ChatUser', { id_user: id_user, receiverId: receiverId });
+  const handlePressChat = (receiverId?: string) => {
+    navigation.navigate('ChatUser', {receiverId: receiverId });
   };
 
   const renderChatItem = ({ item }: { item: ChatItem }) => (
-    <TouchableOpacity onPress={() => handlePressChat(id_user,item.receiverId)}>
+    <TouchableOpacity onPress={() => handlePressChat(item.receiverId)}>
       <View style={styles.chatItem}>
         <View style={styles.avatarContainer}>
           {item.user.avatar ? (

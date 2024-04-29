@@ -12,6 +12,8 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import ImageView from "react-native-image-viewing";
 import { Keyboard } from 'react-native';
 import { getSocket } from '../../services/apiclient/Socket';
+import { useSelector } from 'react-redux';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
 
 interface Message {
   senderId: string;
@@ -31,11 +33,13 @@ interface Member {
 }
 
 const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
+  const profile = useSelector(selectProfile);
+
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [receiver, setReceiver] = useState<Member>();
-  const { id_user, receiverId } = route.params || {};
+  const { receiverId } = route.params || {};
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [isTextInputEmpty, setIsTextInputEmpty] = useState(true);
@@ -177,7 +181,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
 
   useEffect(() => {
     fetchMessages();
-    fetchMember(receiverId, id_user);
+    fetchMember(receiverId, profile.id_user);
     setIsTextInputEmpty(message.trim() === '');
 
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -245,7 +249,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
         renderItem={({ item, index }) => (
           <View style={[
             styles.messageContainer,
-            item.senderId === id_user ? styles.senderMessageContainer : styles.receiverMessageContainer
+            item.senderId === profile.id_user ? styles.senderMessageContainer : styles.receiverMessageContainer
           ]}>
             {item.type === 'photo' ? (
               <TouchableOpacity onPress={() => handleImagePress(item)}>

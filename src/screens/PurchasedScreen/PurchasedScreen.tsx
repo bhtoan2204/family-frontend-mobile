@@ -7,6 +7,8 @@ import styles from './styles';
 import { PackageServices, FamilyServices } from 'src/services/apiclient';
 import { PurchasedScreenProps } from 'src/navigation/NavigationTypes';
 import { FamilyStackProps } from 'src/navigation/NavigationTypes';
+import { useSelector } from 'react-redux';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
 type Purchased = {
   id_order: number;
   id_package: number;
@@ -20,7 +22,7 @@ type Purchased = {
 };
 
 const PurchasedScreen = ({ navigation, route }: PurchasedScreenProps) => {
-  const { id_user } = route.params || {};
+  const profile = useSelector(selectProfile);
   const [value, setValue] = useState(0);
   const [purchasedItems, setPurchasedItems] = useState<Purchased[]>([]);
 
@@ -39,7 +41,7 @@ const PurchasedScreen = ({ navigation, route }: PurchasedScreenProps) => {
 
   const handleViewAllPackage = () => {
     const id_family = undefined;
-    navigation.navigate('PackStack', { screen: 'ViewAllPackage', params: { id_user: id_user, id_family: 0}})  };
+    navigation.navigate('PackStack', { screen: 'ViewAllPackage', params: {id_family: 0}})  };
 
   const handleExtendFamily = (pkg: Purchased) => {
     console.log('Extend family for package:', pkg);
@@ -104,7 +106,7 @@ const PurchasedScreen = ({ navigation, route }: PurchasedScreenProps) => {
                     {pkg.order_family_id ? (
                       <>
                         <TouchableOpacity
-                          onPress={() => navigation.navigate('FamilyStack', { screen: 'ViewFamily', params: { id_user: id_user, id_family: pkg.order_family_id}})}>
+                          onPress={() => navigation.navigate('FamilyStack', { screen: 'ViewFamily', params: { id_family: pkg.order_family_id}})}>
                             
                           <View style={styles.viewButton}>
                             <Text style={styles.viewfamilybtn}>View details</Text>
@@ -112,7 +114,7 @@ const PurchasedScreen = ({ navigation, route }: PurchasedScreenProps) => {
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                          onPress={() => navigation.navigate('PackStack', { screen: 'ViewAllPackage', params: { id_user: id_user, id_family: pkg.order_family_id}})}>
+                          onPress={() => navigation.navigate('PackStack', { screen: 'ViewAllPackage', params: {  id_family: pkg.order_family_id}})}>
                           <View style={styles.viewButton}>
                             <Text style={styles.viewfamilybtn}>Extend family</Text>
                           </View>                        
@@ -120,7 +122,7 @@ const PurchasedScreen = ({ navigation, route }: PurchasedScreenProps) => {
                       </>
                     ) : (
                       <TouchableOpacity
-                      onPress={() => navigation.navigate('FamilyStack', {  screen: 'CreateFamily', params: { id_user: id_user, id_order: pkg.id_order }})}>
+                      onPress={() => navigation.navigate('FamilyStack', {  screen: 'CreateFamily', params: { id_order: pkg.id_order }})}>
                       <View style={styles.viewButton}>
                             <Text style={styles.viewfamilybtn}>Create family</Text>
                           </View>                        

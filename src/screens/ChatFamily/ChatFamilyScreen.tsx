@@ -11,6 +11,7 @@ import { ChatFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import styles from './styles';
 import { Keyboard } from 'react-native';
 import { getSocket } from '../../services/apiclient/Socket';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
 
 interface Message {
   senderId: string;
@@ -32,6 +33,7 @@ interface Family {
 }
 
 const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
+  const profile = useSelector(selectProfile);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -41,7 +43,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   const [images, setImages] = useState<string[]>([]);
   const [isTextInputEmpty, setIsTextInputEmpty] = useState(true);
   const dispatch = useDispatch();
-  const { id_user, id_family } = route.params || {};
+  const { id_family } = route.params || {};
   const [memberLookup, setMemberLookup] = useState<{ [key: string]: Member }>({});
   const [refreshFlatList, setRefreshFlatList] = useState(false); 
   const [keyboardIsOpen, setKeyboardIsOpen] = useState(false); 

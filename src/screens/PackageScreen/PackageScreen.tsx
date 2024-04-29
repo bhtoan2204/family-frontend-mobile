@@ -10,6 +10,8 @@ import {PackageServices} from 'src/services/apiclient';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import { ViewAllPackageScreenProps } from 'src/navigation/NavigationTypes';
 import {RouteProp} from '@react-navigation/native';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
+import { useSelector } from 'react-redux';
 type Package = {
   id_package: number;
   name: string;
@@ -20,10 +22,12 @@ type Package = {
 
 const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
   const [value, setValue] = React.useState(0);
-  const {id_user, id_family} = route.params || {};
+  const {id_family} = route.params || {};
   const [selectedPackage, setSelectedPackage] = useState<null | Package>(null);
   const [selectedMount, setSelectedMount] = useState<number>(0);
   const [packages, setPackages] = useState<Package[]>([]);
+  const profile = useSelector(selectProfile);
+
   const handleSelectPackage = (
     id_user?: string,
     id_family?: number,
@@ -31,7 +35,6 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
     amount?: number,
   ) => {
     navigation.navigate('OrderDetailScreen', {
-      id_user,
       id_family,
       id_package,
       amount,
@@ -102,7 +105,7 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
             onPress={() =>
               selectedPackage &&
               handleSelectPackage(
-                id_user,
+                profile.id_user,
                 id_family,
                 selectedPackage.id_package,
                 selectedMount,

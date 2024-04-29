@@ -7,16 +7,15 @@ import {
   TextInput,
   Image,
   Modal,
-  Alert,
-  Dimensions,
 } from 'react-native';
 import {FamilyServices} from 'src/services/apiclient';
-import RBSheet from 'react-native-raw-bottom-sheet';
 import {Feather as FeatherIcon, MaterialIcons} from '@expo/vector-icons';
 import {ViewAllFamilyScreenProps} from 'src/navigation/NavigationTypes';
 import styles from './styles';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {LinearGradient} from 'expo-linear-gradient';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
+import { useDispatch, useSelector } from 'react-redux';
 
 type Family = {
   id_family?: number;
@@ -34,7 +33,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
   navigation,
   route,
 }) => {
-  const {id_user} = route.params || {};
+  const profile = useSelector(selectProfile);
   const [families, setFamilies] = useState<Family[]>([]);
   const scrollY = useRef(new Animated.Value(0)).current;
   const [searchTerm, setSearchTerm] = useState('');
@@ -224,8 +223,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                       <TouchableOpacity
                         onPress={() =>
                           navigation.navigate('ViewFamily', {
-                            id_user,
-                            id_family: family.id_family,
+                            id_family: family.id_family
                           })
                         }>
                         <Text
@@ -339,3 +337,5 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
 };
 
 export default ViewAllFamilyScreen;
+
+

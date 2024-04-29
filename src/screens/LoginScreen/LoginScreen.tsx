@@ -33,7 +33,6 @@ import {AuthUrl} from 'src/services/urls';
 import LocalStorage from 'src/store/localstorage';
 import * as Yup from 'yup';
 import styles from './styles';
-import {setCurrentNavigation} from 'src/redux/slices/NavigationSlice';
 import {useDispatch} from 'react-redux';
 
 interface FormValues {
@@ -48,11 +47,8 @@ type CombinedScreenProps = SignupScreenProps &
 const LoginScreen = ({navigation}: CombinedScreenProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(setCurrentNavigation(navigation));
-  }, [navigation]);
+
 
   const handleLogin = async (
     values: FormValues,

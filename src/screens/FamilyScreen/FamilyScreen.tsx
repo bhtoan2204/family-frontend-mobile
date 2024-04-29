@@ -19,6 +19,8 @@ import styles from './styles';
 import BottomSheet from './BottomSheet';
 import {MaterialCommunityIcons, MaterialIcons} from '@expo/vector-icons';
 import {LinearGradient} from 'expo-linear-gradient';
+import { useSelector } from 'react-redux';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
 
 type Family = {
   id_family: number;
@@ -28,13 +30,14 @@ type Family = {
 };
 
 const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
-  const {id_user, id_family} = route.params || {};
+  const {id_family} = route.params || {};
   const [family, setFamily] = useState<Family[]>([]);
   const bottomSheetRef = useRef<RBSheet>(null);
   const allMemberRef = useRef<RBSheet>(null);
   const screenHeight = Dimensions.get('screen').height;
   const [selectedButton, setSelectedButton] = useState<number | null>(null);
   const buttons = ['Members', 'Calendar', 'Education'];
+  const profile = useSelector(selectProfile);
 
   const handleGetFamily = async () => {
     try {
@@ -78,7 +81,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const handleChatPress = () => {
     navigation.navigate('ChatStack', {
       screen: 'ChatFamily',
-      params: {id_user: id_user, id_family: id_family},
+      params: { id_family: id_family},
     });
   };
   const handleEducationPress = () => {};
@@ -89,10 +92,9 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     });
   };
   const handleOpenAllMemberModal = (
-    id_user: string | undefined,
     id_family: number,
   ) => {
-    navigation.navigate('AllMember', {id_user, id_family});
+    navigation.navigate('AllMember', {id_family});
   };
 
   useEffect(() => {
@@ -221,7 +223,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         <View style={styles.row}>
           <TouchableOpacity
             onPress={() =>
-              handleOpenAllMemberModal(id_user, family[0].id_family)
+              handleOpenAllMemberModal( family[0].id_family)
             }
             style={styles.settingItem}>
             <View style={styles.iconContainer}>
@@ -293,7 +295,6 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           },
         }}>
         <BottomSheet
-          id_user={id_user}
           id_family={id_family}
           name={family[0]?.name}
           description={family[0]?.description}

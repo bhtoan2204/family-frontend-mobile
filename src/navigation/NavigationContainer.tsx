@@ -20,6 +20,7 @@ const Navigation = () => {
           screenOptions={{
             header: () => null,
           }}>
+
           <Stack.Screen name="AuthStack" component={AuthStack} />
           <Stack.Screen name="HomeTab" component={HomeTab} />
           <Stack.Screen name="FamilyStack" component={FamilyStack} />

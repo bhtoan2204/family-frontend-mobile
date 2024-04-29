@@ -15,16 +15,12 @@ export type RootParamList = {
 
 export type ChatStackParamList = {
   ChatFamily: {
-    id_user: string|undefined;
     id_family: number|undefined;
   };
   ChatUser: {
-    id_user: string|undefined;
     receiverId: string|undefined;
   };
-  ChatList: {
-    id_user: string |undefined;
-  };
+  ChatList: undefined;
 
   CallVideo: {
     receiverId: string | undefined;
@@ -85,31 +81,26 @@ export type AuthStackParamList = {
 
 export type CalendarStackParamList = {
   CalendarScreen: {
-    id_family: number;
+    id_family: number | undefined;
   };
   CreateEvent: {
-    id_family: number;
+    id_family: number | undefined;
   };
 };
 
 export type FamilyStackParamList = {
-  ViewAllFamily: {
-    id_user: string | undefined;
-  };
+  ViewAllFamily: undefined;
   CreateFamily: {
-    id_user: string | undefined;
     id_order: number | undefined;
   };
 
   InviteMembers: undefined;
 
   ViewFamily: {
-    id_user: string | undefined;
     id_family: number | undefined;
   };
 
   AllMember: {
-    id_user: string | undefined;
     id_family: number | undefined;
   };
   Contact: {
@@ -118,15 +109,11 @@ export type FamilyStackParamList = {
 };
 
 export type PackStackParamList = {
-  ViewAllPurchased: {
-    id_user: string | undefined;
-  };
+  ViewAllPurchased: undefined;
   ViewAllPackage: {
-    id_user: string | undefined;
     id_family: number | undefined;
   };
   BankInfoScreen: {
-    id_user: string | undefined;
     id_family: number | undefined;
     id_package: number | undefined;
     bankCode: string | undefined;
@@ -135,7 +122,6 @@ export type PackStackParamList = {
     method: string | undefined;
   };
   OrderDetailScreen: {
-    id_user: string | undefined;
     id_family: number | undefined;
     id_package: number | undefined;
     amount: number | undefined;
@@ -385,11 +371,7 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 
 export interface HomeScreenProps {
   navigation: HomeScreenNavigationProp;
-  route: {
-    params: {
-      id_user: string | undefined;
-    };
-  };
+  route: RouteProp<HomeTabParamList, 'HomeScreen'>;
 }
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
@@ -453,7 +435,6 @@ export type ModelScreenParamsList = {
   ChangePassword: undefined;
   MainProfile: undefined;
   UpdateFamily: {
-    id_user: string;
     id_family: number;
     name: string;
     description: string;

@@ -62,24 +62,20 @@ const HomeScreen = ({
 
   const handlePackage = () => {
     navigation.navigate('PackStack', {
-      screen: 'ViewAllPurchased',
-      params: {id_user: profile?.id_user || ''},
+      screen: 'ViewAllPurchased'
     });
   };
   const handleFamily = () => {
     navigation.navigate('FamilyStack', {
-      screen: 'ViewAllFamily',
-      params: {id_user: profile?.id_user || ''},
+      screen: 'ViewAllFamily'
     });
   };
   const handleChat = () => {
     navigation.navigate('ChatStack', {
-      screen: 'ChatList',
-      params: {id_user: profile?.id_user || ''},
+      screen: 'ChatList'
     });
   };
 
-  // const handleProfile;
   const handleGetProfile = async () => {
     try {
       const result = await PackageServices.getProfile();

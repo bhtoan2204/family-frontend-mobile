@@ -7,13 +7,12 @@ import UpdateFamilyScreen from '../ModalScreen/UpdateFamily';
 const Stack = createNativeStackNavigator();
 
 interface BottomSheetProps {
-    id_user?: string;
     id_family?: number;
     name?: string;
     description?: string;
   }
   
-  const BottomSheet: React.FC<BottomSheetProps> = ({ id_user, id_family, name, description }) => {
+  const BottomSheet: React.FC<BottomSheetProps> = ({ id_family, name, description }) => {
 
   return (
     <SafeAreaProvider>
@@ -25,7 +24,7 @@ interface BottomSheetProps {
             }}
             name="UpdateFamily"
             component={UpdateFamilyScreen}
-            initialParams={{ id_user, id_family, name, description }} 
+            initialParams={{  id_family, name, description }} 
             
           />
    
