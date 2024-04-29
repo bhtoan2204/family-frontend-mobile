@@ -15,6 +15,7 @@ import EducationImage from 'src/assets/images/education.png';
 import ChatImage from 'src/assets/images/speak.png';
 import MemberImage from 'src/assets/images/diversity.png';
 import DeleteImage from 'src/assets/images/remove.png';
+import HouseHoldImage from 'src/assets/images/household.png';
 const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const { id_user, id_family } = route.params || {};
   const [family, setFamily] = useState<Family>();
@@ -82,6 +83,9 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   };
   const handleNavigateGuildLine = () => {
     navigation.navigate('GuildLine', { id_family: id_family })
+  }
+  const handleNavigateHouseHold = () => {
+    navigation.navigate('HouseHold', { id_family: id_family })
   }
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -164,7 +168,18 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
                     source={GuildLineImage}
                     resizeMode="contain"
                   />
-                  <Text className='ml-4 text-lg' >Guideline </Text>
+                  <Text className='ml-4 text-lg' >Guideline Items </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleNavigateHouseHold()} >
+                <View className='flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white'>
+
+                  <Image
+                    className="h-12 w-12"
+                    source={HouseHoldImage}
+                    resizeMode="contain"
+                  />
+                  <Text className='ml-4 text-lg' >HouseHold Appliances </Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleDeleteFamily(family!.id_family)} >
