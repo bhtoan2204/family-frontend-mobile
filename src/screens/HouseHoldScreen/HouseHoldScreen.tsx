@@ -4,7 +4,9 @@ import { HouseHoldCategoryScreenProps, HouseHoldScreenProps } from 'src/navigati
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants';
 import ImageComponent from 'src/components/Image/Image';
-import FamilyImage from 'src/assets/images/diversity.png';
+import FamilyImage from 'src/assets/images/household.png';
+import AddHouseHoldItemSheet from './AddHouseHoldItemSheet/AddHouseHoldItemSheet';
+import RBSheet from 'react-native-raw-bottom-sheet';
 const household_category_dat = [
     {
         "id_category": 1,
@@ -47,8 +49,7 @@ const household_items = [
         "item_name": "Máy giặt",
         "item_description": "máy giặt toshiba nhà tao",
         "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713451417048",
-        "id_category": 1,
-        "description": "máy giặt toshiba nhà tao"
+        "id_category": 1
     },
     {
         "id_household_item": 5,
@@ -56,8 +57,7 @@ const household_items = [
         "item_name": "Hủ muối tiêu",
         "item_description": "ai mà ăn muối tiêu chanh này sẽ bị ám suốt đời",
         "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713451468168",
-        "id_category": 1,
-        "description": "ai mà ăn muối tiêu chanh này sẽ bị ám suốt đời"
+        "id_category": 1
     },
     {
         "id_household_item": 6,
@@ -65,8 +65,7 @@ const household_items = [
         "item_name": "tủ lạnh cùi",
         "item_description": "cái tủ lạnh cùi vãi",
         "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713454442646",
-        "id_category": 1,
-        "description": "cái tủ lạnh cùi vãi"
+        "id_category": 1
     },
     {
         "id_household_item": 7,
@@ -74,8 +73,7 @@ const household_items = [
         "item_name": "tủ lạnh cùi",
         "item_description": "cái tủ lạnh cùi vãi",
         "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713454456027",
-        "id_category": 1,
-        "description": "cái tủ lạnh cùi vãi"
+        "id_category": 1
     },
     {
         "id_household_item": 8,
@@ -83,8 +81,7 @@ const household_items = [
         "item_name": "tủ lạnh cùi",
         "item_description": "cái tủ lạnh cùi vãi",
         "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713454463179",
-        "id_category": 1,
-        "description": "cái tủ lạnh cùi vãi"
+        "id_category": 1
     },
     {
         "id_household_item": 9,
@@ -92,8 +89,7 @@ const household_items = [
         "item_name": "tủ lạnh cùi",
         "item_description": "cái tủ lạnh cùi vãi",
         "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713454518267",
-        "id_category": 1,
-        "description": "cái tủ lạnh cùi vãi"
+        "id_category": 1
     },
     {
         "id_household_item": 10,
@@ -101,8 +97,7 @@ const household_items = [
         "item_name": "tủ lạnh cùi",
         "item_description": "cái tủ lạnh cùi vãi",
         "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713454576319",
-        "id_category": 1,
-        "description": "cái tủ lạnh cùi vãi"
+        "id_category": 1
     },
     {
         "id_household_item": 11,
@@ -110,13 +105,21 @@ const household_items = [
         "item_name": "eulaaaaa",
         "item_description": "đây là bé eula dễ thương",
         "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713502246879",
-        "id_category": 1,
-        "description": "cái tủ lạnh cùi vãi"
+        "id_category": 1
+    },
+    {
+        "id_household_item": 13,
+        "id_family": 96,
+        "item_name": "Adudu",
+        "item_description": "lalala",
+        "item_imageurl": null,
+        "id_category": 2
     }
 ]
 
 const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
+    const refRBSheet = React.useRef<RBSheet>(null);
     const [householdCategory, setHouseholdCategory] = React.useState<HouseHoldCategoryInterface[]>(household_category_dat)
     const [householdItems, setHouseholdItems] = React.useState<HouseHoldItemInterface[]>(household_items)
     const [choosenCategoryIndex, setChoosenCategoryIndex] = React.useState<number>(0)
@@ -127,23 +130,19 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
         return <View className='mt-2'>
             {
                 categoryItems.map(item => (
-                    <TouchableOpacity key={item.id_household_item} onPress={() => { }} className='bg-white m-2'>
+                    <TouchableOpacity key={item.id_household_item} onPress={() => {
+                        navigation.navigate('HouseHoldCategoryDetail', {
+                            id_family: id_family,
+                            id_item: item.id_household_item,
+                            id_category: item.id_category
+                        })
+                    }} className='bg-white my-2'>
 
                         <View className='m-4  flex-row items-center'>
-                            <ImageComponent imageUrl={item.item_imageurl} style={{ width: 70, height: 70 }} defaultImage={FamilyImage} className='rounded-lg ' />
-                            <View className='flex-1'>
-                                <Text className='ml-3' style={{
-                                    fontSize: 17, fontWeight: '400', color: COLORS.gray
-                                }}>
-                                    {item.item_name}
-                                </Text>
-                                <View className='line-clamp-1'>
-                                    <Text className='ml-3 ' style={{
-                                        fontSize: 17, fontWeight: '400', color: COLORS.gray,
-                                    }}  >
-                                        {item.description}
-                                    </Text>
-                                </View>
+                            <ImageComponent imageUrl={item.item_imageurl || ""} style={{ width: 70, height: 70 }} defaultImage={FamilyImage} className='rounded-lg ' />
+                            <View className='flex-1 ml-4'>
+                                <Text className='font-semibold text-lg' style={{ color: COLORS.primary }}>{item.item_name}</Text>
+                                <Text className='text-base text-gray-500' >{item.item_description}</Text>
                             </View>
                         </View>
 
@@ -162,7 +161,7 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
                 </TouchableOpacity>
                 <View className='mr-3'>
                     <TouchableOpacity onPress={() => {
-
+                        refRBSheet.current?.open()
 
                     }} >
                         {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
@@ -194,7 +193,7 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
                     {showCategoryItems()}
                 </View>
             </ScrollView>
-
+            <AddHouseHoldItemSheet refRBSheet={refRBSheet} setHouseHoldItem={setHouseholdItems} />
         </View>
     )
 }

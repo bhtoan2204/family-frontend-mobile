@@ -4,6 +4,5 @@ interface HouseHoldItemInterface {
   item_name: string;
   id_household_item: number;
   item_description: string;
-  item_imageurl: string;
-  description: string;
+  item_imageurl?: string | null;
 }
