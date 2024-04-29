@@ -52,56 +52,6 @@ const CreateEventModal: React.FC<CreateEventScreenProps> = ({
     }
   };
 
-  // return (
-  //     <Modal
-  //         animationType="slide"
-  //         transparent={true}
-  //         visible={true}
-  //         onRequestClose={() => navigation.goBack()}
-  //     >
-  //         <View style={styles.container}>
-  //             <View style={styles.headerfile}>
-  //                 <TouchableOpacity onPress={() => navigation.goBack()}>
-  //                     <Icon name="arrow-back" size={30} style={styles.backButton} />
-  //                 </TouchableOpacity>
-  //                 <Text style={styles.headerTitle}>CREATE EVENT</Text>
-  //             </View>
-
-  //             <Text>Title: </Text>
-  //             <TextInput
-  //                 style={styles.input}
-  //                 placeholder="Title"
-  //                 value={title}
-  //                 onChangeText={setTitle}
-  //             />
-  //             <Text>Description: </Text>
-
-  //             <TextInput
-  //                 style={styles.input}
-  //                 placeholder="Description"
-  //                 value={description}
-  //                 onChangeText={setDescription}
-  //             />
-  //             <Text>Date time: </Text>
-
-  //             <DateTimePicker
-  //                 value={chosenDate}
-  //                 mode="datetime"
-  //                 display="default"
-  //                 onChange={handleDateChange}
-  //             />
-  //             <View style={ styles.containerBtn}>
-  //                 <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-  //                     <Text>Submit</Text>
-  //                 </TouchableOpacity>
-
-  //                 {/* <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-  //                     <Text>Close</Text>
-  //                 </TouchableOpacity> */}
-  //             </View>
-  //         </View>
-  //     </Modal>
-  // );
   return (
     // <Modal
     //   animationType="none"
@@ -176,7 +126,7 @@ const CreateEventModal: React.FC<CreateEventScreenProps> = ({
             <View style={styles.row}>
               <Text style={styles.headerTitle}>Add New Event</Text>
               <TouchableOpacity onPress={() => navigation.goBack()}>
-                <Icon name="arrow-back" size={30} style={styles.backButton} />
+                <Icon name="close" size={30} style={styles.backButton} />
               </TouchableOpacity>
             </View>
             <View>
@@ -188,6 +138,36 @@ const CreateEventModal: React.FC<CreateEventScreenProps> = ({
                 onChangeText={setTitle}
               />
             </View>
+          </View>
+          <View
+            style={[
+              styles.column,
+              {
+                backgroundColor: '#ffffff',
+                borderBottomWidth: 1,
+                borderBottomColor: '#ccc',
+                paddingVertical: 10,
+                //alignItems: 'center',
+              },
+            ]}>
+            <View style={[styles.row, {alignItems: 'center'}]}>
+              <MaterialCommunityIcons
+                name="playlist-edit"
+                size={30}
+                style={{color: 'gray'}}
+              />
+              <Text style={[{right: 250}, {fontSize: 16}, {color: 'gray'}]}>
+                Description
+              </Text>
+            </View>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter description"
+              value={description}
+              onChangeText={setDescription}
+              multiline={true}
+              numberOfLines={4}
+            />
           </View>
           <View
             style={[
@@ -246,6 +226,13 @@ const CreateEventModal: React.FC<CreateEventScreenProps> = ({
               <Picker.Item label="Monthly" value="monthly" />
               <Picker.Item label="Yearly" value="yearly" />
             </Picker> */}
+          </View>
+          <View style={[styles.formAction, {paddingVertical: 10}]}>
+            <TouchableOpacity onPress={handleSubmit}>
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>Submit</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

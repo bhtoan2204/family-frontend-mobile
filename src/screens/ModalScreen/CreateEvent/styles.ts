@@ -125,8 +125,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     // backgroundColor: '#007bff',
     // borderColor: '#007bff',
-    backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary,
+    backgroundColor: '#66c0f4',
+    borderColor: '#66c0f4',
   },
   btnText: {
     fontSize: 18,
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: '#16202D',
   },
   modalContainer: {
     height: 830, // This will make the container take up 90% of the screen height
