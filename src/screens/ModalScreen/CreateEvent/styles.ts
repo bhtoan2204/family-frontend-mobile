@@ -32,17 +32,15 @@ const styles = StyleSheet.create({
   //     borderRadius: 5,
   //   },
   input: {
-    height: 50,
-    marginVertical: 10,
+    height: 40,
+    //marginVertical: 10,
     backgroundColor: '#fff',
     paddingHorizontal: 16,
     borderRadius: 12,
-    fontSize: 15,
+    fontSize: 25,
     fontWeight: '500',
-    color: '#222',
-    borderWidth: 1,
-    borderColor: '#C9D3DB',
-    borderStyle: 'solid',
+    color: '#333',
+    right: 10,
   },
   button: {
     backgroundColor: 'lightgray',
@@ -85,12 +83,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   // Style cho container của modal
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Màu nền với độ mờ
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 
   // Style cho phần header của modal
   modalHeader: {
@@ -104,7 +96,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc', // Màu viền dưới
   },
-
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  column: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
   // Style cho phần body của modal
   modalBody: {
     backgroundColor: '#ffffff', // Màu nền
@@ -134,6 +133,22 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     fontWeight: '600',
     color: '#fff',
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContainer: {
+    height: 830, // This will make the container take up 90% of the screen height
+    width: '100%', // This will make the container take up 90% of the screen width
+    backgroundColor: 'white',
+    borderTopLeftRadius: 30, // This will round the top left corner
+    borderTopRightRadius: 30, // This will round the top right corner
+    flexDirection: 'column',
+    top: 30,
+    padding: 20,
   },
 });
 
