@@ -6,10 +6,10 @@ import GuildLineService from 'src/services/apiclient/GuildLineService'
 import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants'
-import MemberIcon from 'src/assets/images/diversity.png'
+
 import RBSheet from 'react-native-raw-bottom-sheet'
 import AddGuildLineSheet from './AddGuildLineSheet/AddGuildLineSheet'
-import { Swipeable } from 'react-native-gesture-handler'
+
 import GuildlineItem from './GuildlineItem/GuildlineItem'
 const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
@@ -17,17 +17,26 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
     const [loading, setLoading] = React.useState(true);
     const refRBSheet = React.useRef<RBSheet>(null);
 
-    const fetchGuidelines = async () => {
-        try {
-            const response = await GuildLineService.getAllGuideLine(id_family!); // API call to fetch all guidelines
-            setGuidelines(response);
-            setLoading(false);
-        } catch (error) {
-            console.error('Error fetching guidelines:', error);
-            setLoading(false);
-        }
-    };
+
     useEffect(() => {
+        const fetchGuidelines = async () => {
+            try {
+                const response = await GuildLineService.getAllGuideLine(id_family!); // API call to fetch all guidelines
+                if (response) {
+                    setGuidelines(response);
+                }
+                else {
+                    setGuidelines([]);
+                }
+                // setGuidelines(response);
+                setLoading(false);
+
+                console.log('Guidelines:', response)
+            } catch (error) {
+                console.error('Error fetching guidelines:', error);
+                setLoading(false);
+            }
+        };
         fetchGuidelines();
     }, []);
 

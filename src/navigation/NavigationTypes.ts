@@ -114,6 +114,18 @@ export type FamilyStackParamList = {
     id_education_progress: number;
     id_subject: number;
   };
+  HouseHold: {
+    id_family: number | undefined;
+  };
+  HouseHoldCategory: {
+    id_family: number | undefined;
+    id_category: number;
+  };
+  HouseHoldCategoryDetail: {
+    id_family: number | undefined;
+    id_category: number;
+    id_item: number;
+  };
 };
 
 export type PackStackParamList = {
@@ -285,6 +297,36 @@ type SubjectDetailNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'SubjectDetail'
 >;
+
+type HouseHoldNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'HouseHold'
+>;
+
+type HouseHoldCategoryNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'HouseHoldCategory'
+>;
+
+type HouseHoldCategoryDetailNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'HouseHoldCategoryDetail'
+>;
+
+export interface HouseHoldScreenProps {
+  navigation: HouseHoldNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'HouseHold'>;
+}
+
+export interface HouseHoldCategoryScreenProps {
+  navigation: HouseHoldCategoryNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'HouseHoldCategory'>;
+}
+
+export interface HouseHoldCategoryDetailScreenProps {
+  navigation: HouseHoldCategoryDetailNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'HouseHoldCategoryDetail'>;
+}
 
 export interface SubjectDetailScreenProps {
   navigation: SubjectDetailNavigationProp;

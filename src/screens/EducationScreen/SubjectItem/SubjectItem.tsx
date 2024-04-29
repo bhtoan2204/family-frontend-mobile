@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, Dimensions } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { TouchableOpacity } from 'react-native'
 import RBSheet from 'react-native-raw-bottom-sheet'
 import { COLORS } from 'src/constants'
 import SubjectSheet from '../SubjectSheet/SubjectSheet'

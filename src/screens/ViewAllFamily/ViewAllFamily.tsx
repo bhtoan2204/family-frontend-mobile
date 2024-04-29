@@ -8,7 +8,7 @@ import styles from './styles';
 import { Family } from 'src/interface/family/family';
 import FamilyImage from 'src/assets/images/diversity.png';
 import { COLORS } from 'src/constants';
-
+import ImageComponent from 'src/components/Image/Image';
 
 const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({ navigation, route }) => {
   const { id_user } = route.params || {};
@@ -88,7 +88,8 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({ navigation, r
               return <TouchableOpacity key={index} onPress={() => navigation.navigate('ViewFamily', { id_user, id_family: family.id_family })}>
                 <View key={index} className=' mb-3 py-4 px-3 mx-3 rounded-lg border-[1px] border-[#d5d5d5] bg-[#FAFAFA] '>
                   <View className='flex flex-row w-full'>
-                    <Image source={family.avatar != null && family.avatar != "" ? { uri: family.avatar } : FamilyImage} style={{ width: 75, height: 75 }} className='rounded-lg' />
+                    <ImageComponent imageUrl={family.avatar || ""} style={{ width: 75, height: 75 }} className='rounded-lg' defaultImage={FamilyImage} />
+                    {/* <Image source={family.avatar != null && family.avatar != "" ? { uri: family.avatar } : FamilyImage} style={{ width: 75, height: 75 }} className='rounded-lg' /> */}
                     <View className='ml-4 flex-col justify-evenly w-full' >
                       <Text className=' text-xl font-bold' style={{ color: COLORS.primary }}>{family.name}</Text>
                       <Text className='text-ellipsis text-sm text-gray-600'>Members: {family.quantity}</Text>
