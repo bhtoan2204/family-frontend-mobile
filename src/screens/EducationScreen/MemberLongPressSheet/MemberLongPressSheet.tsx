@@ -5,7 +5,7 @@ import RBSheet from 'react-native-raw-bottom-sheet'
 import { Education } from 'src/interface/education/education'
 import MemberDetailSheet from '../MemberDetailSheet/MemberDetailSheet'
 
-const MemberLongPressSheet = ({ bottomSheetRef, memberEducationData }: { bottomSheetRef: React.RefObject<RBSheet>,  memberEducationData: Education | undefined }) => {
+const MemberLongPressSheet = ({ bottomSheetRef, memberEducationData }: { bottomSheetRef: React.RefObject<RBSheet>, memberEducationData: Education | undefined }) => {
     const detailSheetRef = React.useRef<RBSheet>(null);
     return (
         <RBSheet
@@ -25,7 +25,7 @@ const MemberLongPressSheet = ({ bottomSheetRef, memberEducationData }: { bottomS
             }}
         >
             <View className='flex-col p-6 h-full bg-[#fafafa] justify-center'>
-                <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={ () => {
+                <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={() => {
                     // bottomSheetRef.current?.close()
                     detailSheetRef.current?.open()
                     // await handleTakePhoto()

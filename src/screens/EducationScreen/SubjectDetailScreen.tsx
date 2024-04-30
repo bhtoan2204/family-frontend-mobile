@@ -5,7 +5,7 @@ import { COLORS } from 'src/constants';
 import { SubjectDetailScreenProps } from 'src/navigation/NavigationTypes';
 import SubjectItem from './SubjectItem/SubjectItem';
 import { ComponentScore, EducationDetail, Subject } from 'src/interface/education/education';
-import AddSubjectSheet from './SubjectSheet/AddSubjectSheet';
+import AddComponentScoreSheet from './SubjectSheet/AddComponentScoreSheet';
 import RBSheet from 'react-native-raw-bottom-sheet';
 const data = {
     "message": "Success",
@@ -172,7 +172,7 @@ const SubjectDetailScreen: React.FC<SubjectDetailScreenProps> = ({ navigation, r
 
 
             </ScrollView>
-            <AddSubjectSheet refRBSheet={refRBSheet} setSubjectDetailData={setSubjectDetailData}
+            <AddComponentScoreSheet refRBSheet={refRBSheet} setSubjectDetailData={setSubjectDetailData}
                 id_education_progress={id_education_progress}
                 id_subject={id_subject}
                 id_family={id_family!}

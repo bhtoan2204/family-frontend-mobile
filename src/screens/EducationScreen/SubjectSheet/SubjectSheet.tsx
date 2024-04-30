@@ -9,12 +9,13 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, setSubjectD
     const [selectedLanguage, setSelectedLanguage] = React.useState();
     const numbers = [];
 
-    for (let i = 1; i <= 9; i++) {
+    for (let i = 0; i <= 9; i++) {
         for (let j = 1; j <= 9; j++) {
             const number = i + j * 0.1;
             numbers.push(Math.round(number * 10) / 10);
         }
     }
+    numbers.push(10);
 
     return (
         <RBSheet
@@ -93,7 +94,7 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, setSubjectD
                         })
 
                     }
-
+                    bottomSheetRef.current?.close()
                 }}>
                     <Text className='text-lg font-semibold text-red-600'>Clear data</Text>
                 </TouchableOpacity>

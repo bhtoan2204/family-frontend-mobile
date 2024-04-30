@@ -4,6 +4,9 @@ import { EducationDetailScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants';
 import CourseItem from './CourseItem';
+import { EducationDetail } from 'src/interface/education/education';
+import AddSubjectSheet from './SubjectSheet/AddSubjectSheet';
+import RBSheet from 'react-native-raw-bottom-sheet';
 const data = {
     "message": "Success",
     "data": [
@@ -38,6 +41,8 @@ const data = {
 }
 const EducationDetailScreen: React.FC<EducationDetailScreenProps> = ({ navigation, route }) => {
     const { id_education_progress, id_family } = route.params
+    const [educationDetailData, setEducationDetailData] = React.useState<EducationDetail>(data.data[0])
+    const refRBSheet = React.useRef<RBSheet>(null);
     return (
         <View className="flex-1 bg-[#F7F7F7]">
             <View className='w-full  flex-row justify-between items-center py-3 bg-white'>
@@ -47,7 +52,7 @@ const EducationDetailScreen: React.FC<EducationDetailScreenProps> = ({ navigatio
                 </TouchableOpacity>
                 <View className='mr-3'>
                     <TouchableOpacity onPress={() => {
-                        // refRBSheet.current?.open()
+                        refRBSheet.current?.open()
                     }} >
                         {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
                         <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Add</Text>
@@ -56,7 +61,7 @@ const EducationDetailScreen: React.FC<EducationDetailScreenProps> = ({ navigatio
             </View>
             <ScrollView className=' '>
                 {
-                    data && data.data[0].subjects_info.map((item: any, index: number) => {
+                    educationDetailData && educationDetailData.subjects_info.map((item: any, index: number) => {
                         return (
                             <React.Fragment key={index}>
                                 <CourseItem data={item} onPress={() => {
@@ -73,6 +78,11 @@ const EducationDetailScreen: React.FC<EducationDetailScreenProps> = ({ navigatio
 
             </ScrollView>
 
+            <AddSubjectSheet refRBSheet={refRBSheet}
+                id_education_progress={id_education_progress}
+                id_family={id_family!}
+                setEducationDetailData={setEducationDetailData}
+            />
 
         </View>
 
