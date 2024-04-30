@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import { HouseHoldCategoryScreenProps, HouseHoldScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -7,6 +7,7 @@ import ImageComponent from 'src/components/Image/Image';
 import FamilyImage from 'src/assets/images/household.png';
 import AddHouseHoldItemSheet from './AddHouseHoldItemSheet/AddHouseHoldItemSheet';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import HouseHoldItem from './HouseHoldItem/HouseHoldItem';
 const household_category_dat = [
     {
         "id_category": 1,
@@ -124,29 +125,13 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
     const [householdItems, setHouseholdItems] = React.useState<HouseHoldItemInterface[]>(household_items)
     const [choosenCategoryIndex, setChoosenCategoryIndex] = React.useState<number>(0)
     const [choosenCategoryId, setChoosenCategoryId] = React.useState<number>(householdCategory[0].id_category)
-
+    const categoryRefScroll = useRef<any>(null);
     const showCategoryItems = () => {
         const categoryItems = householdItems.filter(item => item.id_category === choosenCategoryId);
         return <View className='mt-2'>
             {
-                categoryItems.map(item => (
-                    <TouchableOpacity key={item.id_household_item} onPress={() => {
-                        navigation.navigate('HouseHoldCategoryDetail', {
-                            id_family: id_family,
-                            id_item: item.id_household_item,
-                            id_category: item.id_category
-                        })
-                    }} className='bg-white my-2'>
-
-                        <View className='m-4  flex-row items-center'>
-                            <ImageComponent imageUrl={item.item_imageurl || ""} style={{ width: 70, height: 70 }} defaultImage={FamilyImage} className='rounded-lg ' />
-                            <View className='flex-1 ml-4'>
-                                <Text className='font-semibold text-lg' style={{ color: COLORS.primary }}>{item.item_name}</Text>
-                                <Text className='text-base text-gray-500' >{item.item_description}</Text>
-                            </View>
-                        </View>
-
-                    </TouchableOpacity>
+                categoryItems.map((item, index) => (
+                    <HouseHoldItem item={item} key={item.id_household_item} setHouseHoldItem={setHouseholdItems} index={index} />
                 ))
             }
         </View>
@@ -170,13 +155,19 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
                 </View>
             </View>
             <View>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} ref={categoryRefScroll}>
                     {householdCategory.map((category, index) => (
                         <TouchableOpacity
                             key={category.id_category}
                             onPress={() => {
                                 setChoosenCategoryIndex(index)
                                 setChoosenCategoryId(category.id_category)
+                                if (categoryRefScroll.current) {
+                                    categoryRefScroll.current.scrollTo({
+                                        x: index * 100, // Adjust this value as needed based on your item width
+                                        animated: true,
+                                    });
+                                }
                             }}
                             style={{ paddingHorizontal: 20, paddingVertical: 10, borderBottomColor: COLORS.primary }}
                             className={`${choosenCategoryIndex === index ? 'border-b-2 border-[#56409e]' : ''}`}

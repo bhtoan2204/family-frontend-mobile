@@ -5,6 +5,8 @@ import { COLORS } from 'src/constants';
 import { SubjectDetailScreenProps } from 'src/navigation/NavigationTypes';
 import SubjectItem from './SubjectItem/SubjectItem';
 import { ComponentScore, EducationDetail, Subject } from 'src/interface/education/education';
+import AddSubjectSheet from './SubjectSheet/AddSubjectSheet';
+import RBSheet from 'react-native-raw-bottom-sheet';
 const data = {
     "message": "Success",
     "data": [
@@ -58,11 +60,7 @@ const SubjectDetailScreen: React.FC<SubjectDetailScreenProps> = ({ navigation, r
     const [subjectDetailData, setSubjectDetailData] = React.useState<Subject>(data.data[0])
     const [expectedGrade, setExpectedGrade] = React.useState<number>(0)
     const [currentGrade, setCurrentGrade] = React.useState<number>(0)
-    // const [midtermScore, setMidtermScore] = React.useState<ComponentScore>(data.data[0].midterm_score)
-    // const [finalScore, setFinalScore] = React.useState<ComponentScore>(data.data[0].final_score)
-    // const [componentScores, setComponentScores] = React.useState<ComponentScore[]>(
-    //     data.data[0].component_scores
-    // )
+    const refRBSheet = React.useRef<RBSheet>(null)
     const getFirstLetterSubject = (subject: string) => {
         var str = subject.split(" ");
         return str[0]
@@ -127,10 +125,10 @@ const SubjectDetailScreen: React.FC<SubjectDetailScreenProps> = ({ navigation, r
                 </View>
                 <View className='mr-3'>
                     <TouchableOpacity onPress={() => {
-                        // refRBSheet.current?.open()
+                        refRBSheet.current?.open()
                     }} >
 
-                        <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Edit</Text>
+                        <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Add</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -174,7 +172,11 @@ const SubjectDetailScreen: React.FC<SubjectDetailScreenProps> = ({ navigation, r
 
 
             </ScrollView>
-
+            <AddSubjectSheet refRBSheet={refRBSheet} setSubjectDetailData={setSubjectDetailData}
+                id_education_progress={id_education_progress}
+                id_subject={id_subject}
+                id_family={id_family!}
+            />
         </View>
     )
 }

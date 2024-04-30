@@ -8,15 +8,14 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, setSubjectD
     const setScoreSheetRef = React.useRef<RBSheet>(null);
     const [selectedLanguage, setSelectedLanguage] = React.useState();
     const numbers = [];
-    // for (let i = 0; i <= 100; i++) {
-    //     numbers.push(i);
-    // }
+
     for (let i = 1; i <= 9; i++) {
         for (let j = 1; j <= 9; j++) {
-            const number = i + j * 0.1
+            const number = i + j * 0.1;
             numbers.push(Math.round(number * 10) / 10);
         }
     }
+
     return (
         <RBSheet
             ref={bottomSheetRef}
