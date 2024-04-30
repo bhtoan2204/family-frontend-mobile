@@ -16,26 +16,16 @@ const data = {
     "message": "Success",
     "data": [
         {
-            "id_education_progress": 3,
+            "id_education_progress": 1,
             "id_user": "db31bfb8-ec15-4cb1-9cbe-ebe3edaca323",
-            "title": "Học trên trường",
-            "progress_notes": "tình hình ko ổn, lười học quá",
-            "school_info": "địa chỉ cơ sở 2 nguyễn văn cừ, đh khoa học tự nhiên",
-            "created_at": "2024-04-09T04:29:20.875Z",
-            "updated_at": "2024-04-09T04:39:57.716Z",
-            "avatar": "",
+            "title": "Discrete Mathematic",
+            "progress_notes": "M",
+            "school_info": "Hcmus",
+            "created_at": "2024-04-30T08:59:03.177Z",
+            "updated_at": "2024-04-30T08:59:03.177Z",
+            "avatar": "[NULL]",
             "firstname": "Tang",
-            "lastname": "Long",
-            "subjects": [
-                {
-                    "id_subject": 6,
-                    "subject_name": "Introduction to Statistics"
-                },
-                {
-                    "id_subject": 4,
-                    "subject_name": "Discrete mathematics"
-                }
-            ]
+            "lastname": "Long"
         }
     ]
 }

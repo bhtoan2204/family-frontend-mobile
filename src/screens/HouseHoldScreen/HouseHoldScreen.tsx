@@ -193,7 +193,7 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
                     {showCategoryItems()}
                 </View>
             </ScrollView>
-            <AddHouseHoldItemSheet refRBSheet={refRBSheet} setHouseHoldItem={setHouseholdItems} />
+            <AddHouseHoldItemSheet refRBSheet={refRBSheet} setHouseHoldItem={setHouseholdItems} id_category={choosenCategoryId} id_family={id_family!} />
         </View>
     )
 }

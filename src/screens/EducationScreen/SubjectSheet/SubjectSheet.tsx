@@ -2,15 +2,21 @@ import React from 'react'
 import { Dimensions, TouchableOpacity, View, Text } from 'react-native'
 import RBSheet from 'react-native-raw-bottom-sheet'
 import { Picker } from '@react-native-picker/picker';
-const SubjectSheet = ({ bottomSheetRef, setExpected, setScore, expected, score }: { bottomSheetRef: React.RefObject<RBSheet>, setExpected: React.Dispatch<React.SetStateAction<number>>, setScore: React.Dispatch<React.SetStateAction<number>>, expected: number, score: number }) => {
+import { ComponentScore, Subject } from 'src/interface/education/education';
+const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, setSubjectDetailData }: { bottomSheetRef: React.RefObject<RBSheet>, subjectComponentData: ComponentScore, index: number, setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>> }) => {
     const setExpectedSheetRef = React.useRef<RBSheet>(null);
     const setScoreSheetRef = React.useRef<RBSheet>(null);
     const [selectedLanguage, setSelectedLanguage] = React.useState();
     const numbers = [];
-    for (let i = 0; i <= 100; i++) {
-        numbers.push(i);
+    // for (let i = 0; i <= 100; i++) {
+    //     numbers.push(i);
+    // }
+    for (let i = 1; i <= 9; i++) {
+        for (let j = 1; j <= 9; j++) {
+            const number = i + j * 0.1
+            numbers.push(Math.round(number * 10) / 10);
+        }
     }
-
     return (
         <RBSheet
             ref={bottomSheetRef}
@@ -39,7 +45,7 @@ const SubjectSheet = ({ bottomSheetRef, setExpected, setScore, expected, score }
                 </TouchableOpacity>
                 <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={() => {
                     // bottomSheetRef.current?.close()
-                    setScoreSheetRef.current?.open()    
+                    setScoreSheetRef.current?.open()
                     // await handleTakePhoto()
 
                 }}>
@@ -48,8 +54,49 @@ const SubjectSheet = ({ bottomSheetRef, setExpected, setScore, expected, score }
                 <TouchableOpacity className='h-16 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
                     // await handlePickImage()
 
+                    if (index === -1) {
+                        setSubjectDetailData((prev) => {
+                            return {
+                                ...prev,
+                                final_score: {
+                                    ...prev.final_score,
+                                    score: null,
+                                    expected_score: null
+                                }
+                            }
+                        })
+                    } else if (index === -2) {
+                        setSubjectDetailData((prev) => {
+                            return {
+                                ...prev,
+                                midterm_score: {
+                                    ...prev.midterm_score,
+                                    score: null,
+                                    expected_score: null
+                                }
+                            }
+                        })
+                    } else {
+                        setSubjectDetailData((prev) => {
+                            return {
+                                ...prev,
+                                component_scores: prev.component_scores.map((item, i) => {
+                                    if (i === index) {
+                                        return {
+                                            ...item,
+                                            score: null,
+                                            expected_score: null
+                                        }
+                                    }
+                                    return item
+                                })
+                            }
+                        })
+
+                    }
+
                 }}>
-                    <Text className='text-lg font-semibold text-red-600'>Delete this</Text>
+                    <Text className='text-lg font-semibold text-red-600'>Clear data</Text>
                 </TouchableOpacity>
             </View>
             <RBSheet
@@ -70,11 +117,50 @@ const SubjectSheet = ({ bottomSheetRef, setExpected, setScore, expected, score }
                 }}>
 
                 <View className='flex-col p-6 h-full bg-[#fafafa] justify-center'>
-                    <Text className='text-lg font-semibold'>Set expect score</Text>
+                    <Text className='text-lg font-semibold'>Set expected score</Text>
                     <Picker
-                        selectedValue={expected}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setExpected(itemValue || 0)
+                        selectedValue={subjectComponentData.expected_score}
+                        onValueChange={(itemValue) =>
+                        // setExpected(itemValue || 0)
+                        {
+                            if (index === -1) {
+                                setSubjectDetailData((prev) => {
+                                    return {
+                                        ...prev,
+                                        final_score: {
+                                            ...prev.final_score,
+                                            expected_score: itemValue
+                                        }
+                                    }
+                                })
+                            } else if (index === -2) {
+                                setSubjectDetailData((prev) => {
+                                    return {
+                                        ...prev,
+                                        midterm_score: {
+                                            ...prev.midterm_score,
+                                            expected_score: itemValue
+                                        }
+                                    }
+                                })
+                            } else {
+                                setSubjectDetailData((prev) => {
+                                    return {
+                                        ...prev,
+                                        component_scores: prev.component_scores.map((item, i) => {
+                                            if (i === index) {
+                                                return {
+                                                    ...item,
+                                                    expected_score: itemValue
+                                                }
+                                            }
+                                            return item
+                                        })
+                                    }
+                                })
+
+                            }
+                        }
                         }>
 
                         {
@@ -104,11 +190,48 @@ const SubjectSheet = ({ bottomSheetRef, setExpected, setScore, expected, score }
                 }}>
 
                 <View className='flex-col p-6 h-full bg-[#fafafa] justify-center'>
-                    <Text className='text-lg font-semibold'>Set expect score</Text>
+                    <Text className='text-lg font-semibold'>Set  score</Text>
                     <Picker
-                        selectedValue={score}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setScore(itemValue || 0)
+                        selectedValue={subjectComponentData.score}
+                        onValueChange={(itemValue) => {
+                            if (index === -1) {
+                                setSubjectDetailData((prev) => {
+                                    return {
+                                        ...prev,
+                                        final_score: {
+                                            ...prev.final_score,
+                                            score: itemValue
+                                        }
+                                    }
+                                })
+                            } else if (index === -2) {
+                                setSubjectDetailData((prev) => {
+                                    return {
+                                        ...prev,
+                                        midterm_score: {
+                                            ...prev.midterm_score,
+                                            score: itemValue
+                                        }
+                                    }
+                                })
+                            } else {
+                                setSubjectDetailData((prev) => {
+                                    return {
+                                        ...prev,
+                                        component_scores: prev.component_scores.map((item, i) => {
+                                            if (i === index) {
+                                                return {
+                                                    ...item,
+                                                    score: itemValue
+                                                }
+                                            }
+                                            return item
+                                        })
+                                    }
+                                })
+
+                            }
+                        }
                         }>
 
                         {
