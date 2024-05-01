@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Alert } from 'react-native'
 import { Swipeable, TouchableOpacity } from 'react-native-gesture-handler'
 import ImageComponent from 'src/components/Image/Image'
 import { COLORS } from 'src/constants'
@@ -12,9 +12,20 @@ const HouseHoldItem = ({ item, setHouseHoldItem, index }: { item: HouseHoldItemI
     const editSheetRef = React.useRef<RBSheet>(null);
     const handleDelete = () => {
         console.log("Deleting item with id:", item.id_household_item);
-        setHouseHoldItem((prev) => {
-            return prev.filter((element) => element.id_household_item !== item.id_household_item)
-        })
+        Alert.alert("Delete Item", "Are you sure you want to delete this item?", [
+            {
+                text: "Cancel",
+                style: "cancel"
+            },
+            {
+                text: "Delete",
+                onPress: () => {
+                    setHouseHoldItem((prev) => {
+                        return prev.filter((houseHoldItem) => houseHoldItem.id_household_item !== item.id_household_item)
+                    })
+                }
+            }
+        ])
     }
     const renderLeftActions = () => (
         <TouchableOpacity onPress={handleDelete} style={{ backgroundColor: '#EF3B4F', width: "auto" }} className='h-full flex-row items-center py-4 px-2  my-2 ' >

@@ -14,6 +14,7 @@ const EditHouseHoldItemSheet = ({ refRBSheet, setHouseHoldItem, id_category, id_
     const [name, setName] = React.useState(item.item_name);
     const [description, setDescription] = React.useState(item.item_description);
     const [image, setImage] = React.useState(item.item_imageurl);
+    const [i, setI] = React.useState(index)
     const isKeyboardVisible = useKeyboardVisible();
     const nameInputRef = React.useRef<TextInput>(null);
     const descriptionInputRef = React.useRef<TextInput>(null);
@@ -34,7 +35,7 @@ const EditHouseHoldItemSheet = ({ refRBSheet, setHouseHoldItem, id_category, id_
                 {
                     text: 'Delete',
                     onPress: () => {
-                        
+
                     },
                     style: 'destructive',
                 },
@@ -63,11 +64,11 @@ const EditHouseHoldItemSheet = ({ refRBSheet, setHouseHoldItem, id_category, id_
         }
 
         setHouseHoldItem((prev) =>
-            prev.map((item, i) => {
-                if (i === index) {
+            prev.map((houseHoldItem) => {
+                if (houseHoldItem.id_household_item === item.id_household_item) {
                     return newHouseHoldItem
                 }
-                return item
+                return houseHoldItem
             })
         )
 
