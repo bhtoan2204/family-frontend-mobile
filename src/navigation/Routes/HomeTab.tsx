@@ -9,7 +9,7 @@ import HomeScreen from 'src/screens/HomeScreen';
 import ProfileScreen from 'src/screens/ProfileScreen';
 import ReportScreen from 'src/screens/ReportScreen';
 import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
-
+import ExpenditureScreen from 'src/screens/ExpenseScreen';
 import BottomSheetChild from 'src/screens/HomeScreen/BottomSheetContent';
 import {
   PurchasedScreenProps,
@@ -35,11 +35,11 @@ const TabList = [
     visible: true,
   },
   {
-    id: TEXTS.QR_CODE_TAB,
-    title: TEXTS.QR_CODE_TAB,
-    component: ProfileScreen,
-    screen: 'QRCodeScreen',
-    icon: 'qrcode-scan',
+    id: 'Expense',
+    title: 'Expense',
+    component: ExpenditureScreen,
+    screen: 'Expense',
+    icon: 'plus',
     visible: true,
   },
   {

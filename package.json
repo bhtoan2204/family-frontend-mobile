@@ -74,7 +74,7 @@
     "react-native-notifications": "^5.1.0",
     "react-native-paper": "^5.12.3",
     "react-native-photo-view": "^1.5.2",
-    "react-native-picker-select": "^9.0.1",
+    "react-native-picker-select": "^9.1.3",
     "react-native-popup-menu": "^0.16.1",
     "react-native-push-notification": "^8.1.1",
     "react-native-raw-bottom-sheet": "^2.2.0",

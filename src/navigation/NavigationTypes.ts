@@ -25,7 +25,10 @@ export type ChatStackParamList = {
   }
   
 };
+export type ExpenseStackParamList = {
+  Expenditure: undefined;
 
+};
 type ChatFamilyScreenNavigationProp = NativeStackNavigationProp<
   ChatStackParamList,
   'ChatFamily'
