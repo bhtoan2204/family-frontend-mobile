@@ -1,8 +1,5 @@
-import axios, {AxiosResponse} from 'axios';
-import {ERROR_TEXTS} from 'src/constants';
-import {FamilyUrl} from '../urls';
+import  {AxiosResponse} from 'axios';
 import instance from '../httpInterceptor';
-import LocalStorage from 'src/store/localstorage';
 import baseUrl from '../urls/baseUrl';
 
 const ChatServices = {
@@ -48,7 +45,19 @@ const ChatServices = {
       console.error('Error in getUsersChat:', error.message);
     }
   },
-  
+
+  GetAllUser: async ({index }: {index: number }) => {
+    try {
+      const response: AxiosResponse = await instance.get(
+        `${baseUrl}/api/v1/user/getAllUser`
+      );
+      if ( response) {
+        return response.data; 
+      }
+    } catch (error: any) {
+      console.error('Error in getAllUser:', error.message);
+    }
+  },
   
 }
 export default ChatServices;
