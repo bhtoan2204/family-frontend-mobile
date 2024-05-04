@@ -10,7 +10,6 @@ const styles = StyleSheet.create({
     paddingTop: 10, 
 },
   headcontainer: {
-    flex: 1,
     backgroundColor: 'white', 
     paddingHorizontal: 3,
   },
@@ -27,10 +26,7 @@ const styles = StyleSheet.create({
 
 
   },
-  dropdown: {
-    flexDirection: 'row',
-    alignItems: 'center',
-},
+
   inputAmount: {
     borderBottomWidth: 1,
     borderColor: '#ccc', 
@@ -39,9 +35,10 @@ const styles = StyleSheet.create({
     width: '100%', 
   },
   currency: {
-    marginLeft: 5,
     fontSize: 16,
     justifyContent: 'center', 
+    padding: screenWidth*0.03,
+
   },
   inputWrapper: {
     flex: 1, 
@@ -54,7 +51,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
     justifyContent: 'space-between',
-  
+    height: '50'
   },
   headerText: {
     fontSize: 20,
@@ -74,14 +71,22 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 25,
   },
-
+  categoryContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start', 
+    marginRight: 10,
+    width: '100%',
+    padding: 15,
+    marginBottom: 10,
+  },
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 5,
-    backgroundColor: 'white', 
-    width: '100%'
+    width: '100%',
   },
+  
   ContainerCategory: {
     borderWidth: 1,
     borderColor: '#ccc',
@@ -143,7 +148,7 @@ const styles = StyleSheet.create({
     color: '#ccc',
   },
   icon: {
-    marginRight: 10,
+    marginRight: 20,
   },
 
   walletContainer: {
@@ -153,6 +158,7 @@ const styles = StyleSheet.create({
   chevronContainer: {
     position: 'absolute',
     right: screenWidth*0.005,
+
 },
 imageContainer: {
   flexDirection: 'row',
@@ -169,6 +175,47 @@ inputControl: {
   paddingHorizontal: 15,
   width: '30%',
 
+},
+dropdownMenu: {
+  position: 'absolute',
+  top: 0,
+  backgroundColor: 'white',
+  borderWidth: 1,
+  borderColor: 'white',
+  width: '100%',
+
+},
+menuItem: {
+  paddingVertical: 10,
+  borderBottomWidth: 1, 
+  borderBottomColor: '#ccc',
+  flexDirection: 'row',
+
+},
+menuItemLast: {
+  borderBottomWidth: 0, 
+},
+  text: {
+    color: 'black',
+    fontSize: 16,
+    alignContent: 'center',
+    padding: 10,
+  },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+},
+modalContainer: {
+  flex: 1,
+  justifyContent: 'flex-start',
+  marginTop: 100, 
+},
+checkIcon: {
+  position: 'absolute',
+  right: screenWidth*0.005,
+  padding: screenWidth*0.05,
 },
 });
 
