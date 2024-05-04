@@ -7,21 +7,22 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1, 
     paddingHorizontal: 20, 
-    paddingTop: 10, 
+    paddingTop: 0, 
 },
   headcontainer: {
     backgroundColor: 'white', 
     paddingHorizontal: 3,
+    height: '95%',
   },
   inputContainer: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 25,
-    padding: 20,
+    padding: 15,
     fontSize: 16,
     width: '100%',
     flexDirection: 'row', 
-    marginBottom: 20, 
+    marginBottom: 10, 
     backgroundColor: 'white', 
 
 
@@ -46,17 +47,18 @@ const styles = StyleSheet.create({
 
   },
   header: {
-    backgroundColor: COLORS.BlueLight,
-    paddingVertical: 15,
+    backgroundColor: 'rgba(128, 50, 128, 0.5)', 
     alignItems: 'center',
     marginBottom: 20,
-    justifyContent: 'space-between',
-    height: '50'
+    justifyContent: 'center',
+    flexDirection: 'row',
+    height: '8%',
   },
   headerText: {
     fontSize: 20,
     color: '#ffffff', 
     fontWeight: 'bold',
+    marginLeft: 10
   },
   scrollViewContent: {
     flexGrow: 1,
@@ -83,8 +85,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 5,
-    width: '100%',
+
   },
   
   ContainerCategory: {
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     flexDirection: 'column', 
-    marginBottom: 20, 
+    marginBottom: 10, 
     backgroundColor: 'white', 
 
   },
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
 
   },
   descriptionAndDatePickerContainer: {
-    marginBottom: 20, 
+    marginBottom: 10, 
   },
 
   container: {
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     flexDirection: 'column', 
-    marginBottom: 20, 
+    marginBottom: 0, 
     backgroundColor: 'white', 
 
   },
@@ -158,6 +159,7 @@ const styles = StyleSheet.create({
   chevronContainer: {
     position: 'absolute',
     right: screenWidth*0.005,
+    marginRight: 10,
 
 },
 imageContainer: {
@@ -206,17 +208,48 @@ menuItemLast: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-},
-modalContainer: {
-  flex: 1,
-  justifyContent: 'flex-start',
-  marginTop: 100, 
-},
-checkIcon: {
-  position: 'absolute',
-  right: screenWidth*0.005,
-  padding: screenWidth*0.05,
-},
-});
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    marginTop: 100, 
+  },
+  checkIcon: {
+    position: 'absolute',
+    right: screenWidth*0.005,
+    padding: screenWidth*0.05,
+  },
+  circle: {
+    width: 140, 
+    height: 40, 
+    borderRadius: 15, 
+    backgroundColor: 'rgba(128, 50, 128, 0.2)', 
+    justifyContent: 'center', 
+    alignItems: 'center',
+  },
+  familyScrollContainer: {
+    flexGrow: 1,
+  },
+  familycontainer: {
+      paddingHorizontal: 5,
+      flexDirection: 'row',
+      alignItems: 'center',
+      height: 45,
+      marginBottom: 20,
+  },
+
+  family: {
+      backgroundColor: '#ccc',
+      padding: 10,
+      borderRadius: 30,
+  },
+  familyText: {
+      fontSize: 16,
+  },
+  selectedFamily: {
+      backgroundColor: COLORS.primary, 
+  },
+  
+  });
 
 export default styles;

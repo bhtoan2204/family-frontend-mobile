@@ -16,12 +16,7 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {LinearGradient} from 'expo-linear-gradient';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import { useDispatch, useSelector } from 'react-redux';
-
-type Family = {
-  id_family?: number;
-  name?: string;
-  description?: string;
-};
+import { Family } from 'src/interface/family/family';
 
 type ButtonProps = {
   title: string;

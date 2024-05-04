@@ -4,7 +4,10 @@ import ProfileServices from './ProfileServices';
 import PackageServices from './PackageServices';
 import GuideLineService from './GuildLineService';
 import ChatServices from './ChatServices';
-export {AuthServices, FamilyServices, ProfileServices, PackageServices};
+import ExpenseServices from './ExpenseServices';
+import IncomeServices from './IncomeServices';
+
+export {AuthServices, FamilyServices, ProfileServices, PackageServices, ExpenseServices, ChatServices, IncomeServices, GuideLineService};
 
 // export {
 //   AuthServices,

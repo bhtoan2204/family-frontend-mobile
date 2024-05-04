@@ -1,6 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ExpenditureScreen from 'src/screens/ExpenseScreen';
-import { ExpenditureScreenProps } from '../NavigationTypes';
+import { CategoryExpenseScreenProps, ExpenditureScreenProps } from '../NavigationTypes';
+import CategoryExpenseScreen from 'src/screens/ExpenseScreen/CategoryScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,6 +13,7 @@ const ExpenseStack = () => {
       }}>
      
      <Stack.Screen name="Expenditure">{(props) => <ExpenditureScreen {...props as ExpenditureScreenProps} />}</Stack.Screen>
+     <Stack.Screen name="CategoryExpense">{(props) => <CategoryExpenseScreen {...props as CategoryExpenseScreenProps} />}</Stack.Screen>
 
     </Stack.Navigator>
   );

@@ -6,15 +6,12 @@ import {StyleSheet} from 'react-native';
 import TabButton from 'src/components/TabButton';
 import {TEXTS} from 'src/constants';
 import HomeScreen from 'src/screens/HomeScreen';
-import ProfileScreen from 'src/screens/ProfileScreen';
 import ReportScreen from 'src/screens/ReportScreen';
 import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
 import ExpenditureScreen from 'src/screens/ExpenseScreen';
 import BottomSheetChild from 'src/screens/HomeScreen/BottomSheetContent';
-import {
-  PurchasedScreenProps,
-  ViewAllFamilyScreenProps,
-} from '../NavigationTypes';
+import CategoryExpenseScreen from 'src/screens/ExpenseScreen/CategoryScreen';
+import WalletScreen from 'src/screens/ExpenseScreen/WalletScreen';
 
 const Tab = createBottomTabNavigator();
 const TabList = [
@@ -41,6 +38,18 @@ const TabList = [
     screen: 'Expense',
     icon: 'plus',
     visible: true,
+  },
+  {
+    id: 'CategoryExpense',
+    component: CategoryExpenseScreen,
+    screen: 'CategoryExpense',
+    visible: false,
+  },
+  {
+    id: 'Wallet',
+    component: WalletScreen,
+    screen: 'Wallet',
+    visible: false,
   },
   {
     id: TEXTS.REPORT_TAB,
@@ -73,7 +82,6 @@ const TabBarButton = (props: BottomTabBarButtonProps, tab: any) => {
 const HomeTab = () => {
   return (
     <Tab.Navigator
-      initialRouteName="AddScreen"
       screenOptions={{
         header: () => null,
         tabBarStyle: styles.tabBar,
@@ -99,15 +107,13 @@ const HomeTab = () => {
 
 const styles = StyleSheet.create({
   tabBar: {
-    height: 70,
+    height: '7%',
+    width: '100%',
     position: 'absolute',
-    bottom: 15,
-    marginHorizontal: 16,
-    borderRadius: 16,
+    borderRadius: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 0.5,
-    borderColor: '#dadada',
+    borderColor: 'rgba(128, 50, 128, 0.5)',
   },
 });
 
