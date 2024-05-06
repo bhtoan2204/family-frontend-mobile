@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   headcontainer: {
     backgroundColor: 'white', 
     paddingHorizontal: 3,
-    height: '95%',
+    height: '100%',
   },
   inputContainer: {
     borderWidth: 1,
@@ -115,6 +115,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
 
   },
+  cameraButton: {
+    marginRight: 20, 
+},
   descriptionAndDatePickerContainer: {
     marginBottom: 10, 
   },
@@ -160,14 +163,26 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: screenWidth*0.005,
     marginRight: 10,
-
+},
+iconMoney: {
+  position: 'absolute',
+  left: screenWidth*0.05,
+  marginRight: 10,
 },
 imageContainer: {
   flexDirection: 'row',
-  justifyContent: 'space-between',
+  flex: 1, 
+  justifyContent: 'center', 
   alignItems: 'center', 
-  paddingHorizontal: screenWidth*0.25 , 
-  marginHorizontal: 10, 
+},
+imageContainer1: {
+  justifyContent: 'center', 
+  alignItems: 'center',
+  marginRight: 50
+},
+imageContainer2: {
+  flexDirection: 'row',
+
 },
 inputControl: {
   borderWidth: 1,
@@ -249,7 +264,26 @@ menuItemLast: {
   selectedFamily: {
       backgroundColor: COLORS.primary, 
   },
-  
+  image: {
+    height: 100,
+     width: 100,
+  },
+  largeImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+},
+closeButton: {
+  position: 'absolute',
+  top: 180,
+  right: 15, 
+},
+modalImageContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'rgba(0, 0, 0, 0.7)',
+},
   });
 
 export default styles;

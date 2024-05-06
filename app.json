@@ -31,6 +31,13 @@
       "icon": "src/assets/images/notification-icon.png",
       "color": "#ffffff",
       "iosDisplayInForeground": true
+    },
+    "android": {
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE"
+      ]
     }
-  }
+   
+}
 }

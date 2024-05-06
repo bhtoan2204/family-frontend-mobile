@@ -12,6 +12,7 @@ import ExpenditureScreen from 'src/screens/ExpenseScreen';
 import BottomSheetChild from 'src/screens/HomeScreen/BottomSheetContent';
 import CategoryExpenseScreen from 'src/screens/ExpenseScreen/CategoryScreen';
 import WalletScreen from 'src/screens/ExpenseScreen/WalletScreen';
+import FamilyScreen from 'src/screens/ExpenseScreen/FamilyScreen';
 
 const Tab = createBottomTabNavigator();
 const TabList = [
@@ -51,6 +52,13 @@ const TabList = [
     screen: 'Wallet',
     visible: false,
   },
+  {
+    id: 'FamilyFinace',
+    component: FamilyScreen,
+    screen: 'FamilyFinace',
+    visible: false,
+  },
+
   {
     id: TEXTS.REPORT_TAB,
     title: TEXTS.REPORT_TAB,

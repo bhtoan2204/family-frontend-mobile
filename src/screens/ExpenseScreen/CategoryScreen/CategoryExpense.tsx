@@ -5,8 +5,8 @@ import ExpenseServices from "src/services/apiclient/ExpenseServices";
 import { CategoryExpenseScreenProps } from "src/navigation/NavigationTypes";
 import styles from "./styles";
 import Icon from 'react-native-vector-icons/Ionicons';
-import { setCategory_id, setCategory_name } from "src/redux/slices/FinanceSlice";
-import { useDispatch } from "react-redux";
+import {getType, setExpenseCategory_id, setExpenseCategory_name, setIncomeCategory_id, setIncomeCategory_name, setType } from "src/redux/slices/FinanceSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { IncomeServices } from "src/services/apiclient";
 
 interface ExpenseType {
@@ -26,13 +26,17 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
     const [isModalVisible, setModalVisible] = useState<boolean>(false);
     const [newCategoryName, setNewCategoryName] = useState<string>('');
     const dispatch = useDispatch();
-    const [selectedCategoryType, setSelectedCategoryType] = useState<'expense' | 'income'>('expense'); 
+    const [selectedCategoryType, setSelectedCategoryType] = useState<string>(''); 
     const urlFood = 'https://img.freepik.com/premium-vector/icon-food-drink-illustration-vector_643279-134.jpg';
     const addUrl ='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBWw-U6s-Q1k-tt_xXKV02dPlypckiNOJMxJo3KxWW-g&s';
+    let state = useSelector(getType);
+
+    
     useEffect(() => {
         fetchExpenseType();
         fetchIncomeType();
-    }, []);
+        setSelectedCategoryType(state);
+    }, [state]);
 
     const fetchExpenseType = async () => {
         try {
@@ -76,8 +80,20 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
         );
     }
     const selectCategory = async(item: any)=> {
-        dispatch(setCategory_id(item.id_expense_type));
-        dispatch(setCategory_name(item.expense_name));
+        dispatch(setType(selectedCategoryType));
+        if (selectedCategoryType == 'Expense') {
+            dispatch(setExpenseCategory_id(item.id_expense_type));
+            dispatch(setExpenseCategory_name(item.expense_name));
+        }
+        else if (selectedCategoryType=='Income'){
+            dispatch(setIncomeCategory_id(item.id_income_source));
+            dispatch(setIncomeCategory_name(item.income_name));
+    
+        }
+        navigation.navigate('HomeTab', {screen: 'Expense'})
+    };
+    const selectOption= async(option: string)=> {
+        setSelectedCategoryType(option);
     } 
     return (
         <View style={styles.container}>
@@ -95,22 +111,23 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
         </View>
         <View style={styles.containerTab}>
             <TouchableOpacity
-                onPress={() => setSelectedCategoryType('income')}
-                style={[styles.tabButton, selectedCategoryType === 'income' && styles.selectedTabButton]}
+                onPress={() => selectOption('Income')}
+                style={[styles.tabButton, selectedCategoryType === 'Income' && styles.selectedTabButton]}
             >
                 <Text style={styles.tabButtonText}>Income</Text>
             </TouchableOpacity>
+
             <TouchableOpacity
-                onPress={() => setSelectedCategoryType('expense')}
-                style={[styles.tabButton, selectedCategoryType === 'expense' && styles.selectedTabButton]}
+                onPress={() => selectOption('Expense')}
+                style={[styles.tabButton, selectedCategoryType === 'Expense' && styles.selectedTabButton]}
             >
                 <Text style={styles.tabButtonText}>Expense</Text>
             </TouchableOpacity>
-            <View style={[styles.bottomLine, { left: selectedCategoryType === 'income' ? 0 : '50%' }]} />
+            <View style={[styles.bottomLine, { left: selectedCategoryType === 'Income' ? 0 : '50%' }]} />
         </View>
 
         <ScrollView style={styles.scrollView}>
-            {selectedCategoryType === 'expense' && (
+            {selectedCategoryType === 'Expense' && (
                 expenseType.map((item, index) => (
                     <TouchableOpacity key={index.toString()} onPress={() => selectCategory(item)} style={styles.categoryItemContainer}>
                         <Image source={{ uri: urlFood }} style={styles.categoryImage} />
@@ -119,7 +136,7 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
                 ))
             )}
 
-            {selectedCategoryType === 'income' && (
+            {selectedCategoryType === 'Income' && (
                 incomeCategories.map((item, index) => (
                     <TouchableOpacity key={index.toString()} onPress={() => selectCategory(item)} style={styles.categoryItemContainer}>
                         <Image source={{ uri: urlFood }} style={styles.categoryImage} />

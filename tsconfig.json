@@ -1,11 +1,10 @@
 {
-  "moduleResolution": "node16",
+  "moduleResolution": "node",
   "extends": [
     "@react-native/typescript-config/tsconfig.json",
     "expo/tsconfig.base"
   ],
   "compilerOptions": {
-    "module": "esnext",
     "module": "esnext",
     "strict": true,
     "baseUrl": "./",

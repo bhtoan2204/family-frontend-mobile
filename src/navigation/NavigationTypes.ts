@@ -15,6 +15,9 @@ export type RootParamList = {
 export type ExpenseStackParamList = {
   Expenditure: undefined;
   CategoryExpense: undefined;
+  FamilySpec: {
+    id_family: number | undefined;
+  }
 };
 // type ExpenditureScreenNavigationProp = NativeStackNavigationProp<
 // ExpenseStackParamList,
@@ -33,6 +36,16 @@ ExpenseStackParamList,
 export interface CategoryExpenseScreenProps {
   navigation: CategoryExpenseScreenNavigationProp;
   route: RouteProp<ExpenseStackParamList, 'CategoryExpense'>;
+}
+
+type FamilySpecNavigationProp = NativeStackNavigationProp<
+ExpenseStackParamList,
+  'FamilySpec'
+>;
+
+export interface FamilySpecProps {
+  navigation: FamilySpecNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'FamilySpec'>;
 }
 
 export type ChatStackParamList = {

@@ -97,15 +97,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
     </TouchableOpacity>
   );
 
-  const handleGetAllFamily = async () => {
-    try {
-      const result = await FamilyServices.getAllFamily();
-      setFamilies(result);
-      setFilteredFamilies(result); // Initially, all families are displayed
-    } catch (error: any) {
-      console.log('FamilyServices.getAllFamily error:', error);
-    }
-  };
+
 
   const handleSearch = () => {
     const result = families.filter(family =>
