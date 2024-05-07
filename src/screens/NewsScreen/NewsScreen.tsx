@@ -1,7 +1,13 @@
-import React from 'react'
-import { View, Text } from 'react-native'
-
-const data = {
+import React, { useRef } from 'react'
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { COLORS } from 'src/constants'
+import { NewsScreenProps } from 'src/navigation/NavigationTypes'
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import { news_category, categoryColors } from './data';
+import { NewsCategoryInterface, NewsInterface } from 'src/interface/news/news';
+import ImageComponent from 'src/components/Image/Image';
+import NewsImage from 'src/assets/images/news.png';
+const news_data = {
     "items": [
         {
             "title": "Nga tuyên bố kiểm soát thêm hai làng tại Ukraine",
@@ -142,12 +148,132 @@ const data = {
     "totalItems": 48
 }
 
-const NewsScreen = () => {
+
+
+const NewsScreen: React.FC<NewsScreenProps> = ({ navigation, route }) => {
+    const { id_family } = route.params
+    const [newsCategory, setNewsCategory] = React.useState<NewsCategoryInterface[]>(news_category)
+    const [newsItem, setNewsItem] = React.useState<NewsInterface[]>(news_data.items)
+    const [choosenCategoryIndex, setChoosenCategoryIndex] = React.useState<number>(0)
+    const [choosenNewsCategory, setChoosenNewsCategory] = React.useState<number>(news_category[0].id)
+    const categoryRefScroll = useRef<any>(null);
+
+    const buildDateDiff = (pubDate: string) => {
+        const today = new Date();
+        const publishedDate = new Date(pubDate);
+
+        const diffTime = Math.abs((today as any) - (publishedDate as any));
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const diffWeeks = Math.ceil(diffDays / 7);
+        const diffMonths = Math.ceil(diffDays / 30);
+        const diffYears = Math.ceil(diffDays / 365);
+
+        if (diffDays === 1) {
+            return '1 day ago';
+        } else if (diffDays < 7) {
+            return `${diffDays} days ago`;
+        } else if (diffWeeks === 1) {
+            return '1 week ago';
+        } else if (diffWeeks < 4) {
+            return `${diffWeeks} weeks ago`;
+        } else if (diffMonths === 1) {
+            return '1 month ago';
+        } else if (diffMonths < 12) {
+            return `${diffMonths} months ago`;
+        } else if (diffYears === 1) {
+            return '1 year ago';
+        } else {
+            return `${diffYears} years ago`;
+        }
+
+    }
+
+    const buildReadTime = (length: number) => {
+        const wordsPerMinute = 200;
+        const minutes = length / wordsPerMinute;
+        const readTime = Math.ceil(minutes);
+        return readTime + ' minutes of reading'
+    }
+
+    const showCategoryItems = () => {
+        const categoryItems = newsItem;
+        categoryItems.forEach((item, index) => {
+            item.category = {
+                id: choosenNewsCategory,
+                category_name: news_category[choosenCategoryIndex].category_name,
+                title: news_category[choosenCategoryIndex].title
+            }
+        })
+        return <View className='mt-2'>
+            {
+                categoryItems.map((item, index) => (
+                    <TouchableOpacity key={index} className='mx-4 my-4 shadow-b shadow-sm bg-white  rounded-md'>
+                        <View className='flex-row py-2 px-2'>
+                            <ImageComponent imageUrl={item.enclosure?.url || ""} style={{ width: 110, height: 130 }} defaultImage={NewsImage} className='rounded-md ' />
+                            <View className='ml-4 flex-1  '>
+                                <Text className='text-[#A2ABBD] mb-2 ' numberOfLines={1} >{buildReadTime(parseInt(item.enclosure?.length || "0"))} - {buildDateDiff(item.pubDate)}</Text>
+                                <Text className='text-base font-medium flex-1 ' numberOfLines={2}>{item.title}</Text>
+                                <View className='flex-row align-top rounded-lg   '>
+                                    <View className='p-3 ' style={{ backgroundColor: categoryColors[choosenCategoryIndex].backgroundColor }}>
+                                        <Text className='font-semibold' style={{ color: categoryColors[choosenCategoryIndex].textColor }}>{item.category!.title}</Text>
+                                    </View>
+                                </View>
+                            </View>
+
+                        </View>
+                    </TouchableOpacity>
+                ))
+            }
+        </View>
+    }
+
     return (
-        <View>
-            <Text>
-                haha
-            </Text>
+        <View className="flex-1 bg-white">
+            <View className='w-full  flex-row justify-between items-center py-3 bg-white'>
+                <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
+                    <Material name="chevron-left" size={30} style={{ color: COLORS.primary, fontWeight: "bold" }} />
+                    <Text className='text-lg font-semibold text-gray-600' style={{ color: COLORS.primary }}>Back</Text>
+                </TouchableOpacity>
+                <View className='mr-3'>
+                    <TouchableOpacity onPress={() => {
+
+                    }} >
+                        {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
+                        <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Add</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <View>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} ref={categoryRefScroll}>
+                    {newsCategory.map((category, index) => (
+                        <TouchableOpacity
+                            key={category.id}
+                            onPress={() => {
+                                setChoosenCategoryIndex(index)
+                                setChoosenNewsCategory(category.id)
+                                if (categoryRefScroll.current) {
+                                    categoryRefScroll.current.scrollTo({
+                                        x: index * 70,
+                                        animated: true,
+                                    });
+                                }
+                            }}
+                            style={{ paddingHorizontal: 20, paddingVertical: 10, borderBottomColor: COLORS.primary }}
+                            className={`${choosenCategoryIndex === index ? 'border-b-2 border-[#56409e]' : ''}`}
+                        >
+                            <Text style={choosenCategoryIndex == index ? { fontSize: 16, fontWeight: '600', color: COLORS.primary } : {
+                                fontSize: 16, fontWeight: '600', color: COLORS.gray
+                            }}>{category.title}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
+            </View>
+            <ScrollView>
+                <View style={{ flex: 1 }}>
+                    {showCategoryItems()}
+                </View>
+            </ScrollView>
+
         </View>
     )
 }

@@ -17,7 +17,7 @@ import MemberImage from 'src/assets/images/diversity.png';
 import DeleteImage from 'src/assets/images/remove.png';
 import HouseHoldImage from 'src/assets/images/household.png';
 import CheckListImage from 'src/assets/images/checklist.png';
-
+import NewsImage from 'src/assets/images/news.png';
 const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const { id_user, id_family } = route.params || {};
   const [family, setFamily] = useState<Family>();
@@ -92,6 +92,10 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const handleNavigateChecklist = () => {
     navigation.navigate('CheckList', { id_family: id_family })
   }
+  const handleNavigateNews = () => {
+    navigation.navigate('News', { id_family: id_family })
+  }
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       handleGetFamily();
@@ -197,6 +201,18 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
                     resizeMode="contain"
                   />
                   <Text className='ml-4 text-lg' >HouseHold Appliances </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => handleNavigateNews()} >
+                <View className='flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white'>
+
+                  <Image
+                    className="h-12 w-12"
+                    source={NewsImage}
+                    resizeMode="contain"
+                  />
+                  <Text className='ml-4 text-lg' >News </Text>
                 </View>
               </TouchableOpacity>
 

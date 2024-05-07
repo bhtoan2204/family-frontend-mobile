@@ -129,6 +129,9 @@ export type FamilyStackParamList = {
   CheckList: {
     id_family: number | undefined;
   };
+  News: {
+    id_family: number | undefined;
+  };
 };
 
 export type PackStackParamList = {
@@ -321,9 +324,19 @@ type CheckListNavigationProp = NativeStackNavigationProp<
   'CheckList'
 >;
 
+type NewsNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'News'
+>;
+
 export interface CheckListScreenProps {
   navigation: CheckListNavigationProp;
   route: RouteProp<FamilyStackParamList, 'CheckList'>;
+}
+
+export interface NewsScreenProps {
+  navigation: NewsNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'News'>;
 }
 
 export interface HouseHoldScreenProps {
