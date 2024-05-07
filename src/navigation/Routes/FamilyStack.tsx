@@ -5,7 +5,7 @@ import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
 import ViewFamilyScreen from 'src/screens/FamilyScreen';
 import ViewAllMemberScreen from 'src/screens/AllMember';
 import AddMemberScreen from 'src/screens/AddEditFamilyMemberScreen';
-import { AddEditFamilyMemberScreenProps, AllMemberScreenProps, ContactScreenProps, CreateFamilyScreenProps, EducationDetailScreenProps, EducationScreenProps, GuildLineDetailScreenProps, GuildLineScreenProps, HouseHoldCategoryDetailScreenProps, HouseHoldCategoryScreenProps, HouseHoldScreenProps, SubjectDetailScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
+import { AddEditFamilyMemberScreenProps, AllMemberScreenProps, CheckListScreenProps, ContactScreenProps, CreateFamilyScreenProps, EducationDetailScreenProps, EducationScreenProps, GuildLineDetailScreenProps, GuildLineScreenProps, HouseHoldCategoryDetailScreenProps, HouseHoldCategoryScreenProps, HouseHoldScreenProps, SubjectDetailScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
 import ContactListScreen from 'src/screens/ContactList/ContactList';
 import GuildLineScreen from 'src/screens/GuildLineScreen/GuildLineScreen';
 import GuildLineDetailScreen from 'src/screens/GuildLineScreen/GuildLineDetailScreen';
@@ -15,6 +15,7 @@ import SubjectDetailScreen from 'src/screens/EducationScreen/SubjectDetailScreen
 import HouseHoldScreen from 'src/screens/HouseHoldScreen/HouseHoldScreen';
 import HouseHoldCategoryScreen from 'src/screens/HouseHoldScreen/HouseHoldCategoryScreen/HouseHoldCategoryScreen';
 import HouseHoldCategoryDetailScreen from 'src/screens/HouseHoldScreen/HouseHoldCategoryDetailScreen/HouseHoldCategoryDetailScreen';
+import ChecklistScreen from 'src/screens/CheckListScreen/CheckListScreen';
 const Stack = createNativeStackNavigator();
 
 const FamilyStack = () => {
@@ -67,6 +68,9 @@ const FamilyStack = () => {
       </Stack.Screen>
       <Stack.Screen name="HouseHoldCategoryDetail">
         {(props) => <HouseHoldCategoryDetailScreen {...props as HouseHoldCategoryDetailScreenProps} />}
+      </Stack.Screen>
+      <Stack.Screen name="CheckList">
+        {(props) => <ChecklistScreen {...props as CheckListScreenProps} />}
       </Stack.Screen>
     </Stack.Navigator>
   );

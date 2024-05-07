@@ -16,6 +16,8 @@ import ChatImage from 'src/assets/images/speak.png';
 import MemberImage from 'src/assets/images/diversity.png';
 import DeleteImage from 'src/assets/images/remove.png';
 import HouseHoldImage from 'src/assets/images/household.png';
+import CheckListImage from 'src/assets/images/checklist.png';
+
 const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const { id_user, id_family } = route.params || {};
   const [family, setFamily] = useState<Family>();
@@ -87,6 +89,9 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const handleNavigateHouseHold = () => {
     navigation.navigate('HouseHold', { id_family: id_family })
   }
+  const handleNavigateChecklist = () => {
+    navigation.navigate('CheckList', { id_family: id_family })
+  }
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       handleGetFamily();
@@ -119,6 +124,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
           </View>
           <View className=''>
             <View className='mt-2'>
+
               <TouchableOpacity onPress={() => handleOpenAllMemberModal(id_user, family!.id_family)} >
                 <View className='flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white'>
                   <Image
@@ -138,6 +144,17 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
                     resizeMode="contain"
                   />
                   <Text className='ml-4 text-lg'>Chat with members</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleNavigateChecklist()} >
+                <View className='flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white'>
+
+                  <Image
+                    className="h-12 w-12"
+                    source={CheckListImage}
+                    resizeMode="contain"
+                  />
+                  <Text className='ml-4 text-lg' >Checklist</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleEducationPress} >
@@ -182,6 +199,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
                   <Text className='ml-4 text-lg' >HouseHold Appliances </Text>
                 </View>
               </TouchableOpacity>
+
               <TouchableOpacity onPress={() => handleDeleteFamily(family!.id_family)} >
                 <View className='flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white'>
                   <Image

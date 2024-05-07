@@ -8,6 +8,7 @@ import Notification from 'src/screens/Notifications';
 import * as BackgroundFetch from 'expo-background-fetch';
 import { connectSocket } from 'src/services/apiclient/Socket';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 
 const App: React.FC = () => {
@@ -17,11 +18,12 @@ const App: React.FC = () => {
 
     return (
         <Provider store={store}>
-
             <SafeAreaProvider>
                 <GestureHandlerRootView style={{ flex: 1 }}>
                     <PaperProvider>
-                        <NavigationContainer />
+                        <ActionSheetProvider>
+                            <NavigationContainer />
+                        </ActionSheetProvider>
                     </PaperProvider>
                 </GestureHandlerRootView>
             </SafeAreaProvider>

@@ -1856,6 +1856,14 @@
     semver "7.5.3"
     xml2js "0.6.0"
 
+"@expo/react-native-action-sheet@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.npmjs.org/@expo/react-native-action-sheet/-/react-native-action-sheet-4.0.1.tgz"
+  integrity sha512-FwCFpjpB6yzrK8CIWssLlh/i6zQFytFBiJfNdz0mJ2ckU4hWk8SrjB37P0Q4kF7w0bnIdYzPgRbdPR9hnfFqPw==
+  dependencies:
+    "@types/hoist-non-react-statics" "^3.3.1"
+    hoist-non-react-statics "^3.3.0"
+
 "@expo/rudder-sdk-node@1.1.1":
   version "1.1.1"
   resolved "https://registry.npmjs.org/@expo/rudder-sdk-node/-/rudder-sdk-node-1.1.1.tgz"
@@ -2483,9 +2491,9 @@
     prompts "^2.4.2"
     semver "^7.5.2"
 
-"@react-native-community/datetimepicker@>=6.7.0", "@react-native-community/datetimepicker@github:react-native-datetimepicker/datetimepicker":
-  version "7.6.3"
-  resolved "git+ssh://git@github.com/react-native-datetimepicker/datetimepicker.git#15db0f9f2a512062c0b18cd1f63024b06b31f608"
+"@react-native-community/datetimepicker@>=6.7.0":
+  version "8.0.0"
+  resolved "git+ssh://git@github.com/react-native-datetimepicker/datetimepicker.git#6858d3c23d4904ebaa0fa38a30ca5251033ef871"
   dependencies:
     invariant "^2.2.4"
 
@@ -9537,7 +9545,7 @@ react-native-webview@^13.8.1:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
-react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", "react-native@>= 0.30.0", "react-native@>= 0.62", react-native@>=0.23.1, react-native@>=0.33, react-native@>=0.36.0, react-native@>=0.40.0, react-native@>=0.42.0, react-native@>=0.48.4, react-native@>=0.58.4, react-native@>=0.59, react-native@>=0.59.0, react-native@>=0.60.0, react-native@>=0.61.3, react-native@>=0.64.0, react-native@>=0.65.0, react-native@>=0.69, react-native@>=v0.40.0, react-native@0.73.4:
+react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", react-native@^0.73.0, "react-native@>= 0.30.0", "react-native@>= 0.62", react-native@>=0.23.1, react-native@>=0.33, react-native@>=0.36.0, react-native@>=0.40.0, react-native@>=0.42.0, react-native@>=0.48.4, react-native@>=0.58.4, react-native@>=0.59, react-native@>=0.59.0, react-native@>=0.60.0, react-native@>=0.61.3, react-native@>=0.64.0, react-native@>=0.65.0, react-native@>=0.69, react-native@>=v0.40.0, react-native@0.73.4:
   version "0.73.4"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.73.4.tgz"
   integrity sha512-VtS+Yr6OOTIuJGDECIYWzNU8QpJjASQYvMtfa/Hvm/2/h5GdB6W9H9TOmh13x07Lj4AOhNMx3XSsz6TdrO4jIg==

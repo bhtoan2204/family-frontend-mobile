@@ -126,6 +126,9 @@ export type FamilyStackParamList = {
     id_category: number;
     id_item: number;
   };
+  CheckList: {
+    id_family: number | undefined;
+  };
 };
 
 export type PackStackParamList = {
@@ -312,6 +315,16 @@ type HouseHoldCategoryDetailNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'HouseHoldCategoryDetail'
 >;
+
+type CheckListNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'CheckList'
+>;
+
+export interface CheckListScreenProps {
+  navigation: CheckListNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'CheckList'>;
+}
 
 export interface HouseHoldScreenProps {
   navigation: HouseHoldNavigationProp;
