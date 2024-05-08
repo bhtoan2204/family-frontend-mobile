@@ -1,9 +1,9 @@
 import React from 'react'
 import { ChecklistItemInterface } from 'src/interface/checklist/checklist';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Vibration, } from 'react-native'
 import RBSheet from 'react-native-raw-bottom-sheet';
 import ChecklistDetailSheet from './CheckListDetailSheet';
-
+import * as Haptics from 'expo-haptics';
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
 
@@ -35,7 +35,11 @@ const ChecklistItem: React.FC<{ item: ChecklistItemInterface, setChecklist: Reac
         <View  >
             <View className='flex-row items-center'>
                 <TouchableOpacity className='w-7 h-7 rounded-full mr-4 flex flex-col items-center justify-center' style={{ backgroundColor: priorityColors[item.priority - 1] }} onPress={() => {
+                    Haptics.notificationAsync(
+                        Haptics.NotificationFeedbackType.Success
+                    )
                     handleUpdateComplete()
+
                 }}>
                     {
                         item.isCompleted ? <Text className='text-white'>✓</Text> : <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[item.priority - 1] }}>

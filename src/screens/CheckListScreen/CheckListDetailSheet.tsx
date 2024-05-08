@@ -7,7 +7,7 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import { ChecklistItemInterface } from 'src/interface/checklist/checklist';
 import { Picker } from '@react-native-picker/picker';
 import { TimePicker } from './AddItemCheckListSheet';
-
+import * as Haptics from 'expo-haptics';
 
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
@@ -201,7 +201,7 @@ const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSh
                     </View>
                 }
                 <KeyboardAvoidingView className="flex-1 bg-white " behavior="padding">
-                    <ScrollView showsVerticalScrollIndicator={true} className='flex-1 ' keyboardShouldPersistTaps="always" scrollEnabled={isEditing == false} >
+                    <ScrollView showsVerticalScrollIndicator={false} className='flex-1 ' keyboardShouldPersistTaps="always" scrollEnabled={isEditing == false} >
                         {
                             isEditing
                                 ? <View >
@@ -230,6 +230,9 @@ const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSh
                                         }}>
                                             <TouchableOpacity className='w-7 h-7 rounded-full mr-4 flex flex-col items-center justify-center' style={{ backgroundColor: priorityColors[priority - 1] }} onPress={() => {
                                                 handleUpdateComplete()
+                                                Haptics.notificationAsync(
+                                                    Haptics.NotificationFeedbackType.Success
+                                                )
                                             }}>
                                                 {
                                                     checklist.isCompleted ? <Text className='text-white'>✓</Text> : <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[checklist.priority - 1] }}>
@@ -273,15 +276,14 @@ const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSh
                                         </TouchableOpacity>
                                     </View>
                                     <View className='h-1 bg-gray-200 my-3'></View>
-                                    <ScrollView className='w-full h-full'>
-                                        <View className='flex-row items-center  ml-4'>
-                                            <View className='w-7 h-7  mr-4 flex flex-col items-center justify-center'>
-                                                <Material name="plus" size={28} style={{ color: "#B5B5B5" }} />
-                                            </View>
-                                            <Text className='text-base'>Add sub task</Text>
+                                    <View className='flex-row items-center  ml-4'>
+                                        <View className='w-7 h-7  mr-4 flex flex-col items-center justify-center'>
+                                            <Material name="plus" size={28} style={{ color: "#B5B5B5" }} />
                                         </View>
-                                    </ScrollView>
+                                        <Text className='text-base'>Add sub task</Text>
+                                    </View>
                                 </View>
+
                         }
                     </ScrollView>
                 </KeyboardAvoidingView>
