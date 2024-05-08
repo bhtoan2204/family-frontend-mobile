@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { COLORS } from 'src/constants'
 import { NewsScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -7,6 +7,7 @@ import { news_category, categoryColors } from './data';
 import { NewsCategoryInterface, NewsInterface } from 'src/interface/news/news';
 import ImageComponent from 'src/components/Image/Image';
 import NewsImage from 'src/assets/images/news.png';
+import NewsService from 'src/services/apiclient/NewsService';
 const news_data = {
     "items": [
         {
@@ -153,9 +154,10 @@ const news_data = {
 const NewsScreen: React.FC<NewsScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
     const [newsCategory, setNewsCategory] = React.useState<NewsCategoryInterface[]>(news_category)
-    const [newsItem, setNewsItem] = React.useState<NewsInterface[]>(news_data.items)
+    const [newsItem, setNewsItem] = React.useState<NewsInterface[] | null>(null)
     const [choosenCategoryIndex, setChoosenCategoryIndex] = React.useState<number>(0)
     const [choosenNewsCategory, setChoosenNewsCategory] = React.useState<number>(news_category[0].id)
+    const [loading, setLoading] = React.useState<boolean>(false)
     const categoryRefScroll = useRef<any>(null);
 
     const buildDateDiff = (pubDate: string) => {
@@ -195,15 +197,38 @@ const NewsScreen: React.FC<NewsScreenProps> = ({ navigation, route }) => {
         return readTime + ' minutes of reading'
     }
 
+    React.useEffect(() => {
+        const fetchNews = async () => {
+            const type = news_category[choosenCategoryIndex].category_name
+            try {
+                // setLoading(true)
+                setNewsItem(null)
+                const data = await NewsService.getNewsByCategory(type, null, null)
+                setNewsItem(data)
+            } catch (error) {
+                console.error('Error fetching news:', error);
+            }
+        }
+        fetchNews()
+
+    }, [choosenCategoryIndex])
+
     const showCategoryItems = () => {
         const categoryItems = newsItem;
-        categoryItems.forEach((item, index) => {
-            item.category = {
-                id: choosenNewsCategory,
-                category_name: news_category[choosenCategoryIndex].category_name,
-                title: news_category[choosenCategoryIndex].title
-            }
-        })
+        if (categoryItems === null) return (
+            <View className='flex-1 flex-col mt-1/2 justify-center items-center'>
+                <ActivityIndicator size="small" />
+            </View>
+        )
+        else {
+            categoryItems.forEach((item, index) => {
+                item.category = {
+                    id: choosenNewsCategory,
+                    category_name: news_category[choosenCategoryIndex].category_name,
+                    title: news_category[choosenCategoryIndex].title
+                }
+            })
+        }
         return <View className='mt-2'>
             {
                 categoryItems.map((item, index) => (
@@ -239,7 +264,7 @@ const NewsScreen: React.FC<NewsScreenProps> = ({ navigation, route }) => {
 
                     }} >
                         {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
-                        <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Add</Text>
+                        {/* <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Add</Text> */}
                     </TouchableOpacity>
                 </View>
             </View>
