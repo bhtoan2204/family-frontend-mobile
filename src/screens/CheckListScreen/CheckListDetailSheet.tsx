@@ -6,6 +6,7 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { ChecklistItemInterface } from 'src/interface/checklist/checklist';
 import { Picker } from '@react-native-picker/picker';
+import { TimePicker } from './AddItemCheckListSheet';
 
 
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
@@ -292,137 +293,137 @@ const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSh
     )
 }
 
-export const TimePicker = ({ refRBSheet, setSave, initialValue }: { refRBSheet: React.RefObject<RBSheet>, setSave: (dueDate: Date | null) => void, initialValue: Date | null }) => {
-    const [selectedYear, setSelectedYear] = useState(initialValue?.getFullYear().toString() || (new Date().getFullYear()).toString());
-    const [selectedMonth, setSelectedMonth] = useState((initialValue!.getMonth() + 1).toString().padStart(2, '0') || (new Date().getMonth() + 1).toString().padStart(2, '0'));
-    const [selectedDay, setSelectedDay] = useState(initialValue?.getDate().toString().padStart(2, '0') || (new Date().getDate()).toString().padStart(2, '0'));
-    const [selectedDate, setSelectedDate] = useState<Date>();
+// export const TimePicker = ({ refRBSheet, setSave, initialValue }: { refRBSheet: React.RefObject<RBSheet>, setSave: (dueDate: Date | null) => void, initialValue: Date | null }) => {
+//     const [selectedYear, setSelectedYear] = useState(initialValue?.getFullYear().toString() || (new Date().getFullYear()).toString());
+//     const [selectedMonth, setSelectedMonth] = useState((initialValue!.getMonth() + 1).toString().padStart(2, '0') || (new Date().getMonth() + 1).toString().padStart(2, '0'));
+//     const [selectedDay, setSelectedDay] = useState(initialValue?.getDate().toString().padStart(2, '0') || (new Date().getDate()).toString().padStart(2, '0'));
+//     const [selectedDate, setSelectedDate] = useState<Date>();
 
-    useEffect(() => {
-        setSelectedDate(new Date(
-            parseInt(selectedYear),
-            parseInt(selectedMonth) - 1,
-            parseInt(selectedDay)
-        ))
+//     useEffect(() => {
+//         setSelectedDate(new Date(
+//             parseInt(selectedYear),
+//             parseInt(selectedMonth) - 1,
+//             parseInt(selectedDay)
+//         ))
 
-    }, [selectedDay, selectedMonth, selectedYear])
-    const handleSave = () => {
-        setSave(selectedDate || null)
-    }
+//     }, [selectedDay, selectedMonth, selectedYear])
+//     const handleSave = () => {
+//         setSave(selectedDate || null)
+//     }
 
-    return <RBSheet
-        ref={refRBSheet}
-        onClose={() => {
-            setSelectedDay(initialValue?.getFullYear().toString() || (new Date().getFullYear()).toString())
-            setSelectedMonth((initialValue!.getMonth() + 1).toString().padStart(2, '0') || (new Date().getMonth() + 1).toString().padStart(2, '0'))
-            setSelectedYear(initialValue?.getDate().toString().padStart(2, '0') || (new Date().getDate()).toString().padStart(2, '0'))
-            setSelectedDate(undefined);
-        }}
-        customStyles={{
-            container: {
-                borderTopLeftRadius: 10,
-                height: Dimensions.get('window').height * 0.45,
-                borderTopRightRadius: 10,
+//     return <RBSheet
+//         ref={refRBSheet}
+//         onClose={() => {
+//             setSelectedDay(initialValue?.getFullYear().toString() || (new Date().getFullYear()).toString())
+//             setSelectedMonth((initialValue!.getMonth() + 1).toString().padStart(2, '0') || (new Date().getMonth() + 1).toString().padStart(2, '0'))
+//             setSelectedYear(initialValue?.getDate().toString().padStart(2, '0') || (new Date().getDate()).toString().padStart(2, '0'))
+//             setSelectedDate(undefined);
+//         }}
+//         customStyles={{
+//             container: {
+//                 borderTopLeftRadius: 10,
+//                 height: Dimensions.get('window').height * 0.45,
+//                 borderTopRightRadius: 10,
 
-            },
-            draggableIcon: {
-                display: "none",
-            }
-        }}
-    >
-        <View>
-            <View className='w-full  flex-row justify-between  items-center py-3 bg-white px-4 z-10'>
-                <TouchableOpacity onPress={() => {
+//             },
+//             draggableIcon: {
+//                 display: "none",
+//             }
+//         }}
+//     >
+//         <View>
+//             <View className='w-full  flex-row justify-between  items-center py-3 bg-white px-4 z-10'>
+//                 <TouchableOpacity onPress={() => {
 
-                    refRBSheet.current?.close()
-                }} className=' flex-row items-center ' >
-                    <Text className='text-base font-medium' style={{ color: COLORS.red }}>Cancel</Text>
-                </TouchableOpacity>
-                <View className=' '>
-                    <Text className='text-base font-medium text-center' >Pick Time</Text>
-                </View>
-                <TouchableOpacity className=' ' onPress={() => {
-                    handleSave()
-                    refRBSheet.current?.close()
-                }}>
-                    <Text className='text-base font-medium ' style={{
-                        textAlign: "right",
-                        color: COLORS.primary
-                    }}>Save</Text>
-                </TouchableOpacity>
-            </View>
-            <View className='flex-row items-center'>
-                <Picker
-                    selectedValue={selectedDay}
-                    onValueChange={(itemValue, itemIndex) => setSelectedDay(itemValue)}
-                    style={[styles.picker, styles.dayPicker]}
+//                     refRBSheet.current?.close()
+//                 }} className=' flex-row items-center ' >
+//                     <Text className='text-base font-medium' style={{ color: COLORS.red }}>Cancel</Text>
+//                 </TouchableOpacity>
+//                 <View className=' '>
+//                     <Text className='text-base font-medium text-center' >Pick Time</Text>
+//                 </View>
+//                 <TouchableOpacity className=' ' onPress={() => {
+//                     handleSave()
+//                     refRBSheet.current?.close()
+//                 }}>
+//                     <Text className='text-base font-medium ' style={{
+//                         textAlign: "right",
+//                         color: COLORS.primary
+//                     }}>Save</Text>
+//                 </TouchableOpacity>
+//             </View>
+//             <View className='flex-row items-center'>
+//                 <Picker
+//                     selectedValue={selectedDay}
+//                     onValueChange={(itemValue, itemIndex) => setSelectedDay(itemValue)}
+//                     style={[styles.picker, styles.dayPicker]}
 
-                >
-                    {[...Array(31).keys()].map(day => (
-                        <Picker.Item key={day} label={`${day + 1}`.padStart(2, '0')} value={`${day + 1}`.padStart(2, '0')} />
-                    ))}
-                </Picker>
+//                 >
+//                     {[...Array(31).keys()].map(day => (
+//                         <Picker.Item key={day} label={`${day + 1}`.padStart(2, '0')} value={`${day + 1}`.padStart(2, '0')} />
+//                     ))}
+//                 </Picker>
 
-                <Picker
-                    selectedValue={selectedMonth}
-                    onValueChange={(itemValue, itemIndex) => setSelectedMonth(itemValue)}
-                    style={[styles.picker, styles.monthPicker]}
+//                 <Picker
+//                     selectedValue={selectedMonth}
+//                     onValueChange={(itemValue, itemIndex) => setSelectedMonth(itemValue)}
+//                     style={[styles.picker, styles.monthPicker]}
 
-                >
-                    {[...Array(12).keys()].map(month => (
-                        <Picker.Item key={month} label={`${month + 1}`.padStart(2, '0')} value={`${month + 1}`.padStart(2, '0')} />
-                    ))}
-                </Picker>
-                <Picker
-                    selectedValue={selectedYear}
-                    onValueChange={(itemValue, itemIndex) => setSelectedYear(itemValue)}
-                    style={[styles.picker, styles.yearPicker]}
-                >
-                    {[...Array(10).keys()].map(year => (
-                        <Picker.Item key={year} label={`${2024 + year}`} value={`${2024 + year}`} />
-                    ))}
-                </Picker>
-            </View>
-        </View>
+//                 >
+//                     {[...Array(12).keys()].map(month => (
+//                         <Picker.Item key={month} label={`${month + 1}`.padStart(2, '0')} value={`${month + 1}`.padStart(2, '0')} />
+//                     ))}
+//                 </Picker>
+//                 <Picker
+//                     selectedValue={selectedYear}
+//                     onValueChange={(itemValue, itemIndex) => setSelectedYear(itemValue)}
+//                     style={[styles.picker, styles.yearPicker]}
+//                 >
+//                     {[...Array(10).keys()].map(year => (
+//                         <Picker.Item key={year} label={`${2024 + year}`} value={`${2024 + year}`} />
+//                     ))}
+//                 </Picker>
+//             </View>
+//         </View>
 
-    </RBSheet>
-}
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 20,
-    },
-    pickerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    picker: {
-        height: 150,
-        fontSize: 20,
-    },
-    yearPicker: {
-        flex: 1,
-    },
-    monthPicker: {
-        flex: 1,
-        // marginHorizontal: 5,
-    },
-    dayPicker: {
-        flex: 1,
-    },
-    confirmButton: {
-        marginTop: 20,
-        backgroundColor: '#007BFF',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 10,
-    },
-    confirmButtonText: {
-        color: 'white',
-        fontSize: 18,
-    },
-});
+//     </RBSheet>
+// }
+// const styles = StyleSheet.create({
+//     container: {
+//         flex: 1,
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//         paddingHorizontal: 20,
+//     },
+//     pickerContainer: {
+//         flexDirection: 'row',
+//         alignItems: 'center',
+//     },
+//     picker: {
+//         height: 150,
+//         fontSize: 20,
+//     },
+//     yearPicker: {
+//         flex: 1,
+//     },
+//     monthPicker: {
+//         flex: 1,
+//         // marginHorizontal: 5,
+//     },
+//     dayPicker: {
+//         flex: 1,
+//     },
+//     confirmButton: {
+//         marginTop: 20,
+//         backgroundColor: '#007BFF',
+//         paddingVertical: 10,
+//         paddingHorizontal: 20,
+//         borderRadius: 10,
+//     },
+//     confirmButtonText: {
+//         color: 'white',
+//         fontSize: 18,
+//     },
+// });
 
 export default ChecklistDetailSheet

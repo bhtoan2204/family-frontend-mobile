@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native'
 import { COLORS } from 'src/constants'
 import { NewsScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -158,7 +158,25 @@ const NewsScreen: React.FC<NewsScreenProps> = ({ navigation, route }) => {
     const [choosenCategoryIndex, setChoosenCategoryIndex] = React.useState<number>(0)
     const [choosenNewsCategory, setChoosenNewsCategory] = React.useState<number>(news_category[0].id)
     const [loading, setLoading] = React.useState<boolean>(false)
+    const [refreshing, setRefreshing] = React.useState<boolean>(false)
     const categoryRefScroll = useRef<any>(null);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        const fetchNews = async () => {
+            const type = news_category[choosenCategoryIndex].category_name
+            try {
+                // setLoading(true)
+                setNewsItem(null)
+                const data = await NewsService.getNewsByCategory(type, null, null)
+                setRefreshing(false)
+                setNewsItem(data)
+            } catch (error) {
+                console.error('Error fetching news:', error);
+            }
+        }
+        fetchNews()
+    }, []);
 
     const buildDateDiff = (pubDate: string) => {
         const today = new Date();
@@ -269,7 +287,7 @@ const NewsScreen: React.FC<NewsScreenProps> = ({ navigation, route }) => {
                 </View>
             </View>
             <View>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} ref={categoryRefScroll}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} ref={categoryRefScroll} className=''>
                     {newsCategory.map((category, index) => (
                         <TouchableOpacity
                             key={category.id}
@@ -293,8 +311,12 @@ const NewsScreen: React.FC<NewsScreenProps> = ({ navigation, route }) => {
                     ))}
                 </ScrollView>
             </View>
-            <ScrollView>
-                <View style={{ flex: 1 }}>
+            <ScrollView refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh} />
+            } style={{ flex: 1 }}>
+                <View >
                     {showCategoryItems()}
                 </View>
             </ScrollView>

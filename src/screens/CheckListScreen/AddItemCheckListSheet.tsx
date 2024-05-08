@@ -162,7 +162,7 @@ const AddItemCheckListSheet = ({ refRBSheet, setChecklist }: { refRBSheet: React
 
 export const TimePicker = ({ refRBSheet, setSave, initialValue }: { refRBSheet: React.RefObject<RBSheet>, setSave: (dueDate: Date | null) => void, initialValue: Date | null }) => {
     const [selectedYear, setSelectedYear] = useState(initialValue?.getFullYear().toString() || (new Date().getFullYear()).toString());
-    const [selectedMonth, setSelectedMonth] = useState(initialValue?.getMonth().toString().padStart(2, '0') || (new Date().getMonth() + 1).toString().padStart(2, '0'));
+    const [selectedMonth, setSelectedMonth] = useState(initialValue != null ? (initialValue!.getMonth() + 1).toString().padStart(2, '0') : (new Date().getMonth() + 1).toString().padStart(2, '0'));
     const [selectedDay, setSelectedDay] = useState(initialValue?.getDate().toString().padStart(2, '0') || (new Date().getDate()).toString().padStart(2, '0'));
     const [selectedDate, setSelectedDate] = useState<Date>();
 
