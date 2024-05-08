@@ -8,7 +8,7 @@ export default StyleSheet.create({
       marginBottom: 20,
       justifyContent: 'center',
       flexDirection: 'row',
-      height: '8%',
+      height: '7%',
     
 },
 headerTitleContainer: {
@@ -117,9 +117,10 @@ headerText: {
     alignItems: 'center',
   },
   addImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,  
+    marginBottom: 10,
+    marginRight: 10,
+    marginTop: 10,
+    color: 'white',
   },
   scrollView: {
     flex: 1, 
@@ -149,7 +150,7 @@ headerText: {
     position: 'absolute',
     bottom: 0,
     height: 2,
-    backgroundColor: COLORS.primaryDark,
+    backgroundColor: 'gray',
     width: '50%', 
   },
 });

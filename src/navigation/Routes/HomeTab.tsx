@@ -6,7 +6,7 @@ import {StyleSheet} from 'react-native';
 import TabButton from 'src/components/TabButton';
 import {TEXTS} from 'src/constants';
 import HomeScreen from 'src/screens/HomeScreen';
-import ReportScreen from 'src/screens/ReportScreen';
+import ReportScreen from 'src/screens/Report';
 import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
 import ExpenditureScreen from 'src/screens/ExpenseScreen';
 import BottomSheetChild from 'src/screens/HomeScreen/BottomSheetContent';
@@ -63,7 +63,7 @@ const TabList = [
     id: TEXTS.REPORT_TAB,
     title: TEXTS.REPORT_TAB,
     component: ReportScreen,
-    screen: 'PackageScreen',
+    screen: 'ReportScreen',
     icon: 'notebook',
     visible: true,
   },

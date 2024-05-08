@@ -1,4 +1,4 @@
-interface Expenditure {
+export interface Expenditure {
     id_expenditure: number;
     id_family: number;
     id_created_by: string;

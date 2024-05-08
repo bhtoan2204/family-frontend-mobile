@@ -219,7 +219,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
           }
         };
    const showTransactionHistory = () => {
-        navigation.navigate('HomeTab', {screen: 'FamilyFinace'});
+        navigation.navigate('HomeTab', {screen: 'ReportScreen'});
    }
         
     return (

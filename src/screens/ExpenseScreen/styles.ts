@@ -11,7 +11,6 @@ const styles = StyleSheet.create({
 },
   headcontainer: {
     backgroundColor: 'white', 
-    paddingHorizontal: 3,
     height: '100%',
   },
   inputContainer: {

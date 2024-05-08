@@ -106,7 +106,7 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
             </View>
       
             <TouchableOpacity onPress={toggleModal} style={styles.headerButton}>
-                <Image source={{ uri: addUrl}} style={styles.addImage} />
+            <Icon name="add" size={30} style={styles.addImage} />
             </TouchableOpacity>
         </View>
         <View style={styles.containerTab}>
