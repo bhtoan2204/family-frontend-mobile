@@ -102,6 +102,10 @@ export type FamilyStackParamList = {
     id_family: number | undefined;
     id_item: number;
   };
+  SharedGuildLine: {
+    id_family: number | undefined;
+    id_item: number;
+  };
   Education: {
     id_family: number | undefined;
   };
@@ -294,6 +298,11 @@ type GuildLineDetailNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'GuildLineDetail'
 >;
+type SharedGuildLineNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'SharedGuildLine'
+>;
+
 type EducationNavigationprop = NativeStackNavigationProp<
   FamilyStackParamList,
   'Education'
@@ -382,6 +391,11 @@ export interface GuildLineScreenProps {
 export interface GuildLineDetailScreenProps {
   navigation: GuildLineDetailNavigationProp;
   route: RouteProp<FamilyStackParamList, 'GuildLineDetail'>;
+}
+
+export interface SharedGuildLineScreenProps {
+  navigation: SharedGuildLineNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'SharedGuildLine'>;
 }
 
 export type UpdateFamilyNavigationProps = NativeStackNavigationProp<
