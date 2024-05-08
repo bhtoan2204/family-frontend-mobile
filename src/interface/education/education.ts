@@ -58,7 +58,7 @@ export interface Education {
   school_info: string;
   created_at: string;
   updated_at: string;
-  avatar: string;
+  avatar?: string;
   firstname: string;
   lastname: string;
 }
