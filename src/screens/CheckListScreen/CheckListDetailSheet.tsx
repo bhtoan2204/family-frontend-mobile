@@ -81,6 +81,24 @@ const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSh
         })
     }
 
+    const handleUpdateComplete = () => {
+        setChecklist((prev) => {
+            return [
+                ...prev.map((item) => {
+                    if (item.id === checklist.id) {
+                        return {
+                            ...item,
+                            isCompleted: !checklist.isCompleted,
+                        };
+                    }
+                    return item;
+                })
+            ]
+
+
+        })
+    }
+
     const onPressPriority = () => {
         const options = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Cancel',];
         const cancelButtonIndex = 4;
@@ -210,10 +228,12 @@ const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSh
                                             setIsEditing(true)
                                         }}>
                                             <TouchableOpacity className='w-7 h-7 rounded-full mr-4 flex flex-col items-center justify-center' style={{ backgroundColor: priorityColors[priority - 1] }} onPress={() => {
-                                                console.log('Priority:', priority)
+                                                handleUpdateComplete()
                                             }}>
-                                                <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[priority - 1] }}>
-                                                </View>
+                                                {
+                                                    checklist.isCompleted ? <Text className='text-white'>✓</Text> : <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[checklist.priority - 1] }}>
+                                                    </View>
+                                                }
                                             </TouchableOpacity>
                                             <Text className='text-lg font-semibold'>{checklist.title}</Text>
                                         </TouchableOpacity>
@@ -274,7 +294,7 @@ const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSh
 
 export const TimePicker = ({ refRBSheet, setSave, initialValue }: { refRBSheet: React.RefObject<RBSheet>, setSave: (dueDate: Date | null) => void, initialValue: Date | null }) => {
     const [selectedYear, setSelectedYear] = useState(initialValue?.getFullYear().toString() || (new Date().getFullYear()).toString());
-    const [selectedMonth, setSelectedMonth] = useState(initialValue?.getMonth().toString().padStart(2, '0') || (new Date().getMonth() + 1).toString().padStart(2, '0'));
+    const [selectedMonth, setSelectedMonth] = useState((initialValue!.getMonth() + 1).toString().padStart(2, '0') || (new Date().getMonth() + 1).toString().padStart(2, '0'));
     const [selectedDay, setSelectedDay] = useState(initialValue?.getDate().toString().padStart(2, '0') || (new Date().getDate()).toString().padStart(2, '0'));
     const [selectedDate, setSelectedDate] = useState<Date>();
 
@@ -292,6 +312,12 @@ export const TimePicker = ({ refRBSheet, setSave, initialValue }: { refRBSheet: 
 
     return <RBSheet
         ref={refRBSheet}
+        onClose={() => {
+            setSelectedDay(initialValue?.getFullYear().toString() || (new Date().getFullYear()).toString())
+            setSelectedMonth((initialValue!.getMonth() + 1).toString().padStart(2, '0') || (new Date().getMonth() + 1).toString().padStart(2, '0'))
+            setSelectedYear(initialValue?.getDate().toString().padStart(2, '0') || (new Date().getDate()).toString().padStart(2, '0'))
+            setSelectedDate(undefined);
+        }}
         customStyles={{
             container: {
                 borderTopLeftRadius: 10,

@@ -8,6 +8,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { COLORS } from 'src/constants';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import AddItemCheckListSheet from './AddItemCheckListSheet';
+import { compareDates } from 'src/utils/compareDate';
 
 const today = new Date();
 const yesterday = new Date(today.setDate(today.getDate() - 1));
@@ -16,7 +17,7 @@ const tomorrow = new Date(today.setDate(today.getDate() + 1));
 const checklistData: ChecklistItemInterface[] = [
     { id: '1', title: 'Task 1', description: 'Description 1', dueDate: tomorrow, priority: 3, isCompleted: false, createdAt: new Date() },
     { id: '2', title: 'Task 2', description: 'Description 2', dueDate: today, priority: 2, isCompleted: false, createdAt: new Date() },
-    { id: '3', title: 'Task 3', description: 'Description 3', dueDate: yesterday, priority: 1, isCompleted: false, createdAt: new Date() },
+    { id: '3', title: 'Task 3', description: 'Description 3', dueDate: yesterday, priority: 1, isCompleted: true, createdAt: new Date() },
     // Thêm các mục kiểm tra khác ở đây...
 ];
 
@@ -31,14 +32,14 @@ const ChecklistSections: React.FC<{ checklist: ChecklistItemInterface[], setChec
             }
             else dueDate = new Date(item.dueDate);
 
-            if (dueDate.getDay() === today.getDay()) {
+            if (compareDates(dueDate, today) === 0) {
                 const todayIndex = newSections.findIndex(section => section.title === 'Today');
                 if (todayIndex === -1) {
                     newSections.push({ title: 'Today', data: [item] });
                 } else {
                     newSections[todayIndex].data.push(item);
                 }
-            } else if (dueDate.getDay() < today.getDay()) {
+            } else if (compareDates(dueDate, today) === -1) {
                 const overdueIndex = newSections.findIndex(section => section.title === 'Overdue');
                 if (overdueIndex === -1) {
                     newSections.push({ title: 'Overdue', data: [item] });

@@ -8,17 +8,39 @@ const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
 
 const ChecklistItem: React.FC<{ item: ChecklistItemInterface, setChecklist: React.Dispatch<React.SetStateAction<ChecklistItemInterface[]>> }> = ({ item, setChecklist }) => {
+    const [isCompleted, setIsCompleted] = React.useState<boolean>(item.isCompleted);
     const refRBSheet = React.useRef<RBSheet>(null);
+
+    const handleUpdateComplete = () => {
+        setChecklist((prev) => {
+            return [
+                ...prev.map((i) => {
+                    if (i.id === item.id) {
+                        return {
+                            ...i,
+                            isCompleted: !item.isCompleted,
+                        };
+                    }
+                    return i;
+                })
+            ]
+
+
+        })
+    }
+
     return <TouchableOpacity onPress={() => {
         refRBSheet.current?.open();
     }} style={styles.checklistItem} className='bg-white'>
         <View  >
             <View className='flex-row items-center'>
                 <TouchableOpacity className='w-7 h-7 rounded-full mr-4 flex flex-col items-center justify-center' style={{ backgroundColor: priorityColors[item.priority - 1] }} onPress={() => {
-                    console.log('Priority:', item.priority)
+                    handleUpdateComplete()
                 }}>
-                    <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[item.priority - 1] }}>
-                    </View>
+                    {
+                        item.isCompleted ? <Text className='text-white'>✓</Text> : <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[item.priority - 1] }}>
+                        </View>
+                    }
                 </TouchableOpacity>
                 <Text className='text-base'>{item.title}</Text>
             </View>

@@ -60,6 +60,7 @@ const AddItemCheckListSheet = ({ refRBSheet, setChecklist }: { refRBSheet: React
                 setName("");
                 setDescription("");
                 setPriority(4);
+                setDueDate(null);
             }}
 
             customStyles={{
@@ -145,7 +146,7 @@ const AddItemCheckListSheet = ({ refRBSheet, setChecklist }: { refRBSheet: React
 
                     }}
                     onPress={() => {
-                        setChecklist((prev) => [...prev, { id: (prev.length + 1).toString(), title: name, description: description, dueDate: new Date(), priority: priority, isCompleted: false, createdAt: new Date() }]);
+                        setChecklist((prev) => [...prev, { id: (prev.length + 1).toString(), title: name, description: description, dueDate: dueDate != null ? new Date(dueDate) : new Date(), priority: priority, isCompleted: false, createdAt: new Date() }]);
 
                         refRBSheet.current?.close();
                     }}
@@ -159,7 +160,7 @@ const AddItemCheckListSheet = ({ refRBSheet, setChecklist }: { refRBSheet: React
     )
 }
 
-export const TimePicker = ({ refRBSheet, setSave, initialValue }: { refRBSheet: React.RefObject<RBSheet>, setSave: React.Dispatch<React.SetStateAction<Date | null>>, initialValue: Date | null }) => {
+export const TimePicker = ({ refRBSheet, setSave, initialValue }: { refRBSheet: React.RefObject<RBSheet>, setSave: (dueDate: Date | null) => void, initialValue: Date | null }) => {
     const [selectedYear, setSelectedYear] = useState(initialValue?.getFullYear().toString() || (new Date().getFullYear()).toString());
     const [selectedMonth, setSelectedMonth] = useState(initialValue?.getMonth().toString().padStart(2, '0') || (new Date().getMonth() + 1).toString().padStart(2, '0'));
     const [selectedDay, setSelectedDay] = useState(initialValue?.getDate().toString().padStart(2, '0') || (new Date().getDate()).toString().padStart(2, '0'));
@@ -179,6 +180,12 @@ export const TimePicker = ({ refRBSheet, setSave, initialValue }: { refRBSheet: 
 
     return <RBSheet
         ref={refRBSheet}
+        onClose={() => {
+            setSelectedDay((new Date().getDate()).toString().padStart(2, '0'))
+            setSelectedMonth((new Date().getMonth() + 1).toString().padStart(2, '0'))
+            setSelectedYear((new Date().getFullYear()).toString())
+            setSelectedDate(undefined)
+        }}
         customStyles={{
             container: {
                 borderTopLeftRadius: 10,
