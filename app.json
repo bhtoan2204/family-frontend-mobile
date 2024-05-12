@@ -1,6 +1,4 @@
 {
-  "name": "mobile_shell",
-  "displayName": "mobile_shell",
   "expo": {
     "name": "mobile_shell",
     "slug": "mobile_shell",
@@ -14,30 +12,20 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true,
-      "backgroundModes": ["fetch"] 
+      "supportsTablet": true
     },
     "platforms": [
       "ios",
       "android"
     ],
-    "backgroundFetch": {
-      "enabled": true,
-      "minimumInterval": 15 
-    },
     "notification": {
       "icon": "src/assets/images/notification-icon.png",
       "color": "#ffffff",
       "iosDisplayInForeground": true
-    },
-    "android": {
-      "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE"
-      ]
     }
-   
-}
+  }
 }

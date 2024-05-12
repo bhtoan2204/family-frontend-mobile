@@ -12,11 +12,8 @@ import { getExpenseId, getExpenseName, getIncomeId, getIncomeName, getType, setE
 import { FamilyServices } from 'src/services/apiclient';
 import { Family } from 'src/interface/family/family';
 import TesseractOcr, { LANG_ENGLISH, LEVEL_WORD  } from 'react-native-tesseract-ocr';
-import * as Permissions from 'expo-permissions';
-import * as launchCamera from 'expo-image-picker';
 import { launchCameraAsync, MediaTypeOptions, CameraPermissionResponse, requestCameraPermissionsAsync } from 'expo-image-picker';
 import { RNTesseractOcr } from 'react-native-tesseract-ocr';
-import RNTextDetector from "react-native-text-detector";
 import HomeTab from 'src/navigation/Routes/HomeTab';
 
 
@@ -212,8 +209,8 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
       const analyzeInvoice = async (uri: string) => {
         try {
             console.log(uri)
-            const textRecognition =  RNTextDetector.detectFromUri(uri);
-            console.log(textRecognition)
+            // const textRecognition =  RNTextDetector.detectFromUri(uri);
+            // console.log(textRecognition)
           } catch (err) {
             console.error(err);
           }
