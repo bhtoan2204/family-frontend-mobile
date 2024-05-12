@@ -154,54 +154,55 @@ const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSh
             }}
         >
             <View className='flex-1'>
-                {
-                    isEditing ? <View className='w-full  flex-row justify-between  items-center py-3 bg-white px-4 z-10'>
-                        <TouchableOpacity onPress={() => {
-                            setIsEditing(false)
-                        }} className=' flex-row items-center ' >
-                            <Text className='text-base font-medium' style={{ color: COLORS.red }}>Cancel</Text>
-                        </TouchableOpacity>
-                        <View className=' '>
-                            <Text className='text-base font-medium text-center' >Edit</Text>
-                        </View>
-                        <TouchableOpacity className=' ' onPress={() => {
-                            handleUpdateChecklist()
-                            setIsEditing(false)
-                        }}>
-                            <Text className='text-base font-medium ' style={{
-                                textAlign: "right",
-                                color: COLORS.primary
-                            }}>Save</Text>
-                        </TouchableOpacity>
-                    </View> : <View className='w-full  flex-row justify-between  items-center py-3 bg-white px-4 z-10'>
-                        <View className=' flex-row items-center flex-1'>
-                        </View>
-                        <View className='flex-1 '>
-                        </View>
-                        <View className=' flex-1   '>
-                            {/* <Text className='text-base font-medium ' style={{
+
+                <KeyboardAvoidingView className="flex-1 bg-white " behavior="padding">
+                    {
+                        isEditing ? <View className='w-full  flex-row justify-between  items-center py-3 bg-white px-4 z-10'>
+                            <TouchableOpacity onPress={() => {
+                                setIsEditing(false)
+                            }} className=' flex-row items-center ' >
+                                <Text className='text-base font-medium' style={{ color: COLORS.red }}>Cancel</Text>
+                            </TouchableOpacity>
+                            <View className=' '>
+                                <Text className='text-base font-medium text-center' >Edit</Text>
+                            </View>
+                            <TouchableOpacity className=' ' onPress={() => {
+                                handleUpdateChecklist()
+                                setIsEditing(false)
+                            }}>
+                                <Text className='text-base font-medium ' style={{
+                                    textAlign: "right",
+                                    color: COLORS.primary
+                                }}>Save</Text>
+                            </TouchableOpacity>
+                        </View> : <View className='w-full  flex-row justify-between  items-center py-3 bg-white px-4 z-10'>
+                            <View className=' flex-row items-center flex-1'>
+                            </View>
+                            <View className='flex-1 '>
+                            </View>
+                            <View className=' flex-1   '>
+                                {/* <Text className='text-base font-medium ' style={{
                                 textAlign: "right",
                                 color: COLORS.primary
                             }}>Save</Text> */}
-                            <View style={{ alignItems: "flex-end" }} className='flex-row justify-end' >
-                                <View className='bg-gray-200 p-1 rounded-full mr-3'>
-                                    <Material name="dots-horizontal" size={22} style={{ color: COLORS.black }} onPress={() => {
+                                <View style={{ alignItems: "flex-end" }} className='flex-row justify-end' >
+                                    <View className='bg-gray-200 p-1 rounded-full mr-3'>
+                                        <Material name="dots-horizontal" size={22} style={{ color: COLORS.black }} onPress={() => {
 
-                                    }} />
-                                </View>
-                                <View className='bg-gray-200 p-1 rounded-full'>
-                                    <Material name="close" size={22} style={{ color: COLORS.black }} onPress={() => {
-                                        refRBSheet.current?.close()
-                                    }} />
+                                        }} />
+                                    </View>
+                                    <View className='bg-gray-200 p-1 rounded-full'>
+                                        <Material name="close" size={22} style={{ color: COLORS.black }} onPress={() => {
+                                            refRBSheet.current?.close()
+                                        }} />
+                                    </View>
                                 </View>
                             </View>
+
+
                         </View>
-
-
-                    </View>
-                }
-                <KeyboardAvoidingView className="flex-1 bg-white " behavior="padding">
-                    <ScrollView showsVerticalScrollIndicator={false} className='flex-1 ' keyboardShouldPersistTaps="always" scrollEnabled={isEditing == false} >
+                    }
+                    <ScrollView showsVerticalScrollIndicator={false} className='flex-1 ' keyboardShouldPersistTaps="handled" scrollEnabled={isEditing == false} >
                         {
                             isEditing
                                 ? <View >

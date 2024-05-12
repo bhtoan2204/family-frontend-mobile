@@ -67,8 +67,8 @@ const AddItemCheckListSheet = ({ refRBSheet, setChecklist }: { refRBSheet: React
                 container: {
                     // backgroundColor: "#F6F7F9",
                     height: "auto",
-                    borderTopLeftRadius: 10,
-                    borderTopRightRadius: 10,
+                    borderTopLeftRadius: 5,
+                    borderTopRightRadius: 5,
                 },
                 draggableIcon: {
                     // borderBlockColor: "#0000",

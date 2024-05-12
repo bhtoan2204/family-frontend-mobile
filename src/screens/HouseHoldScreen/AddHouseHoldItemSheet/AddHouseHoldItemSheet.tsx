@@ -123,27 +123,28 @@ const AddHouseHoldItemSheet = ({ refRBSheet, setHouseHoldItem, id_category, id_f
             }}
         >
             <View className='flex-1 '>
-                <View className='w-full  flex-row justify-between items-center py-4 z-10 ' >
-                    <TouchableOpacity
-                        onPress={() => {
-                            refRBSheet.current?.close()
-                        }}
-                    ><Text className='text-blue-600 text-base pl-4'>Cancel</Text>
-                    </TouchableOpacity>
 
-                    <View>
-                        <Text className='text-base font-semibold'>HouseHold</Text>
-                    </View>
-
-                    <TouchableOpacity onPress={() => {
-                        handleAddHouseHold()
-                    }} className='pr-4 disabled:text-gray-600 text-blue-600' disabled={
-                        name === "" || image === ""
-                    }>
-                        <Text className=' text-base font-semibold ' >Add</Text>
-                    </TouchableOpacity>
-                </View>
                 <KeyboardAvoidingView className="flex-1 bg-white" behavior="padding">
+                    <View className='w-full  flex-row justify-between items-center py-4 z-10 ' >
+                        <TouchableOpacity
+                            onPress={() => {
+                                refRBSheet.current?.close()
+                            }}
+                        ><Text className='text-blue-600 text-base pl-4'>Cancel</Text>
+                        </TouchableOpacity>
+
+                        <View>
+                            <Text className='text-base font-semibold'>HouseHold</Text>
+                        </View>
+
+                        <TouchableOpacity onPress={() => {
+                            handleAddHouseHold()
+                        }} className='pr-4 disabled:text-gray-600 text-blue-600' disabled={
+                            name === "" || image === ""
+                        }>
+                            <Text className=' text-base font-semibold ' >Add</Text>
+                        </TouchableOpacity>
+                    </View>
                     <ScrollView showsVerticalScrollIndicator={true} className='flex-1 ' keyboardShouldPersistTaps="handled" >
                         <View className='p-4'>
                             <TouchableOpacity onPress={() => {

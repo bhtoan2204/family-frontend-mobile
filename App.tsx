@@ -10,7 +10,6 @@ import { connectSocket } from 'src/services/apiclient/Socket';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
-
 const App: React.FC = () => {
     useEffect(() => {
         connectSocket();
