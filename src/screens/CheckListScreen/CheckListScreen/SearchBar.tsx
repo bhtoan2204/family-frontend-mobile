@@ -5,7 +5,7 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 const SearchBar = ({ searchString, setSearchString }: any) => {
     const inputRef = React.useRef<TextInput>(null)
     return (
-        <TouchableOpacity className='bg-[#EEEFF2] py-4 pl-4 mx-2 mb-3 rounded-lg flex-row items-center' onPress={() => {
+        <TouchableOpacity className='bg-[#EEEFF2] py-4 pl-4 mx-2 mb-3 rounded-3xl flex-row items-center' onPress={() => {
             inputRef.current?.focus()
         }}>
             <View className='mr-2'>

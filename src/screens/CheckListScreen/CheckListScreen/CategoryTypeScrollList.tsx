@@ -14,7 +14,7 @@ import { shoppingListItemColor, shoppingListItemColorInside } from '../constant/
 import CircularProgress from '../../EducationScreen/CircularProgress';
 
 const CategoryTypeScrollList = ({ setSelectedCategory }: { setSelectedCategory: any }) => {
-    return <ScrollView horizontal showsHorizontalScrollIndicator={false} className="px-2 my-2 ">
+    return <ScrollView horizontal showsHorizontalScrollIndicator={false} className="px-2 my-2 " keyboardShouldPersistTaps="never">
         <TouchableOpacity
             key={-1}
             onPress={() => { }}

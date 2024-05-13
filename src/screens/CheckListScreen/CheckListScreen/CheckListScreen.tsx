@@ -62,11 +62,18 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
     }, [])
 
     useEffect(() => {
+        // const timeOutId = setTimeout(() => {
+
+        // }, 1000)
+        // return () => {
+        //     clearTimeout(timeOutId)
+        // }
         const filtered = checklist.filter(item => item.title.toLowerCase().includes(searchString.toLowerCase()))
         filtered.map(item => {
             item.category_name = checklist_category_type.find(type => type.id_item_type === item.id_item_type)?.item_type_name
         })
         setFilteredChecklist(filtered)
+        console.log("filter here: ",filtered)
     }, [searchString])
 
     return (
