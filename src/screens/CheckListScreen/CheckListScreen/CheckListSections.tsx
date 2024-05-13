@@ -11,7 +11,7 @@ const today = new Date();
 const yesterday = new Date(today.setDate(today.getDate() - 1));
 const tomorrow = new Date(today.setDate(today.getDate() + 1));
 
-const ChecklistSections: React.FC<{ checklist: CheckListCategoryInterface[], setChecklist: React.Dispatch<React.SetStateAction<CheckListCategoryInterface[]>>, setSelectedCategory: React.Dispatch<React.SetStateAction<number | null>>, handleNavigateCheckListDetail: (id_checklist: number) => void, searchString: string, setSearchString: React.Dispatch<React.SetStateAction<string>> }> = ({ checklist, setChecklist, setSelectedCategory, handleNavigateCheckListDetail, searchString, setSearchString }) => {
+const ChecklistSections: React.FC<{ checklist: CheckListCategoryInterface[], setChecklist: React.Dispatch<React.SetStateAction<CheckListCategoryInterface[]>>, selectedCategory: number | null, setSelectedCategory: React.Dispatch<React.SetStateAction<number | null>>, handleNavigateCheckListDetail: (id_checklist: number) => void, searchString: string, setSearchString: React.Dispatch<React.SetStateAction<string>> }> = ({ checklist, setChecklist, selectedCategory, setSelectedCategory, handleNavigateCheckListDetail, searchString, setSearchString }) => {
     const [sections, setSections] = React.useState<{ title: string, data: CheckListCategoryInterface[], }[]>([]);
     React.useEffect(() => {
         const newSections: { title: string, data: CheckListCategoryInterface[] }[] = [];
@@ -71,7 +71,7 @@ const ChecklistSections: React.FC<{ checklist: CheckListCategoryInterface[], set
         <KeyboardAvoidingView className="flex-1 bg-white " behavior={Platform.OS === "ios" ? "padding" : "height"} >
             <ScrollView className='flex-1' showsVerticalScrollIndicator keyboardShouldPersistTaps="handled" >
                 <SearchBar searchString={searchString} setSearchString={setSearchString} />
-                <CategoryTypeScrollList setSelectedCategory={setSelectedCategory} />
+                <CategoryTypeScrollList selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
 
                 {
                     sections.map((section, index) => (

@@ -62,19 +62,25 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
     }, [])
 
     useEffect(() => {
+        // console.log(selectedCategory, searchString)
         // const timeOutId = setTimeout(() => {
 
         // }, 1000)
         // return () => {
         //     clearTimeout(timeOutId)
         // }
-        const filtered = checklist.filter(item => item.title.toLowerCase().includes(searchString.toLowerCase()))
+        const filtered = checklist.filter(item =>
+            (selectedCategory === null || item.id_item_type === selectedCategory) &&
+            (searchString === '' || item.title.toLowerCase().includes(searchString.toLowerCase()))
+        )
         filtered.map(item => {
             item.category_name = checklist_category_type.find(type => type.id_item_type === item.id_item_type)?.item_type_name
         })
         setFilteredChecklist(filtered)
-        console.log("filter here: ",filtered)
-    }, [searchString])
+        console.log("filter here: ", filtered)
+    }, [searchString, selectedCategory])
+
+
 
     return (
         <View style={styles.container}>
@@ -90,7 +96,7 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
             </View>
 
 
-            <ChecklistSections checklist={filteredChecklist} setChecklist={setChecklist} setSelectedCategory={setSelectedCategory} handleNavigateCheckListDetail={handleNavigateCheckListDetail} searchString={searchString} setSearchString={setSearchString} />
+            <ChecklistSections checklist={filteredChecklist} setChecklist={setChecklist} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} handleNavigateCheckListDetail={handleNavigateCheckListDetail} searchString={searchString} setSearchString={setSearchString} />
             {/* <TouchableOpacity onPress={() => {
                 refRBSheet.current?.open()
             }} style={styles.fab} >
