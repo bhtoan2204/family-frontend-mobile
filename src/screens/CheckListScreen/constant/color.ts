@@ -10,10 +10,10 @@ export const shoppingListItemColor = [
 ];
 
 export const shoppingListItemColorInside = [
-  '#FBD1D1', // Màu cho Grocery
-  '#FFEBCC', // Màu cho Electronics
-  '#B0D8FD', // Màu cho Clothing
-  '#BEF1BE', // Màu cho Furniture
-  '#FFD3E6', // Màu cho Pharmacy
-  '#DCDCDC', // Màu cho Other (xám)
+  '#FEE2E2', // Màu cho Grocery (Tươi)
+  '#FFF7E3', // Màu cho Electronics (Tươi)
+  '#DBEAFE', // Màu cho Clothing (Tươi)
+  '#E6F7E9', // Màu cho Furniture (Tươi)
+  '#FFE4EE', // Màu cho Pharmacy (Tươi)
+  '#E0E0E0', // Màu cho Other (Xám Nhạt)
 ];

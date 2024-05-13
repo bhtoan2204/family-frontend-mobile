@@ -15,7 +15,7 @@ import SubjectDetailScreen from 'src/screens/EducationScreen/SubjectDetailScreen
 import HouseHoldScreen from 'src/screens/HouseHoldScreen/HouseHoldScreen';
 import HouseHoldCategoryScreen from 'src/screens/HouseHoldScreen/HouseHoldCategoryScreen/HouseHoldCategoryScreen';
 import HouseHoldCategoryDetailScreen from 'src/screens/HouseHoldScreen/HouseHoldCategoryDetailScreen/HouseHoldCategoryDetailScreen';
-import ChecklistScreen from 'src/screens/CheckListScreen/CheckListScreen';
+import ChecklistScreen from 'src/screens/CheckListScreen/CheckListScreen/CheckListScreen';
 import NewsScreen from 'src/screens/NewsScreen/NewsScreen';
 import SharedGuildLineDetailScreen from 'src/screens/GuildLineScreen/SharedGuildLineScreen';
 import ChecklistDetailScreen from 'src/screens/CheckListScreen/CheckListDetailScreen';

@@ -15,9 +15,9 @@ const yesterday = new Date(today.setDate(today.getDate() - 1));
 const tomorrow = new Date(today.setDate(today.getDate() + 1));
 
 const checklistData: ChecklistItemInterface[] = [
-    { id: '1', title: 'Task 1', description: 'Description 1', dueDate: tomorrow, priority: 3, isCompleted: false, createdAt: new Date() },
+    { id: '1', title: 'Task 1', description: 'Description 1', dueDate: today, priority: 3, isCompleted: false, createdAt: new Date() },
     { id: '2', title: 'Task 2', description: 'Description 2', dueDate: today, priority: 2, isCompleted: false, createdAt: new Date() },
-    { id: '3', title: 'Task 3', description: 'Description 3', dueDate: yesterday, priority: 1, isCompleted: true, createdAt: new Date() },
+    { id: '3', title: 'Task 3', description: 'Description 3', dueDate: today, priority: 1, isCompleted: true, createdAt: new Date() },
     // Thêm các mục kiểm tra khác ở đây...
 ];
 
@@ -125,92 +125,6 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
         setChecklist(checklistData)
     }, [])
     useEffect(() => {
-
-        // checklist.forEach(item => {
-        //     console.log('Item:', item)
-        //     const dueDate = new Date(item.dueDate);
-        //     if (dueDate.getDay() === today.getDay()) {
-        //         const todayIndex = sections.findIndex(section => section.title === 'Today');
-        //         if (todayIndex === -1) {
-        //             // sections.push({ title: 'Today', data: [item] });
-        //             setSections([...sections, { title: 'Today', data: [item] }]);
-        //         } else {
-        //             if (sections[todayIndex].data.findIndex(i => i.id === item.id) === -1) {
-        //                 // sections[todayIndex].data.push(item);
-        //                 const newSections = sections[todayIndex].data
-        //                 newSections.push(item)
-        //                 setSections([...sections, { title: 'Today', data: newSections }])
-        //             }
-        //         }
-        //     } else if (dueDate.getDay() < today.getDay()) {
-        //         const overdueIndex = sections.findIndex(section => section.title === 'Overdue');
-        //         if (overdueIndex === -1) {
-        //             // sections.push({ title: 'Overdue', data: [item] });
-        //             setSections([...sections, { title: 'Overdue', data: [item] }]);
-        //         } else {
-        //             if (sections[overdueIndex].data.findIndex(i => i.id === item.id) === -1) {
-        //                 // sections[overdueIndex].data.push(item);
-        //                 const newSections = sections[overdueIndex].data
-        //                 newSections.push(item)
-        //                 setSections([...sections, { title: 'Overdue', data: newSections }])
-        //             }
-        //         }
-        //     } else {
-        //         const date = dueDate.toDateString();
-        //         const dateIndex = sections.findIndex(section => section.title === date);
-        //         if (dateIndex === -1) {
-        //             // sections.push({ title: date, data: [item] });
-        //             setSections([...sections, { title: date, data: [item] }]);
-        //         } else {
-        //             if (sections[dateIndex].data.findIndex(i => i.id === item.id) === -1) {
-        //                 // sections[dateIndex].data.push(item);
-        //                 const newSections = sections[dateIndex].data
-        //                 newSections.push(item)
-        //                 setSections([...sections, { title: date, data: newSections }])
-        //             }
-        //         }
-        //     }
-
-        // })
-
-        // const sortSection = () => {
-        //     sections.forEach(section => {
-        //         // Sắp xếp các mục trong mỗi section theo priority từ thấp đến cao
-        //         section.data.sort((a, b) => {
-        //             if (a.priority !== b.priority) {
-        //                 return a.priority - b.priority;
-        //             } else {
-        //                 // Nếu các mục có cùng priority, sắp xếp theo dueDate từ nhỏ đến lớn
-        //                 const dateA = new Date(a.dueDate);
-        //                 const dateB = new Date(b.dueDate);
-        //                 return dateA.getTime() - dateB.getTime();
-        //             }
-        //         });
-        //     });
-        //     sections.sort((a, b) => {
-        //         // Sắp xếp trước các mục Overdue
-        //         if (a.title === "Overdue" && b.title !== "Overdue") {
-        //             return -1; // a trước b
-        //         }
-        //         if (a.title !== "Overdue" && b.title === "Overdue") {
-        //             return 1; // b trước a
-        //         }
-
-        //         // Sau đó sắp xếp các mục Today
-        //         if (a.title === "Today" && b.title !== "Today") {
-        //             return -1; // a trước b
-        //         }
-        //         if (a.title !== "Today" && b.title === "Today") {
-        //             return 1; // b trước a
-        //         }
-
-        //         // Cuối cùng, sắp xếp các mục còn lại dựa trên thời gian dueDate
-        //         const dateA = new Date(a.data[0].dueDate);
-        //         const dateB = new Date(b.data[0].dueDate);
-        //         return dateA.getTime() - dateB.getTime();
-        //     });
-        // }
-        // sortSection();
     }, [checklist])
 
 
