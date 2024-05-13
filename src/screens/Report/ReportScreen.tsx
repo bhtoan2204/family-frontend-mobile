@@ -7,7 +7,9 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     const pressExVsIn = () => {
         navigation.navigate('ExpenseStack', {screen: 'FamilySpec', params: {id_family: 0}});
     }
-
+    const pressExpenseAnalysis = () => {
+      navigation.navigate('ExpenseStack', {screen: 'ChartExpense'});
+  }
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.expenseContainer} onPress={()=>pressExVsIn()}>
@@ -15,12 +17,13 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
       </TouchableOpacity>
   
       <View style={styles.analysisContainer}>
-        <View style={styles.expenseAnalysis}>
+        <TouchableOpacity style={styles.expenseAnalysis} onPress={()=>pressExpenseAnalysis()}>
           <Text style={styles.heading}>Expense Analysis</Text>
-        </View>
-        <View style={styles.incomeAnalysis}>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.incomeAnalysis} onPress={()=>pressExpenseAnalysis()}>
           <Text style={styles.heading}>Income Analysis</Text>
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

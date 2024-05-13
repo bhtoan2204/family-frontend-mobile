@@ -18,16 +18,18 @@ export type ExpenseStackParamList = {
   FamilySpec: {
     id_family: number | undefined;
   }
+  ChartExpense: undefined;
 };
-// type ExpenditureScreenNavigationProp = NativeStackNavigationProp<
-// ExpenseStackParamList,
-//   'Expenditure'
-// >;
+type ChartExpenseNavigationProp = NativeStackNavigationProp<
+ExpenseStackParamList,
+  'ChartExpense'
+>;
 
-// export interface ExpenditureScreenProps {
-//   navigation: ExpenditureScreenNavigationProp & CategoryExpenseScreenNavigationProp;
-//   route: RouteProp<ExpenseStackParamList, 'Expenditure'>;
-// }
+export interface ChartExpenseProps {
+  navigation: ChartExpenseNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'ChartExpense'>;
+}
+
 type CategoryExpenseScreenNavigationProp = NativeStackNavigationProp<
 ExpenseStackParamList,
   'CategoryExpense'

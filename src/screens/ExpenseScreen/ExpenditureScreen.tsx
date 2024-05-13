@@ -15,16 +15,9 @@ import TesseractOcr, { LANG_ENGLISH, LEVEL_WORD  } from 'react-native-tesseract-
 import { launchCameraAsync, MediaTypeOptions, CameraPermissionResponse, requestCameraPermissionsAsync } from 'expo-image-picker';
 import { RNTesseractOcr } from 'react-native-tesseract-ocr';
 import HomeTab from 'src/navigation/Routes/HomeTab';
+import { ExpenseType } from 'src/interface/expense/ExpenseType';
+import { IncomeType } from 'src/interface/income/IncomeType';
 
-
-interface ExpenseType {
-    id_expense_type: number;
-    expense_name: string;
-}
-interface IncomeType {
-    id_income_source: number;
-    income_name: string;
-}
 const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
     const [expenseType, setExpenseType] = useState<ExpenseType[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -56,21 +49,26 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
     const [uriImage, setUriImage] = useState<string>('');
     const [showLargeImage, setShowLargeImage] = useState(false);
 
-    useEffect(() => {
-        fetchExpenseType();
-        setSelectedMenu(state);
-        fetchAllFamily();
-        fetchIncomeType();
-        if (selectedMenu == 'Expense') {
-            selectExpenseCategory({ ...expenseCategory, id_expense_type: ExpenseId, expense_name: ExpenseName });
+    // useEffect(() => {
+    //     fetchExpenseType();
+    //     setSelectedMenu(state);
+    //     fetchAllFamily();
+    //     fetchIncomeType();
+    //     if (selectedMenu == 'Expense') {
+    //         selectExpenseCategory({ ...expenseCategory, id_expense_type: ExpenseId, expense_name: ExpenseName });
 
-        }
-        else if (selectedMenu =='Income'){
-            selectIncomeCategory({ ...incomeCategory, id_income_source: IncomeId, income_name: IncomeName });
+    //     }
+    //     else if (selectedMenu =='Income'){
+    //         selectIncomeCategory({ ...incomeCategory, id_income_source: IncomeId, income_name: IncomeName });
 
-        }
-    }, [ExpenseId, IncomeId, state, selectedMenu]);
-    
+    //     }
+    // }, [ExpenseId, IncomeId, state, selectedMenu]);
+     useEffect(() => {
+         setSelectedMenu(state);
+
+         fetchAllFamily();
+     },[])
+
 
     const fetchExpenseType = async () => {
         try {
