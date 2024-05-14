@@ -9,7 +9,7 @@ const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
 
 const ChecklistItemDetail: React.FC<{ item: ChecklistItemInterface, setChecklist: React.Dispatch<React.SetStateAction<ChecklistItemInterface[]>> }> = ({ item, setChecklist }) => {
     const [isCompleted, setIsCompleted] = React.useState<boolean>(item.isCompleted);
-    const refRBSheet = React.useRef<RBSheet>(null);
+    const refRBSheet = React.useRef<any>(null);
 
     const handleUpdateComplete = () => {
         setChecklist((prev) => {
@@ -32,7 +32,7 @@ const ChecklistItemDetail: React.FC<{ item: ChecklistItemInterface, setChecklist
     return <TouchableOpacity onPress={() => {
         refRBSheet.current?.open();
     }} style={styles.checklistItem} className='bg-white'>
-        <View  >
+        <View  className='ml-2'>
             <View className='flex-row items-center'>
                 <TouchableOpacity className='w-7 h-7 rounded-full mr-4 flex flex-col items-center justify-center' style={{ backgroundColor: priorityColors[item.priority - 1] }} onPress={() => {
                     Haptics.notificationAsync(

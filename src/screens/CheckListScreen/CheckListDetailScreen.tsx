@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native'
 import { ChecklistItemInterface } from 'src/interface/checklist/checklist';
-import ChecklistItem from './CheckListItemDetail';
+import ChecklistItem from './CheckListItem';
 import ChecklistItemModal from './AddItemCheckListSheet';
 import { CheckListDetailScreenProps, CheckListScreenProps } from 'src/navigation/NavigationTypes';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -37,10 +37,7 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
 
     const showContent = () => {
         const sortedCheckList = checklist.sort((a, b) => {
-            if (a.isCompleted === b.isCompleted) {
-                return a.priority - b.priority
-            }
-            return a.isCompleted === b.isCompleted ? 0 : a.isCompleted ? 1 : -1
+            return a.priority - b.priority
         })
         return <>
             {sortedCheckList.map((item, index) => {
@@ -66,8 +63,8 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
             </View>
             {/* <ChecklistSections checklist={checklist} setChecklist={setChecklist} /> */}
             <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
-                <View className=''>
-                    <Text>All Item</Text>
+                <View className='ml-2'>
+                    <Text>All Items</Text>
                 </View>
                 {showContent()}
             </ScrollView>

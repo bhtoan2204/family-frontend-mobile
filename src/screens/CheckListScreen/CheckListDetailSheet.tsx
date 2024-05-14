@@ -163,54 +163,54 @@ const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSh
 
         >
             <View className='flex-1'>
-
-                <KeyboardAvoidingView className="flex-1 bg-white " behavior="padding">
-                    {
-                        isEditing ? <View className='w-full  flex-row justify-between  items-center py-3 bg-white px-4 z-10'>
-                            <TouchableOpacity onPress={() => {
-                                setIsEditing(false)
-                            }} className=' flex-row items-center ' >
-                                <Text className='text-base font-medium' style={{ color: COLORS.red }}>Cancel</Text>
-                            </TouchableOpacity>
-                            <View className=' '>
-                                <Text className='text-base font-medium text-center' >Edit</Text>
-                            </View>
-                            <TouchableOpacity className=' ' onPress={() => {
-                                handleUpdateChecklist()
-                                setIsEditing(false)
-                            }}>
-                                <Text className='text-base font-medium ' style={{
-                                    textAlign: "right",
-                                    color: COLORS.primary
-                                }}>Save</Text>
-                            </TouchableOpacity>
-                        </View> : <View className='w-full  flex-row justify-between  items-center py-3 bg-white px-4 z-10'>
-                            <View className=' flex-row items-center flex-1'>
-                            </View>
-                            <View className='flex-1 '>
-                            </View>
-                            <View className=' flex-1   '>
-                                {/* <Text className='text-base font-medium ' style={{
+                {
+                    isEditing ? <View className='w-full  flex-row justify-between  items-center py-3 bg-white px-4 z-10'>
+                        <TouchableOpacity onPress={() => {
+                            setIsEditing(false)
+                        }} className=' flex-row items-center ' >
+                            <Text className='text-base font-medium' style={{ color: COLORS.red }}>Cancel</Text>
+                        </TouchableOpacity>
+                        <View className=' '>
+                            <Text className='text-base font-medium text-center' >Edit</Text>
+                        </View>
+                        <TouchableOpacity className=' ' onPress={() => {
+                            handleUpdateChecklist()
+                            setIsEditing(false)
+                        }}>
+                            <Text className='text-base font-medium ' style={{
+                                textAlign: "right",
+                                color: COLORS.primary
+                            }}>Save</Text>
+                        </TouchableOpacity>
+                    </View> : <View className='w-full  flex-row justify-between  items-center py-3 bg-white px-4 z-10'>
+                        <View className=' flex-row items-center flex-1'>
+                        </View>
+                        <View className='flex-1 '>
+                        </View>
+                        <View className=' flex-1   '>
+                            {/* <Text className='text-base font-medium ' style={{
                                 textAlign: "right",
                                 color: COLORS.primary
                             }}>Save</Text> */}
-                                <View style={{ alignItems: "flex-end" }} className='flex-row justify-end' >
-                                    <View className='bg-gray-200 p-1 rounded-full mr-3'>
-                                        <Material name="dots-horizontal" size={22} style={{ color: COLORS.black }} onPress={() => {
+                            <View style={{ alignItems: "flex-end" }} className='flex-row justify-end' >
+                                <View className='bg-gray-200 p-1 rounded-full mr-3'>
+                                    <Material name="dots-horizontal" size={22} style={{ color: COLORS.black }} onPress={() => {
 
-                                        }} />
-                                    </View>
-                                    <View className='bg-gray-200 p-1 rounded-full'>
-                                        <Material name="close" size={22} style={{ color: COLORS.black }} onPress={() => {
-                                            refRBSheet.current?.close()
-                                        }} />
-                                    </View>
+                                    }} />
+                                </View>
+                                <View className='bg-gray-200 p-1 rounded-full'>
+                                    <Material name="close" size={22} style={{ color: COLORS.black }} onPress={() => {
+                                        refRBSheet.current?.close()
+                                    }} />
                                 </View>
                             </View>
-
-
                         </View>
-                    }
+
+
+                    </View>
+                }
+                <KeyboardAvoidingView className="flex-1 " behavior="padding">
+
                     <ScrollView showsVerticalScrollIndicator={false} className='flex-1 ' keyboardShouldPersistTaps="handled" scrollEnabled={isEditing == false} >
                         {
                             isEditing
@@ -245,7 +245,7 @@ const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSh
                                                 )
                                             }}>
                                                 {
-                                                    checklist.isCompleted ? <Text className='text-white'>✓</Text> : <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[checklist.priority - 1] }}>
+                                                    checklist.isCompleted ? <Text className='text-white font-bold'>✓</Text> : <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[checklist.priority - 1] }}>
                                                     </View>
                                                 }
                                             </TouchableOpacity>
@@ -255,7 +255,7 @@ const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSh
                                             setIsEditing(true)
                                         }}>
                                             <View className='w-7 h-7  mr-4 flex flex-col items-center justify-center'>
-                                                <Material name="tooltip-outline" size={26} style={{ color: "#B5B5B5" }} />
+                                                <Material name="tooltip-outline" size={26} style={{ color: priorityColors[priority - 1] }} />
                                             </View>
                                             <Text className='text-base'>{checklist.description}</Text>
                                         </TouchableOpacity>
@@ -275,11 +275,11 @@ const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSh
                                             {
                                                 dueDate == null ? <>
                                                     <View className='w-7 h-7  mr-4 flex flex-col items-center justify-center'>
-                                                        <Material name="calendar-blank-outline" size={28} style={{ color: "#B5B5B5" }} />
+                                                        <Material name="calendar-blank-outline" size={28} style={{ color: priorityColors[priority - 1] }} />
                                                     </View>
                                                     <Text className='text-base'>Set reminder</Text>
                                                 </> : <><View className='w-7 h-7  mr-4 flex flex-col items-center justify-center'>
-                                                    <Material name="calendar-blank-outline" size={28} style={{ color: "#B5B5B5" }} />
+                                                    <Material name="calendar-blank-outline" size={28} style={{ color: priorityColors[priority - 1] }} />
                                                 </View>
                                                     <Text className='text-base'>{buildDate(dueDate)}</Text></>
                                             }
@@ -288,7 +288,7 @@ const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSh
                                     <View className='h-1 bg-gray-200 my-3'></View>
                                     <View className='flex-row items-center  ml-4'>
                                         <View className='w-7 h-7  mr-4 flex flex-col items-center justify-center'>
-                                            <Material name="plus" size={28} style={{ color: "#B5B5B5" }} />
+                                            <Material name="plus" size={28} style={{ color: priorityColors[priority - 1] }} />
                                         </View>
                                         <Text className='text-base'>Add sub task</Text>
                                     </View>

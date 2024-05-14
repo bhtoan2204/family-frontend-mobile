@@ -31,9 +31,9 @@ const ChecklistItemDetail: React.FC<{ item: ChecklistItemInterface, setChecklist
     return <TouchableOpacity onPress={() => {
         refRBSheet.current?.open();
     }} style={styles.checklistItem} className='bg-white'>
-        <View  >
+        <View className='ml-1' >
             <View className='flex-row items-center'>
-                <TouchableOpacity className='w-7 h-7 rounded-full ml-4 mr-4 flex flex-col items-center justify-center' style={{ backgroundColor: priorityColors[item.priority - 1] }} onPress={() => {
+                <TouchableOpacity className='w-6 h-6 rounded-full mr-3 flex flex-col items-center justify-center' style={{ backgroundColor: priorityColors[item.priority - 1] }} onPress={() => {
                     Haptics.notificationAsync(
                         Haptics.NotificationFeedbackType.Success
                     )
@@ -43,13 +43,13 @@ const ChecklistItemDetail: React.FC<{ item: ChecklistItemInterface, setChecklist
                     {
                         item.isCompleted ? <Text className='text-white ' style={{
                             fontWeight: 'bold'
-                        }}>✓</Text> : <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[item.priority - 1] }}>
+                        }}>✓</Text> : <View className=' z-10 w-5 h-5 rounded-full' style={{ backgroundColor: priorityColorsInside[item.priority - 1] }}>
                         </View>
                     }
                 </TouchableOpacity>
-                <Text className='text-base'>{item.title}</Text>
+                <Text className='text-base my-1' style={{}}>{item.title}</Text>
             </View>
-            <View className='ml-11'>
+            <View className='ml-10'>
                 <Text className='text-sm text-gray-400'>{item.description}</Text>
             </View>
             <ChecklistDetailSheet refRBSheet={refRBSheet} setChecklist={setChecklist} checklist={item} />
