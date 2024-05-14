@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native'
 import { ChecklistItemInterface } from 'src/interface/checklist/checklist';
 import ChecklistItem from './CheckListItemDetail';
 import ChecklistItemModal from './AddItemCheckListSheet';
@@ -21,114 +21,33 @@ const checklistData: ChecklistItemInterface[] = [
     // Thêm các mục kiểm tra khác ở đây...
 ];
 
-const ChecklistSections: React.FC<{ checklist: ChecklistItemInterface[], setChecklist: React.Dispatch<React.SetStateAction<ChecklistItemInterface[]>> }> = ({ checklist, setChecklist }) => {
-    const [sections, setSections] = React.useState<{ title: string, data: ChecklistItemInterface[] }[]>([]);
-    useEffect(() => {
-        const newSections: { title: string, data: ChecklistItemInterface[] }[] = [];
-        checklist.forEach(item => {
-            let dueDate;
-            if (item.dueDate === null) {
-                dueDate = new Date(item.createdAt);
-            }
-            else dueDate = new Date(item.dueDate);
-
-            if (compareDates(dueDate, today) === 0) {
-                const todayIndex = newSections.findIndex(section => section.title === 'Today');
-                if (todayIndex === -1) {
-                    newSections.push({ title: 'Today', data: [item] });
-                } else {
-                    newSections[todayIndex].data.push(item);
-                }
-            } else if (compareDates(dueDate, today) === -1) {
-                const overdueIndex = newSections.findIndex(section => section.title === 'Overdue');
-                if (overdueIndex === -1) {
-                    newSections.push({ title: 'Overdue', data: [item] });
-                } else {
-                    newSections[overdueIndex].data.push(item);
-                }
-            } else {
-                const date = dueDate.toDateString();
-                const dateIndex = newSections.findIndex(section => section.title === date);
-                if (dateIndex === -1) {
-                    newSections.push({ title: date, data: [item] });
-                } else {
-                    newSections[dateIndex].data.push(item);
-                }
-            }
-        });
-        // Sắp xếp các mục trong mỗi section theo priority từ thấp đến cao
-        newSections.forEach(section => {
-            section.data.sort((a, b) => {
-                if (a.priority !== b.priority) {
-                    return a.priority - b.priority;
-                } else {
-                    const dateA = new Date(a.createdAt);;
-                    const dateB = new Date(b.createdAt);;
-                    return dateA.getTime() - dateB.getTime();
-                }
-            });
-        });
-        // Sắp xếp các sections theo thứ tự Overdue, Today và các ngày sau
-        newSections.sort((a, b) => {
-            if (a.title === "Overdue" && b.title !== "Overdue") {
-                return -1;
-            }
-            if (a.title !== "Overdue" && b.title === "Overdue") {
-                return 1;
-            }
-            if (a.title === "Today" && b.title !== "Today") {
-                return -1;
-            }
-            if (a.title !== "Today" && b.title === "Today") {
-                return 1;
-            }
-            const dateA = new Date(a.data[0].createdAt);
-            const dateB = new Date(b.data[0].createdAt);
-            return dateA.getTime() - dateB.getTime();
-        });
-        setSections(newSections);
-    }, [checklist])
-
-    // const sections: { title: string, data: ChecklistItemInterface[] }[] = [
-    //     { title: 'Today', data: checklist.filter(item => new Date(item.dueDate).getDate() === today.getDate()) },
-    //     { title: 'Overdue', data: checklist.filter(item => new Date(item.dueDate).getDate() < today.getDate()) },
-    // ];
-
-
-    return <>
-        <FlatList
-            data={sections}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => <CheckListSection title={item.title} data={item.data} setChecklist={setChecklist} />}
-        />
-
-    </>
-
-};
-
-const CheckListSection: React.FC<{ title: string, data: ChecklistItemInterface[], setChecklist: React.Dispatch<React.SetStateAction<ChecklistItemInterface[]>> }> = ({ title, data, setChecklist }) => {
-    return <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>{title}</Text>
-        {data.map(item => (
-            <ChecklistItem key={item.id} item={item} setChecklist={setChecklist} />
-        ))}
-    </View>
-}
 
 const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigation, route }) => {
-    const refRBSheet = React.useRef<RBSheet>(null);
+    const refRBSheet = useRef<any>();
     const [checklist, setChecklist] = React.useState<ChecklistItemInterface[]>(checklistData);
-    const [selectedItem, setSelectedItem] = React.useState<ChecklistItemInterface | null>(null);
-    const [sections, setSections] = React.useState<{ title: string, data: ChecklistItemInterface[] }[]>([]);
+    const [filteredChecklist, setFilteredChecklist] = React.useState<ChecklistItemInterface[]>()
     // const sections: { title: string, data: ChecklistItemInterface[] }[] = [];
     useEffect(() => {
         setChecklist(checklistData)
     }, [])
     useEffect(() => {
+        setFilteredChecklist(checklist)
     }, [checklist])
 
 
-
+    const showContent = () => {
+        const sortedCheckList = checklist.sort((a, b) => {
+            if (a.isCompleted === b.isCompleted) {
+                return a.priority - b.priority
+            }
+            return a.isCompleted === b.isCompleted ? 0 : a.isCompleted ? 1 : -1
+        })
+        return <>
+            {sortedCheckList.map((item, index) => {
+                return <ChecklistItem key={index} item={item} setChecklist={setChecklist} />
+            })}
+        </>
+    }
 
 
     return (
@@ -136,19 +55,27 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
             <View className='w-full  flex-row justify-between  items-center py-3 bg-white '>
                 <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center flex-1'>
                     <Material name="chevron-left" size={30} style={{ color: COLORS.primary, fontWeight: "bold" }} />
-                    <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Back</Text>
+                    {/* <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Back</Text> */}
                 </TouchableOpacity>
-                <View className='flex-1'>
+                {/* <View className='flex-1'>
                     <Text className='text-lg font-semibold text-center' style={{ color: COLORS.primary }}>Checklist Detail</Text>
-                </View>
+                </View> */}
                 <View className=' flex-1'></View>
 
 
             </View>
-            <ChecklistSections checklist={checklist} setChecklist={setChecklist} />
+            {/* <ChecklistSections checklist={checklist} setChecklist={setChecklist} /> */}
+            <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
+                <View className=''>
+                    <Text>All Item</Text>
+                </View>
+                {showContent()}
+            </ScrollView>
             <TouchableOpacity onPress={() => {
-                refRBSheet.current?.open()
-            }} style={styles.fab} >
+                refRBSheet.current.open()
+            }} className='absolute bottom-6 right-4 bg-gray-200 h-16 w-16 flex-row items-center justify-center rounded-full' style={{
+                backgroundColor: COLORS.primary,
+            }}>
                 <Text style={{ color: 'white', fontSize: 40 }}>+</Text>
             </TouchableOpacity>
             <AddItemCheckListSheet refRBSheet={refRBSheet} setChecklist={setChecklist} />

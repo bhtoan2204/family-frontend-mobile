@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
@@ -9,10 +9,10 @@ import {
 } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import {PackageServices} from 'src/services/apiclient';
+import { PackageServices } from 'src/services/apiclient';
 import BottonSheetContent from './BottomSheetContent';
 import styles from './styles';
-import {PurchasedScreenProps,ViewAllFamilyScreenProps,} from 'src/navigation/NavigationTypes';
+import { PurchasedScreenProps, ViewAllFamilyScreenProps, } from 'src/navigation/NavigationTypes';
 import { Profile } from 'src/redux/slices/ProfileSclice';
 import { useDispatch } from 'react-redux';
 
@@ -24,9 +24,9 @@ type Profile = {
   phone: string;
 };
 
-const HomeScreen = ({navigation,}: PurchasedScreenProps & ViewAllFamilyScreenProps) => {
+const HomeScreen = ({ navigation, }: PurchasedScreenProps & ViewAllFamilyScreenProps) => {
   const scrollY = new Animated.Value(0);
-  const bottomSheetRef = useRef<RBSheet>(null);
+  const bottomSheetRef = useRef<any>();
   const screenHeight = Dimensions.get('screen').height;
   const dispatch = useDispatch();
   const sheetHeight = screenHeight * 0.9;
@@ -37,22 +37,22 @@ const HomeScreen = ({navigation,}: PurchasedScreenProps & ViewAllFamilyScreenPro
     extrapolate: 'clamp',
   });
 
-  const handleOpenModal = () => bottomSheetRef.current?.open();
+  // const handleOpenModal = () => bottomSheetRef.current?.open();
 
   const handlePackage = () => {
     navigation.navigate('PackStack', {
       screen: 'ViewAllPurchased',
-      params: {id_user: profile?.id_user || ''},
+      params: { id_user: profile?.id_user || '' },
     });
   };
   const handleFamily = () => {
     navigation.navigate('FamilyStack', {
       screen: 'ViewAllFamily',
-      params: {id_user: profile?.id_user || ''},
+      params: { id_user: profile?.id_user || '' },
     });
   };
   const handleChat = () => {
-    navigation.navigate('ChatStack', {screen: 'ChatList' , params: { id_user: profile?.id_user || ''}});
+    navigation.navigate('ChatStack', { screen: 'ChatList', params: { id_user: profile?.id_user || '' } });
   };
 
   /////Goi tu homescreen
@@ -70,10 +70,10 @@ const HomeScreen = ({navigation,}: PurchasedScreenProps & ViewAllFamilyScreenPro
   useEffect(() => {
     handleGetProfile();
   }, []);
-  
+
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.header, {transform: [{translateY}]}]}>
+      <Animated.View style={[styles.header, { transform: [{ translateY }] }]}>
         <Text style={styles.headerText}>Home</Text>
       </Animated.View>
 
@@ -123,9 +123,9 @@ const HomeScreen = ({navigation,}: PurchasedScreenProps & ViewAllFamilyScreenPro
         closeOnPressBack
         closeOnPressMask
         customStyles={{
-          wrapper: {backgroundColor: 'rgba(0,0,0,0.5)'},
-          draggableIcon: {height: 0, backgroundColor: 'transparent'},
-          container: {borderTopLeftRadius: 20, borderTopRightRadius: 20},
+          wrapper: { backgroundColor: 'rgba(0,0,0,0.5)' },
+          draggableIcon: { height: 0, backgroundColor: 'transparent' },
+          container: { borderTopLeftRadius: 20, borderTopRightRadius: 20 },
         }}>
         <BottonSheetContent />
       </RBSheet>

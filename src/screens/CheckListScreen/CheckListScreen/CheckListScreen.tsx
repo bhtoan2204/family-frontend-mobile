@@ -13,6 +13,7 @@ import { checklist_category_type } from '../constant/checklist_category_type';
 import { shoppingListItemColor, shoppingListItemColorInside } from '../constant/color'
 import CircularProgress from '../../EducationScreen/CircularProgress';
 import ChecklistSections from './CheckListSections';
+import AddCheckListCategoryItem from '../AddCheckListCategoryItem/AddCheckListCategoryItem';
 
 const today = new Date();
 const yesterday = new Date(today.setDate(today.getDate() - 1));
@@ -39,7 +40,7 @@ const checklistData: ChecklistItemInterface[] = [
 const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) => {
     console.log(route.params)
     const { id_family } = route.params
-    const refRBSheet = React.useRef<RBSheet>(null);
+    const refRBSheet = React.useRef<any>(null);
     const [checklist, setChecklist] = React.useState<CheckListCategoryInterface[]>(checkListListData);
     const [selectedItem, setSelectedItem] = React.useState<ChecklistItemInterface | null>(null);
     const [sections, setSections] = React.useState<{ title: string, data: ChecklistItemInterface[] }[]>([]);
@@ -52,7 +53,6 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
         navigation.navigate('CheckListDetail', { id_family, id_checklist })
     }
     useEffect(() => {
-        console.log("uwu")
         const newCheckListData = checkListListData.map(item => {
             const newItem = { ...item, category_name: checklist_category_type.find(type => type.id_item_type === item.id_item_type)?.item_type_name }
             return newItem;
@@ -62,13 +62,7 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
     }, [])
 
     useEffect(() => {
-        // console.log(selectedCategory, searchString)
-        // const timeOutId = setTimeout(() => {
 
-        // }, 1000)
-        // return () => {
-        //     clearTimeout(timeOutId)
-        // }
         const filtered = checklist.filter(item =>
             (selectedCategory === null || item.id_item_type === selectedCategory) &&
             (searchString === '' || item.title.toLowerCase().includes(searchString.toLowerCase()))
@@ -77,8 +71,7 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
             item.category_name = checklist_category_type.find(type => type.id_item_type === item.id_item_type)?.item_type_name
         })
         setFilteredChecklist(filtered)
-        console.log("filter here: ", filtered)
-    }, [searchString, selectedCategory])
+    }, [searchString, selectedCategory, checklist])
 
 
 
@@ -96,13 +89,9 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
             </View>
 
 
-            <ChecklistSections checklist={filteredChecklist} setChecklist={setChecklist} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} handleNavigateCheckListDetail={handleNavigateCheckListDetail} searchString={searchString} setSearchString={setSearchString} />
-            {/* <TouchableOpacity onPress={() => {
-                refRBSheet.current?.open()
-            }} style={styles.fab} >
-                <Text style={{ color: 'white', fontSize: 40 }}>+</Text>
-            </TouchableOpacity>
-            <AddItemCheckListSheet refRBSheet={refRBSheet} setChecklist={setChecklist} /> */}
+            <ChecklistSections checklist={filteredChecklist} setChecklist={setChecklist} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} handleNavigateCheckListDetail={handleNavigateCheckListDetail} searchString={searchString} setSearchString={setSearchString} bottomSheetRef={refRBSheet} />
+
+            <AddCheckListCategoryItem bottomSheetRef={refRBSheet} setCheckList={setChecklist} id_family={id_family!} />
         </View>
     );
 };

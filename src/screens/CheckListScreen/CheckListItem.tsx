@@ -8,8 +8,7 @@ const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
 
 const ChecklistItemDetail: React.FC<{ item: ChecklistItemInterface, setChecklist: React.Dispatch<React.SetStateAction<ChecklistItemInterface[]>> }> = ({ item, setChecklist }) => {
-    const [isCompleted, setIsCompleted] = React.useState<boolean>(item.isCompleted);
-    const refRBSheet = React.useRef<RBSheet>(null);
+    const refRBSheet = React.useRef<any>(null);
 
     const handleUpdateComplete = () => {
         setChecklist((prev) => {
@@ -34,7 +33,7 @@ const ChecklistItemDetail: React.FC<{ item: ChecklistItemInterface, setChecklist
     }} style={styles.checklistItem} className='bg-white'>
         <View  >
             <View className='flex-row items-center'>
-                <TouchableOpacity className='w-7 h-7 rounded-full mr-4 flex flex-col items-center justify-center' style={{ backgroundColor: priorityColors[item.priority - 1] }} onPress={() => {
+                <TouchableOpacity className='w-7 h-7 rounded-full ml-4 mr-4 flex flex-col items-center justify-center' style={{ backgroundColor: priorityColors[item.priority - 1] }} onPress={() => {
                     Haptics.notificationAsync(
                         Haptics.NotificationFeedbackType.Success
                     )
@@ -42,7 +41,9 @@ const ChecklistItemDetail: React.FC<{ item: ChecklistItemInterface, setChecklist
 
                 }}>
                     {
-                        item.isCompleted ? <Text className='text-white'>✓</Text> : <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[item.priority - 1] }}>
+                        item.isCompleted ? <Text className='text-white ' style={{
+                            fontWeight: 'bold'
+                        }}>✓</Text> : <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[item.priority - 1] }}>
                         </View>
                     }
                 </TouchableOpacity>

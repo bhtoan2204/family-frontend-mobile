@@ -10,8 +10,8 @@ import { Picker } from '@react-native-picker/picker';
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#000'];
 
-const AddItemCheckListSheet = ({ refRBSheet, setChecklist }: { refRBSheet: React.RefObject<RBSheet>, setChecklist: React.Dispatch<React.SetStateAction<ChecklistItemInterface[]>> }) => {
-    const timePickerRef = React.useRef<RBSheet>(null);
+const AddItemCheckListSheet = ({ refRBSheet, setChecklist }: { refRBSheet: React.RefObject<any>, setChecklist: React.Dispatch<React.SetStateAction<ChecklistItemInterface[]>> }) => {
+    const timePickerRef = React.useRef<any>(null);
     const [name, setName] = React.useState("");
     const [description, setDescription] = React.useState("");
     const [priority, setPriority] = React.useState(4);
@@ -54,8 +54,8 @@ const AddItemCheckListSheet = ({ refRBSheet, setChecklist }: { refRBSheet: React
     return (
         <RBSheet
             ref={refRBSheet}
-            closeOnDragDown={true}
             closeOnPressMask={true}
+            closeOnPressBack={true}
             onClose={() => {
                 setName("");
                 setDescription("");
@@ -85,13 +85,12 @@ const AddItemCheckListSheet = ({ refRBSheet, setChecklist }: { refRBSheet: React
                 //     fontSize: 17,
                 //     padding: 17,
                 // }}
-
+                autoFocus
                 editable
                 placeholder="Checklist name "
                 value={name}
                 onChangeText={(text) => setName(text)}
                 className='pl-4 pb-2 pt-5 text-lg font-semibold'
-                autoFocus
 
             />
             <TextInput
@@ -155,12 +154,12 @@ const AddItemCheckListSheet = ({ refRBSheet, setChecklist }: { refRBSheet: React
                     <Material name="arrow-up" size={20} style={{ color: "white", fontWeight: "bold" }} className='font-semibold' />
                 </TouchableOpacity>
             </View>
-            <TimePicker refRBSheet={timePickerRef} setSave={setDueDate} initialValue={dueDate} />
+            <TimePickerSheet refRBSheet={timePickerRef} setSave={setDueDate} initialValue={dueDate} />
         </RBSheet>
     )
 }
 
-export const TimePicker = ({ refRBSheet, setSave, initialValue }: { refRBSheet: React.RefObject<RBSheet>, setSave: (dueDate: Date | null) => void, initialValue: Date | null }) => {
+export const TimePickerSheet = ({ refRBSheet, setSave, initialValue }: { refRBSheet: React.RefObject<any>, setSave: (dueDate: Date | null) => void, initialValue: Date | null }) => {
     const [selectedYear, setSelectedYear] = useState(initialValue?.getFullYear().toString() || (new Date().getFullYear()).toString());
     const [selectedMonth, setSelectedMonth] = useState(initialValue != null ? (initialValue!.getMonth() + 1).toString().padStart(2, '0') : (new Date().getMonth() + 1).toString().padStart(2, '0'));
     const [selectedDay, setSelectedDay] = useState(initialValue?.getDate().toString().padStart(2, '0') || (new Date().getDate()).toString().padStart(2, '0'));

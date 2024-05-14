@@ -13,11 +13,13 @@ import { checklist_category_type } from '../constant/checklist_category_type';
 import { shoppingListItemColor, shoppingListItemColorInside } from '../constant/color'
 import CircularProgress from '../../EducationScreen/CircularProgress';
 
-const CategoryTypeScrollList = ({ selectedCategory, setSelectedCategory }: { selectedCategory: any, setSelectedCategory: any }) => {
+const CategoryTypeScrollList = ({ selectedCategory, setSelectedCategory, refRBSheet }: { selectedCategory: any, setSelectedCategory: any, refRBSheet: any }) => {
     return <ScrollView horizontal showsHorizontalScrollIndicator={false} className="px-2 my-2 " keyboardShouldPersistTaps="handled" >
         <TouchableOpacity
             key={-1}
-            onPress={() => { }}
+            onPress={() => {
+                refRBSheet.current?.open();
+            }}
             className={`py-2 px-4 rounded-full mr-4 border-2 items-center justify-center h-auto`}
             style={{
                 borderColor: shoppingListItemColor[shoppingListItemColor.length - 1],

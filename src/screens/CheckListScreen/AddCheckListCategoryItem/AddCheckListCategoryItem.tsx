@@ -1,12 +1,16 @@
 import React from 'react'
 
-import { Dimensions, View, Text, TouchableOpacity, KeyboardAvoidingView, ScrollView, TextInput, Switch } from 'react-native'
+import { Dimensions, View, Text, TouchableOpacity, KeyboardAvoidingView, ScrollView, TextInput, Switch, Platform } from 'react-native'
 import RBSheet from 'react-native-raw-bottom-sheet'
 import { Education } from 'src/interface/education/education'
 import { Member } from 'src/interface/member/member'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import ImageComponent from 'src/components/Image/Image'
 import FamilyImage from 'src/assets/images/default_ava.png'
+import { CheckListCategoryInterface } from 'src/interface/checklist/checklist'
+import { checklist_category_type } from '../constant/checklist_category_type'
+import { shoppingListItemColor, shoppingListItemColorInside } from '../constant/color'
+import { TimePickerSheet } from '../AddItemCheckListSheet'
 const sheetIndex = [
     {
         id: 0,
@@ -26,30 +30,26 @@ const sheetIndex = [
     },
 ]
 
-const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, members }: { bottomSheetRef: React.RefObject<any>, setMemberEducationDatas: React.Dispatch<React.SetStateAction<Education[]>>, members: Member[] }) => {
-    const [choosenMember, setChoosenMember] = React.useState<Member | undefined>(undefined)
-    const [choosenMemberId, setChoosenMemberId] = React.useState<string>("")
+const AddCheckListCategoryItem = ({ bottomSheetRef, setCheckList, id_family }: {
+    bottomSheetRef: React.RefObject<any>, setCheckList: React.Dispatch<React.SetStateAction<CheckListCategoryInterface[]>>, id_family: number
+}) => {
+    const timePickerSheetRef = React.useRef<any>(null)
+    const [choosenCategory, setChoosenCategory] = React.useState<number | undefined>(undefined)
     const [inputProgressNote, setInputProgressNote] = React.useState<string>("")
     const [inputSchoolInfo, setInputSchoolInfo] = React.useState<string>("")
-    const [isEnabled, setIsEnabled] = React.useState(false);
     const [inputProgressNote2, setInputProgressNote2] = React.useState<string>("")
     const [inputSchoolInfo2, setInputSchoolInfo2] = React.useState<string>("")
-
-
+    const [isEnabled, setIsEnabled] = React.useState(false);
     const [pickSheetIndex, setPickSheetIndex] = React.useState<number>(0)
-
+    const [dueDate, setDueDate] = React.useState<Date | null>(null);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
     const inputDescriptionRef = React.useRef<TextInput>(null)
 
-    React.useEffect(() => {
-        if (choosenMember != null) {
-            setChoosenMemberId(choosenMember.email)
-        } else {
-            setChoosenMemberId("")
-        }
+    const buildDate = (date: Date) => {
+        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    }
 
-    }, [choosenMember])
 
     const showHeader = () => {
         if (pickSheetIndex == 0) {
@@ -57,45 +57,45 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                 <TouchableOpacity
                     onPress={() => {
                         bottomSheetRef.current?.close()
-                        setChoosenMemberId("")
+                        setChoosenCategory(6)
                         setInputProgressNote("")
                         setInputSchoolInfo("")
-                        setChoosenMember(undefined)
                     }}
                 ><Text className='text-blue-600 text-base pl-4'>Cancel</Text>
                 </TouchableOpacity>
 
                 <View>
-                    <Text className='text-base font-semibold'>Add Member</Text>
+                    <Text className='text-base font-semibold'>Add ShoppingList</Text>
                 </View>
 
                 <TouchableOpacity onPress={() => {
-                    const newEdu: Education = {
-                        id_education_progress: 0,
-                        id_user: choosenMember!.id_user,
-                        title: "",
-                        progress_notes: inputProgressNote,
-                        school_info: inputSchoolInfo,
-                        created_at: "",
-                        updated_at: "",
-                        avatar: choosenMember?.avatar,
-                        firstname: choosenMember!.firstname,
-                        lastname: choosenMember!.lastname,
-                        // status: isEnabled ? "done" : "in_progress"
+                    const newCheckListCategory: CheckListCategoryInterface = {
+                        id: Math.floor(Math.random() * 1000),
+                        id_item_type: choosenCategory!,
+                        completed: 0,
+                        total: 0,
+                        category_name: checklist_category_type.find((item) => item.id_item_type == choosenCategory)?.item_type_name,
+                        id_family: id_family,
+                        createdAt: new Date(),
+                        title: inputProgressNote
                     }
-                    console.log(newEdu)
-                    setMemberEducationDatas((prev) => {
+                    setCheckList((prev) => {
                         return [
                             ...prev,
-                            newEdu
+                            newCheckListCategory
                         ]
                     })
+
+                    // setMemberEducationDatas((prev) => {
+                    //     return [
+                    //         ...prev,
+                    //         newEdu
+                    //     ]
+                    // })
                     bottomSheetRef.current?.close()
 
 
-                }} className='pr-4 disabled:text-gray-600 text-blue-600' disabled={
-                    choosenMember == null || choosenMember == undefined || choosenMemberId == ""
-                }>
+                }} className='pr-4 disabled:text-gray-600 text-blue-600' >
                     <Text className=' text-base font-semibold ' >Add</Text>
                 </TouchableOpacity>
             </View>
@@ -113,11 +113,11 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                 </View>
 
                 <TouchableOpacity onPress={() => {
-                    setChoosenMember(
-                        members.find((item) => item.email == choosenMemberId)
-                    )
+                    // setChoosenMember(
+                    //     members.find((item) => item.email == choosenMemberId)
+                    // )
                     setPickSheetIndex(0)
-                }} className='pr-4 disabled:text-gray-600 text-blue-600' disabled={choosenMemberId == null || choosenMemberId == ""}>
+                }} className='pr-4 disabled:text-gray-600 text-blue-600' >
                     <Text className=' text-base font-semibold ' >Done</Text>
                 </TouchableOpacity>
             </View>
@@ -132,7 +132,7 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                 </TouchableOpacity>
 
                 <View>
-                    <Text className='text-base font-semibold'>Input progress note</Text>
+                    <Text className='text-base font-semibold'>Input title</Text>
                 </View>
 
                 <TouchableOpacity onPress={() => {
@@ -148,12 +148,13 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                     onPress={() => {
                         setPickSheetIndex(0)
                         setInputSchoolInfo2("")
+                        timePickerSheetRef.current?.close()
                     }}
                 ><Text className='text-blue-600 text-base pl-4'>Cancel</Text>
                 </TouchableOpacity>
 
                 <View>
-                    <Text className='text-base font-semibold'>Input school info</Text>
+                    <Text className='text-base font-semibold'>Pick time</Text>
                 </View>
 
                 <TouchableOpacity onPress={() => {
@@ -173,11 +174,16 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                     <TouchableOpacity className='w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-0 px-2 py-3 rounded-tl-lg rounded-tr-lg'
                         onPress={() => { setPickSheetIndex(1) }}
                     >
-                        <Text className='ml-2 text-[#8F8E90] font-medium text-base'>Member</Text>
+                        <Text className='ml-2 text-[#8F8E90] font-medium text-base'>Pick category</Text>
                         <View className='flex-row items-center'>
-                            <Text className='mr-2 text-[#8F8E90] font-medium text-base'>{
-                                choosenMember ? choosenMember.firstname + " " + choosenMember.lastname : "Choose member"
-                            }</Text>
+                            <Text className='mr-2 text-[#8F8E90] font-medium text-base' style={{
+                                color: choosenCategory ? shoppingListItemColor[choosenCategory - 1] : "#8F8E90",
+                                fontWeight: choosenCategory ? "bold" : "normal"
+                            }}>{
+                                    choosenCategory ?
+                                        checklist_category_type.find((item) => item.id_item_type == choosenCategory)?.item_type_name
+                                        : "Choose category"
+                                }</Text>
                             <View className='justify-self-end'>
                                 <Material name="chevron-right" size={24} color={"#8F8E90"} />
 
@@ -187,10 +193,10 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                     <TouchableOpacity className='w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-0 px-2 py-3 '
                         onPress={() => { setPickSheetIndex(2) }}
                     >
-                        <Text className='ml-2 text-[#8F8E90] font-medium text-base'>Note</Text>
+                        <Text className='ml-2 text-[#8F8E90] font-medium text-base'>Title</Text>
                         <View className='flex-row items-center'>
                             {
-                                inputProgressNote == "" ? <Text className='mr-2 text-[#8F8E90] font-medium text-base'>Progress note</Text> : <Text className='mr-2 text-[#8F8E90] font-medium text-base w-24 ' numberOfLines={1} style={{ textAlign: 'right' }}>{inputProgressNote}</Text>
+                                inputProgressNote == "" ? <Text className='mr-2 text-[#8F8E90] font-medium text-base'>Title</Text> : <Text className='mr-2 text-[#8F8E90] font-medium text-base w-24 ' numberOfLines={1} style={{ textAlign: 'right' }}>{inputProgressNote}</Text>
                             }
                             <View className='justify-self-end'>
                                 <Material name="chevron-right" size={24} color={"#8F8E90"} />
@@ -198,13 +204,18 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity className='w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-0 px-2 py-3 '
-                        onPress={() => { setPickSheetIndex(3) }}
+
+                    <TouchableOpacity className='w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-[#ccc]  px-2 py-3 rounded-bl-lg rounded-br-lg'
+                        onPress={() => {
+                            // setPickSheetIndex(3)
+                            timePickerSheetRef.current?.open()
+
+                        }}
                     >
-                        <Text className='ml-2 text-[#8F8E90] font-medium text-base'>School Info</Text>
+                        <Text className='ml-2 text-[#8F8E90] font-medium text-base'>Pick Time </Text>
                         <View className='flex-row items-center'>
                             {
-                                inputSchoolInfo == "" ? <Text className='mr-2 text-[#8F8E90] font-medium text-base'>School Info</Text> : <Text className='mr-2 text-[#8F8E90] font-medium text-base w-24 ' numberOfLines={1} style={{ textAlign: 'right' }}>{inputSchoolInfo}</Text>
+                                dueDate == null ? <Text className='mr-2 text-[#8F8E90] font-medium text-base'>Date</Text> : <Text className='mr-2 text-[#8F8E90] font-medium text-base w-24 ' numberOfLines={1} style={{ textAlign: 'right' }}>{buildDate(dueDate!)}</Text>
                             }
                             <View className='justify-self-end'>
                                 <Material name="chevron-right" size={24} color={"#8F8E90"} />
@@ -212,44 +223,38 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity className='w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-[#ccc]  px-2 py-3 rounded-bl-lg rounded-br-lg'>
-                        <Text className='ml-2 text-[#8F8E90] font-medium text-base'>Done </Text>
-                        <View className='flex-row items-center mr-2'>
-                            <Switch
-                                trackColor={{ false: '#DDDDDD', true: '#36CF56' }}
-                                thumbColor={isEnabled ? '#fff' : '#f4f3f4'}
-                                ios_backgroundColor="#DDDDDD"
-                                onValueChange={toggleSwitch}
-                                value={isEnabled}
-
-                            />
-                        </View>
-                    </TouchableOpacity>
                 </View>
-                <View className='bg-white rounded-lg mt-10 border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-[#ccc] border-[0.5px]  px-2 py-3'>
+                {/* <View className='bg-white rounded-lg mt-10 border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-[#ccc] border-[0.5px]  px-2 py-3'>
                     <Text className='ml-2 text-[#F93E3E] font-medium text-base text-center'>Delete this member </Text>
-                </View>
+                </View> */}
             </View>
         } else if (pickSheetIndex == 1) {
             return <View className='p-4'>
                 <View className='bg-white rounded-lg'>
                     {
-                        members.map((item, index) => {
-                            return <TouchableOpacity key={index} className={index == 0 ? 'w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-0 px-2 py-3 rounded-tl-lg rounded-tr-lg' : index == members.length - 1 ? 'w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-0 px-2 py-3 ' : 'w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-0 px-2 py-3 '}
-                                onPress={() => { setChoosenMemberId(item.email) }}
+                        checklist_category_type.map((item, index) => {
+                            return <TouchableOpacity key={index} className={index == 0 ? 'w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-0 px-2 py-3 rounded-tl-lg rounded-tr-lg' : index == checklist_category_type.length - 1 ? 'w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-0 px-2 py-3 ' : 'w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-0 px-2 py-3 '}
+                                onPress={() => { setChoosenCategory(item.id_item_type) }}
                             >
-                                <View className='ml-4'>
-                                    <ImageComponent imageUrl={item.avatar || ""} style={{ width: 30, height: 30 }} defaultImage={FamilyImage} className='rounded-sm ' />
+                                <View className='ml-2'>
+                                    {/* <ImageComponent imageUrl={item.avatar || ""} style={{ width: 30, height: 30 }} defaultImage={FamilyImage} className='rounded-sm ' /> */}
+                                    <View className='rounded-full ' style={{
+                                        width: 30, height: 30,
+                                        backgroundColor: shoppingListItemColor[item.id_item_type - 1]
 
+
+                                    }} >
+
+                                    </View>
                                 </View>
                                 {/* <Text className='ml-2 text-[#8F8E90] font-medium text-base'>Aha</Text> */}
                                 <View className='flex-row items-center'>
                                     <Text className='mr-2 text-[#8F8E90] font-medium text-base'>{
-                                        item.firstname + " " + item.lastname
+                                        item.item_type_name
                                     }</Text>
                                     <View className='justify-self-end'>
                                         {
-                                            item.email == choosenMemberId && <Material name="check" size={24} color={"#49CC90"} />
+                                            item.id_item_type == choosenCategory && <Material name="check" size={24} color={"#49CC90"} />
                                         }
 
                                     </View>
@@ -276,7 +281,7 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                         }}
                         ref={inputDescriptionRef}
                         editable
-                        placeholder="Input progress note"
+                        placeholder="Input title"
                         value={inputProgressNote2}
                         onChangeText={(text) => setInputProgressNote2(text)}
                         className='bg-white'
@@ -289,28 +294,7 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
             </View>
         } else if (pickSheetIndex == 3) {
             return <View className='p-4'>
-                <View className='bg-white rounded-lg'>
-                    <TextInput
-                        style={{
-                            borderWidth: 1,
-                            borderColor: "#ccc",
-                            borderRadius: 5,
-                            // marginBottom: 20,
-                            fontSize: 17,
-                            padding: 17,
-                        }}
-                        ref={inputDescriptionRef}
-                        editable
-                        placeholder="Input school info"
-                        value={inputSchoolInfo2}
-                        onChangeText={(text) => setInputSchoolInfo2(text)}
-                        className='bg-white'
-                        autoFocus
-                    />
 
-
-
-                </View>
 
             </View>
         }
@@ -323,22 +307,36 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
             closeOnPressMask
             customStyles={{
                 container: {
-
                     backgroundColor: "#F2F1F6",
-
-                    height: pickSheetIndex == 0 || pickSheetIndex == 1 ? Dimensions.get("window").height * 0.9 : Dimensions.get("window").height * 0.5,
+                    height: Platform.OS == 'ios' ? Dimensions.get('window').height * 1 : Dimensions.get('window').height * 0.8,
                     borderTopLeftRadius: 20,
                     borderTopRightRadius: 20,
                 },
+                wrapper: {
+                    backgroundColor: Platform.OS == 'ios' ? 'transparent' : undefined
+                },
                 draggableIcon: {
-                    display: "none",
-                }
+                    backgroundColor: '#CDCDCC',
+                },
             }}
+
+            customModalProps={{
+                animationType: 'slide',
+                presentationStyle: Platform.OS == 'ios' ? 'formSheet' : undefined,
+                transparent: Platform.OS == 'ios' ? false : undefined,
+                statusBarTranslucent: true,
+            }}
+            customAvoidingViewProps={{
+                enabled: false,
+            }}
+
             onClose={() => {
-                setChoosenMemberId("")
+                setPickSheetIndex(0)
+                setChoosenCategory(6)
                 setInputProgressNote("")
                 setInputSchoolInfo("")
-                setChoosenMember(undefined)
+                timePickerSheetRef.current?.close()
+                setDueDate(null)
             }}
         >
             <View className='flex-1 '>
@@ -406,27 +404,11 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                         {showContentIndex()}
                     </ScrollView>
                 </KeyboardAvoidingView>
-
+                <TimePickerSheet refRBSheet={timePickerSheetRef} setSave={setDueDate} initialValue={dueDate} />
             </View>
-            {/* <TextInput
-                                style={{
-                                    borderWidth: 1,
-                                    borderColor: "#ccc",
-                                    borderRadius: 5,
-                                    marginBottom: 20,
-                                    fontSize: 17,
-                                    padding: 17,
-                                }}
-                                ref={inputDescriptionRef}
-                                editable
-                                placeholder="Input subject name"
-                                value={inputDescription}
-                                onChangeText={(text) => setInputDescription(text)}
-                                className='bg-white'
-                                autoFocus
-                            /> */}
+
         </RBSheet>
     )
 }
 
-export default AddMemberEducationSheet
+export default AddCheckListCategoryItem
