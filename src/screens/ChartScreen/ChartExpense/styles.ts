@@ -132,13 +132,15 @@ headerText: {
   },
   tabButton: {
     paddingVertical: 10, 
+    alignItems: 'center',
+
   },
   selectedTabButton: {
-    borderBottomColor: COLORS.primary,
+    borderBottomColor: COLORS.darkgray,
     paddingBottom: 0,
-    borderBottomWidth: 1, 
-    width: '20%',
-
+    borderBottomWidth: 2, 
+    width: '33%',
+    alignItems: 'center',
     },
 
   tabButtonText: {
@@ -148,7 +150,7 @@ headerText: {
     flexDirection: 'row',
     justifyContent: 'space-around', 
     borderBottomWidth: 1, 
-    borderBottomColor: 'gray', 
+    borderBottomColor: '#ccc', 
     width: '100%',
   } ,
   bottomLine: {
@@ -196,7 +198,6 @@ headerText: {
     flexDirection: 'row',
     justifyContent: "center",
     alignItems: "center",
-    flexWrap: "wrap",
     flexGrow: 1,
 
   },
@@ -219,7 +220,7 @@ headerText: {
     backgroundColor: "lightgray",
   },
   chartContainer: {
-    marginTop: 20,
+    marginTop: 10,
   },
  
   buttonContainer: {
@@ -233,7 +234,7 @@ headerText: {
   expenseItem: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 10,
+    padding: 20,
  
   },
   expenseDetails: {
@@ -243,12 +244,12 @@ headerText: {
   },
   expenseText: {
     fontSize: 16,
-    marginRight: 10,
+    padding: 10,
   },
   expenseAmount: {
-    fontSize: 14,
+    fontSize: 15,
     color: 'red',
-    textAlign: 'right', 
+    marginRight: 10
   },
   monthText: {
     color: 'black',
@@ -271,12 +272,11 @@ headerText: {
     backgroundColor: '#ccc',
   },
   yearPickerContainer: {
-    //paddingHorizontal: 10,
-    //paddingVertical: 20,
+
     backgroundColor: '#ffffff',
     alignItems: 'center',
-
-  },
+    marginBottom: 70,
+    },
 
   dropdownYear: {
     height:30, 
@@ -322,6 +322,22 @@ headerText: {
     marginVertical: 8,
     borderRadius: 16,
   },
+  flatListContent: {
+    paddingBottom: 20,
+},
+
+
+legendColorBox: {
+  width: 20,
+  height: 20,
+  marginRight: 5,
+  borderRadius: 25,
+
+},
+detailsContainer: {
+  marginTop: 10,
+},
+
 
 });
 export default styles;

@@ -1,10 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Button, ScrollView } from "react-native";
 import { BarChart } from "react-native-chart-kit";
 import styles from "./styles"; 
+import Icon from 'react-native-vector-icons/Ionicons';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { useSelector } from "react-redux";
+import { getDate } from "src/redux/slices/ExpenseAnalysis";
 
 const BarChartScreen = () => {
     const [showDetails, setShowDetails] = useState<boolean>(false);
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+    const date= useSelector(getDate);
+
+    useEffect(() => {
+      const parsedDate = new Date(date);
+      setSelectedDate(parsedDate);
+    },[]);
 
   const barChartData = [
     { category: "Food", amount: 4000, color: "gray" },
@@ -22,10 +33,29 @@ const BarChartScreen = () => {
       },
     ],
   };
+  const handleDateChange = (event: any, selectedDate: any) => {
+    const currentDate = selectedDate || date;
+    setSelectedDate(currentDate);
+  };
 
   return (
-    <View>
+    <ScrollView>
+    <View style={styles.itemContainer} >
+            <Icon name="calendar" size={25} color="black" style={styles.icon} />
+            <Text style={styles.text}>Select Date</Text>
+        </View>
+          <View style={styles.datePickerContainer}>
+            <DateTimePicker
+              value={selectedDate}
+              mode="date"
+              display="default"
+              onChange={handleDateChange}
+            />
+          </View>
+
       <View style={styles.chartContainer}>
+      <Text>(Unit: VNĐ)</Text>
+
         <BarChart
           data={data}
           width={400}
@@ -49,24 +79,23 @@ const BarChartScreen = () => {
       </View>
 
       {showDetails && (
-        <ScrollView>
-                  <View  style={styles.ContainerCategory}> 
+        <View  style={styles.ContainerCategory}> 
 
           {barChartData.map((expense, index) => (
-                <View key={index} style={styles.expenseItem}>
+            <View key={index} style={styles.expenseItem}>    
+               <View style={styles.expenseDetails}>
                 <Text style={styles.expenseText}>{expense.category}</Text>
-
+                </View>
                 <View style={styles.expenseDetails}>
-                    <Text style={styles.expenseAmount}>-{expense.amount} VNĐ</Text>
+                    <Text style={styles.expenseAmount}>-{expense.amount} đ</Text>
                 </View>
                 </View>
           ))}
-                        </View>
+         </View>
 
-        </ScrollView>
       )}
 
-    </View>
+    </ScrollView>
   );
 };
 
