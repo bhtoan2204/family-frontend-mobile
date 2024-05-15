@@ -3,13 +3,14 @@ import { View, Button, SafeAreaView, TextInput, Text, ScrollView, TouchableOpaci
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ExpenseServices from "src/services/apiclient/ExpenseServices";
 import styles from './styles'; 
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { ExpenditureScreenProps } from 'src/navigation/NavigationTypes';
 import { useDispatch, useSelector } from 'react-redux';
-import { getExpenseId, getExpenseName, getIncomeId, getIncomeName, getType, setExpenseCategory_id, setExpenseCategory_name, setIncomeCategory_id, setIncomeCategory_name, setType} from 'src/redux/slices/FinanceSlice';
-import { FamilyServices } from 'src/services/apiclient';
+import { getExpenseId, getExpenseName, getIncomeId, getIncomeName, getType, setExpenseCategory_id, setExpenseCategory_name, setFamily, setIncomeCategory_id, setIncomeCategory_name, setType} from 'src/redux/slices/FinanceSlice';
+import { FamilyServices, IncomeServices } from 'src/services/apiclient';
 import { Family } from 'src/interface/family/family';
 import TesseractOcr, { LANG_ENGLISH, LEVEL_WORD  } from 'react-native-tesseract-ocr';
 import { launchCameraAsync, MediaTypeOptions, CameraPermissionResponse, requestCameraPermissionsAsync } from 'expo-image-picker';
@@ -38,7 +39,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
     const urlCatetory= 'https://static.thenounproject.com/png/2351449-200.png'; 
     const urlMoney='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMpESFH3-fByKNSoaMNWOHuOp-blpyaDhabTnEbtjMmA&s';
     const [families, setFamilies] = useState<Family[]>([]);
-    const [selectedFamily, setSelectedFamily] = useState(null);
+    const [selectedFamily, setSelectedFamily] = useState<number | null>(null);
     const [amount, setAmount] = useState<number | null>(null);
     const [incomeType, setIncomeType] = useState<IncomeType[]>([]);
     
@@ -49,30 +50,38 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
     const [uriImage, setUriImage] = useState<string>('');
     const [showLargeImage, setShowLargeImage] = useState(false);
 
-    // useEffect(() => {
-    //     fetchExpenseType();
-    //     setSelectedMenu(state);
-    //     fetchAllFamily();
-    //     fetchIncomeType();
-    //     if (selectedMenu == 'Expense') {
-    //         selectExpenseCategory({ ...expenseCategory, id_expense_type: ExpenseId, expense_name: ExpenseName });
+    useEffect(() => {
+        fetchAllFamily();
+   },[]);
 
-    //     }
-    //     else if (selectedMenu =='Income'){
-    //         selectIncomeCategory({ ...incomeCategory, id_income_source: IncomeId, income_name: IncomeName });
+    useEffect(() => {
+        if(selectedFamily != undefined){
 
-    //     }
-    // }, [ExpenseId, IncomeId, state, selectedMenu]);
+        fetchExpenseType(selectedFamily);
+        fetchIncomeType(selectedFamily);
+
+        if (selectedMenu == 'Expense') {
+            selectExpenseCategory({ ...expenseCategory, id_expense_type: ExpenseId, expense_name: ExpenseName });
+
+        }
+        else if (selectedMenu =='Income'){
+            selectIncomeCategory({ ...incomeCategory, id_income_source: IncomeId, income_name: IncomeName });
+
+        }
+    }
+    }, [ExpenseId, IncomeId, state, selectedMenu,selectedFamily]);
+
      useEffect(() => {
          setSelectedMenu(state);
-
-         fetchAllFamily();
      },[])
 
+     useEffect(() => {
+        dispatch(setFamily(selectedFamily))
+    },[selectedFamily])
 
-    const fetchExpenseType = async () => {
+    const fetchExpenseType = async (id_family: any) => {
         try {
-            const response = await ExpenseServices.getExpenseType();
+            const response = await ExpenseServices.getExpenseType(id_family);
             setExpenseType(response);
             setLoading(false);
         } catch (error: any) {
@@ -80,9 +89,9 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
         }
     }
 
-    const fetchIncomeType = async () => {
+    const fetchIncomeType = async (id_family: any) => {
         try {
-            const response = await ExpenseServices.getIncomeType();
+            const response = await IncomeServices.getIncomeType(id_family);
             console.log(response)
             setIncomeType(response);
             setLoading(false);
@@ -93,12 +102,13 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
 
     const fetchAllFamily = async () => {
         try {
-          const result = await FamilyServices.getAllFamily();
-          setFamilies(result);
+            const result = await FamilyServices.getAllFamily();
+            setFamilies(result);
+            setSelectedFamily(result[0]?.id_family || null); 
         } catch (error: any) {
-          console.log('FamilyServices.getAllFamily error:', error);
+            console.log('FamilyServices.getAllFamily error:', error);
         }
-      };
+    };
 
 
     const handleSubmit = () => {
@@ -176,6 +186,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
       const pressSelectCategory = () => {
         navigation.navigate('HomeTab', {screen: 'CategoryExpense'});
     }
+
     const handleFamilyPress = (family: any) => {
         if (selectedFamily == family){
             setSelectedFamily(null);
@@ -184,9 +195,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
         setSelectedFamily(family);
         }
     };
-    const pressWallet = () => {
-        navigation.navigate('HomeTab', {screen: 'Wallet'});
-    };
+
     
    
     const handleTakePhoto = async () => {
@@ -214,16 +223,17 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
           }
         };
    const showTransactionHistory = () => {
-        navigation.navigate('HomeTab', {screen: 'ReportScreen'});
+        navigation.navigate('HomeTab', {screen: 'Invoice'});
    }
-        
+   const handleRemoveImage = () => {
+    setUriImage('');
+  };
     return (
      <View style={styles.headcontainer}>
-        <ScrollView style={styles.headcontainer}>
             <View style={styles.header}>
                 
                 <TouchableOpacity style={styles.iconMoney} onPress={showTransactionHistory}>
-                    <Icon name="money" size={25} />
+                    <Icon name="list" color='white' size={25} />
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => headerPress()}>
@@ -231,14 +241,14 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
 
                     <View style={styles.itemContainer}>
                             <Text style={styles.headerText}>{selectedMenu}</Text>
-                            <Icon name="chevron-down" size={15} color="white" />
+                            <Icon name="chevron-down-outline" size={15} color="white" />
 
                         </View>
                     </View>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.chevronContainer} onPress={handleSubmit}>
-                    <Icon name="check" size={25} />
+                    <Icon name="checkmark-done-sharp" color='white' size={25} />
                 </TouchableOpacity>
             </View>
 
@@ -256,7 +266,6 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                     <Text style={styles.currency}>VNĐ</Text>
                 </View>
                 
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     <View style={styles.familycontainer}>
                         <Text style={styles.text}>Family</Text>
                         {families.map((family, index) => (
@@ -264,22 +273,21 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                                 key={index}
                                 style={[
                                     styles.family,
-                                    selectedFamily === family && styles.selectedFamily 
+                                    selectedFamily === family.id_family && styles.selectedFamily 
                                 ]}
-                                onPress={() => handleFamilyPress(family)}
+                                onPress={() => handleFamilyPress(family.id_family)}
                             >
                                 <Text style={styles.familyText}>{family.name}</Text>
                             </TouchableOpacity>
                         ))}
                     </View>
-                </ScrollView>
-            {selectedMenu == 'Expense' && (
+            {selectedFamily != null && selectedMenu == 'Expense' && (
                 <View style={styles.ContainerCategory}>
                     <View style={styles.selectedItemContainer}>
                         <Image source={{ uri: urlCatetory}} style={styles.avatar} />
                             <Text style={styles.inputAmount}>{expenseCategory?.expense_name || 'Select category'}</Text>
                         <TouchableOpacity style={styles.chevronContainer} onPress={pressSelectCategory}>
-                            <Icon name="chevron-right" size={22} color="gray" />
+                            <Icon name="chevron-forward-outline" size={22} color="gray" />
                         </TouchableOpacity>
 
                     </View>
@@ -300,14 +308,14 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                     
                 </View>
             )}
-            {selectedMenu == 'Income' && (
+            { selectedFamily != null && selectedMenu == 'Income' && (
 
                 <View style={styles.ContainerCategory}>
                     <View style={styles.selectedItemContainer}>
                         <Image source={{ uri: urlCatetory}} style={styles.avatar} />
                             <Text style={styles.inputAmount}>{incomeCategory?.income_name || 'Select category'}</Text>
                         <TouchableOpacity style={styles.chevronContainer} onPress={pressSelectCategory}>
-                            <Icon name="chevron-right" size={22} color="gray" />
+                            <Icon name="chevron-forward-outline" size={22} color="gray" />
                         </TouchableOpacity>
 
                     </View>
@@ -354,39 +362,38 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                         />
                     </View>
 
-                    <View style={styles.datePickerContainer}>
-                        <View style={styles.itemContainer}>
-                            <TouchableOpacity onPress={()=> pressWallet()}>
-                                <View style={styles.walletContainer}>
-                                    <Icon name="credit-card" size={25} color="black" style={styles.icon} />
-                                    <Text style={styles.text}>Wallet</Text>
-                                </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.chevronContainer}  onPress={()=> pressWallet()}>
-                                <Icon name="chevron-right" size={22} color="gray" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+                    
                 </View>
                 <View style={styles.imageContainer}> 
 
-                    <View style={styles.imageContainer1}> 
-                        <TouchableOpacity onPress={() => setShowLargeImage(true)}>
-                            {uriImage && <Image source={{ uri: uriImage }} style={styles.image} />}
-                        </TouchableOpacity>
+                    <View style={styles.imageContainer}> 
+
+                        <View style={styles.imageContainer1}> 
+                            <TouchableOpacity onPress={() => setShowLargeImage(true)}>
+                            {uriImage && (
+                                <View>
+                                    <Image source={{ uri: uriImage }} style={styles.image} />
+                                    <TouchableOpacity style={styles.removeIconContainer} onPress={handleRemoveImage}>
+                                        <Icon name="close" size={20} color="white" />
+                                    </TouchableOpacity>
+                                </View>     
+                            )}                      
+                             </TouchableOpacity>
+                        </View>
                     </View>
+
                     <View style={styles.imageContainer2}> 
-                        <TouchableOpacity onPress={()=> handleOpenImageLibrary()}>
-                            <Icon name="image" size={60} color="gray" style= {styles.cameraButton} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> handleTakePhoto()}>
-                            <Icon name="camera" size={60} color="gray" />
-                        </TouchableOpacity>
+
+                            <TouchableOpacity onPress={()=> handleOpenImageLibrary()}>
+                                <Icon name="image" size={60} color="gray" style= {styles.cameraButton} />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={()=> handleTakePhoto()}>
+                                <Icon name="camera" size={60} color="gray" />
+                            </TouchableOpacity>
                     </View>
                 </View>
 
 
-            </ScrollView>
 
             <Modal visible={showLargeImage} transparent={true}>
                 <View style={styles.modalImageContainer}>
@@ -420,7 +427,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                                 <Image source={{ uri: urlMoney}} style={styles.avatar} />
                                 <Text style={styles.text}>Expense</Text>
                                 <View style={styles.checkIcon}> 
-                                    {selectedMenu === "Expense" && <Icon name="check" size={20} color="green" />}
+                                    {selectedMenu === "Expense" && <Icon name="checkmark-sharp" size={20} color="green" />}
                                 </View>
                             </View>
                         </TouchableOpacity>
@@ -429,7 +436,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                                 <Image source={{ uri: urlMoney}} style={styles.avatar} />
                                 <Text style={styles.text}>Income</Text>
                                 <View style={styles.checkIcon}> 
-                                    {selectedMenu === "Income" && <Icon name="check" size={20} color="green" />}
+                                    {selectedMenu === "Income" && <Icon name="checkmark-sharp" size={20} color="green" />}
                                 </View>
                             </View>
                         </TouchableOpacity>
@@ -438,7 +445,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                                 <Image source={{ uri: urlMoney}} style={styles.avatar} />
                                 <Text style={styles.text}>Lend</Text>
                                 <View style={styles.checkIcon}> 
-                                    {selectedMenu === "Lend" && <Icon name="check" size={20} color="green" />}
+                                    {selectedMenu === "Lend" && <Icon name="checkmark-sharp" size={20} color="green" />}
                                 </View>
                             </View>
                         </TouchableOpacity>

@@ -5,10 +5,10 @@ export default StyleSheet.create({
   headerContainer: {
       backgroundColor: 'rgba(128, 50, 128, 0.5)', 
       alignItems: 'center',
-      marginBottom: 20,
+      marginBottom: 10,
       justifyContent: 'center',
       flexDirection: 'row',
-      height: '7%',
+      height: '6%',
     
 },
 headerTitleContainer: {
@@ -39,7 +39,13 @@ headerText: {
     color: 'white',
 
   },
-
+  selectedTabText: {
+    fontSize: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'black',
+    fontWeight: 'bold',
+  },
   categoryItemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -138,6 +144,7 @@ headerText: {
     },
   tabButtonText: {
       fontSize: 16, 
+      color: '#ccc',
   },
   containerTab: {
     flexDirection: 'row',

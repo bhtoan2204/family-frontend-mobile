@@ -28,12 +28,10 @@ headerText: {
     fontWeight: 'bold',
 },
 
-  container: {
-    flex: 1,
-    backgroundColor: 'white', 
-
-  },
-
+container: {
+  flex: 1,
+  backgroundColor: 'white',
+},
   backButton: {
     marginBottom: 10,
     marginLeft: 10,
@@ -66,6 +64,7 @@ headerText: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    marginTop: screenHeight*0.115,
   },
   modalContent: {
     backgroundColor: 'white',
@@ -133,15 +132,14 @@ headerText: {
   tabButton: {
     paddingVertical: 10, 
     alignItems: 'center',
-
+    width: '33%',
   },
   selectedTabButton: {
-    borderBottomColor: COLORS.darkgray,
+    borderBottomColor: COLORS.primary,
     paddingBottom: 0,
-    borderBottomWidth: 2, 
-    width: '33%',
+    borderBottomWidth: 4, 
     alignItems: 'center',
-    },
+  },
 
   tabButtonText: {
       fontSize: 16, 
@@ -152,6 +150,7 @@ headerText: {
     borderBottomWidth: 1, 
     borderBottomColor: '#ccc', 
     width: '100%',
+
   } ,
   bottomLine: {
     position: 'absolute',
@@ -234,7 +233,7 @@ headerText: {
   expenseItem: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 20,
+    padding: 15,
  
   },
   expenseDetails: {
@@ -324,20 +323,43 @@ headerText: {
   },
   flatListContent: {
     paddingBottom: 20,
-},
+  },
 
 
-legendColorBox: {
-  width: 20,
-  height: 20,
-  marginRight: 5,
-  borderRadius: 25,
+  legendColorBox: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
+    borderRadius: 25,
 
-},
-detailsContainer: {
-  marginTop: 10,
-},
+  },
+  detailsContainer: {
+    marginTop: 10,
+  },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dropdownMenu: {
+    position: 'absolute',
+    top: 0,
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    width: '100%',
 
-
-});
+  },
+  filterItem: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    flexDirection: 'row',
+  },
+  filterButton: {
+    color: 'white'
+  },
+  
+  });
 export default styles;

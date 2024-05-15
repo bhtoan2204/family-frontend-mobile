@@ -8,7 +8,7 @@ interface FinanceState {
   expensecategory_name: string ;
   incomecategory_id: number ;
   incomecategory_name: string ;
-  wallet: string;
+  id_family: number | null;
 }
 
 const initialState: FinanceState = {
@@ -17,7 +17,7 @@ const initialState: FinanceState = {
   expensecategory_name: '',
   incomecategory_id: 0,
   incomecategory_name: '',
-  wallet: '',
+  id_family: null,
 };
 
 const financeSlice = createSlice({
@@ -43,19 +43,20 @@ const financeSlice = createSlice({
         state.incomecategory_name = action.payload;
 
     },
-    setWallet: (state, action: PayloadAction<string>) => {
-      state.wallet = action.payload;
-    },
+    setFamily: (state, action: PayloadAction<number | null>) => {
+      state.id_family = action.payload;
+  },
   },
 });
 
-export const { setType, setExpenseCategory_id, setExpenseCategory_name ,setIncomeCategory_id, setIncomeCategory_name, setWallet } = financeSlice.actions;
+export const { setType, setExpenseCategory_id, setExpenseCategory_name ,setIncomeCategory_id, setIncomeCategory_name, setFamily } = financeSlice.actions;
  
 export const getType= (state: RootState) => state.finace.type;
 export const getIncomeId= (state: RootState) => state.finace.incomecategory_id;
 export const getIncomeName= (state: RootState) => state.finace.incomecategory_name;
 export const getExpenseId= (state: RootState) => state.finace.expensecategory_id;
 export const getExpenseName= (state: RootState) => state.finace.expensecategory_name;
+export const getFamily= (state: RootState) => state.finace.id_family;
 
 
 export default financeSlice.reducer;

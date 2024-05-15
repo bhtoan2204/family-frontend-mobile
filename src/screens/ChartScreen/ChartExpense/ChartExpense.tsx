@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Button } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Button, Modal, FlatList, Image } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
 import { ChartExpenseProps } from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -29,6 +29,8 @@ const ChartExpenseScreen = ({ navigation }: ChartExpenseProps) => {
   const moment = require('moment');
   let option = useSelector(getOption);
   const dispatch = useDispatch();
+  const [isFamilyModalOpen, setIsFamilyModalOpen] = useState(false);
+  const familyUri = 'https://t3.ftcdn.net/jpg/06/75/38/14/360_F_675381468_yjYEK9SvCRYpRUyKNRWsnArIalbMeBU4.jpg';
 
   useEffect(() => {
 
@@ -73,11 +75,12 @@ const ChartExpenseScreen = ({ navigation }: ChartExpenseProps) => {
     dispatch(setSelectedOption(option));
   };
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
 
 
+  const handleFamilySelection = (selectedFamily: Family) => {
+    setIsFamilyModalOpen(false);
+    setSelectedFamily(selectedFamily.id_family)
+};
 
 
   return (
@@ -89,8 +92,8 @@ const ChartExpenseScreen = ({ navigation }: ChartExpenseProps) => {
         <View style={styles.headerTitleContainer}>
           <Text style={styles.headerText}>Expense Analysis</Text>
         </View>
-        <TouchableOpacity onPress={toggleModal} style={styles.headerButton}>
-          <Icon name="add" size={30} style={styles.addImage} />
+        <TouchableOpacity  style={styles.headerButton} onPress={() => setIsFamilyModalOpen(!isFamilyModalOpen)}>
+          <Icon name="filter" size={30} style={styles.filterButton} />
         </TouchableOpacity>
       </View>
       <View style={styles.containerTab}>
@@ -115,25 +118,48 @@ const ChartExpenseScreen = ({ navigation }: ChartExpenseProps) => {
       </View>
       {selectedCategoryType === 'Day' && (
         <View>
- 
           <BarChartScreen/>
-
         </View>
       )}
      {selectedCategoryType === 'Month' && (
         <View>
             <PieChartComponent />
-            
         </View>
-        
       )}
       {selectedCategoryType === 'Year' && (
-        <View>
-          
-        <LineChartScreen/>
-       
+        <View>         
+        <LineChartScreen/>       
         </View>
       )}
+          <Modal
+                visible={isFamilyModalOpen}
+                animationType="slide"
+                transparent={true}
+                onRequestClose={() => setIsFamilyModalOpen(false)}
+            >
+                <TouchableOpacity
+                    style={styles.modalContainer}
+                    activeOpacity={1}
+                    onPress={() => setIsFamilyModalOpen(!isFamilyModalOpen)} 
+                >
+                    <View style={styles.modalBackground}>
+                        <View style={styles.dropdownMenu}>
+                            <FlatList
+                                data={families}
+                                renderItem={({ item }) => (
+                                    <TouchableOpacity style={styles.filterItem} onPress={() => handleFamilySelection(item)}>
+                                        <Image source={{ uri: familyUri}} style={styles.avatar} />
+                                        <Text style={styles.text}>{item.name}</Text>
+                                    </TouchableOpacity>
+                                )}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </Modal>
+
+
     </View>
   );
 };

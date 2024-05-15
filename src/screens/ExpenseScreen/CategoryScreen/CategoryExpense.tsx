@@ -5,7 +5,7 @@ import ExpenseServices from "src/services/apiclient/ExpenseServices";
 import { CategoryExpenseScreenProps } from "src/navigation/NavigationTypes";
 import styles from "./styles";
 import Icon from 'react-native-vector-icons/Ionicons';
-import {getType, setExpenseCategory_id, setExpenseCategory_name, setIncomeCategory_id, setIncomeCategory_name, setType } from "src/redux/slices/FinanceSlice";
+import {getFamily, getType, setExpenseCategory_id, setExpenseCategory_name, setIncomeCategory_id, setIncomeCategory_name, setType } from "src/redux/slices/FinanceSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { IncomeServices } from "src/services/apiclient";
 
@@ -30,26 +30,29 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
     const urlFood = 'https://img.freepik.com/premium-vector/icon-food-drink-illustration-vector_643279-134.jpg';
     const addUrl ='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBWw-U6s-Q1k-tt_xXKV02dPlypckiNOJMxJo3KxWW-g&s';
     let state = useSelector(getType);
+    let id_family = useSelector(getFamily);
 
-    
+    const [selectedFamily, setSelectedFamily] = useState<number | null>(null);
+
+
     useEffect(() => {
-        fetchExpenseType();
-        fetchIncomeType();
+        fetchExpenseType(id_family);
+        fetchIncomeType(id_family);
         setSelectedCategoryType(state);
     }, [state]);
 
-    const fetchExpenseType = async () => {
+    const fetchExpenseType = async (id_family: any) => {
         try {
-            const response = await ExpenseServices.getExpenseType();
+            const response = await ExpenseServices.getExpenseType(id_family);
             setExpenseType(response);
             setLoading(false);
         } catch (error: any) {
             console.error('Error in getExpenseType:', error.message);
         }
     }
-    const fetchIncomeType = async () => {
+    const fetchIncomeType = async (id_family: any) => {
         try {
-            const response = await IncomeServices.getIncomeType();
+            const response = await IncomeServices.getIncomeType(id_family);
             setIncomeCategories(response);
             setLoading(false);
         } catch (error: any) {
@@ -63,8 +66,8 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
 
     const createCategory = async () => {
         try {
-            //await ExpenseServices.createExpenseType(newCategoryName);
-            fetchExpenseType();
+            await ExpenseServices.createExpenseType(id_family,newCategoryName);
+            fetchExpenseType(id_family);
             toggleModal(); 
             setNewCategoryName(''); 
         } catch (error: any) {
@@ -111,17 +114,21 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
         </View>
         <View style={styles.containerTab}>
             <TouchableOpacity
-                onPress={() => selectOption('Income')}
-                style={[styles.tabButton, selectedCategoryType === 'Income' && styles.selectedTabButton]}
+            onPress={() => selectOption('Income')}
+            style={[styles.tabButton, selectedCategoryType === 'Income' && styles.selectedTabButton]}
             >
-                <Text style={styles.tabButtonText}>Income</Text>
+            <Text style={[styles.tabButtonText, selectedCategoryType === 'Income' && styles.selectedTabText]}>
+                Income
+            </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-                onPress={() => selectOption('Expense')}
-                style={[styles.tabButton, selectedCategoryType === 'Expense' && styles.selectedTabButton]}
+            onPress={() => selectOption('Expense')}
+            style={[styles.tabButton, selectedCategoryType === 'Expense' && styles.selectedTabButton]}
             >
-                <Text style={styles.tabButtonText}>Expense</Text>
+            <Text style={[styles.tabButtonText, selectedCategoryType === 'Expense' && styles.selectedTabText]}>
+                Expense
+            </Text>
             </TouchableOpacity>
             <View style={[styles.bottomLine, { left: selectedCategoryType === 'Income' ? 0 : '50%' }]} />
         </View>

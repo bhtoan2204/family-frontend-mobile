@@ -4,10 +4,10 @@ import instance from "../httpInterceptor";
 import baseUrl from "../urls/baseUrl";
 
 const ExpenseServices = {
-    getExpenseType: async() =>{
+    getExpenseType: async(id_family: number) =>{
         try {
             const response: AxiosResponse = await instance.get(
-                `${baseUrl}/api/v1/finance/expensediture/getExpenseType`,
+                `${baseUrl}/api/v1/finance/expenseditureType/getExpenseType/${id_family}`,
             );
             if (response.status === 200) {
               return response.data.data;
@@ -18,18 +18,21 @@ const ExpenseServices = {
             console.error('Error in getExpenseType:', error.message);
           }
     },
-    getIncomeType: async() =>{
+    createExpenseType: async(id_family: number | null, name: string) =>{
       try {
-          const response: AxiosResponse = await instance.get(
-              `${baseUrl}/api/v1/finance/income/getIncomeSource`,
+          const response: AxiosResponse = await instance.post(
+              `${baseUrl}/api/v1/finance/expenseditureType/createExpenseType`, {
+                  id_family, name
+                },
+              
           );
           if (response.status === 200) {
-            return response.data.data;
+            return response.status;
           } else {
-              console.error('Error in getIncomeSource');
+              console.error('Error in createExpenseType');
           }
         } catch (error: any) {
-          console.error('Error in getIncomeSource:', error.message);
+          console.error('Error in createExpenseType:', error.message);
         }
   },
   getExpense: async(page: number, itemsPerPage: number, id_family?: number) =>{
@@ -50,23 +53,6 @@ const ExpenseServices = {
         console.error('Error in getExpense:', error.message);
       }
 },    
-    getIncome: async(page: number, itemsPerPage: number, id_family?: number) =>{
-      try {
-          const response: AxiosResponse = await instance.get(
-              `${baseUrl}/api/v1/finance/income/getIncome/${id_family}`,{
-              params: {
-                page, itemsPerPage, id_family,
-              }
-            }
-          );
-          if (response.status === 200) {
-            return response.data.data;
-          } else {
-              console.error('Error in getIncome');
-          }
-        } catch (error: any) {
-          console.error('Error in getIncome:', error.message);
-        }
-    },
+    
 }
 export default ExpenseServices;

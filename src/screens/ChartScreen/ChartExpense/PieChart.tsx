@@ -175,6 +175,8 @@ const PieChartComponent = () => {
               </View>
               <View style={styles.expenseDetails}>
                 <Text style={styles.expenseAmount}>-{detail.dailyTotal} đ</Text>
+                <Icon name="chevron-right" size={20} color="#ccc" />
+
               </View>
             </TouchableOpacity>
           ))}

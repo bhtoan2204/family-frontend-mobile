@@ -13,6 +13,7 @@ import BottomSheetChild from 'src/screens/HomeScreen/BottomSheetContent';
 import CategoryExpenseScreen from 'src/screens/ExpenseScreen/CategoryScreen';
 import WalletScreen from 'src/screens/ExpenseScreen/WalletScreen';
 import FamilyScreen from 'src/screens/ExpenseScreen/FamilyScreen';
+import CreateInvoiceScreen from 'src/screens/Invoice/CreateInvoice/CreateInvoice';
 
 const Tab = createBottomTabNavigator();
 const TabList = [
@@ -39,6 +40,14 @@ const TabList = [
     screen: 'Expense',
     icon: 'plus',
     visible: true,
+  },
+  {
+    id: 'Invoice',
+    title: 'Invoice',
+    component: CreateInvoiceScreen,
+    screen: 'Invoice',
+    icon: 'plus',
+    visible: false,
   },
   {
     id: 'CategoryExpense',
@@ -118,7 +127,7 @@ const styles = StyleSheet.create({
     height: '7%',
     width: '100%',
     position: 'absolute',
-    borderRadius: 0,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: 'rgba(128, 50, 128, 0.5)',

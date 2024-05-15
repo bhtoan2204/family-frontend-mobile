@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
 },
   headcontainer: {
     backgroundColor: 'white', 
-    height: '100%',
+    height: '95%',
   },
   inputContainer: {
     borderWidth: 1,
@@ -46,12 +46,12 @@ const styles = StyleSheet.create({
 
   },
   header: {
-    backgroundColor: 'rgba(128, 50, 128, 0.5)', 
+    backgroundColor: '#66C0F4', 
     alignItems: 'center',
     marginBottom: 20,
     justifyContent: 'center',
     flexDirection: 'row',
-    height: '8%',
+    height: '6%',
   },
   headerText: {
     fontSize: 20,
@@ -91,12 +91,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 25,
-    padding: 10,
     fontSize: 16,
     flexDirection: 'column', 
-    marginBottom: 10, 
     backgroundColor: 'white', 
-
+    
   },
   selectedItemContainer: {
     flexDirection: 'row',
@@ -170,17 +168,19 @@ iconMoney: {
 },
 imageContainer: {
   flexDirection: 'row',
-  flex: 1, 
   justifyContent: 'center', 
   alignItems: 'center', 
+
 },
 imageContainer1: {
   justifyContent: 'center', 
   alignItems: 'center',
-  marginRight: 50
 },
 imageContainer2: {
   flexDirection: 'row',
+  justifyContent: 'center', 
+  alignItems: 'center',
+  marginRight: 50
 
 },
 inputControl: {
@@ -248,8 +248,7 @@ menuItemLast: {
       paddingHorizontal: 5,
       flexDirection: 'row',
       alignItems: 'center',
-      height: 45,
-      marginBottom: 20,
+      height:60,
   },
 
   family: {
@@ -271,18 +270,24 @@ menuItemLast: {
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
-},
-closeButton: {
-  position: 'absolute',
-  top: 180,
-  right: 15, 
-},
-modalImageContainer: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: 'rgba(0, 0, 0, 0.7)',
-},
+    },
+    closeButton: {
+      position: 'absolute',
+      top: 180,
+      right: 15, 
+    },
+    modalImageContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    },
+    removeIconContainer: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      backgroundColor: 'red',
+      borderRadius: 12,
+    },
   });
 
 export default styles;
