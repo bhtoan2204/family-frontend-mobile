@@ -57,6 +57,7 @@ const AddItemCheckListSheet = ({ refRBSheet, id_checklist }: { refRBSheet: React
     return (
         <RBSheet
             ref={refRBSheet}
+            useNativeDriver
             closeOnPressMask={true}
             closeOnPressBack={true}
             onClose={() => {
@@ -77,6 +78,9 @@ const AddItemCheckListSheet = ({ refRBSheet, id_checklist }: { refRBSheet: React
                     // borderBlockColor: "#0000",
                     display: "none",
                 }
+            }}
+            customModalProps={{
+                animationType: 'slide',
             }}
         >
             <TextInput

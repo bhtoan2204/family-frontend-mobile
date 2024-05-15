@@ -78,8 +78,8 @@ const styles = StyleSheet.create({
     },
     checklistItem: {
         padding: 10,
-        paddingVertical: 10,
-        marginBottom: 10,
+        // paddingVertical: 10,
+        marginBottom: 0,
         borderRadius: 5,
     },
     fab: {

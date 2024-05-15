@@ -177,7 +177,7 @@ const EditHouseHoldItemSheet = ({ refRBSheet, setHouseHoldItem, id_category, id_
             customStyles={{
                 container: {
                     backgroundColor: "#F6F7F9",
-                    // height: Dimensions.get("window").height * 0.6,
+                    height: Dimensions.get("window").height * 0.6,
                     borderTopLeftRadius: 10,
                     borderTopRightRadius: 10,
                 },
