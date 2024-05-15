@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
 
   },
   header: {
-    backgroundColor: '#66C0F4', 
+    backgroundColor: 'rgba(128, 50, 128, 0.5)', 
     alignItems: 'center',
     marginBottom: 20,
     justifyContent: 'center',
@@ -175,6 +175,7 @@ imageContainer: {
 imageContainer1: {
   justifyContent: 'center', 
   alignItems: 'center',
+  marginRight: 50
 },
 imageContainer2: {
   flexDirection: 'row',
@@ -260,7 +261,7 @@ menuItemLast: {
       fontSize: 16,
   },
   selectedFamily: {
-      backgroundColor: COLORS.primary, 
+      backgroundColor: 'rgba(128, 50, 128, 0.5)', 
   },
   image: {
     height: 100,
@@ -288,6 +289,12 @@ menuItemLast: {
       backgroundColor: 'red',
       borderRadius: 12,
     },
+    invoiceContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+  },
+  
   });
 
 export default styles;

@@ -86,6 +86,7 @@ container: {
     borderRadius: 5,
     marginBottom: 10,
     paddingHorizontal: 10,
+    
   },
 
   modalButtons: {
@@ -135,7 +136,7 @@ container: {
     width: '33%',
   },
   selectedTabButton: {
-    borderBottomColor: COLORS.primary,
+    borderBottomColor: '#ccc',
     paddingBottom: 0,
     borderBottomWidth: 4, 
     alignItems: 'center',

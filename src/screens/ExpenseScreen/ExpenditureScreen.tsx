@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Button, SafeAreaView, TextInput, Text, ScrollView, TouchableOpacity, Image, Modal, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { View, Button, SafeAreaView, TextInput, Text, ScrollView, TouchableOpacity, Image, Modal} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ExpenseServices from "src/services/apiclient/ExpenseServices";
 import styles from './styles'; 
@@ -18,6 +18,8 @@ import { RNTesseractOcr } from 'react-native-tesseract-ocr';
 import HomeTab from 'src/navigation/Routes/HomeTab';
 import { ExpenseType } from 'src/interface/expense/ExpenseType';
 import { IncomeType } from 'src/interface/income/IncomeType';
+import CreateInvoiceScreen from '../Invoice/CreateInvoice/CreateInvoice';
+import CreateInvoiceComponent from '../Invoice/CreateInvoice/CreateInvoice';
 
 const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
     const [expenseType, setExpenseType] = useState<ExpenseType[]>([]);
@@ -147,6 +149,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
         setIsPickerOpen(false);
         setSelectedMenu(option)
         dispatch(setType(option));
+
     };
 
     const headerPress = () => {
@@ -222,17 +225,19 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
             console.error(err);
           }
         };
-   const showTransactionHistory = () => {
+   const showInvoice = () => {
         navigation.navigate('HomeTab', {screen: 'Invoice'});
    }
    const handleRemoveImage = () => {
     setUriImage('');
   };
     return (
-     <View style={styles.headcontainer}>
+     <View >
+       <ScrollView contentContainerStyle={styles.headcontainer}>
+
             <View style={styles.header}>
                 
-                <TouchableOpacity style={styles.iconMoney} onPress={showTransactionHistory}>
+                <TouchableOpacity style={styles.iconMoney} >
                     <Icon name="list" color='white' size={25} />
                 </TouchableOpacity>
 
@@ -250,8 +255,9 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                 <TouchableOpacity style={styles.chevronContainer} onPress={handleSubmit}>
                     <Icon name="checkmark-done-sharp" color='white' size={25} />
                 </TouchableOpacity>
+                
             </View>
-
+          
 
                 <View style={styles.inputContainer}>
                     <View style={styles.inputWrapper}>
@@ -336,6 +342,12 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                     
                 </View>
             )}
+
+            {selectedMenu === 'Invoice' && (
+                    <CreateInvoiceComponent />
+            )}
+
+            
                 <View style={styles.container}>
                     <View style={styles.datePickerContainer}>
                         <View style={styles.itemContainer} >
@@ -393,7 +405,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                     </View>
                 </View>
 
-
+        </ScrollView>
 
             <Modal visible={showLargeImage} transparent={true}>
                 <View style={styles.modalImageContainer}>
@@ -440,12 +452,12 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                                 </View>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handleOptionPress("Lend")}>
+                        <TouchableOpacity onPress={() => handleOptionPress("Invoice")}>
                             <View style={styles.menuItem}>
                                 <Image source={{ uri: urlMoney}} style={styles.avatar} />
-                                <Text style={styles.text}>Lend</Text>
+                                <Text style={styles.text}>Invoice</Text>
                                 <View style={styles.checkIcon}> 
-                                    {selectedMenu === "Lend" && <Icon name="checkmark-sharp" size={20} color="green" />}
+                                    {selectedMenu === "Invoice" && <Icon name="checkmark-sharp" size={20} color="green" />}
                                 </View>
                             </View>
                         </TouchableOpacity>
@@ -454,7 +466,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                     </TouchableOpacity>
                 </View>
             </Modal>
-
+            
             </View>
     );
 }    
