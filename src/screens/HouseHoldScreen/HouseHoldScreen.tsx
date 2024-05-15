@@ -120,7 +120,7 @@ const household_items = [
 
 const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
-    const refRBSheet = React.useRef<RBSheet>(null);
+    const refRBSheet = React.useRef<any>(null);
     const [householdCategory, setHouseholdCategory] = React.useState<HouseHoldCategoryInterface[]>(household_category_dat)
     const [householdItems, setHouseholdItems] = React.useState<HouseHoldItemInterface[]>(household_items)
     const [choosenCategoryIndex, setChoosenCategoryIndex] = React.useState<number>(0)

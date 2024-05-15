@@ -6,17 +6,20 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { ChecklistItemInterface } from 'src/interface/checklist/checklist';
 import { Picker } from '@react-native-picker/picker';
+import { AppDispatch } from 'src/redux/store';
+import { useDispatch } from 'react-redux';
+import { addNewCheckListItemToCheckList } from 'src/redux/slices/CheckListSlice';
 
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#000'];
 
-const AddItemCheckListSheet = ({ refRBSheet, setChecklist }: { refRBSheet: React.RefObject<any>, setChecklist: React.Dispatch<React.SetStateAction<ChecklistItemInterface[]>> }) => {
+const AddItemCheckListSheet = ({ refRBSheet, id_checklist }: { refRBSheet: React.RefObject<any>, id_checklist: number }) => {
     const timePickerRef = React.useRef<any>(null);
     const [name, setName] = React.useState("");
     const [description, setDescription] = React.useState("");
     const [priority, setPriority] = React.useState(4);
     const [dueDate, setDueDate] = React.useState<Date | null>(null);
-
+    const dispatch = useDispatch<AppDispatch>();
     const { showActionSheetWithOptions } = useActionSheet();
 
     const buildDate = (date: Date) => {
@@ -145,8 +148,14 @@ const AddItemCheckListSheet = ({ refRBSheet, setChecklist }: { refRBSheet: React
 
                     }}
                     onPress={() => {
-                        setChecklist((prev) => [...prev, { id: (prev.length + 1).toString(), title: name, description: description, dueDate: dueDate != null ? new Date(dueDate) : new Date(), priority: priority, isCompleted: false, createdAt: new Date() }]);
-
+                        // setChecklist((prev) => [...prev, { id: (prev.length + 1).toString(), title: name, description: description, dueDate: dueDate != null ? new Date(dueDate) : new Date(), priority: priority, isCompleted: false, createdAt: new Date() }]);
+                        const newItem: ChecklistItemInterface = { id: "-1", title: name, description: description, dueDate: dueDate != null ? new Date(dueDate) : new Date(), priority: priority, isCompleted: false, createdAt: new Date() }
+                        dispatch(
+                            addNewCheckListItemToCheckList({
+                                id: id_checklist,
+                                item: newItem
+                            })
+                        )
                         refRBSheet.current?.close();
                     }}
                     className='my-2 w-auto h-auto mr-4 p-2 rounded-full'

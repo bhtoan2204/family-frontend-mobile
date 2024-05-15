@@ -6,14 +6,19 @@ import CategoryTypeScrollList from "./CategoryTypeScrollList";
 import CheckListSection from "./CheckListSection";
 import SearchBar from "./SearchBar";
 import RBSheet from "react-native-raw-bottom-sheet";
+import { AppDispatch } from "src/redux/store";
+import { useDispatch } from "react-redux";
 
 
 const today = new Date();
 const yesterday = new Date(today.setDate(today.getDate() - 1));
 const tomorrow = new Date(today.setDate(today.getDate() + 1));
 
-const ChecklistSections: React.FC<{ checklist: CheckListCategoryInterface[], setChecklist: React.Dispatch<React.SetStateAction<CheckListCategoryInterface[]>>, selectedCategory: number | null, setSelectedCategory: React.Dispatch<React.SetStateAction<number | null>>, handleNavigateCheckListDetail: (id_checklist: number) => void, searchString: string, setSearchString: React.Dispatch<React.SetStateAction<string>>, bottomSheetRef: React.RefObject<RBSheet> }> = ({ checklist, setChecklist, selectedCategory, setSelectedCategory, handleNavigateCheckListDetail, searchString, setSearchString, bottomSheetRef }) => {
+const ChecklistSections: React.FC<{ checklist: CheckListCategoryInterface[], selectedCategory: number | null, setSelectedCategory: React.Dispatch<React.SetStateAction<number | null>>, handleNavigateCheckListDetail: (id_checklist: number) => void, searchString: string, setSearchString: React.Dispatch<React.SetStateAction<string>>, bottomSheetRef: React.RefObject<any> }> = ({ checklist, selectedCategory, setSelectedCategory, handleNavigateCheckListDetail, searchString, setSearchString, bottomSheetRef }) => {
     const [sections, setSections] = React.useState<{ title: string, data: CheckListCategoryInterface[], }[]>([]);
+    const dispatch = useDispatch<AppDispatch>();
+
+
     React.useEffect(() => {
         const newSections: { title: string, data: CheckListCategoryInterface[] }[] = [];
         checklist.forEach(item => {
@@ -76,7 +81,7 @@ const ChecklistSections: React.FC<{ checklist: CheckListCategoryInterface[], set
 
                 {
                     sections.map((section, index) => (
-                        <CheckListSection key={index} title={section.title} data={section.data} setChecklist={setChecklist} handleNavigateCheckListDetail={handleNavigateCheckListDetail} />
+                        <CheckListSection key={index} title={section.title} data={section.data} handleNavigateCheckListDetail={handleNavigateCheckListDetail} />
                     ))
                 }
 

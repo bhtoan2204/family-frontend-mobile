@@ -9,7 +9,7 @@ import EditHouseHoldItemSheet from '../AddHouseHoldItemSheet/EditHouseHoldItemSh
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const HouseHoldItem = ({ item, setHouseHoldItem, index }: { item: HouseHoldItemInterface, setHouseHoldItem: React.Dispatch<React.SetStateAction<HouseHoldItemInterface[]>>, index: number }) => {
-    const editSheetRef = React.useRef<RBSheet>(null);
+    const editSheetRef = React.useRef<any>(null);
     const handleDelete = () => {
         console.log("Deleting item with id:", item.id_household_item);
         Alert.alert("Delete Item", "Are you sure you want to delete this item?", [

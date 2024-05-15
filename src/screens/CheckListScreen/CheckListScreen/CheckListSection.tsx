@@ -17,7 +17,7 @@ const today = new Date();
 const yesterday = new Date(today.setDate(today.getDate() - 1));
 const tomorrow = new Date(today.setDate(today.getDate() + 1));
 
-const CheckListSection: React.FC<{ title: string, data: CheckListCategoryInterface[], setChecklist: React.Dispatch<React.SetStateAction<CheckListCategoryInterface[]>>, handleNavigateCheckListDetail: (id_checklist: number) => void }> = ({ title, data, setChecklist, handleNavigateCheckListDetail }) => {
+const CheckListSection: React.FC<{ title: string, data: CheckListCategoryInterface[], handleNavigateCheckListDetail: (id_checklist: number) => void }> = ({ title, data, handleNavigateCheckListDetail }) => {
     return <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>{title}</Text>
         {data.map(item => (
@@ -39,7 +39,7 @@ const CheckListSection: React.FC<{ title: string, data: CheckListCategoryInterfa
                         <View className='mr-2'>
                             <CircularProgress
                                 size={20}
-                                progress={item.completed / item.total * 100}
+                                progress={item.total === 0 ? 0 : item.completed / item.total * 100}
                                 strokeWidth={2}
                                 backgroundColor="#BEC8DF"
                                 progressColor={shoppingListItemColor[item.id_item_type - 1]}

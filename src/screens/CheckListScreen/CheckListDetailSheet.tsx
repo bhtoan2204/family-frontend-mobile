@@ -8,96 +8,117 @@ import { ChecklistItemInterface } from 'src/interface/checklist/checklist';
 import { Picker } from '@react-native-picker/picker';
 import { TimePickerSheet } from './AddItemCheckListSheet';
 import * as Haptics from 'expo-haptics';
+import { AppDispatch } from 'src/redux/store';
+import { useDispatch } from 'react-redux';
+import { updateCheckListItemCompleted, updateCheckListItemDueDate, updateCheckListItemPriority, updateCheckListItemTitleAndDescription } from 'src/redux/slices/CheckListSlice';
 
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
 
-const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSheet: React.RefObject<any>, setChecklist: React.Dispatch<React.SetStateAction<ChecklistItemInterface[]>>, checklist: ChecklistItemInterface }) => {
+const ChecklistDetailSheet = ({ refRBSheet, checklist_item, id_checklist }: { refRBSheet: React.RefObject<any>, checklist_item: ChecklistItemInterface, id_checklist: number }) => {
     const timePickerRBSheet = React.useRef<any>();
-    const [name, setName] = React.useState(checklist.title);
-    const [description, setDescription] = React.useState(checklist.description);
-    const [priority, setPriority] = React.useState(checklist.priority);
+    const [name, setName] = React.useState(checklist_item.title);
+    const [description, setDescription] = React.useState(checklist_item.description);
+    const [priority, setPriority] = React.useState(checklist_item.priority);
     const [isEditing, setIsEditing] = React.useState(false);
-    const [dueDate, setDueDate] = React.useState(checklist.dueDate)
+    const [dueDate, setDueDate] = React.useState(checklist_item.dueDate)
+    const dispatch = useDispatch<AppDispatch>();
+
     useEffect(() => {
-        setName(checklist.title)
-        setDescription(checklist.description)
-        setPriority(checklist.priority)
-        setDueDate(checklist.dueDate)
-    }, [checklist])
+        setName(checklist_item.title)
+        setDescription(checklist_item.description)
+        setPriority(checklist_item.priority)
+        setDueDate(checklist_item.dueDate)
+    }, [checklist_item])
 
     const { showActionSheetWithOptions } = useActionSheet();
 
     const handleUpdateChecklist = () => {
-        setChecklist((prev) => {
-            return prev.map((item) => {
-                if (item.id === checklist.id) {
-                    return {
-                        ...item,
-                        title: name,
-                        description: description,
-                        priority: priority,
-                    };
-                }
-                return item;
-            });
-        });
+        // setChecklist((prev) => {
+        //     return prev.map((item) => {
+        //         if (item.id === checklist.id) {
+        //             return {
+        //                 ...item,
+        //                 title: name,
+        //                 description: description,
+        //                 priority: priority,
+        //             };
+        //         }
+        //         return item;
+        //     });
+        // });
+        dispatch(updateCheckListItemTitleAndDescription({
+            id: id_checklist,
+            id_checklist: checklist_item.id,
+            title: name,
+            description: description,
+        }))
     }
 
     const handleUpdatePriority = (priority: number) => {
-        console.log(checklist.id, priority)
-        setChecklist((prev) => {
-            return [
-                ...prev.map((item) => {
-                    if (item.id === checklist.id) {
-                        return {
-                            ...item,
-                            priority: priority,
-                        };
-                    }
-                    return item;
-                })
-            ]
-
-
-        })
+        console.log(checklist_item.id, priority)
+        // setChecklist((prev) => {
+        //     return [
+        //         ...prev.map((item) => {
+        //             if (item.id === checklist.id) {
+        //                 return {
+        //                     ...item,
+        //                     priority: priority,
+        //                 };
+        //             }
+        //             return item;
+        //         })
+        //     ]
+        // })
+        dispatch(updateCheckListItemPriority({
+            id: id_checklist,
+            id_checklist: checklist_item.id,
+            priority: priority,
+        }))
     }
 
     const handleUpdateDueDate = (dueDate: Date | null) => {
-        console.log(checklist.id, priority)
-        setChecklist((prev) => {
-            return [
-                ...prev.map((item) => {
-                    if (item.id === checklist.id) {
-                        return {
-                            ...item,
-                            dueDate: dueDate,
-                        };
-                    }
-                    return item;
-                })
-            ]
+        // setChecklist((prev) => {
+        //     return [
+        //         ...prev.map((item) => {
+        //             if (item.id === checklist.id) {
+        //                 return {
+        //                     ...item,
+        //                     dueDate: dueDate,
+        //                 };
+        //             }
+        //             return item;
+        //         })
+        //     ]
 
 
-        })
+        // })
+        dispatch(updateCheckListItemDueDate({
+            id: id_checklist,
+            id_checklist: checklist_item.id,
+            dueDate: dueDate || new Date(),
+        }))
     }
 
     const handleUpdateComplete = () => {
-        setChecklist((prev) => {
-            return [
-                ...prev.map((item) => {
-                    if (item.id === checklist.id) {
-                        return {
-                            ...item,
-                            isCompleted: !checklist.isCompleted,
-                        };
-                    }
-                    return item;
-                })
-            ]
-
-
-        })
+        // setChecklist((prev) => {
+        //     return [
+        //         ...prev.map((item) => {
+        //             if (item.id === checklist.id) {
+        //                 return {
+        //                     ...item,
+        //                     isCompleted: !checklist.isCompleted,
+        //                 };
+        //             }
+        //             return item;
+        //         })
+        //     ]
+        // })
+        dispatch(updateCheckListItemCompleted({
+            id: id_checklist,
+            id_checklist: checklist_item.id,
+            isCompleted: !checklist_item.isCompleted,
+        }))
     }
 
     const onPressPriority = () => {
@@ -245,11 +266,11 @@ const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSh
                                                 )
                                             }}>
                                                 {
-                                                    checklist.isCompleted ? <Text className='text-white font-bold'>✓</Text> : <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[checklist.priority - 1] }}>
+                                                    checklist_item.isCompleted ? <Text className='text-white font-bold'>✓</Text> : <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[checklist_item.priority - 1] }}>
                                                     </View>
                                                 }
                                             </TouchableOpacity>
-                                            <Text className='text-lg font-semibold'>{checklist.title}</Text>
+                                            <Text className='text-lg font-semibold'>{checklist_item.title}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity className='flex-row items-center mt-5' onPress={() => {
                                             setIsEditing(true)
@@ -257,7 +278,7 @@ const ChecklistDetailSheet = ({ refRBSheet, setChecklist, checklist }: { refRBSh
                                             <View className='w-7 h-7  mr-4 flex flex-col items-center justify-center'>
                                                 <Material name="tooltip-outline" size={26} style={{ color: priorityColors[priority - 1] }} />
                                             </View>
-                                            <Text className='text-base'>{checklist.description}</Text>
+                                            <Text className='text-base'>{checklist_item.description}</Text>
                                         </TouchableOpacity>
 
                                         <TouchableOpacity className='flex-row items-center mt-5' onPress={() => {

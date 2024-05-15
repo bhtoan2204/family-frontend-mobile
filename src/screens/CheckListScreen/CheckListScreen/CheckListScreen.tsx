@@ -14,18 +14,21 @@ import { shoppingListItemColor, shoppingListItemColorInside } from '../constant/
 import CircularProgress from '../../EducationScreen/CircularProgress';
 import ChecklistSections from './CheckListSections';
 import AddCheckListCategoryItem from '../AddCheckListCategoryItem/AddCheckListCategoryItem';
+import { AppDispatch, RootState } from 'src/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { setInitialCheckList } from 'src/redux/slices/CheckListSlice';
 
 const today = new Date();
 const yesterday = new Date(today.setDate(today.getDate() - 1));
 const tomorrow = new Date(today.setDate(today.getDate() + 1));
 
 const checkListListData: CheckListCategoryInterface[] = [
-    { id: 1, id_item_type: 1, id_family: 1, title: 'Grocery Title 1', completed: 1, total: 10, createdAt: today },
-    { id: 2, id_item_type: 2, id_family: 1, title: 'Random Title 2', completed: 0, total: 10, createdAt: yesterday },
-    { id: 3, id_item_type: 3, id_family: 1, title: 'Random Title 3', completed: 0, total: 10, createdAt: tomorrow },
-    { id: 4, id_item_type: 4, id_family: 1, title: 'Random Title 4', completed: 0, total: 10, createdAt: today },
-    { id: 5, id_item_type: 5, id_family: 1, title: 'Random Title 5', completed: 0, total: 10, createdAt: yesterday },
-    { id: 6, id_item_type: 6, id_family: 1, title: 'Random Title 6', completed: 0, total: 10, createdAt: tomorrow },
+    { id: 1, id_item_type: 1, id_family: 1, title: 'Grocery Title 1', completed: 0, total: 0, createdAt: today, checklistItems: [] },
+    { id: 2, id_item_type: 2, id_family: 1, title: 'Random Title 2', completed: 0, total: 0, createdAt: yesterday, checklistItems: [] },
+    { id: 3, id_item_type: 3, id_family: 1, title: 'Random Title 3', completed: 0, total: 0, createdAt: tomorrow, checklistItems: [] },
+    { id: 4, id_item_type: 4, id_family: 1, title: 'Random Title 4', completed: 0, total: 0, createdAt: today, checklistItems: [] },
+    { id: 5, id_item_type: 5, id_family: 1, title: 'Random Title 5', completed: 0, total: 0, createdAt: yesterday, checklistItems: [] },
+    { id: 6, id_item_type: 6, id_family: 1, title: 'Random Title 6', completed: 0, total: 0, createdAt: tomorrow, checklistItems: [] },
 ]
 
 const checklistData: ChecklistItemInterface[] = [
@@ -40,8 +43,10 @@ const checklistData: ChecklistItemInterface[] = [
 const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) => {
     console.log(route.params)
     const { id_family } = route.params
+    const dispatch = useDispatch<AppDispatch>();
     const refRBSheet = React.useRef<any>(null);
-    const [checklist, setChecklist] = React.useState<CheckListCategoryInterface[]>(checkListListData);
+    // const [checklist, setChecklist] = React.useState<CheckListCategoryInterface[]>([]);
+    const checklist = useSelector((state: RootState) => state.checklist)
     const [selectedItem, setSelectedItem] = React.useState<ChecklistItemInterface | null>(null);
     const [sections, setSections] = React.useState<{ title: string, data: ChecklistItemInterface[] }[]>([]);
     const [selectedCategory, setSelectedCategory] = React.useState<number | null>(null);
@@ -58,7 +63,9 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
             return newItem;
         })
 
-        setChecklist(newCheckListData)
+        dispatch(setInitialCheckList(newCheckListData))
+        // setChecklist(newCheckListData)
+
     }, [])
 
     useEffect(() => {
@@ -89,9 +96,9 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
             </View>
 
 
-            <ChecklistSections checklist={filteredChecklist} setChecklist={setChecklist} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} handleNavigateCheckListDetail={handleNavigateCheckListDetail} searchString={searchString} setSearchString={setSearchString} bottomSheetRef={refRBSheet} />
+            <ChecklistSections checklist={filteredChecklist} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} handleNavigateCheckListDetail={handleNavigateCheckListDetail} searchString={searchString} setSearchString={setSearchString} bottomSheetRef={refRBSheet} />
 
-            <AddCheckListCategoryItem bottomSheetRef={refRBSheet} setCheckList={setChecklist} id_family={id_family!} />
+            <AddCheckListCategoryItem bottomSheetRef={refRBSheet} id_family={id_family!} />
         </View>
     );
 };

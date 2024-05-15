@@ -11,6 +11,9 @@ import { CheckListCategoryInterface } from 'src/interface/checklist/checklist'
 import { checklist_category_type } from '../constant/checklist_category_type'
 import { shoppingListItemColor, shoppingListItemColorInside } from '../constant/color'
 import { TimePickerSheet } from '../AddItemCheckListSheet'
+import { AppDispatch } from 'src/redux/store'
+import { useDispatch } from 'react-redux'
+import { addNewCheckListItem } from 'src/redux/slices/CheckListSlice'
 const sheetIndex = [
     {
         id: 0,
@@ -30,8 +33,8 @@ const sheetIndex = [
     },
 ]
 
-const AddCheckListCategoryItem = ({ bottomSheetRef, setCheckList, id_family }: {
-    bottomSheetRef: React.RefObject<any>, setCheckList: React.Dispatch<React.SetStateAction<CheckListCategoryInterface[]>>, id_family: number
+const AddCheckListCategoryItem = ({ bottomSheetRef, id_family }: {
+    bottomSheetRef: React.RefObject<any>, id_family: number
 }) => {
     const timePickerSheetRef = React.useRef<any>(null)
     const [choosenCategory, setChoosenCategory] = React.useState<number | undefined>(undefined)
@@ -39,10 +42,9 @@ const AddCheckListCategoryItem = ({ bottomSheetRef, setCheckList, id_family }: {
     const [inputSchoolInfo, setInputSchoolInfo] = React.useState<string>("")
     const [inputProgressNote2, setInputProgressNote2] = React.useState<string>("")
     const [inputSchoolInfo2, setInputSchoolInfo2] = React.useState<string>("")
-    const [isEnabled, setIsEnabled] = React.useState(false);
     const [pickSheetIndex, setPickSheetIndex] = React.useState<number>(0)
     const [dueDate, setDueDate] = React.useState<Date | null>(null);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+    const dispatch = useDispatch<AppDispatch>();
 
     const inputDescriptionRef = React.useRef<TextInput>(null)
 
@@ -77,14 +79,16 @@ const AddCheckListCategoryItem = ({ bottomSheetRef, setCheckList, id_family }: {
                         category_name: checklist_category_type.find((item) => item.id_item_type == choosenCategory)?.item_type_name,
                         id_family: id_family,
                         createdAt: new Date(),
-                        title: inputProgressNote
+                        title: inputProgressNote,
+                        checklistItems: []
                     }
-                    setCheckList((prev) => {
-                        return [
-                            ...prev,
-                            newCheckListCategory
-                        ]
-                    })
+                    // setCheckList((prev) => {
+                    //     return [
+                    //         ...prev,
+                    //         newCheckListCategory
+                    //     ]
+                    // })
+                    dispatch(addNewCheckListItem(newCheckListCategory))
 
                     // setMemberEducationDatas((prev) => {
                     //     return [

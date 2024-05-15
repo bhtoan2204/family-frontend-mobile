@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Alert, Dimensions, KeyboardAvoidingView, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, KeyboardAvoidingView, Linking, Platform, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { COLORS } from 'src/constants';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -8,13 +8,12 @@ import ImageComponent from 'src/components/Image/Image';
 import { useKeyboardVisible } from 'src/hooks/useKeyboardVisible';
 import * as ImagePicker from 'expo-image-picker';
 // import PickImageSheet from 'src/screens/GuildLineScreen/PickImageSheet/PickImageSheet';
-const EditHouseHoldItemSheet = ({ refRBSheet, setHouseHoldItem, id_category, id_family, item, index }: { refRBSheet: React.RefObject<RBSheet>, setHouseHoldItem: React.Dispatch<React.SetStateAction<HouseHoldItemInterface[]>>, id_category: number, id_family: number, item: HouseHoldItemInterface, index: number }) => {
+const EditHouseHoldItemSheet = ({ refRBSheet, setHouseHoldItem, id_category, id_family, item, index }: { refRBSheet: React.RefObject<any>, setHouseHoldItem: React.Dispatch<React.SetStateAction<HouseHoldItemInterface[]>>, id_category: number, id_family: number, item: HouseHoldItemInterface, index: number }) => {
     // const refRBSheet = React.useRef<RBSheet>(null);
-    const pickImageSheetRef = React.useRef<RBSheet>(null);
+    const pickImageSheetRef = React.useRef<any>(null);
     const [name, setName] = React.useState(item.item_name);
     const [description, setDescription] = React.useState(item.item_description);
     const [image, setImage] = React.useState(item.item_imageurl);
-    const [i, setI] = React.useState(index)
     const isKeyboardVisible = useKeyboardVisible();
     const nameInputRef = React.useRef<TextInput>(null);
     const descriptionInputRef = React.useRef<TextInput>(null);
@@ -93,7 +92,32 @@ const EditHouseHoldItemSheet = ({ refRBSheet, setHouseHoldItem, id_category, id_
 
             }
         } else {
-            alert('Permission to access camera was denied');
+            Alert.alert(
+                'Denied',
+                'Give Access To This App By Going To Settings -> App -> Permissions -> Camera',
+                [
+                    {
+                        text: 'Redirect',
+                        onPress: () => {
+                            Linking.openURL('app-settings:')
+                        },
+                        style: 'default',
+                        isPreferred: true
+                    },
+                    {
+                        text: 'Cancel',
+                        onPress: () => {
+
+                        },
+                        style: 'destructive',
+                    },
+                ],
+                {
+                    cancelable: true,
+                    onDismiss: () => { }
+
+                },
+            );
         }
     }
 
@@ -114,7 +138,32 @@ const EditHouseHoldItemSheet = ({ refRBSheet, setHouseHoldItem, id_category, id_
             }
         }
         else {
-            alert('Permission to access camera was denied');
+            Alert.alert(
+                'Denied',
+                'Give Access To This App By Going To Settings -> App -> Permissions -> Camera',
+                [
+                    {
+                        text: 'Redirect',
+                        onPress: () => {
+                            Linking.openURL('app-settings:')
+                        },
+                        style: 'default',
+                        isPreferred: true
+                    },
+                    {
+                        text: 'Cancel',
+                        onPress: () => {
+
+                        },
+                        style: 'destructive',
+                    },
+                ],
+                {
+                    cancelable: true,
+                    onDismiss: () => { }
+
+                },
+            );
         }
     }
 
@@ -122,15 +171,13 @@ const EditHouseHoldItemSheet = ({ refRBSheet, setHouseHoldItem, id_category, id_
     return (
         <RBSheet
             ref={refRBSheet}
-            closeOnDragDown
             closeOnPressBack
-            dragFromTopOnly
             closeOnPressMask
-            // minClosingHeight={Dimensions.get("window").height * 0.5}
-            height={Dimensions.get("window").height * 0.6}
+            // useNativeDriver
             customStyles={{
                 container: {
                     backgroundColor: "#F6F7F9",
+                    // height: Dimensions.get("window").height * 0.6,
                     borderTopLeftRadius: 10,
                     borderTopRightRadius: 10,
                 },
@@ -139,7 +186,14 @@ const EditHouseHoldItemSheet = ({ refRBSheet, setHouseHoldItem, id_category, id_
                     display: "none",
                 }
             }}
-
+            customModalProps={{
+                animationType: "slide",
+            }}
+            customAvoidingViewProps={{
+                enabled: true
+            }
+            }
+            onClose={() => { }}
         >
             <View className='flex-1 '>
                 <View className='w-full  flex-row justify-between items-center py-4 z-10 ' >
@@ -162,8 +216,9 @@ const EditHouseHoldItemSheet = ({ refRBSheet, setHouseHoldItem, id_category, id_
                         <Text className=' text-base font-semibold'>Save</Text>
                     </TouchableOpacity>
                 </View>
-                <KeyboardAvoidingView className="flex-1 bg-white" behavior="padding">
-                    <ScrollView showsVerticalScrollIndicator={true} className='flex-1 ' keyboardShouldPersistTaps="handled" >
+                <KeyboardAvoidingView className="flex-1 " behavior={Platform.OS === "ios" ? "padding" : "height"}
+                    keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}>
+                    <ScrollView showsVerticalScrollIndicator={true} className='flex-1 ' keyboardShouldPersistTaps="handled"  >
                         <View className='p-4'>
                             <TouchableOpacity onPress={() => {
                                 pickImageSheetRef.current?.open()
@@ -238,12 +293,12 @@ const EditHouseHoldItemSheet = ({ refRBSheet, setHouseHoldItem, id_category, id_
     )
 }
 
-const PickImageSheet = ({ bottomSheetRef, handleTakePhoto, handlePickImage }: { bottomSheetRef: React.RefObject<RBSheet>, handleTakePhoto: () => Promise<void>, handlePickImage: () => Promise<void> }) => {
+const PickImageSheet = ({ bottomSheetRef, handleTakePhoto, handlePickImage }: { bottomSheetRef: React.RefObject<any>, handleTakePhoto: () => Promise<void>, handlePickImage: () => Promise<void> }) => {
     return (
         <RBSheet
             ref={bottomSheetRef}
-            closeOnDragDown={true}
             closeOnPressMask={true}
+            useNativeDriver
             customStyles={{
                 container: {
                     backgroundColor: "white",
@@ -254,6 +309,9 @@ const PickImageSheet = ({ bottomSheetRef, handleTakePhoto, handlePickImage }: { 
                 draggableIcon: {
                     display: "none",
                 }
+            }}
+            customModalProps={{
+                animationType: "slide",
             }}
         >
             <View className='flex-col p-6 h-full bg-[#fafafa] justify-center'>

@@ -345,64 +345,7 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                 {showHeader()}
                 <KeyboardAvoidingView className="flex-1 " behavior="padding">
                     <ScrollView showsVerticalScrollIndicator={true} className='flex-1 ' keyboardShouldPersistTaps="handled" >
-                        {/* <View className='p-4'>
-                            <View className='bg-white rounded-lg'>
-                                <TouchableOpacity className='w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-0 px-2 py-3 rounded-tl-lg rounded-tr-lg'
-                                    onPress={() => { setPickSheetIndex(1) }}
-                                >
-                                    <Text className='ml-2 text-[#8F8E90] font-medium text-base'>Member</Text>
-                                    <View className='flex-row items-center'>
-                                        <Text className='mr-2 text-[#8F8E90] font-medium text-base'>{
-                                            choosenMember ? choosenMember.firstname + " " + choosenMember.lastname : "Choose member"
-                                        }</Text>
-                                        <View className='justify-self-end'>
-                                            <Material name="chevron-right" size={24} color={"#8F8E90"} />
-
-                                        </View>
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity className='w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-0 px-2 py-3 '
-                                    onPress={() => { setPickSheetIndex(2) }}
-                                >
-                                    <Text className='ml-2 text-[#8F8E90] font-medium text-base'>Note</Text>
-                                    <View className='flex-row items-center'>
-                                        <Text className='mr-2 text-[#8F8E90] font-medium text-base'>Progress note</Text>
-                                        <View className='justify-self-end'>
-                                            <Material name="chevron-right" size={24} color={"#8F8E90"} />
-
-                                        </View>
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity className='w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-0 px-2 py-3 '
-                                    onPress={() => { setPickSheetIndex(3) }}
-                                >
-                                    <Text className='ml-2 text-[#8F8E90] font-medium text-base'>School Info</Text>
-                                    <View className='flex-row items-center'>
-                                        <Text className='mr-2 text-[#8F8E90] font-medium text-base'>School Info</Text>
-                                        <View className='justify-self-end'>
-                                            <Material name="chevron-right" size={24} color={"#8F8E90"} />
-
-                                        </View>
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity className='w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-[#ccc]  px-2 py-3 rounded-bl-lg rounded-br-lg'>
-                                    <Text className='ml-2 text-[#8F8E90] font-medium text-base'>Done </Text>
-                                    <View className='flex-row items-center mr-2'>
-                                        <Switch
-                                            trackColor={{ false: '#DDDDDD', true: '#36CF56' }}
-                                            thumbColor={isEnabled ? '#fff' : '#f4f3f4'}
-                                            ios_backgroundColor="#DDDDDD"
-                                            onValueChange={toggleSwitch}
-                                            value={isEnabled}
-
-                                        />
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-                            <View className='bg-white rounded-lg mt-10 border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-[#ccc] border-[0.5px]  px-2 py-3'>
-                                <Text className='ml-2 text-[#F93E3E] font-medium text-base text-center'>Delete this member </Text>
-                            </View>
-                        </View> */}
+                        
                         {showContentIndex()}
                     </ScrollView>
                 </KeyboardAvoidingView>

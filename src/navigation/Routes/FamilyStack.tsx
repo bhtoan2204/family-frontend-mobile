@@ -13,8 +13,6 @@ import EducationScreen from 'src/screens/EducationScreen/EducationScreen';
 import EducationDetailScreen from 'src/screens/EducationScreen/EducationDetailScreen';
 import SubjectDetailScreen from 'src/screens/EducationScreen/SubjectDetailScreen';
 import HouseHoldScreen from 'src/screens/HouseHoldScreen/HouseHoldScreen';
-import HouseHoldCategoryScreen from 'src/screens/HouseHoldScreen/HouseHoldCategoryScreen/HouseHoldCategoryScreen';
-import HouseHoldCategoryDetailScreen from 'src/screens/HouseHoldScreen/HouseHoldCategoryDetailScreen/HouseHoldCategoryDetailScreen';
 import ChecklistScreen from 'src/screens/CheckListScreen/CheckListScreen/CheckListScreen';
 import NewsScreen from 'src/screens/NewsScreen/NewsScreen';
 import SharedGuildLineDetailScreen from 'src/screens/GuildLineScreen/SharedGuildLineScreen';
@@ -69,12 +67,12 @@ const FamilyStack = () => {
       <Stack.Screen name="HouseHold">
         {(props) => <HouseHoldScreen {...props as HouseHoldScreenProps} />}
       </Stack.Screen>
-      <Stack.Screen name="HouseHoldCategory">
+      {/* <Stack.Screen name="HouseHoldCategory">
         {(props) => <HouseHoldCategoryScreen {...props as HouseHoldCategoryScreenProps} />}
       </Stack.Screen>
       <Stack.Screen name="HouseHoldCategoryDetail">
         {(props) => <HouseHoldCategoryDetailScreen {...props as HouseHoldCategoryDetailScreenProps} />}
-      </Stack.Screen>
+      </Stack.Screen> */}
       <Stack.Screen name="CheckList">
         {(props) => <ChecklistScreen {...props as CheckListScreenProps} />}
       </Stack.Screen>

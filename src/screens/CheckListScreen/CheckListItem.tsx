@@ -4,28 +4,35 @@ import { View, Text, StyleSheet, TouchableOpacity, Vibration, } from 'react-nati
 import RBSheet from 'react-native-raw-bottom-sheet';
 import ChecklistDetailSheet from './CheckListDetailSheet';
 import * as Haptics from 'expo-haptics';
+import { AppDispatch } from 'src/redux/store';
+import { useDispatch } from 'react-redux';
+import { updateCheckListItemCompleted } from 'src/redux/slices/CheckListSlice';
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
 
-const ChecklistItemDetail: React.FC<{ item: ChecklistItemInterface, setChecklist: React.Dispatch<React.SetStateAction<ChecklistItemInterface[]>> }> = ({ item, setChecklist }) => {
+const ChecklistItemDetail: React.FC<{ item: ChecklistItemInterface, id_checklist: number }> = ({ item, id_checklist }) => {
     const refRBSheet = React.useRef<any>(null);
-
+    const dispatch = useDispatch<AppDispatch>();
     const handleUpdateComplete = () => {
-        setChecklist((prev) => {
-            return [
-                ...prev.map((i) => {
-                    if (i.id === item.id) {
-                        return {
-                            ...i,
-                            isCompleted: !item.isCompleted,
-                        };
-                    }
-                    return i;
-                })
-            ]
+        // setChecklist((prev) => {
+        //     return [
+        //         ...prev.map((i) => {
+        //             if (i.id === item.id) {
+        //                 return {
+        //                     ...i,
+        //                     isCompleted: !item.isCompleted,
+        //                 };
+        //             }
+        //             return i;
+        //         })
+        //     ]
+        // })
+        dispatch(updateCheckListItemCompleted({
+            id: id_checklist,
+            id_checklist: item.id,
+            isCompleted: !item.isCompleted,
+        }))
 
-
-        })
     }
 
     return <TouchableOpacity onPress={() => {
@@ -52,7 +59,7 @@ const ChecklistItemDetail: React.FC<{ item: ChecklistItemInterface, setChecklist
             <View className='ml-10'>
                 <Text className='text-sm text-gray-400'>{item.description}</Text>
             </View>
-            <ChecklistDetailSheet refRBSheet={refRBSheet} setChecklist={setChecklist} checklist={item} />
+            <ChecklistDetailSheet refRBSheet={refRBSheet} checklist_item={item} id_checklist={id_checklist} />
         </View>
     </TouchableOpacity>
 };

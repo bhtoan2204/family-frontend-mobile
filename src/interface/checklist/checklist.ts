@@ -12,6 +12,7 @@ export interface CheckListCategoryInterface {
   completed: number;
   total: number;
   createdAt: Date;
+  checklistItems: ChecklistItemInterface[];
 }
 
 export interface ChecklistItemInterface {

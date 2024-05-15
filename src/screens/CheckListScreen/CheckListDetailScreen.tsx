@@ -1,15 +1,16 @@
 import React, { useEffect, useRef } from 'react'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native'
-import { ChecklistItemInterface } from 'src/interface/checklist/checklist';
+import { CheckListCategoryInterface, ChecklistItemInterface } from 'src/interface/checklist/checklist';
 import ChecklistItem from './CheckListItem';
 import ChecklistItemModal from './AddItemCheckListSheet';
 import { CheckListDetailScreenProps, CheckListScreenProps } from 'src/navigation/NavigationTypes';
-import RBSheet from 'react-native-raw-bottom-sheet';
 import { COLORS } from 'src/constants';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import AddItemCheckListSheet from './AddItemCheckListSheet';
-import { compareDates } from 'src/utils/compareDate';
-
+import { shoppingListItemColor, shoppingListItemColorInside } from './constant/color';
+import CircularProgress from '../EducationScreen/CircularProgress';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from 'src/redux/store';
 const today = new Date();
 const yesterday = new Date(today.setDate(today.getDate() - 1));
 const tomorrow = new Date(today.setDate(today.getDate() + 1));
@@ -21,14 +22,20 @@ const checklistData: ChecklistItemInterface[] = [
     // Thêm các mục kiểm tra khác ở đây...
 ];
 
+// const checkListCategoryData: CheckListCategoryInterface = { id: 1, id_item_type: 1, id_family: 1, title: 'Grocery Title 1', completed: 1, total: 10, createdAt: today }
 
 const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigation, route }) => {
+    const { id_checklist, id_family } = route.params
     const refRBSheet = useRef<any>();
-    const [checklist, setChecklist] = React.useState<ChecklistItemInterface[]>(checklistData);
+    const dispatch = useDispatch<AppDispatch>();
+    const checkListCategoryData = useSelector((state: RootState) => state.checklist).find(item => item.id === id_checklist)!
+    const checklist = useSelector((state: RootState) => state.checklist).find(item => item.id === id_checklist)!.checklistItems
+    // const [checklist, setChecklist] = React.useState<ChecklistItemInterface[]>(checklistData);
     const [filteredChecklist, setFilteredChecklist] = React.useState<ChecklistItemInterface[]>()
     // const sections: { title: string, data: ChecklistItemInterface[] }[] = [];
     useEffect(() => {
-        setChecklist(checklistData)
+        // setChecklist(checklistData)
+
     }, [])
     useEffect(() => {
         setFilteredChecklist(checklist)
@@ -41,41 +48,75 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
         })
         return <>
             {sortedCheckList.map((item, index) => {
-                return <ChecklistItem key={index} item={item} setChecklist={setChecklist} />
+                return <ChecklistItem key={index} item={item} id_checklist={id_checklist} />
             })}
         </>
     }
 
 
     return (
-        <View style={styles.container}>
-            <View className='w-full  flex-row justify-between  items-center py-3 bg-white '>
-                <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center flex-1'>
-                    <Material name="chevron-left" size={30} style={{ color: COLORS.primary, fontWeight: "bold" }} />
-                    {/* <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Back</Text> */}
-                </TouchableOpacity>
-                {/* <View className='flex-1'>
-                    <Text className='text-lg font-semibold text-center' style={{ color: COLORS.primary }}>Checklist Detail</Text>
-                </View> */}
-                <View className=' flex-1'></View>
+        <View style={styles.container} >
+            <View className=' ' style={{
+
+            }}>
+                <View className='w-full  flex-row justify-between  items-center py-3 '>
+                    <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center flex-1'>
+                        <Material name="chevron-left" size={30} color={'#908B89'} />
+                        {/* <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Back</Text> */}
+                    </TouchableOpacity>
+                    <View className='flex-1'>
+                        {/* <Text className='text-lg font-semibold text-center' style={{ color: COLORS.primary }}>Checklist Detail</Text> */}
+                    </View>
+                    <TouchableOpacity className=' flex-1 justify-end items-end mr-2'>
+                        <Material name="dots-horizontal" size={30} color={'#908B89'} />
+                    </TouchableOpacity>
+                </View>
 
 
             </View>
             {/* <ChecklistSections checklist={checklist} setChecklist={setChecklist} /> */}
-            <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
-                <View className='ml-2'>
-                    <Text>All Items</Text>
+            <ScrollView className='flex-1 rounded-t-xl mt-[-10] pt-3  bg-white' showsVerticalScrollIndicator={false}>
+                <View className='pl-3 mt-2 py-3 mb-8' style={{
+                    backgroundColor: shoppingListItemColorInside[checkListCategoryData.id_item_type - 1],
+                }}>
+                    <Text className='text-xl font-bold mb-4'>{checkListCategoryData.title} </Text>
+                    <View style={{
+                        backgroundColor: shoppingListItemColor[checkListCategoryData.id_item_type - 1],
+                        alignSelf: 'flex-start'
+                    }} className='w-auto px-2 py-1 rounded-2xl mb-4 '>
+                        <Text className='text-xs text-white font-medium '>Grocery</Text>
+                    </View>
+                    <View className='flex-row items-center'>
+                        <View className='mr-2'>
+                            <CircularProgress
+                                size={20}
+                                progress={checkListCategoryData.completed / checkListCategoryData.total * 100}
+                                strokeWidth={2}
+                                backgroundColor="#BEC8DF"
+                                progressColor={shoppingListItemColor[checkListCategoryData.id_item_type - 1]}
+                                disableProgressText={true}
+                            />
+                        </View>
+                        <Text className='text-[#908B89] text-sm'>{checkListCategoryData.completed}</Text>
+                        <Text className='text-[#908B89] text-sm'>/</Text>
+                        <Text className='text-[#908B89] text-sm'>{checkListCategoryData.total}</Text>
+                        <Text className='text-[#908B89] ml-1 text-sm'>Complete</Text>
+                    </View>
+
+                </View>
+                <View className='ml-4 my-3'>
+                    <Text className='text-xl'>All Items</Text>
                 </View>
                 {showContent()}
             </ScrollView>
             <TouchableOpacity onPress={() => {
                 refRBSheet.current.open()
             }} className='absolute bottom-6 right-4 bg-gray-200 h-16 w-16 flex-row items-center justify-center rounded-full' style={{
-                backgroundColor: COLORS.primary,
+                backgroundColor: shoppingListItemColor[checkListCategoryData.id_item_type - 1],
             }}>
                 <Text style={{ color: 'white', fontSize: 40 }}>+</Text>
             </TouchableOpacity>
-            <AddItemCheckListSheet refRBSheet={refRBSheet} setChecklist={setChecklist} />
+            <AddItemCheckListSheet refRBSheet={refRBSheet} id_checklist={id_checklist} />
         </View>
     );
 };
