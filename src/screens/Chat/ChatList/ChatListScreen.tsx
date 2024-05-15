@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, Text, View, TouchableOpacity, SafeAreaView, TextInput } from 'react-native';
+import { ActivityIndicator, FlatList, Image, Text, View, TouchableOpacity, SafeAreaView, TextInput, ScrollView } from 'react-native';
 import { ChatListProps } from 'src/navigation/NavigationTypes';
 import ChatServices from 'src/services/apiclient/ChatServices';
 import styles from './styles';
@@ -18,6 +18,7 @@ interface LastMessage {
 }
 
 interface User {
+  id_user: string;
   firstname: string;
   lastname: string;
   avatar: string | null;
@@ -33,10 +34,27 @@ interface ChatItem {
 
 const ChatListScreen = ({ navigation, route }: ChatListProps) => {
   const [chats, setChats] = useState<ChatItem[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
+  const [receiverId, setReceiverId] = useState('');
+
+  const { id_user } = route.params;
+
+  const fetchUser =async () => {
+    try{
+      const response = await ChatServices.GetAllUser({ index: 0 });
+      setUsers(response);
+
+    }
+    catch(error) {
+      console.error('Error fetching user data:', error);
+
+    }
+  }
+
 
   const formatDateTime = (dateTime: Date) => {
     const today = new Date();
@@ -81,14 +99,38 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
 
   useEffect(() => {
     fetchData(currentPage);
+    fetchUser();
   }, [currentPage]);
 
-  const handlePressChat = (receiverId?: string) => {
-    navigation.navigate('ChatUser', {receiverId: receiverId });
+  const handlePressChat = (id_user?: string, receiverId?: string) => {
+    navigation.navigate('ChatUser', { id_user: id_user, receiverId: receiverId });
   };
 
+  const renderAllUser = () => (
+    <View style={styles.userHeaderContainer}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {users.map((user, index) => (
+          <TouchableOpacity key={index} onPress={() => handlePressChat(id_user, user.id_user)}>
+            <View style={[styles.userContainer, !user.avatar && styles.userContainerWithoutAvatar]}>
+              {user.avatar ? (
+                <Image source={{ uri: user.avatar }} style={styles.avatar} />
+              ) : (
+                <View style={styles.avatarPlaceholder}>
+                  <Text style={styles.avatarText}>{`${user.firstname.charAt(0)}${user.lastname.charAt(0)}`}</Text>
+                </View>
+              )}
+              <Text style={styles.userName}>{`${user.firstname} ${user.lastname}`}</Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </View>
+  );
+  
+
+
   const renderChatItem = ({ item }: { item: ChatItem }) => (
-    <TouchableOpacity onPress={() => handlePressChat(item.receiverId)}>
+    <TouchableOpacity onPress={() => handlePressChat(id_user,item.receiverId)}>
       <View style={styles.chatItem}>
         <View style={styles.avatarContainer}>
           {item.user.avatar ? (
@@ -127,6 +169,7 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
           <Icon name="search" size={20} style={styles.searchIcon} />
         </View>
       </View>
+      {renderAllUser()}
       <FlatList
         data={chats}
         keyExtractor={item => item._id}

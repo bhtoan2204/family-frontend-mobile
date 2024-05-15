@@ -47,13 +47,15 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ccc',
+    backgroundColor: 'blue',
     marginRight: 10,
   },
   avatar: {
     width: 50,
     height: 50,
-    borderRadius: 25,
+    borderRadius: 100,
+    borderColor: 'blue', 
+
   },
   avatarText: {
     fontSize: 18,
@@ -75,9 +77,31 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#999',
   },
-
-
-
+  userName: {
+    fontSize: 12,
+  },
+  userContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: 10,
+  },
+  userHeaderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  userContainerWithoutAvatar: {
+    borderColor: '#ccc', 
+  },
+  avatarPlaceholder: {
+    width: 50,
+    height: 50,
+    borderRadius: 25, 
+    backgroundColor: '#ccc', 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default styles;
