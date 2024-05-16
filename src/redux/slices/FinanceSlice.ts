@@ -51,12 +51,12 @@ const financeSlice = createSlice({
 
 export const { setType, setExpenseCategory_id, setExpenseCategory_name ,setIncomeCategory_id, setIncomeCategory_name, setFamily } = financeSlice.actions;
  
-export const getType= (state: RootState) => state.finace.type;
-export const getIncomeId= (state: RootState) => state.finace.incomecategory_id;
-export const getIncomeName= (state: RootState) => state.finace.incomecategory_name;
-export const getExpenseId= (state: RootState) => state.finace.expensecategory_id;
-export const getExpenseName= (state: RootState) => state.finace.expensecategory_name;
-export const getFamily= (state: RootState) => state.finace.id_family;
+export const getType= (state: RootState) => state.finance.type;
+export const getIncomeId= (state: RootState) => state.finance.incomecategory_id;
+export const getIncomeName= (state: RootState) => state.finance.incomecategory_name;
+export const getExpenseId= (state: RootState) => state.finance.expensecategory_id;
+export const getExpenseName= (state: RootState) => state.finance.expensecategory_name;
+export const getFamily= (state: RootState) => state.finance.id_family;
 
 
 export default financeSlice.reducer;

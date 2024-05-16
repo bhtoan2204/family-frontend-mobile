@@ -1,8 +1,8 @@
 import axios from 'axios';
-import {ERROR_TEXTS} from 'src/constants';
+import { ERROR_TEXTS } from 'src/constants';
 import LocalStorage from 'src/store/localstorage';
-import {AuthServices} from '../apiclient';
 import baseUrl from '../urls/baseUrl';
+import { AuthUrl } from '../urls';
 
 const instance = axios.create({
   baseURL: baseUrl,
@@ -11,6 +11,23 @@ const instance = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+const refreshToken = async () => {
+  try {
+    const response = await axios.post(AuthUrl.refreshToken);
+    const tokenData = response.data;
+    if (response.statusText === 'OK') {
+      return {
+        accessToken: tokenData.accessToken,
+        refreshToken: tokenData.refreshToken,
+      };
+    } else {
+      throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+    }
+  } catch (error) {
+    throw new Error(ERROR_TEXTS.API_ERROR);
+  }
+};
 
 instance.interceptors.request.use(async request => {
   const accessToken = await LocalStorage.GetAccessToken();
@@ -22,19 +39,19 @@ instance.interceptors.response.use(
   response => response,
   async error => {
     const config = error?.config;
-    if (error?.response?.status === 401) {
+    if (error?.response?.status === 401 && !config.sent) {
       config.sent = true;
 
       try {
-        const {accessToken, refreshToken} = await AuthServices.refreshToken();
+        const { accessToken, refreshToken: newRefreshToken } = await refreshToken();
 
-        if (accessToken && refreshToken) {
+        if (accessToken && newRefreshToken) {
           await LocalStorage.StoreAccessToken(accessToken);
-          await LocalStorage.StoreRefreshToken(refreshToken);
+          await LocalStorage.StoreRefreshToken(newRefreshToken);
 
           const AccessToken = await LocalStorage.GetAccessToken();
 
-          const newConfig = {...config};
+          const newConfig = { ...config };
           newConfig.headers.Authorization = `Bearer ${AccessToken}`;
 
           return axios(newConfig);
@@ -50,7 +67,8 @@ instance.interceptors.response.use(
         throw new Error(ERROR_TEXTS.API_ERROR);
       }
     }
-  },
+    return Promise.reject(error);
+  }
 );
 
 export default instance;
