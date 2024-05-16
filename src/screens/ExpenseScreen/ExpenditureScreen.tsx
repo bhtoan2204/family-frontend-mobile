@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Image,
   Modal,
+  Animated,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ExpenseServices from 'src/services/apiclient/ExpenseServices';
@@ -266,6 +267,12 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const handleRemoveImage = () => {
     setUriImage('');
   };
+  const pages = [];
+  for (let i = 0; i < expenseType.length; i += 8) {
+    pages.push(expenseType.slice(i, i + 8));
+  }
+  const scrollX = new Animated.Value(0);
+
   return (
     <View>
       <ScrollView contentContainerStyle={styles.headcontainer}>
@@ -389,7 +396,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
               <Text style={styles.mostUsedButton}>Most used </Text>
             </TouchableOpacity>
 
-            <ScrollView horizontal showsHorizontalScrollIndicator={true}>
+            {/* <ScrollView horizontal showsHorizontalScrollIndicator={true}>
               {expenseType.map(item => (
                 <TouchableOpacity
                   key={item.id_expense_type}
@@ -400,7 +407,44 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                   </View>
                 </TouchableOpacity>
               ))}
-            </ScrollView>
+            </ScrollView> */}
+            <Animated.ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={true}
+              pagingEnabled
+              scrollEventThrottle={16}
+              onScroll={Animated.event(
+                [{nativeEvent: {contentOffset: {x: scrollX}}}],
+                {useNativeDriver: false},
+              )}>
+              {pages.map((page, pageIndex) => (
+                <FlatList
+                  key={pageIndex}
+                  data={page}
+                  numColumns={4}
+                  keyExtractor={item => item.id_expense_type.toString()}
+                  contentContainerStyle={{marginLeft: 10}}
+                  renderItem={({item}) => (
+                    <TouchableOpacity
+                      onPress={() => handleExpenseTypePress(item)}>
+                      <View
+                        style={[
+                          styles.categoryContainer,
+                          {width: 100, height: 80},
+                        ]}>
+                        <Image source={{uri: url}} style={styles.avatar} />
+                        <Text
+                          style={styles.expenseItem}
+                          numberOfLines={1}
+                          ellipsizeMode="tail">
+                          {item.expense_name}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                />
+              ))}
+            </Animated.ScrollView>
           </View>
         )}
         {selectedFamily != null && selectedMenu == 'Income' && (

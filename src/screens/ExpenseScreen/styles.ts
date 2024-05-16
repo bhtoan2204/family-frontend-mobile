@@ -69,13 +69,16 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   categoryContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-start',
     marginRight: 10,
     width: '100%',
     padding: 15,
     marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
   },
   itemContainer: {
     flexDirection: 'row',
