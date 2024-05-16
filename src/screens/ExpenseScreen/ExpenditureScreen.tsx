@@ -290,18 +290,21 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
         </View>
 
         <View style={styles.inputContainer}>
-          <View style={styles.inputWrapper}>
-            <TextInput
-              style={styles.inputAmount}
-              placeholder="Amount"
-              value={amount}
-              onChangeText={setAmount}
-              keyboardType="numeric"
-            />
+          <Text style={{textAlign: 'left', fontSize: 17}}>Amount</Text>
+          <View style={{flexDirection: 'row'}}>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={[styles.inputAmount, {color: 'red', fontSize: 20}]}
+                placeholder="Enter amount"
+                value={amount}
+                onChangeText={setAmount}
+                keyboardType="numeric"
+              />
+            </View>
+            <Text style={styles.currency}>VNĐ</Text>
           </View>
-          <Text style={styles.currency}>VNĐ</Text>
+          <View style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}} />
         </View>
-
         <View style={styles.familycontainer}>
           <Text style={styles.text}>Family</Text>
           {families.map((family, index) => (
