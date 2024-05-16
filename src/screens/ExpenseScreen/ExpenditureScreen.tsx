@@ -553,7 +553,9 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                 color="black"
                 style={styles.icon}
               />
-              <Text style={styles.text}>Select Date</Text>
+              <Text style={[styles.text, {marginRight: 90, right: 10}]}>
+                Select Date
+              </Text>
             </View>
             <DateTimePicker
               value={date}

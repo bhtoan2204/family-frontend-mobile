@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     fontSize: 20,
     width: '100%',
+    flexDirection: 'row',
   },
 
   titleText: {
