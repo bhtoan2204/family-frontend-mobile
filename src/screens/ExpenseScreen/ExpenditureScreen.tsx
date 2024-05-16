@@ -56,6 +56,7 @@ import {FlatList} from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {COLORS} from 'src/constants';
 import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const [expenseType, setExpenseType] = useState<ExpenseType[]>([]);
@@ -65,7 +66,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const [date, setDate] = useState<Date>(new Date());
   const [wallet, setWallet] = useState<string>('');
   const [image, setImage] = useState<string>('');
-  const [showCategory, setShowCategory] = useState<boolean>(false);
+
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<string>('');
@@ -180,9 +181,6 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
     dispatch(setIncomeCategory_id(item.id_income_source));
     dispatch(setIncomeCategory_name(item.income_name));
   };
-  const handleMostUsedPress = () => {
-    setShowCategory(!showCategory);
-  };
 
   const handleOptionPress = (option: string) => {
     setIsPickerOpen(false);
@@ -283,6 +281,17 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
 
   const [currentPage, setCurrentPage] = useState(0);
   const widthOfYourPage = Dimensions.get('window').width;
+
+  const [isScrollViewVisible, setScrollViewVisible] = useState(true);
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  const handleMostUsedPress = () => {
+    setScrollViewVisible(!isScrollViewVisible);
+    if (!isScrollViewVisible) {
+      setCurrentPage(0);
+      scrollViewRef.current?.scrollTo({x: 0, animated: false});
+    }
+  };
 
   return (
     <View>
@@ -403,72 +412,90 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
               </TouchableOpacity>
             </View>
             <View style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}} />
-            <TouchableOpacity onPress={handleMostUsedPress}>
-              <Text style={styles.mostUsedButton}>Most used </Text>
+            <TouchableOpacity
+              onPress={handleMostUsedPress}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                //justifyContent: 'space-between',
+              }}>
+              <Text style={[styles.mostUsedButton, {marginRight: -10}]}>
+                Most used{' '}
+              </Text>
+              <EvilIcons
+                name={isScrollViewVisible ? 'chevron-down' : 'chevron-up'}
+                size={30}
+                color="#878C9A"
+              />
             </TouchableOpacity>
 
-            <Animated.ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              pagingEnabled
-              scrollEventThrottle={16}
-              onScroll={Animated.event(
-                [{nativeEvent: {contentOffset: {x: scrollX}}}],
-                {
-                  useNativeDriver: false,
-                  listener: (
-                    event: NativeSyntheticEvent<NativeScrollEvent>,
-                  ) => {
-                    const pageIndex = Math.round(
-                      event.nativeEvent.contentOffset.x / widthOfYourPage,
-                    );
-                    setCurrentPage(pageIndex);
-                  },
-                },
-              )}>
-              {pages.map((page, pageIndex) => (
-                <FlatList
-                  key={pageIndex}
-                  data={page}
-                  numColumns={3} // Thay đổi số cột ở đây
-                  keyExtractor={item => item.id_expense_type.toString()}
-                  contentContainerStyle={{marginLeft: 10}}
-                  scrollEnabled={false}
-                  renderItem={({item}) => (
-                    <TouchableOpacity
-                      onPress={() => handleExpenseTypePress(item)}>
-                      <View
-                        style={[
-                          styles.categoryContainer,
-                          {width: 125, height: 80},
-                        ]}>
-                        <Image source={{uri: url}} style={styles.avatar} />
-                        <Text
-                          style={styles.expenseItem}
-                          numberOfLines={1}
-                          ellipsizeMode="tail">
-                          {item.expense_name}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  )}
-                />
-              ))}
-            </Animated.ScrollView>
-            <View style={styles.pagination}>
-              {pages.map((_, pageIndex) => (
-                <View
-                  key={pageIndex}
-                  style={[
-                    styles.dot,
+            {isScrollViewVisible && (
+              <>
+                <Animated.ScrollView
+                  ref={scrollViewRef}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  pagingEnabled
+                  scrollEventThrottle={16}
+                  onScroll={Animated.event(
+                    [{nativeEvent: {contentOffset: {x: scrollX}}}],
                     {
-                      backgroundColor:
-                        pageIndex === currentPage ? 'gray' : '#ccc',
+                      useNativeDriver: false,
+                      listener: (
+                        event: NativeSyntheticEvent<NativeScrollEvent>,
+                      ) => {
+                        const pageIndex = Math.round(
+                          event.nativeEvent.contentOffset.x / widthOfYourPage,
+                        );
+                        setCurrentPage(pageIndex);
+                      },
                     },
-                  ]}
-                />
-              ))}
-            </View>
+                  )}>
+                  {pages.map((page, pageIndex) => (
+                    <FlatList
+                      key={pageIndex}
+                      data={page}
+                      numColumns={3}
+                      keyExtractor={item => item.id_expense_type.toString()}
+                      contentContainerStyle={{marginLeft: 10}}
+                      scrollEnabled={false}
+                      renderItem={({item}) => (
+                        <TouchableOpacity
+                          onPress={() => handleExpenseTypePress(item)}>
+                          <View
+                            style={[
+                              styles.categoryContainer,
+                              {width: 125, height: 80},
+                            ]}>
+                            <Image source={{uri: url}} style={styles.avatar} />
+                            <Text
+                              style={styles.expenseItem}
+                              numberOfLines={1}
+                              ellipsizeMode="tail">
+                              {item.expense_name}
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      )}
+                    />
+                  ))}
+                </Animated.ScrollView>
+                <View style={styles.pagination}>
+                  {pages.map((_, pageIndex) => (
+                    <View
+                      key={pageIndex}
+                      style={[
+                        styles.dot,
+                        {
+                          backgroundColor:
+                            pageIndex === currentPage ? 'gray' : '#ccc',
+                        },
+                      ]}
+                    />
+                  ))}
+                </View>
+              </>
+            )}
           </View>
         )}
         {selectedFamily != null && selectedMenu == 'Income' && (

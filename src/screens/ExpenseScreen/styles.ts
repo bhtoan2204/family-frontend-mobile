@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginVertical: 10,
     fontWeight: 'bold',
+    fontSize: 16,
   },
   cameraButton: {
     marginRight: 20,
