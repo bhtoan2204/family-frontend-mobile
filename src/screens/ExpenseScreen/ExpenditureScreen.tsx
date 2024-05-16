@@ -50,6 +50,9 @@ import {ExpenseType} from 'src/interface/expense/ExpenseType';
 import {IncomeType} from 'src/interface/income/IncomeType';
 import CreateInvoiceScreen from '../Invoice/CreateInvoice/CreateInvoice';
 import CreateInvoiceComponent from '../Invoice/CreateInvoice/CreateInvoice';
+import {FlatList} from 'react-native-gesture-handler';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {COLORS} from 'src/constants';
 
 const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const [expenseType, setExpenseType] = useState<ExpenseType[]>([]);
@@ -314,28 +317,38 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
             },
           ]}>
           <Text style={styles.text}>Choose Family</Text>
-          <View style={styles.familycontainer}>
-            {families.map((family, index) => (
+          <FlatList
+            horizontal
+            data={families}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item: family}) => (
               <TouchableOpacity
-                key={index}
                 style={[
                   styles.family,
                   selectedFamily === family.id_family && styles.selectedFamily,
-                  {marginBottom: 10, margin: 5},
+                  {
+                    marginBottom: 10,
+                    margin: 5,
+                    shadowColor: '#000',
+                    shadowOffset: {width: 0, height: 2},
+                    shadowOpacity: 0.1,
+                    shadowRadius: 3.84,
+                    elevation: 5,
+                  },
                 ]}
                 onPress={() => handleFamilyPress(family.id_family)}>
-                <View style={[{flexDirection: 'row', alignItems: 'center'}]}>
-                  <Octicons
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Ionicons
                     name="people"
                     size={22}
-                    color="black"
+                    color={COLORS.darkgray}
                     style={{marginRight: 10}}
                   />
                   <Text style={styles.familyText}>{family.name}</Text>
                 </View>
               </TouchableOpacity>
-            ))}
-          </View>
+            )}
+          />
         </View>
         {selectedFamily != null && selectedMenu == 'Expense' && (
           <View style={styles.ContainerCategory}>
