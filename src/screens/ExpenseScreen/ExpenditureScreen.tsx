@@ -270,6 +270,10 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
 
   const itemsPerPage = 6;
   const pages = [];
+  if (!expenseType.some(item => item.id_expense_type === -1)) {
+    expenseType.push({id_expense_type: -1, expense_name: 'Edit'});
+  }
+
   for (let i = 0; i < expenseType.length; i += itemsPerPage) {
     pages.push(expenseType.slice(i, i + itemsPerPage));
   }
@@ -400,7 +404,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
 
             <Animated.ScrollView
               horizontal
-              showsHorizontalScrollIndicator={true}
+              showsHorizontalScrollIndicator={false}
               pagingEnabled
               scrollEventThrottle={16}
               onScroll={Animated.event(
@@ -414,6 +418,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                   numColumns={3} // Thay đổi số cột ở đây
                   keyExtractor={item => item.id_expense_type.toString()}
                   contentContainerStyle={{marginLeft: 10}}
+                  scrollEnabled={false}
                   renderItem={({item}) => (
                     <TouchableOpacity
                       onPress={() => handleExpenseTypePress(item)}>
