@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   mostUsedButton: {
     paddingHorizontal: 10,
     paddingVertical: 5,
-    color: '#ccc',
+    color: '#878C9A',
     borderRadius: 5,
     marginVertical: 10,
     fontWeight: 'bold',

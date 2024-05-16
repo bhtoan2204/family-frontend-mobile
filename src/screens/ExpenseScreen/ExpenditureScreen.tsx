@@ -267,9 +267,11 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const handleRemoveImage = () => {
     setUriImage('');
   };
+
+  const itemsPerPage = 6;
   const pages = [];
-  for (let i = 0; i < expenseType.length; i += 8) {
-    pages.push(expenseType.slice(i, i + 8));
+  for (let i = 0; i < expenseType.length; i += itemsPerPage) {
+    pages.push(expenseType.slice(i, i + itemsPerPage));
   }
   const scrollX = new Animated.Value(0);
 
@@ -396,18 +398,6 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
               <Text style={styles.mostUsedButton}>Most used </Text>
             </TouchableOpacity>
 
-            {/* <ScrollView horizontal showsHorizontalScrollIndicator={true}>
-              {expenseType.map(item => (
-                <TouchableOpacity
-                  key={item.id_expense_type}
-                  onPress={() => handleExpenseTypePress(item)}>
-                  <View style={styles.categoryContainer}>
-                    <Image source={{uri: url}} style={styles.avatar} />
-                    <Text style={styles.expenseItem}>{item.expense_name}</Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </ScrollView> */}
             <Animated.ScrollView
               horizontal
               showsHorizontalScrollIndicator={true}
@@ -421,7 +411,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                 <FlatList
                   key={pageIndex}
                   data={page}
-                  numColumns={4}
+                  numColumns={3} // Thay đổi số cột ở đây
                   keyExtractor={item => item.id_expense_type.toString()}
                   contentContainerStyle={{marginLeft: 10}}
                   renderItem={({item}) => (
@@ -430,7 +420,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                       <View
                         style={[
                           styles.categoryContainer,
-                          {width: 100, height: 80},
+                          {width: 125, height: 80},
                         ]}>
                         <Image source={{uri: url}} style={styles.avatar} />
                         <Text
