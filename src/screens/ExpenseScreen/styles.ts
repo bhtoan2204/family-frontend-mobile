@@ -13,6 +13,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#F2F2F7',
     height: '100%',
   },
+  pagination: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dot: {
+    width: 13,
+    height: 2,
+    borderRadius: 5,
+    margin: 5,
+  },
   inputContainer: {
     //borderWidth: 1,
     //borderColor: '#ccc',

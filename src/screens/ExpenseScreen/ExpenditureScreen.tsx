@@ -10,6 +10,7 @@ import {
   Image,
   Modal,
   Animated,
+  Dimensions,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ExpenseServices from 'src/services/apiclient/ExpenseServices';
@@ -54,6 +55,7 @@ import CreateInvoiceComponent from '../Invoice/CreateInvoice/CreateInvoice';
 import {FlatList} from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {COLORS} from 'src/constants';
+import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
 
 const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const [expenseType, setExpenseType] = useState<ExpenseType[]>([]);
@@ -277,7 +279,10 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   for (let i = 0; i < expenseType.length; i += itemsPerPage) {
     pages.push(expenseType.slice(i, i + itemsPerPage));
   }
-  const scrollX = new Animated.Value(0);
+  const scrollX = useRef(new Animated.Value(0)).current;
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const widthOfYourPage = Dimensions.get('window').width;
 
   return (
     <View>
@@ -409,7 +414,17 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
               scrollEventThrottle={16}
               onScroll={Animated.event(
                 [{nativeEvent: {contentOffset: {x: scrollX}}}],
-                {useNativeDriver: false},
+                {
+                  useNativeDriver: false,
+                  listener: (
+                    event: NativeSyntheticEvent<NativeScrollEvent>,
+                  ) => {
+                    const pageIndex = Math.round(
+                      event.nativeEvent.contentOffset.x / widthOfYourPage,
+                    );
+                    setCurrentPage(pageIndex);
+                  },
+                },
               )}>
               {pages.map((page, pageIndex) => (
                 <FlatList
@@ -440,6 +455,20 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                 />
               ))}
             </Animated.ScrollView>
+            <View style={styles.pagination}>
+              {pages.map((_, pageIndex) => (
+                <View
+                  key={pageIndex}
+                  style={[
+                    styles.dot,
+                    {
+                      backgroundColor:
+                        pageIndex === currentPage ? 'gray' : '#ccc',
+                    },
+                  ]}
+                />
+              ))}
+            </View>
           </View>
         )}
         {selectedFamily != null && selectedMenu == 'Income' && (
