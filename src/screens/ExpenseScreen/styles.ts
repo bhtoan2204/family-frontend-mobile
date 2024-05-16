@@ -200,9 +200,9 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'black',
-    fontSize: 16,
+    fontSize: 18,
     alignContent: 'center',
-    padding: 10,
+    padding: 15,
   },
   modalBackground: {
     flex: 1,

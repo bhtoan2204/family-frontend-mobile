@@ -305,19 +305,37 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
           </View>
           <View style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}} />
         </View>
-        <View style={styles.familycontainer}>
-          <Text style={styles.text}>Family</Text>
-          {families.map((family, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.family,
-                selectedFamily === family.id_family && styles.selectedFamily,
-              ]}
-              onPress={() => handleFamilyPress(family.id_family)}>
-              <Text style={styles.familyText}>{family.name}</Text>
-            </TouchableOpacity>
-          ))}
+        <View
+          style={[
+            {
+              flexDirection: 'column',
+              backgroundColor: 'white',
+              marginBottom: 10,
+            },
+          ]}>
+          <Text style={styles.text}>Choose Family</Text>
+          <View style={styles.familycontainer}>
+            {families.map((family, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.family,
+                  selectedFamily === family.id_family && styles.selectedFamily,
+                  {marginBottom: 10, margin: 5},
+                ]}
+                onPress={() => handleFamilyPress(family.id_family)}>
+                <View style={[{flexDirection: 'row', alignItems: 'center'}]}>
+                  <Octicons
+                    name="people"
+                    size={22}
+                    color="black"
+                    style={{marginRight: 10}}
+                  />
+                  <Text style={styles.familyText}>{family.name}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
         {selectedFamily != null && selectedMenu == 'Expense' && (
           <View style={styles.ContainerCategory}>
