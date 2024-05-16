@@ -10,7 +10,7 @@ import { FamilyServices, ChatServices } from 'src/services/apiclient';
 import { ChatFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import styles from './styles';
 import { Keyboard } from 'react-native';
-import { getSocket } from '../../services/apiclient/Socket';
+import { getSocket } from '../../../services/apiclient/Socket';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 
 interface Message {

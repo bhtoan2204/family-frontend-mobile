@@ -3,7 +3,6 @@ const TEXTS = {
   PROFILE_TAB: 'Profile',
   FAMILY_TAB: 'Family',
   //ADD_TAB: 'Add',
-  QR_CODE_TAB: 'QR Code',
   REPORT_TAB: 'Report',
   MORE_TAB: 'More',
   EDIT_PROFILE: 'Edit Profile',

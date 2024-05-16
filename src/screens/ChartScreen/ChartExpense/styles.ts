@@ -1,0 +1,366 @@
+import { Dimensions, StyleSheet } from 'react-native';
+import { COLORS } from 'src/constants';
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+
+const styles = StyleSheet.create({
+    headerContainer: {
+      backgroundColor: 'rgba(128, 50, 128, 0.5)', 
+      alignItems: 'center',
+      marginBottom: 20,
+      justifyContent: 'center',
+      flexDirection: 'row',
+      height: '7%',
+    
+},
+headerTitleContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginLeft: 15,
+},
+headerButton: {
+    paddingHorizontal: 0,
+},
+headerText: {
+    fontSize: 18,
+    color: 'white',
+    fontWeight: 'bold',
+},
+
+container: {
+  flex: 1,
+  backgroundColor: 'white',
+},
+  backButton: {
+    marginBottom: 10,
+    marginLeft: 10,
+    marginTop: 10,
+    color: 'white',
+
+  },
+
+  categoryItemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  categoryImage: {
+    width: 50,
+    height: 50,
+    marginRight: 10,
+    borderRadius: 25,
+
+  },
+  categoryName: {
+    fontSize: 16,
+  },
+  
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    marginTop: screenHeight*0.115,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+  },
+
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    
+  },
+
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+
+  button: {
+    backgroundColor: 'blue',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  addButton: {
+    marginBottom: 10,
+  },
+  iconContainer: {
+    width: 40, 
+    height: 40,
+    borderRadius: 20, 
+    borderWidth: 1, 
+    borderColor: 'gray', 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addImage: {
+    marginBottom: 10,
+    marginRight: 10,
+    marginTop: 10,
+    color: 'white',
+  },
+  scrollView: {
+    flex: 1, 
+    backgroundColor: '#FFFFFF', 
+    paddingVertical: 10, 
+    width: '100%',
+  },
+  tabButton: {
+    paddingVertical: 10, 
+    alignItems: 'center',
+    width: '33%',
+  },
+  selectedTabButton: {
+    borderBottomColor: '#ccc',
+    paddingBottom: 0,
+    borderBottomWidth: 4, 
+    alignItems: 'center',
+  },
+
+  tabButtonText: {
+      fontSize: 16, 
+  },
+  containerTab: {
+    flexDirection: 'row',
+    justifyContent: 'space-around', 
+    borderBottomWidth: 1, 
+    borderBottomColor: '#ccc', 
+    width: '100%',
+
+  } ,
+  bottomLine: {
+    position: 'absolute',
+    bottom: 0,
+    height: 2,
+    backgroundColor: 'gray',
+    width: '30%', 
+  },
+  datePickerText: {
+    marginBottom: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: 'gray',
+  },
+
+  datePickerContainer: {
+    borderBottomWidth: 1,
+    borderColor: '#ccc', 
+    paddingVertical: 10,
+    paddingHorizontal: 0,
+    fontSize: 20,
+    width: '100%', 
+    
+},
+
+  titleText: {
+    fontSize: 16,
+    color: '#ccc',
+  },
+  icon: {
+    marginRight: 20,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+
+  },
+  text: {
+    color: 'black',
+    fontSize: 16,
+    alignContent: 'center',
+    padding: 10,
+  },
+  legendContainer: {
+    flexDirection: 'row',
+    justifyContent: "center",
+    alignItems: "center",
+    flexGrow: 1,
+
+  },
+  legendItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 10,
+    marginVertical: 5,
+  },
+  legendColor: {
+    width: 20,
+    height: 3,
+    borderRadius: 5,
+    marginRight: 5,
+  },
+  legendText: {
+    fontSize: 16,
+  },
+  selectedLegendItem: {
+    backgroundColor: "lightgray",
+  },
+  chartContainer: {
+    marginTop: 10,
+  },
+ 
+  buttonContainer: {
+    marginTop: screenHeight*0.005,
+  },
+  ContainerCategory: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 20,
+  },
+  expenseItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 15,
+ 
+  },
+  expenseDetails: {
+    flexDirection: "row",
+    alignItems: "center",
+
+  },
+  expenseText: {
+    fontSize: 16,
+    padding: 10,
+  },
+  expenseAmount: {
+    fontSize: 15,
+    color: 'red',
+    marginRight: 10
+  },
+  monthText: {
+    color: 'black',
+    fontSize: 16,
+    alignContent: 'center',
+    padding: 10,
+  },
+  monthPickerContainer: {
+    width: '100%', 
+    alignItems: 'flex-end',
+    borderColor: '#ccc', 
+    borderBottomWidth: 1,
+    paddingVertical: 10,
+
+  },
+  monthContainer: {
+    borderRadius: 10, 
+    alignItems: 'center',
+    borderColor: '#ccc', 
+    backgroundColor: '#ccc',
+  },
+  yearPickerContainer: {
+
+    backgroundColor: '#ffffff',
+    alignItems: 'center',
+    marginBottom: 70,
+    },
+
+  dropdownYear: {
+    height:30, 
+    width:  150,
+  },
+
+  categoryContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    marginTop: 10,
+    marginBottom: 20,
+  },
+
+  categoryText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  categoryItem: {
+    padding: 10,
+    margin: 5,
+    borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 5,
+  },
+  selectedCategoryItem: {
+    backgroundColor: "lightblue",
+  },
+  categoryList: {
+    borderTopWidth: 1,
+    borderTopColor: "#ccc", 
+  },
+ 
+    avatar: {
+    width: 30,
+    height: 30,
+    borderRadius: 25,
+  },
+ 
+  linechart: {
+    marginVertical: 8,
+    borderRadius: 16,
+  },
+  flatListContent: {
+    paddingBottom: 20,
+  },
+
+
+  legendColorBox: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
+    borderRadius: 25,
+
+  },
+  detailsContainer: {
+    marginTop: 10,
+  },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dropdownMenu: {
+    position: 'absolute',
+    top: 0,
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    width: '100%',
+
+  },
+  filterItem: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    flexDirection: 'row',
+  },
+  filterButton: {
+    color: 'white'
+  },
+  
+  });
+export default styles;

@@ -42,7 +42,7 @@ type PackageDetail = {
 const OrderDetailScreen = ({route, navigation}: OrderDetailScreenProps) => {
   const [code, setCodeMethod] = useState('vnpay');
   const currentDate = new Date().toLocaleDateString();
-  const {id_user, id_family, id_package, amount} = route.params;
+  const { id_family, id_package, amount} = route.params;
   const [profile, setProfile] = useState<Profile[]>([]);
   const [packageDetail, setPackageDetail] = useState<PackageDetail[]>([]);
   const [value, setValue] = React.useState(0);
@@ -51,7 +51,6 @@ const OrderDetailScreen = ({route, navigation}: OrderDetailScreenProps) => {
   //them tham so trong handleSelectMethod (id_package, amount)
   const handleSelectMethod = (
     code: string,
-    id_user: string,
     id_family: number,
     id_package: number,
     amount: number,
@@ -61,7 +60,6 @@ const OrderDetailScreen = ({route, navigation}: OrderDetailScreenProps) => {
       case 'vnpay':
         navigation.navigate('BankInfoScreen', {
           code,
-          id_user,
           id_family,
           id_package,
           amount,
@@ -262,7 +260,7 @@ const OrderDetailScreen = ({route, navigation}: OrderDetailScreenProps) => {
           onPress={() => {
             console.log('name_method', code);
             // navigation.navigate('BankInfoScreen');
-            handleSelectMethod(code, id_user, id_family, id_package, amount);
+            handleSelectMethod(code, id_family, id_package, amount);
           }}>
           <View style={styles.btn}>
             <Text style={styles.btnText}>Submit Receipt</Text>

@@ -9,7 +9,46 @@ export type RootParamList = {
   HomeTab: NavigatorScreenParams<HomeTabParamList>;
   CalendarStack: NavigatorScreenParams<CalendarStackParamList>;
   ChatStack: NavigatorScreenParams<ChatStackParamList>;
+  ExpenseStack: NavigatorScreenParams<ExpenseStackParamList>;
+
 };
+export type ExpenseStackParamList = {
+  Expenditure: undefined;
+  CategoryExpense: undefined;
+  FamilySpec: {
+    id_family: number | undefined;
+  }
+  ChartExpense: undefined;
+};
+type ChartExpenseNavigationProp = NativeStackNavigationProp<
+ExpenseStackParamList,
+  'ChartExpense'
+>;
+
+export interface ChartExpenseProps {
+  navigation: ChartExpenseNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'ChartExpense'>;
+}
+
+type CategoryExpenseScreenNavigationProp = NativeStackNavigationProp<
+ExpenseStackParamList,
+  'CategoryExpense'
+>;
+
+export interface CategoryExpenseScreenProps {
+  navigation: CategoryExpenseScreenNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'CategoryExpense'>;
+}
+
+type FamilySpecNavigationProp = NativeStackNavigationProp<
+ExpenseStackParamList,
+  'FamilySpec'
+>;
+
+export interface FamilySpecProps {
+  navigation: FamilySpecNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'FamilySpec'>;
+}
 
 export type ChatStackParamList = {
   ChatFamily: {
@@ -517,11 +556,22 @@ export interface ViewAllPackageScreenProps {
 export type HomeTabParamList = {
   HomeScreen: undefined;
   ProfileScreen: undefined;
-  EditProfileScreen: undefined;
   ReportScreen: undefined;
   AddScreen: undefined;
   MoreScreen: undefined;
+  Expenditure: undefined;
+  CategoryExpense: undefined;
 };
+
+type CategoryExpenseNavigationProp = NativeStackNavigationProp<
+  HomeTabParamList,
+  'CategoryExpense'
+>;
+
+export interface CategoryExpenseProps {
+  navigation: CategoryExpenseNavigationProp;
+  route: RouteProp<HomeTabParamList, 'CategoryExpense'>;
+}
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeTabParamList,
@@ -569,13 +619,13 @@ export interface MoreScreenProps {
   navigation: MoreScreenNavigationProp;
 }
 
-type EditProfileScreenNavigationProp = NativeStackNavigationProp<
+type ExpenditureScreenNavigationProp = NativeStackNavigationProp<
   HomeTabParamList,
-  'EditProfileScreen'
+  'Expenditure'
 >;
 
-export interface EditProfileScreenProps {
-  navigation: EditProfileScreenNavigationProp;
+export interface ExpenditureScreenProps {
+  navigation: ExpenditureScreenNavigationProp;
 }
 
 // Define the types for the navigation tab nested in the HomeTab

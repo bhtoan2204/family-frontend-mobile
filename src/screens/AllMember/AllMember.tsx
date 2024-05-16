@@ -23,7 +23,7 @@ type Member = {
 };
 
 const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps ) => {
-  const { id_user, id_family } = route.params || {};
+  const {  id_family } = route.params || {};
   const [members, setMembers] = useState<Member[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isAddMemberModalVisible, setAddMemberModalVisible] = useState<boolean>(false); // State to control modal visibility
@@ -66,7 +66,7 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps ) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <View style={{ flex: 1 }}>
         <View style={styles.header}>
-        <TouchableOpacity onPress={() => { navigation.navigate('ViewFamily', { id_user, id_family }); }}>
+        <TouchableOpacity onPress={() => { navigation.navigate('ViewFamily', {  id_family }); }}>
         <Icon name="arrow-back" size={24} style={styles.backButton} />
         </TouchableOpacity>
 

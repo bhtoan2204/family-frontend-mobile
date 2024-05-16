@@ -6,15 +6,14 @@ import {StyleSheet} from 'react-native';
 import TabButton from 'src/components/TabButton';
 import {TEXTS} from 'src/constants';
 import HomeScreen from 'src/screens/HomeScreen';
-import ProfileScreen from 'src/screens/ProfileScreen';
-import ReportScreen from 'src/screens/ReportScreen';
+import ReportScreen from 'src/screens/Report';
 import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
-
+import ExpenditureScreen from 'src/screens/ExpenseScreen';
 import BottomSheetChild from 'src/screens/HomeScreen/BottomSheetContent';
-import {
-  PurchasedScreenProps,
-  ViewAllFamilyScreenProps,
-} from '../NavigationTypes';
+import CategoryExpenseScreen from 'src/screens/ExpenseScreen/CategoryScreen';
+import WalletScreen from 'src/screens/ExpenseScreen/WalletScreen';
+import FamilyScreen from 'src/screens/ExpenseScreen/FamilyScreen';
+import CreateInvoiceScreen from 'src/screens/Invoice/CreateInvoice/CreateInvoice';
 
 const Tab = createBottomTabNavigator();
 const TabList = [
@@ -35,18 +34,45 @@ const TabList = [
     visible: true,
   },
   {
-    id: TEXTS.QR_CODE_TAB,
-    title: TEXTS.QR_CODE_TAB,
-    component: ProfileScreen,
-    screen: 'QRCodeScreen',
-    icon: 'qrcode-scan',
+    id: 'Expense',
+    title: 'Expense',
+    component: ExpenditureScreen,
+    screen: 'Expense',
+    icon: 'plus',
     visible: true,
   },
+  {
+    id: 'Invoice',
+    title: 'Invoice',
+    component: CreateInvoiceScreen,
+    screen: 'Invoice',
+    icon: 'plus',
+    visible: false,
+  },
+  {
+    id: 'CategoryExpense',
+    component: CategoryExpenseScreen,
+    screen: 'CategoryExpense',
+    visible: false,
+  },
+  {
+    id: 'Wallet',
+    component: WalletScreen,
+    screen: 'Wallet',
+    visible: false,
+  },
+  {
+    id: 'FamilyFinace',
+    component: FamilyScreen,
+    screen: 'FamilyFinace',
+    visible: false,
+  },
+
   {
     id: TEXTS.REPORT_TAB,
     title: TEXTS.REPORT_TAB,
     component: ReportScreen,
-    screen: 'PackageScreen',
+    screen: 'ReportScreen',
     icon: 'notebook',
     visible: true,
   },
@@ -73,7 +99,6 @@ const TabBarButton = (props: BottomTabBarButtonProps, tab: any) => {
 const HomeTab = () => {
   return (
     <Tab.Navigator
-      initialRouteName="AddScreen"
       screenOptions={{
         header: () => null,
         tabBarStyle: styles.tabBar,
@@ -99,15 +124,13 @@ const HomeTab = () => {
 
 const styles = StyleSheet.create({
   tabBar: {
-    height: 70,
+    height: '7%',
+    width: '100%',
     position: 'absolute',
-    bottom: 15,
-    marginHorizontal: 16,
-    borderRadius: 16,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 0.5,
-    borderColor: '#dadada',
+    borderColor: 'rgba(128, 50, 128, 0.5)',
   },
 });
 

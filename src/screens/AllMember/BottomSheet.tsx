@@ -6,11 +6,10 @@ import AddMemberScreen from '../AddEditFamilyMemberScreen';
 const Stack = createNativeStackNavigator();
 
 interface BottomSheetProps {
-    id_user?: string;
     id_family?: number;
   }
   
-  const BottomSh: React.FC<BottomSheetProps> = ({ id_user, id_family }) => {
+  const BottomSh: React.FC<BottomSheetProps> = ({ id_family }) => {
   return (
     <SafeAreaProvider>
       <PaperProvider>
@@ -21,7 +20,7 @@ interface BottomSheetProps {
             }}
             name="AddEditFamilyMember"
             component={AddMemberScreen}
-            initialParams={{ id_user, id_family}} 
+            initialParams={{ id_family}} 
             
           />
    

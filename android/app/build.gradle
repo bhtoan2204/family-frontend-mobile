@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
-apply plugin: "org.jetbrains.kotlin.android"
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-kapt"
 apply plugin: "com.facebook.react"
 
 /**
@@ -73,14 +74,16 @@ android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
-
+    compileSdkVersion 33
     namespace "com.mobile_shell"
+    
     defaultConfig {
         applicationId "com.mobile_shell"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
     }
     signingConfigs {
         debug {
@@ -104,12 +107,16 @@ android {
     }
 }
 
+
+
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
     implementation("com.facebook.react:flipper-integration")
-    implementation(name:'zpdk-release-v3.1', ext:'aar')
-
+    implementation("org.jitsi:webrtc:118.0.0") {
+        exclude group: 'org.webrtc'
+    }
+    
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
@@ -118,3 +125,4 @@ dependencies {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+ 

@@ -72,7 +72,6 @@ const FamilyServices = {
     id_order?: number;
   }) => {
     try {
-      console.log('createFamily called with:', {description, name});
       const response: AxiosResponse = await instance.post(
         FamilyUrl.createFamily,
         {
@@ -82,7 +81,6 @@ const FamilyServices = {
         },
       );
       if (response.status === 200) {
-        //alert('Create family successfully');
         return response.data;
       } else {
         throw new Error(ERROR_TEXTS.CREATE_FAMILY_ERROR);

@@ -41,7 +41,6 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [receiverId, setReceiverId] = useState('');
 
-  const { id_user } = route.params;
 
   const fetchUser =async () => {
     try{
@@ -102,15 +101,15 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
     fetchUser();
   }, [currentPage]);
 
-  const handlePressChat = (id_user?: string, receiverId?: string) => {
-    navigation.navigate('ChatUser', { id_user: id_user, receiverId: receiverId });
+  const handlePressChat = (receiverId?: string) => {
+    navigation.navigate('ChatUser', {  receiverId: receiverId });
   };
 
   const renderAllUser = () => (
     <View style={styles.userHeaderContainer}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {users.map((user, index) => (
-          <TouchableOpacity key={index} onPress={() => handlePressChat(id_user, user.id_user)}>
+          <TouchableOpacity key={index} onPress={() => handlePressChat(user.id_user)}>
             <View style={[styles.userContainer, !user.avatar && styles.userContainerWithoutAvatar]}>
               {user.avatar ? (
                 <Image source={{ uri: user.avatar }} style={styles.avatar} />
