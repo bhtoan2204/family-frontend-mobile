@@ -108,6 +108,10 @@ export type FamilyStackParamList = {
     id_family: number | undefined;
     id_item: number;
   };
+  SharedGuildLine: {
+    id_family: number | undefined;
+    id_item: number;
+  };
   Education: {
     id_family: number | undefined;
   };
@@ -131,6 +135,16 @@ export type FamilyStackParamList = {
     id_family: number | undefined;
     id_category: number;
     id_item: number;
+  };
+  CheckList: {
+    id_family: number | undefined;
+  };
+  CheckListDetail: {
+    id_family: number | undefined;
+    id_checklist: number;
+  };
+  News: {
+    id_family: number | undefined;
   };
 };
 
@@ -289,6 +303,11 @@ type GuildLineDetailNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'GuildLineDetail'
 >;
+type SharedGuildLineNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'SharedGuildLine'
+>;
+
 type EducationNavigationprop = NativeStackNavigationProp<
   FamilyStackParamList,
   'Education'
@@ -313,6 +332,35 @@ type HouseHoldCategoryDetailNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'HouseHoldCategoryDetail'
 >;
+
+type CheckListNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'CheckList'
+>;
+
+type NewsNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'News'
+>;
+type CheckListDetailNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'CheckListDetail'
+>;
+
+export interface CheckListDetailScreenProps {
+  navigation: CheckListDetailNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'CheckListDetail'>;
+}
+
+export interface CheckListScreenProps {
+  navigation: CheckListNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'CheckList'>;
+}
+
+export interface NewsScreenProps {
+  navigation: NewsNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'News'>;
+}
 
 export interface HouseHoldScreenProps {
   navigation: HouseHoldNavigationProp;
@@ -357,6 +405,11 @@ export interface GuildLineScreenProps {
 export interface GuildLineDetailScreenProps {
   navigation: GuildLineDetailNavigationProp;
   route: RouteProp<FamilyStackParamList, 'GuildLineDetail'>;
+}
+
+export interface SharedGuildLineScreenProps {
+  navigation: SharedGuildLineNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'SharedGuildLine'>;
 }
 
 export type UpdateFamilyNavigationProps = NativeStackNavigationProp<

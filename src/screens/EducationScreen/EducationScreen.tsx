@@ -8,46 +8,71 @@ import CircularProgress from './CircularProgress';
 import CourseItem from './CourseItem';
 import MemberEducationItem from './MemberEducationItem';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import MemberLongPressSheet from './MemberLongPressSheet/MemberLongPressSheet';
-import MemberDetailSheet from './MemberDetailSheet/MemberDetailSheet';
+
 import { Education } from 'src/interface/education/education';
+import { Member } from 'src/interface/member/member';
+import { FamilyServices } from 'src/services/apiclient';
+import AddMemberEducationSheet from './AddMemberEducationSheet/AddMemberEducationSheet';
+import { ActivityIndicator } from 'react-native-paper';
 
 const data = {
     "message": "Success",
     "data": [
         {
-            "id_education_progress": 3,
+            "id_education_progress": 1,
             "id_user": "db31bfb8-ec15-4cb1-9cbe-ebe3edaca323",
-            "title": "Học trên trường",
-            "progress_notes": "tình hình ko ổn, lười học quá",
-            "school_info": "địa chỉ cơ sở 2 nguyễn văn cừ, đh khoa học tự nhiên",
-            "created_at": "2024-04-09T04:29:20.875Z",
-            "updated_at": "2024-04-09T04:39:57.716Z",
-            "avatar": "",
+            "title": "Discrete Mathematic",
+            "progress_notes": "M",
+            "school_info": "Hcmus",
+            "created_at": "2024-04-30T08:59:03.177Z",
+            "updated_at": "2024-04-30T08:59:03.177Z",
+            "avatar": "[NULL]",
             "firstname": "Tang",
-            "lastname": "Long",
-            "subjects": [
-                {
-                    "id_subject": 6,
-                    "subject_name": "Introduction to Statistics"
-                },
-                {
-                    "id_subject": 4,
-                    "subject_name": "Discrete mathematics"
-                }
-            ]
+            "lastname": "Long"
         }
     ]
 }
 
 const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
+    const [members, setMembers] = React.useState<Member[]>([]);
+    const [filteredMembers, setFilteredMembers] = React.useState<Member[]>([])
+    const [memberEducationData, setMemberEducationData] = React.useState<Education>()
+    const [memberEducationDatas, setMemberEducationDatas] = React.useState<Education[]>([data.data[0]])
+
     const bottomSheetRef = React.useRef<RBSheet>(null);
 
-    const [memberEducationData, setMemberEducationData] = React.useState<Education>()
     useEffect(() => {
-        console.log('Education Screen')
+        const handleViewAllMember = async () => {
+            try {
+                const result = await FamilyServices.getAllMembers({ id_family });
+                console.log('FamilyServices.getAllMembers result:', result);
+                setMembers(result);
+                setFilteredMembers(result)
+            } catch (error) {
+                console.log('FamilyServices.getAllMembers error:', error);
+            }
+        };
+        handleViewAllMember()
     }, [])
+
+    // useEffect(() => {
+    //     if (memberEducationDatas != null) {
+    //         const filteredMembersArray = []
+    //         memberEducationDatas.forEach((item) => {
+    //             if (members != null) {
+    //                 members.forEach((member) => {
+    //                     if (item.id_user == member.id_user) {
+    //                         filteredMembersArray.push(member)
+    //                     }
+    //                 })
+    //             }
+    //         })
+
+    //     }
+    // }, [memberEducationDatas, members])
+
+
 
     return (
         <View className="flex-1 bg-[#F7F7F7]">
@@ -59,6 +84,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                 <View className='mr-3'>
                     <TouchableOpacity onPress={() => {
                         // refRBSheet.current?.open()
+                        bottomSheetRef.current?.open()
                     }} >
                         {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
                         <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Add</Text>
@@ -66,15 +92,24 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                 </View>
             </View>
             <ScrollView className=' '>
+                {
+                    memberEducationDatas != null ? memberEducationDatas.map((item: Education, index: number) => {
+                        return (
+                            <React.Fragment key={index}>
+                                <MemberEducationItem data={item} onPress={() => {
+                                    navigation.navigate('EducationDetail', {
+                                        id_education_progress: item.id_education_progress,
+                                        id_family: route.params.id_family,
+                                    })
+                                }} />
+                            </React.Fragment>
+                        )
+                    }) : <ActivityIndicator size={"small"} />
 
-                <MemberEducationItem data={data.data[0]} onPress={() => {
-                    navigation.navigate('EducationDetail', {
-                        id_education_progress: data.data[0].id_education_progress,
-                        id_family: route.params.id_family,
-                    })
-                }} />
+                }
+
             </ScrollView>
-            <MemberLongPressSheet bottomSheetRef={bottomSheetRef} memberEducationData={memberEducationData} />
+            <AddMemberEducationSheet bottomSheetRef={bottomSheetRef} setMemberEducationDatas={setMemberEducationDatas} members={filteredMembers} />
 
         </View>
     )

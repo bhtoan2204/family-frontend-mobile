@@ -7,7 +7,7 @@ import { store } from 'src/redux/store';
 import Notification from 'src/screens/Notifications';
 import { connectSocket } from 'src/services/apiclient/Socket';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 const App: React.FC = () => {
     useEffect(() => {
@@ -16,11 +16,12 @@ const App: React.FC = () => {
 
     return (
         <Provider store={store}>
-
             <SafeAreaProvider>
                 <GestureHandlerRootView style={{ flex: 1 }}>
                     <PaperProvider>
-                        <NavigationContainer />
+                        <ActionSheetProvider>
+                            <NavigationContainer />
+                        </ActionSheetProvider>
                     </PaperProvider>
                 </GestureHandlerRootView>
             </SafeAreaProvider>

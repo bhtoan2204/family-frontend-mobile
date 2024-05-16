@@ -11,6 +11,19 @@ import RBSheet from 'react-native-raw-bottom-sheet'
 import AddGuildLineSheet from './AddGuildLineSheet/AddGuildLineSheet'
 
 import GuildlineItem from './GuildlineItem/GuildlineItem'
+// id_item: number;
+//   name: string;
+//   description: string;
+//   created_at: string;
+//   updated_at: string;
+const guildLineData: Guildline = {
+    id_item: 1,
+    name: 'Shared guideline',
+    description: 'This is the shared guideline',
+    created_at: '2024-04-30T08:59:03.177Z',
+    updated_at: '2024-04-30T08:59:03.177Z'
+}
+
 const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
     const [guidelines, setGuidelines] = React.useState<Guildline[]>([]);
@@ -98,6 +111,9 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                 keyExtractor={(item) => item.id_item.toString()}
                 className='pt-2'
             />
+            <GuildlineItem item={guildLineData} onPress={() => {
+                navigation.navigate('SharedGuildLine', { id_family: id_family, id_item: guildLineData.id_item })
+            }} />
             <AddGuildLineSheet refRBSheet={refRBSheet} setGuidelines={setGuidelines} />
         </View>
     )

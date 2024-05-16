@@ -12,6 +12,7 @@ const MemberEducationItem = ({ data, onPress }: { data: Education, onPress: () =
         if (progress == 100) return '#27AB6D';
         return '#56409e';
     }
+
     return (
         <TouchableOpacity className=' h-auto  mt-4  ' onPress={onPress}>
             <View className='flex-row items-center bg-white p-4'>
