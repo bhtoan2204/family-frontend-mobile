@@ -316,7 +316,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
               marginBottom: 10,
             },
           ]}>
-          <Text style={styles.text}>Choose Family</Text>
+          <Text style={styles.text}>Select Family</Text>
           <FlatList
             horizontal
             data={families}
@@ -354,15 +354,37 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
           <View style={styles.ContainerCategory}>
             <View style={styles.selectedItemContainer}>
               <Image source={{uri: urlCatetory}} style={styles.avatar} />
-              <Text style={styles.inputAmount}>
+              <Text
+                style={[
+                  styles.inputAmount,
+                  {textAlign: 'left'},
+                  {fontSize: 18},
+                ]}>
                 {expenseCategory?.expense_name || 'Select category'}
               </Text>
+
               <TouchableOpacity
                 style={styles.chevronContainer}
                 onPress={pressSelectCategory}>
-                <Icon name="chevron-forward-outline" size={22} color="gray" />
+                <Text
+                  style={[
+                    {
+                      color: 'rgba(128,50,128,0.5)',
+                      fontWeight: 600,
+                      fontSize: 16,
+                      marginRight: 5,
+                    },
+                  ]}>
+                  All
+                </Text>
+                <Icon
+                  name="chevron-forward-outline"
+                  size={22}
+                  color="rgba(128,50,128,0.5)"
+                />
               </TouchableOpacity>
             </View>
+            <View style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}} />
             <TouchableOpacity onPress={handleMostUsedPress}>
               <Text style={styles.mostUsedButton}>Most used </Text>
             </TouchableOpacity>

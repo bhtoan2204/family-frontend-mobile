@@ -83,9 +83,9 @@ const styles = StyleSheet.create({
   },
 
   ContainerCategory: {
-    borderWidth: 1,
+    //borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 25,
+    //borderRadius: 25,
     fontSize: 16,
     flexDirection: 'column',
     backgroundColor: 'white',
@@ -93,8 +93,8 @@ const styles = StyleSheet.create({
   selectedItemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: 2,
-    borderBottomColor: '#ccc',
+    //borderBottomWidth: 2,
+    // borderBottomColor: '#ccc',
     padding: 10,
   },
   mostUsedButton: {
@@ -151,6 +151,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: screenWidth * 0.005,
     marginRight: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 10,
   },
   iconMoney: {
     position: 'absolute',
