@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     //backgroundColor: '#F4F7FF',
-    backgroundColor: '#16202D',
+    //backgroundColor: '#fff',
   },
   header: {
     height: 50,
@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+    top: 70,
   },
   content: {
     padding: 20,
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     //backgroundColor: '#2a475e',
-    backgroundColor: 'rgba(42, 71, 94, 0.5)',
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',

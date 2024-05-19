@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  ImageBackground,
 } from 'react-native';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {PackageServices} from 'src/services/apiclient';
@@ -62,17 +63,17 @@ const HomeScreen = ({
 
   const handlePackage = () => {
     navigation.navigate('PackStack', {
-      screen: 'ViewAllPurchased'
+      screen: 'ViewAllPurchased',
     });
   };
   const handleFamily = () => {
     navigation.navigate('FamilyStack', {
-      screen: 'ViewAllFamily'
+      screen: 'ViewAllFamily',
     });
   };
   const handleChat = () => {
     navigation.navigate('ChatStack', {
-      screen: 'ChatList'
+      screen: 'ChatList',
     });
   };
 
@@ -153,14 +154,11 @@ const HomeScreen = ({
   }, []);
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        showsVerticalScrollIndicator={false}
-        scrollEventThrottle={16}
-        onScroll={e => {
-          scrollY.setValue(e.nativeEvent.contentOffset.y);
-        }}>
+    <ImageBackground
+      source={require('../../assets/images/home-screen-light.png')}
+      style={{flex: 1}}
+      resizeMode="stretch">
+      <View style={styles.container}>
         <View style={styles.circleContainer}>
           <TouchableOpacity style={styles.circle}>
             <Image
@@ -179,166 +177,243 @@ const HomeScreen = ({
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.title}>TRENDING SEARCH</Text>
-
-        <ScrollView
-          ref={scrollViewRef}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          style={{flex: 1}}>
-          {viewsWithFake.map((view, index) => (
-            <View key={index} style={{width}}>
-              {view}
-            </View>
-          ))}
-        </ScrollView>
-        <View style={styles.dots}>
-          {[...Array(3)].map((_, i) => (
+        <View
+          style={[
+            {flexDirection: 'row'},
+            {justifyContent: 'space-between'},
+            {alignItems: 'center'},
+          ]}>
+          <View style={[{flexDirection: 'column', paddingLeft: 20}]}>
+            <Text style={[{color: 'white', fontSize: 30}]}>Welcome</Text>
             <Text
-              key={i}
-              style={[styles.dot, displayedPage === i && styles.activeDot]}>
-              •
+              style={[
+                {
+                  color: 'white',
+                  fontSize: 38,
+                  fontWeight: 'bold',
+                  marginBottom: 8,
+                },
+              ]}>
+              Jennie Kim
             </Text>
-          ))}
-        </View>
-
-        <View style={styles.walletBox}>
-          <View style={styles.rowStyle}>
-            <View style={styles.columnStyle}>
-              <Text style={styles.balance}>Active Balance</Text>
-              <View style={styles.rowStyle}>
-                {isBalanceVisible ? (
-                  <Text style={styles.numberBalanceHidden}>******</Text>
-                ) : (
-                  <Text style={styles.numberBalanceVisible}>500.00$</Text>
-                )}
-                <TouchableOpacity
-                  onPress={() => setIsBalanceVisible(!isBalanceVisible)}>
-                  <Material
-                    name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'}
-                    size={24}
-                    //color="#6C6D71"
-                    color="#fff"
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <View style={styles.rowStyle1}>
-              <View style={styles.columnStyle}>
-                <TouchableOpacity style={styles.buttonStyle}>
-                  {/* <Material name="tray-arrow-up" size={20} color="#6C6D71" /> */}
-                  <Material name="tray-arrow-up" size={20} color="#fff" />
-                  <Text style={styles.buttonText}>Top Up</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.columnStyle}>
-                <TouchableOpacity style={styles.buttonStyle}>
-                  <Material name="tray-arrow-down" size={20} color="#fff" />
-                  <Text style={styles.buttonText}>Request</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.columnStyle}>
-                <TouchableOpacity style={styles.buttonStyle}>
-                  <Material name="wallet-outline" size={20} color="#fff" />
-                  <Text style={styles.buttonText}>Transfer</Text>
-                </TouchableOpacity>
-              </View>
+            <View
+              style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
+              <MaterialIcons
+                name="location-on"
+                size={22}
+                //color="#56409e"
+                color="#fff"
+              />
+              <Text style={[{color: 'white', fontSize: 17, right: 30}]}>
+                24 Tran Hung Dao
+              </Text>
             </View>
           </View>
+          <View style={[{flexDirection: 'row'}, {right: 20}]}>
+            <Image
+              source={require('../../assets/images/avatar.png')}
+              resizeMode="contain"
+              style={{
+                width: 80,
+                height: 80,
+                borderRadius: 40,
+                overflow: 'hidden',
+                marginRight: 10,
+                alignItems: 'flex-end',
+                justifyContent: 'flex-end',
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 5,
+                shadowRadius: 10,
+                borderWidth: 3,
+                borderColor: 'white',
+              }}
+            />
+            <View
+              style={{
+                width: 15,
+                height: 15,
+                borderRadius: 7.5,
+                backgroundColor: '#68DD73',
+                right: 30,
+                top: 60,
+              }}
+            />
+          </View>
         </View>
+        <ScrollView
+          style={styles.scrollView}
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={16}
+          onScroll={e => {
+            scrollY.setValue(e.nativeEvent.contentOffset.y);
+          }}>
+          <Text style={styles.title}>TRENDING SEARCH</Text>
 
-        <View style={styles.containerBottom}>
-          <View>
-            <Text style={styles.titleBottom}>Top Feature</Text>
+          <ScrollView
+            ref={scrollViewRef}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            style={{flex: 1}}>
+            {viewsWithFake.map((view, index) => (
+              <View key={index} style={{width}}>
+                {view}
+              </View>
+            ))}
+          </ScrollView>
+          <View style={styles.dots}>
+            {[...Array(3)].map((_, i) => (
+              <Text
+                key={i}
+                style={[styles.dot, displayedPage === i && styles.activeDot]}>
+                •
+              </Text>
+            ))}
+          </View>
+
+          <View style={styles.walletBox}>
             <View style={styles.rowStyle}>
-              <View style={styles.columnStyle1}>
-                <LinearGradient
-                  // Array of colors for gradient
-                  colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
-                  // Gradient style
-                  style={styles.button1}
-                  // Gradient direction
-                  start={{x: 0, y: 0}}
-                  end={{x: 0, y: 1}}>
-                  <TouchableOpacity onPress={handlePackage}>
+              <View style={styles.columnStyle}>
+                <Text style={styles.balance}>Active Balance</Text>
+                <View style={styles.rowStyle}>
+                  {isBalanceVisible ? (
+                    <Text style={styles.numberBalanceHidden}>******</Text>
+                  ) : (
+                    <Text style={styles.numberBalanceVisible}>500.00$</Text>
+                  )}
+                  <TouchableOpacity
+                    onPress={() => setIsBalanceVisible(!isBalanceVisible)}>
                     <Material
-                      name="package-variant-closed"
-                      size={30}
-                      style={styles.buttonIcon1}
+                      name={
+                        isBalanceVisible ? 'eye-off-outline' : 'eye-outline'
+                      }
+                      size={24}
+                      //color="#6C6D71"
+                      color="#fff"
                     />
                   </TouchableOpacity>
-                </LinearGradient>
-                <Text style={styles.buttonText1}>Package</Text>
+                </View>
               </View>
 
-              <View style={styles.columnStyle1}>
-                <LinearGradient
-                  // Array of colors for gradient
-                  colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
-                  // Gradient style
-                  style={styles.button1}
-                  // Gradient direction
-                  start={{x: 0, y: 0}}
-                  end={{x: 0, y: 1}}>
-                  <TouchableOpacity onPress={handleFamily}>
-                    <Material
-                      name="account-supervisor-outline"
-                      size={30}
-                      style={styles.buttonIcon1}
-                    />
+              <View style={styles.rowStyle1}>
+                <View style={styles.columnStyle}>
+                  <TouchableOpacity style={styles.buttonStyle}>
+                    {/* <Material name="tray-arrow-up" size={20} color="#6C6D71" /> */}
+                    <Material name="tray-arrow-up" size={20} color="#fff" />
+                    <Text style={styles.buttonText}>Top Up</Text>
                   </TouchableOpacity>
-                </LinearGradient>
-                <Text style={styles.buttonText1}>Family</Text>
-              </View>
+                </View>
 
-              <View style={styles.columnStyle1}>
-                <LinearGradient
-                  // Array of colors for gradient
-                  colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
-                  // Gradient style
-                  style={styles.button1}
-                  // Gradient direction
-                  start={{x: 0, y: 0}}
-                  end={{x: 0, y: 1}}>
-                  <TouchableOpacity onPress={handleChat}>
-                    <Material
-                      name="chat-outline"
-                      size={30}
-                      style={styles.buttonIcon1}
-                    />
+                <View style={styles.columnStyle}>
+                  <TouchableOpacity style={styles.buttonStyle}>
+                    <Material name="tray-arrow-down" size={20} color="#fff" />
+                    <Text style={styles.buttonText}>Request</Text>
                   </TouchableOpacity>
-                </LinearGradient>
-                <Text style={styles.buttonText1}>Chat</Text>
-              </View>
+                </View>
 
-              <View style={styles.columnStyle1}>
-                <LinearGradient
-                  // Array of colors for gradient
-                  colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
-                  // Gradient style
-                  style={styles.button1}
-                  // Gradient direction
-                  start={{x: 0, y: 0}}
-                  end={{x: 0, y: 1}}>
-                  <TouchableOpacity onPress={handlePress}>
-                    <MaterialIcons
-                      name={isLightMode ? 'light-mode' : 'nightlight'}
-                      size={30}
-                      style={styles.buttonIcon1}
-                    />
+                <View style={styles.columnStyle}>
+                  <TouchableOpacity style={styles.buttonStyle}>
+                    <Material name="wallet-outline" size={20} color="#fff" />
+                    <Text style={styles.buttonText}>Transfer</Text>
                   </TouchableOpacity>
-                </LinearGradient>
-                <Text style={styles.buttonText1}>Change Mode</Text>
+                </View>
               </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
-    </View>
+
+          <View style={styles.containerBottom}>
+            <View>
+              <Text style={styles.titleBottom}>Top Feature</Text>
+              <View style={styles.rowStyle}>
+                <View style={styles.columnStyle1}>
+                  <LinearGradient
+                    // Array of colors for gradient
+                    colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
+                    // Gradient style
+                    style={styles.button1}
+                    // Gradient direction
+                    start={{x: 0, y: 0}}
+                    end={{x: 0, y: 1}}>
+                    <TouchableOpacity onPress={handlePackage}>
+                      <Material
+                        name="package-variant-closed"
+                        size={30}
+                        style={styles.buttonIcon1}
+                      />
+                    </TouchableOpacity>
+                  </LinearGradient>
+                  <Text style={styles.buttonText1}>Package</Text>
+                </View>
+
+                <View style={styles.columnStyle1}>
+                  <LinearGradient
+                    // Array of colors for gradient
+                    colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
+                    // Gradient style
+                    style={styles.button1}
+                    // Gradient direction
+                    start={{x: 0, y: 0}}
+                    end={{x: 0, y: 1}}>
+                    <TouchableOpacity onPress={handleFamily}>
+                      <Material
+                        name="account-supervisor-outline"
+                        size={30}
+                        style={styles.buttonIcon1}
+                      />
+                    </TouchableOpacity>
+                  </LinearGradient>
+                  <Text style={styles.buttonText1}>Family</Text>
+                </View>
+
+                <View style={styles.columnStyle1}>
+                  <LinearGradient
+                    // Array of colors for gradient
+                    colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
+                    // Gradient style
+                    style={styles.button1}
+                    // Gradient direction
+                    start={{x: 0, y: 0}}
+                    end={{x: 0, y: 1}}>
+                    <TouchableOpacity onPress={handleChat}>
+                      <Material
+                        name="chat-outline"
+                        size={30}
+                        style={styles.buttonIcon1}
+                      />
+                    </TouchableOpacity>
+                  </LinearGradient>
+                  <Text style={styles.buttonText1}>Chat</Text>
+                </View>
+
+                <View style={styles.columnStyle1}>
+                  <LinearGradient
+                    // Array of colors for gradient
+                    colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
+                    // Gradient style
+                    style={styles.button1}
+                    // Gradient direction
+                    start={{x: 0, y: 0}}
+                    end={{x: 0, y: 1}}>
+                    <TouchableOpacity onPress={handlePress}>
+                      <MaterialIcons
+                        name={isLightMode ? 'light-mode' : 'nightlight'}
+                        size={30}
+                        style={styles.buttonIcon1}
+                      />
+                    </TouchableOpacity>
+                  </LinearGradient>
+                  <Text style={styles.buttonText1}>Change Mode</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    </ImageBackground>
   );
 };
 
