@@ -2,6 +2,7 @@ import React from 'react';
 import {SafeAreaView, View, Image, Text, TouchableOpacity} from 'react-native';
 import styles from './styles';
 import {HomeTabProps, SignupScreenProps} from 'src/navigation/NavigationTypes';
+import Icon from 'react-native-vector-icons/Ionicons'; // Đảm bảo đã cài đặt thư viện này
 
 type CombinedScreenProps = SignupScreenProps & HomeTabProps;
 
@@ -33,8 +34,14 @@ const LandingPage = ({navigation}: CombinedScreenProps) => {
         </View>
 
         <TouchableOpacity onPress={handleGoButtonPress}>
-          <View style={styles.button}>
-            <Text style={styles.buttonText}>Let's go</Text>
+          <View style={[styles.button, {flexDirection: 'row'}]}>
+            <Text style={[styles.buttonText, {left: 15}]}>Let's go</Text>
+            <Icon
+              name="arrow-forward"
+              size={24}
+              color="#fff"
+              style={{left: 125}}
+            />
           </View>
         </TouchableOpacity>
       </View>

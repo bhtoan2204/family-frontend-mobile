@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     lineHeight: 24,
-    fontWeight: '400',
+    fontWeight: '600',
     color: '#C7D5E0',
     textAlign: 'center',
   },
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   appName: {
-    backgroundColor: '#fff2dd',
+    backgroundColor: '#FEF5E9',
     transform: [
       {
         rotate: '-5deg',
