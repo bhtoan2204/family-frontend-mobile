@@ -139,7 +139,10 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           style={styles.Icon}
                         />
                         <TextInput
-                          style={[styles.textInput, {marginLeft: 10}]}
+                          style={[
+                            styles.textInput,
+                            {marginLeft: 10, color: '#2A475E'},
+                          ]}
                           placeholder={TEXTS.FIRST_NAME_PLACEHOLDER}
                           placeholderTextColor={
                             errors.firstName ? COLORS.red : '#A6A6A6'
@@ -165,7 +168,10 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           style={styles.Icon}
                         />
                         <TextInput
-                          style={[styles.textInput, {marginLeft: 10}]}
+                          style={[
+                            styles.textInput,
+                            {marginLeft: 10, color: '#2A475E'},
+                          ]}
                           placeholder={TEXTS.LAST_NAME_PLACEHOLDER}
                           placeholderTextColor={
                             errors.lastName ? COLORS.red : '#A6A6A6'
@@ -191,7 +197,10 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           style={styles.Icon}
                         />
                         <TextInput
-                          style={[styles.textInput, {marginLeft: 10}]}
+                          style={[
+                            styles.textInput,
+                            {marginLeft: 10, color: '#2A475E'},
+                          ]}
                           placeholder={TEXTS.EMAIL_PLACEHOLDER}
                           placeholderTextColor={
                             errors.email ? COLORS.red : '#A6A6A6'
@@ -220,7 +229,10 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           style={styles.Icon}
                         />
                         <TextInput
-                          style={[styles.textInput, {marginLeft: 10}]}
+                          style={[
+                            styles.textInput,
+                            {marginLeft: 10, color: '#2A475E'},
+                          ]}
                           placeholder={TEXTS.PHONE_NUMBER_PLACEHOLDER}
                           placeholderTextColor={
                             errors.phoneNumber ? COLORS.red : '#A6A6A6'
@@ -249,7 +261,10 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           style={styles.Icon}
                         />
                         <TextInput
-                          style={[styles.textInput, {marginLeft: 10}]}
+                          style={[
+                            styles.textInput,
+                            {marginLeft: 10, color: '#2A475E'},
+                          ]}
                           placeholder={TEXTS.PASSWORD_PLACEHOLDER}
                           placeholderTextColor={
                             errors.password ? COLORS.red : '#A6A6A6'

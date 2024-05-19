@@ -187,8 +187,8 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                           style={[
                             {
                               marginLeft: 10,
-
                               width: '100%',
+                              color: '#2A475E',
                             },
                           ]}
                         />
@@ -226,7 +226,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                           onBlur={handleBlur('password')}
                           onChangeText={handleChange('password')}
                           value={values.password}
-                          style={[{marginLeft: 10, color: '#C7D5E0'}]}
+                          style={[{marginLeft: 10, color: '#2A475E'}]}
                         />
                         <TouchableOpacity
                           className="absolute right-3"
