@@ -127,7 +127,11 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const fetchExpenseType = async (id_family: any) => {
     try {
       const response = await ExpenseServices.getExpenseType(id_family);
-      setExpenseType(response);
+      if (response) {
+        setExpenseType(response);
+      } else {
+        console.error('Error in getExpenseType: response is undefined');
+      }
       setLoading(false);
     } catch (error: any) {
       console.error('Error in getExpenseType:', error.message);

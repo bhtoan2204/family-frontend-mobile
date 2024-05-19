@@ -9,11 +9,12 @@ const styles = StyleSheet.create({
   TextInput: {
     height: 48,
     width: '100%',
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 30,
+    backgroundColor: '#C7D5E0',
   },
   scrollView: {
     flex: 1,
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 18,
     marginBottom: 4,
-    borderColor: '#66C0F4',
+    borderColor: '#2A475E',
   },
   lineStyle: {
     flex: 1,

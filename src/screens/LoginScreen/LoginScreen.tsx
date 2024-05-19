@@ -48,8 +48,6 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
-
-
   const handleLogin = async (
     values: FormValues,
     actions: FormikHelpers<FormValues>,
@@ -116,7 +114,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/login-wall-dark.png')}
+      source={require('../../assets/images/login-wall-light.png')}
       style={{flex: 1}}
       resizeMode="stretch">
       <KeyboardAvoidingView behavior="padding">
@@ -135,7 +133,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                     {marginTop: 130},
                     {fontSize: 30},
                     {fontWeight: 'bold'},
-                    {color: '#C7D5E0'},
+                    {color: '#2A475E'},
                   ]}>
                   Log in
                 </Text>
@@ -171,14 +169,13 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                           styles.row,
                           {alignItems: 'center'},
                           styles.TextInput,
-                          {borderColor: errors.email ? 'red' : '#66C0F4'},
+                          {borderColor: errors.email ? 'red' : '#2A475E'},
                         ]}>
                         <MaterialCommunityIcons
                           name="email-outline"
                           style={styles.Icon}
                         />
                         <TextInput
-                          className="w-full"
                           placeholder={TEXTS.EMAIL_PLACEHOLDER}
                           placeholderTextColor={
                             errors.email ? COLORS.red : '#7F7F7F'
@@ -187,7 +184,13 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                           onBlur={handleBlur('email')}
                           onChangeText={handleChange('email')}
                           value={values.email}
-                          style={[{marginLeft: 10, color: '#C7D5E0'}]}
+                          style={[
+                            {
+                              marginLeft: 10,
+
+                              width: '100%',
+                            },
+                          ]}
                         />
                       </View>
                       {errors.email && touched.email && (
@@ -207,7 +210,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                           styles.row,
                           {alignItems: 'center'},
                           styles.TextInput,
-                          {borderColor: errors.email ? 'red' : '#66C0F4'},
+                          {borderColor: errors.email ? 'red' : '#2A475E'},
                         ]}>
                         <MaterialCommunityIcons
                           name="lock-outline"
@@ -275,7 +278,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                         onPress={() => {
                           navigation.navigate('ForgotPasswordScreen');
                         }}>
-                        <Text style={[{color: '#C7D5E0'}, {fontSize: 16}]}>
+                        <Text style={[{color: '#2A475E'}, {fontSize: 16}]}>
                           {TEXTS.FORGOT_PASSWORD}
                         </Text>
                       </Pressable>
@@ -300,7 +303,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   style={[
                     {fontSize: 17},
                     {marginBottom: -20},
-                    {color: '#C7D5E0'},
+                    {color: '#2A475E'},
                   ]}>
                   {TEXTS.LOGIN_OR}
                 </Text>
@@ -326,7 +329,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                 </TouchableOpacity>
               </View>
               <View className="flex-row justify-center my-5">
-                <Text className="text-base mr-1" style={{color: '#C7D5E0'}}>
+                <Text className="text-base mr-1" style={{color: '#2A475E'}}>
                   {TEXTS.DONT_HAVE_ACCOUNT}
                 </Text>
                 {/* <Pressable

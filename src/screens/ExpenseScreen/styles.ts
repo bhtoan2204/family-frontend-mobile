@@ -181,6 +181,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
+    marginTop: 10,
   },
   imageContainer1: {
     justifyContent: 'center',
