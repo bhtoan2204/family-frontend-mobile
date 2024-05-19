@@ -68,11 +68,11 @@ const styles = StyleSheet.create({
   },
   eyeIcon: {
     fontSize: 24,
-    color: '#747474',
+    color: '#2A475E',
   },
   Icon: {
     fontSize: 24,
-    color: '#7F7F7F',
+    color: '#2A475E',
   },
   marginVerticalFlex: {
     flexDirection: 'row',

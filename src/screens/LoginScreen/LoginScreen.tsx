@@ -178,7 +178,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                         <TextInput
                           placeholder={TEXTS.EMAIL_PLACEHOLDER}
                           placeholderTextColor={
-                            errors.email ? COLORS.red : '#7F7F7F'
+                            errors.email ? COLORS.red : '#A6A6A6'
                           }
                           keyboardType="email-address"
                           onBlur={handleBlur('email')}
@@ -220,7 +220,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                           className="w-full"
                           placeholder={TEXTS.PASSWORD_PLACEHOLDER}
                           placeholderTextColor={
-                            errors.password ? COLORS.red : '#7F7F7F'
+                            errors.password ? COLORS.red : '#A6A6A6'
                           }
                           secureTextEntry={!isPasswordVisible}
                           onBlur={handleBlur('password')}
@@ -278,7 +278,13 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                         onPress={() => {
                           navigation.navigate('ForgotPasswordScreen');
                         }}>
-                        <Text style={[{color: '#2A475E'}, {fontSize: 16}]}>
+                        <Text
+                          style={[
+                            {color: '#66C0F4'},
+                            {fontSize: 16},
+                            {fontWeight: 600},
+                            {marginBottom: 20},
+                          ]}>
                           {TEXTS.FORGOT_PASSWORD}
                         </Text>
                       </Pressable>
