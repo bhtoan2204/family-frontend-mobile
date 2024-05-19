@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
   accountTitle: {
     fontSize: 16,
-    color: '#747474',
+    color: '#2A475E',
   },
   marginBottom: {
     marginBottom: 20,
@@ -43,15 +43,15 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   placeholder: {
-    flexDirection: 'row',
-    width: '100%',
     height: 48,
-    borderColor: COLORS.black,
-    borderWidth: 1,
+    width: '100%',
+    borderWidth: 1.5,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: 30,
+    paddingHorizontal: 30,
+    backgroundColor: '#C7D5E0',
+    flexDirection: 'row',
   },
   touchable: {
     position: 'absolute',
@@ -59,11 +59,11 @@ const styles = StyleSheet.create({
   },
   Icon: {
     fontSize: 24,
-    color: '#A3A3A3',
+    color: '#2A475E',
   },
   eyeIcon: {
     fontSize: 24,
-    color: '#747474',
+    color: '#2A475E',
   },
   marginVerticalFlex: {
     flexDirection: 'row',
@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     marginRight: 8,
+    color: '#2A475E',
   },
   button: {
     marginTop: 18,
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
   },
   loginText: {
     fontSize: 16,
-    color: COLORS.primary,
+    color: '#66C0F4',
     fontWeight: 'bold',
     marginLeft: 6,
   },

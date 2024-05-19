@@ -81,6 +81,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                     {marginTop: 80},
                     {fontSize: 30},
                     {fontWeight: 'bold'},
+                    {color: '#2A475E'},
                   ]}>
                   Sign in
                 </Text>
@@ -131,7 +132,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           ...styles.placeholder,
                           borderColor: errors.firstName
                             ? COLORS.red
-                            : COLORS.gray,
+                            : '#2A475E',
                         }}>
                         <MaterialCommunityIcons
                           name="account"
@@ -141,7 +142,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           style={[styles.textInput, {marginLeft: 10}]}
                           placeholder={TEXTS.FIRST_NAME_PLACEHOLDER}
                           placeholderTextColor={
-                            errors.firstName ? COLORS.red : COLORS.gray
+                            errors.firstName ? COLORS.red : '#A6A6A6'
                           }
                           onBlur={handleBlur('firstName')}
                           onChangeText={handleChange('firstName')}
@@ -157,9 +158,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                       <View
                         style={{
                           ...styles.placeholder,
-                          borderColor: errors.lastName
-                            ? COLORS.red
-                            : COLORS.gray,
+                          borderColor: errors.lastName ? COLORS.red : '#2A475E',
                         }}>
                         <MaterialCommunityIcons
                           name="account"
@@ -169,7 +168,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           style={[styles.textInput, {marginLeft: 10}]}
                           placeholder={TEXTS.LAST_NAME_PLACEHOLDER}
                           placeholderTextColor={
-                            errors.lastName ? COLORS.red : COLORS.gray
+                            errors.lastName ? COLORS.red : '#A6A6A6'
                           }
                           onBlur={handleBlur('lastName')}
                           onChangeText={handleChange('lastName')}
@@ -185,7 +184,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                       <View
                         style={{
                           ...styles.placeholder,
-                          borderColor: errors.email ? COLORS.red : COLORS.gray,
+                          borderColor: errors.email ? COLORS.red : '#2A475E',
                         }}>
                         <MaterialCommunityIcons
                           name="email-outline"
@@ -195,7 +194,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           style={[styles.textInput, {marginLeft: 10}]}
                           placeholder={TEXTS.EMAIL_PLACEHOLDER}
                           placeholderTextColor={
-                            errors.email ? COLORS.red : COLORS.gray
+                            errors.email ? COLORS.red : '#A6A6A6'
                           }
                           keyboardType="email-address"
                           onBlur={handleBlur('email')}
@@ -214,7 +213,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           ...styles.placeholder,
                           borderColor: errors.phoneNumber
                             ? COLORS.red
-                            : COLORS.gray,
+                            : '#2A475E',
                         }}>
                         <MaterialCommunityIcons
                           name="phone-outline"
@@ -224,7 +223,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           style={[styles.textInput, {marginLeft: 10}]}
                           placeholder={TEXTS.PHONE_NUMBER_PLACEHOLDER}
                           placeholderTextColor={
-                            errors.phoneNumber ? COLORS.red : COLORS.gray
+                            errors.phoneNumber ? COLORS.red : '#A6A6A6'
                           }
                           keyboardType="phone-pad"
                           onBlur={handleBlur('phoneNumber')}
@@ -243,9 +242,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                       <View
                         style={{
                           ...styles.placeholder,
-                          borderColor: errors.password
-                            ? COLORS.red
-                            : COLORS.gray,
+                          borderColor: errors.password ? COLORS.red : '#2A475E',
                         }}>
                         <MaterialCommunityIcons
                           name="lock-outline"
@@ -255,7 +252,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           style={[styles.textInput, {marginLeft: 10}]}
                           placeholder={TEXTS.PASSWORD_PLACEHOLDER}
                           placeholderTextColor={
-                            errors.password ? COLORS.red : COLORS.gray
+                            errors.password ? COLORS.red : '#A6A6A6'
                           }
                           secureTextEntry={!isPasswordVisible}
                           onBlur={handleBlur('password')}
@@ -292,7 +289,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           handleChange('termsAndConditions');
                         }}
                       />
-                      <Text style={{color: 'gray'}}>
+                      <Text style={{color: '#2A475E'}}>
                         {TEXTS.TERMS_AND_CONDITIONS}
                       </Text>
                     </View>
