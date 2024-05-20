@@ -275,56 +275,6 @@ const HomeScreen = ({
             ))}
           </View>
 
-          <View style={styles.walletBox}>
-            <View style={styles.rowStyle}>
-              <View style={styles.columnStyle}>
-                <Text style={styles.balance}>Active Balance</Text>
-                <View style={styles.rowStyle}>
-                  {isBalanceVisible ? (
-                    <Text style={styles.numberBalanceHidden}>******</Text>
-                  ) : (
-                    <Text style={styles.numberBalanceVisible}>500.00$</Text>
-                  )}
-                  <TouchableOpacity
-                    onPress={() => setIsBalanceVisible(!isBalanceVisible)}>
-                    <Material
-                      name={
-                        isBalanceVisible ? 'eye-off-outline' : 'eye-outline'
-                      }
-                      size={24}
-                      //color="#6C6D71"
-                      color="#fff"
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={styles.rowStyle1}>
-                <View style={styles.columnStyle}>
-                  <TouchableOpacity style={styles.buttonStyle}>
-                    {/* <Material name="tray-arrow-up" size={20} color="#6C6D71" /> */}
-                    <Material name="tray-arrow-up" size={20} color="#fff" />
-                    <Text style={styles.buttonText}>Top Up</Text>
-                  </TouchableOpacity>
-                </View>
-
-                <View style={styles.columnStyle}>
-                  <TouchableOpacity style={styles.buttonStyle}>
-                    <Material name="tray-arrow-down" size={20} color="#fff" />
-                    <Text style={styles.buttonText}>Request</Text>
-                  </TouchableOpacity>
-                </View>
-
-                <View style={styles.columnStyle}>
-                  <TouchableOpacity style={styles.buttonStyle}>
-                    <Material name="wallet-outline" size={20} color="#fff" />
-                    <Text style={styles.buttonText}>Transfer</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          </View>
-
           <View style={styles.containerBottom}>
             <View>
               <Text style={styles.titleBottom}>Top Feature</Text>
