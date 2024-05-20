@@ -10,7 +10,7 @@ const ExpenseServices = {
                 `${baseUrl}/api/v1/finance/expenseditureType/getExpenseType/${id_family}`,
             );
             if (response.status === 200) {
-              return response.data.data;
+              return response.data.data[0].f_get_finance_expenditure_type;
             } else {
                 console.error('Error in getExpenseType');
             }

@@ -1,17 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {
-  View,
-  Button,
-  SafeAreaView,
-  TextInput,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-  Modal,
-  Animated,
-  Dimensions,
-} from 'react-native';
+import {View,Button,SafeAreaView,TextInput,Text,ScrollView,TouchableOpacity,Image,Modal,Animated,Dimensions,} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ExpenseServices from 'src/services/apiclient/ExpenseServices';
 import styles from './styles';
@@ -104,13 +92,13 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
         selectExpenseCategory({
           ...expenseCategory,
           id_expense_type: ExpenseId,
-          expense_name: ExpenseName,
+          category: ExpenseName,
         });
       } else if (selectedMenu == 'Income') {
         selectIncomeCategory({
           ...incomeCategory,
           id_income_source: IncomeId,
-          income_name: IncomeName,
+          category: IncomeName,
         });
       }
     }
@@ -141,7 +129,6 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const fetchIncomeType = async (id_family: any) => {
     try {
       const response = await IncomeServices.getIncomeType(id_family);
-      console.log(response);
       setIncomeType(response);
       setLoading(false);
     } catch (error: any) {
@@ -177,13 +164,13 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const handleExpenseTypePress = (item: ExpenseType) => {
     selectExpenseCategory(item);
     dispatch(setExpenseCategory_id(item.id_expense_type));
-    dispatch(setExpenseCategory_name(item.expense_name));
+    dispatch(setExpenseCategory_name(item.category));
   };
 
   const handleIncomeTypePress = (item: IncomeType) => {
     selectIncomeCategory(item);
     dispatch(setIncomeCategory_id(item.id_income_source));
-    dispatch(setIncomeCategory_name(item.income_name));
+    dispatch(setIncomeCategory_name(item.category));
   };
 
   const handleOptionPress = (option: string) => {
@@ -275,7 +262,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const itemsPerPage = 6;
   const pages = [];
   if (!expenseType.some(item => item.id_expense_type === -1)) {
-    expenseType.push({id_expense_type: -1, expense_name: 'Edit'});
+    expenseType.push({id_expense_type: -1, category: 'Edit'});
   }
 
   for (let i = 0; i < expenseType.length; i += itemsPerPage) {
@@ -391,7 +378,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                   {textAlign: 'left'},
                   {fontSize: 18},
                 ]}>
-                {expenseCategory?.expense_name || 'Select category'}
+                {expenseCategory?.category || 'Select category'}
               </Text>
 
               <TouchableOpacity
@@ -476,7 +463,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                               style={styles.expenseItem}
                               numberOfLines={1}
                               ellipsizeMode="tail">
-                              {item.expense_name}
+                              {item.category}
                             </Text>
                           </View>
                         </TouchableOpacity>
@@ -507,7 +494,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
             <View style={styles.selectedItemContainer}>
               <Image source={{uri: urlCatetory}} style={styles.avatar} />
               <Text style={styles.inputAmount}>
-                {incomeCategory?.income_name || 'Select category'}
+                {incomeCategory?.category || 'Select category'}
               </Text>
               <TouchableOpacity
                 style={styles.chevronContainer}
@@ -526,7 +513,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                   onPress={() => handleIncomeTypePress(item)}>
                   <View style={styles.categoryContainer}>
                     <Image source={{uri: url}} style={styles.avatar} />
-                    <Text style={styles.expenseItem}>{item.income_name}</Text>
+                    <Text style={styles.expenseItem}>{item.category}</Text>
                   </View>
                 </TouchableOpacity>
               ))}

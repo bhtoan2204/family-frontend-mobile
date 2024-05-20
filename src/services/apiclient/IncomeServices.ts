@@ -11,7 +11,7 @@ const IncomeServices = {
             `${baseUrl}/api/v1/finance/incomeSource/getIncomeSource/${id_family}`,
         );
         if (response.status === 200) {
-          return response.data.data;
+          return response.data.data[0].f_get_finance_income_source;
         } else {
             console.error('Error in getIncomeSource');
         }

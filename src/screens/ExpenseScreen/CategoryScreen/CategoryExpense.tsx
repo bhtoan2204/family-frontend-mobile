@@ -11,11 +11,11 @@ import { IncomeServices } from "src/services/apiclient";
 
 interface ExpenseType {
     id_expense_type: number;
-    expense_name: string;
+    category: string;
 }
 interface IncomeType {
     id_income_source: number;
-    income_name: string;
+    category: string;
 }
 
 const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
@@ -86,11 +86,11 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
         dispatch(setType(selectedCategoryType));
         if (selectedCategoryType == 'Expense') {
             dispatch(setExpenseCategory_id(item.id_expense_type));
-            dispatch(setExpenseCategory_name(item.expense_name));
+            dispatch(setExpenseCategory_name(item.category));
         }
         else if (selectedCategoryType=='Income'){
             dispatch(setIncomeCategory_id(item.id_income_source));
-            dispatch(setIncomeCategory_name(item.income_name));
+            dispatch(setIncomeCategory_name(item.category));
     
         }
         navigation.navigate('HomeTab', {screen: 'Expense'})
@@ -138,7 +138,7 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
                 expenseType.map((item, index) => (
                     <TouchableOpacity key={index.toString()} onPress={() => selectCategory(item)} style={styles.categoryItemContainer}>
                         <Image source={{ uri: urlFood }} style={styles.categoryImage} />
-                        <Text style={styles.categoryName}>{item.expense_name}</Text>
+                        <Text style={styles.categoryName}>{item.category}</Text>
                     </TouchableOpacity>
                 ))
             )}
@@ -147,7 +147,7 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
                 incomeCategories.map((item, index) => (
                     <TouchableOpacity key={index.toString()} onPress={() => selectCategory(item)} style={styles.categoryItemContainer}>
                         <Image source={{ uri: urlFood }} style={styles.categoryImage} />
-                        <Text style={styles.categoryName}>{item.income_name}</Text>
+                        <Text style={styles.categoryName}>{item.category}</Text>
                     </TouchableOpacity>
                 ))
             )}
