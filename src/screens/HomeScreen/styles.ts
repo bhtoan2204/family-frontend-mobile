@@ -68,10 +68,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: 30,
     textAlign: 'center',
     alignSelf: 'flex-start',
-    color: '#66c0f4',
+    color: '#2a475e',
     padding: 20,
   },
   titleBottom: {
@@ -305,11 +305,10 @@ const styles = StyleSheet.create({
   dot: {
     margin: 5,
     fontSize: 20,
-    color: '#888',
+    color: '#c7d5e0',
   },
   activeDot: {
-    //color: '#000',
-    color: '#fff',
+    color: '#1b2838',
     transform: [{scale: 1.6}],
   },
   containerBottom: {

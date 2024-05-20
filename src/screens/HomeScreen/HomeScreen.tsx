@@ -251,7 +251,7 @@ const HomeScreen = ({
           onScroll={e => {
             scrollY.setValue(e.nativeEvent.contentOffset.y);
           }}>
-          <Text style={styles.title}>TRENDING SEARCH</Text>
+          <Text style={styles.title}>Trending Search</Text>
 
           <ScrollView
             ref={scrollViewRef}
