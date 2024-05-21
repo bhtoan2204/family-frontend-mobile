@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, Dimensions, Modal, Button } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { CalendarScreenProps } from 'src/navigation/NavigationTypes';
-import styles from './style';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { format } from 'date-fns';
-import BottomSheet from './BottomSheet'; 
+import BottomSheet from './BottomSheet';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import EventList from './EventList';
+import { LongPressGestureHandler, State } from 'react-native-gesture-handler';
 
 type Event = {
     id_calendar: number;
@@ -15,18 +16,15 @@ type Event = {
     event_description: string;
     event_id_family: number;
     event_title: string;
-}
+};
 
 const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
     const { id_family } = route.params || {};
     const [events, setEvents] = useState({});
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [showCreateEventModal, setShowCreateEventModal] = useState(false); 
-    const [showUpdateEventModal, setShowUpdateEventModal] = useState(false);
-    const bottomSheetRef = useRef<RBSheet>(null); 
+    const bottomSheetRef = useRef<RBSheet>(null);
     const screenHeight = Dimensions.get('screen').height;
     const [eventDetails, setEventDetails] = useState<Event[]>([]);
-    const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
 
     type FormattedEvents = {
         [date: string]: { marked: boolean; icon?: () => JSX.Element };
@@ -34,7 +32,7 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
 
     const handleGetCalendar = async () => {
         try {
-            const response = await CalendarServices.getCalendar({ id_family: id_family });
+            const response = await CalendarServices.getCalendar({ id_family });
             const formattedEvents: FormattedEvents = {};
             response.data.forEach((item: { datetime: string }) => {
                 const date = new Date(item.datetime).toISOString().split('T')[0];
@@ -65,54 +63,44 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
     };
 
     const handleAddEvent = () => {
-        navigation.navigate('CreateEvent',{id_family: id_family});
+        navigation.navigate('CreateEvent', { id_family });
     };
 
-    const updateEvent = (id_calendar: number, title: string, description: string, datetime: Date) => {
-        bottomSheetRef.current?.open(); 
-        const selectedEvent = eventDetails.find(event => event.id_calendar === id_calendar);
-        if (selectedEvent) {
-          setEventDetails([selectedEvent]);
-      }
+    const onEventPress = (event: any) => {
+        bottomSheetRef.current?.open();
+    };
+
+    const handleLongPress = () => {
+        navigation.navigate('CalendarList', {id_family: id_family})
     };
 
     return (
         <View style={styles.calendar}>
-            <Calendar
-                onDayPress={handleDayPress}
-                monthFormat={'yyyy/MM'}
-                firstDay={1}
-                enableSwipeMonths={true}
-                markedDates={events}
-            />
+            <LongPressGestureHandler onHandlerStateChange={({ nativeEvent }) => {
+                if (nativeEvent.state === State.ACTIVE) {
+                    handleLongPress();
+                }
+            }}>
+                <View>
+                    <Calendar
+                        onDayPress={handleDayPress}
+                        monthFormat={'yyyy/MM'}
+                        firstDay={1}
+                        enableSwipeMonths={true}
+                        markedDates={events}
+                    />
 
-            <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                    <View style={styles.modalIcon}>
-                        <Text style={styles.modalTitle}> {format(selectedDate, 'yyyy-MM-dd')} </Text>
-                        <TouchableOpacity onPress={handleAddEvent} style={styles.plusIcon}>
-                            <Icon name="plus" size={18} color="black" />
-                        </TouchableOpacity>
+                    <View >
+                        <View style={styles.header}>
+                            <Text style={styles.dateTitle}>{format(selectedDate, 'yyyy-MM-dd')}</Text>
+                            <TouchableOpacity onPress={handleAddEvent} style={styles.plusIcon}>
+                                <Icon name="plus" size={18} color="black" />
+                            </TouchableOpacity>
+                        </View>
+                        <EventList events={eventDetails} />
                     </View>
-
-                    {eventDetails.length === 0 ? (
-                        <Text style={styles.noEventText}>No events for today.</Text>
-                    ) : (
-                        eventDetails.map((event, index) => (
-                            <View key={index} style={styles.card}>
-                                <View style={styles.eventInfo}>
-                                    <Text style={styles.eventTitle}>{event.event_title}</Text>
-                                    <Text>{format(event.event_datetime, 'yyyy-MM-dd hh:mm')}</Text>
-                                    <Text>{event.event_description}</Text>
-                                </View>
-                                <TouchableOpacity onPress={() => updateEvent(event.id_calendar, event.event_title, event.event_description, event.event_datetime)}>
-                                    <Icon name="edit" size={20} color="black" style={styles.editIcon} />
-                                </TouchableOpacity>
-                            </View>
-                        ))
-                    )}
                 </View>
-            </View>
+            </LongPressGestureHandler>
 
             <RBSheet
                 ref={bottomSheetRef}
@@ -135,23 +123,37 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
                     />
                 ))}
             </RBSheet>
-
-            {/* <CreateEventModal 
-                navigation={navigation}
-                isVisible={showCreateEventModal} 
-                id_family={id_family} 
-                onClose={() => setShowCreateEventModal(false)} 
-                onSubmit={() => setShowCreateEventModal(false)} 
-            /> */}
-
-            {/* <UpdateEventModal
-                isVisible={showUpdateEventModal}
-                eventId={selectedEventId}
-                onClose={() => setShowUpdateEventModal(false)}
-                onSubmit={() => setShowUpdateEventModal(false)}
-            /> */}
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    calendar: {
+        flex: 1,
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        paddingHorizontal: 20,
+        marginBottom: 10,
+    },
+    dateTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    plusIcon: {
+        backgroundColor: '#ddd',
+        borderRadius: 50,
+        padding: 10,
+    },
+});
 
 export default CalendarScreen;
