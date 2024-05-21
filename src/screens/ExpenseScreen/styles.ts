@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
 
   },
   header: {
-    backgroundColor: 'rgba(128, 50, 128, 0.5)', 
+    backgroundColor: 'white', 
     alignItems: 'center',
     marginBottom: 20,
     justifyContent: 'center',
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    color: '#ffffff', 
+    color: 'black', 
     fontWeight: 'bold',
     marginLeft: 10
   },
@@ -238,7 +238,7 @@ menuItemLast: {
     width: 140, 
     height: 40, 
     borderRadius: 15, 
-    backgroundColor: 'rgba(128, 50, 128, 0.2)', 
+    backgroundColor: 'rgba(128, 50, 128, 0.5)', 
     justifyContent: 'center', 
     alignItems: 'center',
   },

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { CalendarScreenProps } from 'src/navigation/NavigationTypes';
 import CalendarServices from 'src/services/apiclient/CalendarService';
@@ -9,6 +9,7 @@ import BottomSheet from './BottomSheet';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import EventList from './EventList';
 import { LongPressGestureHandler, State } from 'react-native-gesture-handler';
+import styles from './style';
 
 type Event = {
     id_calendar: number;
@@ -71,16 +72,28 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
     };
 
     const handleLongPress = () => {
-        navigation.navigate('CalendarList', {id_family: id_family})
+        navigation.navigate('CalendarList', { id_family });
     };
 
     return (
         <View style={styles.calendar}>
-            <LongPressGestureHandler onHandlerStateChange={({ nativeEvent }) => {
-                if (nativeEvent.state === State.ACTIVE) {
-                    handleLongPress();
-                }
-            }}>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Icon name="arrow-left" size={20} color="black" />
+                </TouchableOpacity>
+                <Text style={styles.headerText}>Calendar</Text>
+
+                {/* <Icon name="navicon" size={20} color="black" /> */}
+
+            </View>
+
+            <LongPressGestureHandler
+                onHandlerStateChange={({ nativeEvent }) => {
+                    if (nativeEvent.state === State.ACTIVE) {
+                        handleLongPress();
+                    }
+                }}
+            >
                 <View>
                     <Calendar
                         onDayPress={handleDayPress}
@@ -90,17 +103,16 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
                         markedDates={events}
                     />
 
-                    <View >
-                        <View style={styles.header}>
-                            <Text style={styles.dateTitle}>{format(selectedDate, 'yyyy-MM-dd')}</Text>
-                            <TouchableOpacity onPress={handleAddEvent} style={styles.plusIcon}>
-                                <Icon name="plus" size={18} color="black" />
-                            </TouchableOpacity>
-                        </View>
+                    <View>
+              
                         <EventList events={eventDetails} />
                     </View>
                 </View>
             </LongPressGestureHandler>
+
+            <TouchableOpacity onPress={handleAddEvent} style={styles.plusIcon}>
+                <Icon name="plus" size={18} color="white" />
+            </TouchableOpacity>
 
             <RBSheet
                 ref={bottomSheetRef}
@@ -126,34 +138,5 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    calendar: {
-        flex: 1,
-    },
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 20,
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%',
-        paddingHorizontal: 20,
-        marginBottom: 10,
-    },
-    dateTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    plusIcon: {
-        backgroundColor: '#ddd',
-        borderRadius: 50,
-        padding: 10,
-    },
-});
 
 export default CalendarScreen;

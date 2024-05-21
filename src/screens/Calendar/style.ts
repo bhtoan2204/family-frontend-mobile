@@ -3,67 +3,46 @@ import { COLORS } from 'src/constants';
 
 const styles = StyleSheet.create({
   calendar: {
-  },
-  centeredView: {
-    position: 'absolute',
-    bottom: -200,
-    width: '100%', 
-    height: '100%',
-
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    padding: 20,
-  },
-  modalView: {
-    width: '100%', 
-    height: '100%',
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 20,
-    alignItems: 'center', 
-    justifyContent: 'center', 
-  },
-  modalIcon: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-  },
-  modalTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'black',
-  },
-  plusIcon: {
-    alignSelf: 'flex-end',
-    marginLeft: 'auto',
-    marginRight: 20, 
-  },
-  noEventText: {
-    textAlign: 'center',
-    fontSize: 16,
-    fontStyle: 'italic',
-    marginTop: 10,
-  },
-  card: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: 'lightgray',
-    padding: 10,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  eventInfo: {
     flex: 1,
-  },
-  eventTitle: {
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  editIcon: {
+},
+header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#ffffff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+},
+headerText: {
     marginLeft: 10,
-  },
+    fontSize: 18,
+    fontWeight: 'bold',
+},
+subHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 20,
+    marginBottom: 10,
+},
+dateTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+},
+plusIcon: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    backgroundColor: '#00adf5',
+    borderRadius: 50,
+    padding: 15,
+    elevation: 5, // Adds shadow for Android
+    shadowColor: '#000', // Adds shadow for iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+},
 });
 
 export default styles;

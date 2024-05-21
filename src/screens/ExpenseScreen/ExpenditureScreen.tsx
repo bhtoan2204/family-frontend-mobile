@@ -238,7 +238,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
             <View style={styles.header}>
                 
                 <TouchableOpacity style={styles.iconMoney} >
-                    <Icon name="list" color='white' size={25} />
+                    <Icon name="list" color='black' size={25} />
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => headerPress()}>
@@ -246,14 +246,14 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
 
                     <View style={styles.itemContainer}>
                             <Text style={styles.headerText}>{selectedMenu}</Text>
-                            <Icon name="chevron-down-outline" size={15} color="white" />
+                            <Icon name="chevron-down-outline" size={15} color="black" />
 
                         </View>
                     </View>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.chevronContainer} onPress={handleSubmit}>
-                    <Icon name="checkmark-done-sharp" color='white' size={25} />
+                    <Icon name="checkmark-done-sharp" color='black' size={25} />
                 </TouchableOpacity>
                 
             </View>
