@@ -28,7 +28,7 @@ import bundle from 'src/assets/icons/bundle.png';
 import calendar from 'src/assets/icons/calendar.png';
 import collectiable from 'src/assets/icons/collectiable.png';
 import guideline from 'src/assets/icons/guideline.png';
-import mechanic from 'src/assets/icons/mechanic.png';
+import family from 'src/assets/icons/family.png';
 import news from 'src/assets/icons/news.png';
 import seemore from 'src/assets/icons/see-more.png';
 
@@ -38,7 +38,7 @@ const icons = {
   collectiable,
   electrical,
   guideline,
-  mechanic,
+  family,
   plumbing,
   news,
   seemore,
@@ -50,7 +50,7 @@ type IconKey =
   | 'collectiable'
   | 'electrical'
   | 'guideline'
-  | 'mechanic'
+  | 'family'
   | 'plumbing'
   | 'news'
   | 'seemore';
@@ -61,64 +61,64 @@ interface Item {
   onPress: () => void;
 }
 
-const data: Item[] = [
-  {
-    icon: 'bundle',
-    label: 'Bundles',
-    onPress: () => {
-      console.log('Bundle pressed');
-    },
-  },
-  {
-    icon: 'calendar',
-    label: 'Calendar',
-    onPress: () => {
-      console.log('Calendar pressed');
-    },
-  },
-  {
-    icon: 'electrical',
-    label: 'Electrical',
-    onPress: () => {
-      console.log('Electrical pressed');
-    },
-  },
-  {
-    icon: 'guideline',
-    label: 'Guideline',
-    onPress: () => {
-      console.log('Guideline pressed');
-    },
-  },
-  {
-    icon: 'mechanic',
-    label: 'Mechanic',
-    onPress: () => {
-      console.log('Mechanic pressed');
-    },
-  },
-  {
-    icon: 'plumbing',
-    label: 'Plumbing',
-    onPress: () => {
-      console.log('Plumbing pressed');
-    },
-  },
-  {
-    icon: 'news',
-    label: 'Newspaper',
-    onPress: () => {
-      console.log('Newspaper pressed');
-    },
-  },
-  {
-    icon: 'seemore',
-    label: 'See More',
-    onPress: () => {
-      console.log('See More pressed');
-    },
-  },
-];
+// const data: Item[] = [
+//   {
+//     icon: 'bundle',
+//     label: 'Bundles',
+//     onPress: () => {
+//       console.log('Bundle pressed');
+//     },
+//   },
+//   {
+//     icon: 'calendar',
+//     label: 'Calendar',
+//     onPress: () => {
+//       console.log('Calendar pressed');
+//     },
+//   },
+//   {
+//     icon: 'electrical',
+//     label: 'Electrical',
+//     onPress: () => {
+//       console.log('Electrical pressed');
+//     },
+//   },
+//   {
+//     icon: 'guideline',
+//     label: 'Guideline',
+//     onPress: () => {
+//       console.log('Guideline pressed');
+//     },
+//   },
+//   {
+//     icon: 'family',
+//     label: 'Family',
+//     onPress: () => {
+//       handleFamily();
+//     },
+//   },
+//   {
+//     icon: 'plumbing',
+//     label: 'Plumbing',
+//     onPress: () => {
+//       console.log('Plumbing pressed');
+//     },
+//   },
+//   {
+//     icon: 'news',
+//     label: 'Newspaper',
+//     onPress: () => {
+//       console.log('Newspaper pressed');
+//     },
+//   },
+//   {
+//     icon: 'seemore',
+//     label: 'See More',
+//     onPress: () => {
+//       console.log('See More pressed');
+//     },
+//   },
+// ];
 
 type Profile = {
   id_user: string;
@@ -249,6 +249,64 @@ const HomeScreen = ({
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+  const data: Item[] = [
+    {
+      icon: 'bundle',
+      label: 'Bundles',
+      onPress: () => {
+        console.log('Bundle pressed');
+      },
+    },
+    {
+      icon: 'calendar',
+      label: 'Calendar',
+      onPress: () => {
+        console.log('Calendar pressed');
+      },
+    },
+    {
+      icon: 'electrical',
+      label: 'Electrical',
+      onPress: () => {
+        console.log('Electrical pressed');
+      },
+    },
+    {
+      icon: 'guideline',
+      label: 'Guideline',
+      onPress: () => {
+        console.log('Guideline pressed');
+      },
+    },
+    {
+      icon: 'family',
+      label: 'Family',
+      onPress: () => {
+        handleFamily();
+      },
+    },
+    {
+      icon: 'plumbing',
+      label: 'Plumbing',
+      onPress: () => {
+        console.log('Plumbing pressed');
+      },
+    },
+    {
+      icon: 'news',
+      label: 'Newspaper',
+      onPress: () => {
+        console.log('Newspaper pressed');
+      },
+    },
+    {
+      icon: 'seemore',
+      label: 'See More',
+      onPress: () => {
+        console.log('See More pressed');
+      },
+    },
+  ];
 
   return (
     <ImageBackground
