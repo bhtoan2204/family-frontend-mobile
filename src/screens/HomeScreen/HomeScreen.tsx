@@ -2,7 +2,6 @@ import {useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Image,
-  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -22,8 +21,8 @@ import {useDispatch} from 'react-redux';
 import {MaterialIcons} from '@expo/vector-icons';
 import {COLORS} from 'src/constants';
 import {LinearGradient} from 'expo-linear-gradient';
-import plumbing from 'src/assets/icons/plumbing.png';
-import electrical from 'src/assets/icons/electrical.png';
+import chat from 'src/assets/icons/chat.png';
+import report from 'src/assets/icons/report.png';
 import bundle from 'src/assets/icons/bundle.png';
 import calendar from 'src/assets/icons/calendar.png';
 import collectiable from 'src/assets/icons/collectiable.png';
@@ -31,15 +30,16 @@ import guideline from 'src/assets/icons/guideline.png';
 import family from 'src/assets/icons/family.png';
 import news from 'src/assets/icons/news.png';
 import seemore from 'src/assets/icons/see-more.png';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const icons = {
   bundle,
   calendar,
   collectiable,
-  electrical,
+  report,
   guideline,
   family,
-  plumbing,
+  chat,
   news,
   seemore,
 };
@@ -48,10 +48,10 @@ type IconKey =
   | 'bundle'
   | 'calendar'
   | 'collectiable'
-  | 'electrical'
+  | 'report'
   | 'guideline'
   | 'family'
-  | 'plumbing'
+  | 'chat'
   | 'news'
   | 'seemore';
 
@@ -60,65 +60,6 @@ interface Item {
   label: string;
   onPress: () => void;
 }
-
-// const data: Item[] = [
-//   {
-//     icon: 'bundle',
-//     label: 'Bundles',
-//     onPress: () => {
-//       console.log('Bundle pressed');
-//     },
-//   },
-//   {
-//     icon: 'calendar',
-//     label: 'Calendar',
-//     onPress: () => {
-//       console.log('Calendar pressed');
-//     },
-//   },
-//   {
-//     icon: 'electrical',
-//     label: 'Electrical',
-//     onPress: () => {
-//       console.log('Electrical pressed');
-//     },
-//   },
-//   {
-//     icon: 'guideline',
-//     label: 'Guideline',
-//     onPress: () => {
-//       console.log('Guideline pressed');
-//     },
-//   },
-//   {
-//     icon: 'family',
-//     label: 'Family',
-//     onPress: () => {
-//       handleFamily();
-//     },
-//   },
-//   {
-//     icon: 'plumbing',
-//     label: 'Plumbing',
-//     onPress: () => {
-//       console.log('Plumbing pressed');
-//     },
-//   },
-//   {
-//     icon: 'news',
-//     label: 'Newspaper',
-//     onPress: () => {
-//       console.log('Newspaper pressed');
-//     },
-//   },
-//   {
-//     icon: 'seemore',
-//     label: 'See More',
-//     onPress: () => {
-//       console.log('See More pressed');
-//     },
-//   },
-// ];
 
 type Profile = {
   id_user: string;
@@ -265,8 +206,8 @@ const HomeScreen = ({
       },
     },
     {
-      icon: 'electrical',
-      label: 'Electrical',
+      icon: 'report',
+      label: 'Report Bugs',
       onPress: () => {
         console.log('Electrical pressed');
       },
@@ -286,8 +227,8 @@ const HomeScreen = ({
       },
     },
     {
-      icon: 'plumbing',
-      label: 'Plumbing',
+      icon: 'chat',
+      label: 'Chat',
       onPress: () => {
         console.log('Plumbing pressed');
       },
@@ -402,6 +343,7 @@ const HomeScreen = ({
         <ScrollView
           style={styles.scrollView}
           showsVerticalScrollIndicator={false}
+          nestedScrollEnabled={true}
           scrollEventThrottle={16}
           onScroll={e => {
             scrollY.setValue(e.nativeEvent.contentOffset.y);
@@ -491,92 +433,6 @@ const HomeScreen = ({
             />
           </View>
           <View style={{height: 170}}></View>
-          {/* <View style={styles.containerBottom}>
-            <View>
-              <Text style={styles.titleBottom}>Top Feature</Text>
-              <View style={styles.rowStyle}>
-                <View style={styles.columnStyle1}>
-                  <LinearGradient
-                    // Array of colors for gradient
-                    colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
-                    // Gradient style
-                    style={styles.button1}
-                    // Gradient direction
-                    start={{x: 0, y: 0}}
-                    end={{x: 0, y: 1}}>
-                    <TouchableOpacity onPress={handlePackage}>
-                      <Material
-                        name="package-variant-closed"
-                        size={30}
-                        style={styles.buttonIcon1}
-                      />
-                    </TouchableOpacity>
-                  </LinearGradient>
-                  <Text style={styles.buttonText1}>Package</Text>
-                </View>
-
-                <View style={styles.columnStyle1}>
-                  <LinearGradient
-                    // Array of colors for gradient
-                    colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
-                    // Gradient style
-                    style={styles.button1}
-                    // Gradient direction
-                    start={{x: 0, y: 0}}
-                    end={{x: 0, y: 1}}>
-                    <TouchableOpacity onPress={handleFamily}>
-                      <Material
-                        name="account-supervisor-outline"
-                        size={30}
-                        style={styles.buttonIcon1}
-                      />
-                    </TouchableOpacity>
-                  </LinearGradient>
-                  <Text style={styles.buttonText1}>Family</Text>
-                </View>
-
-                <View style={styles.columnStyle1}>
-                  <LinearGradient
-                    // Array of colors for gradient
-                    colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
-                    // Gradient style
-                    style={styles.button1}
-                    // Gradient direction
-                    start={{x: 0, y: 0}}
-                    end={{x: 0, y: 1}}>
-                    <TouchableOpacity onPress={handleChat}>
-                      <Material
-                        name="chat-outline"
-                        size={30}
-                        style={styles.buttonIcon1}
-                      />
-                    </TouchableOpacity>
-                  </LinearGradient>
-                  <Text style={styles.buttonText1}>Chat</Text>
-                </View>
-
-                <View style={styles.columnStyle1}>
-                  <LinearGradient
-                    // Array of colors for gradient
-                    colors={['#041430', '#03184B', '#0C467C', '#0B75A8']}
-                    // Gradient style
-                    style={styles.button1}
-                    // Gradient direction
-                    start={{x: 0, y: 0}}
-                    end={{x: 0, y: 1}}>
-                    <TouchableOpacity onPress={handlePress}>
-                      <MaterialIcons
-                        name={isLightMode ? 'light-mode' : 'nightlight'}
-                        size={30}
-                        style={styles.buttonIcon1}
-                      />
-                    </TouchableOpacity>
-                  </LinearGradient>
-                  <Text style={styles.buttonText1}>Change Mode</Text>
-                </View>
-              </View>
-            </View>
-          </View> */}
         </ScrollView>
       </View>
     </ImageBackground>
