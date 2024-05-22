@@ -326,90 +326,98 @@ const HomeScreen = ({
           </View>
         </View>
 
-        <FlatList
-          data={data}
-          numColumns={4}
-          contentContainerStyle={{marginTop: 60}}
-          keyExtractor={(item, index) => index.toString()}
-          ListHeaderComponent={() => (
-            <>
-              <Text style={styles.title}>Trending Search</Text>
-              <ScrollView
-                ref={scrollViewRef}
-                horizontal
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                style={{flex: 1}}>
-                {viewsWithFake.map((view, index) => (
-                  <View key={index} style={{width}}>
-                    {view}
+        <ScrollView style={{top: 60}}>
+          <View style={{marginBottom: 70}}>
+            <FlatList
+              data={data}
+              numColumns={4}
+              scrollEnabled={false}
+              keyExtractor={(item, index) => index.toString()}
+              ListHeaderComponent={() => (
+                <>
+                  <Text style={styles.title}>Trending Search</Text>
+                  <ScrollView
+                    ref={scrollViewRef}
+                    horizontal
+                    pagingEnabled
+                    showsHorizontalScrollIndicator={false}
+                    style={{flex: 1}}>
+                    {viewsWithFake.map((view, index) => (
+                      <View key={index} style={{width}}>
+                        {view}
+                      </View>
+                    ))}
+                  </ScrollView>
+                  <View style={styles.dots}>
+                    {[...Array(3)].map((_, i) => (
+                      <Text
+                        key={i}
+                        style={[
+                          styles.dot,
+                          displayedPage === i && styles.activeDot,
+                        ]}>
+                        •
+                      </Text>
+                    ))}
                   </View>
-                ))}
-              </ScrollView>
-              <View style={styles.dots}>
-                {[...Array(3)].map((_, i) => (
-                  <Text
-                    key={i}
-                    style={[
-                      styles.dot,
-                      displayedPage === i && styles.activeDot,
-                    ]}>
-                    •
-                  </Text>
-                ))}
-              </View>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={styles.title}>Let's Start with Service</Text>
-                <Text
+                  <View style={{flexDirection: 'column'}}>
+                    <Text style={styles.title}>Let's Start with Service</Text>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        color: 'gray',
+                        marginLeft: 20,
+                        bottom: 15,
+                      }}>
+                      We found 100 services in your area
+                    </Text>
+                    <View style={{flexDirection: 'row'}}></View>
+                  </View>
+                </>
+              )}
+              renderItem={({item, index}) => (
+                <View
                   style={{
-                    fontSize: 15,
-                    color: 'gray',
-                    marginLeft: 20,
-                    bottom: 15,
+                    width: '23%',
+                    alignItems: 'center',
+                    margin: 2,
+                    marginLeft: 5,
                   }}>
-                  We found 100 services in your area
-                </Text>
-                <View style={{flexDirection: 'row'}}></View>
-              </View>
-            </>
-          )}
-          renderItem={({item, index}) => (
-            <View
-              style={{
-                width: '23%',
-                alignItems: 'center',
-                margin: 2,
-                marginLeft: 5,
-              }}>
-              <TouchableOpacity
-                onPress={item.onPress}
-                style={{
-                  width: 70,
-                  height: 70,
-                  aspectRatio: 1,
-                  padding: 10,
-                  borderRadius: 20,
-                  backgroundColor: '#fff',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  shadowColor: '#000',
-                  shadowOffset: {width: 0, height: 1},
-                  shadowOpacity: 0.2,
-                  shadowRadius: 5,
-                  marginTop: 10,
-                }}>
-                <Image
-                  source={icons[item.icon]}
-                  style={{width: '80%', height: '80%', borderRadius: 10}}
-                />
-              </TouchableOpacity>
-              <Text
-                style={{marginVertical: 10, color: '#1b2838', fontWeight: 600}}>
-                {item.label}
-              </Text>
-            </View>
-          )}
-        />
+                  <TouchableOpacity
+                    onPress={item.onPress}
+                    style={{
+                      width: 70,
+                      height: 70,
+                      aspectRatio: 1,
+                      padding: 10,
+                      borderRadius: 20,
+                      backgroundColor: '#fff',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      shadowColor: '#000',
+                      shadowOffset: {width: 0, height: 1},
+                      shadowOpacity: 0.2,
+                      shadowRadius: 5,
+                      marginTop: 10,
+                    }}>
+                    <Image
+                      source={icons[item.icon]}
+                      style={{width: '80%', height: '80%', borderRadius: 10}}
+                    />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      marginVertical: 10,
+                      color: '#1b2838',
+                      fontWeight: 600,
+                    }}>
+                    {item.label}
+                  </Text>
+                </View>
+              )}
+            />
+          </View>
+        </ScrollView>
       </View>
     </ImageBackground>
   );
