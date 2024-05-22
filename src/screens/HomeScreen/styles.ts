@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     alignSelf: 'flex-start',
     color: '#2a475e',
-    padding: 20,
+    padding: 15,
   },
   titleBottom: {
     fontSize: 30,

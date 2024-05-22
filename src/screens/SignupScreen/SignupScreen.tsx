@@ -19,7 +19,6 @@ import {LoginScreenProps} from 'src/navigation/NavigationTypes';
 import {AuthServices} from 'src/services/apiclient';
 import * as Yup from 'yup';
 import styles from './styles';
-import {Image} from 'react-native';
 
 interface FormValues {
   firstName: string;

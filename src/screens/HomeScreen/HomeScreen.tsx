@@ -21,8 +21,104 @@ import {Profile} from 'src/redux/slices/ProfileSclice';
 import {useDispatch} from 'react-redux';
 import {MaterialIcons} from '@expo/vector-icons';
 import {COLORS} from 'src/constants';
-import {Icon} from 'react-native-paper';
 import {LinearGradient} from 'expo-linear-gradient';
+import plumbing from 'src/assets/icons/plumbing.png';
+import electrical from 'src/assets/icons/electrical.png';
+import bundle from 'src/assets/icons/bundle.png';
+import calendar from 'src/assets/icons/calendar.png';
+import collectiable from 'src/assets/icons/collectiable.png';
+import guideline from 'src/assets/icons/guideline.png';
+import mechanic from 'src/assets/icons/mechanic.png';
+import news from 'src/assets/icons/news.png';
+import seemore from 'src/assets/icons/see-more.png';
+
+const icons = {
+  bundle,
+  calendar,
+  collectiable,
+  electrical,
+  guideline,
+  mechanic,
+  plumbing,
+  news,
+  seemore,
+};
+
+type IconKey =
+  | 'bundle'
+  | 'calendar'
+  | 'collectiable'
+  | 'electrical'
+  | 'guideline'
+  | 'mechanic'
+  | 'plumbing'
+  | 'news'
+  | 'seemore';
+
+interface Item {
+  icon: IconKey;
+  label: string;
+  onPress: () => void;
+}
+
+const data: Item[] = [
+  {
+    icon: 'bundle',
+    label: 'Bundles',
+    onPress: () => {
+      console.log('Bundle pressed');
+    },
+  },
+  {
+    icon: 'calendar',
+    label: 'Calendar',
+    onPress: () => {
+      console.log('Calendar pressed');
+    },
+  },
+  {
+    icon: 'electrical',
+    label: 'Electrical',
+    onPress: () => {
+      console.log('Electrical pressed');
+    },
+  },
+  {
+    icon: 'guideline',
+    label: 'Guideline',
+    onPress: () => {
+      console.log('Guideline pressed');
+    },
+  },
+  {
+    icon: 'mechanic',
+    label: 'Mechanic',
+    onPress: () => {
+      console.log('Mechanic pressed');
+    },
+  },
+  {
+    icon: 'plumbing',
+    label: 'Plumbing',
+    onPress: () => {
+      console.log('Plumbing pressed');
+    },
+  },
+  {
+    icon: 'news',
+    label: 'Newspaper',
+    onPress: () => {
+      console.log('Newspaper pressed');
+    },
+  },
+  {
+    icon: 'seemore',
+    label: 'See More',
+    onPress: () => {
+      console.log('See More pressed');
+    },
+  },
+];
 
 type Profile = {
   id_user: string;
@@ -154,17 +250,6 @@ const HomeScreen = ({
     return () => clearInterval(interval);
   }, []);
 
-  const data = [
-    {icon: 'home', label: 'Home'},
-    {icon: 'settings', label: 'Settings'},
-    {icon: 'person', label: 'Profile'},
-    {icon: 'mail', label: 'Mail'},
-    {icon: 'notifications', label: 'Notifications'},
-    {icon: 'lock', label: 'Security'},
-    {icon: 'help', label: 'Help'},
-    {icon: 'information', label: 'Info'},
-  ];
-
   return (
     <ImageBackground
       source={require('../../assets/images/home-screen-light.png')}
@@ -288,38 +373,67 @@ const HomeScreen = ({
           </View>
 
           <View style={{flexDirection: 'column'}}>
-            <Text>Let's Start with Service</Text>
-            <Text>We found 100 services in your area</Text>
+            <Text style={styles.title}>Let's Start with Service</Text>
+            <Text
+              style={{
+                fontSize: 15,
+                color: 'gray',
+                marginLeft: 20,
+
+                bottom: 15,
+              }}>
+              We found 100 services in your area
+            </Text>
+
             <View style={{flexDirection: 'row'}}></View>
             <FlatList
               data={data}
               numColumns={4}
-              renderItem={({item}) => (
-                <TouchableOpacity
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item, index}) => (
+                <View
                   style={{
-                    width: '25%',
-                    aspectRatio: 1,
-                    padding: 10,
-                    borderRadius: 10,
-                    backgroundColor: '#f0f0f0',
+                    width: '23%',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    shadowColor: '#000',
-                    shadowOffset: {width: 0, height: 2},
-                    shadowOpacity: 0.5,
-                    shadowRadius: 5,
+                    margin: 2,
+                    marginLeft: 5,
                   }}>
-                  <Image
-                    source={{uri: item.image}}
-                    style={{width: '100%', height: '70%', borderRadius: 10}}
-                  />
-                  <Text style={{marginTop: 10}}>{item.label}</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={item.onPress}
+                    style={{
+                      width: 70,
+                      height: 70,
+                      aspectRatio: 1,
+                      padding: 10,
+                      borderRadius: 20,
+                      backgroundColor: '#fff',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      shadowColor: '#000',
+                      shadowOffset: {width: 0, height: 1},
+                      shadowOpacity: 0.2,
+                      shadowRadius: 5,
+                      marginTop: 10,
+                    }}>
+                    <Image
+                      source={icons[item.icon]}
+                      style={{width: '80%', height: '80%', borderRadius: 10}}
+                    />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      marginVertical: 10,
+                      color: '#1b2838',
+                      fontWeight: 600,
+                    }}>
+                    {item.label}
+                  </Text>
+                </View>
               )}
             />
           </View>
-
-          <View style={styles.containerBottom}>
+          <View style={{height: 170}}></View>
+          {/* <View style={styles.containerBottom}>
             <View>
               <Text style={styles.titleBottom}>Top Feature</Text>
               <View style={styles.rowStyle}>
@@ -404,7 +518,7 @@ const HomeScreen = ({
                 </View>
               </View>
             </View>
-          </View>
+          </View> */}
         </ScrollView>
       </View>
     </ImageBackground>
