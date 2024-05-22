@@ -5,13 +5,14 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from 'react-native';
 import styles from './styles';
 import {EvilIcons} from '@expo/vector-icons';
 
 const CreateInvoiceScreen = () => {
   const [items, setItems] = useState([{name: '', quantity: 0, totalPrice: ''}]);
-
+  const [isDeleteMode, setDeleteMode] = useState(false);
   const addItem = () => {
     setItems([...items, {name: '', quantity: 0, totalPrice: ''}]);
   };
@@ -31,8 +32,20 @@ const CreateInvoiceScreen = () => {
   const handleCreateInvoicePress = () => {
     setScrollViewVisible(!isScrollViewVisible);
     if (!isScrollViewVisible) {
-      //   setCurrentPage(0);
       scrollViewRef.current?.scrollTo({x: 0, animated: false});
+    }
+  };
+
+  const handleDeleteItemPress = () => {
+    setDeleteMode(!isDeleteMode);
+  };
+
+  const handleDeleteIconPress = index => {
+    const newItems = [...items];
+    newItems.splice(index, 1);
+    setItems(newItems);
+    if (newItems.length === 0) {
+      setDeleteMode(false);
     }
   };
 
@@ -40,7 +53,7 @@ const CreateInvoiceScreen = () => {
   const scrollViewRef = useRef<ScrollView>(null);
 
   return isScrollViewVisible ? (
-    <ScrollView style={{backgroundColor: 'white'}}>
+    <ScrollView style={{backgroundColor: 'white'}} ref={scrollViewRef}>
       <TouchableOpacity
         onPress={handleCreateInvoicePress}
         style={{
@@ -57,12 +70,29 @@ const CreateInvoiceScreen = () => {
       <View style={styles.container}>
         {items.map((item, index) => (
           <View key={index} style={styles.containerinput}>
+            {isDeleteMode && (
+              <TouchableOpacity
+                onPress={() => handleDeleteIconPress(index)}
+                style={{
+                  flex: 1,
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-start',
+                }}>
+                <Image
+                  source={require('src/assets/icons/delete.png')}
+                  resizeMode="stretch"
+                  style={{width: 30, height: 30, left: 360, bottom: 30}}
+                />
+              </TouchableOpacity>
+            )}
+
             <TextInput
               style={styles.input}
               placeholder="Name"
               value={item.name}
               onChangeText={text => handleInputChange(index, 'name', text)}
             />
+
             <View style={styles.quantityContainer}>
               <TouchableOpacity onPress={() => handleQuantityChange(index, -1)}>
                 <Text style={styles.quantityButton}>-</Text>
@@ -72,12 +102,13 @@ const CreateInvoiceScreen = () => {
                 <Text style={styles.quantityButton}>+</Text>
               </TouchableOpacity>
             </View>
+
             <TextInput
               style={styles.input}
               placeholder="Total Price"
               value={item.totalPrice}
               onChangeText={number =>
-                handleInputChange(index, 'totalPrice', Text)
+                handleInputChange(index, 'totalPrice', number)
               }
             />
           </View>
@@ -86,7 +117,7 @@ const CreateInvoiceScreen = () => {
           <TouchableOpacity onPress={addItem}>
             <Text>Add Item</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleDeleteItemPress}>
             <Text>Delete Item</Text>
           </TouchableOpacity>
         </View>
