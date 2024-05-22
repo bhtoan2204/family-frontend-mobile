@@ -39,14 +39,13 @@ const CreateInvoiceScreen = () => {
   const [isScrollViewVisible, setScrollViewVisible] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
 
-  return (
+  return isScrollViewVisible ? (
     <ScrollView style={{backgroundColor: 'white'}}>
       <TouchableOpacity
         onPress={handleCreateInvoicePress}
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          //justifyContent: 'space-between',
         }}>
         <Text style={{fontSize: 18, padding: 15}}>Create Invoice</Text>
         <EvilIcons
@@ -55,49 +54,62 @@ const CreateInvoiceScreen = () => {
           color="#878C9A"
         />
       </TouchableOpacity>
-      {isScrollViewVisible && (
-        <View style={styles.container}>
-          {items.map((item, index) => (
-            <View key={index} style={styles.containerinput}>
-              <TextInput
-                style={styles.input}
-                placeholder="Name"
-                value={item.name}
-                onChangeText={text => handleInputChange(index, 'name', text)}
-              />
-              <View style={styles.quantityContainer}>
-                <TouchableOpacity
-                  onPress={() => handleQuantityChange(index, -1)}>
-                  <Text style={styles.quantityButton}>-</Text>
-                </TouchableOpacity>
-                <Text style={styles.quantity}>{item.quantity}</Text>
-                <TouchableOpacity
-                  onPress={() => handleQuantityChange(index, 1)}>
-                  <Text style={styles.quantityButton}>+</Text>
-                </TouchableOpacity>
-              </View>
-              <TextInput
-                style={styles.input}
-                placeholder="Total Price"
-                value={item.totalPrice}
-                onChangeText={number =>
-                  handleInputChange(index, 'totalPrice', Text)
-                }
-              />
+      <View style={styles.container}>
+        {items.map((item, index) => (
+          <View key={index} style={styles.containerinput}>
+            <TextInput
+              style={styles.input}
+              placeholder="Name"
+              value={item.name}
+              onChangeText={text => handleInputChange(index, 'name', text)}
+            />
+            <View style={styles.quantityContainer}>
+              <TouchableOpacity onPress={() => handleQuantityChange(index, -1)}>
+                <Text style={styles.quantityButton}>-</Text>
+              </TouchableOpacity>
+              <Text style={styles.quantity}>{item.quantity}</Text>
+              <TouchableOpacity onPress={() => handleQuantityChange(index, 1)}>
+                <Text style={styles.quantityButton}>+</Text>
+              </TouchableOpacity>
             </View>
-          ))}
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <TouchableOpacity onPress={addItem}>
-              <Text>Add Item</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text>Delete Item</Text>
-            </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              placeholder="Total Price"
+              value={item.totalPrice}
+              onChangeText={number =>
+                handleInputChange(index, 'totalPrice', Text)
+              }
+            />
           </View>
+        ))}
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <TouchableOpacity onPress={addItem}>
+            <Text>Add Item</Text>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Text>Delete Item</Text>
+          </TouchableOpacity>
         </View>
-      )}
+      </View>
       <View style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}} />
     </ScrollView>
+  ) : (
+    <View style={{backgroundColor: 'white'}}>
+      <TouchableOpacity
+        onPress={handleCreateInvoicePress}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        <Text style={{fontSize: 18, padding: 15}}>Create Invoice</Text>
+        <EvilIcons
+          name={isScrollViewVisible ? 'chevron-down' : 'chevron-up'}
+          size={30}
+          color="#878C9A"
+        />
+      </TouchableOpacity>
+      <View style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}} />
+    </View>
   );
 };
 

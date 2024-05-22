@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
   },
 
   family: {
-    backgroundColor: '#D3D3D3',
+    backgroundColor: '#E1E1E3',
     padding: 10,
     borderRadius: 30,
   },
