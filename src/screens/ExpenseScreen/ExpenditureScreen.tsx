@@ -619,22 +619,6 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                 />
               </TouchableOpacity>
 
-              {/* <FlatList
-                data={incomeType}
-                numColumns={3}
-                keyExtractor={item => item.id_income_source.toString()}
-                renderItem={({item}) => (
-                  <TouchableOpacity
-                    onPress={() => handleIncomeTypePress(item)}
-                    style={{flex: 1, aspectRatio: 1}} // make each item have equal size
-                  >
-                    <View style={styles.categoryContainer}>
-                      <Image source={{uri: url}} style={styles.avatar} />
-                      <Text style={styles.expenseItem}>{item.category}</Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-              /> */}
               {isScrollViewVisible && (
                 <>
                   <Animated.ScrollView

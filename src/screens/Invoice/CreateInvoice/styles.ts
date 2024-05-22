@@ -1,19 +1,19 @@
-import { StyleSheet } from 'react-native';
-import { Dimensions } from 'react-native';
-import { COLORS } from 'src/constants';
+import {StyleSheet} from 'react-native';
+import {Dimensions} from 'react-native';
+import {COLORS} from 'src/constants';
 const screenWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 15,
   },
   containerinput: {
     flex: 1,
     flexDirection: 'row',
     borderWidth: 1,
     borderRadius: 15,
-    marginBottom :20
+    marginBottom: 20,
   },
   input: {
     borderColor: 'gray',
@@ -23,12 +23,13 @@ const styles = StyleSheet.create({
     width: '40%',
     alignItems: 'center',
     justifyContent: 'center',
-
+    left: 10,
   },
   quantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    right: 10,
   },
   quantityButton: {
     borderWidth: 1,
@@ -42,6 +43,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginHorizontal: 5,
   },
-  });
+});
 
 export default styles;

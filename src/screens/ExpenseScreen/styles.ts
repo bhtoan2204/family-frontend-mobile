@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   menuItem: {
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: '#2a475e',
     flexDirection: 'row',
   },
   menuItemLast: {
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
   },
 
   family: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#D3D3D3',
     padding: 10,
     borderRadius: 30,
   },
