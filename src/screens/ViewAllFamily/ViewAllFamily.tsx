@@ -123,40 +123,41 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
 
   return (
     <View style={[{flex: 1, backgroundColor: '#fff'}]}>
-      {/* <Text style={styles.headerTitle1}>FAMILIES</Text> */}
       <View style={styles.circleContainer}>
         <TouchableOpacity style={styles.circle}>
           <MaterialIcons
             name="keyboard-arrow-left"
-            size={30}
+            size={32}
             //color="#56409e"
-            color="#fff"
+            color="#000"
           />
         </TouchableOpacity>
-        <View style={styles.inputWrapper}>
-          <TextInput
-            placeholder="Search Families"
-            placeholderTextColor="#9C9AAF"
-            style={styles.input}
-            onChangeText={text => setSearchTerm(text)}
-            value={searchTerm}
-          />
-          <TouchableOpacity onPress={handleSearch}>
-            <Material
-              name="home-search-outline"
-              size={25}
-              //color="#56409e"
-              color="#fff"
-              style={styles.inputIcon}
-            />
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.headerTitle1}>Family&Member</Text>
         <TouchableOpacity style={styles.circle}>
           <Material
             name="home-plus-outline"
             size={25}
             //color="#56409e"
+            color="#000"
+          />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.inputWrapper}>
+        <TextInput
+          placeholder="Search Families"
+          placeholderTextColor="#9C9AAF"
+          style={styles.input}
+          onChangeText={text => setSearchTerm(text)}
+          value={searchTerm}
+        />
+        <TouchableOpacity onPress={handleSearch}>
+          <Material
+            name="home-search-outline"
+            size={25}
+            //color="#56409e"
             color="#fff"
+            style={styles.inputIcon}
           />
         </TouchableOpacity>
       </View>
