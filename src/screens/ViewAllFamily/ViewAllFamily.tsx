@@ -124,7 +124,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
 
   return (
     <ImageBackground
-      source={require('../../assets/images/view-all-family.png')}
+      source={require('../../assets/images/view-all-family-2.png')}
       style={{flex: 1}}
       resizeMode="stretch">
       <View style={[{flex: 1}]}>
