@@ -254,7 +254,7 @@ const HomeScreen = ({
       source={require('../../assets/images/home-screen-light.png')}
       style={{flex: 1}}
       resizeMode="stretch">
-      <View style={styles.container}>
+      <View style={[styles.container, {marginBottom: 90}]}>
         <View style={styles.circleContainer}>
           <TouchableOpacity style={styles.circle}>
             <Image
@@ -264,48 +264,36 @@ const HomeScreen = ({
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.circle}>
-            <Material
-              name="bell-badge-outline"
-              size={30}
-              //color="#56409e"
-              color="#fff"
-            />
+            <Material name="bell-badge-outline" size={30} color="#fff" />
           </TouchableOpacity>
         </View>
 
         <View
-          style={[
-            {flexDirection: 'row'},
-            {justifyContent: 'space-between'},
-            {alignItems: 'center'},
-          ]}>
-          <View style={[{flexDirection: 'column', paddingLeft: 20}]}>
-            <Text style={[{color: 'white', fontSize: 30}]}>Welcome</Text>
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <View style={{flexDirection: 'column', paddingLeft: 20}}>
+            <Text style={{color: 'white', fontSize: 30}}>Welcome</Text>
             <Text
-              style={[
-                {
-                  color: 'white',
-                  fontSize: 38,
-                  fontWeight: 'bold',
-                  marginBottom: 8,
-                },
-              ]}>
+              style={{
+                color: 'white',
+                fontSize: 38,
+                fontWeight: 'bold',
+                marginBottom: 8,
+              }}>
               Jennie Kim
             </Text>
             <View
-              style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
-              <MaterialIcons
-                name="location-on"
-                size={22}
-                //color="#56409e"
-                color="#fff"
-              />
-              <Text style={[{color: 'white', fontSize: 17, right: 30}]}>
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <MaterialIcons name="location-on" size={22} color="#fff" />
+              <Text style={{color: 'white', fontSize: 17, right: 30}}>
                 24 Tran Hung Dao
               </Text>
             </View>
           </View>
-          <View style={[{flexDirection: 'row'}, {right: 20}]}>
+          <View style={{flexDirection: 'row', right: 20}}>
             <Image
               source={require('../../assets/images/avatar.png')}
               resizeMode="contain"
@@ -318,10 +306,7 @@ const HomeScreen = ({
                 alignItems: 'flex-end',
                 justifyContent: 'flex-end',
                 shadowColor: '#000',
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
-                },
+                shadowOffset: {width: 0, height: 2},
                 shadowOpacity: 5,
                 shadowRadius: 10,
                 borderWidth: 3,
@@ -340,100 +325,91 @@ const HomeScreen = ({
             />
           </View>
         </View>
-        <ScrollView
-          style={styles.scrollView}
-          showsVerticalScrollIndicator={false}
-          nestedScrollEnabled={true}
-          scrollEventThrottle={16}
-          onScroll={e => {
-            scrollY.setValue(e.nativeEvent.contentOffset.y);
-          }}>
-          <Text style={styles.title}>Trending Search</Text>
 
-          <ScrollView
-            ref={scrollViewRef}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            style={{flex: 1}}>
-            {viewsWithFake.map((view, index) => (
-              <View key={index} style={{width}}>
-                {view}
-              </View>
-            ))}
-          </ScrollView>
-          <View style={styles.dots}>
-            {[...Array(3)].map((_, i) => (
-              <Text
-                key={i}
-                style={[styles.dot, displayedPage === i && styles.activeDot]}>
-                •
-              </Text>
-            ))}
-          </View>
-
-          <View style={{flexDirection: 'column'}}>
-            <Text style={styles.title}>Let's Start with Service</Text>
-            <Text
-              style={{
-                fontSize: 15,
-                color: 'gray',
-                marginLeft: 20,
-
-                bottom: 15,
-              }}>
-              We found 100 services in your area
-            </Text>
-
-            <View style={{flexDirection: 'row'}}></View>
-            <FlatList
-              data={data}
-              numColumns={4}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({item, index}) => (
-                <View
-                  style={{
-                    width: '23%',
-                    alignItems: 'center',
-                    margin: 2,
-                    marginLeft: 5,
-                  }}>
-                  <TouchableOpacity
-                    onPress={item.onPress}
-                    style={{
-                      width: 70,
-                      height: 70,
-                      aspectRatio: 1,
-                      padding: 10,
-                      borderRadius: 20,
-                      backgroundColor: '#fff',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      shadowColor: '#000',
-                      shadowOffset: {width: 0, height: 1},
-                      shadowOpacity: 0.2,
-                      shadowRadius: 5,
-                      marginTop: 10,
-                    }}>
-                    <Image
-                      source={icons[item.icon]}
-                      style={{width: '80%', height: '80%', borderRadius: 10}}
-                    />
-                  </TouchableOpacity>
+        <FlatList
+          data={data}
+          numColumns={4}
+          contentContainerStyle={{marginTop: 60}}
+          keyExtractor={(item, index) => index.toString()}
+          ListHeaderComponent={() => (
+            <>
+              <Text style={styles.title}>Trending Search</Text>
+              <ScrollView
+                ref={scrollViewRef}
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                style={{flex: 1}}>
+                {viewsWithFake.map((view, index) => (
+                  <View key={index} style={{width}}>
+                    {view}
+                  </View>
+                ))}
+              </ScrollView>
+              <View style={styles.dots}>
+                {[...Array(3)].map((_, i) => (
                   <Text
-                    style={{
-                      marginVertical: 10,
-                      color: '#1b2838',
-                      fontWeight: 600,
-                    }}>
-                    {item.label}
+                    key={i}
+                    style={[
+                      styles.dot,
+                      displayedPage === i && styles.activeDot,
+                    ]}>
+                    •
                   </Text>
-                </View>
-              )}
-            />
-          </View>
-          <View style={{height: 170}}></View>
-        </ScrollView>
+                ))}
+              </View>
+              <View style={{flexDirection: 'column'}}>
+                <Text style={styles.title}>Let's Start with Service</Text>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: 'gray',
+                    marginLeft: 20,
+                    bottom: 15,
+                  }}>
+                  We found 100 services in your area
+                </Text>
+                <View style={{flexDirection: 'row'}}></View>
+              </View>
+            </>
+          )}
+          renderItem={({item, index}) => (
+            <View
+              style={{
+                width: '23%',
+                alignItems: 'center',
+                margin: 2,
+                marginLeft: 5,
+              }}>
+              <TouchableOpacity
+                onPress={item.onPress}
+                style={{
+                  width: 70,
+                  height: 70,
+                  aspectRatio: 1,
+                  padding: 10,
+                  borderRadius: 20,
+                  backgroundColor: '#fff',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  shadowColor: '#000',
+                  shadowOffset: {width: 0, height: 1},
+                  shadowOpacity: 0.2,
+                  shadowRadius: 5,
+                  marginTop: 10,
+                }}>
+                <Image
+                  source={icons[item.icon]}
+                  style={{width: '80%', height: '80%', borderRadius: 10}}
+                />
+              </TouchableOpacity>
+              <Text
+                style={{marginVertical: 10, color: '#1b2838', fontWeight: 600}}>
+                {item.label}
+              </Text>
+            </View>
+          )}
+        />
       </View>
     </ImageBackground>
   );
