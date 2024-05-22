@@ -182,6 +182,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     marginTop: 10,
+    marginBottom: 10,
   },
   imageContainer1: {
     justifyContent: 'center',

@@ -287,7 +287,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const widthOfYourPage = Dimensions.get('window').width;
 
-  const [isScrollViewVisible, setScrollViewVisible] = useState(true);
+  const [isScrollViewVisible, setScrollViewVisible] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
 
   const handleMostUsedPress = () => {
@@ -359,39 +359,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
               },
             ]}>
             <Text style={styles.text}>Select Family</Text>
-            {/* <FlatList
-              horizontal
-              data={families}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({item: family}) => (
-                <TouchableOpacity
-                  style={[
-                    styles.family,
-                    selectedFamily === family.id_family &&
-                      styles.selectedFamily,
-                    {
-                      marginBottom: 10,
-                      margin: 5,
-                      shadowColor: '#000',
-                      shadowOffset: {width: 0, height: 2},
-                      shadowOpacity: 0.1,
-                      shadowRadius: 3.84,
-                      elevation: 5,
-                    },
-                  ]}
-                  onPress={() => handleFamilyPress(family.id_family)}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Ionicons
-                      name="people"
-                      size={22}
-                      color={COLORS.darkgray}
-                      style={{marginRight: 10}}
-                    />
-                    <Text style={styles.familyText}>{family.name}</Text>
-                  </View>
-                </TouchableOpacity>
-              )}
-            /> */}
+
             <FlatList
               horizontal
               data={families}
@@ -508,7 +476,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                   Most used{' '}
                 </Text>
                 <EvilIcons
-                  name={isScrollViewVisible ? 'chevron-down' : 'chevron-up'}
+                  name={isScrollViewVisible ? 'chevron-down' : 'chevron-right'}
                   size={30}
                   color="#878C9A"
                 />
