@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 100,
     position: 'absolute',
-    backgroundColor: '#66c0f4',
+    backgroundColor: '#2a475e',
   },
   button: {
     width: 50,
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#66c0f4',
+    color: '#2a475e',
     position: 'absolute',
     bottom: 20,
   },

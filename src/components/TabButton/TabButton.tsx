@@ -79,7 +79,7 @@ const TabButton = ({item, accessibilityState, onPress}: TabButtonProps) => {
         <Animated.View style={[styles.animated, scaleStyles]} />
         <Material
           name={item.icon}
-          color={accessibilityState!.selected ? COLORS.white : '#66c0f4'}
+          color={accessibilityState!.selected ? COLORS.white : '#2a475e'}
           size={30}
         />
       </Animated.View>
