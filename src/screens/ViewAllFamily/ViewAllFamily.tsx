@@ -129,7 +129,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
             name="keyboard-arrow-left"
             size={32}
             //color="#56409e"
-            color="#000"
+            color="#2a475e"
           />
         </TouchableOpacity>
         <Text style={styles.headerTitle1}>Family&Member</Text>
@@ -138,12 +138,12 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
             name="home-plus-outline"
             size={25}
             //color="#56409e"
-            color="#000"
+            color="#2a475e"
           />
         </TouchableOpacity>
       </View>
 
-      <View style={styles.inputWrapper}>
+      <View style={[styles.inputWrapper, {left: 20, marginBottom: 15}]}>
         <TextInput
           placeholder="Search Families"
           placeholderTextColor="#9C9AAF"
@@ -156,7 +156,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
             name="home-search-outline"
             size={25}
             //color="#56409e"
-            color="#fff"
+            color="#2a475e"
             style={styles.inputIcon}
           />
         </TouchableOpacity>

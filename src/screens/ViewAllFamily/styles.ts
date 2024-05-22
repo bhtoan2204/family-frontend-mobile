@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   headerTitle1: {
     color: '#2a475e',
     fontSize: 28,
-    fontWeight: 800,
+    fontWeight: '600',
     textAlign: 'center',
   },
   editDeleteContainer: {
@@ -39,10 +39,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     //backgroundColor: '#332E59',
-    backgroundColor: 'rgba(42, 71, 94, 0.5)',
-    borderRadius: 15,
+    backgroundColor: 'transparent',
+    borderRadius: 25,
     paddingHorizontal: 15,
-    width: '65%',
+    width: '90%',
+    height: 45,
+    borderColor: '#D2D2D2',
+    borderWidth: 1,
   },
   input: {
     flex: 1,
