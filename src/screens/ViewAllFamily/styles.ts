@@ -67,7 +67,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 11,
   },
   card: {
-    backgroundColor: 'rgba(42, 71, 94, 0.5)',
+    // backgroundColor: 'rgba(42, 71, 94, 0.5)',
+    backgroundColor: '#D9E3EA',
     paddingTop: 20,
     paddingHorizontal: 5,
     justifyContent: 'space-between',
@@ -82,14 +83,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   cardTitle: {
-    color: 'white',
+    color: '#1b2838',
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 5,
   },
   cardDescription: {
     fontSize: 16,
-    color: '#fff',
+    color: '#1b2838',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -169,11 +170,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
-    elevation: 5,
+    //elevation: 5,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: {width: 0, height: 5},
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
   },
   buttonText: {
     fontWeight: '500',

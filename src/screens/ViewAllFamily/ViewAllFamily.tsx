@@ -14,9 +14,9 @@ import {ViewAllFamilyScreenProps} from 'src/navigation/NavigationTypes';
 import styles from './styles';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {LinearGradient} from 'expo-linear-gradient';
-import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { useDispatch, useSelector } from 'react-redux';
-import { Family } from 'src/interface/family/family';
+import {selectProfile} from 'src/redux/slices/ProfileSclice';
+import {useDispatch, useSelector} from 'react-redux';
+import {Family} from 'src/interface/family/family';
 
 type ButtonProps = {
   title: string;
@@ -55,7 +55,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
       {selectedButton === title ? (
         <LinearGradient
           colors={
-            isUp ? ['#1E3B70', '#29539B'] : ['#c7d5e0', '#c7d5e0', '#c7d5e0']
+            isUp ? ['#537895', '#09203F'] : ['#c7d5e0', '#c7d5e0', '#c7d5e0']
           }
           style={[styles.button1, buttonStyle]}
           start={{x: 0, y: 0}}
@@ -64,7 +64,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
             <Text
               style={[
                 styles.buttonTextChoosen,
-                {color: isUp ? '#c7d5e0' : '#1E3B70'},
+                {color: isUp ? '#fff' : '#1E3B70'},
                 {fontSize: 16},
               ]}>
               {title}
@@ -72,7 +72,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
             <MaterialIcons
               name={isUp ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
               size={25}
-              color={isUp ? '#c7d5e0' : '#1E3B70'}
+              color={isUp ? '#fff' : '#1E3B70'}
               style={styles.iconWrapper}
             />
           </View>
@@ -97,8 +97,6 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
     </TouchableOpacity>
   );
 
-
-
   const handleSearch = () => {
     const result = families.filter(family =>
       family.name?.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -120,13 +118,12 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
       handleGetAllFamily();
     });
 
-
     return unsubscribe;
   }, [navigation]);
 
   return (
-    <View style={[{flex: 1, backgroundColor: '#16202D'}]}>
-      <Text style={styles.headerTitle1}>FAMILIES</Text>
+    <View style={[{flex: 1, backgroundColor: '#fff'}]}>
+      {/* <Text style={styles.headerTitle1}>FAMILIES</Text> */}
       <View style={styles.circleContainer}>
         <TouchableOpacity style={styles.circle}>
           <MaterialIcons
@@ -193,13 +190,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                   style={styles.image}
                 />
               </TouchableOpacity>
-              <View
-                style={[
-                  styles.row,
-                  {shadowColor: '#000'},
-                  {shadowOffset: {width: 0, height: 6}},
-                  {shadowOpacity: 0.25},
-                ]}>
+              <View style={[styles.row]}>
                 <View style={styles.cardContainer2}>
                   <Text style={styles.cardTitle}>{family.name}</Text>
                   <View style={styles.ColorAndDescription}>
@@ -212,20 +203,25 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                   </View>
                   <View style={styles.buttonPos}>
                     <LinearGradient
-                      colors={['#0D324D', '#7F5A83']}
+                      colors={['#09203F', '#537895']}
                       style={[styles.button, styles.detailButton]}
                       start={{x: 0, y: 1}}
                       end={{x: 0, y: 0}}>
                       <TouchableOpacity
+                        style={{
+                          shadowColor: '#000',
+                          shadowOffset: {width: 0, height: 6},
+                          shadowOpacity: 0.25,
+                        }}
                         onPress={() =>
                           navigation.navigate('ViewFamily', {
-                            id_family: family.id_family
+                            id_family: family.id_family,
                           })
                         }>
                         <Text
                           style={[
                             styles.buttonText,
-                            {color: '#c7d5e0'},
+                            {color: '#fff'},
                             {fontWeight: '600'},
                           ]}>
                           View Detail
@@ -246,7 +242,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                     });
                     setModalVisible(true);
                   }}>
-                  <MaterialIcons name="more-vert" size={30} color="#c7d5e0" />
+                  <MaterialIcons name="more-vert" size={30} color="#1b2838" />
                 </TouchableOpacity>
 
                 <Modal
@@ -269,7 +265,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                         }}>
                         <View
                           style={{
-                            backgroundColor: '#c7d5e0',
+                            backgroundColor: '#f6f6f6',
                             padding: 15,
                             borderRadius: 10,
                             width: 130,
@@ -328,8 +324,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
           </View>
         ))}
       </Animated.ScrollView>
-    </View> 
-   ) }
+    </View>
+  );
+};
 export default ViewAllFamilyScreen;
-
-
