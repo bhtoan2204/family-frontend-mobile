@@ -62,6 +62,7 @@ import {LinearGradient} from 'expo-linear-gradient';
 
 const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const [expenseType, setExpenseType] = useState<ExpenseType[]>([]);
+
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedExpenseType, setSelectedExpenseType] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -281,6 +282,14 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
 
   for (let i = 0; i < expenseType.length; i += itemsPerPage) {
     pages.push(expenseType.slice(i, i + itemsPerPage));
+  }
+  const pagesIncome: any[] = [];
+  if (!incomeType.some(item => item.id_income_source === -1)) {
+    incomeType.push({id_income_source: -1, category: 'Edit'});
+  }
+
+  for (let i = 0; i < incomeType.length; i += itemsPerPage) {
+    pagesIncome.push(incomeType.slice(i, i + itemsPerPage)); // Fixed here
   }
   const scrollX = useRef(new Animated.Value(0)).current;
 
@@ -554,35 +563,148 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
               )}
             </View>
           )}
+
           {selectedFamily != null && selectedMenu == 'Income' && (
             <View style={styles.ContainerCategory}>
               <View style={styles.selectedItemContainer}>
                 <Image source={{uri: urlCatetory}} style={styles.avatar} />
-                <Text style={styles.inputAmount}>
+                <Text
+                  style={[
+                    styles.inputAmount,
+                    {textAlign: 'left'},
+                    {fontSize: 18},
+                    {color: '#1b2838'},
+                  ]}>
                   {incomeCategory?.category || 'Select category'}
                 </Text>
+
                 <TouchableOpacity
                   style={styles.chevronContainer}
                   onPress={pressSelectCategory}>
-                  <Icon name="chevron-forward-outline" size={22} color="gray" />
+                  <Text
+                    style={[
+                      {
+                        color: '#1b2838',
+                        fontWeight: 600,
+                        fontSize: 16,
+                        marginRight: 5,
+                      },
+                    ]}>
+                    All
+                  </Text>
+                  <Icon
+                    name="chevron-forward-outline"
+                    size={22}
+                    color="#1b2838"
+                  />
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity onPress={handleMostUsedPress}>
-                <Text style={styles.mostUsedButton}>Most used </Text>
+              <View
+                style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}}
+              />
+              <TouchableOpacity
+                onPress={handleMostUsedPress}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  //justifyContent: 'space-between',
+                }}>
+                <Text style={[styles.mostUsedButton, {marginRight: -10}]}>
+                  Most used{' '}
+                </Text>
+                <EvilIcons
+                  name={isScrollViewVisible ? 'chevron-down' : 'chevron-right'}
+                  size={30}
+                  color="#878C9A"
+                />
               </TouchableOpacity>
 
-              <ScrollView horizontal showsHorizontalScrollIndicator={true}>
-                {incomeType.map(item => (
+              {/* <FlatList
+                data={incomeType}
+                numColumns={3}
+                keyExtractor={item => item.id_income_source.toString()}
+                renderItem={({item}) => (
                   <TouchableOpacity
-                    key={item.id_income_source}
-                    onPress={() => handleIncomeTypePress(item)}>
+                    onPress={() => handleIncomeTypePress(item)}
+                    style={{flex: 1, aspectRatio: 1}} // make each item have equal size
+                  >
                     <View style={styles.categoryContainer}>
                       <Image source={{uri: url}} style={styles.avatar} />
                       <Text style={styles.expenseItem}>{item.category}</Text>
                     </View>
                   </TouchableOpacity>
-                ))}
-              </ScrollView>
+                )}
+              /> */}
+              {isScrollViewVisible && (
+                <>
+                  <Animated.ScrollView
+                    ref={scrollViewRef}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    pagingEnabled
+                    scrollEventThrottle={16}
+                    onScroll={Animated.event(
+                      [{nativeEvent: {contentOffset: {x: scrollX}}}],
+                      {
+                        useNativeDriver: false,
+                        listener: (
+                          event: NativeSyntheticEvent<NativeScrollEvent>,
+                        ) => {
+                          const pageIndex = Math.round(
+                            event.nativeEvent.contentOffset.x / widthOfYourPage,
+                          );
+                          setCurrentPage(pageIndex);
+                        },
+                      },
+                    )}>
+                    {pagesIncome.map((page, pageIndex) => (
+                      <FlatList
+                        key={pageIndex}
+                        data={page}
+                        numColumns={3}
+                        keyExtractor={item => item.id_income_source.toString()}
+                        contentContainerStyle={{marginLeft: 10}}
+                        scrollEnabled={false}
+                        renderItem={({item}) => (
+                          <TouchableOpacity
+                            onPress={() => handleIncomeTypePress(item)}>
+                            <View
+                              style={[
+                                styles.categoryContainer,
+                                {width: 125, height: 80},
+                              ]}>
+                              <Image
+                                source={{uri: url}}
+                                style={styles.avatar}
+                              />
+                              <Text
+                                style={styles.expenseItem}
+                                numberOfLines={1}
+                                ellipsizeMode="tail">
+                                {item.category}
+                              </Text>
+                            </View>
+                          </TouchableOpacity>
+                        )}
+                      />
+                    ))}
+                  </Animated.ScrollView>
+                  <View style={styles.pagination}>
+                    {pages.map((_, pageIndex) => (
+                      <View
+                        key={pageIndex}
+                        style={[
+                          styles.dot,
+                          {
+                            backgroundColor:
+                              pageIndex === currentPage ? 'gray' : '#ccc',
+                          },
+                        ]}
+                      />
+                    ))}
+                  </View>
+                </>
+              )}
             </View>
           )}
 
