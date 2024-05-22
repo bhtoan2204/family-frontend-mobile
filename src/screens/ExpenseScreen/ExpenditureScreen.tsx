@@ -792,7 +792,11 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
               <View style={styles.dropdownMenu}>
                 <TouchableOpacity onPress={() => handleOptionPress('Expense')}>
                   <View style={styles.menuItem}>
-                    <Image source={{uri: urlMoney}} style={styles.avatar} />
+                    <Image
+                      source={require('src/assets/icons/expense.png')}
+                      resizeMode="stretch"
+                      style={styles.avatar}
+                    />
                     <Text style={styles.text}>Expense</Text>
                     <View style={styles.checkIcon}>
                       {selectedMenu === 'Expense' && (
@@ -803,7 +807,11 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleOptionPress('Income')}>
                   <View style={styles.menuItem}>
-                    <Image source={{uri: urlMoney}} style={styles.avatar} />
+                    <Image
+                      source={require('src/assets/icons/income.png')}
+                      resizeMode="stretch"
+                      style={styles.avatar}
+                    />
                     <Text style={styles.text}>Income</Text>
                     <View style={styles.checkIcon}>
                       {selectedMenu === 'Income' && (
@@ -814,7 +822,11 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleOptionPress('Invoice')}>
                   <View style={styles.menuItem}>
-                    <Image source={{uri: urlMoney}} style={styles.avatar} />
+                    <Image
+                      source={require('src/assets/icons/invoice.png')}
+                      resizeMode="stretch"
+                      style={styles.avatar}
+                    />
                     <Text style={styles.text}>Invoice</Text>
                     <View style={styles.checkIcon}>
                       {selectedMenu === 'Invoice' && (
