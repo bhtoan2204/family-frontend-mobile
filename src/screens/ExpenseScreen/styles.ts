@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   text: {
-    color: 'black',
+    color: '#1b2838',
     fontSize: 18,
     alignContent: 'center',
     padding: 15,

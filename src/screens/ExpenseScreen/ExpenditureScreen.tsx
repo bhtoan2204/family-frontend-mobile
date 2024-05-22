@@ -333,7 +333,9 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
         <View style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}} />
         <ScrollView contentContainerStyle={styles.headcontainer}>
           <View style={styles.inputContainer}>
-            <Text style={{textAlign: 'left', fontSize: 17}}>Amount</Text>
+            <Text style={{textAlign: 'left', fontSize: 18, color: '#1b2838'}}>
+              Amount
+            </Text>
             <View style={{flexDirection: 'row'}}>
               <View style={styles.inputWrapper}>
                 <TextInput
@@ -357,7 +359,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
               },
             ]}>
             <Text style={styles.text}>Select Family</Text>
-            <FlatList
+            {/* <FlatList
               horizontal
               data={families}
               keyExtractor={(item, index) => index.toString()}
@@ -389,6 +391,72 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                   </View>
                 </TouchableOpacity>
               )}
+            /> */}
+            <FlatList
+              horizontal
+              data={families}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item: family}) =>
+                selectedFamily === family.id_family ? (
+                  <LinearGradient
+                    colors={['#09203F', '#537895']} // Your gradient colors
+                    style={[
+                      styles.family,
+                      styles.selectedFamily,
+                      {
+                        marginBottom: 10,
+                        margin: 5,
+                        shadowColor: '#000',
+                        shadowOffset: {width: 0, height: 2},
+                        shadowOpacity: 0.1,
+                        shadowRadius: 3.84,
+                        elevation: 5,
+                      },
+                    ]}>
+                    <TouchableOpacity
+                      onPress={() => handleFamilyPress(family.id_family)}>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Ionicons
+                          name="people"
+                          size={22}
+                          color={COLORS.white}
+                          style={{marginRight: 10}}
+                        />
+                        <Text
+                          style={[styles.familyText, {color: COLORS.white}]}>
+                          {family.name}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </LinearGradient>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => handleFamilyPress(family.id_family)}
+                    style={[
+                      styles.family,
+                      {
+                        marginBottom: 10,
+                        margin: 5,
+                        shadowColor: '#000',
+                        shadowOffset: {width: 0, height: 2},
+                        shadowOpacity: 0.1,
+                        shadowRadius: 3.84,
+                        elevation: 5,
+                      },
+                    ]}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Ionicons
+                        name="people"
+                        size={22}
+                        color={COLORS.darkgray}
+                        style={{marginRight: 10}}
+                      />
+                      <Text style={styles.familyText}>{family.name}</Text>
+                    </View>
+                  </TouchableOpacity>
+                )
+              }
             />
           </View>
           {selectedFamily != null && selectedMenu == 'Expense' && (
@@ -400,6 +468,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                     styles.inputAmount,
                     {textAlign: 'left'},
                     {fontSize: 18},
+                    {color: '#1b2838'},
                   ]}>
                   {expenseCategory?.category || 'Select category'}
                 </Text>
@@ -410,7 +479,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                   <Text
                     style={[
                       {
-                        color: 'rgba(128,50,128,0.5)',
+                        color: '#1b2838',
                         fontWeight: 600,
                         fontSize: 16,
                         marginRight: 5,
@@ -421,7 +490,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                   <Icon
                     name="chevron-forward-outline"
                     size={22}
-                    color="rgba(128,50,128,0.5)"
+                    color="#1b2838"
                   />
                 </TouchableOpacity>
               </View>
