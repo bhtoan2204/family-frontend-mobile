@@ -10,7 +10,6 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   headcontainer: {
-    backgroundColor: '#F2F2F7',
     height: '100%',
   },
   pagination: {
@@ -53,7 +52,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   header: {
-    backgroundColor: 'rgba(128, 50, 128, 0.5)',
+    //backgroundColor: 'rgba(128, 50, 128, 0.5)',
     alignItems: 'center',
     marginBottom: 10,
     justifyContent: 'center',
@@ -269,7 +268,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   selectedFamily: {
-    backgroundColor: 'rgba(128, 50, 128, 0.5)',
+    backgroundColor: '#2a475e',
   },
   image: {
     height: 100,

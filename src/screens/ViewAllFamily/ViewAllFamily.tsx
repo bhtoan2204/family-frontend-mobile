@@ -191,7 +191,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
               <View style={styles.card}>
                 <TouchableOpacity>
                   <Image
-                    source={require('../../assets/images/far-cry-family.png')}
+                    source={require('../../assets/images/family.jpg')}
                     resizeMode="center"
                     style={styles.image}
                   />
