@@ -170,7 +170,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
     console.log('Image:', image);
   };
 
-  const handleDateChange = (event: any, selectedDate: Date) => {
+  const handleDateChange = (event: any, selectedDate?: Date) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
     setDate(currentDate);
@@ -267,9 +267,9 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
       console.error(err);
     }
   };
-  const showInvoice = () => {
-    navigation.navigate('HomeTab', {screen: 'Invoice'});
-  };
+  // const showInvoice = () => {
+  //   navigation.navigate('HomeTab', {screen: 'Invoice'});
+  // };
   const handleRemoveImage = () => {
     setUriImage('');
   };
@@ -350,8 +350,8 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                 <TextInput
                   style={[styles.inputAmount, {color: 'red', fontSize: 20}]}
                   placeholder="Enter amount"
-                  value={amount}
-                  onChangeText={setAmount}
+                  value={amount !== null ? amount.toString() : ''}
+                  onChangeText={text => setAmount(text ? Number(text) : null)}
                   keyboardType="numeric"
                 />
               </View>
