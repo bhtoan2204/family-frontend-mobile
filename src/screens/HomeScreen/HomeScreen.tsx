@@ -8,6 +8,7 @@ import {
   View,
   Dimensions,
   ImageBackground,
+  FlatList,
 } from 'react-native';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {PackageServices} from 'src/services/apiclient';
@@ -153,6 +154,17 @@ const HomeScreen = ({
     return () => clearInterval(interval);
   }, []);
 
+  const data = [
+    {icon: 'home', label: 'Home'},
+    {icon: 'settings', label: 'Settings'},
+    {icon: 'person', label: 'Profile'},
+    {icon: 'mail', label: 'Mail'},
+    {icon: 'notifications', label: 'Notifications'},
+    {icon: 'lock', label: 'Security'},
+    {icon: 'help', label: 'Help'},
+    {icon: 'information', label: 'Info'},
+  ];
+
   return (
     <ImageBackground
       source={require('../../assets/images/home-screen-light.png')}
@@ -273,6 +285,38 @@ const HomeScreen = ({
                 •
               </Text>
             ))}
+          </View>
+
+          <View style={{flexDirection: 'column'}}>
+            <Text>Let's Start with Service</Text>
+            <Text>We found 100 services in your area</Text>
+            <View style={{flexDirection: 'row'}}></View>
+            <FlatList
+              data={data}
+              numColumns={4}
+              renderItem={({item}) => (
+                <TouchableOpacity
+                  style={{
+                    width: '25%',
+                    aspectRatio: 1,
+                    padding: 10,
+                    borderRadius: 10,
+                    backgroundColor: '#f0f0f0',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    shadowColor: '#000',
+                    shadowOffset: {width: 0, height: 2},
+                    shadowOpacity: 0.5,
+                    shadowRadius: 5,
+                  }}>
+                  <Image
+                    source={{uri: item.image}}
+                    style={{width: '100%', height: '70%', borderRadius: 10}}
+                  />
+                  <Text style={{marginTop: 10}}>{item.label}</Text>
+                </TouchableOpacity>
+              )}
+            />
           </View>
 
           <View style={styles.containerBottom}>
