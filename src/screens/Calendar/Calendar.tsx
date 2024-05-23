@@ -4,7 +4,7 @@ import { Calendar } from 'react-native-calendars';
 import { CalendarScreenProps } from 'src/navigation/NavigationTypes';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import BottomSheet from './BottomSheet';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import EventList from './EventList';
@@ -13,10 +13,12 @@ import styles from './style';
 
 type Event = {
     id_calendar: number;
-    event_datetime: Date;
-    event_description: string;
-    event_id_family: number;
-    event_title: string;
+    title: string;
+    time_start: Date;
+    time_end: Date;
+    description: string;
+    color: string;
+    is_all_day: boolean;
 };
 
 const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
@@ -34,25 +36,47 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
     const handleGetCalendar = async () => {
         try {
             const response = await CalendarServices.getCalendar({ id_family });
-            const formattedEvents: FormattedEvents = {};
-            response.data.forEach((item: { datetime: string }) => {
-                const date = new Date(item.datetime).toISOString().split('T')[0];
-                formattedEvents[date] = { marked: true };
-            });
-            setEvents(formattedEvents);
+            console.log(response); // Log the response to see the actual data structure
+
+            if (Array.isArray(response)) {
+                const formattedEvents: FormattedEvents = {};
+                response.forEach((item: { time_start: string }) => {
+                    const date = new Date(item.time_start).toISOString().split('T')[0];
+                    formattedEvents[date] = { marked: true };
+                });
+                setEvents(formattedEvents);
+            } else {
+                console.log('Unexpected response format', response);
+            }
         } catch (error) {
-            console.log('getCalendar', error);
+            console.log('Error fetching calendar data:', error);
         }
     };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                handleGetCalendar();
+                await handleGetCalendar();
                 const eventData = await CalendarServices.getEventOnDate(id_family, format(selectedDate, 'yyyy-MM-dd'));
-                setEventDetails(eventData.data);
+                if (Array.isArray(eventData)) {
+                    const parsedEvents = eventData.map(event => {
+                        try {
+                            return {
+                                ...event,
+                                time_start: new Date(event.time_start),
+                                time_end: new Date(event.time_end)
+                            };
+                        } catch (e) {
+                            console.log('Invalid date format for event:', event);
+                            return event;
+                        }
+                    });
+                    setEventDetails(parsedEvents);
+                } else {
+                    console.log('Unexpected event data format', eventData);
+                }
             } catch (error) {
-                console.log('handleDayPress', error);
+                console.log('Error fetching event details:', error);
             }
         };
 
@@ -82,9 +106,6 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
                     <Icon name="arrow-left" size={20} color="black" />
                 </TouchableOpacity>
                 <Text style={styles.headerText}>Calendar</Text>
-
-                {/* <Icon name="navicon" size={20} color="black" /> */}
-
             </View>
 
             <LongPressGestureHandler
@@ -104,7 +125,6 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
                     />
 
                     <View>
-              
                         <EventList events={eventDetails} />
                     </View>
                 </View>
@@ -129,9 +149,9 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
                     <BottomSheet
                         key={index}
                         id_calendar={event.id_calendar}
-                        title={event.event_title}
-                        description={event.event_description}
-                        datetime={event.event_datetime}
+                        title={event.title}
+                        description={event.description}
+                        datetime={event.time_start}
                     />
                 ))}
             </RBSheet>

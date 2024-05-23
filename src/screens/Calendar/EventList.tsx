@@ -11,16 +11,16 @@ const generateHours = () => {
 };
 
 const EventList = ({ events }) => {
-    // Sắp xếp sự kiện theo thời gian
-    const sortedEvents = events.sort((a, b) => new Date(a.event_datetime) - new Date(b.event_datetime));
+    // Sort events by start time
+    const sortedEvents = events.sort((a, b) => new Date(a.time_start) - new Date(b.time_start));
 
     const hours = generateHours();
 
     const renderHourItem = ({ item: hour }) => {
-        const eventsAtHour = sortedEvents.filter(event => format(new Date(event.event_datetime), 'HH:00') === hour);
+        const eventsAtHour = sortedEvents.filter(event => format(new Date(event.time_start), 'HH:00') === hour);
     
         if (eventsAtHour.length === 0) {
-            return null; // Không có sự kiện nào ở giờ này, không cần hiển thị
+            return null; // No events at this hour, don't render the block
         }
     
         return (
@@ -29,16 +29,15 @@ const EventList = ({ events }) => {
                 <View style={styles.eventContainer}>
                     {eventsAtHour.map((event, index) => (
                         <View key={index} style={styles.eventCard}>
-                            <Text style={styles.eventTitle}>{event.event_title}</Text>
-                            <Text style={styles.eventTime}>{format(new Date(event.event_datetime), 'HH:mm')}</Text>
-                            <Text style={styles.eventDescription}>{event.event_description}</Text>
+                            <Text style={styles.eventTitle}>{event.title}</Text>
+                            <Text style={styles.eventTime}>{format(new Date(event.time_start), 'HH:mm')}</Text>
+                            <Text style={styles.eventDescription}>{event.description}</Text>
                         </View>
                     ))}
                 </View>
             </View>
         );
     };
-    
 
     return (
         <FlatList
