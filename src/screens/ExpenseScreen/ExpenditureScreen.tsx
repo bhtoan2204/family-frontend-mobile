@@ -462,7 +462,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                         marginRight: 5,
                       },
                     ]}>
-                    All
+                    View All
                   </Text>
                   <Icon
                     name="chevron-forward-outline"
@@ -590,7 +590,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                         marginRight: 5,
                       },
                     ]}>
-                    All
+                    View All
                   </Text>
                   <Icon
                     name="chevron-forward-outline"
