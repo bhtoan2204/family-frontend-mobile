@@ -103,6 +103,7 @@
     "react-redux": "^9.1.0",
     "reanimated": "^0.0.1-alpha",
     "redux-thunk": "^3.1.0",
+    "rrule": "^2.8.1",
     "socket.io-client": "^4.7.4",
     "stream-chat-react-native": "^5.27.0",
     "victory-native": "^40.2.0",

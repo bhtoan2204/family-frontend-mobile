@@ -38,30 +38,20 @@ const ExpenseServices = {
       console.error('Error in createExpenseType:', error.message);
     }
   },
-  getExpense: async (
-    page: number,
-    itemsPerPage: number,
-    id_family?: number,
-  ) => {
+  getExpenseByYear: async (year: number, id_family?: number) => {
     try {
       const response: AxiosResponse = await instance.get(
-        `${baseUrl}/api/v1/finance/expensediture/getExpense/${id_family}`,
-        {
-          params: {
-            page,
-            itemsPerPage,
-            id_family,
-          },
-        },
+        `${baseUrl}/api/v1/finance/expensediture/getExpensebyYear/${id_family}/${year}`,
       );
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error('Error in getExpense');
+        console.error('Error in getExpenseByYear');
       }
     } catch (error: any) {
-      console.error('Error in getExpense:', error.message);
+      console.error('Error in getExpenseByYear:', error.message);
     }
-  },
+},
+
 };
 export default ExpenseServices;

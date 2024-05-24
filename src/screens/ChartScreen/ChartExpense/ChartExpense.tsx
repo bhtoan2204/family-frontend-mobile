@@ -41,12 +41,7 @@ const ChartExpenseScreen = ({ navigation }: ChartExpenseProps) => {
     setSelectedCategoryType( option);
   });
 
-  useEffect(() => {
-    if(selectedFamily != undefined){
-      fetchExpenses();
-    }
-  }, [currentIndex, selectedFamily]);
-
+ 
   const fetchAllFamily = async () => {
     try {
       const result = await FamilyServices.getAllFamily();
@@ -57,16 +52,6 @@ const ChartExpenseScreen = ({ navigation }: ChartExpenseProps) => {
     }
   };
 
-  const fetchExpenses = async () => {
-    try {
-      const result: Expenditure[] = await ExpenseServices.getExpense(currentIndex, 10, selectedFamily);
-      if (result) {
-        setExpenses(prevExpenses => [...prevExpenses, ...result]);
-      }
-    } catch (error) {
-      console.log('fetchExpenses error:', error);
-    }
-  }
 
 
 
@@ -128,7 +113,7 @@ const ChartExpenseScreen = ({ navigation }: ChartExpenseProps) => {
       )}
       {selectedCategoryType === 'Year' && (
         <View>         
-        <LineChartScreen/>       
+          <LineChartScreen id_family={selectedFamily} />
         </View>
       )}
           <Modal
