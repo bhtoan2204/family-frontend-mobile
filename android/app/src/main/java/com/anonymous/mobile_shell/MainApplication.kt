@@ -1,4 +1,4 @@
-package com.mobile_shell
+package com.anonymous.mobile_shell
 
 import android.app.Application
 import com.facebook.react.PackageList
