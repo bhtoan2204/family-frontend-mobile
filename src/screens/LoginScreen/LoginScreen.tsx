@@ -141,7 +141,6 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
   useEffect(() => {
     if (response?.type === 'success') {
       const {code} = response.params;
-      // Now send the code to your server to exchange for user's tokens!
     }
   }, [response]);
 
