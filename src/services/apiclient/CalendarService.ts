@@ -13,12 +13,10 @@ const CalendarServices = {
       params = { id_family };
     }
     const response: AxiosResponse = await instance.get(`${baseUrl}/api/v1/calendar/getAllCalendar/${id_family}`, { 
-      params: {
-        id_family,
-      },
+
     });
     if (response.status === 200) {
-      return response.data;
+      return response.data.data;
     } else {
       console.error('Error in getCalendar');
     }
@@ -28,7 +26,7 @@ const CalendarServices = {
 
   getEventOnDate: async (id_family?: number, date?: String) => {
     try {
-      const response: AxiosResponse = await instance.post(`${baseUrl}/api/v1/calendar/getEventOnDate/${id_family}`, 
+      const response: AxiosResponse = await instance.post(`${baseUrl}/api/v1/calendar/getEventOnDate`, 
         {
           id_family,
           date
@@ -37,7 +35,8 @@ const CalendarServices = {
       
       if (response) {
         if (response.status === 200) {
-          return response.data;
+          console.log(response.data.data)
+          return response.data.data;
         } else {
           console.error('Error in getEventOnDate');
         }
