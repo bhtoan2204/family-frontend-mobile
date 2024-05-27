@@ -1,7 +1,7 @@
 import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 import Checkbox from 'expo-checkbox';
 import {Formik, FormikHelpers} from 'formik';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ImageBackground,
   KeyboardAvoidingView,
@@ -11,6 +11,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Image,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import CustomButton from 'src/components/Button';
@@ -19,6 +20,10 @@ import {LoginScreenProps} from 'src/navigation/NavigationTypes';
 import {AuthServices} from 'src/services/apiclient';
 import * as Yup from 'yup';
 import styles from './styles';
+import * as WebBrowser from 'expo-web-browser';
+import {makeRedirectUri, useAuthRequest} from 'expo-auth-session';
+import FacebookImage from 'src/assets/images/facebook.png';
+import GoogleImage from 'src/assets/images/google.png';
 
 interface FormValues {
   firstName: string;
@@ -30,8 +35,29 @@ interface FormValues {
   submit: null;
 }
 
+WebBrowser.maybeCompleteAuthSession();
+
+// Endpoint
+const discovery = {
+  authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
+  tokenEndpoint: 'https://oauth2.googleapis.com/token',
+  revocationEndpoint: 'https://oauth2.googleapis.com/revoke',
+};
+
 const SignupScreen = ({navigation}: LoginScreenProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const [request, response, promptAsync] = useAuthRequest(
+    {
+      clientId:
+        '79354209613-utvqpvit5utmdalov9jdjotulc1m5fq9.apps.googleusercontent.com',
+      scopes: ['openid', 'profile', 'email'],
+      redirectUri: makeRedirectUri({
+        native: 'com.anonymous.mobile_shell://redirect',
+      }),
+    },
+    discovery,
+  );
 
   const handleSignup = async (
     values: FormValues,
@@ -62,6 +88,12 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
       actions.setErrors({submit: error.message});
     }
   };
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      const {code} = response.params;
+    }
+  }, [response]);
 
   return (
     <ImageBackground
@@ -341,6 +373,35 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                         }}>
                         <Text style={styles.loginText}>{TEXTS.LOGIN}</Text>
                       </Pressable>
+                    </View>
+
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        bottom: 10,
+                      }}>
+                      <TouchableOpacity
+                        style={[styles.button, {right: 20}]}
+                        onPress={() => {
+                          promptAsync();
+                        }}>
+                        <Image
+                          style={{height: 36, width: 36}}
+                          source={GoogleImage}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[styles.button, {left: 20}]}
+                        // onPress={handleFacebookLogin}
+                      >
+                        <Image
+                          style={{height: 36, width: 36}}
+                          source={FacebookImage}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
                     </View>
                   </View>
                 )}

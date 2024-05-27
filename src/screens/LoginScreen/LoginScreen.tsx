@@ -1,3 +1,6 @@
+// ios 79354209613-utvqpvit5utmdalov9jdjotulc1m5fq9.apps.googleusercontent.com
+// android
+
 import {
   Ionicons,
   MaterialCommunityIcons,
@@ -34,6 +37,8 @@ import LocalStorage from 'src/store/localstorage';
 import * as Yup from 'yup';
 import styles from './styles';
 import {useDispatch} from 'react-redux';
+import * as WebBrowser from 'expo-web-browser';
+import {makeRedirectUri, useAuthRequest} from 'expo-auth-session';
 
 interface FormValues {
   email: string;
@@ -43,6 +48,15 @@ interface FormValues {
 type CombinedScreenProps = SignupScreenProps &
   HomeTabProps &
   LandingPageScreenProps;
+
+WebBrowser.maybeCompleteAuthSession();
+
+// Endpoint
+const discovery = {
+  authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
+  tokenEndpoint: 'https://oauth2.googleapis.com/token',
+  revocationEndpoint: 'https://oauth2.googleapis.com/revoke',
+};
 
 const LoginScreen = ({navigation}: CombinedScreenProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -72,25 +86,25 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      Linking.openURL(AuthUrl.googleLogin);
+  // const handleGoogleLogin = async () => {
+  //   try {
+  //     Linking.openURL(AuthUrl.googleLogin);
 
-      const handleOpenUrl = async (event: {url: string}) => {
-        console.log(event.url);
-      };
+  //     const handleOpenUrl = async (event: {url: string}) => {
+  //       console.log(event.url);
+  //     };
 
-      Linking.addEventListener('url', handleOpenUrl);
+  //     Linking.addEventListener('url', handleOpenUrl);
 
-      navigation.navigate('HomeTab', {screen: 'HomeScreen'});
+  //     navigation.navigate('HomeTab', {screen: 'HomeScreen'});
 
-      return () => {
-        Linking.removeAllListeners('url');
-      };
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
+  //     return () => {
+  //       Linking.removeAllListeners('url');
+  //     };
+  //   } catch (error: any) {
+  //     console.log(error);
+  //   }
+  // };
 
   const handleFacebookLogin = async () => {
     try {
@@ -111,6 +125,24 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
       console.log(error);
     }
   };
+
+  const [request, response, promptAsync] = useAuthRequest(
+    {
+      clientId:
+        '79354209613-utvqpvit5utmdalov9jdjotulc1m5fq9.apps.googleusercontent.com',
+      scopes: ['openid', 'profile', 'email'],
+      redirectUri: makeRedirectUri({
+        native: 'com.anonymous.mobile_shell://redirect',
+      }),
+    },
+    discovery,
+  );
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      const {code} = response.params;
+    }
+  }, [response]);
 
   return (
     <ImageBackground
@@ -317,7 +349,9 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
               <View style={styles.container}>
                 <TouchableOpacity
                   style={[styles.button, {right: 20}]}
-                  onPress={handleGoogleLogin}>
+                  onPress={() => {
+                    promptAsync();
+                  }}>
                   <Image
                     style={styles.image}
                     source={GoogleImage}

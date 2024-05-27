@@ -1,43 +1,40 @@
-import { StyleSheet } from 'react-native';
-import { COLORS } from 'src/constants';
+import {StyleSheet} from 'react-native';
+import {COLORS} from 'src/constants';
 
 export default StyleSheet.create({
   headerContainer: {
-      backgroundColor: 'rgba(128, 50, 128, 0.5)', 
-      alignItems: 'center',
-      marginBottom: 10,
-      justifyContent: 'center',
-      flexDirection: 'row',
-      height: '6%',
-    
-},
-headerTitleContainer: {
+    //backgroundColor: 'rgba(128, 50, 128, 0.5)',
+    alignItems: 'center',
+    //marginBottom: 10,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    height: '6%',
+  },
+  headerTitleContainer: {
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
     marginLeft: 15,
-},
-headerButton: {
+  },
+  headerButton: {
     paddingHorizontal: 0,
-},
-headerText: {
-    fontSize: 18,
-    color: 'white',
+  },
+  headerText: {
+    fontSize: 20,
+    color: 'black',
     fontWeight: 'bold',
-},
+  },
 
   container: {
     flex: 1,
-    backgroundColor: 'white', 
-
+    backgroundColor: 'white',
   },
 
   backButton: {
     marginBottom: 10,
     marginLeft: 10,
     marginTop: 10,
-    color: 'white',
-
+    color: 'black',
   },
   selectedTabText: {
     fontSize: 18,
@@ -59,12 +56,11 @@ headerText: {
     height: 50,
     marginRight: 10,
     borderRadius: 25,
-
   },
   categoryName: {
     fontSize: 16,
   },
-  
+
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -114,11 +110,11 @@ headerText: {
     marginBottom: 10,
   },
   iconContainer: {
-    width: 40, 
+    width: 40,
     height: 40,
-    borderRadius: 20, 
-    borderWidth: 1, 
-    borderColor: 'gray', 
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'gray',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -126,38 +122,38 @@ headerText: {
     marginBottom: 10,
     marginRight: 10,
     marginTop: 10,
-    color: 'white',
+    color: 'black',
   },
   scrollView: {
-    flex: 1, 
-    backgroundColor: '#FFFFFF', 
-    paddingVertical: 10, 
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 10,
     width: '100%',
   },
   tabButton: {
-    paddingVertical: 10, 
+    paddingVertical: 10,
   },
   selectedTabButton: {
-      borderBottomWidth: 0, 
-      borderBottomColor: COLORS.primary,
-      paddingBottom: 0,
-    },
+    borderBottomWidth: 0,
+    borderBottomColor: COLORS.primary,
+    paddingBottom: 0,
+  },
   tabButtonText: {
-      fontSize: 16, 
-      color: '#ccc',
+    fontSize: 16,
+    color: '#ccc',
   },
   containerTab: {
     flexDirection: 'row',
-    justifyContent: 'space-around', 
-    borderBottomWidth: 1, 
-    borderBottomColor: 'gray', 
+    justifyContent: 'space-around',
+    borderBottomWidth: 1,
+    borderBottomColor: 'gray',
     width: '100%',
-  } ,
+  },
   bottomLine: {
     position: 'absolute',
     bottom: 0,
     height: 2,
     backgroundColor: 'gray',
-    width: '50%', 
+    width: '50%',
   },
 });
