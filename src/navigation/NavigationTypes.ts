@@ -10,8 +10,10 @@ export type RootParamList = {
   CalendarStack: NavigatorScreenParams<CalendarStackParamList>;
   ChatStack: NavigatorScreenParams<ChatStackParamList>;
   ExpenseStack: NavigatorScreenParams<ExpenseStackParamList>;
+  IncomeStack:  NavigatorScreenParams<IncomeStackParamList>;
 
 };
+
 export type ExpenseStackParamList = {
   Expenditure: undefined;
   CategoryExpense: undefined;
@@ -20,6 +22,23 @@ export type ExpenseStackParamList = {
   }
   ChartExpense: undefined;
 };
+
+
+export type IncomeStackParamList = {
+    ChartIncomeScreen: undefined;
+};
+
+
+type ChartIncomeScreenNavigationProp = NativeStackNavigationProp<
+IncomeStackParamList,
+  'ChartIncomeScreen'
+>;
+
+export interface ChartIncomeScreenProps {
+  navigation: ChartIncomeScreenNavigationProp;
+  route: RouteProp<IncomeStackParamList, 'ChartIncomeScreen'>;
+}
+
 type ChartExpenseNavigationProp = NativeStackNavigationProp<
 ExpenseStackParamList,
   'ChartExpense'

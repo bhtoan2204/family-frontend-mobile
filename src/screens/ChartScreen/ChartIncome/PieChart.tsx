@@ -7,8 +7,8 @@ import MonthPicker from 'react-native-month-picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { getDate, setSelectedDate, setSelectedOption } from 'src/redux/slices/ExpenseAnalysis';
-import { ExpenseServices } from 'src/services/apiclient';
+import { ExpenseServices, IncomeServices } from 'src/services/apiclient';
+import { getDate, setSelectedDate, setSelectedOption } from 'src/redux/slices/IncomeAnalysis';
 
 interface PieChartScreenProps {
   id_family: number;
@@ -36,7 +36,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
 
   const fetchData = async (month: number, year: number, id_family: number) => {
     try {
-      const response = await ExpenseServices.getExpenseByMonth(month, year, id_family);
+      const response = await IncomeServices.getIncomeByMonth(month, year, id_family);
       if (Array.isArray(response)) {
         setDailyData(response);
       } else {
@@ -82,7 +82,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
   const pieChartData = Object.entries(categoryData).map(([name, amount], index) => ({
     key: name,
     value: (amount / totalExpense) * 100,
-    svg: { fill: categoryColors[index + 1] }, 
+    svg: { fill: categoryColors[index + 1] },
     arc: { outerRadius: '100%', innerRadius: '60%' },
     label: `${((amount / totalExpense) * 100).toFixed(2)}%`,
   }));
@@ -91,6 +91,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
     return moment(date).format('MM/YYYY');
   };
 
+
   const handleMonthPickerConfirm = (newDate: Date) => {
     const year = moment(newDate).year();
     const month = moment(newDate).month() + 1;
@@ -98,6 +99,11 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
     setMonthPickerVisible(false);
     fetchData(month, year, id_family);
   };
+  
+  
+  
+  
+
 
   const Labels = ({ slices }) => {
     return slices.map((slice, index) => {
@@ -182,13 +188,13 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
         {showDetails && (
           <View style={styles.ContainerCategory}>
             {dailyData.map((detail, index) => (
-              <TouchableOpacity key={index} style={styles.expenseItem} onPress={() => handlePressDate(detail.date)}>
-                <View style={styles.expenseDetails}>
+              <TouchableOpacity key={index} style={styles.incomeItem} onPress={() => handlePressDate(detail.date)}>
+                <View style={styles.incomeDetails}>
                   <Image source={{ uri: `https://dummyimage.com/40x40/000/fff&text=${detail.date.split('-')[2]}` }} style={styles.avatar} />
-                  <Text style={styles.expenseText}>{detail.date}</Text>
+                  <Text style={styles.incomeText}>{detail.date}</Text>
                 </View>
-                <View style={styles.expenseDetails}>
-                  <Text style={styles.expenseAmount}>-{detail.total} đ</Text>
+                <View style={styles.incomeDetails}>
+                  <Text style={styles.incomeAmount}>+{detail.total} đ</Text>
                   <Icon name="chevron-right" size={20} color="#ccc" />
                 </View>
               </TouchableOpacity>

@@ -4,11 +4,12 @@ import { Calendar } from 'react-native-calendars';
 import { CalendarScreenProps } from 'src/navigation/NavigationTypes';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import BottomSheet from './BottomSheet';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import EventList from './EventList';
 import { LongPressGestureHandler, State } from 'react-native-gesture-handler';
+import { RRule } from 'rrule';
 import styles from './style';
 
 type Event = {
@@ -19,6 +20,7 @@ type Event = {
     description: string;
     color: string;
     is_all_day: boolean;
+    rrule?: string;
 };
 
 const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
@@ -40,9 +42,13 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
 
             if (Array.isArray(response)) {
                 const formattedEvents: FormattedEvents = {};
-                response.forEach((item: { time_start: string }) => {
-                    const date = new Date(item.time_start).toISOString().split('T')[0];
-                    formattedEvents[date] = { marked: true };
+                response.forEach((item: Event) => {
+                    // Generate occurrences for recurring events
+                    const occurrences = generateOccurrences(item);
+                    occurrences.forEach((date) => {
+                        const formattedDate = format(date, 'yyyy-MM-dd');
+                        formattedEvents[formattedDate] = { marked: true };
+                    });
                 });
                 setEvents(formattedEvents);
             } else {
@@ -51,6 +57,25 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
         } catch (error) {
             console.log('Error fetching calendar data:', error);
         }
+    };
+
+    const generateOccurrences = (event: Event) => {
+        const occurrences = [];
+        if (event.rrule) {
+            const rule = RRule.fromString(event.rrule);
+            const startDate = new Date(event.time_start);
+            const endDate = new Date(event.time_end);
+
+            const oneYearFromNow = new Date();
+            oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
+
+            rule.between(startDate, oneYearFromNow).forEach((date) => {
+                occurrences.push(date);
+            });
+        } else {
+            occurrences.push(new Date(event.time_start));
+        }
+        return occurrences;
     };
 
     useEffect(() => {

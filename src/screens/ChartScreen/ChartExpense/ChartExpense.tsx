@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getOption, setSelectedOption } from 'src/redux/slices/ExpenseAnalysis';
 
 const ChartExpenseScreen = ({ navigation }: ChartExpenseProps) => {
-  const [selectedCategoryType, setSelectedCategoryType] = useState<string>('Day');
+  const [selectedCategoryType, setSelectedCategoryType] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const [date, setDate] = useState<Date>(new Date());
@@ -32,14 +32,23 @@ const ChartExpenseScreen = ({ navigation }: ChartExpenseProps) => {
   const [isFamilyModalOpen, setIsFamilyModalOpen] = useState(false);
   const familyUri = 'https://t3.ftcdn.net/jpg/06/75/38/14/360_F_675381468_yjYEK9SvCRYpRUyKNRWsnArIalbMeBU4.jpg';
 
-  useEffect(() => {
-
-    fetchAllFamily();
-  },[]);
+  const [isFamilyDataLoaded, setIsFamilyDataLoaded] = useState(false);
 
   useEffect(() => {
-    setSelectedCategoryType( option);
-  });
+    const fetchData = async () => {
+      await fetchAllFamily();
+      setIsFamilyDataLoaded(true);
+    };
+  
+    fetchData();
+  }, []);
+  
+  useEffect(() => {
+    if (isFamilyDataLoaded) {
+      setSelectedCategoryType(option);
+    }
+  }, [isFamilyDataLoaded, option]);
+  
 
  
   const fetchAllFamily = async () => {
@@ -103,12 +112,12 @@ const ChartExpenseScreen = ({ navigation }: ChartExpenseProps) => {
       </View>
       {selectedCategoryType === 'Day' && (
         <View>
-          <BarChartScreen/>
+          <BarChartScreen id_family={selectedFamily} />
         </View>
       )}
      {selectedCategoryType === 'Month' && (
         <View>
-            <PieChartComponent />
+            <PieChartComponent  id_family={selectedFamily}/>
         </View>
       )}
       {selectedCategoryType === 'Year' && (

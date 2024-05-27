@@ -41,7 +41,12 @@ const ExpenseServices = {
   getExpenseByYear: async (year: number, id_family?: number) => {
     try {
       const response: AxiosResponse = await instance.get(
-        `${baseUrl}/api/v1/finance/expensediture/getExpensebyYear/${id_family}/${year}`,
+        `${baseUrl}/api/v1/finance/expensediture/getExpensebyYear/${id_family}`,
+        {
+          params: {
+            year
+          }
+        }
       );
       if (response.status === 200) {
         return response.data.data;
@@ -51,7 +56,48 @@ const ExpenseServices = {
     } catch (error: any) {
       console.error('Error in getExpenseByYear:', error.message);
     }
-},
+        
+    },
+    getExpenseByMonth: async (month: number, year: number, id_family?: number) => {
+      try {
+        const response: AxiosResponse = await instance.get(
+          `${baseUrl}/api/v1/finance/expensediture/getExpenseByMonth/${id_family}`,
+          {
+            params: {
+              year, month
+            }
+          }
+        );
+        if (response.status === 200) {
+          return response.data.data;
+        } else {
+          console.error('Error in getExpenseByMonth');
+        }
+      } catch (error: any) {
+        console.error('Error in getExpenseByMonth:', error.message);
+      }
+      
+    },
+    getExpenseByDate: async (date: string, id_family?: number) => {
 
+      try {
+        const response: AxiosResponse = await instance.get(
+          `${baseUrl}/api/v1/finance/expensediture/getExpenseByDate/${id_family}`,
+          {
+            params: {
+              date
+            }
+          }
+        );
+        if (response.status === 200) {
+          return response.data.data;
+        } else {
+          console.error('Error in getExpenseByDate');
+        }
+      } catch (error: any) {
+        console.error('Error in getExpenseByDate:', error.message);
+      }
+      
+    },
 };
 export default ExpenseServices;

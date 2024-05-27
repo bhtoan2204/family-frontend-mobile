@@ -5,9 +5,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
 import { useDispatch } from "react-redux";
-import { setSelectedDate, setSelectedOption } from "src/redux/slices/ExpenseAnalysis";
+import { getOption, setSelectedDate, setSelectedOption } from 'src/redux/slices/IncomeAnalysis';
 import moment from 'moment';
-import { ExpenseServices } from "src/services/apiclient";
+import { ExpenseServices, IncomeServices } from "src/services/apiclient";
 
 interface Category {
     name: string;
@@ -50,14 +50,14 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
 
     const fetchData = async (year: number, id_family: number) => {
         try {
-            const response = await ExpenseServices.getExpenseByYear(year, id_family);
+            const response = await IncomeServices.getIncomeByYear(year, id_family);
             const transformedData = response.map((monthData: MonthlyData) => ({
                 month: monthData.month,
                 total: monthData.total,
                 categories: monthData.categories ? monthData.categories.reduce((acc: { [key: string]: number }, category: Category) => {
                     acc[category.name] = category.amount;
                     return acc;
-                }, {}) : {} // If categories is undefined, assign an empty object
+                }, {}) : {} 
             }));
             
             setMonthlyData(transformedData);
@@ -239,20 +239,20 @@ if (monthlyData.length > 0) {
                     {monthlyData.map((monthData) => (
                         <TouchableOpacity
                             key={monthData.month}
-                            style={styles.expenseItem}
+                            style={styles.incomeItem}
                             onPress={() => handlePressMonth(`${monthData.month}`)}
                         >
-                            <View style={styles.expenseDetails}>
+                            <View style={styles.incomeDetails}>
                                 <Image source={{ uri: `${avatarUrlTemplate}${monthData.month}` }} style={styles.avatar} />
-                                <Text style={styles.expenseText}>{`Month ${monthData.month}`}</Text>
+                                <Text style={styles.incomeText}>{`Month ${monthData.month}`}</Text>
                             </View>
-                            <View style={styles.expenseDetails}>
+                            <View style={styles.incomeDetails}>
                                 {monthData.categories && Array.isArray(monthData.categories) && monthData.categories.map((category) => (
                                     <View key={category.name}>
                                         <Text>{`${category.name}: ${category.amount}`}</Text>
                                     </View>
                                 ))}
-                                <Text style={styles.expenseAmount}>{`Total: ${monthData.total} đ`}</Text>
+                                <Text style={styles.incomeAmount}>{`+${monthData.total} đ`}</Text>
                                 <Icon name="chevron-right" size={20} color="#ccc" />
                             </View>
                         </TouchableOpacity>

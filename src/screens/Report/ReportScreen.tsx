@@ -10,6 +10,9 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     const pressExpenseAnalysis = () => {
       navigation.navigate('ExpenseStack', {screen: 'ChartExpense'});
   }
+  const pressIncomeAnalysis = () => {
+    navigation.navigate('IncomeStack', {screen: 'ChartInomeScreen'});
+}
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.expenseContainer} onPress={()=>pressExVsIn()}>
@@ -21,7 +24,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           <Text style={styles.heading}>Expense Analysis</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.incomeAnalysis} onPress={()=>pressExpenseAnalysis()}>
+        <TouchableOpacity style={styles.incomeAnalysis} onPress={()=>pressIncomeAnalysis()}>
           <Text style={styles.heading}>Income Analysis</Text>
         </TouchableOpacity>
       </View>

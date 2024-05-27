@@ -249,7 +249,8 @@ container: {
   expenseAmount: {
     fontSize: 15,
     color: 'red',
-    marginRight: 10
+    marginRight: 10,
+
   },
   monthText: {
     color: 'black',
@@ -361,6 +362,27 @@ container: {
   filterButton: {
     color: 'white'
   },
-  
+  expenseDateItem:{
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+
+  },
+  containerTextName: {
+    color: 'blue'
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  noDataText: {
+    fontSize: 18,
+    color: 'red',
+  },
   });
 export default styles;

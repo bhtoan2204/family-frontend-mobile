@@ -3,18 +3,18 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import moment from 'moment';
 import { RootState } from '../store';
 
-interface ExpenseAnalysisState {
+interface IncomeAnalysisState {
   selectedOption: 'Day' | 'Month' | 'Year';
   selectedDate: string;
 }
 
-const initialState: ExpenseAnalysisState = {
+const initialState: IncomeAnalysisState = {
   selectedOption: 'Day',
   selectedDate: new Date().toISOString().split('T')[0],
 };
 
-const expenseAnalysisSlice = createSlice({
-  name: 'expenseAnalysis',
+const incomeAnalysisSlice = createSlice({
+  name: 'incomeAnalysis',
   initialState,
   reducers: {
     setSelectedOption(state, action: PayloadAction<'Day' | 'Month' | 'Year'>) {
@@ -26,9 +26,9 @@ const expenseAnalysisSlice = createSlice({
   },
 });
 
-export const { setSelectedOption, setSelectedDate } = expenseAnalysisSlice.actions;
+export const { setSelectedOption, setSelectedDate } = incomeAnalysisSlice.actions;
 
-export const getOption= (state: RootState) => state.expenseAnalysis.selectedOption;
-export const getDate= (state: RootState) => state.expenseAnalysis.selectedDate;
+export const getOption= (state: RootState) => state.incomeAnalysis.selectedOption;
+export const getDate= (state: RootState) => state.incomeAnalysis.selectedDate;
 
-export default expenseAnalysisSlice.reducer;
+export default incomeAnalysisSlice.reducer;
