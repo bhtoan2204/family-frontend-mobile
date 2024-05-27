@@ -2,6 +2,7 @@
   "expo": {
     "name": "mobile_shell",
     "slug": "mobile_shell",
+    "scheme": "mobile_shell",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
