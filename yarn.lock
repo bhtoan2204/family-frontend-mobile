@@ -2741,6 +2741,11 @@
   resolved "https://registry.npmjs.org/@types/d3-path/-/d3-path-3.1.0.tgz"
   integrity sha512-P2dlU/q51fkOc/Gfl3Ul9kicV7l+ra934qBFXCFhrZMOL6du1TM0pm1ThYvENukyOn5h9v+yMJ9Fn5JK4QozrQ==
 
+"@types/d3-path@^1":
+  version "1.0.11"
+  resolved "https://registry.npmjs.org/@types/d3-path/-/d3-path-1.0.11.tgz"
+  integrity sha512-4pQMp8ldf7UaB/gR8Fvvy69psNHkTpD/pVw3vmEi8iZAB9EPMBruB1JvHO4BIq9QkUUd2lV1F5YXpMNj7JPBpw==
+
 "@types/d3-polygon@*":
   version "3.0.2"
   resolved "https://registry.npmjs.org/@types/d3-polygon/-/d3-polygon-3.0.2.tgz"
@@ -2768,6 +2773,13 @@
   dependencies:
     "@types/d3-time" "*"
 
+"@types/d3-scale@^1":
+  version "1.0.22"
+  resolved "https://registry.npmjs.org/@types/d3-scale/-/d3-scale-1.0.22.tgz"
+  integrity sha512-9XHVg/pVr+4qbowUNKHYNouFCXQUQ0ZZr1ppGgh10DVUaEb6nKuyPj0May0mmTiLhuDEaa9di1t0Hmg6lYTSFw==
+  dependencies:
+    "@types/d3-time" "^1"
+
 "@types/d3-selection@*":
   version "3.0.10"
   resolved "https://registry.npmjs.org/@types/d3-selection/-/d3-selection-3.0.10.tgz"
@@ -2780,6 +2792,13 @@
   dependencies:
     "@types/d3-path" "*"
 
+"@types/d3-shape@^1":
+  version "1.3.12"
+  resolved "https://registry.npmjs.org/@types/d3-shape/-/d3-shape-1.3.12.tgz"
+  integrity sha512-8oMzcd4+poSLGgV0R1Q1rOlx/xdmozS4Xab7np0eamFFUYq71AU9pOCJEFnkXW2aI/oXdVYJzw6pssbSut7Z9Q==
+  dependencies:
+    "@types/d3-path" "^1"
+
 "@types/d3-time-format@*":
   version "4.0.3"
   resolved "https://registry.npmjs.org/@types/d3-time-format/-/d3-time-format-4.0.3.tgz"
@@ -2789,6 +2808,11 @@
   version "3.0.3"
   resolved "https://registry.npmjs.org/@types/d3-time/-/d3-time-3.0.3.tgz"
   integrity sha512-2p6olUZ4w3s+07q3Tm2dbiMZy5pCDfYwtLXXHUnVzXgQlZ/OyPtUz6OL382BkOuGlLXqfT+wqv8Fw2v8/0geBw==
+
+"@types/d3-time@^1":
+  version "1.1.4"
+  resolved "https://registry.npmjs.org/@types/d3-time/-/d3-time-1.1.4.tgz"
+  integrity sha512-JIvy2HjRInE+TXOmIGN5LCmeO0hkFZx5f9FZ7kiN+D+YTcc8pptsiLiuHsvwxwC7VVKmJ2ExHUgNlAiV7vQM9g==
 
 "@types/d3-timer@*":
   version "3.0.2"
@@ -2949,6 +2973,17 @@
   version "8.1.4"
   resolved "https://registry.npmjs.org/@types/react-native-push-notification/-/react-native-push-notification-8.1.4.tgz"
   integrity sha512-qXu/NcQ7YSk5ZveDMNKFBQkLt9W5FCde3be+h8fYbEnmvd5O+v5m318XGhh8AMPXURAV9pSB5Ads08Wc0KTS7A==
+
+"@types/react-native-svg-charts@^5.0.16":
+  version "5.0.16"
+  resolved "https://registry.npmjs.org/@types/react-native-svg-charts/-/react-native-svg-charts-5.0.16.tgz"
+  integrity sha512-YUUX12ZtOt/e0PMXLFNWPXfhfLp83NEtZiUJL38nJ57hPie/FTBZa766ztJAtlOIv8/MBNsBpCVc8Wqm/pHorw==
+  dependencies:
+    "@types/d3-scale" "^1"
+    "@types/d3-shape" "^1"
+    "@types/react" "*"
+    react-native "*"
+    react-native-svg "^6.2.1"
 
 "@types/react-native-table-component@^1.2.8":
   version "1.2.8"
@@ -3982,6 +4017,13 @@ color-convert@^1.9.0:
   dependencies:
     color-name "1.1.3"
 
+color-convert@^1.9.1:
+  version "1.9.3"
+  resolved "https://registry.npmjs.org/color-convert/-/color-convert-1.9.3.tgz"
+  integrity sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==
+  dependencies:
+    color-name "1.1.3"
+
 color-convert@^1.9.3:
   version "1.9.3"
   resolved "https://registry.npmjs.org/color-convert/-/color-convert-1.9.3.tgz"
@@ -4006,13 +4048,21 @@ color-name@1.1.3:
   resolved "https://registry.npmjs.org/color-name/-/color-name-1.1.3.tgz"
   integrity sha512-72fSenhMw2HZMTVHeCA9KCmpEIbzWiQsjN+BHcBbS9vr1mtt+vJjPdksIBNUmKAW8TFUDPJK5SUU3QhE9NEXDw==
 
-color-string@^1.6.0, color-string@^1.9.0:
+color-string@^1.5.2, color-string@^1.6.0, color-string@^1.9.0:
   version "1.9.1"
   resolved "https://registry.npmjs.org/color-string/-/color-string-1.9.1.tgz"
   integrity sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==
   dependencies:
     color-name "^1.0.0"
     simple-swizzle "^0.2.2"
+
+color@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/color/-/color-2.0.1.tgz"
+  integrity sha512-ubUCVVKfT7r2w2D3qtHakj8mbmKms+tThR8gI8zEYCbUBl8/voqFGt3kgBqGwXAopgXybnkuOq+qMYCRrp4cXw==
+  dependencies:
+    color-convert "^1.9.1"
+    color-string "^1.5.2"
 
 color@^3.1.2:
   version "3.2.1"
@@ -7505,7 +7555,7 @@ lodash.throttle@^4.1.1:
   resolved "https://registry.npmjs.org/lodash.throttle/-/lodash.throttle-4.1.1.tgz"
   integrity sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ==
 
-lodash@^4.17.13, lodash@^4.17.15, lodash@^4.17.21, lodash@^4.17.4:
+lodash@^4.16.6, lodash@^4.17.13, lodash@^4.17.15, lodash@^4.17.21, lodash@^4.17.4:
   version "4.17.21"
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -8473,6 +8523,11 @@ paths-js@^0.4.10:
   resolved "https://registry.npmjs.org/paths-js/-/paths-js-0.4.11.tgz"
   integrity sha512-3mqcLomDBXOo7Fo+UlaenG6f71bk1ZezPQy2JCmYHy2W2k5VKpP+Jbin9H0bjXynelTbglCqdFhSEkeIkKTYUA==
 
+pegjs@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.npmjs.org/pegjs/-/pegjs-0.10.0.tgz"
+  integrity sha512-qI5+oFNEGi3L5HAxDwN2LA4Gg7irF70Zs25edhjld9QemOgp0CbvMtbFcMvFtEo1OityPrcCzkQFB8JP/hxgow==
+
 performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/performance-now/-/performance-now-2.1.0.tgz"
@@ -8727,7 +8782,7 @@ prompts@^2.0.1, prompts@^2.3.2, prompts@^2.4.2:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@*, prop-types@^15.5.10, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1, prop-types@>=15.5.0, prop-types@15.8.1:
+prop-types@*, prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1, prop-types@>=15.5.0, prop-types@15.8.1:
   version "15.8.1"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -9296,6 +9351,15 @@ react-native-svg@^15.2.0, react-native-svg@^6.2.1||^7.0.3, "react-native-svg@> 6
     css-select "^5.1.0"
     css-tree "^1.1.3"
 
+react-native-svg@^6.2.1:
+  version "6.5.3"
+  resolved "https://registry.npmjs.org/react-native-svg/-/react-native-svg-6.5.3.tgz"
+  integrity sha512-bKyKHrSvOK09MqsFkQiD4NZp7nM4uf+MoEtWKPfOste8g/3ilc+ZXQDc95iur7xgi0GURHHCXZbz2i8g0cX8sg==
+  dependencies:
+    color "^2.0.1"
+    lodash "^4.16.6"
+    pegjs "^0.10.0"
+
 react-native-swipe-gestures@^1.0.4, react-native-swipe-gestures@^1.0.5:
   version "1.0.5"
   resolved "https://registry.npmjs.org/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.5.tgz"
@@ -9343,7 +9407,7 @@ react-native-webview@13.8.6:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
-react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", "react-native@>= 0.30.0", "react-native@>= 0.50.0", "react-native@>= 0.62", react-native@>=0.23.1, react-native@>=0.33, react-native@>=0.36.0, react-native@>=0.40.0, react-native@>=0.42.0, react-native@>=0.46.0, react-native@>=0.48.4, react-native@>=0.58.4, react-native@>=0.59, react-native@>=0.59.0, react-native@>=0.60.0, react-native@>=0.61.3, react-native@>=0.64, react-native@>=0.64.0, react-native@>=0.65.0, react-native@>=0.69.0, react-native@>=v0.40.0, react-native@0.74.1:
+react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", "react-native@>= 0.30.0", "react-native@>= 0.50.0", "react-native@>= 0.62", react-native@>=0.23.1, react-native@>=0.33, react-native@>=0.36.0, react-native@>=0.40.0, react-native@>=0.42.0, react-native@>=0.46.0, react-native@>=0.48.4, react-native@>=0.50.0, react-native@>=0.58.4, react-native@>=0.59, react-native@>=0.59.0, react-native@>=0.60.0, react-native@>=0.61.3, react-native@>=0.64, react-native@>=0.64.0, react-native@>=0.65.0, react-native@>=0.69.0, react-native@>=v0.40.0, react-native@0.74.1:
   version "0.74.1"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.74.1.tgz"
   integrity sha512-0H2XpmghwOtfPpM2LKqHIN7gxy+7G/r1hwJHKLV6uoyXGC/gCojRtoo5NqyKrWpFC8cqyT6wTYCLuG7CxEKilg==
