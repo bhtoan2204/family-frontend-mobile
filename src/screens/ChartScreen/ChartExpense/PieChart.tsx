@@ -279,28 +279,33 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
           <Legend data={pieChartData} style={{flex: 1}} />
         </View>
         <View style={{height: 1, backgroundColor: '#F3F1EE', marginTop: -5}} />
-        <View
+
+        <TouchableOpacity
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             padding: 10,
+            alignItems: 'center',
             marginTop: 10,
-          }}>
-          <TouchableOpacity>
-            <Text>View details</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons name="chevron-forward" size={20} color="black" />
-          </TouchableOpacity>
-        </View>
+          }}
+          onPress={() => setShowDetails(!showDetails)}>
+          <Text style={{fontWeight: '500'}}>
+            {showDetails ? 'Hide details' : 'View details'}
+          </Text>
+          <Ionicons
+            name={showDetails ? 'chevron-down' : 'chevron-forward'}
+            size={20}
+            color="black"
+          />
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.buttonContainer}>
+      {/* <View style={styles.buttonContainer}>
         <Button
           title={showDetails ? 'Hide Details' : 'View Details'}
           onPress={() => setShowDetails(!showDetails)}
         />
-      </View>
+      </View> */}
 
       {showDetails && (
         <View style={styles.ContainerCategory}>
