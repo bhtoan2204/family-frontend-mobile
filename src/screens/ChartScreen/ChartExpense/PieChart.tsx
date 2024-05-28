@@ -27,6 +27,7 @@ interface PieChartScreenProps {
 
 interface LegendProps {
   data: DataType[];
+  style?: React.CSSProperties;
 }
 
 interface ExpenseData {
@@ -207,7 +208,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
     });
   };
 
-  const Legend: React.FC<LegendProps> = ({data}) => {
+  const Legend: React.FC<LegendProps> = ({data, style}) => {
     return (
       <ScrollView horizontal contentContainerStyle={styles.legendContainer}>
         {data.map((item, index) => (
@@ -230,17 +231,21 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
 
   return (
     <ScrollView style={{height: '80%'}}>
-      <View style={styles.itemContainer}>
-        <Icon name="calendar" size={25} color="black" style={styles.icon} />
-        <Text style={styles.text}>Select Month</Text>
-      </View>
-      <TouchableOpacity
-        style={styles.monthPickerContainer}
-        onPress={() => setMonthPickerVisible(!isMonthPickerVisible)}>
-        <View style={styles.monthContainer}>
-          <Text style={styles.monthText}>{formatMonthYear(selectedMonth)}</Text>
+      <View style={{flexDirection: 'row', padding: 10}}>
+        <View style={styles.itemContainer}>
+          <Icon name="calendar" size={25} color="black" style={styles.icon} />
+          <Text style={styles.text}>Select Month</Text>
         </View>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.monthPickerContainer}
+          onPress={() => setMonthPickerVisible(!isMonthPickerVisible)}>
+          <View style={styles.monthContainer}>
+            <Text style={styles.monthText}>
+              {formatMonthYear(selectedMonth)}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
 
       {isMonthPickerVisible && (
         <MonthPicker

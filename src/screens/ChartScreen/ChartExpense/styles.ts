@@ -254,6 +254,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderBottomWidth: 1,
     paddingVertical: 10,
+    right: 165,
   },
   monthContainer: {
     borderRadius: 10,
