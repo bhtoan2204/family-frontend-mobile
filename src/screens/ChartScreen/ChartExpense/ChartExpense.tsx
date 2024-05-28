@@ -100,6 +100,20 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
             <Icon name="filter" size={30} style={styles.filterButton} />
           </TouchableOpacity>
         </View>
+        <View
+          style={{
+            flexDirection: 'column',
+            marginHorizontal: 20,
+            bottom: 5,
+            marginBottom: 10,
+          }}>
+          <Text style={{fontSize: 20, fontWeight: '600', marginBottom: 5}}>
+            Hello, Jennie
+          </Text>
+          <Text style={{fontSize: 16, color: 'gray'}}>
+            Here you can view brief overview of your budget.
+          </Text>
+        </View>
         <View style={styles.containerTab}>
           <TouchableOpacity
             onPress={() => selectOption('Day')}
