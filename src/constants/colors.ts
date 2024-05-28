@@ -30,6 +30,7 @@ const COLORS = {
   SilverFoil: '#b0b0b0',
   Azure: '#0095FF',
   BlueLight: '#87CEEB',
+  SpringWood: '#FEF5E9',
 };
 
 export default COLORS;

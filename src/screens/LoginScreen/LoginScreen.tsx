@@ -132,232 +132,236 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
       resizeMode="stretch">
       <KeyboardAvoidingView behavior="padding">
         {/* <ScrollView keyboardShouldPersistTaps="handled"></ScrollView> */}
-        <SafeAreaView>
-          <View>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('WelcomeScreen');
-              }}>
-              <Ionicons
-                name="chevron-back-circle-outline"
-                style={styles.backIcon}
-              />
-            </TouchableOpacity>
-          </View>
-          <View className="mx-7" style={{bottom: 95}}>
-            <Image
-              source={require('../../assets/images/logo-app-1.png')}
-              resizeMode="stretch"
-              style={styles.logo}
-            />
-            <View className="my-5" style={{marginTop: 100}}>
-              {/* <Text style={styles.loginText}>Log in</Text> */}
+        <ScrollView>
+          <SafeAreaView>
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('WelcomeScreen');
+                }}>
+                <Ionicons
+                  name="chevron-back-circle-outline"
+                  style={styles.backIcon}
+                />
+              </TouchableOpacity>
             </View>
-            <Formik
-              initialValues={{email: '', password: '', submit: null}}
-              onSubmit={handleLogin}
-              validationSchema={Yup.object().shape({
-                email: Yup.string()
-                  .email(TEXTS.INVALID_EMAIL)
-                  .required(TEXTS.EMAIL_REQUIRED),
-                password: Yup.string()
-                  .max(255)
-                  .min(6, TEXTS.INVALID_PASSWORD)
-                  .required(TEXTS.PASSWORD_REQUIRED),
-              })}>
-              {({
-                errors,
-                handleBlur,
-                handleChange,
-                handleSubmit,
-                isSubmitting,
-                touched,
-                values,
-              }) => (
-                <View style={{marginTop: 15}}>
-                  <View className="mb-2">
-                    {/* <Text className="text-base font-normal my-2">
+            <View className="mx-7" style={{bottom: 95}}>
+              <Image
+                source={require('../../assets/images/logo-app-1.png')}
+                resizeMode="stretch"
+                style={styles.logo}
+              />
+              <View className="my-5" style={{marginTop: 100}}>
+                {/* <Text style={styles.loginText}>Log in</Text> */}
+              </View>
+              <Formik
+                initialValues={{email: '', password: '', submit: null}}
+                onSubmit={handleLogin}
+                validationSchema={Yup.object().shape({
+                  email: Yup.string()
+                    .email(TEXTS.INVALID_EMAIL)
+                    .required(TEXTS.EMAIL_REQUIRED),
+                  password: Yup.string()
+                    .max(255)
+                    .min(6, TEXTS.INVALID_PASSWORD)
+                    .required(TEXTS.PASSWORD_REQUIRED),
+                })}>
+                {({
+                  errors,
+                  handleBlur,
+                  handleChange,
+                  handleSubmit,
+                  isSubmitting,
+                  touched,
+                  values,
+                }) => (
+                  <View style={{marginTop: 15}}>
+                    <View className="mb-2">
+                      {/* <Text className="text-base font-normal my-2">
                         {TEXTS.EMAIL}
                       </Text> */}
-                    <View
-                      style={[
-                        styles.row,
-                        styles.TextInput,
-                        {borderColor: errors.email ? 'red' : '#2A475E'},
-                      ]}>
-                      <MaterialCommunityIcons
-                        name="email-outline"
-                        style={styles.Icon}
-                      />
-                      <TextInput
-                        placeholder={TEXTS.EMAIL_PLACEHOLDER}
-                        placeholderTextColor={
-                          errors.email ? COLORS.red : '#A6A6A6'
-                        }
-                        keyboardType="email-address"
-                        onBlur={handleBlur('email')}
-                        onChangeText={handleChange('email')}
-                        value={values.email}
+                      <View
                         style={[
-                          {
-                            marginLeft: 10,
-                            width: '100%',
-                            color: '#2A475E',
-                          },
-                        ]}
-                      />
+                          styles.row,
+                          styles.TextInput,
+                          {borderColor: errors.email ? 'red' : '#2A475E'},
+                        ]}>
+                        <MaterialCommunityIcons
+                          name="email-outline"
+                          style={styles.Icon}
+                        />
+                        <TextInput
+                          placeholder={TEXTS.EMAIL_PLACEHOLDER}
+                          placeholderTextColor={
+                            errors.email ? COLORS.red : '#A6A6A6'
+                          }
+                          keyboardType="email-address"
+                          onBlur={handleBlur('email')}
+                          onChangeText={handleChange('email')}
+                          value={values.email}
+                          style={[
+                            {
+                              marginLeft: 10,
+                              width: '100%',
+                              color: '#2A475E',
+                            },
+                          ]}
+                        />
+                      </View>
+                      {errors.email && touched.email && (
+                        <View>
+                          <Text
+                            className="
+                            text-xs text-red-500 mt-[5px] ml-[5px]
+                          ">
+                            {errors.email}
+                          </Text>
+                        </View>
+                      )}
                     </View>
-                    {errors.email && touched.email && (
+                    <View className="mb-2" style={{marginTop: 20}}>
+                      <View
+                        style={[
+                          styles.row,
+                          {alignItems: 'center'},
+                          styles.TextInput,
+                          {borderColor: errors.email ? 'red' : '#2A475E'},
+                        ]}>
+                        <MaterialCommunityIcons
+                          name="lock-outline"
+                          style={styles.Icon}
+                        />
+                        <TextInput
+                          className="w-full"
+                          placeholder={TEXTS.PASSWORD_PLACEHOLDER}
+                          placeholderTextColor={
+                            errors.password ? COLORS.red : '#A6A6A6'
+                          }
+                          secureTextEntry={!isPasswordVisible}
+                          onBlur={handleBlur('password')}
+                          onChangeText={handleChange('password')}
+                          value={values.password}
+                          style={[{marginLeft: 10, color: '#2A475E'}]}
+                        />
+                        <TouchableOpacity
+                          className="absolute right-3"
+                          onPress={() =>
+                            setIsPasswordVisible(!isPasswordVisible)
+                          }>
+                          {isPasswordVisible ? (
+                            <Ionicons name="eye" style={styles.eyeIcon} />
+                          ) : (
+                            <Ionicons name="eye-off" style={styles.eyeIcon} />
+                          )}
+                        </TouchableOpacity>
+                      </View>
+                      {errors.password && touched.password && (
+                        <View>
+                          <Text
+                            className="
+                            text-xs text-red-500 mt-[5px] ml-[5px]
+                          ">
+                            {errors.password}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                    {errors.submit && (
                       <View>
                         <Text
                           className="
                             text-xs text-red-500 mt-[5px] ml-[5px]
                           ">
-                          {errors.email}
+                          {errors.submit}
                         </Text>
                       </View>
                     )}
-                  </View>
-                  <View className="mb-2" style={{marginTop: 20}}>
                     <View
-                      style={[
-                        styles.row,
-                        {alignItems: 'center'},
-                        styles.TextInput,
-                        {borderColor: errors.email ? 'red' : '#2A475E'},
-                      ]}>
-                      <MaterialCommunityIcons
-                        name="lock-outline"
-                        style={styles.Icon}
-                      />
-                      <TextInput
-                        className="w-full"
-                        placeholder={TEXTS.PASSWORD_PLACEHOLDER}
-                        placeholderTextColor={
-                          errors.password ? COLORS.red : '#A6A6A6'
-                        }
-                        secureTextEntry={!isPasswordVisible}
-                        onBlur={handleBlur('password')}
-                        onChangeText={handleChange('password')}
-                        value={values.password}
-                        style={[{marginLeft: 10, color: '#2A475E'}]}
-                      />
-                      <TouchableOpacity
-                        className="absolute right-3"
-                        onPress={() =>
-                          setIsPasswordVisible(!isPasswordVisible)
-                        }>
-                        {isPasswordVisible ? (
-                          <Ionicons name="eye" style={styles.eyeIcon} />
-                        ) : (
-                          <Ionicons name="eye-off" style={styles.eyeIcon} />
-                        )}
-                      </TouchableOpacity>
-                    </View>
-                    {errors.password && touched.password && (
-                      <View>
-                        <Text
-                          className="
-                            text-xs text-red-500 mt-[5px] ml-[5px]
-                          ">
-                          {errors.password}
-                        </Text>
-                      </View>
-                    )}
-                  </View>
-                  {errors.submit && (
-                    <View>
-                      <Text
-                        className="
-                            text-xs text-red-500 mt-[5px] ml-[5px]
-                          ">
-                        {errors.submit}
-                      </Text>
-                    </View>
-                  )}
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'flex-end',
-                    }}>
-                    <Pressable
-                      onPress={() => {
-                        navigation.navigate('ForgotPasswordScreen');
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
                       }}>
-                      <Text style={styles.forgotPassword}>
-                        {TEXTS.FORGOT_PASSWORD}
-                      </Text>
-                    </Pressable>
+                      <Pressable
+                        onPress={() => {
+                          navigation.navigate('ForgotPasswordScreen');
+                        }}>
+                        <Text style={styles.forgotPassword}>
+                          {TEXTS.FORGOT_PASSWORD}
+                        </Text>
+                      </Pressable>
+                    </View>
+                    <CustomButton
+                      style={styles.button}
+                      title={TEXTS.LOGIN}
+                      filled
+                      onPress={handleSubmit}
+                    />
                   </View>
-                  <CustomButton
-                    style={styles.button}
-                    title={TEXTS.LOGIN}
-                    filled
-                    onPress={handleSubmit}
-                  />
-                </View>
-              )}
-            </Formik>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginVertical: 23,
-              }}>
-              <Text
-                style={[
-                  {fontSize: 17},
-                  {marginBottom: -20},
-                  {color: '#2A475E'},
-                ]}>
-                {TEXTS.LOGIN_OR}
-              </Text>
-            </View>
-            <View style={[styles.container, {bottom: 20}]}>
-              <TouchableOpacity
-                style={[styles.button, {right: 20}]}
-                onPress={() => {
-                  promptAsync();
-                }}>
-                <Image
-                  style={styles.image}
-                  source={GoogleImage}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, {left: 20}]}
-                onPress={handleFacebookLogin}>
-                <Image
-                  style={styles.image}
-                  source={FacebookImage}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
-            <View className="flex-row justify-center my-5" style={{bottom: 40}}>
-              <Text className="text-base mr-1" style={{color: '#2A475E'}}>
-                {TEXTS.DONT_HAVE_ACCOUNT}
-              </Text>
-
-              <TouchableOpacity
-                style={{top: 2}}
-                onPress={() => {
-                  navigation.navigate('SignupScreen');
+                )}
+              </Formik>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginVertical: 23,
                 }}>
                 <Text
                   style={[
-                    {color: '#66C0F4'},
-                    {fontSize: 16},
-                    {fontWeight: 'bold'},
+                    {fontSize: 17},
+                    {marginBottom: -20},
+                    {color: '#2A475E'},
                   ]}>
-                  {TEXTS.SIGNUP}
+                  {TEXTS.LOGIN_OR}
                 </Text>
-              </TouchableOpacity>
+              </View>
+              <View style={[styles.container, {bottom: 20}]}>
+                <TouchableOpacity
+                  style={[styles.button, {right: 20}]}
+                  onPress={() => {
+                    promptAsync();
+                  }}>
+                  <Image
+                    style={styles.image}
+                    source={GoogleImage}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.button, {left: 20}]}
+                  onPress={handleFacebookLogin}>
+                  <Image
+                    style={styles.image}
+                    source={FacebookImage}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+              </View>
+              <View
+                className="flex-row justify-center my-5"
+                style={{bottom: 40}}>
+                <Text className="text-base mr-1" style={{color: '#2A475E'}}>
+                  {TEXTS.DONT_HAVE_ACCOUNT}
+                </Text>
+
+                <TouchableOpacity
+                  style={{top: 2}}
+                  onPress={() => {
+                    navigation.navigate('SignupScreen');
+                  }}>
+                  <Text
+                    style={[
+                      {color: '#66C0F4'},
+                      {fontSize: 16},
+                      {fontWeight: 'bold'},
+                    ]}>
+                    {TEXTS.SIGNUP}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </SafeAreaView>
+          </SafeAreaView>
+        </ScrollView>
       </KeyboardAvoidingView>
     </ImageBackground>
   );

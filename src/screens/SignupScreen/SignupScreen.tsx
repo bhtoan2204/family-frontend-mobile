@@ -101,257 +101,261 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
       style={{flex: 1}}
       resizeMode="stretch">
       <KeyboardAvoidingView behavior="padding">
-        <SafeAreaView>
-          <View>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('WelcomeScreen');
-              }}>
-              <Ionicons
-                name="chevron-back-circle-outline"
-                style={styles.backIcon}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={[styles.marginHorizontal, {bottom: 190}]}>
-            <View style={[styles.marginVertical]}>
-              <Image
-                source={require('../../assets/images/logo-app-1.png')}
-                resizeMode="stretch"
-                style={styles.logo}
-              />
+        <ScrollView>
+          <SafeAreaView>
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('WelcomeScreen');
+                }}>
+                <Ionicons
+                  name="chevron-back-circle-outline"
+                  style={styles.backIcon}
+                />
+              </TouchableOpacity>
             </View>
-            <Formik
-              initialValues={{
-                firstName: '',
-                lastName: '',
-                email: '',
-                phoneNumber: '',
-                password: '',
-                termsAndConditions: false,
-                submit: null,
-              }}
-              onSubmit={handleSignup}
-              validationSchema={Yup.object().shape({
-                firstName: Yup.string().required(TEXTS.FIRST_NAME_REQUIRED),
-                lastName: Yup.string().required(TEXTS.LAST_NAME_REQUIRED),
-                email: Yup.string()
-                  .email(TEXTS.INVALID_EMAIL)
-                  .required(TEXTS.EMAIL_REQUIRED),
-                phoneNumber: Yup.string()
-                  .min(10, TEXTS.INVALID_PHONE_NUMBER)
-                  .required(TEXTS.PHONE_NUMBER_REQUIRED),
-                password: Yup.string()
-                  .max(255)
-                  .min(6, TEXTS.INVALID_PASSWORD)
-                  .required(TEXTS.PASSWORD_REQUIRED),
-                termsAndConditions: Yup.boolean()
-                  .oneOf([true], TEXTS.TERMS_AND_CONDITIONS_REQUIRED)
-                  .required(TEXTS.TERMS_AND_CONDITIONS_REQUIRED),
-              })}>
-              {({
-                errors,
-                handleBlur,
-                handleChange,
-                handleSubmit,
-                isSubmitting,
-                touched,
-                values,
-                setFieldValue,
-              }) => (
-                <View style={{marginTop: 120}}>
-                  <View style={styles.marginBottom}>
-                    <View
-                      style={{
-                        ...styles.placeholder,
-                        borderColor: errors.firstName
-                          ? COLORS.red
-                          : COLORS.Rhino,
-                      }}>
-                      <MaterialCommunityIcons
-                        name="account"
-                        style={styles.Icon}
-                      />
-                      <TextInput
-                        style={[
-                          styles.textInput,
-                          {marginLeft: 10, color: '#2A475E'},
-                        ]}
-                        placeholder={TEXTS.FIRST_NAME_PLACEHOLDER}
-                        placeholderTextColor={
-                          errors.firstName ? COLORS.red : '#A6A6A6'
-                        }
-                        onBlur={handleBlur('firstName')}
-                        onChangeText={handleChange('firstName')}
-                        value={values.firstName}
-                      />
+            <View style={[styles.marginHorizontal, {bottom: 190}]}>
+              <View style={[styles.marginVertical]}>
+                <Image
+                  source={require('../../assets/images/logo-app-1.png')}
+                  resizeMode="stretch"
+                  style={styles.logo}
+                />
+              </View>
+              <Formik
+                initialValues={{
+                  firstName: '',
+                  lastName: '',
+                  email: '',
+                  phoneNumber: '',
+                  password: '',
+                  termsAndConditions: false,
+                  submit: null,
+                }}
+                onSubmit={handleSignup}
+                validationSchema={Yup.object().shape({
+                  firstName: Yup.string().required(TEXTS.FIRST_NAME_REQUIRED),
+                  lastName: Yup.string().required(TEXTS.LAST_NAME_REQUIRED),
+                  email: Yup.string()
+                    .email(TEXTS.INVALID_EMAIL)
+                    .required(TEXTS.EMAIL_REQUIRED),
+                  phoneNumber: Yup.string()
+                    .min(10, TEXTS.INVALID_PHONE_NUMBER)
+                    .required(TEXTS.PHONE_NUMBER_REQUIRED),
+                  password: Yup.string()
+                    .max(255)
+                    .min(6, TEXTS.INVALID_PASSWORD)
+                    .required(TEXTS.PASSWORD_REQUIRED),
+                  termsAndConditions: Yup.boolean()
+                    .oneOf([true], TEXTS.TERMS_AND_CONDITIONS_REQUIRED)
+                    .required(TEXTS.TERMS_AND_CONDITIONS_REQUIRED),
+                })}>
+                {({
+                  errors,
+                  handleBlur,
+                  handleChange,
+                  handleSubmit,
+                  isSubmitting,
+                  touched,
+                  values,
+                  setFieldValue,
+                }) => (
+                  <View style={{marginTop: 120}}>
+                    <View style={styles.marginBottom}>
+                      <View
+                        style={{
+                          ...styles.placeholder,
+                          borderColor: errors.firstName
+                            ? COLORS.red
+                            : COLORS.Rhino,
+                        }}>
+                        <MaterialCommunityIcons
+                          name="account"
+                          style={styles.Icon}
+                        />
+                        <TextInput
+                          style={[
+                            styles.textInput,
+                            {marginLeft: 10, color: '#2A475E'},
+                          ]}
+                          placeholder={TEXTS.FIRST_NAME_PLACEHOLDER}
+                          placeholderTextColor={
+                            errors.firstName ? COLORS.red : '#A6A6A6'
+                          }
+                          onBlur={handleBlur('firstName')}
+                          onChangeText={handleChange('firstName')}
+                          value={values.firstName}
+                        />
+                      </View>
+                      {errors.firstName && touched.firstName && (
+                        <Text style={styles.errorText}>{errors.firstName}</Text>
+                      )}
                     </View>
-                    {errors.firstName && touched.firstName && (
-                      <Text style={styles.errorText}>{errors.firstName}</Text>
+                    <View style={styles.marginBottom}>
+                      {/* <Text style={styles.title}>{TEXTS.LAST_NAME}</Text> */}
+                      <View
+                        style={{
+                          ...styles.placeholder,
+                          borderColor: errors.lastName ? COLORS.red : '#2A475E',
+                        }}>
+                        <MaterialCommunityIcons
+                          name="account"
+                          style={styles.Icon}
+                        />
+                        <TextInput
+                          style={[
+                            styles.textInput,
+                            {marginLeft: 10, color: '#2A475E'},
+                          ]}
+                          placeholder={TEXTS.LAST_NAME_PLACEHOLDER}
+                          placeholderTextColor={
+                            errors.lastName ? COLORS.red : '#A6A6A6'
+                          }
+                          onBlur={handleBlur('lastName')}
+                          onChangeText={handleChange('lastName')}
+                          value={values.lastName}
+                        />
+                      </View>
+                      {errors.lastName && touched.lastName && (
+                        <Text style={styles.errorText}>{errors.lastName}</Text>
+                      )}
+                    </View>
+                    <View style={styles.marginBottom}>
+                      {/* <Text style={styles.title}>{TEXTS.EMAIL}</Text> */}
+                      <View
+                        style={{
+                          ...styles.placeholder,
+                          borderColor: errors.email ? COLORS.red : '#2A475E',
+                        }}>
+                        <MaterialCommunityIcons
+                          name="email-outline"
+                          style={styles.Icon}
+                        />
+                        <TextInput
+                          style={[
+                            styles.textInput,
+                            {marginLeft: 10, color: '#2A475E'},
+                          ]}
+                          placeholder={TEXTS.EMAIL_PLACEHOLDER}
+                          placeholderTextColor={
+                            errors.email ? COLORS.red : '#A6A6A6'
+                          }
+                          keyboardType="email-address"
+                          onBlur={handleBlur('email')}
+                          onChangeText={handleChange('email')}
+                          value={values.email}
+                        />
+                      </View>
+                      {errors.email && touched.email && (
+                        <Text style={styles.errorText}>{errors.email}</Text>
+                      )}
+                    </View>
+                    <View style={styles.marginBottom}>
+                      {/* <Text style={styles.title}>{TEXTS.PHONE_NUMBER}</Text> */}
+                      <View
+                        style={{
+                          ...styles.placeholder,
+                          borderColor: errors.phoneNumber
+                            ? COLORS.red
+                            : '#2A475E',
+                        }}>
+                        <MaterialCommunityIcons
+                          name="phone-outline"
+                          style={styles.Icon}
+                        />
+                        <TextInput
+                          style={[
+                            styles.textInput,
+                            {marginLeft: 10, color: '#2A475E'},
+                          ]}
+                          placeholder={TEXTS.PHONE_NUMBER_PLACEHOLDER}
+                          placeholderTextColor={
+                            errors.phoneNumber ? COLORS.red : '#A6A6A6'
+                          }
+                          keyboardType="phone-pad"
+                          onBlur={handleBlur('phoneNumber')}
+                          onChangeText={handleChange('phoneNumber')}
+                          value={values.phoneNumber}
+                        />
+                      </View>
+                      {errors.phoneNumber && touched.phoneNumber && (
+                        <Text style={styles.errorText}>
+                          {errors.phoneNumber}
+                        </Text>
+                      )}
+                    </View>
+                    <View style={styles.marginBottom}>
+                      {/* <Text style={styles.title}>{TEXTS.PASSWORD}</Text> */}
+                      <View
+                        style={{
+                          ...styles.placeholder,
+                          borderColor: errors.password ? COLORS.red : '#2A475E',
+                        }}>
+                        <MaterialCommunityIcons
+                          name="lock-outline"
+                          style={styles.Icon}
+                        />
+                        <TextInput
+                          style={[
+                            styles.textInput,
+                            {marginLeft: 10, color: '#2A475E'},
+                          ]}
+                          placeholder={TEXTS.PASSWORD_PLACEHOLDER}
+                          placeholderTextColor={
+                            errors.password ? COLORS.red : '#A6A6A6'
+                          }
+                          secureTextEntry={!isPasswordVisible}
+                          onBlur={handleBlur('password')}
+                          onChangeText={handleChange('password')}
+                          value={values.password}
+                        />
+                        <TouchableOpacity
+                          style={styles.touchable}
+                          onPress={() =>
+                            setIsPasswordVisible(!isPasswordVisible)
+                          }>
+                          {isPasswordVisible ? (
+                            <Ionicons name="eye" style={styles.eyeIcon} />
+                          ) : (
+                            <Ionicons name="eye-off" style={styles.eyeIcon} />
+                          )}
+                        </TouchableOpacity>
+                      </View>
+                      {errors.password && touched.password && (
+                        <Text style={styles.errorText}>{errors.password}</Text>
+                      )}
+                    </View>
+                    {errors.submit && (
+                      <View>
+                        <Text style={styles.errorText}>{errors.submit}</Text>
+                      </View>
                     )}
-                  </View>
-                  <View style={styles.marginBottom}>
-                    {/* <Text style={styles.title}>{TEXTS.LAST_NAME}</Text> */}
-                    <View
-                      style={{
-                        ...styles.placeholder,
-                        borderColor: errors.lastName ? COLORS.red : '#2A475E',
-                      }}>
-                      <MaterialCommunityIcons
-                        name="account"
-                        style={styles.Icon}
+                    <View style={styles.marginVerticalFlex}>
+                      <Checkbox
+                        style={styles.checkbox}
+                        value={values.termsAndConditions}
+                        onValueChange={newValue => {
+                          setFieldValue('termsAndConditions', newValue);
+                          handleChange('termsAndConditions');
+                        }}
                       />
-                      <TextInput
-                        style={[
-                          styles.textInput,
-                          {marginLeft: 10, color: '#2A475E'},
-                        ]}
-                        placeholder={TEXTS.LAST_NAME_PLACEHOLDER}
-                        placeholderTextColor={
-                          errors.lastName ? COLORS.red : '#A6A6A6'
-                        }
-                        onBlur={handleBlur('lastName')}
-                        onChangeText={handleChange('lastName')}
-                        value={values.lastName}
-                      />
+                      <Text style={{color: COLORS.Rhino}}>
+                        {TEXTS.TERMS_AND_CONDITIONS}
+                      </Text>
                     </View>
-                    {errors.lastName && touched.lastName && (
-                      <Text style={styles.errorText}>{errors.lastName}</Text>
-                    )}
-                  </View>
-                  <View style={styles.marginBottom}>
-                    {/* <Text style={styles.title}>{TEXTS.EMAIL}</Text> */}
-                    <View
-                      style={{
-                        ...styles.placeholder,
-                        borderColor: errors.email ? COLORS.red : '#2A475E',
-                      }}>
-                      <MaterialCommunityIcons
-                        name="email-outline"
-                        style={styles.Icon}
-                      />
-                      <TextInput
-                        style={[
-                          styles.textInput,
-                          {marginLeft: 10, color: '#2A475E'},
-                        ]}
-                        placeholder={TEXTS.EMAIL_PLACEHOLDER}
-                        placeholderTextColor={
-                          errors.email ? COLORS.red : '#A6A6A6'
-                        }
-                        keyboardType="email-address"
-                        onBlur={handleBlur('email')}
-                        onChangeText={handleChange('email')}
-                        value={values.email}
-                      />
-                    </View>
-                    {errors.email && touched.email && (
-                      <Text style={styles.errorText}>{errors.email}</Text>
-                    )}
-                  </View>
-                  <View style={styles.marginBottom}>
-                    {/* <Text style={styles.title}>{TEXTS.PHONE_NUMBER}</Text> */}
-                    <View
-                      style={{
-                        ...styles.placeholder,
-                        borderColor: errors.phoneNumber
-                          ? COLORS.red
-                          : '#2A475E',
-                      }}>
-                      <MaterialCommunityIcons
-                        name="phone-outline"
-                        style={styles.Icon}
-                      />
-                      <TextInput
-                        style={[
-                          styles.textInput,
-                          {marginLeft: 10, color: '#2A475E'},
-                        ]}
-                        placeholder={TEXTS.PHONE_NUMBER_PLACEHOLDER}
-                        placeholderTextColor={
-                          errors.phoneNumber ? COLORS.red : '#A6A6A6'
-                        }
-                        keyboardType="phone-pad"
-                        onBlur={handleBlur('phoneNumber')}
-                        onChangeText={handleChange('phoneNumber')}
-                        value={values.phoneNumber}
-                      />
-                    </View>
-                    {errors.phoneNumber && touched.phoneNumber && (
-                      <Text style={styles.errorText}>{errors.phoneNumber}</Text>
-                    )}
-                  </View>
-                  <View style={styles.marginBottom}>
-                    {/* <Text style={styles.title}>{TEXTS.PASSWORD}</Text> */}
-                    <View
-                      style={{
-                        ...styles.placeholder,
-                        borderColor: errors.password ? COLORS.red : '#2A475E',
-                      }}>
-                      <MaterialCommunityIcons
-                        name="lock-outline"
-                        style={styles.Icon}
-                      />
-                      <TextInput
-                        style={[
-                          styles.textInput,
-                          {marginLeft: 10, color: '#2A475E'},
-                        ]}
-                        placeholder={TEXTS.PASSWORD_PLACEHOLDER}
-                        placeholderTextColor={
-                          errors.password ? COLORS.red : '#A6A6A6'
-                        }
-                        secureTextEntry={!isPasswordVisible}
-                        onBlur={handleBlur('password')}
-                        onChangeText={handleChange('password')}
-                        value={values.password}
-                      />
-                      <TouchableOpacity
-                        style={styles.touchable}
-                        onPress={() =>
-                          setIsPasswordVisible(!isPasswordVisible)
-                        }>
-                        {isPasswordVisible ? (
-                          <Ionicons name="eye" style={styles.eyeIcon} />
-                        ) : (
-                          <Ionicons name="eye-off" style={styles.eyeIcon} />
-                        )}
-                      </TouchableOpacity>
-                    </View>
-                    {errors.password && touched.password && (
-                      <Text style={styles.errorText}>{errors.password}</Text>
-                    )}
-                  </View>
-                  {errors.submit && (
-                    <View>
-                      <Text style={styles.errorText}>{errors.submit}</Text>
-                    </View>
-                  )}
-                  <View style={styles.marginVerticalFlex}>
-                    <Checkbox
-                      style={styles.checkbox}
-                      value={values.termsAndConditions}
-                      onValueChange={newValue => {
-                        setFieldValue('termsAndConditions', newValue);
-                        handleChange('termsAndConditions');
-                      }}
+                    {errors.termsAndConditions &&
+                      touched.termsAndConditions && (
+                        <Text style={styles.errorText}>
+                          {errors.termsAndConditions}
+                        </Text>
+                      )}
+                    <CustomButton
+                      title={TEXTS.SIGNUP}
+                      filled
+                      style={styles.button}
+                      onPress={handleSubmit}
                     />
-                    <Text style={{color: COLORS.Rhino}}>
-                      {TEXTS.TERMS_AND_CONDITIONS}
-                    </Text>
-                  </View>
-                  {errors.termsAndConditions && touched.termsAndConditions && (
-                    <Text style={styles.errorText}>
-                      {errors.termsAndConditions}
-                    </Text>
-                  )}
-                  <CustomButton
-                    title={TEXTS.SIGNUP}
-                    filled
-                    style={styles.button}
-                    onPress={handleSubmit}
-                  />
-                  {/* <View
+                    {/* <View
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'center',
@@ -363,51 +367,52 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                       </Text>
                     </View> */}
 
-                  <View style={styles.marginVerticalCenter}>
-                    <Text style={styles.accountTitle}>
-                      {TEXTS.HAVE_ACCOUNT}
-                    </Text>
-                    <Pressable
-                      onPress={() => {
-                        navigation.navigate('LoginScreen');
-                      }}>
-                      <Text style={styles.loginText}>{TEXTS.LOGIN}</Text>
-                    </Pressable>
-                  </View>
+                    <View style={styles.marginVerticalCenter}>
+                      <Text style={styles.accountTitle}>
+                        {TEXTS.HAVE_ACCOUNT}
+                      </Text>
+                      <Pressable
+                        onPress={() => {
+                          navigation.navigate('LoginScreen');
+                        }}>
+                        <Text style={styles.loginText}>{TEXTS.LOGIN}</Text>
+                      </Pressable>
+                    </View>
 
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      bottom: 10,
-                    }}>
-                    <TouchableOpacity
-                      style={[styles.button, {right: 20}]}
-                      onPress={() => {
-                        promptAsync();
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        bottom: 10,
                       }}>
-                      <Image
-                        style={{height: 36, width: 36}}
-                        source={GoogleImage}
-                        resizeMode="contain"
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.button, {left: 20}]}
-                      // onPress={handleFacebookLogin}
-                    >
-                      <Image
-                        style={{height: 36, width: 36}}
-                        source={FacebookImage}
-                        resizeMode="contain"
-                      />
-                    </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[styles.button, {right: 20}]}
+                        onPress={() => {
+                          promptAsync();
+                        }}>
+                        <Image
+                          style={{height: 36, width: 36}}
+                          source={GoogleImage}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[styles.button, {left: 20}]}
+                        // onPress={handleFacebookLogin}
+                      >
+                        <Image
+                          style={{height: 36, width: 36}}
+                          source={FacebookImage}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-              )}
-            </Formik>
-          </View>
-        </SafeAreaView>
+                )}
+              </Formik>
+            </View>
+          </SafeAreaView>
+        </ScrollView>
       </KeyboardAvoidingView>
     </ImageBackground>
   );
