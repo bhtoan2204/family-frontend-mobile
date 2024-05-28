@@ -19,7 +19,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: screenWidth * 0.07,
     backgroundColor: COLORS.PaleAqua,
     color: COLORS.Rhino,
+    alignSelf: 'center',
   },
+
   scrollView: {
     flex: 1,
     backgroundColor: COLORS.white,
@@ -58,11 +60,31 @@ const styles = StyleSheet.create({
     width: screenWidth * 0.08,
   },
   logo: {
-    height: screenHeight * 0.08,
-    width: screenWidth * 0.15,
+    height: 100,
+    width: 100,
     top: screenHeight * 0.1,
-    marginTop: screenHeight * 0.05,
+    marginTop: screenHeight * 0.09,
     alignSelf: 'center',
+  },
+  forgotPassword: {
+    color: COLORS.DenimBlue,
+    fontSize: screenHeight * 0.018,
+    fontWeight: '600',
+    marginVertical: screenHeight * 0.005,
+    paddingRight: screenWidth * 0.03,
+  },
+  loginText: {
+    fontSize: screenHeight * 0.032,
+    fontWeight: 'bold',
+    color: COLORS.Rhino,
+    alignSelf: 'flex-start',
+    paddingLeft: screenWidth * 0.02,
+    top: screenHeight * 0.02,
+  },
+  backIcon: {
+    fontSize: screenHeight * 0.05,
+    color: COLORS.Rhino,
+    padding: screenHeight * 0.02,
   },
 });
 
