@@ -14,16 +14,20 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.5,
     alignSelf: 'center',
     marginBottom: -120,
+    alignItems: 'center',
   },
   textLogo: {
     width: screenWidth * 0.4,
     height: screenHeight * 0.2,
     alignSelf: 'center',
+    alignItems: 'center',
   },
   welcomeText: {
     fontSize: screenHeight * 0.018,
     alignSelf: 'center',
     color: COLORS.black,
+    alignItems: 'center',
+    fontWeight: '400',
   },
   buttonLogin: {
     backgroundColor: '#2a475e',

@@ -351,7 +351,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   {TEXTS.LOGIN_OR}
                 </Text>
               </View>
-              <View style={styles.container}>
+              <View style={[styles.container, {bottom: 20}]}>
                 <TouchableOpacity
                   style={[styles.button, {right: 20}]}
                   onPress={() => {
@@ -373,18 +373,13 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   />
                 </TouchableOpacity>
               </View>
-              <View className="flex-row justify-center my-5">
+              <View
+                className="flex-row justify-center my-5"
+                style={{bottom: 40}}>
                 <Text className="text-base mr-1" style={{color: '#2A475E'}}>
                   {TEXTS.DONT_HAVE_ACCOUNT}
                 </Text>
-                {/* <Pressable
-                  onPress={() => {
-                    navigation.navigate('SignupScreen');
-                  }}>
-                  <Text className={`text-base text-[${COLORS.login}]`}>
-                    {TEXTS.SIGNUP}
-                  </Text>
-                </Pressable> */}
+
                 <TouchableOpacity
                   style={{top: 2}}
                   onPress={() => {

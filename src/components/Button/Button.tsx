@@ -34,6 +34,7 @@ const CustomButton = (props: ButtonProps) => {
         style={{
           fontSize: 18,
           color: textColor,
+          fontWeight: 'bold',
         }}>
         {props.title}
       </Text>
