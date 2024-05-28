@@ -123,6 +123,9 @@ export type CalendarStackParamList = {
   CreateEvent: {
     id_family: number | undefined;
   };
+  CreateCategoryEvent: {
+    id_family: number | undefined;
+  };
 };
 
 export type FamilyStackParamList = {
@@ -491,6 +494,16 @@ export type CreateEventNavigationProps = NativeStackNavigationProp<
 export interface CreateEventScreenProps {
   navigation: CreateEventNavigationProps;
   route: RouteProp<CalendarStackParamList, 'CreateEvent'>;
+}
+
+export type CreateCategoryEventNavigationProps = NativeStackNavigationProp<
+  CalendarStackParamList,
+  'CreateCategoryEvent'
+>;
+
+export interface CreateCategoryEventScreenProps {
+  navigation: CreateCategoryEventNavigationProps;
+  route: RouteProp<CalendarStackParamList, 'CreateCategoryEvent'>;
 }
 
 export type AllMemberNavigationProp = NativeStackNavigationProp<

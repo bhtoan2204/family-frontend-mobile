@@ -37,8 +37,8 @@ plusIcon: {
     backgroundColor: '#00adf5',
     borderRadius: 50,
     padding: 15,
-    elevation: 5, // Adds shadow for Android
-    shadowColor: '#000', // Adds shadow for iOS
+    elevation: 5, 
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 2,

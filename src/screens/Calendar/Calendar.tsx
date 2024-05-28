@@ -10,41 +10,65 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import EventList from './EventList';
 import { LongPressGestureHandler, State } from 'react-native-gesture-handler';
 import styles from './style';
-
-type Event = {
-    id_calendar: number;
-    title: string;
-    time_start: Date;
-    time_end: Date;
-    description: string;
-    color: string;
-    is_all_day: boolean;
-};
+import { useDispatch } from 'react-redux';
+import { setFamily } from 'src/redux/slices/CalendarSlice';
+import { Event } from 'src/interface/calendar/Event';
 
 const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
     const { id_family } = route.params || {};
     const [events, setEvents] = useState({});
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const bottomSheetRef = useRef<RBSheet>(null);
-    const screenHeight = Dimensions.get('screen').height;
     const [eventDetails, setEventDetails] = useState<Event[]>([]);
+    const dispatch = useDispatch();
+    const [selectedDates, setSelectedDates] = useState({}); 
 
     type FormattedEvents = {
         [date: string]: { marked: boolean; icon?: () => JSX.Element };
     };
+   
+    useEffect(() => {
+        dispatch(setFamily(id_family));
+
+       
+        handleGetCalendar();
+    }, [id_family]);
+
+    useEffect(() => {
+        handleGetEventOnDate();
+    }, [id_family,selectedDate ]);
+
+  
+const handleGetEventOnDate = async () => {
+    try {
+        const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+        const response = await CalendarServices.getEventOnDate(id_family, formattedDate);
+        if (Array.isArray(response)) {
+            setEventDetails(response);
+        } else {
+            console.log('Unexpected response format', response);
+        }
+    } catch (error) {
+        console.log('Error fetching calendar data:', error);
+    }
+};
 
     const handleGetCalendar = async () => {
         try {
             const response = await CalendarServices.getCalendar({ id_family });
-            console.log(response); // Log the response to see the actual data structure
-
             if (Array.isArray(response)) {
                 const formattedEvents: FormattedEvents = {};
-                response.forEach((item: { time_start: string }) => {
-                    const date = new Date(item.time_start).toISOString().split('T')[0];
-                    formattedEvents[date] = { marked: true };
+                response.forEach((item: { time_start: string, time_end: string }) => {
+                    const startDate = new Date(item.time_start);
+                    const endDate = new Date(item.time_end);
+                    const currentDate = new Date(startDate);
+                    while (currentDate <= endDate) {
+                        const date = currentDate.toISOString().split('T')[0];
+                        formattedEvents[date] = { marked: true };
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
                 });
                 setEvents(formattedEvents);
+
             } else {
                 console.log('Unexpected response format', response);
             }
@@ -52,48 +76,20 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
             console.log('Error fetching calendar data:', error);
         }
     };
+    
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                await handleGetCalendar();
-                const eventData = await CalendarServices.getEventOnDate(id_family, format(selectedDate, 'yyyy-MM-dd'));
-                if (Array.isArray(eventData)) {
-                    const parsedEvents = eventData.map(event => {
-                        try {
-                            return {
-                                ...event,
-                                time_start: new Date(event.time_start),
-                                time_end: new Date(event.time_end)
-                            };
-                        } catch (e) {
-                            console.log('Invalid date format for event:', event);
-                            return event;
-                        }
-                    });
-                    setEventDetails(parsedEvents);
-                } else {
-                    console.log('Unexpected event data format', eventData);
-                }
-            } catch (error) {
-                console.log('Error fetching event details:', error);
-            }
-        };
-
-        fetchData();
-    }, [selectedDate, id_family]);
+ 
 
     const handleDayPress = (day: any) => {
-        setSelectedDate(new Date(day.dateString));
+ 
+        setSelectedDate(day.dateString);
     };
 
     const handleAddEvent = () => {
         navigation.navigate('CreateEvent', { id_family });
     };
 
-    const onEventPress = (event: any) => {
-        bottomSheetRef.current?.open();
-    };
+  
 
     const handleLongPress = () => {
         navigation.navigate('CalendarList', { id_family });
@@ -121,11 +117,11 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
                         monthFormat={'yyyy/MM'}
                         firstDay={1}
                         enableSwipeMonths={true}
-                        markedDates={events}
-                    />
+                        markedDates={{ ...events, ...{ [selectedDate]: { selected: true, selectedColor: '#00adf5' } } }} 
+                        />
 
                     <View>
-                        <EventList events={eventDetails} />
+                        <EventList selectDate={selectedDate} id_family={id_family} />
                     </View>
                 </View>
             </LongPressGestureHandler>
@@ -134,27 +130,8 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
                 <Icon name="plus" size={18} color="white" />
             </TouchableOpacity>
 
-            <RBSheet
-                ref={bottomSheetRef}
-                closeOnDragDown={true}
-                height={screenHeight * 0.5}
-                customStyles={{
-                    container: {
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                    },
-                }}
-            >
-                {eventDetails.map((event, index) => (
-                    <BottomSheet
-                        key={index}
-                        id_calendar={event.id_calendar}
-                        title={event.title}
-                        description={event.description}
-                        datetime={event.time_start}
-                    />
-                ))}
-            </RBSheet>
+            
+       
         </View>
     );
 };
