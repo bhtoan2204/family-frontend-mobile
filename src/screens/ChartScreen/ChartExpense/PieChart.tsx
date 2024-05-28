@@ -263,9 +263,8 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
           labelRadius={120}>
           <Labels slices={pieChartData} />
         </PieChart>
+        <Legend data={pieChartData} />
       </View>
-
-      <Legend data={pieChartData} />
 
       <View style={styles.buttonContainer}>
         <Button

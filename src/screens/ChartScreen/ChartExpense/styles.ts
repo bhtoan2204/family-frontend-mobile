@@ -214,6 +214,18 @@ const styles = StyleSheet.create({
   },
   chartContainer: {
     marginTop: 10,
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 20,
+    width: '90%',
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
 
   buttonContainer: {
