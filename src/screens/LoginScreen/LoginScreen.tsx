@@ -153,16 +153,21 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
         <ScrollView keyboardShouldPersistTaps="handled">
           <SafeAreaView>
             <View className="mx-7">
-              <View className="my-5">
+              <Image
+                source={require('../../assets/images/logo-app-1.png')}
+                resizeMode="stretch"
+                style={styles.logo}
+              />
+              <View className="my-5" style={{marginTop: 100}}>
                 {/* <Text className="text-xl font-bold my-3 text-gray-900">
                   {TEXTS.LOGIN_WELCOME}
                 </Text>
                 <Text className="text-base text-gray-900">
                   {TEXTS.LOGIN_TITLE}
                 </Text> */}
+
                 <Text
                   style={[
-                    {marginTop: 130},
                     {fontSize: 30},
                     {fontWeight: 'bold'},
                     {color: '#2A475E'},
@@ -191,7 +196,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   touched,
                   values,
                 }) => (
-                  <View style={{marginTop: 5}}>
+                  <View style={{marginTop: 15}}>
                     <View className="mb-2">
                       {/* <Text className="text-base font-normal my-2">
                         {TEXTS.EMAIL}

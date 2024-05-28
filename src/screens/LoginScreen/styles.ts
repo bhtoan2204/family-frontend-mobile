@@ -175,6 +175,13 @@ const styles = StyleSheet.create({
     height: 36,
     width: 36,
   },
+  logo: {
+    height: 95,
+    width: 95,
+    top: 80,
+    //alignSelf: 'left',
+    marginTop: 40,
+  },
 });
 
 export default styles;

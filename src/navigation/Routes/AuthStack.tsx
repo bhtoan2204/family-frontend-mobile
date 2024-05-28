@@ -6,6 +6,7 @@ import SignupScreen from 'src/screens/SignupScreen';
 import {AuthStackParamList} from '../NavigationTypes';
 import LandingPage from 'src/screens/LandingPage/LandingPage';
 import Notification from 'src/screens/Notifications';
+import WelcomeScreen from 'src/screens/WelcomeScreen';
 
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
@@ -15,6 +16,7 @@ const AuthStack = () => {
       screenOptions={{
         header: () => null,
       }}>
+      <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
       <Stack.Screen name="Notification" component={Notification} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="SignupScreen" component={SignupScreen} />
