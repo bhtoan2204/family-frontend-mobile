@@ -58,9 +58,9 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
               let categoryData = month.categories[category as any];
               // Check if categoryData exists
               if (categoryData === undefined) {
-                console.log(
-                  `categoryData for category "${category}" does not exist in month ${month}`,
-                );
+                // console.log(
+                //   `categoryData for category "${category}" does not exist in month ${month.month}`,
+                // );
                 categoryData = {name: 'Default', amount: 0}; // Default value
               }
               return categoryData;
@@ -70,7 +70,6 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
         },
       );
     }
-    // Do something with categoryDatasets here
   }, [selectedYear, id_family, monthlyData]);
 
   const generateRecentYears = () => {
