@@ -20,7 +20,7 @@ const TEXTS = {
   SEND: 'Send',
   TRY_AGAIN: 'Try again',
   BACK_TO_LOGIN: 'Back to login',
-  LOGIN: 'LOGIN',
+  LOGIN: 'Login',
   LOGIN_OR: 'or',
   LOGIN_WITH_GOOGLE: 'Login with Google',
   DONT_HAVE_ACCOUNT: "Don't have an account?",
