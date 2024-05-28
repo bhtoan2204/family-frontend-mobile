@@ -189,9 +189,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   legendContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flexGrow: 1,
   },
   legendItem: {

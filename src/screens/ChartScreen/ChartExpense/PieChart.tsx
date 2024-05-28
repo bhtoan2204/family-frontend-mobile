@@ -210,7 +210,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
 
   const Legend: React.FC<LegendProps> = ({data, style}) => {
     return (
-      <ScrollView horizontal contentContainerStyle={styles.legendContainer}>
+      <ScrollView contentContainerStyle={styles.legendContainer}>
         {data.map((item, index) => (
           <View key={index} style={styles.legendItem}>
             <View
@@ -258,12 +258,12 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
         <PieChart
           style={{height: 250}}
           data={pieChartData}
-          outerRadius={'100%'}
+          outerRadius={'80%'}
           innerRadius={'60%'}
           labelRadius={120}>
           <Labels slices={pieChartData} />
         </PieChart>
-        <Legend data={pieChartData} />
+        <Legend data={pieChartData} style={{}} />
       </View>
 
       <View style={styles.buttonContainer}>
