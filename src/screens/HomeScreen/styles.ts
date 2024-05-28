@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
   button1: {
     width: 60, // Đảm bảo không xếp chồng
     height: 60,
-    backgroundColor: COLORS.primary, // Màu primary
+    //backgroundColor: COLORS.primary, // Màu primary
     borderRadius: 100, // Hình tròn
     justifyContent: 'center',
     alignItems: 'center',

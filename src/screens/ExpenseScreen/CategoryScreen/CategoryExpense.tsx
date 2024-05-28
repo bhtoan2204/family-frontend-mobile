@@ -27,6 +27,8 @@ import {
 } from 'src/redux/slices/FinanceSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {IncomeServices} from 'src/services/apiclient';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {COLORS} from 'src/constants';
 
 interface ExpenseType {
   id_expense_type: number;
@@ -117,124 +119,126 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
     setSelectedCategoryType(option);
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('HomeTab', {screen: 'Expense'})}
-          style={styles.headerButton}>
-          <Icon name="arrow-back" size={25} style={styles.backButton} />
-        </TouchableOpacity>
-        <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerText}>Categories</Text>
+    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('HomeTab', {screen: 'Expense'})}
+            style={styles.headerButton}>
+            <Icon name="arrow-back" size={25} style={styles.backButton} />
+          </TouchableOpacity>
+          <View style={styles.headerTitleContainer}>
+            <Text style={styles.headerText}>Categories</Text>
+          </View>
+
+          <TouchableOpacity onPress={toggleModal} style={styles.headerButton}>
+            <Icon name="add" size={30} style={styles.addImage} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.containerTab}>
+          <TouchableOpacity
+            onPress={() => selectOption('Income')}
+            style={[
+              styles.tabButton,
+              selectedCategoryType === 'Income' && styles.selectedTabButton,
+            ]}>
+            <View style={{flexDirection: 'row'}}>
+              <Text
+                style={[
+                  styles.tabButtonText,
+                  selectedCategoryType === 'Income' && styles.selectedTabText,
+                ]}>
+                Income
+              </Text>
+              <Image
+                source={require('src/assets/icons/category-income.png')}
+                resizeMode="stretch"
+                style={{width: 24, height: 24, marginLeft: 10, bottom: 5}}
+              />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => selectOption('Expense')}
+            style={[
+              styles.tabButton,
+              selectedCategoryType === 'Expense' && styles.selectedTabButton,
+            ]}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignContent: 'center',
+              }}>
+              <Text
+                style={[
+                  styles.tabButtonText,
+                  selectedCategoryType === 'Expense' && styles.selectedTabText,
+                ]}>
+                Expense
+              </Text>
+              <Image
+                source={require('src/assets/icons/category-expense.png')}
+                resizeMode="stretch"
+                style={{width: 28, height: 28, marginLeft: 10, bottom: 5}}
+              />
+            </View>
+          </TouchableOpacity>
+          <View
+            style={[
+              styles.bottomLine,
+              {left: selectedCategoryType === 'Income' ? 0 : '50%'},
+            ]}
+          />
         </View>
 
-        <TouchableOpacity onPress={toggleModal} style={styles.headerButton}>
-          <Icon name="add" size={30} style={styles.addImage} />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.containerTab}>
-        <TouchableOpacity
-          onPress={() => selectOption('Income')}
-          style={[
-            styles.tabButton,
-            selectedCategoryType === 'Income' && styles.selectedTabButton,
-          ]}>
-          <View style={{flexDirection: 'row'}}>
-            <Text
-              style={[
-                styles.tabButtonText,
-                selectedCategoryType === 'Income' && styles.selectedTabText,
-              ]}>
-              Income
-            </Text>
-            <Image
-              source={require('src/assets/icons/category-income.png')}
-              resizeMode="stretch"
-              style={{width: 24, height: 24, marginLeft: 10, bottom: 5}}
-            />
-          </View>
-        </TouchableOpacity>
+        <ScrollView style={styles.scrollView}>
+          {selectedCategoryType === 'Expense' &&
+            expenseType.map((item, index) => (
+              <TouchableOpacity
+                key={index.toString()}
+                onPress={() => selectCategory(item)}
+                style={styles.categoryItemContainer}>
+                <Image source={{uri: urlFood}} style={styles.categoryImage} />
+                <Text style={styles.categoryName}>{item.category}</Text>
+              </TouchableOpacity>
+            ))}
 
-        <TouchableOpacity
-          onPress={() => selectOption('Expense')}
-          style={[
-            styles.tabButton,
-            selectedCategoryType === 'Expense' && styles.selectedTabButton,
-          ]}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignContent: 'center',
-            }}>
-            <Text
-              style={[
-                styles.tabButtonText,
-                selectedCategoryType === 'Expense' && styles.selectedTabText,
-              ]}>
-              Expense
-            </Text>
-            <Image
-              source={require('src/assets/icons/category-expense.png')}
-              resizeMode="stretch"
-              style={{width: 28, height: 28, marginLeft: 10, bottom: 5}}
-            />
-          </View>
-        </TouchableOpacity>
-        <View
-          style={[
-            styles.bottomLine,
-            {left: selectedCategoryType === 'Income' ? 0 : '50%'},
-          ]}
-        />
-      </View>
+          {selectedCategoryType === 'Income' &&
+            incomeCategories.map((item, index) => (
+              <TouchableOpacity
+                key={index.toString()}
+                onPress={() => selectCategory(item)}
+                style={styles.categoryItemContainer}>
+                <Image source={{uri: urlFood}} style={styles.categoryImage} />
+                <Text style={styles.categoryName}>{item.category}</Text>
+              </TouchableOpacity>
+            ))}
+        </ScrollView>
 
-      <ScrollView style={styles.scrollView}>
-        {selectedCategoryType === 'Expense' &&
-          expenseType.map((item, index) => (
-            <TouchableOpacity
-              key={index.toString()}
-              onPress={() => selectCategory(item)}
-              style={styles.categoryItemContainer}>
-              <Image source={{uri: urlFood}} style={styles.categoryImage} />
-              <Text style={styles.categoryName}>{item.category}</Text>
-            </TouchableOpacity>
-          ))}
-
-        {selectedCategoryType === 'Income' &&
-          incomeCategories.map((item, index) => (
-            <TouchableOpacity
-              key={index.toString()}
-              onPress={() => selectCategory(item)}
-              style={styles.categoryItemContainer}>
-              <Image source={{uri: urlFood}} style={styles.categoryImage} />
-              <Text style={styles.categoryName}>{item.category}</Text>
-            </TouchableOpacity>
-          ))}
-      </ScrollView>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={toggleModal}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Add New Category</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter category name"
-              value={newCategoryName}
-              onChangeText={setNewCategoryName}
-            />
-            <View style={styles.modalButtons}>
-              <Button title="Cancel" onPress={toggleModal} color="gray" />
-              <Button title="Create" onPress={createCategory} />
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isModalVisible}
+          onRequestClose={toggleModal}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Add New Category</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter category name"
+                value={newCategoryName}
+                onChangeText={setNewCategoryName}
+              />
+              <View style={styles.modalButtons}>
+                <Button title="Cancel" onPress={toggleModal} color="gray" />
+                <Button title="Create" onPress={createCategory} />
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
-    </View>
+        </Modal>
+      </View>
+    </SafeAreaView>
   );
 };
 
