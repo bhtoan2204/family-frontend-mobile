@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginVertical: 10,
     borderColor: '#171a21',
-    borderWidth: 1.5,
+    borderWidth: 1.2,
     shadowColor: COLORS.black,
     shadowOffset: {
       width: 0,
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginVertical: 10,
     borderColor: '#171a21',
-    borderWidth: 1.5,
+    borderWidth: 1.2,
   },
   btnLogin: {
     fontSize: screenHeight * 0.022,
