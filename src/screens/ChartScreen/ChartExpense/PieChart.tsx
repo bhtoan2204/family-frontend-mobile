@@ -20,6 +20,7 @@ import {
   setSelectedOption,
 } from 'src/redux/slices/ExpenseAnalysis';
 import {ExpenseServices} from 'src/services/apiclient';
+import {Ionicons} from '@expo/vector-icons';
 
 interface PieChartScreenProps {
   id_family: number;
@@ -254,7 +255,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
         />
       )}
 
-      <View style={styles.chartContainer}>
+      {/* <View style={styles.chartContainer}>
         <PieChart
           style={{height: 250}}
           data={pieChartData}
@@ -264,6 +265,34 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
           <Labels slices={pieChartData} />
         </PieChart>
         <Legend data={pieChartData} style={{}} />
+      </View> */}
+      <View style={styles.chartContainer}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <PieChart
+            style={{height: 250, flex: 40}}
+            data={pieChartData}
+            outerRadius={'80%'}
+            innerRadius={'60%'}
+            labelRadius={120}>
+            <Labels slices={pieChartData} />
+          </PieChart>
+          <Legend data={pieChartData} style={{flex: 1}} />
+        </View>
+        <View style={{height: 1, backgroundColor: '#F3F1EE', marginTop: -5}} />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            padding: 10,
+            marginTop: 10,
+          }}>
+          <TouchableOpacity>
+            <Text>View details</Text>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Ionicons name="chevron-forward" size={20} color="black" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.buttonContainer}>
