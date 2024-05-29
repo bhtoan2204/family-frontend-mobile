@@ -227,8 +227,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: 'white',
     padding: 10,
-    borderRadius: 20,
-    width: '90%',
+    paddingTop: 20,
+    borderTopLeftRadius: 60,
+    borderTopRightRadius: 60,
+    width: '100%',
     alignSelf: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -392,6 +394,12 @@ const styles = StyleSheet.create({
   noDataText: {
     fontSize: 18,
     color: 'red',
+  },
+  outerContainer: {
+    flex: 0.7,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    backgroundColor: 'white',
   },
 });
 export default styles;
