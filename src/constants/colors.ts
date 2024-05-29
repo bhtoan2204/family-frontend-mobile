@@ -1,10 +1,11 @@
 const COLORS = {
-  //primary: '#9572A7',
+  Mirage: '#171A21',
+  DenimBlue: '#66c0f4',
+  EbonyClay: '#1b2838',
+  Rhino: '#2a475e',
+  PaleAqua: '#c7d5e0',
+  ///
   login: '#6756AA',
-  primary: 'rgba(128, 50, 128, 0.5)',
-  primaryDark: '#2759ff',
-  primaryLite: '#56409e99',
-  secondary: '#00FF00',
   tertiary: '#0000FF', //
   white: '#FFFFFF',
   black: '#000000',
@@ -29,7 +30,7 @@ const COLORS = {
   SilverFoil: '#b0b0b0',
   Azure: '#0095FF',
   BlueLight: '#87CEEB',
-  Blue: 'fff',
+  SpringWood: '#FEF5E9',
 };
 
 export default COLORS;

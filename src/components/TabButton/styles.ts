@@ -50,13 +50,13 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: COLORS.primary,
+    //backgroundColor: COLORS.primary,
     borderRadius: 25,
   },
   text: {
     fontSize: 12,
     textAlign: 'center',
-    color: COLORS.primary,
+    //color: COLORS.primary,
     fontWeight: '500',
   },
   title: {

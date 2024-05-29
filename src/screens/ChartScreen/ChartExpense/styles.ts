@@ -1,43 +1,41 @@
-import { Dimensions, StyleSheet } from 'react-native';
-import { COLORS } from 'src/constants';
+import {Dimensions, StyleSheet} from 'react-native';
+import {COLORS} from 'src/constants';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
-    headerContainer: {
-      backgroundColor: 'rgba(128, 50, 128, 0.5)', 
-      alignItems: 'center',
-      marginBottom: 20,
-      justifyContent: 'center',
-      flexDirection: 'row',
-      height: '7%',
-    
-},
-headerTitleContainer: {
+  headerContainer: {
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    marginBottom: 20,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    height: '7%',
+    marginHorizontal: 10,
+  },
+  headerTitleContainer: {
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
     marginLeft: 15,
-},
-headerButton: {
+  },
+  headerButton: {
     paddingHorizontal: 0,
-},
-headerText: {
+  },
+  headerText: {
     fontSize: 18,
     color: 'white',
     fontWeight: 'bold',
-},
+  },
 
-container: {
-  flex: 1,
-  backgroundColor: 'white',
-},
+  container: {
+    flex: 1,
+  },
   backButton: {
     marginBottom: 10,
     marginLeft: 10,
     marginTop: 10,
     color: 'white',
-
   },
 
   categoryItemContainer: {
@@ -53,18 +51,17 @@ container: {
     height: 50,
     marginRight: 10,
     borderRadius: 25,
-
   },
   categoryName: {
     fontSize: 16,
   },
-  
+
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    marginTop: screenHeight*0.115,
+    marginTop: screenHeight * 0.115,
   },
   modalContent: {
     backgroundColor: 'white',
@@ -86,7 +83,6 @@ container: {
     borderRadius: 5,
     marginBottom: 10,
     paddingHorizontal: 10,
-    
   },
 
   modalButtons: {
@@ -110,11 +106,11 @@ container: {
     marginBottom: 10,
   },
   iconContainer: {
-    width: 40, 
+    width: 40,
     height: 40,
-    borderRadius: 20, 
-    borderWidth: 1, 
-    borderColor: 'gray', 
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'gray',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -125,40 +121,50 @@ container: {
     color: 'white',
   },
   scrollView: {
-    flex: 1, 
-    backgroundColor: '#FFFFFF', 
-    paddingVertical: 10, 
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 10,
     width: '100%',
   },
   tabButton: {
-    paddingVertical: 10, 
+    paddingVertical: 10,
     alignItems: 'center',
-    width: '33%',
+    width: '30%',
+    height: '70%',
+    marginBottom: 15,
+    backgroundColor: '#fff', // Default gray background
+    borderRadius: 20,
+  },
+  tabButtonContent: {
+    paddingVertical: 10,
+    alignItems: 'center',
   },
   selectedTabButton: {
-    borderBottomColor: '#ccc',
-    paddingBottom: 0,
-    borderBottomWidth: 4, 
-    alignItems: 'center',
+    backgroundColor: '#CCEAFB',
+  },
+  selectedTabButtonText: {
+    color: '#2a475e',
+    fontWeight: '600', // Text color when selected
   },
 
   tabButtonText: {
-      fontSize: 16, 
+    color: '#696969',
+    fontSize: 16,
+    alignSelf: 'center',
   },
   containerTab: {
     flexDirection: 'row',
-    justifyContent: 'space-around', 
-    borderBottomWidth: 1, 
-    borderBottomColor: '#ccc', 
-    width: '100%',
-
-  } ,
+    justifyContent: 'space-around',
+    width: '95%',
+    alignSelf: 'center',
+    color: 'transparent',
+  },
   bottomLine: {
     position: 'absolute',
     bottom: 0,
     height: 2,
     backgroundColor: 'gray',
-    width: '30%', 
+    width: '30%',
   },
   datePickerText: {
     marginBottom: 10,
@@ -167,14 +173,24 @@ container: {
   },
 
   datePickerContainer: {
-    borderBottomWidth: 1,
-    borderColor: '#ccc', 
-    paddingVertical: 10,
+    //paddingVertical: 10,
+    top: 10,
     paddingHorizontal: 0,
     fontSize: 20,
-    width: '100%', 
-    
-},
+    alignSelf: 'center',
+    zIndex: 1,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    width: '30%',
+    height: 40,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+  },
 
   titleText: {
     fontSize: 16,
@@ -186,7 +202,6 @@ container: {
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-
   },
   text: {
     color: 'black',
@@ -195,15 +210,14 @@ container: {
     padding: 10,
   },
   legendContainer: {
-    flexDirection: 'row',
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
     flexGrow: 1,
-
   },
   legendItem: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginHorizontal: 10,
     marginVertical: 5,
   },
@@ -217,30 +231,59 @@ container: {
     fontSize: 16,
   },
   selectedLegendItem: {
-    backgroundColor: "lightgray",
+    backgroundColor: 'lightgray',
   },
   chartContainer: {
-    marginTop: 10,
+    bottom: 30,
+    backgroundColor: 'white',
+    padding: 10,
+    paddingTop: 20,
+    borderTopLeftRadius: 60,
+    borderTopRightRadius: 60,
+    width: '100%',
+    alignSelf: 'center',
+
+    flexDirection: 'column',
   },
- 
+  chartBarContainer: {
+    bottom: 30,
+    backgroundColor: 'white',
+    padding: 10,
+    paddingTop: 20,
+    borderTopRightRadius: 60,
+    width: '100%',
+    alignSelf: 'center',
+
+    flexDirection: 'column',
+  },
+  chartLineContainer: {
+    bottom: 30,
+    backgroundColor: 'white',
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 30,
+    borderTopLeftRadius: 60,
+    width: '100%',
+    alignSelf: 'center',
+
+    flexDirection: 'column',
+  },
   buttonContainer: {
-    marginTop: screenHeight*0.005,
+    marginTop: screenHeight * 0.005,
   },
   ContainerCategory: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 20,
+    // borderWidth: 1,
+    // borderColor: '#ccc',
+    // borderRadius: 20,
   },
   expenseItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     padding: 15,
- 
   },
   expenseDetails: {
-    flexDirection: "row",
-    alignItems: "center",
-
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   expenseText: {
     fontSize: 16,
@@ -250,38 +293,44 @@ container: {
     fontSize: 15,
     color: 'red',
     marginRight: 10,
-
   },
   monthText: {
-    color: 'black',
+    color: 'white',
     fontSize: 16,
     alignContent: 'center',
     padding: 10,
+    fontWeight: 'bold',
   },
   monthPickerContainer: {
-    width: '100%', 
+    width: '100%',
     alignItems: 'flex-end',
-    borderColor: '#ccc', 
-    borderBottomWidth: 1,
+    // borderColor: '#ccc',
+    // borderBottomWidth: 1,
     paddingVertical: 10,
-
+    right: 165,
   },
   monthContainer: {
-    borderRadius: 10, 
+    borderRadius: 10,
     alignItems: 'center',
-    borderColor: '#ccc', 
-    backgroundColor: '#ccc',
+    borderColor: '#ccc',
+    backgroundColor: COLORS.DenimBlue,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
   },
   yearPickerContainer: {
-
     backgroundColor: '#ffffff',
     alignItems: 'center',
     marginBottom: 70,
-    },
+  },
 
   dropdownYear: {
-    height:30, 
-    width:  150,
+    height: 30,
+    width: 150,
   },
 
   categoryContainer: {
@@ -302,23 +351,23 @@ container: {
     padding: 10,
     margin: 5,
     borderWidth: 1,
-    borderColor: "black",
+    borderColor: 'black',
     borderRadius: 5,
   },
   selectedCategoryItem: {
-    backgroundColor: "lightblue",
+    backgroundColor: 'lightblue',
   },
   categoryList: {
     borderTopWidth: 1,
-    borderTopColor: "#ccc", 
+    borderTopColor: '#ccc',
   },
- 
-    avatar: {
+
+  avatar: {
     width: 30,
     height: 30,
     borderRadius: 25,
   },
- 
+
   linechart: {
     marginVertical: 8,
     borderRadius: 16,
@@ -327,13 +376,11 @@ container: {
     paddingBottom: 20,
   },
 
-
   legendColorBox: {
     width: 20,
     height: 20,
     marginRight: 5,
     borderRadius: 25,
-
   },
   detailsContainer: {
     marginTop: 10,
@@ -351,28 +398,26 @@ container: {
     borderWidth: 1,
     borderColor: '#ccc',
     width: '100%',
-
   },
   filterItem: {
     padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomColor: '#ccc',
     flexDirection: 'row',
   },
   filterButton: {
-    color: 'white'
+    color: 'white',
   },
-  expenseDateItem:{
+  expenseDateItem: {
     flexDirection: 'column',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-
+    // borderBottomWidth: 1,
+    // borderBottomColor: '#ccc',
   },
   containerTextName: {
-    color: 'blue'
+    color: 'blue',
   },
   noDataContainer: {
     flex: 1,
@@ -384,5 +429,11 @@ container: {
     fontSize: 18,
     color: 'red',
   },
-  });
+  outerContainer: {
+    flex: 0.7,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    backgroundColor: 'white',
+  },
+});
 export default styles;

@@ -1,6 +1,8 @@
 import {Dimensions, StyleSheet} from 'react-native';
 import {COLORS} from 'src/constants';
 const halfScreenHeight = Dimensions.get('window').height / 2;
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
 
 const styles = StyleSheet.create({
   safeView: {
@@ -29,8 +31,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    //backgroundColor: '#F4F7FF',
-    //backgroundColor: '#fff',
+    right: 10,
   },
   header: {
     height: 50,
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 50,
     borderWidth: 2,
-    borderColor: COLORS.primary,
+    //borderColor: COLORS.primary,
     padding: 3,
   },
   iconDetail: {
@@ -127,7 +128,8 @@ const styles = StyleSheet.create({
   circleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 10,
+    padding: screenWidth * 0.03,
+    bottom: screenHeight * 0.025,
   },
   circle: {
     width: 50,
@@ -236,7 +238,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   pictureBox: {
-    width: 375,
+    width: screenWidth * 0.9,
+    //height: screenHeight * 0.3,
     elevation: 5,
     padding: 15,
     margin: 20,
@@ -251,7 +254,8 @@ const styles = StyleSheet.create({
     //overflow: 'hidden',
   },
   pictureBox2: {
-    width: 375,
+    width: screenWidth * 0.9,
+    //height: screenHeight * 0.3,
     elevation: 5,
     padding: 15,
     margin: 20,
@@ -329,7 +333,7 @@ const styles = StyleSheet.create({
   button1: {
     width: 60, // Đảm bảo không xếp chồng
     height: 60,
-    backgroundColor: COLORS.primary, // Màu primary
+    //backgroundColor: COLORS.primary, // Màu primary
     borderRadius: 100, // Hình tròn
     justifyContent: 'center',
     alignItems: 'center',

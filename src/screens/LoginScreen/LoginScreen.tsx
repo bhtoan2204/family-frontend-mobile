@@ -30,6 +30,7 @@ import {
   HomeTabProps,
   LandingPageScreenProps,
   SignupScreenProps,
+  WelcomeScreenProps,
 } from 'src/navigation/NavigationTypes';
 import {AuthServices} from 'src/services/apiclient';
 import {AuthUrl} from 'src/services/urls';
@@ -47,7 +48,8 @@ interface FormValues {
 }
 type CombinedScreenProps = SignupScreenProps &
   HomeTabProps &
-  LandingPageScreenProps;
+  LandingPageScreenProps &
+  WelcomeScreenProps;
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -75,7 +77,6 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
       await LocalStorage.StoreAccessToken(response.accessToken);
       await LocalStorage.StoreRefreshToken(response.refreshToken);
 
-      //navigation.navigate('HomeTab', {screen: 'HomeScreen'});
       navigation.navigate('LandingPage');
       actions.setStatus({success: true});
     } catch (error: any) {
@@ -85,26 +86,6 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
       actions.setErrors({submit: error.message});
     }
   };
-
-  // const handleGoogleLogin = async () => {
-  //   try {
-  //     Linking.openURL(AuthUrl.googleLogin);
-
-  //     const handleOpenUrl = async (event: {url: string}) => {
-  //       console.log(event.url);
-  //     };
-
-  //     Linking.addEventListener('url', handleOpenUrl);
-
-  //     navigation.navigate('HomeTab', {screen: 'HomeScreen'});
-
-  //     return () => {
-  //       Linking.removeAllListeners('url');
-  //     };
-  //   } catch (error: any) {
-  //     console.log(error);
-  //   }
-  // };
 
   const handleFacebookLogin = async () => {
     try {
@@ -150,25 +131,28 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
       style={{flex: 1}}
       resizeMode="stretch">
       <KeyboardAvoidingView behavior="padding">
-        <ScrollView keyboardShouldPersistTaps="handled">
+        {/* <ScrollView keyboardShouldPersistTaps="handled"></ScrollView> */}
+        <ScrollView>
           <SafeAreaView>
-            <View className="mx-7">
-              <View className="my-5">
-                {/* <Text className="text-xl font-bold my-3 text-gray-900">
-                  {TEXTS.LOGIN_WELCOME}
-                </Text>
-                <Text className="text-base text-gray-900">
-                  {TEXTS.LOGIN_TITLE}
-                </Text> */}
-                <Text
-                  style={[
-                    {marginTop: 130},
-                    {fontSize: 30},
-                    {fontWeight: 'bold'},
-                    {color: '#2A475E'},
-                  ]}>
-                  Log in
-                </Text>
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('WelcomeScreen');
+                }}>
+                <Ionicons
+                  name="chevron-back-circle-outline"
+                  style={styles.backIcon}
+                />
+              </TouchableOpacity>
+            </View>
+            <View className="mx-7" style={{bottom: 95}}>
+              <Image
+                source={require('../../assets/images/logo-app-1.png')}
+                resizeMode="stretch"
+                style={styles.logo}
+              />
+              <View className="my-5" style={{marginTop: 100}}>
+                {/* <Text style={styles.loginText}>Log in</Text> */}
               </View>
               <Formik
                 initialValues={{email: '', password: '', submit: null}}
@@ -191,7 +175,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   touched,
                   values,
                 }) => (
-                  <View style={{marginTop: 5}}>
+                  <View style={{marginTop: 15}}>
                     <View className="mb-2">
                       {/* <Text className="text-base font-normal my-2">
                         {TEXTS.EMAIL}
@@ -199,7 +183,6 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                       <View
                         style={[
                           styles.row,
-                          {alignItems: 'center'},
                           styles.TextInput,
                           {borderColor: errors.email ? 'red' : '#2A475E'},
                         ]}>
@@ -293,14 +276,6 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                         </Text>
                       </View>
                     )}
-                    {/* <View className="flex-row my-1 items-center">
-                      <Checkbox
-                        className="mr-2"
-                        value={isChecked}
-                        onValueChange={setIsChecked}
-                      />
-                      <Text>{TEXTS.REMEMBER_ME}</Text>
-                    </View> */}
                     <View
                       style={{
                         flexDirection: 'row',
@@ -310,13 +285,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                         onPress={() => {
                           navigation.navigate('ForgotPasswordScreen');
                         }}>
-                        <Text
-                          style={[
-                            {color: '#66C0F4'},
-                            {fontSize: 16},
-                            {fontWeight: 600},
-                            {marginBottom: 20},
-                          ]}>
+                        <Text style={styles.forgotPassword}>
                           {TEXTS.FORGOT_PASSWORD}
                         </Text>
                       </Pressable>
@@ -346,7 +315,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   {TEXTS.LOGIN_OR}
                 </Text>
               </View>
-              <View style={styles.container}>
+              <View style={[styles.container, {bottom: 20}]}>
                 <TouchableOpacity
                   style={[styles.button, {right: 20}]}
                   onPress={() => {
@@ -368,18 +337,13 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   />
                 </TouchableOpacity>
               </View>
-              <View className="flex-row justify-center my-5">
+              <View
+                className="flex-row justify-center my-5"
+                style={{bottom: 40}}>
                 <Text className="text-base mr-1" style={{color: '#2A475E'}}>
                   {TEXTS.DONT_HAVE_ACCOUNT}
                 </Text>
-                {/* <Pressable
-                  onPress={() => {
-                    navigation.navigate('SignupScreen');
-                  }}>
-                  <Text className={`text-base text-[${COLORS.login}]`}>
-                    {TEXTS.SIGNUP}
-                  </Text>
-                </Pressable> */}
+
                 <TouchableOpacity
                   style={{top: 2}}
                   onPress={() => {

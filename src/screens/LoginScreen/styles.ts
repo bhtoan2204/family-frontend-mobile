@@ -1,5 +1,8 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 import {COLORS} from 'src/constants';
+
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
 
 const styles = StyleSheet.create({
   keyboardView: {
@@ -7,16 +10,18 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   TextInput: {
-    height: 48,
-    width: '100%',
+    height: screenHeight * 0.06,
+    width: screenWidth * 0.85,
     borderWidth: 1.5,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 30,
-    backgroundColor: '#C7D5E0',
-    color: '#2A475E',
+    paddingHorizontal: screenWidth * 0.07,
+    backgroundColor: COLORS.PaleAqua,
+    color: COLORS.Rhino,
+    alignSelf: 'center',
   },
+
   scrollView: {
     flex: 1,
     backgroundColor: COLORS.white,
@@ -25,127 +30,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white,
   },
-  marginHorizontal: {
-    flex: 1,
-    marginHorizontal: 22,
-  },
-  marginVertical: {
-    marginVertical: 22,
-  },
-  welcomeText: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginVertical: 12,
-    color: COLORS.black,
-  },
-  accountTitle: {
-    fontSize: 16,
-    color: COLORS.black,
-  },
-  marginBottom: {
-    marginBottom: 12,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '400',
-    marginVertical: 8,
-  },
-  textInput: {
-    width: '100%',
-  },
-  placeholder: {
-    width: '100%',
-    height: 48,
-    borderColor: COLORS.black,
-    borderWidth: 1,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: 22,
-  },
-  touchable: {
-    position: 'absolute',
-    right: 12,
-  },
   eyeIcon: {
-    fontSize: 24,
-    color: '#2A475E',
+    fontSize: screenHeight * 0.03,
+    color: COLORS.Rhino,
   },
   Icon: {
-    fontSize: 24,
-    color: '#2A475E',
-  },
-  marginVerticalFlex: {
-    flexDirection: 'row',
-    marginVertical: 6,
-    alignItems: 'center',
-  },
-  marginVerticalFlexMax: {
-    flexDirection: 'row',
-    marginVertical: 20,
-    alignItems: 'center',
-  },
-  marginVerticalCenter: {
-    flexDirection: 'row',
-    marginVertical: 22,
-    justifyContent: 'center',
-  },
-  marginVerticalCenterSmall: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  checkbox: {
-    marginRight: 8,
+    fontSize: screenHeight * 0.03,
+    color: COLORS.Rhino,
   },
   button: {
-    marginTop: 18,
-    marginBottom: 4,
-    borderColor: '#2A475E',
-  },
-  lineStyle: {
-    flex: 1,
-    height: 1,
-    backgroundColor: COLORS.gray,
-    marginHorizontal: 10,
-  },
-  loginOption: {fontSize: 14},
-  socialLogin: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  socialIcon: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    height: 52,
-    borderWidth: 1,
-    borderColor: COLORS.gray,
-    marginRight: 4,
-    borderRadius: 10,
-  },
-  imageStyle: {
-    height: 36,
-    width: 36,
-    marginRight: 8,
-  },
-  signupText: {
-    fontSize: 16,
-    color: COLORS.primary,
-    fontWeight: 'bold',
-    marginLeft: 6,
-  },
-  forgotText: {
-    fontSize: 16,
-    color: COLORS.black,
-    textDecorationLine: 'underline',
-    fontWeight: 'bold',
-  },
-  errorText: {
-    color: COLORS.red,
-    fontSize: 12,
-    marginTop: 5,
-    marginLeft: 5,
+    marginTop: screenHeight * 0.02,
+    marginBottom: screenHeight * 0.01,
+    borderColor: COLORS.Rhino,
   },
   row: {
     flexDirection: 'row',
@@ -155,25 +51,40 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
-  icon: {
-    flex: 1,
-    height: 52,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    marginRight: 1,
-    borderColor: 'gray',
-    //marginHorizontal: 10,
-  },
-
   container: {
     flexDirection: 'row',
     justifyContent: 'center',
   },
   image: {
-    height: 36,
-    width: 36,
+    height: screenHeight * 0.08,
+    width: screenWidth * 0.08,
+  },
+  logo: {
+    height: 100,
+    width: 100,
+    top: screenHeight * 0.1,
+    marginTop: screenHeight * 0.09,
+    alignSelf: 'center',
+  },
+  forgotPassword: {
+    color: COLORS.DenimBlue,
+    fontSize: screenHeight * 0.018,
+    fontWeight: '600',
+    marginVertical: screenHeight * 0.005,
+    paddingRight: screenWidth * 0.03,
+  },
+  loginText: {
+    fontSize: screenHeight * 0.032,
+    fontWeight: 'bold',
+    color: COLORS.Rhino,
+    alignSelf: 'flex-start',
+    paddingLeft: screenWidth * 0.02,
+    top: screenHeight * 0.02,
+  },
+  backIcon: {
+    fontSize: screenHeight * 0.05,
+    color: COLORS.Rhino,
+    padding: screenHeight * 0.02,
   },
 });
 

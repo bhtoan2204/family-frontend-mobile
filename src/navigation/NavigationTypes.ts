@@ -10,8 +10,7 @@ export type RootParamList = {
   CalendarStack: NavigatorScreenParams<CalendarStackParamList>;
   ChatStack: NavigatorScreenParams<ChatStackParamList>;
   ExpenseStack: NavigatorScreenParams<ExpenseStackParamList>;
-  IncomeStack:  NavigatorScreenParams<IncomeStackParamList>;
-
+  IncomeStack: NavigatorScreenParams<IncomeStackParamList>;
 };
 
 export type ExpenseStackParamList = {
@@ -19,18 +18,16 @@ export type ExpenseStackParamList = {
   CategoryExpense: undefined;
   FamilySpec: {
     id_family: number | undefined;
-  }
+  };
   ChartExpense: undefined;
 };
 
-
 export type IncomeStackParamList = {
-    ChartIncomeScreen: undefined;
+  ChartIncomeScreen: undefined;
 };
 
-
 type ChartIncomeScreenNavigationProp = NativeStackNavigationProp<
-IncomeStackParamList,
+  IncomeStackParamList,
   'ChartIncomeScreen'
 >;
 
@@ -40,7 +37,7 @@ export interface ChartIncomeScreenProps {
 }
 
 type ChartExpenseNavigationProp = NativeStackNavigationProp<
-ExpenseStackParamList,
+  ExpenseStackParamList,
   'ChartExpense'
 >;
 
@@ -50,7 +47,7 @@ export interface ChartExpenseProps {
 }
 
 type CategoryExpenseScreenNavigationProp = NativeStackNavigationProp<
-ExpenseStackParamList,
+  ExpenseStackParamList,
   'CategoryExpense'
 >;
 
@@ -60,7 +57,7 @@ export interface CategoryExpenseScreenProps {
 }
 
 type FamilySpecNavigationProp = NativeStackNavigationProp<
-ExpenseStackParamList,
+  ExpenseStackParamList,
   'FamilySpec'
 >;
 
@@ -71,17 +68,16 @@ export interface FamilySpecProps {
 
 export type ChatStackParamList = {
   ChatFamily: {
-    id_family: number|undefined;
+    id_family: number | undefined;
   };
   ChatUser: {
-    receiverId: string|undefined;
+    receiverId: string | undefined;
   };
   ChatList: undefined;
 
   CallVideo: {
     receiverId: string | undefined;
-  }
-  
+  };
 };
 
 type ChatFamilyScreenNavigationProp = NativeStackNavigationProp<
@@ -122,7 +118,6 @@ type CallVideoNavigationProp = NativeStackNavigationProp<
 export interface CallVideoProps {
   navigation: CallVideoNavigationProp;
   route: RouteProp<ChatStackParamList, 'CallVideo'>;
-
 }
 export type AuthStackParamList = {
   LoginScreen: undefined;
@@ -130,6 +125,7 @@ export type AuthStackParamList = {
   ForgotPasswordScreen: undefined;
   LandingPage: undefined;
   Notification: undefined;
+  WelcomeScreen: undefined;
 };
 
 export type CalendarStackParamList = {
@@ -340,6 +336,16 @@ type LoginScreenNavigationProp = NativeStackNavigationProp<
 export interface LoginScreenProps {
   navigation: LoginScreenNavigationProp;
 }
+
+type WelcomeScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'WelcomeScreen'
+>;
+
+export interface WelcomeScreenProps {
+  navigation: WelcomeScreenNavigationProp;
+}
+
 type NotificationNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
   'Notification'

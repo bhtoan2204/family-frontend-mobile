@@ -40,7 +40,7 @@ const LandingPage = ({navigation}: CombinedScreenProps) => {
               name="arrow-forward"
               size={24}
               color="#fff"
-              style={{left: 125}}
+              style={styles.icon}
             />
           </View>
         </TouchableOpacity>

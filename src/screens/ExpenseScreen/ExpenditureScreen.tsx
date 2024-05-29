@@ -312,534 +312,561 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
       source={require('../../assets/images/view-all-family-2.png')}
       style={{flex: 1}}
       resizeMode="stretch">
-      <View>
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.iconMoney}>
-            <Icon name="list" color="#2a475e" size={25} />
-          </TouchableOpacity>
-
-          <LinearGradient
-            colors={['#09203F', '#537895']}
-            style={styles.circle}
-            start={{x: 0, y: 1}}
-            end={{x: 0, y: 0}}>
-            <TouchableOpacity onPress={() => headerPress()}>
-              <View style={styles.itemContainer}>
-                <Text style={[styles.headerText, {marginRight: 10}]}>
-                  {selectedMenu}
-                </Text>
-                <Octicons name="triangle-down" size={35} color="#fff" />
-              </View>
+      <SafeAreaView style={{flex: 1}}>
+        <View>
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.iconMoney}>
+              <Icon name="list" color="#2a475e" size={25} />
             </TouchableOpacity>
-          </LinearGradient>
 
-          <TouchableOpacity
-            style={styles.chevronContainer}
-            onPress={handleSubmit}>
-            <Icon name="checkmark-done-sharp" color="#2a475e" size={25} />
-          </TouchableOpacity>
-        </View>
-        <View style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}} />
-        <ScrollView contentContainerStyle={styles.headcontainer}>
-          <View style={styles.inputContainer}>
-            <Text style={{textAlign: 'left', fontSize: 18, color: '#1b2838'}}>
-              Amount
-            </Text>
-            <View style={{flexDirection: 'row'}}>
-              <View style={styles.inputWrapper}>
-                <TextInput
-                  style={[styles.inputAmount, {color: 'red', fontSize: 20}]}
-                  placeholder="Enter amount"
-                  value={amount !== null ? amount.toString() : ''}
-                  onChangeText={text => setAmount(text ? Number(text) : null)}
-                  keyboardType="numeric"
-                />
-              </View>
-              <Text style={styles.currency}>VNĐ</Text>
-            </View>
-            <View style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}} />
+            <LinearGradient
+              colors={['#09203F', '#537895']}
+              style={styles.circle}
+              start={{x: 0, y: 1}}
+              end={{x: 0, y: 0}}>
+              <TouchableOpacity onPress={() => headerPress()}>
+                <View style={styles.itemContainer}>
+                  <Text style={[styles.headerText, {marginRight: 10}]}>
+                    {selectedMenu}
+                  </Text>
+                  <Octicons name="triangle-down" size={35} color="#fff" />
+                </View>
+              </TouchableOpacity>
+            </LinearGradient>
+
+            <TouchableOpacity
+              style={styles.chevronContainer}
+              onPress={handleSubmit}>
+              <Icon name="checkmark-done-sharp" color="#2a475e" size={25} />
+            </TouchableOpacity>
           </View>
-          <View
-            style={[
-              {
-                flexDirection: 'column',
-                backgroundColor: 'white',
-                marginBottom: 10,
-              },
-            ]}>
-            <Text style={styles.text}>Select Family</Text>
+          <View style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}} />
+          <ScrollView contentContainerStyle={styles.headcontainer}>
+            <View style={styles.inputContainer}>
+              <Text style={{textAlign: 'left', fontSize: 18, color: '#1b2838'}}>
+                Amount
+              </Text>
+              <View style={{flexDirection: 'row'}}>
+                <View style={styles.inputWrapper}>
+                  <TextInput
+                    style={[styles.inputAmount, {color: 'red', fontSize: 20}]}
+                    placeholder="Enter amount"
+                    value={amount !== null ? amount.toString() : ''}
+                    onChangeText={text => setAmount(text ? Number(text) : null)}
+                    keyboardType="numeric"
+                  />
+                </View>
+                <Text style={styles.currency}>VNĐ</Text>
+              </View>
+              <View
+                style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}}
+              />
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: 'column',
+                  backgroundColor: 'white',
+                  marginBottom: 10,
+                },
+              ]}>
+              <Text style={styles.text}>Select Family</Text>
 
-            <FlatList
-              horizontal
-              data={families}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({item: family}) =>
-                selectedFamily === family.id_family ? (
-                  <LinearGradient
-                    colors={['#09203F', '#537895']} // Your gradient colors
-                    style={[
-                      styles.family,
-                      styles.selectedFamily,
-                      {
-                        marginBottom: 10,
-                        margin: 5,
-                        shadowColor: '#000',
-                        shadowOffset: {width: 0, height: 2},
-                        shadowOpacity: 0.1,
-                        shadowRadius: 3.84,
-                        elevation: 5,
-                      },
-                    ]}>
+              <FlatList
+                horizontal
+                data={families}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item: family}) =>
+                  selectedFamily === family.id_family ? (
+                    <LinearGradient
+                      colors={['#09203F', '#537895']} // Your gradient colors
+                      style={[
+                        styles.family,
+                        styles.selectedFamily,
+                        {
+                          marginBottom: 10,
+                          margin: 5,
+                          shadowColor: '#000',
+                          shadowOffset: {width: 0, height: 2},
+                          shadowOpacity: 0.1,
+                          shadowRadius: 3.84,
+                          elevation: 5,
+                        },
+                      ]}>
+                      <TouchableOpacity
+                        onPress={() => handleFamilyPress(family.id_family)}>
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <Ionicons
+                            name="people"
+                            size={22}
+                            color={COLORS.white}
+                            style={{marginRight: 10}}
+                          />
+                          <Text
+                            style={[styles.familyText, {color: COLORS.white}]}>
+                            {family.name}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </LinearGradient>
+                  ) : (
                     <TouchableOpacity
-                      onPress={() => handleFamilyPress(family.id_family)}>
+                      onPress={() => handleFamilyPress(family.id_family)}
+                      style={[
+                        styles.family,
+                        {
+                          marginBottom: 10,
+                          margin: 5,
+                          shadowColor: '#000',
+                          shadowOffset: {width: 0, height: 2},
+                          shadowOpacity: 0.1,
+                          shadowRadius: 3.84,
+                          elevation: 5,
+                        },
+                      ]}>
                       <View
                         style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Ionicons
                           name="people"
                           size={22}
-                          color={COLORS.white}
+                          color={COLORS.darkgray}
                           style={{marginRight: 10}}
                         />
-                        <Text
-                          style={[styles.familyText, {color: COLORS.white}]}>
-                          {family.name}
-                        </Text>
+                        <Text style={styles.familyText}>{family.name}</Text>
                       </View>
                     </TouchableOpacity>
-                  </LinearGradient>
-                ) : (
-                  <TouchableOpacity
-                    onPress={() => handleFamilyPress(family.id_family)}
+                  )
+                }
+              />
+            </View>
+            {selectedFamily != null && selectedMenu == 'Expense' && (
+              <View style={styles.ContainerCategory}>
+                <View style={styles.selectedItemContainer}>
+                  <Image source={{uri: urlCatetory}} style={styles.avatar} />
+                  <Text
                     style={[
-                      styles.family,
-                      {
-                        marginBottom: 10,
-                        margin: 5,
-                        shadowColor: '#000',
-                        shadowOffset: {width: 0, height: 2},
-                        shadowOpacity: 0.1,
-                        shadowRadius: 3.84,
-                        elevation: 5,
-                      },
+                      styles.inputAmount,
+                      {textAlign: 'left'},
+                      {fontSize: 18},
+                      {color: '#1b2838'},
                     ]}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Ionicons
-                        name="people"
-                        size={22}
-                        color={COLORS.darkgray}
-                        style={{marginRight: 10}}
+                    {expenseCategory?.category || 'Select category'}
+                  </Text>
+
+                  <TouchableOpacity
+                    style={styles.chevronContainer}
+                    onPress={pressSelectCategory}>
+                    <Text
+                      style={[
+                        {
+                          color: '#1b2838',
+                          fontWeight: 600,
+                          fontSize: 16,
+                          marginRight: 5,
+                        },
+                      ]}>
+                      View All
+                    </Text>
+                    <Icon
+                      name="chevron-forward-outline"
+                      size={22}
+                      color="#1b2838"
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}}
+                />
+                <TouchableOpacity
+                  onPress={handleMostUsedPress}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    //justifyContent: 'space-between',
+                  }}>
+                  <Text style={[styles.mostUsedButton, {marginRight: -10}]}>
+                    Most used{' '}
+                  </Text>
+                  <EvilIcons
+                    name={
+                      isScrollViewVisible ? 'chevron-down' : 'chevron-right'
+                    }
+                    size={30}
+                    color="#878C9A"
+                  />
+                </TouchableOpacity>
+
+                {isScrollViewVisible && (
+                  <>
+                    <Animated.ScrollView
+                      ref={scrollViewRef}
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      pagingEnabled
+                      scrollEventThrottle={16}
+                      onScroll={Animated.event(
+                        [{nativeEvent: {contentOffset: {x: scrollX}}}],
+                        {
+                          useNativeDriver: false,
+                          listener: (
+                            event: NativeSyntheticEvent<NativeScrollEvent>,
+                          ) => {
+                            const pageIndex = Math.round(
+                              event.nativeEvent.contentOffset.x /
+                                widthOfYourPage,
+                            );
+                            setCurrentPage(pageIndex);
+                          },
+                        },
+                      )}>
+                      {pages.map((page, pageIndex) => (
+                        <FlatList
+                          key={pageIndex}
+                          data={page}
+                          numColumns={3}
+                          keyExtractor={item => item.id_expense_type.toString()}
+                          contentContainerStyle={{marginLeft: 10}}
+                          scrollEnabled={false}
+                          renderItem={({item}) => (
+                            <TouchableOpacity
+                              onPress={() => handleExpenseTypePress(item)}>
+                              <View
+                                style={[
+                                  styles.categoryContainer,
+                                  {width: 125, height: 80},
+                                ]}>
+                                <Image
+                                  source={{uri: url}}
+                                  style={styles.avatar}
+                                />
+                                <Text
+                                  style={styles.expenseItem}
+                                  numberOfLines={1}
+                                  ellipsizeMode="tail">
+                                  {item.category}
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+                          )}
+                        />
+                      ))}
+                    </Animated.ScrollView>
+                    <View style={styles.pagination}>
+                      {pages.map((_, pageIndex) => (
+                        <View
+                          key={pageIndex}
+                          style={[
+                            styles.dot,
+                            {
+                              backgroundColor:
+                                pageIndex === currentPage ? 'gray' : '#ccc',
+                            },
+                          ]}
+                        />
+                      ))}
+                    </View>
+                  </>
+                )}
+              </View>
+            )}
+
+            {selectedFamily != null && selectedMenu == 'Income' && (
+              <View style={styles.ContainerCategory}>
+                <View style={styles.selectedItemContainer}>
+                  <Image source={{uri: urlCatetory}} style={styles.avatar} />
+                  <Text
+                    style={[
+                      styles.inputAmount,
+                      {textAlign: 'left'},
+                      {fontSize: 18},
+                      {color: '#1b2838'},
+                    ]}>
+                    {incomeCategory?.category || 'Select category'}
+                  </Text>
+
+                  <TouchableOpacity
+                    style={styles.chevronContainer}
+                    onPress={pressSelectCategory}>
+                    <Text
+                      style={[
+                        {
+                          color: '#1b2838',
+                          fontWeight: 600,
+                          fontSize: 16,
+                          marginRight: 5,
+                        },
+                      ]}>
+                      View All
+                    </Text>
+                    <Icon
+                      name="chevron-forward-outline"
+                      size={22}
+                      color="#1b2838"
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}}
+                />
+                <TouchableOpacity
+                  onPress={handleMostUsedPress}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    //justifyContent: 'space-between',
+                  }}>
+                  <Text style={[styles.mostUsedButton, {marginRight: -10}]}>
+                    Most used{' '}
+                  </Text>
+                  <EvilIcons
+                    name={
+                      isScrollViewVisible ? 'chevron-down' : 'chevron-right'
+                    }
+                    size={30}
+                    color="#878C9A"
+                  />
+                </TouchableOpacity>
+
+                {isScrollViewVisible && (
+                  <>
+                    <Animated.ScrollView
+                      ref={scrollViewRef}
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      pagingEnabled
+                      scrollEventThrottle={16}
+                      onScroll={Animated.event(
+                        [{nativeEvent: {contentOffset: {x: scrollX}}}],
+                        {
+                          useNativeDriver: false,
+                          listener: (
+                            event: NativeSyntheticEvent<NativeScrollEvent>,
+                          ) => {
+                            const pageIndex = Math.round(
+                              event.nativeEvent.contentOffset.x /
+                                widthOfYourPage,
+                            );
+                            setCurrentPage(pageIndex);
+                          },
+                        },
+                      )}>
+                      {pagesIncome.map((page, pageIndex) => (
+                        <FlatList
+                          key={pageIndex}
+                          data={page}
+                          numColumns={3}
+                          keyExtractor={item =>
+                            item.id_income_source.toString()
+                          }
+                          contentContainerStyle={{marginLeft: 10}}
+                          scrollEnabled={false}
+                          renderItem={({item}) => (
+                            <TouchableOpacity
+                              onPress={() => handleIncomeTypePress(item)}>
+                              <View
+                                style={[
+                                  styles.categoryContainer,
+                                  {width: 125, height: 80},
+                                ]}>
+                                <Image
+                                  source={{uri: url}}
+                                  style={styles.avatar}
+                                />
+                                <Text
+                                  style={styles.expenseItem}
+                                  numberOfLines={1}
+                                  ellipsizeMode="tail">
+                                  {item.category}
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+                          )}
+                        />
+                      ))}
+                    </Animated.ScrollView>
+                    <View style={styles.pagination}>
+                      {pages.map((_, pageIndex) => (
+                        <View
+                          key={pageIndex}
+                          style={[
+                            styles.dot,
+                            {
+                              backgroundColor:
+                                pageIndex === currentPage ? 'gray' : '#ccc',
+                            },
+                          ]}
+                        />
+                      ))}
+                    </View>
+                  </>
+                )}
+              </View>
+            )}
+
+            {selectedMenu === 'Invoice' && <CreateInvoiceComponent />}
+
+            <View style={styles.container}>
+              <View style={styles.datePickerContainer}>
+                <View style={styles.itemContainer}>
+                  <Icon
+                    name="pencil"
+                    size={25}
+                    color="black"
+                    style={styles.icon}
+                  />
+                  <TextInput
+                    style={styles.titleText}
+                    placeholder="Description"
+                    value={description}
+                    onChangeText={setDescription}
+                  />
+                </View>
+              </View>
+
+              <View style={styles.datePickerContainer}>
+                <View style={styles.itemContainer}>
+                  <Icon
+                    name="calendar"
+                    size={25}
+                    color="black"
+                    style={styles.icon}
+                  />
+                  <Text style={[styles.text, {marginRight: 90, right: 10}]}>
+                    Select Date
+                  </Text>
+                </View>
+                <DateTimePicker
+                  value={date}
+                  mode="date"
+                  display="default"
+                  onChange={handleDateChange}
+                />
+              </View>
+            </View>
+            <View style={styles.imageContainer}>
+              <View style={styles.imageContainer}>
+                <View style={styles.imageContainer1}>
+                  <TouchableOpacity onPress={() => setShowLargeImage(true)}>
+                    {uriImage && (
+                      <View>
+                        <Image source={{uri: uriImage}} style={styles.image} />
+                        <TouchableOpacity
+                          style={styles.removeIconContainer}
+                          onPress={handleRemoveImage}>
+                          <Icon name="close" size={20} color="white" />
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View style={styles.imageContainer2}>
+                <TouchableOpacity onPress={() => handleOpenImageLibrary()}>
+                  <Icon
+                    name="image"
+                    size={60}
+                    color="gray"
+                    style={styles.cameraButton}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleTakePhoto()}>
+                  <Icon name="camera" size={60} color="gray" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+
+          <Modal visible={showLargeImage} transparent={true}>
+            <View style={styles.modalImageContainer}>
+              <Image source={{uri: uriImage}} style={styles.largeImage} />
+              <TouchableOpacity
+                onPress={() => setShowLargeImage(false)}
+                style={styles.closeButton}>
+                <Icon name="close" size={24} color="white" />
+              </TouchableOpacity>
+            </View>
+          </Modal>
+
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={isPickerOpen}
+            onRequestClose={() => {
+              setIsPickerOpen(!isPickerOpen);
+            }}>
+            <View style={styles.modalContainer}>
+              <TouchableOpacity
+                style={styles.modalBackground}
+                activeOpacity={1}
+                onPress={() => setIsPickerOpen(!isPickerOpen)}>
+                <View style={styles.dropdownMenu}>
+                  <TouchableOpacity
+                    onPress={() => handleOptionPress('Expense')}>
+                    <View style={styles.menuItem}>
+                      <Image
+                        source={require('src/assets/icons/expense.png')}
+                        resizeMode="stretch"
+                        style={styles.avatar}
                       />
-                      <Text style={styles.familyText}>{family.name}</Text>
+                      <Text style={styles.text}>Expense</Text>
+                      <View style={styles.checkIcon}>
+                        {selectedMenu === 'Expense' && (
+                          <Icon
+                            name="checkmark-sharp"
+                            size={20}
+                            color="green"
+                          />
+                        )}
+                      </View>
                     </View>
                   </TouchableOpacity>
-                )
-              }
-            />
-          </View>
-          {selectedFamily != null && selectedMenu == 'Expense' && (
-            <View style={styles.ContainerCategory}>
-              <View style={styles.selectedItemContainer}>
-                <Image source={{uri: urlCatetory}} style={styles.avatar} />
-                <Text
-                  style={[
-                    styles.inputAmount,
-                    {textAlign: 'left'},
-                    {fontSize: 18},
-                    {color: '#1b2838'},
-                  ]}>
-                  {expenseCategory?.category || 'Select category'}
-                </Text>
-
-                <TouchableOpacity
-                  style={styles.chevronContainer}
-                  onPress={pressSelectCategory}>
-                  <Text
-                    style={[
-                      {
-                        color: '#1b2838',
-                        fontWeight: 600,
-                        fontSize: 16,
-                        marginRight: 5,
-                      },
-                    ]}>
-                    View All
-                  </Text>
-                  <Icon
-                    name="chevron-forward-outline"
-                    size={22}
-                    color="#1b2838"
-                  />
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}}
-              />
-              <TouchableOpacity
-                onPress={handleMostUsedPress}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  //justifyContent: 'space-between',
-                }}>
-                <Text style={[styles.mostUsedButton, {marginRight: -10}]}>
-                  Most used{' '}
-                </Text>
-                <EvilIcons
-                  name={isScrollViewVisible ? 'chevron-down' : 'chevron-right'}
-                  size={30}
-                  color="#878C9A"
-                />
-              </TouchableOpacity>
-
-              {isScrollViewVisible && (
-                <>
-                  <Animated.ScrollView
-                    ref={scrollViewRef}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    pagingEnabled
-                    scrollEventThrottle={16}
-                    onScroll={Animated.event(
-                      [{nativeEvent: {contentOffset: {x: scrollX}}}],
-                      {
-                        useNativeDriver: false,
-                        listener: (
-                          event: NativeSyntheticEvent<NativeScrollEvent>,
-                        ) => {
-                          const pageIndex = Math.round(
-                            event.nativeEvent.contentOffset.x / widthOfYourPage,
-                          );
-                          setCurrentPage(pageIndex);
-                        },
-                      },
-                    )}>
-                    {pages.map((page, pageIndex) => (
-                      <FlatList
-                        key={pageIndex}
-                        data={page}
-                        numColumns={3}
-                        keyExtractor={item => item.id_expense_type.toString()}
-                        contentContainerStyle={{marginLeft: 10}}
-                        scrollEnabled={false}
-                        renderItem={({item}) => (
-                          <TouchableOpacity
-                            onPress={() => handleExpenseTypePress(item)}>
-                            <View
-                              style={[
-                                styles.categoryContainer,
-                                {width: 125, height: 80},
-                              ]}>
-                              <Image
-                                source={{uri: url}}
-                                style={styles.avatar}
-                              />
-                              <Text
-                                style={styles.expenseItem}
-                                numberOfLines={1}
-                                ellipsizeMode="tail">
-                                {item.category}
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleOptionPress('Income')}>
+                    <View style={styles.menuItem}>
+                      <Image
+                        source={require('src/assets/icons/income.png')}
+                        resizeMode="stretch"
+                        style={styles.avatar}
+                      />
+                      <Text style={styles.text}>Income</Text>
+                      <View style={styles.checkIcon}>
+                        {selectedMenu === 'Income' && (
+                          <Icon
+                            name="checkmark-sharp"
+                            size={20}
+                            color="green"
+                          />
                         )}
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleOptionPress('Invoice')}>
+                    <View style={styles.menuItem}>
+                      <Image
+                        source={require('src/assets/icons/invoice.png')}
+                        resizeMode="stretch"
+                        style={styles.avatar}
                       />
-                    ))}
-                  </Animated.ScrollView>
-                  <View style={styles.pagination}>
-                    {pages.map((_, pageIndex) => (
-                      <View
-                        key={pageIndex}
-                        style={[
-                          styles.dot,
-                          {
-                            backgroundColor:
-                              pageIndex === currentPage ? 'gray' : '#ccc',
-                          },
-                        ]}
-                      />
-                    ))}
-                  </View>
-                </>
-              )}
-            </View>
-          )}
-
-          {selectedFamily != null && selectedMenu == 'Income' && (
-            <View style={styles.ContainerCategory}>
-              <View style={styles.selectedItemContainer}>
-                <Image source={{uri: urlCatetory}} style={styles.avatar} />
-                <Text
-                  style={[
-                    styles.inputAmount,
-                    {textAlign: 'left'},
-                    {fontSize: 18},
-                    {color: '#1b2838'},
-                  ]}>
-                  {incomeCategory?.category || 'Select category'}
-                </Text>
-
-                <TouchableOpacity
-                  style={styles.chevronContainer}
-                  onPress={pressSelectCategory}>
-                  <Text
-                    style={[
-                      {
-                        color: '#1b2838',
-                        fontWeight: 600,
-                        fontSize: 16,
-                        marginRight: 5,
-                      },
-                    ]}>
-                    View All
-                  </Text>
-                  <Icon
-                    name="chevron-forward-outline"
-                    size={22}
-                    color="#1b2838"
-                  />
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}}
-              />
-              <TouchableOpacity
-                onPress={handleMostUsedPress}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  //justifyContent: 'space-between',
-                }}>
-                <Text style={[styles.mostUsedButton, {marginRight: -10}]}>
-                  Most used{' '}
-                </Text>
-                <EvilIcons
-                  name={isScrollViewVisible ? 'chevron-down' : 'chevron-right'}
-                  size={30}
-                  color="#878C9A"
-                />
-              </TouchableOpacity>
-
-              {isScrollViewVisible && (
-                <>
-                  <Animated.ScrollView
-                    ref={scrollViewRef}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    pagingEnabled
-                    scrollEventThrottle={16}
-                    onScroll={Animated.event(
-                      [{nativeEvent: {contentOffset: {x: scrollX}}}],
-                      {
-                        useNativeDriver: false,
-                        listener: (
-                          event: NativeSyntheticEvent<NativeScrollEvent>,
-                        ) => {
-                          const pageIndex = Math.round(
-                            event.nativeEvent.contentOffset.x / widthOfYourPage,
-                          );
-                          setCurrentPage(pageIndex);
-                        },
-                      },
-                    )}>
-                    {pagesIncome.map((page, pageIndex) => (
-                      <FlatList
-                        key={pageIndex}
-                        data={page}
-                        numColumns={3}
-                        keyExtractor={item => item.id_income_source.toString()}
-                        contentContainerStyle={{marginLeft: 10}}
-                        scrollEnabled={false}
-                        renderItem={({item}) => (
-                          <TouchableOpacity
-                            onPress={() => handleIncomeTypePress(item)}>
-                            <View
-                              style={[
-                                styles.categoryContainer,
-                                {width: 125, height: 80},
-                              ]}>
-                              <Image
-                                source={{uri: url}}
-                                style={styles.avatar}
-                              />
-                              <Text
-                                style={styles.expenseItem}
-                                numberOfLines={1}
-                                ellipsizeMode="tail">
-                                {item.category}
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
+                      <Text style={styles.text}>Invoice</Text>
+                      <View style={styles.checkIcon}>
+                        {selectedMenu === 'Invoice' && (
+                          <Icon
+                            name="checkmark-sharp"
+                            size={20}
+                            color="green"
+                          />
                         )}
-                      />
-                    ))}
-                  </Animated.ScrollView>
-                  <View style={styles.pagination}>
-                    {pages.map((_, pageIndex) => (
-                      <View
-                        key={pageIndex}
-                        style={[
-                          styles.dot,
-                          {
-                            backgroundColor:
-                              pageIndex === currentPage ? 'gray' : '#ccc',
-                          },
-                        ]}
-                      />
-                    ))}
-                  </View>
-                </>
-              )}
-            </View>
-          )}
-
-          {selectedMenu === 'Invoice' && <CreateInvoiceComponent />}
-
-          <View style={styles.container}>
-            <View style={styles.datePickerContainer}>
-              <View style={styles.itemContainer}>
-                <Icon
-                  name="pencil"
-                  size={25}
-                  color="black"
-                  style={styles.icon}
-                />
-                <TextInput
-                  style={styles.titleText}
-                  placeholder="Description"
-                  value={description}
-                  onChangeText={setDescription}
-                />
-              </View>
-            </View>
-
-            <View style={styles.datePickerContainer}>
-              <View style={styles.itemContainer}>
-                <Icon
-                  name="calendar"
-                  size={25}
-                  color="black"
-                  style={styles.icon}
-                />
-                <Text style={[styles.text, {marginRight: 90, right: 10}]}>
-                  Select Date
-                </Text>
-              </View>
-              <DateTimePicker
-                value={date}
-                mode="date"
-                display="default"
-                onChange={handleDateChange}
-              />
-            </View>
-          </View>
-          <View style={styles.imageContainer}>
-            <View style={styles.imageContainer}>
-              <View style={styles.imageContainer1}>
-                <TouchableOpacity onPress={() => setShowLargeImage(true)}>
-                  {uriImage && (
-                    <View>
-                      <Image source={{uri: uriImage}} style={styles.image} />
-                      <TouchableOpacity
-                        style={styles.removeIconContainer}
-                        onPress={handleRemoveImage}>
-                        <Icon name="close" size={20} color="white" />
-                      </TouchableOpacity>
+                      </View>
                     </View>
-                  )}
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <View style={styles.imageContainer2}>
-              <TouchableOpacity onPress={() => handleOpenImageLibrary()}>
-                <Icon
-                  name="image"
-                  size={60}
-                  color="gray"
-                  style={styles.cameraButton}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleTakePhoto()}>
-                <Icon name="camera" size={60} color="gray" />
+                  </TouchableOpacity>
+                </View>
               </TouchableOpacity>
             </View>
-          </View>
-        </ScrollView>
-
-        <Modal visible={showLargeImage} transparent={true}>
-          <View style={styles.modalImageContainer}>
-            <Image source={{uri: uriImage}} style={styles.largeImage} />
-            <TouchableOpacity
-              onPress={() => setShowLargeImage(false)}
-              style={styles.closeButton}>
-              <Icon name="close" size={24} color="white" />
-            </TouchableOpacity>
-          </View>
-        </Modal>
-
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={isPickerOpen}
-          onRequestClose={() => {
-            setIsPickerOpen(!isPickerOpen);
-          }}>
-          <View style={styles.modalContainer}>
-            <TouchableOpacity
-              style={styles.modalBackground}
-              activeOpacity={1}
-              onPress={() => setIsPickerOpen(!isPickerOpen)}>
-              <View style={styles.dropdownMenu}>
-                <TouchableOpacity onPress={() => handleOptionPress('Expense')}>
-                  <View style={styles.menuItem}>
-                    <Image
-                      source={require('src/assets/icons/expense.png')}
-                      resizeMode="stretch"
-                      style={styles.avatar}
-                    />
-                    <Text style={styles.text}>Expense</Text>
-                    <View style={styles.checkIcon}>
-                      {selectedMenu === 'Expense' && (
-                        <Icon name="checkmark-sharp" size={20} color="green" />
-                      )}
-                    </View>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleOptionPress('Income')}>
-                  <View style={styles.menuItem}>
-                    <Image
-                      source={require('src/assets/icons/income.png')}
-                      resizeMode="stretch"
-                      style={styles.avatar}
-                    />
-                    <Text style={styles.text}>Income</Text>
-                    <View style={styles.checkIcon}>
-                      {selectedMenu === 'Income' && (
-                        <Icon name="checkmark-sharp" size={20} color="green" />
-                      )}
-                    </View>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleOptionPress('Invoice')}>
-                  <View style={styles.menuItem}>
-                    <Image
-                      source={require('src/assets/icons/invoice.png')}
-                      resizeMode="stretch"
-                      style={styles.avatar}
-                    />
-                    <Text style={styles.text}>Invoice</Text>
-                    <View style={styles.checkIcon}>
-                      {selectedMenu === 'Invoice' && (
-                        <Icon name="checkmark-sharp" size={20} color="green" />
-                      )}
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </Modal>
-      </View>
+          </Modal>
+        </View>
+      </SafeAreaView>
     </ImageBackground>
   );
 };

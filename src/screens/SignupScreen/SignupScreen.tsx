@@ -103,19 +103,24 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
       <KeyboardAvoidingView behavior="padding">
         <ScrollView>
           <SafeAreaView>
-            <View style={styles.marginHorizontal}>
-              <View style={styles.marginVertical}>
-                {/* <Text style={styles.welcomeText}>{TEXTS.SIGNUP_WELCOME}</Text>
-                <Text style={styles.accountTitle}>{TEXTS.SIGNUP_TITLE}</Text> */}
-                <Text
-                  style={[
-                    {marginTop: 80},
-                    {fontSize: 30},
-                    {fontWeight: 'bold'},
-                    {color: '#2A475E'},
-                  ]}>
-                  Sign in
-                </Text>
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('WelcomeScreen');
+                }}>
+                <Ionicons
+                  name="chevron-back-circle-outline"
+                  style={styles.backIcon}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.marginHorizontal, {bottom: 190}]}>
+              <View style={[styles.marginVertical]}>
+                <Image
+                  source={require('../../assets/images/logo-app-1.png')}
+                  resizeMode="stretch"
+                  style={styles.logo}
+                />
               </View>
               <Formik
                 initialValues={{
@@ -155,15 +160,14 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                   values,
                   setFieldValue,
                 }) => (
-                  <View>
+                  <View style={{marginTop: 120}}>
                     <View style={styles.marginBottom}>
-                      {/* <Text style={styles.title}>{TEXTS.FIRST_NAME}</Text> */}
                       <View
                         style={{
                           ...styles.placeholder,
                           borderColor: errors.firstName
                             ? COLORS.red
-                            : '#2A475E',
+                            : COLORS.Rhino,
                         }}>
                         <MaterialCommunityIcons
                           name="account"
@@ -335,7 +339,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           handleChange('termsAndConditions');
                         }}
                       />
-                      <Text style={{color: '#2A475E'}}>
+                      <Text style={{color: COLORS.Rhino}}>
                         {TEXTS.TERMS_AND_CONDITIONS}
                       </Text>
                     </View>

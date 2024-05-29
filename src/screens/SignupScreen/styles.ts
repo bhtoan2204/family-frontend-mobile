@@ -1,110 +1,91 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 import {COLORS} from 'src/constants';
 
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
+
 const styles = StyleSheet.create({
-  keyboardView: {
-    //flex: 1,
-    //backgroundColor: COLORS.white,
-  },
-  scrollView: {
-    flex: 1,
-    //backgroundColor: COLORS.white,
-  },
-  safeAreaStyle: {
-    flex: 1,
-    //backgroundColor: COLORS.white,
-  },
   marginHorizontal: {
-    //flex: 1,
-    marginHorizontal: 30,
+    marginHorizontal: screenWidth * 0.06,
   },
   marginVertical: {
-    marginVertical: 22,
-  },
-  welcomeText: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginVertical: 12,
-    color: COLORS.black,
+    marginVertical: screenHeight * 0.02,
   },
   accountTitle: {
-    fontSize: 16,
-    color: '#2A475E',
+    fontSize: screenHeight * 0.018,
+    color: COLORS.Rhino,
   },
   marginBottom: {
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '400',
-    marginVertical: 8,
+    marginBottom: screenHeight * 0.02,
   },
   textInput: {
     width: '100%',
   },
   placeholder: {
-    height: 48,
-    width: '100%',
+    height: screenHeight * 0.05,
+    width: screenWidth * 0.9,
     borderWidth: 1.5,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 30,
-    backgroundColor: '#C7D5E0',
+    paddingHorizontal: screenWidth * 0.07,
+    backgroundColor: COLORS.PaleAqua,
     flexDirection: 'row',
+    alignSelf: 'center',
   },
   touchable: {
     position: 'absolute',
-    right: 12,
+    right: screenWidth * 0.03,
   },
   Icon: {
-    fontSize: 24,
-    color: '#2A475E',
+    fontSize: screenHeight * 0.03,
+    color: COLORS.Rhino,
   },
   eyeIcon: {
-    fontSize: 24,
-    color: '#2A475E',
+    fontSize: screenHeight * 0.03,
+    color: COLORS.Rhino,
   },
   marginVerticalFlex: {
     flexDirection: 'row',
-    marginVertical: 6,
-    alignItems: 'center',
-  },
-  marginVerticalFlexMax: {
-    flexDirection: 'row',
-    marginVertical: 20,
+    marginVertical: screenHeight * 0.01,
     alignItems: 'center',
   },
   marginVerticalCenter: {
     flexDirection: 'row',
-    marginVertical: 22,
+    marginVertical: screenHeight * 0.02,
     justifyContent: 'center',
   },
   checkbox: {
-    marginRight: 8,
-    color: '#2A475E',
+    marginRight: screenHeight * 0.01,
+    color: COLORS.Rhino,
   },
   button: {
-    marginTop: 18,
-    marginBottom: 4,
-  },
-  lineStyle: {
-    flex: 1,
-    height: 1,
-    backgroundColor: COLORS.gray,
-    marginHorizontal: 10,
+    marginTop: screenHeight * 0.02,
+    marginBottom: screenHeight * 0.01,
   },
   loginText: {
-    fontSize: 16,
-    color: '#66C0F4',
+    fontSize: screenHeight * 0.018,
+    color: COLORS.DenimBlue,
     fontWeight: 'bold',
-    marginLeft: 6,
+    marginLeft: screenHeight * 0.01,
   },
   errorText: {
     color: COLORS.red,
-    fontSize: 12,
-    marginTop: 5,
-    marginLeft: 5,
+    fontSize: screenHeight * 0.015,
+    marginTop: screenHeight * 0.01,
+    marginLeft: screenHeight * 0.01,
+  },
+  backIcon: {
+    fontSize: screenHeight * 0.05,
+    color: COLORS.Rhino,
+    padding: screenHeight * 0.02,
+  },
+  logo: {
+    height: screenHeight * 0.1,
+    width: screenHeight * 0.1,
+    top: screenHeight * 0.12,
+    marginTop: screenHeight * 0.09,
+    alignSelf: 'center',
   },
 });
 
