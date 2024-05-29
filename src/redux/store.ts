@@ -3,7 +3,7 @@ import profileReducer from './slices/ProfileSclice';
 import checkListReducer from './slices/CheckListSlice';
 import financeReducer from './slices/FinanceSlice';
 import expenseAnalysisReducer from './slices/ExpenseAnalysis';
-import incomeAnalysisReducer from './slices/IncomeAnalysis';
+import calendarReducer from './slices/CalendarSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +11,7 @@ export const store = configureStore({
     checklist: checkListReducer,
     finance: financeReducer,
     expenseAnalysis: expenseAnalysisReducer,
-    incomeAnalysis: incomeAnalysisReducer,
+    calendar: calendarReducer,
   },
 });
 
