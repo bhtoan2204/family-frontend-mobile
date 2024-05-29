@@ -18,6 +18,7 @@ import {
 } from 'src/redux/slices/ExpenseAnalysis';
 import moment from 'moment';
 import {ExpenseServices} from 'src/services/apiclient';
+import {Ionicons} from '@expo/vector-icons';
 
 interface Category {
   name: string;
@@ -312,11 +313,22 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
             style={styles.linechart}
           />
         )}
-        <ScrollView horizontal contentContainerStyle={styles.legendContainer}>
+        <ScrollView
+          horizontal
+          contentContainerStyle={{
+            ...styles.legendContainer,
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+          }}>
           {categoryDatasets.map((dataset, index) => (
             <TouchableOpacity
               key={index}
-              style={legendItemStyle(dataset.name)}
+              style={{
+                ...legendItemStyle(dataset.name),
+                width: '20%',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
               onPress={() => toggleLegend(dataset.name)}>
               <View
                 style={[styles.legendColor, {backgroundColor: dataset.color()}]}
@@ -325,13 +337,26 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
             </TouchableOpacity>
           ))}
         </ScrollView>
+        <View style={{height: 1, backgroundColor: '#F3F1EE', marginTop: 10}} />
 
-        <View style={styles.buttonContainer}>
-          <Button
-            title={showDetails ? 'Hide Details' : 'View Details'}
-            onPress={() => setShowDetails(!showDetails)}
+        <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            padding: 10,
+            alignItems: 'center',
+            marginTop: 10,
+          }}
+          onPress={() => setShowDetails(!showDetails)}>
+          <Text style={{fontWeight: '500'}}>
+            {showDetails ? 'Hide details' : 'View details'}
+          </Text>
+          <Ionicons
+            name={showDetails ? 'chevron-down' : 'chevron-forward'}
+            size={20}
+            color="black"
           />
-        </View>
+        </TouchableOpacity>
 
         {showDetails && (
           <View style={styles.ContainerCategory}>
@@ -369,6 +394,14 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
           </View>
         )}
       </View>
+      <View
+        style={{
+          backgroundColor: 'white',
+          width: '100%',
+          height: 400,
+          marginTop: -30,
+        }}
+      />
     </ScrollView>
   );
 };
