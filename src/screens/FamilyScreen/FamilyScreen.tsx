@@ -127,7 +127,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           className="w-full flex-row justify-between items-center"
           style={{padding: 10, marginTop: 10}}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" size={24} style={styles.backButton} />
+            <Icon name="arrow-back" size={28} style={styles.backButton} />
           </TouchableOpacity>
           {family != null && (
             <Text
@@ -151,7 +151,15 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           <Image
             source={require('../../assets/images/family-1.jpg')}
             resizeMode="stretch"
-            style={{borderRadius: 30, height: 200, width: 350}}
+            style={{
+              borderRadius: 30,
+              height: 200,
+              width: 350,
+              shadowColor: 'black',
+              shadowOffset: {width: 0, height: 2},
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+            }}
           />
         </View>
         {family != null && (
