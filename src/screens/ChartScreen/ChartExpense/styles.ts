@@ -173,11 +173,23 @@ const styles = StyleSheet.create({
   },
 
   datePickerContainer: {
-    paddingVertical: 10,
+    //paddingVertical: 10,
+    top: 10,
     paddingHorizontal: 0,
     fontSize: 20,
     alignSelf: 'center',
     zIndex: 1,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    width: '30%',
+    height: 40,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
   },
 
   titleText: {
@@ -390,8 +402,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    // borderBottomWidth: 1,
+    // borderBottomColor: '#ccc',
   },
   containerTextName: {
     color: 'blue',

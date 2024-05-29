@@ -73,31 +73,45 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({id_family}) => {
         />
       </View>
 
-      <View style={styles.chartBarContainer}>
+      <View style={[styles.chartBarContainer, {marginTop: 20}]}>
         {barChartData.map((expense, index) => (
-          <View key={index} style={styles.expenseDateItem}>
-            <View style={styles.expenseDetails}>
-              <Text style={styles.expenseText}>{expense.expense_category}</Text>
-              <Text style={styles.expenseAmount}>
-                -{expense.expense_amount} đ
-              </Text>
-            </View>
-
-            <TouchableOpacity onPress={() => toggleDetails(index)}>
-              <View style={{flexDirection: 'row'}}>
-                <Text>View details</Text>
-                <EvilIcons name={'chevron-right'} size={30} color="#ccc" />
-              </View>
-            </TouchableOpacity>
-
-            {showDetails[index] && (
-              <View style={styles.detailsContainer}>
-                <Text style={styles.containerTextName}> {expense.name}</Text>
+          <View key={index}>
+            <View style={styles.expenseDateItem}>
+              <View style={styles.expenseDetails}>
                 <Text style={styles.expenseText}>
-                  Description: {expense.description}
+                  {expense.expense_category}
+                </Text>
+                <Text style={styles.expenseAmount}>
+                  -{expense.expense_amount} đ
                 </Text>
               </View>
-            )}
+
+              <TouchableOpacity onPress={() => toggleDetails(index)}>
+                <View style={{flexDirection: 'row'}}>
+                  <Text>View details</Text>
+                  <EvilIcons name={'chevron-right'} size={30} color="#ccc" />
+                </View>
+              </TouchableOpacity>
+
+              {showDetails[index] && (
+                <View style={styles.detailsContainer}>
+                  <Text style={styles.containerTextName}> {expense.name}</Text>
+                  <Text style={styles.expenseText}>
+                    Description: {expense.description}
+                  </Text>
+                </View>
+              )}
+            </View>
+            <View
+              style={{
+                borderBottomColor: '#F3F1EE',
+                borderBottomWidth: 1,
+                width: '90%',
+                alignSelf: 'center',
+                // borderStyle: 'dashed',
+                // borderRadius: 1,
+              }}
+            />
           </View>
         ))}
       </View>
