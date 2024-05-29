@@ -232,11 +232,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
 
   return (
     <ScrollView style={{height: '80%'}}>
-      <View style={{flexDirection: 'row', padding: 10}}>
-        <View style={styles.itemContainer}>
-          <Icon name="calendar" size={25} color="black" style={styles.icon} />
-          <Text style={styles.text}>Select Month</Text>
-        </View>
+      <View style={{flexDirection: 'row', top: 0, zIndex: 1}}>
         <TouchableOpacity
           style={styles.monthPickerContainer}
           onPress={() => setMonthPickerVisible(!isMonthPickerVisible)}>
@@ -254,18 +250,6 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
           onMonthChange={handleMonthPickerConfirm}
         />
       )}
-
-      {/* <View style={styles.chartContainer}>
-        <PieChart
-          style={{height: 250}}
-          data={pieChartData}
-          outerRadius={'80%'}
-          innerRadius={'60%'}
-          labelRadius={120}>
-          <Labels slices={pieChartData} />
-        </PieChart>
-        <Legend data={pieChartData} style={{}} />
-      </View> */}
       <View style={styles.chartContainer}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <PieChart

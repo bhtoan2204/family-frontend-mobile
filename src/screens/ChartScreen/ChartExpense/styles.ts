@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgray',
   },
   chartContainer: {
-    marginTop: 10,
+    bottom: 30,
     backgroundColor: 'white',
     padding: 10,
     paddingTop: 20,
@@ -277,8 +277,8 @@ const styles = StyleSheet.create({
   monthPickerContainer: {
     width: '100%',
     alignItems: 'flex-end',
-    borderColor: '#ccc',
-    borderBottomWidth: 1,
+    // borderColor: '#ccc',
+    // borderBottomWidth: 1,
     paddingVertical: 10,
     right: 165,
   },
