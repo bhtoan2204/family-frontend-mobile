@@ -43,6 +43,42 @@ plusIcon: {
     shadowOpacity: 0.3,
     shadowRadius: 2,
 },
+agendaItem: {
+    backgroundColor: 'white',
+    padding: 10,
+    marginVertical: 5,
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
+
+},
+
+    agendaItemText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    agendaItemTime: {
+        fontSize: 14,
+    },
+    rightAction: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 15,
+        marginVertical: 5,
+        backgroundColor: 'lightgray',
+        borderRadius: 5,
+    },
+    actionButton: {
+        padding: 10,
+        borderRadius: 5,
+    },
+    actionButtonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
 });
 
 export default styles;

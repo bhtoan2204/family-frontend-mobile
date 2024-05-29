@@ -1,10 +1,11 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import CalendarScreen from 'src/screens/Calendar';
-import { CalendarListScreenProps, CalendarScreenProps, CreateCategoryEventScreenProps, CreateEventScreenProps } from '../NavigationTypes';
+import { CalendarScreenProps, CreateCategoryEventScreenProps, CreateEventScreenProps, EventListScreenProps, ScheduleScreenProps } from '../NavigationTypes';
 import CreateEventModal from 'src/screens/Calendar/CreateEvent';
-import CalendarListScreen from 'src/screens/Calendar/CalendarList/CalendarList';
 import CreateEventScreen from 'src/screens/Calendar/CreateEvent/CreateEvent';
 import CreateCategoryEventScreen from 'src/screens/Calendar/CreateCategoryEvent/CreateCategoryEvent';
+import EventListScreen from 'src/screens/Calendar/EventList/EventList';
+import ScheduleScreen from 'src/screens/Calendar/Schedule/Schedule';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,8 +20,8 @@ const CalendarStack = () => {
         {(props) => <CalendarScreen {...props as CalendarScreenProps} />}
         </Stack.Screen>
 
-        <Stack.Screen name="CalendarList">
-        {(props) => <CalendarListScreen {...props as CalendarListScreenProps} />}
+        <Stack.Screen name="ScheduleScreen">
+        {(props) => <ScheduleScreen {...props as ScheduleScreenProps} />}
         </Stack.Screen>
 
         <Stack.Screen name="CreateEvent">
@@ -29,6 +30,10 @@ const CalendarStack = () => {
 
         <Stack.Screen name="CreateCategoryEvent">
         {(props) => <CreateCategoryEventScreen {...props as CreateCategoryEventScreenProps} />}
+        </Stack.Screen>
+
+        <Stack.Screen name="EventListScreen">
+        {(props) => <EventListScreen {...props as EventListScreenProps} />}
         </Stack.Screen>
     </Stack.Navigator>
   );

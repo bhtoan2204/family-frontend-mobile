@@ -66,7 +66,7 @@ const EventList = ({ selectDate, id_family }: { selectDate: Date , id_family?: n
                   try {
                     await CalendarServices.DeleteEvent(event.id_calendar)
                     Alert.alert('Success', 'Event has been deleted successfully.');
-                    handleGetEventOnDate();
+                    await handleGetEventOnDate();
                   } catch (error) {
                     console.log('Error deleting event:', error);
                     Alert.alert('Error', 'An error occurred while deleting the event.');
@@ -80,6 +80,7 @@ const EventList = ({ selectDate, id_family }: { selectDate: Date , id_family?: n
 
     const renderRightActions = (event: Event) => (
         <View style={styles.rightAction}>
+            <View style={[styles.colorBar, { backgroundColor: event.color }]} />
             <Icon name="create-outline" size={35} color="gray" onPress={() => onUpdate(event)} />
             <Icon name="trash-outline" size={35} color="red" onPress={() => onDelete(event)} />
         </View>
@@ -106,18 +107,8 @@ const EventList = ({ selectDate, id_family }: { selectDate: Date , id_family?: n
                                     {event.title}
                                 </Text>
                                 <Text style={[styles.eventTime, event.color === 'white' && { color: 'black' }]}>
-                                    {format(new Date(event.time_start), 'HH:mm')} - {format(new Date(event.time_end), 'HH:mm')}
+                                    {event.is_all_day ? 'All Day' : `${format(new Date(event.time_start), 'HH:mm')} - ${format(new Date(event.time_end), 'HH:mm')}`}
                                 </Text>
-                                <View style={styles.containerLocation}>
-                                    <MaterialCommunityIcons
-                                        name="playlist-edit"
-                                        size={30}
-                                        style={{ color: 'gray' }}
-                                    />
-                                    <Text style={[styles.eventDescription, event.color === 'white' && { color: 'black' }]}>
-                                        {event.description}
-                                    </Text>
-                                </View>
                                 <View style={styles.containerLocation}>
                                     <Icon name="location" size={28} color="gray" />
                                     <Text style={[styles.eventDescription, event.color === 'white' && { color: 'black' }]}>
@@ -204,7 +195,8 @@ const EventList = ({ selectDate, id_family }: { selectDate: Date , id_family?: n
 const styles = StyleSheet.create({
     containerLocation: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems
+        : 'center',
     },
     container: {
         marginTop: 20,
@@ -268,6 +260,12 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginBottom: 10,
         width: '30%',
+    },
+    colorBar: {
+        height: '100%',
+        width: 5,
+        marginRight: 10,
+        borderRadius: 4,
     },
 });
 
