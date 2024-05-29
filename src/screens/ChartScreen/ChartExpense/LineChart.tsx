@@ -254,12 +254,8 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
 
   return (
     <ScrollView style={{height: '80%'}}>
-      <View style={styles.itemContainer}>
-        <Icon name="calendar" size={25} color="black" style={styles.icon} />
-        <Text style={styles.text}>Select Year</Text>
-      </View>
       <TouchableOpacity
-        style={styles.monthPickerContainer}
+        style={[styles.monthPickerContainer, {zIndex: 1}]}
         onPress={() => setYearPickerVisible(!isYearPickerVisible)}>
         <View style={styles.monthContainer}>
           <Text style={styles.monthText}>{selectedYear}</Text>
@@ -277,7 +273,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
           </Picker>
         </View>
       )}
-      <View style={styles.chartContainer}>
+      <View style={styles.chartLineContainer}>
         <Text>(Unit: Million VNĐ)</Text>
         {displayedDatasets.length > 0 && (
           <LineChart
@@ -316,61 +312,63 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
             style={styles.linechart}
           />
         )}
-      </View>
-      <ScrollView horizontal contentContainerStyle={styles.legendContainer}>
-        {categoryDatasets.map((dataset, index) => (
-          <TouchableOpacity
-            key={index}
-            style={legendItemStyle(dataset.name)}
-            onPress={() => toggleLegend(dataset.name)}>
-            <View
-              style={[styles.legendColor, {backgroundColor: dataset.color()}]}
-            />
-            <Text style={styles.legendText}>{dataset.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      <View style={styles.buttonContainer}>
-        <Button
-          title={showDetails ? 'Hide Details' : 'View Details'}
-          onPress={() => setShowDetails(!showDetails)}
-        />
-      </View>
-
-      {showDetails && (
-        <View style={styles.ContainerCategory}>
-          {monthlyData.map(monthData => (
+        <ScrollView horizontal contentContainerStyle={styles.legendContainer}>
+          {categoryDatasets.map((dataset, index) => (
             <TouchableOpacity
-              key={monthData.month}
-              style={styles.expenseItem}
-              onPress={() => handlePressMonth(`${monthData.month}`)}>
-              <View style={styles.expenseDetails}>
-                <Image
-                  source={{uri: `${avatarUrlTemplate}${monthData.month}`}}
-                  style={styles.avatar}
-                />
-                <Text
-                  style={styles.expenseText}>{`Month ${monthData.month}`}</Text>
-              </View>
-              <View style={styles.expenseDetails}>
-                {monthData.categories &&
-                  Array.isArray(monthData.categories) &&
-                  monthData.categories.map(category => (
-                    <View key={category.name}>
-                      <Text>{`${category.name}: ${category.amount}`}</Text>
-                    </View>
-                  ))}
-                <Text
-                  style={
-                    styles.expenseAmount
-                  }>{`Total: ${monthData.total} đ`}</Text>
-                <Icon name="chevron-right" size={20} color="#ccc" />
-              </View>
+              key={index}
+              style={legendItemStyle(dataset.name)}
+              onPress={() => toggleLegend(dataset.name)}>
+              <View
+                style={[styles.legendColor, {backgroundColor: dataset.color()}]}
+              />
+              <Text style={styles.legendText}>{dataset.name}</Text>
             </TouchableOpacity>
           ))}
+        </ScrollView>
+
+        <View style={styles.buttonContainer}>
+          <Button
+            title={showDetails ? 'Hide Details' : 'View Details'}
+            onPress={() => setShowDetails(!showDetails)}
+          />
         </View>
-      )}
+
+        {showDetails && (
+          <View style={styles.ContainerCategory}>
+            {monthlyData.map(monthData => (
+              <TouchableOpacity
+                key={monthData.month}
+                style={styles.expenseItem}
+                onPress={() => handlePressMonth(`${monthData.month}`)}>
+                <View style={styles.expenseDetails}>
+                  <Image
+                    source={{uri: `${avatarUrlTemplate}${monthData.month}`}}
+                    style={styles.avatar}
+                  />
+                  <Text
+                    style={
+                      styles.expenseText
+                    }>{`Month ${monthData.month}`}</Text>
+                </View>
+                <View style={styles.expenseDetails}>
+                  {monthData.categories &&
+                    Array.isArray(monthData.categories) &&
+                    monthData.categories.map(category => (
+                      <View key={category.name}>
+                        <Text>{`${category.name}: ${category.amount}`}</Text>
+                      </View>
+                    ))}
+                  <Text
+                    style={
+                      styles.expenseAmount
+                    }>{`Total: ${monthData.total} đ`}</Text>
+                  <Icon name="chevron-right" size={20} color="#ccc" />
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+      </View>
     </ScrollView>
   );
 };

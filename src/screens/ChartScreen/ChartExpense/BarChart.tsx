@@ -119,7 +119,7 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({id_family}) => {
         style={{
           backgroundColor: 'white',
           width: '100%',
-          height: 420,
+          height: 500,
           marginTop: -30,
         }}
       />

@@ -256,7 +256,18 @@ const styles = StyleSheet.create({
 
     flexDirection: 'column',
   },
+  chartLineContainer: {
+    bottom: 30,
+    backgroundColor: 'white',
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 30,
+    borderTopLeftRadius: 60,
+    width: '100%',
+    alignSelf: 'center',
 
+    flexDirection: 'column',
+  },
   buttonContainer: {
     marginTop: screenHeight * 0.005,
   },
