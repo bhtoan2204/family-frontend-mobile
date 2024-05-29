@@ -24,19 +24,18 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 18,
-    color: 'black',
+    color: 'white',
     fontWeight: 'bold',
   },
 
   container: {
     flex: 1,
-    backgroundColor: '#F7F5F4',
   },
   backButton: {
     marginBottom: 10,
     marginLeft: 10,
     marginTop: 10,
-    color: 'CCC8C1',
+    color: 'white',
   },
 
   categoryItemContainer: {
@@ -133,7 +132,7 @@ const styles = StyleSheet.create({
     width: '30%',
     height: '70%',
     marginBottom: 15,
-    backgroundColor: '#EEEBEA', // Default gray background
+    backgroundColor: '#fff', // Default gray background
     borderRadius: 20,
   },
   tabButtonContent: {
@@ -232,13 +231,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 60,
     width: '100%',
     alignSelf: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
+
     flexDirection: 'column',
   },
 
@@ -269,10 +262,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   monthText: {
-    color: 'black',
+    color: 'white',
     fontSize: 16,
     alignContent: 'center',
     padding: 10,
+    fontWeight: 'bold',
   },
   monthPickerContainer: {
     width: '100%',
@@ -286,7 +280,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     borderColor: '#ccc',
-    backgroundColor: '#ccc',
+    backgroundColor: COLORS.DenimBlue,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
   },
   yearPickerContainer: {
     backgroundColor: '#ffffff',
@@ -372,7 +373,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   filterButton: {
-    color: '#CCC8C1',
+    color: 'white',
   },
   expenseDateItem: {
     flexDirection: 'column',

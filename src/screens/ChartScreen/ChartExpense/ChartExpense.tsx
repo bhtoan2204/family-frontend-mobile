@@ -9,6 +9,7 @@ import {
   Modal,
   FlatList,
   Image,
+  ImageBackground,
 } from 'react-native';
 import {PieChart} from 'react-native-chart-kit';
 import {ChartExpenseProps} from 'src/navigation/NavigationTypes';
@@ -84,126 +85,144 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#F7F5F4'}}>
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('HomeTab', {screen: 'Expense'})}
-            style={styles.headerButton}>
-            <Icon name="arrow-back" size={30} style={styles.backButton} />
-          </TouchableOpacity>
-          <View style={styles.headerTitleContainer}>
-            <Text style={styles.headerText}>Expense Analysis</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.headerButton}
-            onPress={() => setIsFamilyModalOpen(!isFamilyModalOpen)}>
-            <Icon name="filter" size={30} style={styles.filterButton} />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            flexDirection: 'column',
-            marginHorizontal: 20,
-            bottom: 5,
-            marginBottom: 10,
-          }}>
-          <Text style={{fontSize: 20, fontWeight: '600', marginBottom: 5}}>
-            Hello, Jennie
-          </Text>
-          <Text style={{fontSize: 16, color: 'gray'}}>
-            Here you can view brief overview of your budget.
-          </Text>
-        </View>
-        <View style={styles.containerTab}>
-          <TouchableOpacity
-            onPress={() => selectOption('Day')}
-            style={[
-              styles.tabButton,
-              selectedCategoryType === 'Day' && styles.selectedTabButton,
-            ]}>
-            <Text
-              style={[
-                styles.tabButtonText,
-                selectedCategoryType === 'Day' && styles.selectedTabButtonText,
-              ]}>
-              Day
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => selectOption('Month')}
-            style={[
-              styles.tabButton,
-              selectedCategoryType === 'Month' && styles.selectedTabButton,
-            ]}>
-            <Text
-              style={[
-                styles.tabButtonText,
-                selectedCategoryType === 'Month' &&
-                  styles.selectedTabButtonText,
-              ]}>
-              Month
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => selectOption('Year')}
-            style={[
-              styles.tabButton,
-              selectedCategoryType === 'Year' && styles.selectedTabButton,
-            ]}>
-            <Text
-              style={[
-                styles.tabButtonText,
-                selectedCategoryType === 'Year' && styles.selectedTabButtonText,
-              ]}>
-              Year
-            </Text>
-          </TouchableOpacity>
-        </View>
-        {selectedCategoryType === 'Day' && (
-          <View>
-            <BarChartScreen id_family={selectedFamily} />
-          </View>
-        )}
-        {selectedCategoryType === 'Month' && (
-          <View>
-            <PieChartComponent id_family={selectedFamily} />
-          </View>
-        )}
-        {selectedCategoryType === 'Year' && (
-          <View>
-            <LineChartScreen id_family={selectedFamily} />
-          </View>
-        )}
-        <Modal
-          visible={isFamilyModalOpen}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setIsFamilyModalOpen(false)}>
-          <TouchableOpacity
-            style={styles.modalContainer}
-            activeOpacity={1}
-            onPress={() => setIsFamilyModalOpen(!isFamilyModalOpen)}>
-            <View style={styles.modalBackground}>
-              <View style={styles.dropdownMenu}>
-                <FlatList
-                  data={families}
-                  renderItem={({item}) => (
-                    <TouchableOpacity
-                      style={styles.filterItem}
-                      onPress={() => handleFamilySelection(item)}>
-                      <Image source={{uri: familyUri}} style={styles.avatar} />
-                      <Text style={styles.text}>{item.name}</Text>
-                    </TouchableOpacity>
-                  )}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              </View>
+    <ImageBackground
+      source={require('../../../assets/images/background-expense-chart.png')}
+      style={{flex: 1}}
+      resizeMode="stretch">
+      <SafeAreaView style={{flex: 1}}>
+        <View style={styles.container}>
+          <View style={styles.headerContainer}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('HomeTab', {screen: 'Expense'})
+              }
+              style={styles.headerButton}>
+              <Icon name="arrow-back" size={30} style={styles.backButton} />
+            </TouchableOpacity>
+            <View style={styles.headerTitleContainer}>
+              <Text style={styles.headerText}>Expense Analysis</Text>
             </View>
-          </TouchableOpacity>
-        </Modal>
-      </View>
-    </SafeAreaView>
+            <TouchableOpacity
+              style={styles.headerButton}
+              onPress={() => setIsFamilyModalOpen(!isFamilyModalOpen)}>
+              <Icon name="filter" size={30} style={styles.filterButton} />
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              flexDirection: 'column',
+              marginHorizontal: 20,
+              bottom: 5,
+              marginBottom: 20,
+            }}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: '600',
+                marginBottom: 5,
+                color: 'white',
+              }}>
+              Hello, Jennie
+            </Text>
+            <Text style={{fontSize: 16, color: 'white'}}>
+              Here you can view brief overview of your budget.
+            </Text>
+          </View>
+          <View style={styles.containerTab}>
+            <TouchableOpacity
+              onPress={() => selectOption('Day')}
+              style={[
+                styles.tabButton,
+                selectedCategoryType === 'Day' && styles.selectedTabButton,
+              ]}>
+              <Text
+                style={[
+                  styles.tabButtonText,
+                  selectedCategoryType === 'Day' &&
+                    styles.selectedTabButtonText,
+                ]}>
+                Day
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => selectOption('Month')}
+              style={[
+                styles.tabButton,
+                selectedCategoryType === 'Month' && styles.selectedTabButton,
+              ]}>
+              <Text
+                style={[
+                  styles.tabButtonText,
+                  selectedCategoryType === 'Month' &&
+                    styles.selectedTabButtonText,
+                ]}>
+                Month
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => selectOption('Year')}
+              style={[
+                styles.tabButton,
+                selectedCategoryType === 'Year' && styles.selectedTabButton,
+              ]}>
+              <Text
+                style={[
+                  styles.tabButtonText,
+                  selectedCategoryType === 'Year' &&
+                    styles.selectedTabButtonText,
+                ]}>
+                Year
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {selectedCategoryType === 'Day' && (
+            <View>
+              <BarChartScreen id_family={selectedFamily} />
+            </View>
+          )}
+          {selectedCategoryType === 'Month' && (
+            <View>
+              <PieChartComponent id_family={selectedFamily} />
+            </View>
+          )}
+          {selectedCategoryType === 'Year' && (
+            <View>
+              <LineChartScreen id_family={selectedFamily} />
+            </View>
+          )}
+          <Modal
+            visible={isFamilyModalOpen}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={() => setIsFamilyModalOpen(false)}>
+            <TouchableOpacity
+              style={styles.modalContainer}
+              activeOpacity={1}
+              onPress={() => setIsFamilyModalOpen(!isFamilyModalOpen)}>
+              <View style={styles.modalBackground}>
+                <View style={styles.dropdownMenu}>
+                  <FlatList
+                    data={families}
+                    renderItem={({item}) => (
+                      <TouchableOpacity
+                        style={styles.filterItem}
+                        onPress={() => handleFamilySelection(item)}>
+                        <Image
+                          source={{uri: familyUri}}
+                          style={styles.avatar}
+                        />
+                        <Text style={styles.text}>{item.name}</Text>
+                      </TouchableOpacity>
+                    )}
+                    keyExtractor={(item, index) => index.toString()}
+                  />
+                </View>
+              </View>
+            </TouchableOpacity>
+          </Modal>
+        </View>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
