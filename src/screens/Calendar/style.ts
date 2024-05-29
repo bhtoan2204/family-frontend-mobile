@@ -12,11 +12,18 @@ header: {
     backgroundColor: '#ffffff',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+
 },
 headerText: {
     marginLeft: 10,
     fontSize: 18,
     fontWeight: 'bold',
+
+},
+headerp: {
+    marginTop: 40,
+    flexDirection: 'row'
+
 },
 subHeader: {
     flexDirection: 'row',

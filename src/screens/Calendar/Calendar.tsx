@@ -133,10 +133,12 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
     return (
         <View style={styles.calendar}>
             <View style={styles.header}>
+                <View style={styles.headerp}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Icon name="arrow-left" size={20} color="black" />
                 </TouchableOpacity>
                 <Text style={styles.headerText}>Calendar</Text>
+                </View>
             </View>
 
             {renderEvents}
