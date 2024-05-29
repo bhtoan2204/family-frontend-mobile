@@ -173,12 +173,11 @@ const styles = StyleSheet.create({
   },
 
   datePickerContainer: {
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
     paddingVertical: 10,
     paddingHorizontal: 0,
     fontSize: 20,
-    width: '100%',
+    alignSelf: 'center',
+    zIndex: 1,
   },
 
   titleText: {
@@ -228,6 +227,17 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingTop: 20,
     borderTopLeftRadius: 60,
+    borderTopRightRadius: 60,
+    width: '100%',
+    alignSelf: 'center',
+
+    flexDirection: 'column',
+  },
+  chartBarContainer: {
+    bottom: 30,
+    backgroundColor: 'white',
+    padding: 10,
+    paddingTop: 20,
     borderTopRightRadius: 60,
     width: '100%',
     alignSelf: 'center',
