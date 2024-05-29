@@ -124,7 +124,7 @@ const HomeTab = () => {
 
 const styles = StyleSheet.create({
   tabBar: {
-    height: '7%',
+    height: '9%',
     width: '100%',
     position: 'absolute',
     borderRadius: 10,
