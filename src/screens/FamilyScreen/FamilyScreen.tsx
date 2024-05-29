@@ -147,16 +147,15 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
             </TouchableOpacity>
           </View>
         </View>
-
+        <View className="flex-col justify-center items-center pt-4 ">
+          <Image
+            source={require('../../assets/images/family-1.jpg')}
+            resizeMode="stretch"
+            style={{borderRadius: 30, height: 200, width: 350}}
+          />
+        </View>
         {family != null && (
-          <ScrollView className="h-full w-full">
-            <View className="flex-col justify-center items-center pt-4 ">
-              <Image
-                source={require('../../assets/images/family-1.jpg')}
-                resizeMode="stretch"
-                style={{borderRadius: 30, height: 200, width: 350}}
-              />
-            </View>
+          <ScrollView className="h-full w-full" style={{marginTop: 20}}>
             <View className="">
               <View className="mt-2">
                 <TouchableOpacity
