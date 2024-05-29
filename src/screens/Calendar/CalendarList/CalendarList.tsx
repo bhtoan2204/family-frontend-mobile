@@ -38,25 +38,14 @@ const CalendarListScreen = ({ route, navigation }: CalendarListScreenProps) => {
     const handleGetCalendar = async () => {
         try {
             const response = await CalendarServices.getCalendar({ id_family });
-            if (Array.isArray(response)) {
-                const formattedEvents: FormattedEvents = {};
-                response.forEach((item: { time_start: string, time_end: string }) => {
-                    const startDate = new Date(item.time_start);
-                    const endDate = new Date(item.time_end);
-                    const currentDate = new Date(startDate);
-                    while (currentDate <= endDate) {
-                        const date = currentDate.toISOString().split('T')[0];
-                        formattedEvents[date] = { marked: true };
-                        currentDate.setDate(currentDate.getDate() + 1);
-                    }
-                });
-                setEvents(formattedEvents);
-
-            } else {
-                console.log('Unexpected response format', response);
-            }
+            const formattedEvents: FormattedEvents = {};
+            response.data.forEach((item: { datetime: string }) => {
+                const date = new Date(item.datetime).toISOString().split('T')[0];
+                formattedEvents[date] = { marked: true, dotColor: '#00adf5' };
+            });
+            setEvents(formattedEvents);
         } catch (error) {
-            console.log('Error fetching calendar data:', error);
+            console.log('getCalendar', error);
         }
     };
 
@@ -82,7 +71,6 @@ const CalendarListScreen = ({ route, navigation }: CalendarListScreenProps) => {
                 hideDayNames={true}
                 style={styles.calendar}
                 hideExtraDays={true}
-
                 theme={{
                     backgroundColor: '#ffffff',
                     calendarBackground: '#ffffff',

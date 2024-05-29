@@ -17,7 +17,7 @@ interface FormValues {
 }
 
 const UpdateFamilyScreen: React.FC<UpdateFamilyScreenProps> = ({ route, navigation }) => {
-  const { id_family, name, description } = route.params;
+  const { id_user, id_family, name, description } = route.params;
   const [isEdit, setIsEdit] = useState(false);
 
   const handleEdit = () => {

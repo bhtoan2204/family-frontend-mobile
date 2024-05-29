@@ -1,19 +1,17 @@
-import {Dimensions, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {COLORS} from 'src/constants';
-const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black',
+    backgroundColor: COLORS.white,
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333', 
+    color: '#333', // Màu chữ
   },
   headerfile: {
     flexDirection: 'row',
@@ -23,19 +21,19 @@ const styles = StyleSheet.create({
   },
   backButton: {
     color: COLORS.black,
-  },
-  inputControl: {
-
-    borderColor: 'gray',
-    borderRadius: 5,
     padding: 10,
   },
-  containerEnter: {
-
-    marginLeft:screenWidth*0.025,
-  },
-  input1: {
-    height: 30,
+  //   input: {
+  //     width: '90%',
+  //     marginVertical: 10,
+  //     padding: 10,
+  //     borderWidth: 1,
+  //     borderColor: 'gray',
+  //     borderRadius: 5,
+  //   },
+  input: {
+    height: 40,
+    //marginVertical: 10,
     backgroundColor: '#fff',
     paddingHorizontal: 16,
     borderRadius: 12,
@@ -43,15 +41,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#333',
     right: 10,
-  },
-  input2: {
-    height: 20,
-    backgroundColor: '#fff',
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    fontSize: 19,
-    fontWeight: '500',
-    color: '#333',
   },
   button: {
     backgroundColor: 'lightgray',
@@ -66,14 +55,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
   },
+  // Style cho label
   label: {
     fontSize: 17,
     fontWeight: 'bold',
     marginBottom: 5,
     marginTop: 10,
-    color: '#222', 
+    color: '#222', // Màu chữ
   },
 
+  // Style cho phần footer của modal
   modalFooter: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -84,13 +75,16 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
 
+  // Style cho văn bản của các nút
   buttonText: {
-    color: '#fff',
+    color: '#fff', // Màu chữ
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 16,
   },
+  // Style cho container của modal
 
+  // Style cho phần header của modal
   modalHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -98,21 +92,21 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: '#ffffff', 
+    backgroundColor: '#ffffff', // Màu nền
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc', 
+    borderBottomColor: '#ccc', // Màu viền dưới
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10
   },
   column: {
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
+  // Style cho phần body của modal
   modalBody: {
-    backgroundColor: '#ffffff', 
+    backgroundColor: '#ffffff', // Màu nền
     paddingHorizontal: 20,
     paddingVertical: 10,
     width: '100%',
@@ -144,44 +138,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#16202D',
   },
   modalContainer: {
-    height: '100%', 
-    width: '100%', 
+    height: 830, // This will make the container take up 90% of the screen height
+    width: '100%', // This will make the container take up 90% of the screen width
     backgroundColor: 'white',
+    borderTopLeftRadius: 30, // This will round the top left corner
+    borderTopRightRadius: 30, // This will round the top right corner
     flexDirection: 'column',
+    top: 30,
     padding: 20,
-  },
-   datetimeContainer: {
-    flexDirection: 'column',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    padding: 10,
-    marginTop: 20,
-   },
-   allDayConTainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc', 
-    marginBottom: 10,
-    alignItems: 'center',
-
-   },
-
-   text: {
-    textAlign: 'center',
-    fontSize: 16,
-   },
-   switches: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 4,
-  },
-  icon: {
-    color: 'gray',
   },
 });
 

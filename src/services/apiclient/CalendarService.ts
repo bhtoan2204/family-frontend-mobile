@@ -6,97 +6,23 @@ import baseUrl from '../urls/baseUrl';
 import { date } from 'yup';
 
 const CalendarServices = {
-
-  getAllCategoryEvent: async (id_family?: number) => {
-    try {
-      const response: AxiosResponse = await instance.get(`${baseUrl}/api/v1/calendar/getAllCategoryEvent`, {
-        params: {
-          id_family
-        }
-      });
-      if (response.status === 200) {
-        return response.data;
-      } else {
-        console.error('Error in getAllCategoryEvent');
-      }
-    } catch (error: any) {
-      console.error('Error in getAllCategoryEvent', error.message);
+    getCalendar: async ({ id_family }: { id_family?: number }) => {
+  try {
+    let params = {};
+    if (id_family !== undefined) {
+      params = { id_family };
     }
-  },
+    const response: AxiosResponse = await instance.get(`${baseUrl}/api/v1/calendar/getAllCalendar/${id_family}`, { 
 
-  createCategoryEvent: async (title: string, color: string, id_family?: number) => {
-    try {
-      const response: AxiosResponse = await instance.post(`${baseUrl}/api/v1/calendar/createCategoryEvent`, {
-        
-          title,
-          color,
-          id_family
-        
-      });
-      if (response.status === 200) {
-        return response.data;
-      } else {
-        console.error('Error in createCategoryEvent');
-      }
-    } catch (error: any) {
-      console.error('Error in createCategoryEvent', error.message);
+    });
+    if (response.status === 200) {
+      return response.data.data;
+    } else {
+      console.error('Error in getCalendar');
     }
-  },
-  
-  deleteCategoryEvent: async (id_category_event: number, id_family?: number) => {
-    try {
-      const response: AxiosResponse = await instance.delete(`${baseUrl}/api/v1/calendar/deleteCategoryEvent/${id_family}`, {
-        
-        params: {
-          id_family,
-          id_category_event,
-        },
-      });
-      if (response.status === 200) {
-        return response.data;
-      } else {
-        console.error('Error in deleteCategoryEvent');
-      }
-    } catch (error: any) {
-      console.error('Error in deleteCategoryEvent', error.message);
-    }
-  },
-  updateCategoryEvent: async (id_category_event: number, title: string, color: string, id_family?: number) => {
-    try {
-      const response: AxiosResponse = await instance.put(`${baseUrl}/api/v1/calendar/updateCategoryEvent`, {
-        
-          id_category_event, title, color, id_family,
-        
-      });
-      if (response.status === 200) {
-        return response.data;
-      } else {
-        console.error('Error in updateCategoryEvent');
-      }
-    } catch (error: any) {
-      console.error('Error in updateCategoryEvent', error.message);
-    }
-  },
-  
-
-
-  getCalendar: async ({ id_family }: { id_family?: number }) => {
-    try {
-      let params = {};
-      if (id_family !== undefined) {
-        params = { id_family };
-      }
-      const response: AxiosResponse = await instance.get(`${baseUrl}/api/v1/calendar/getAllCalendar/${id_family}`, { 
-
-      });
-      if (response.status === 200) {
-        return response.data.data;
-      } else {
-        console.error('Error in getCalendar');
-      }
-    } catch (error: any) {
-      console.error('Error in getCalendar', error.message);
-    }},
+  } catch (error: any) {
+    console.error('Error in getCalendar', error.message);
+  }},
 
   getEventOnDate: async (id_family?: number, date?: String) => {
     try {
@@ -124,6 +50,7 @@ const CalendarServices = {
 
   UpdateEvent: async (id_calendar: number, title: string, description: string, datetime: string) => {
     try {
+      console.log(datetime);
       const response: AxiosResponse = await instance.put(CalendarUrls.updateCalender, 
         {
           id_calendar,
@@ -156,24 +83,40 @@ const CalendarServices = {
       }
       );
       
-      return 'Successfully deleted event'
+      if (response) {
+        if (response.status === 200) {
+          return response.data;
+        } else {
+          console.error('Error in getEventOnDate');
+        }
+      } else {
+        console.error('Error: No response received');
+      }
     } catch (error: any) {
-      return 'Failed to delete event'
+      console.error('Error in getEventOnDate', error.message);
     }
   },
 
-  CreateEvent: async (title: string, description: string, time_start: Date, time_end: Date, color: string, is_all_day: boolean, category: number, location: string, recurrence_exception: string, recurrence_id: number, recurrence_rule: string, start_timezone:string, end_timezone: string, id_family?: number, ) => {
+  CreateEvent: async (id_family: number, title: string, description: string, datetime: string) => {
     try {
       const response: AxiosResponse = await instance.post(CalendarUrls.createCalendar, {
 
-          title, description, id_family, time_start, time_end, color, is_all_day, category, location, recurrence_exception,recurrence_id, recurrence_rule,start_timezone, end_timezone,       
+          title, description, id_family, datetime,
+        
       }
       );
       
-            return 'Successfully created event'
-        
+      if (response) {
+        if (response.status === 200) {
+          return response.data;
+        } else {
+          console.error('Error in getEventOnDate');
+        }
+      } else {
+        console.error('Error: No response received');
+      }
     } catch (error: any) {
-       return 'Failed to create event'
+      console.error('Error in getEventOnDate', error.message);
     }
   },
   

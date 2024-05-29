@@ -136,16 +136,10 @@ export type CalendarStackParamList = {
   CalendarScreen: {
     id_family: number | undefined;
   };
-  ScheduleScreen: {
+  CalendarList: {
     id_family: number | undefined;
   };
   CreateEvent: {
-    id_family: number | undefined;
-  };
-  CreateCategoryEvent: {
-    id_family: number | undefined;
-  };
-  EventListScreen: {
     id_family: number | undefined;
   };
 };
@@ -255,23 +249,14 @@ export interface CalendarScreenProps {
   route: RouteProp<CalendarStackParamList, 'CalendarScreen'>;
 }
 
-type EventListScreenNavigationProp = NativeStackNavigationProp<
+type CalendarListScreenNavigationProp = NativeStackNavigationProp<
   CalendarStackParamList,
-  'EventListScreen'
+  'CalendarList'
 >;
 
-export interface EventListScreenProps {
-  navigation: EventListScreenNavigationProp ;
-  route: RouteProp<CalendarStackParamList, 'EventListScreen'>;
-}
-type ScheduleScreenNavigationProp = NativeStackNavigationProp<
-  CalendarStackParamList,
-  'ScheduleScreen'
->;
-
-export interface ScheduleScreenProps {
-  navigation: ScheduleScreenNavigationProp;
-  route: RouteProp<CalendarStackParamList, 'ScheduleScreen'>;
+export interface CalendarListScreenProps {
+  navigation: CalendarListScreenNavigationProp;
+  route: RouteProp<CalendarStackParamList, 'CalendarList'>;
 }
 type FamilyStackNavigationProp = NativeStackNavigationProp<
   RootParamList,
@@ -525,16 +510,6 @@ export type CreateEventNavigationProps = NativeStackNavigationProp<
 export interface CreateEventScreenProps {
   navigation: CreateEventNavigationProps;
   route: RouteProp<CalendarStackParamList, 'CreateEvent'>;
-}
-
-export type CreateCategoryEventNavigationProps = NativeStackNavigationProp<
-  CalendarStackParamList,
-  'CreateCategoryEvent'
->;
-
-export interface CreateCategoryEventScreenProps {
-  navigation: CreateCategoryEventNavigationProps;
-  route: RouteProp<CalendarStackParamList, 'CreateCategoryEvent'>;
 }
 
 export type AllMemberNavigationProp = NativeStackNavigationProp<

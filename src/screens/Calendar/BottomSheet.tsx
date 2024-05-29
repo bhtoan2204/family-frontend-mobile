@@ -6,10 +6,10 @@ import UpdateEventScreen from '../ModalScreen/UpdateEventModal';
 const Stack = createNativeStackNavigator();
 
 interface BottomSheetProps {
-    id_calendar: number;
-    title: string;
-    description: string;
-    datetime: Date;
+    id_calendar?: number;
+    title?: string;
+    description?: string;
+    datetime?: Date;
   }
   
   const BottomSheet: React.FC<BottomSheetProps> = ({ id_calendar, title, description, datetime }) => {
