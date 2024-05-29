@@ -298,6 +298,30 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
             color="black"
           />
         </TouchableOpacity>
+        {showDetails && (
+          <View style={styles.ContainerCategory}>
+            {dailyData.map((detail, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.expenseItem}
+                onPress={() => handlePressDate(detail.date)}>
+                <View style={styles.expenseDetails}>
+                  <Image
+                    source={{
+                      uri: `https://dummyimage.com/40x40/000/fff&text=${detail.date.split('-')[2]}`,
+                    }}
+                    style={styles.avatar}
+                  />
+                  <Text style={styles.expenseText}>{detail.date}</Text>
+                </View>
+                <View style={styles.expenseDetails}>
+                  <Text style={styles.expenseAmount}>-{detail.total} đ</Text>
+                  {/* <Icon name="chevron-right" size={20} color="#ccc" /> */}
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
       </View>
 
       {/* <View style={styles.buttonContainer}>
@@ -306,31 +330,6 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
           onPress={() => setShowDetails(!showDetails)}
         />
       </View> */}
-
-      {showDetails && (
-        <View style={styles.ContainerCategory}>
-          {dailyData.map((detail, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.expenseItem}
-              onPress={() => handlePressDate(detail.date)}>
-              <View style={styles.expenseDetails}>
-                <Image
-                  source={{
-                    uri: `https://dummyimage.com/40x40/000/fff&text=${detail.date.split('-')[2]}`,
-                  }}
-                  style={styles.avatar}
-                />
-                <Text style={styles.expenseText}>{detail.date}</Text>
-              </View>
-              <View style={styles.expenseDetails}>
-                <Text style={styles.expenseAmount}>-{detail.total} đ</Text>
-                <Icon name="chevron-right" size={20} color="#ccc" />
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
     </ScrollView>
   );
 };

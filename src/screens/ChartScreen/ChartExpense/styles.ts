@@ -130,24 +130,35 @@ const styles = StyleSheet.create({
   tabButton: {
     paddingVertical: 10,
     alignItems: 'center',
-    width: '33%',
+    width: '30%',
+    height: '70%',
+    marginBottom: 15,
+    backgroundColor: '#EEEBEA', // Default gray background
+    borderRadius: 20,
+  },
+  tabButtonContent: {
+    paddingVertical: 10,
+    alignItems: 'center',
   },
   selectedTabButton: {
-    borderBottomColor: '#ccc',
-    paddingBottom: 0,
-    borderBottomWidth: 4,
-    alignItems: 'center',
+    backgroundColor: '#CCEAFB',
+  },
+  selectedTabButtonText: {
+    color: '#2a475e',
+    fontWeight: '600', // Text color when selected
   },
 
   tabButtonText: {
+    color: '#696969',
     fontSize: 16,
+    alignSelf: 'center',
   },
   containerTab: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    width: '100%',
+    width: '95%',
+    alignSelf: 'center',
+    color: 'transparent',
   },
   bottomLine: {
     position: 'absolute',
@@ -233,9 +244,9 @@ const styles = StyleSheet.create({
     marginTop: screenHeight * 0.005,
   },
   ContainerCategory: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 20,
+    // borderWidth: 1,
+    // borderColor: '#ccc',
+    // borderRadius: 20,
   },
   expenseItem: {
     flexDirection: 'row',

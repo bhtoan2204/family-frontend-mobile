@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {LinearGradient} from 'expo-linear-gradient';
 import {
   View,
   Text,
@@ -121,7 +122,13 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
               styles.tabButton,
               selectedCategoryType === 'Day' && styles.selectedTabButton,
             ]}>
-            <Text style={styles.tabButtonText}>Day</Text>
+            <Text
+              style={[
+                styles.tabButtonText,
+                selectedCategoryType === 'Day' && styles.selectedTabButtonText,
+              ]}>
+              Day
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => selectOption('Month')}
@@ -129,7 +136,14 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
               styles.tabButton,
               selectedCategoryType === 'Month' && styles.selectedTabButton,
             ]}>
-            <Text style={styles.tabButtonText}>Month</Text>
+            <Text
+              style={[
+                styles.tabButtonText,
+                selectedCategoryType === 'Month' &&
+                  styles.selectedTabButtonText,
+              ]}>
+              Month
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => selectOption('Year')}
@@ -137,7 +151,13 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
               styles.tabButton,
               selectedCategoryType === 'Year' && styles.selectedTabButton,
             ]}>
-            <Text style={styles.tabButtonText}>Year</Text>
+            <Text
+              style={[
+                styles.tabButtonText,
+                selectedCategoryType === 'Year' && styles.selectedTabButtonText,
+              ]}>
+              Year
+            </Text>
           </TouchableOpacity>
         </View>
         {selectedCategoryType === 'Day' && (
