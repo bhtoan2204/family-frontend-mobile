@@ -245,10 +245,12 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
       </View>
 
       {isMonthPickerVisible && (
-        <MonthPicker
-          selectedDate={selectedMonth}
-          onMonthChange={handleMonthPickerConfirm}
-        />
+        <View style={{zIndex: 2, marginBottom: 50, padding: 10}}>
+          <MonthPicker
+            selectedDate={selectedMonth}
+            onMonthChange={handleMonthPickerConfirm}
+          />
+        </View>
       )}
       <View style={styles.chartContainer}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
