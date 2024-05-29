@@ -315,6 +315,8 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
         )}
         <ScrollView
           horizontal
+          showsHorizontalScrollIndicator={false}  
+
           contentContainerStyle={{
             ...styles.legendContainer,
             flexDirection: 'row',
@@ -386,7 +388,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
                   <Text
                     style={
                       styles.expenseAmount
-                    }>{`Total: ${monthData.total} đ`}</Text>
+                    }>{`- ${monthData.total} đ`}</Text>
                   <Icon name="chevron-right" size={20} color="#ccc" />
                 </View>
               </TouchableOpacity>

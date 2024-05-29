@@ -301,7 +301,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
                   <Text style={styles.expenseText}>{detail.date}</Text>
                 </View>
                 <View style={styles.expenseDetails}>
-                  <Text style={styles.expenseAmount}>-{detail.total} đ</Text>
+                  <Text style={styles.expenseAmount}>- {detail.total} đ</Text>
                   {/* <Icon name="chevron-right" size={20} color="#ccc" /> */}
                 </View>
               </TouchableOpacity>

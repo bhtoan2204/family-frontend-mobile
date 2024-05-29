@@ -82,7 +82,7 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({id_family}) => {
                   {expense.expense_category}
                 </Text>
                 <Text style={styles.expenseAmount}>
-                  -{expense.expense_amount} đ
+                  - {expense.expense_amount} đ
                 </Text>
               </View>
 
