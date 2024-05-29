@@ -115,6 +115,14 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({id_family}) => {
           </View>
         ))}
       </View>
+      <View
+        style={{
+          backgroundColor: 'white',
+          width: '100%',
+          height: 420,
+          marginTop: -30,
+        }}
+      />
     </ScrollView>
   );
 };

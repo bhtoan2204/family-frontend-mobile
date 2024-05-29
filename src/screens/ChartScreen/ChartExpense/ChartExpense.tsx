@@ -86,7 +86,7 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
 
   return (
     <ImageBackground
-      source={require('../../../assets/images/background-expense-chart.png')}
+      source={require('../../../assets/images/background-expense-chart1.png')}
       style={{flex: 1}}
       resizeMode="stretch">
       <SafeAreaView style={{flex: 1}}>

@@ -309,6 +309,14 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
           </View>
         )}
       </View>
+      <View
+        style={{
+          backgroundColor: 'white',
+          width: '100%',
+          height: 400,
+          marginTop: -30,
+        }}
+      />
 
       {/* <View style={styles.buttonContainer}>
         <Button
