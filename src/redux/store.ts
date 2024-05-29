@@ -4,6 +4,7 @@ import checkListReducer from './slices/CheckListSlice';
 import financeReducer from './slices/FinanceSlice';
 import expenseAnalysisReducer from './slices/ExpenseAnalysis';
 import calendarReducer from './slices/CalendarSlice';
+import incomeAnalysisReducer from './slices/IncomeAnalysis';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     finance: financeReducer,
     expenseAnalysis: expenseAnalysisReducer,
     calendar: calendarReducer,
+    incomeAnalysis: incomeAnalysisReducer,
   },
 });
 
