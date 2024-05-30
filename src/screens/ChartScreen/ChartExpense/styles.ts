@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     width: '30%',
     height: '70%',
     marginBottom: 15,
-    backgroundColor: '#fff', // Default gray background
+    backgroundColor: '#fff',
     borderRadius: 20,
   },
   tabButtonContent: {
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   },
   selectedTabButtonText: {
     color: '#2a475e',
-    fontWeight: '600', // Text color when selected
+    fontWeight: '600',
   },
 
   tabButtonText: {
@@ -211,15 +211,14 @@ const styles = StyleSheet.create({
   },
   legendContainer: {
     flexDirection: 'column',
-    justifyContent: 'center',
+    //justifyContent: 'center',
     alignItems: 'flex-start',
-    flexGrow: 1,
+    //flexGrow: 1,
   },
   legendItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 10,
-    marginVertical: 5,
+    marginRight: 10,
   },
   legendColor: {
     width: 20,
@@ -231,7 +230,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   selectedLegendItem: {
-    backgroundColor: 'lightgray',
+    backgroundColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: '#ccc',
   },
   chartContainer: {
     bottom: 30,
@@ -365,7 +367,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 30,
     height: 30,
-    borderRadius: 25,
+    borderRadius: 30,
   },
 
   linechart: {
@@ -434,6 +436,22 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     backgroundColor: 'white',
+  },
+
+  selectedDataPointContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    padding: 10,
+    borderRadius: 5,
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    zIndex: 2,
+    borderWidth: 1,
+    borderColor: '#ccc',
+  },
+  selectedDataPointText: {
+    fontSize: 14,
+    marginBottom: 5,
   },
 });
 export default styles;

@@ -1,24 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Button,
-  Image,
-} from 'react-native';
-import {LineChart} from 'react-native-chart-kit';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
-import {Picker} from '@react-native-picker/picker';
-import {useDispatch} from 'react-redux';
-import {
-  setSelectedDate,
-  setSelectedOption,
-} from 'src/redux/slices/ExpenseAnalysis';
+import { Picker } from '@react-native-picker/picker';
+import { useDispatch } from 'react-redux';
+import { setSelectedDate, setSelectedOption } from 'src/redux/slices/ExpenseAnalysis';
 import moment from 'moment';
-import {ExpenseServices} from 'src/services/apiclient';
-import {Ionicons} from '@expo/vector-icons';
+import { ExpenseServices } from 'src/services/apiclient';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Category {
   name: string;
@@ -35,43 +25,21 @@ interface LineChartScreenProps {
   id_family: number;
 }
 
-const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
+const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
   const [showDetails, setShowDetails] = useState<boolean>(false);
-  const [selectedLegend, setSelectedLegend] = useState<string | null>(null);
+  const [selectedLegends, setSelectedLegends] = useState<string[]>(['Total']);
   const [isYearPickerVisible, setYearPickerVisible] = useState<boolean>(false);
   const [selectedYear, setSelectedYear] = useState(moment().year());
   const [years, setYears] = useState<number[]>([]);
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const dispatch = useDispatch();
+  const [selectedDataPoint, setSelectedDataPoint] = useState<any>(null);
 
   useEffect(() => {
     const recentYears = generateRecentYears();
     setYears(recentYears);
     fetchData(selectedYear, id_family);
-
-    let categoryDatasets: any[] = [];
-    if (monthlyData.length > 0) {
-      categoryDatasets = Object.keys(monthlyData[0].categories).map(
-        (category, index) => {
-          return {
-            name: category,
-            data: monthlyData.map(month => {
-              let categoryData = month.categories[category as any];
-              // Check if categoryData exists
-              if (categoryData === undefined) {
-                // console.log(
-                //   `categoryData for category "${category}" does not exist in month ${month.month}`,
-                // );
-                categoryData = {name: 'Default', amount: 0}; // Default value
-              }
-              return categoryData;
-            }),
-            color: () => categoryColors[(index + 2).toString()],
-          };
-        },
-      );
-    }
-  }, [selectedYear, id_family, monthlyData]);
+  }, [selectedYear, id_family]);
 
   const generateRecentYears = () => {
     const currentYear = moment().year();
@@ -82,29 +50,6 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
     return recentYears;
   };
 
-  // const fetchData = async (year: number, id_family: number) => {
-  //   try {
-  //     const response = await ExpenseServices.getExpenseByYear(year, id_family);
-  //     const transformedData = response.map((monthData: MonthlyData) => ({
-  //       month: monthData.month,
-  //       total: monthData.total,
-  //       categories: monthData.categories
-  //         ? monthData.categories.reduce(
-  //             (acc: {[key: string]: number}, category: Category) => {
-  //               acc[category.name] = category.amount;
-  //               return acc;
-  //             },
-  //             {},
-  //           )
-  //         : {}, // If categories is undefined, assign an empty object
-  //     }));
-
-  //     setMonthlyData(transformedData);
-  //   } catch (error) {
-  //     console.error('Error fetching data:', error);
-  //   }
-  // };
-
   const fetchData = async (year: number, id_family: number) => {
     try {
       const response = await ExpenseServices.getExpenseByYear(year, id_family);
@@ -113,59 +58,32 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
         total: monthData.total,
         categories: monthData.categories
           ? monthData.categories.reduce(
-              (acc: {[key: string]: number}, category: Category) => {
+              (acc: { [key: string]: number }, category: Category) => {
                 acc[category.name] = category.amount;
                 return acc;
               },
               {},
             )
-          : {}, // If categories is undefined, assign an empty object
+          : {},
       }));
 
       setMonthlyData(transformedData);
-
-      if (transformedData.length > 0) {
-        const defaultCategories = Object.keys(
-          transformedData[0].categories,
-        ).reduce(
-          (acc: {[key: string]: {name: string; amount: number}}, category) => {
-            acc[category] = {name: 'Default', amount: 0};
-            return acc;
-          },
-          {},
-        );
-
-        categoryDatasets = Object.keys(transformedData[0].categories).map(
-          (category, index) => {
-            return {
-              name: category,
-              data: transformedData.map(
-                (month: {
-                  categories: {[key: string]: {name: string; amount: number}};
-                }) => {
-                  let categoryData =
-                    month.categories[category as any] ||
-                    defaultCategories[category];
-                  return categoryData;
-                },
-              ),
-              color: () => categoryColors[(index + 2).toString()],
-            };
-          },
-        );
-      }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
   const toggleLegend = (category: string) => {
-    setSelectedLegend(selectedLegend === category ? null : category);
+    setSelectedLegends(prevLegends =>
+      prevLegends.includes(category)
+        ? prevLegends.filter(legend => legend !== category)
+        : [...prevLegends, category],
+    );
   };
 
   const legendItemStyle = (category: string) => [
     styles.legendItem,
-    selectedLegend === category && styles.selectedLegendItem,
+    selectedLegends.includes(category) && styles.selectedLegendItem,
   ];
 
   const calculateMonthlyTotals = () => {
@@ -178,7 +96,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
 
   const monthlyTotals = calculateMonthlyTotals();
 
-  const avatarUrlTemplate = 'https://dummyimage.com/40x40/000/fff&text=';
+  const avatarUrlTemplate = 'https://via.placeholder.com/40?text=';
 
   const handlePressMonth = (month: string) => {
     const date = `${selectedYear}-${month}-01`;
@@ -186,18 +104,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
     dispatch(setSelectedDate(date));
   };
 
-  const categories = monthlyData.reduce((acc: string[], month) => {
-    if (Array.isArray(month.categories)) {
-      month.categories.forEach(category => {
-        if (!acc.includes(category.name)) {
-          acc.push(category.name);
-        }
-      });
-    }
-    return acc;
-  }, []);
-
-  const categoryColors: {[key: string]: string} = {
+  const categoryColors: { [key: string]: string } = {
     1: `rgba(255, 0, 0, 1)`,
     2: `rgba(0, 255, 0, 1)`,
     3: `rgba(0, 0, 255, 1)`,
@@ -230,7 +137,6 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
             const categoryData = month.categories[category as any];
             return categoryData ? categoryData : 0;
           }),
-          // color: () => categoryColors[index+2],
           color: () => categoryColors[(index + 2).toString()],
         };
       },
@@ -243,8 +149,8 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
     });
   }
 
-  const displayedDatasets = selectedLegend
-    ? categoryDatasets.filter(dataset => dataset.name === selectedLegend)
+  const displayedDatasets = selectedLegends.length > 0
+    ? categoryDatasets.filter(dataset => selectedLegends.includes(dataset.name))
     : [
         ...categoryDatasets,
         {
@@ -254,10 +160,11 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
       ];
 
   return (
-    <ScrollView style={{height: '80%'}}>
+    <ScrollView style={{ height: '80%' }}>
       <TouchableOpacity
-        style={[styles.monthPickerContainer, {zIndex: 1}]}
-        onPress={() => setYearPickerVisible(!isYearPickerVisible)}>
+        style={[styles.monthPickerContainer, { zIndex: 1 }]}
+        onPress={() => setYearPickerVisible(!isYearPickerVisible)}
+      >
         <View style={styles.monthContainer}>
           <Text style={styles.monthText}>{selectedYear}</Text>
         </View>
@@ -267,7 +174,8 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
           <Picker
             selectedValue={selectedYear}
             style={styles.dropdownYear}
-            onValueChange={itemValue => handleYearChange(itemValue)}>
+            onValueChange={itemValue => handleYearChange(itemValue)}
+          >
             {years.map((year: number) => (
               <Picker.Item key={year} label={year.toString()} value={year} />
             ))}
@@ -275,7 +183,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
         </View>
       )}
       <View style={styles.chartLineContainer}>
-        <Text>(Unit: Million VNĐ)</Text>
+        <Text>(Unit: VNĐ)</Text>
         {displayedDatasets.length > 0 && (
           <LineChart
             data={{
@@ -297,49 +205,64 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
             }}
             width={400}
             height={220}
+
             chartConfig={{
               backgroundGradientFrom: '#FFFFFF',
               backgroundGradientTo: '#FFFFFF',
               decimalPlaces: 2,
-              color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              color: (opacity = 1) => `#ccc`,
               labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
               propsForDots: {
-                r: '3',
+                r: '0',
                 strokeWidth: '2',
                 stroke: '#ffa726',
+              },
+              propsForBackgroundLines: {
+                strokeWidth: 0.1,
               },
             }}
             bezier
             style={styles.linechart}
+            onDataPointClick={(data) => {
+              const { value, dataset, index } = data;
+              const month = [
+                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+              ][index];
+              Alert.alert(`${dataset.name} in ${month}: ${value} Million VNĐ`);
+            }}
           />
         )}
         <ScrollView
           horizontal
-          showsHorizontalScrollIndicator={false}  
-
+          showsHorizontalScrollIndicator={false}
+          contentContainer
           contentContainerStyle={{
             ...styles.legendContainer,
             flexDirection: 'row',
             flexWrap: 'wrap',
           }}>
           {categoryDatasets.map((dataset, index) => (
-            <TouchableOpacity
-              key={index}
-              style={{
-                ...legendItemStyle(dataset.name),
-                width: '20%',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-              onPress={() => toggleLegend(dataset.name)}>
-              <View
-                style={[styles.legendColor, {backgroundColor: dataset.color()}]}
-              />
-              <Text style={styles.legendText}>{dataset.name}</Text>
-            </TouchableOpacity>
+          
+                <TouchableOpacity
+                  key={index}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                  onPress={() => toggleLegend(dataset.name)}>
+                    <View style= { [styles.legendItem,
+              selectedLegends.includes(dataset.name) && styles.selectedLegendItem,]}> 
+                  <View
+                    style={[styles.legendColor, { backgroundColor: dataset.color() }]}
+                  />
+                  <Text style={styles.legendText}>{dataset.name}</Text>
+                  </View>
+
+                </TouchableOpacity>
           ))}
         </ScrollView>
-        <View style={{height: 1, backgroundColor: '#F3F1EE', marginTop: 10}} />
+        <View style={{ height: 1, backgroundColor: '#F3F1EE', marginTop: 10 }} />
 
         <TouchableOpacity
           style={{
@@ -350,7 +273,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
             marginTop: 10,
           }}
           onPress={() => setShowDetails(!showDetails)}>
-          <Text style={{fontWeight: '500'}}>
+          <Text style={{ fontWeight: '500' }}>
             {showDetails ? 'Hide details' : 'View details'}
           </Text>
           <Ionicons
@@ -369,7 +292,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
                 onPress={() => handlePressMonth(`${monthData.month}`)}>
                 <View style={styles.expenseDetails}>
                   <Image
-                    source={{uri: `${avatarUrlTemplate}${monthData.month}`}}
+                    source={{ uri: `${avatarUrlTemplate}${monthData.month}` }}
                     style={styles.avatar}
                   />
                   <Text

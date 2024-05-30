@@ -294,7 +294,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
                 <View style={styles.expenseDetails}>
                   <Image
                     source={{
-                      uri: `https://dummyimage.com/40x40/000/fff&text=${detail.date.split('-')[2]}`,
+                      uri: `https://via.placeholder.com/40?text=${detail.date.split('-')[2]}`,
                     }}
                     style={styles.avatar}
                   />

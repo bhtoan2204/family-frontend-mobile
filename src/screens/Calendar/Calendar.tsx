@@ -129,7 +129,9 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
             <IconL name="trash-outline" size={35} color="red" onPress={() => onDelete(event)} />
         </View>
     );
-
+    const pressSchedule = () => {
+        navigation.navigate('ScheduleScreen', {id_family});
+    }
     return (
         <View style={styles.calendar}>
             <View style={styles.header}>
@@ -138,7 +140,13 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
                     <Icon name="arrow-left" size={20} color="black" />
                 </TouchableOpacity>
                 <Text style={styles.headerText}>Calendar</Text>
+
+                <TouchableOpacity onPress={() => pressSchedule()}>
+                    <Icon name="arrow-right" size={20} color="black" />
+                </TouchableOpacity>
                 </View>
+
+                
             </View>
 
             {renderEvents}
