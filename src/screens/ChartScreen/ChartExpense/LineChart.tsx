@@ -13,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 interface Category {
   name: string;
   amount: number;
+  id_expense_type: number;
 }
 
 interface MonthlyData {
@@ -33,13 +34,16 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
   const [years, setYears] = useState<number[]>([]);
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const dispatch = useDispatch();
-  const [selectedDataPoint, setSelectedDataPoint] = useState<any>(null);
+  const labels= ['Jan','Feb', 'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
 
   useEffect(() => {
     const recentYears = generateRecentYears();
     setYears(recentYears);
     fetchData(selectedYear, id_family);
   }, [selectedYear, id_family]);
+
+  
 
   const generateRecentYears = () => {
     const currentYear = moment().year();
@@ -81,10 +85,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
     );
   };
 
-  const legendItemStyle = (category: string) => [
-    styles.legendItem,
-    selectedLegends.includes(category) && styles.selectedLegendItem,
-  ];
+
 
   const calculateMonthlyTotals = () => {
     return monthlyData.map(month => month.total);
@@ -158,7 +159,8 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
           color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
         },
       ];
-
+     
+      
   return (
     <ScrollView style={{ height: '80%' }}>
       <TouchableOpacity
@@ -185,54 +187,57 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
       <View style={styles.chartLineContainer}>
         <Text>(Unit: VNĐ)</Text>
         {displayedDatasets.length > 0 && (
-          <LineChart
-            data={{
-              labels: [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec',
-              ],
-              datasets: displayedDatasets,
-            }}
-            width={400}
-            height={220}
-
-            chartConfig={{
-              backgroundGradientFrom: '#FFFFFF',
-              backgroundGradientTo: '#FFFFFF',
-              decimalPlaces: 2,
-              color: (opacity = 1) => `#ccc`,
-              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-              propsForDots: {
-                r: '0',
-                strokeWidth: '2',
-                stroke: '#ffa726',
-              },
-              propsForBackgroundLines: {
-                strokeWidth: 0.1,
-              },
-            }}
-            bezier
-            style={styles.linechart}
-            onDataPointClick={(data) => {
-              const { value, dataset, index } = data;
-              const month = [
-                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-              ][index];
-              Alert.alert(`${dataset.name} in ${month}: ${value} Million VNĐ`);
-            }}
-          />
+           <LineChart
+           data={{
+             labels: monthlyData.map(month => labels[month.month - 1]),
+             datasets: displayedDatasets,
+           }}
+           width={400}
+           height={220}
+           chartConfig={{
+             backgroundGradientFrom: '#FFFFFF',
+             backgroundGradientTo: '#FFFFFF',
+             decimalPlaces: 2,
+             color: (opacity = 1) => `#ccc`,
+             labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+             propsForDots: {
+               r: '2',
+               strokeWidth: '2',
+               stroke: '#ffa726',
+             },
+             propsForBackgroundLines: {
+               strokeWidth: 0.1,
+             },
+           }}
+           // bezier
+           style={styles.linechart}
+           renderDotContent={({ x, y, index }) => {
+            const month = monthlyData[index];
+            let categoryAmount = 0;
+            
+            if (selectedLegends.length === 1 ) {
+                if (selectedLegends[0] === 'Total') {
+                  categoryAmount = month.total;
+                } else if (month.categories[selectedLegends[0]] ) {
+                  categoryAmount = month.categories[selectedLegends[0]] 
+                }
+              else categoryAmount = 0;
+                return (
+                  <View> 
+                    <Text key={index} style={{ position: 'absolute', left: x, top: y - 20, fontSize: 10, color: 'gray'}}>
+                      {categoryAmount.toFixed(0)} VNĐ
+                    </Text>
+                  </View>
+                );
+              
+    
+            }}}
+         />
+         
+         
+         
         )}
+
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}

@@ -453,5 +453,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 5,
   },
+  dotContent: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Màu nền của nội dung
+    borderRadius: 5, // Độ cong của góc
+    padding: 5, // Khoảng cách nội dung với viền
+    borderWidth: 1, // Độ rộng của viền
+    borderColor: '#ccc', // Màu của viền
+    fontSize: 12, // Kích thước chữ
+  },
 });
 export default styles;
