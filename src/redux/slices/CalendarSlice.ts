@@ -8,13 +8,16 @@ interface calendarState {
   id_category_event: number,
   color: string,
   date: string;
+  freq: string;
+
 }
 
 const initialState: calendarState = {
-    id_family: 0, 
-    id_category_event: 0, 
-    color: '',
-    date: '',
+  id_family: 0,
+  id_category_event: 0,
+  color: '',
+  date: (new Date()).toString(),
+  freq: '',
 
 };
 
@@ -39,15 +42,21 @@ const calendarSlice = createSlice({
     setDate(state, action:PayloadAction<string>)
     {
       state.date = action.payload;
-    }
+    },
+    setFreq(state, action:PayloadAction<string>)
+    {
+      state.freq = action.payload;
+    },
+   
   },
 });
 
-export const { setFamily,setColor,setIdcate, setDate } = calendarSlice.actions;
+export const { setFamily,setColor,setIdcate,setFreq, setDate} = calendarSlice.actions;
 
 export const getFamily= (state: RootState) => state.calendar.id_family;
 export const getColor= (state: RootState) => state.calendar.color;
 export const getIDcate= (state: RootState) => state.calendar.id_category_event;
 export const getDate= (state: RootState) => state.calendar.date;
+export const getFreq= (state: RootState) => state.calendar.freq;
 
 export default calendarSlice.reducer;
