@@ -23,11 +23,11 @@ import {Family} from 'src/interface/family/family';
 import GuildLineImage from 'src/assets/images/guildline.png';
 import CalenderImage from 'src/assets/images/calendar.png';
 import EducationImage from 'src/assets/images/education.png';
-import ChatImage from 'src/assets/images/speak.png';
-import MemberImage from 'src/assets/images/diversity.png';
+import ChatImage from 'src/assets/icons/chat-with-members.png';
+import MemberImage from 'src/assets/icons/family-member.png';
 import DeleteImage from 'src/assets/images/remove.png';
 import HouseHoldImage from 'src/assets/images/household.png';
-import CheckListImage from 'src/assets/images/checklist.png';
+import CheckListImage from 'src/assets/icons/checklist.png';
 import NewsImage from 'src/assets/images/news.png';
 const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const {id_user, id_family} = route.params || {};
@@ -169,88 +169,325 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                 <TouchableOpacity
                   onPress={() =>
                     handleOpenAllMemberModal(id_user, family!.id_family)
-                  }>
-                  <View className="flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white">
+                  }
+                  style={{
+                    borderWidth: 0.5,
+                    marginVertical: 2,
+                    marginHorizontal: 5,
+                    borderRadius: 20,
+                    borderColor: '#C4C7C5',
+                    height: 100,
+                    width: '90%',
+                    alignSelf: 'center',
+                    marginBottom: 20,
+                  }}>
+                  <ImageBackground
+                    source={require('../../assets/images/family-item-bg-1.png')}
+                    resizeMode="stretch"
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                    }}>
+                    <View style={{flexDirection: 'column'}}>
+                      <Text
+                        style={{
+                          marginRight: 36,
+                          fontSize: 18,
+                          marginBottom: 30,
+                        }}>
+                        Family Member
+                      </Text>
+                      <Text style={{fontWeight: '600'}}>View detail</Text>
+                    </View>
                     <Image
-                      className="h-12 w-12"
+                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
                       source={MemberImage}
-                      resizeMode="contain"
+                      resizeMode="stretch"
                     />
-                    <Text className="ml-4 text-lg">Family Member</Text>
-                  </View>
+                  </ImageBackground>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleChatPress}>
-                  <View className="flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white">
+                <TouchableOpacity
+                  onPress={handleChatPress}
+                  style={{
+                    borderWidth: 0.5,
+                    marginVertical: 2,
+                    marginHorizontal: 5,
+                    borderRadius: 20,
+                    borderColor: '#C4C7C5',
+                    height: 100,
+                    width: '90%',
+                    alignSelf: 'center',
+                    marginBottom: 20,
+                  }}>
+                  <ImageBackground
+                    source={require('../../assets/images/family-item-bg-2.png')}
+                    resizeMode="stretch"
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                    }}>
+                    <View style={{flexDirection: 'column'}}>
+                      <Text
+                        style={{
+                          marginRight: 36,
+                          fontSize: 18,
+                          marginBottom: 30,
+                        }}>
+                        Chat with members
+                      </Text>
+                      <Text style={{fontWeight: '600'}}>View detail</Text>
+                    </View>
                     <Image
-                      className="h-12 w-12"
+                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
                       source={ChatImage}
-                      resizeMode="contain"
+                      resizeMode="stretch"
                     />
-                    <Text className="ml-4 text-lg">Chat with members</Text>
-                  </View>
+                  </ImageBackground>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleNavigateChecklist()}>
-                  <View className="flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white">
+                <TouchableOpacity
+                  onPress={() => handleNavigateChecklist()}
+                  style={{
+                    borderWidth: 0.5,
+                    marginVertical: 2,
+                    marginHorizontal: 5,
+                    borderRadius: 20,
+                    borderColor: '#C4C7C5',
+                    height: 100,
+                    width: '90%',
+                    alignSelf: 'center',
+                    marginBottom: 20,
+                  }}>
+                  <ImageBackground
+                    source={require('../../assets/images/family-item-bg-3.png')}
+                    resizeMode="stretch"
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                    }}>
+                    <View style={{flexDirection: 'column'}}>
+                      <Text
+                        style={{
+                          marginRight: 36,
+                          fontSize: 18,
+                          marginBottom: 30,
+                        }}>
+                        Checklist
+                      </Text>
+                      <Text style={{fontWeight: '600'}}>View detail</Text>
+                    </View>
                     <Image
-                      className="h-12 w-12"
+                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
                       source={CheckListImage}
-                      resizeMode="contain"
+                      resizeMode="stretch"
                     />
-                    <Text className="ml-4 text-lg">Checklist</Text>
-                  </View>
+                  </ImageBackground>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleEducationPress}>
-                  <View className="flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white">
+                <TouchableOpacity
+                  onPress={handleEducationPress}
+                  style={{
+                    borderWidth: 0.5,
+                    marginVertical: 2,
+                    marginHorizontal: 5,
+                    borderRadius: 20,
+                    borderColor: '#C4C7C5',
+                    height: 100,
+                    width: '90%',
+                    alignSelf: 'center',
+                    marginBottom: 20,
+                  }}>
+                  <ImageBackground
+                    source={require('../../assets/images/family-item-bg-4.png')}
+                    resizeMode="stretch"
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                    }}>
+                    <View style={{flexDirection: 'column'}}>
+                      <Text
+                        style={{
+                          marginRight: 36,
+                          fontSize: 18,
+                          marginBottom: 30,
+                        }}>
+                        Manage Education
+                      </Text>
+                      <Text style={{fontWeight: '600'}}>View detail</Text>
+                    </View>
                     <Image
-                      className="h-12 w-12"
+                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
                       source={EducationImage}
-                      resizeMode="contain"
+                      resizeMode="stretch"
                     />
-                    <Text className="ml-4 text-lg">Manage Education</Text>
-                  </View>
+                  </ImageBackground>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleCalendarPress}>
-                  <View className="flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white">
+                <TouchableOpacity
+                  onPress={handleCalendarPress}
+                  style={{
+                    borderWidth: 0.5,
+                    marginVertical: 2,
+                    marginHorizontal: 5,
+                    borderRadius: 20,
+                    borderColor: '#C4C7C5',
+                    height: 100,
+                    width: '90%',
+                    alignSelf: 'center',
+                    marginBottom: 20,
+                  }}>
+                  <ImageBackground
+                    source={require('../../assets/images/family-item-bg-5.png')}
+                    resizeMode="stretch"
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                    }}>
+                    <View style={{flexDirection: 'column'}}>
+                      <Text
+                        style={{
+                          marginRight: 36,
+                          fontSize: 18,
+                          marginBottom: 30,
+                        }}>
+                        Calendar & Scheduling
+                      </Text>
+                      <Text style={{fontWeight: '600'}}>View detail</Text>
+                    </View>
                     <Image
-                      className="h-12 w-12"
+                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
                       source={CalenderImage}
-                      resizeMode="contain"
+                      resizeMode="stretch"
                     />
-                    <Text className="ml-4 text-lg">Calendar & Scheduling</Text>
-                  </View>
+                  </ImageBackground>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleNavigateGuildLine()}>
-                  <View className="flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white">
+                <TouchableOpacity
+                  onPress={() => handleNavigateGuildLine()}
+                  style={{
+                    borderWidth: 0.5,
+                    marginVertical: 2,
+                    marginHorizontal: 5,
+                    borderRadius: 20,
+                    borderColor: '#C4C7C5',
+                    height: 100,
+                    width: '90%',
+                    alignSelf: 'center',
+                    marginBottom: 20,
+                  }}>
+                  <ImageBackground
+                    source={require('../../assets/images/family-item-bg-1.png')}
+                    resizeMode="stretch"
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                    }}>
+                    <View style={{flexDirection: 'column'}}>
+                      <Text
+                        style={{
+                          marginRight: 36,
+                          fontSize: 18,
+                          marginBottom: 30,
+                        }}>
+                        Guideline Items
+                      </Text>
+                      <Text style={{fontWeight: '600'}}>View detail</Text>
+                    </View>
                     <Image
-                      className="h-12 w-12"
+                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
                       source={GuildLineImage}
-                      resizeMode="contain"
+                      resizeMode="stretch"
                     />
-                    <Text className="ml-4 text-lg">Guideline Items </Text>
-                  </View>
+                  </ImageBackground>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleNavigateHouseHold()}>
-                  <View className="flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white">
+                <TouchableOpacity
+                  onPress={() => handleNavigateHouseHold()}
+                  style={{
+                    borderWidth: 0.5,
+                    marginVertical: 2,
+                    marginHorizontal: 5,
+                    borderRadius: 20,
+                    borderColor: '#C4C7C5',
+                    height: 100,
+                    width: '90%',
+                    alignSelf: 'center',
+                    marginBottom: 20,
+                  }}>
+                  <ImageBackground
+                    source={require('../../assets/images/family-item-bg-2.png')}
+                    resizeMode="stretch"
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                    }}>
+                    <View style={{flexDirection: 'column'}}>
+                      <Text
+                        style={{
+                          marginRight: 36,
+                          fontSize: 18,
+                          marginBottom: 30,
+                        }}>
+                        HouseHold Appliances
+                      </Text>
+                      <Text style={{fontWeight: '600'}}>View detail</Text>
+                    </View>
                     <Image
-                      className="h-12 w-12"
+                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
                       source={HouseHoldImage}
-                      resizeMode="contain"
+                      resizeMode="stretch"
                     />
-                    <Text className="ml-4 text-lg">HouseHold Appliances </Text>
-                  </View>
+                  </ImageBackground>
                 </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => handleNavigateNews()}>
-                  <View className="flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white">
+                <TouchableOpacity
+                  onPress={() => handleNavigateNews()}
+                  style={{
+                    borderWidth: 0.5,
+                    marginVertical: 2,
+                    marginHorizontal: 5,
+                    borderRadius: 20,
+                    borderColor: '#C4C7C5',
+                    height: 100,
+                    width: '90%',
+                    alignSelf: 'center',
+                    marginBottom: 20,
+                  }}>
+                  <ImageBackground
+                    source={require('../../assets/images/family-item-bg-3.png')}
+                    resizeMode="stretch"
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                    }}>
+                    <View style={{flexDirection: 'column'}}>
+                      <Text
+                        style={{
+                          marginRight: 36,
+                          fontSize: 18,
+                          marginBottom: 30,
+                        }}>
+                        Newspaper
+                      </Text>
+                      <Text style={{fontWeight: '600'}}>View detail</Text>
+                    </View>
                     <Image
-                      className="h-12 w-12"
+                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
                       source={NewsImage}
-                      resizeMode="contain"
+                      resizeMode="stretch"
                     />
-                    <Text className="ml-4 text-lg">News </Text>
-                  </View>
+                  </ImageBackground>
                 </TouchableOpacity>
-
                 <TouchableOpacity
                   onPress={() => handleDeleteFamily(family!.id_family)}>
                   <View className="flex-row  items-center py-4 px-4 border-[0.5px] my-2 mx-5 rounded-lg border-[#C4C7C5] bg-white">
