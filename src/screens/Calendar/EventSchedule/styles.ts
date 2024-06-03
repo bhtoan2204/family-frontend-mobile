@@ -24,6 +24,12 @@ headerp: {
     flexDirection: 'row',
     marginTop: 40,
     justifyContent: 'space-between',
+    marginRight:40
+},
+
+headerContent: {
+  flexDirection: 'row',
+  alignItems: 'center',
 
 },
 subHeader: {

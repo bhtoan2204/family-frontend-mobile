@@ -98,6 +98,24 @@ const CalendarServices = {
       console.error('Error in getCalendar', error.message);
     }},
 
+    getCalendarDetail: async (id_calendar?: number) => {
+      try {
+ 
+        const response: AxiosResponse = await instance.get(`${baseUrl}/api/v1/calendar/getCalendarDetail/${id_calendar}`, { 
+          params: {
+            id_calendar,
+          }
+        }
+      );
+        if (response.status === 200) {
+          return response.data.data;
+        } else {
+          console.error('Error in getCalendarDetail');
+        }
+      } catch (error: any) {
+        console.error('Error in getCalendarDetail', error.message);
+      }},
+  
   getEventOnDate: async (id_family?: number, date?: String) => {
     try {
       const response: AxiosResponse = await instance.post(`${baseUrl}/api/v1/calendar/getEventOnDate`, 

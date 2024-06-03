@@ -144,6 +144,10 @@ export type CalendarStackParamList = {
   EventListScreen: {
     id_family: number | undefined;
   };
+  EventDetailsScreen: {
+    id_family: number | undefined;
+    id_calendar: number | undefined;
+  };
 };
 
 export type FamilyStackParamList = {
@@ -269,6 +273,17 @@ export interface ScheduleScreenProps {
   navigation: ScheduleScreenNavigationProp;
   route: RouteProp<CalendarStackParamList, 'ScheduleScreen'>;
 }
+
+type EventDetailsScreenNavigationProp = NativeStackNavigationProp<
+  CalendarStackParamList,
+  'EventDetailsScreen'
+>;
+
+export interface EventDetailsScreenProps {
+  navigation: EventDetailsScreenNavigationProp;
+  route: RouteProp<CalendarStackParamList, 'EventDetailsScreen'>;
+}
+
 type FamilyStackNavigationProp = NativeStackNavigationProp<
   RootParamList,
   'FamilyStack'

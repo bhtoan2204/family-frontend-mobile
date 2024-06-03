@@ -7,7 +7,8 @@
 		<string>remote-notification</string>
 		<string>fetch</string>
 	</array>
-
+	<key>NSCalendarsUsageDescription</key>
+	<string>This app requires access to the calendar</string>
 
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>We would like to send you notifications for important updates and messages.</string>

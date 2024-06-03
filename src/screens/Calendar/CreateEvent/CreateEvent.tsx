@@ -30,19 +30,31 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   const [chosenDateStart, setChosenDateStart] = useState(new Date());
   const [chosenDateEnd, setChosenDateEnd] = useState(new Date());
   const { id_family } = route.params;
-  const [isPickerOpen, setIsPickerOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('none');
+  const [isPickerRepeatOpen, setIsPickerRepeatOpen] = useState(false);
+  const [isPickerEndRepeatOpen, setIsPickerEndRepeatOpen] = useState(false);
+  const [selectedOptionRepeat, setSelectedOptionRepeat] = useState('none');
+  const [selectedOptionEndRepeat, setSelectedOptionEndRepeat] = useState('never');
+
   const [isAllDay, setIsAllDay] = useState(false);
   const [repeatEndDate, setRepeatEndDate] = useState(new Date());
   let color = useSelector(getColor);
   let category = useSelector(getIDcate);
 
-  const options = [
+  const optionRepeat = [
     { label: 'None', value: 'none' },
     { label: 'Daily', value: 'daily' },
     { label: 'Weekly', value: 'weekly' },
     { label: 'Monthly', value: 'monthly' },
     { label: 'Yearly', value: 'yearly' },
+    { label: 'Custom', value: 'custom' },
+
+  ];
+
+  const optionEndRepeat = [
+    { label: 'Never', value: 'never' },
+    { label: 'On date', value: 'date' },
+
+
   ];
 
   const handleDateChangeStart = (event: any, selectedDate: any) => {
@@ -70,10 +82,11 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       location: location, 
       recurrence_exception: "",
       recurrence_id: 0, 
-      recurrence_rule: selectedOption !== 'none' ? 'FREQ=' + selectedOption.toUpperCase() : "", 
+      recurrence_rule: selectedOptionRepeat !== 'none' ? 'FREQ=' + selectedOptionRepeat.toUpperCase() : "", 
       start_timezone: "", 
       end_timezone: "" 
     };
+    console.log(        eventDetails.time_start    )
     try {
       const message = await CalendarServices.CreateEvent(
         eventDetails.title,
@@ -218,7 +231,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
         </View>
 
       </View>
-        <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10, alignItems: 'center', zIndex: isPickerOpen ? 1000 : 1 }]}>
+        <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center', zIndex: isPickerRepeatOpen ? 1000 : 1 }]}>
           <MaterialCommunityIcons
             name="repeat"
             size={30}
@@ -228,37 +241,68 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
             Repeat
           </Text>
           <DropDownPicker
-            open={isPickerOpen}
-            setOpen={setIsPickerOpen}
-            value={selectedOption}
-            items={options}
-            setValue={setSelectedOption}
+            open={isPickerRepeatOpen}
+            setOpen={setIsPickerRepeatOpen}
+            value={selectedOptionRepeat}
+            items={optionRepeat}
+            setValue={setSelectedOptionRepeat}
             placeholder="None"
-            containerStyle={{ height: 40, width: 200 }}
+            containerStyle={{ height: 40, width: 100 }}
             style={{ borderColor: 'white', borderWidth: 1 }}
-            dropDownContainerStyle={{ borderColor: '#ccc', borderWidth: 1, zIndex: 1000 }}
+            dropDownContainerStyle={{ borderColor: '#ccc', borderWidth: 1, zIndex: 1000, width:100  }}
             zIndex={1000}
             zIndexInverse={1000}
           />
         </View>
-        {selectedOption !== 'none' && (
-          <View style={styles.datetimeContainer}>
-            <View style={[styles.row, { alignItems: 'center' }]}>
+        {selectedOptionRepeat !== 'none' && (
+        <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center', zIndex: selectedOptionRepeat ? 1: 1000 }]}>
               <MaterialCommunityIcons
                 name="calendar-end"
                 size={30}
                 style={styles.icon}
               />
-              <Text style={styles.text}>Repeat End</Text>
-              <DateTimePicker
+            <Text style={{ right: 30, fontSize: 16, color: 'gray' }}> End Repeat </Text>              
+            
+              <DropDownPicker
+                open={isPickerEndRepeatOpen}
+                setOpen={setIsPickerEndRepeatOpen}
+                value={selectedOptionEndRepeat}
+                items={optionEndRepeat}
+                setValue={setSelectedOptionEndRepeat}
+                placeholder="None"
+                containerStyle={{ height: 40, width: 100 }}
+                style={{ borderColor: 'white', borderWidth: 1 }}
+                dropDownContainerStyle={{ borderColor: '#ccc', borderWidth: 1, zIndex: 1000, width: 200  }}
+                zIndex={1000}
+                zIndexInverse={1000}
+            />
+            {/* <DateTimePicker
                 value={repeatEndDate}
                 mode="date"
                 display="default"
                 onChange={handleRepeatEndDateChange}
-              />
-            </View>
+              /> */}
           </View>
         )}
+        {selectedOptionEndRepeat !== 'never' && (
+        <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center' }]}>
+          <MaterialCommunityIcons
+            name="calendar-end"
+            size={30}
+            style={styles.icon}
+          />
+          <Text style={{ right: 30, fontSize: 16, color: 'gray' }}> End Date </Text>              
+        
+          
+          <DateTimePicker
+              value={repeatEndDate}
+              mode="date"
+              display="default"
+              onChange={handleRepeatEndDateChange}
+            />
+        </View>
+        )}
+
                 <ColorPicker navigation={navigation}/>
 
         <View style={[styles.formAction, { paddingVertical: 10 }]}>
