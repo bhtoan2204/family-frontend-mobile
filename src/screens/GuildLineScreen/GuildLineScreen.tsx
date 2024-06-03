@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, TouchableOpacity, Image, ActivityIndicator, FlatList, TextInput, Dimensions, SafeAreaView } from 'react-native'
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, FlatList, TextInput, Dimensions, SafeAreaView, StatusBar } from 'react-native'
 import { Guildline } from 'src/interface/guideline/guideline'
 import { GuildLineScreenProps } from 'src/navigation/NavigationTypes'
 import GuildLineService from 'src/services/apiclient/GuildLineService'

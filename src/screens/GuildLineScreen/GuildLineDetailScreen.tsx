@@ -268,30 +268,6 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
                 <KeyboardAvoidingView className=' h-full flex flex-col items-center mt-3  ' behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
                     {
                         guildLineSteps && <>
-                            {/* <View className='h-[50%] w-[90%] flex-col justify-center items-center mb-10  rounded-full mx-4 '>
-                                <TouchableOpacity disabled={isKeyboardVisible == true} onPress={() => {
-                                    console.log(currentStep)
-                                    bottomSheetRef.current?.open()
-                                }} >
-                                    <Image source={guildLineSteps[currentStep].imageUrl == null || guildLineSteps[currentStep].imageUrl == "" || guildLineSteps[currentStep].imageUrl == undefined
-                                        ? Img
-                                        : { uri: guildLineSteps[currentStep].imageUrl }} resizeMode='cover' style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} />
-                                </TouchableOpacity>
-
-                                {
-                                    guildLineSteps[currentStep].imageUrl == null || guildLineSteps[currentStep].imageUrl == ""
-                                    &&
-                                    <TouchableOpacity style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} className='absolute' activeOpacity={1.0} disabled={isKeyboardVisible == true} onPress={() => {
-                                        console.log(currentStep)
-                                        bottomSheetRef.current?.open()
-                                    }}>
-                                        <View className='opacity-80 bg-white h-full w-full flex justify-center items-center rounded'>
-
-                                            <Material name="file-image-plus" size={30} style={{ color: "gray" }} className='' />
-                                        </View>
-                                    </TouchableOpacity>
-                                }
-                            </View> */}
                             <StepGuideLineImage isAdding={isAdding} isEditing={isEditing} setAdding={setIsAdding} setEditing={setIsEditing} bottomSheetRef={bottomSheetRef} guideLineStepData={guildLineSteps[currentStep]} currentStep={currentStep} isKeyboardVisible={isKeyboardVisible} />
                             <View className='bg-white  w-full'>
 
@@ -352,7 +328,7 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
                         </>
                     }
                     {
-                        guildLineSteps && !isAdding && <>
+                        guildLineSteps && !isAdding && !isEditing && <>
                             <View style={styles.navigationView} className=''>
                                 {
                                     currentStep > 0 ?
