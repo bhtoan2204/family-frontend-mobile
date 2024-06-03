@@ -20,13 +20,13 @@ import {COLORS, TEXTS} from 'src/constants';
 import styles from './styles';
 import BottomSheet from './BottomSheet';
 import {Family} from 'src/interface/family/family';
-import GuildLineImage from 'src/assets/images/guildline.png';
-import CalenderImage from 'src/assets/images/calendar.png';
-import EducationImage from 'src/assets/images/education.png';
+import GuildLineImage from 'src/assets/icons/guideline-items.png';
+import CalenderImage from 'src/assets/icons/calendar-scheduling.png';
+import EducationImage from 'src/assets/icons/manage-eduction.png';
 import ChatImage from 'src/assets/icons/chat-with-members.png';
 import MemberImage from 'src/assets/icons/family-member.png';
 import DeleteImage from 'src/assets/images/remove.png';
-import HouseHoldImage from 'src/assets/images/household.png';
+import HouseHoldImage from 'src/assets/icons/household-appliances.png';
 import CheckListImage from 'src/assets/icons/checklist.png';
 import NewsImage from 'src/assets/images/news.png';
 const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
@@ -171,15 +171,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                     handleOpenAllMemberModal(id_user, family!.id_family)
                   }
                   style={{
-                    borderWidth: 0.5,
+                    borderWidth: 2,
                     marginVertical: 2,
                     marginHorizontal: 5,
                     borderRadius: 20,
-                    borderColor: '#C4C7C5',
+                    borderColor: '#FBE6DD',
                     height: 100,
                     width: '90%',
                     alignSelf: 'center',
                     marginBottom: 20,
+                    backgroundColor: 'white',
                   }}>
                   <ImageBackground
                     source={require('../../assets/images/family-item-bg-1.png')}
@@ -216,15 +217,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                 <TouchableOpacity
                   onPress={handleChatPress}
                   style={{
-                    borderWidth: 0.5,
+                    borderWidth: 2,
                     marginVertical: 2,
                     marginHorizontal: 5,
                     borderRadius: 20,
-                    borderColor: '#C4C7C5',
+                    borderColor: '#E1F2FD',
                     height: 100,
                     width: '90%',
                     alignSelf: 'center',
                     marginBottom: 20,
+                    backgroundColor: 'white',
                   }}>
                   <ImageBackground
                     source={require('../../assets/images/family-item-bg-2.png')}
@@ -261,15 +263,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                 <TouchableOpacity
                   onPress={() => handleNavigateChecklist()}
                   style={{
-                    borderWidth: 0.5,
+                    borderWidth: 2,
                     marginVertical: 2,
                     marginHorizontal: 5,
                     borderRadius: 20,
-                    borderColor: '#C4C7C5',
+                    borderColor: '#E3F4E8',
                     height: 100,
                     width: '90%',
                     alignSelf: 'center',
                     marginBottom: 20,
+                    backgroundColor: 'white',
                   }}>
                   <ImageBackground
                     source={require('../../assets/images/family-item-bg-3.png')}
@@ -306,15 +309,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                 <TouchableOpacity
                   onPress={handleEducationPress}
                   style={{
-                    borderWidth: 0.5,
+                    borderWidth: 2,
                     marginVertical: 2,
                     marginHorizontal: 5,
                     borderRadius: 20,
-                    borderColor: '#C4C7C5',
+                    borderColor: '#F0F2F4',
                     height: 100,
                     width: '90%',
                     alignSelf: 'center',
                     marginBottom: 20,
+                    backgroundColor: 'white',
                   }}>
                   <ImageBackground
                     source={require('../../assets/images/family-item-bg-4.png')}
@@ -351,15 +355,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                 <TouchableOpacity
                   onPress={handleCalendarPress}
                   style={{
-                    borderWidth: 0.5,
+                    borderWidth: 2,
                     marginVertical: 2,
                     marginHorizontal: 5,
                     borderRadius: 20,
-                    borderColor: '#C4C7C5',
+                    borderColor: '#EBE5D1',
                     height: 100,
                     width: '90%',
                     alignSelf: 'center',
                     marginBottom: 20,
+                    backgroundColor: 'white',
                   }}>
                   <ImageBackground
                     source={require('../../assets/images/family-item-bg-5.png')}
@@ -396,15 +401,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                 <TouchableOpacity
                   onPress={() => handleNavigateGuildLine()}
                   style={{
-                    borderWidth: 0.5,
+                    borderWidth: 2,
                     marginVertical: 2,
                     marginHorizontal: 5,
                     borderRadius: 20,
-                    borderColor: '#C4C7C5',
+                    borderColor: '#FBE6DD',
                     height: 100,
                     width: '90%',
                     alignSelf: 'center',
                     marginBottom: 20,
+                    backgroundColor: 'white',
                   }}>
                   <ImageBackground
                     source={require('../../assets/images/family-item-bg-1.png')}
@@ -441,15 +447,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                 <TouchableOpacity
                   onPress={() => handleNavigateHouseHold()}
                   style={{
-                    borderWidth: 0.5,
+                    borderWidth: 2,
                     marginVertical: 2,
                     marginHorizontal: 5,
                     borderRadius: 20,
-                    borderColor: '#C4C7C5',
+                    borderColor: '#E1F2FD',
                     height: 100,
                     width: '90%',
                     alignSelf: 'center',
                     marginBottom: 20,
+                    backgroundColor: 'white',
                   }}>
                   <ImageBackground
                     source={require('../../assets/images/family-item-bg-2.png')}
@@ -486,15 +493,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                 <TouchableOpacity
                   onPress={() => handleNavigateNews()}
                   style={{
-                    borderWidth: 0.5,
+                    borderWidth: 2,
                     marginVertical: 2,
                     marginHorizontal: 5,
                     borderRadius: 20,
-                    borderColor: '#C4C7C5',
+                    borderColor: '#E3F4E8',
                     height: 100,
                     width: '90%',
                     alignSelf: 'center',
                     marginBottom: 20,
+                    backgroundColor: 'white',
                   }}>
                   <ImageBackground
                     source={require('../../assets/images/family-item-bg-3.png')}
