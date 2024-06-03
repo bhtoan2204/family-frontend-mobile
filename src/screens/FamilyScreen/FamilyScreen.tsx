@@ -186,11 +186,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                     resizeMode="stretch"
                     style={{
                       flex: 1,
-                      justifyContent: 'center',
-                      alignItems: 'center',
                       flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: 20,
                     }}>
-                    <View style={{flexDirection: 'column'}}>
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                      }}>
                       <Text
                         style={{
                           marginRight: 36,
@@ -202,7 +207,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                       <Text style={{fontWeight: '600'}}>View detail</Text>
                     </View>
                     <Image
-                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
+                      style={{height: 74, width: 74}}
                       source={MemberImage}
                       resizeMode="stretch"
                     />
@@ -226,11 +231,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                     resizeMode="stretch"
                     style={{
                       flex: 1,
-                      justifyContent: 'center',
+                      justifyContent: 'space-between',
                       alignItems: 'center',
                       flexDirection: 'row',
+                      padding: 20,
                     }}>
-                    <View style={{flexDirection: 'column'}}>
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                      }}>
                       <Text
                         style={{
                           marginRight: 36,
@@ -242,7 +252,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                       <Text style={{fontWeight: '600'}}>View detail</Text>
                     </View>
                     <Image
-                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
+                      style={{height: 74, width: 74}}
                       source={ChatImage}
                       resizeMode="stretch"
                     />
@@ -266,11 +276,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                     resizeMode="stretch"
                     style={{
                       flex: 1,
-                      justifyContent: 'center',
+                      justifyContent: 'space-between',
                       alignItems: 'center',
                       flexDirection: 'row',
+                      padding: 20,
                     }}>
-                    <View style={{flexDirection: 'column'}}>
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                      }}>
                       <Text
                         style={{
                           marginRight: 36,
@@ -282,7 +297,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                       <Text style={{fontWeight: '600'}}>View detail</Text>
                     </View>
                     <Image
-                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
+                      style={{height: 74, width: 74}}
                       source={CheckListImage}
                       resizeMode="stretch"
                     />
@@ -306,11 +321,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                     resizeMode="stretch"
                     style={{
                       flex: 1,
-                      justifyContent: 'center',
+                      justifyContent: 'space-between',
                       alignItems: 'center',
                       flexDirection: 'row',
+                      padding: 20,
                     }}>
-                    <View style={{flexDirection: 'column'}}>
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                      }}>
                       <Text
                         style={{
                           marginRight: 36,
@@ -322,7 +342,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                       <Text style={{fontWeight: '600'}}>View detail</Text>
                     </View>
                     <Image
-                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
+                      style={{height: 74, width: 74}}
                       source={EducationImage}
                       resizeMode="stretch"
                     />
@@ -346,11 +366,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                     resizeMode="stretch"
                     style={{
                       flex: 1,
-                      justifyContent: 'center',
+                      justifyContent: 'space-between',
                       alignItems: 'center',
                       flexDirection: 'row',
+                      padding: 20,
                     }}>
-                    <View style={{flexDirection: 'column'}}>
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                      }}>
                       <Text
                         style={{
                           marginRight: 36,
@@ -362,7 +387,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                       <Text style={{fontWeight: '600'}}>View detail</Text>
                     </View>
                     <Image
-                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
+                      style={{height: 74, width: 74}}
                       source={CalenderImage}
                       resizeMode="stretch"
                     />
@@ -386,11 +411,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                     resizeMode="stretch"
                     style={{
                       flex: 1,
-                      justifyContent: 'center',
+                      justifyContent: 'space-between',
                       alignItems: 'center',
                       flexDirection: 'row',
+                      padding: 20,
                     }}>
-                    <View style={{flexDirection: 'column'}}>
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                      }}>
                       <Text
                         style={{
                           marginRight: 36,
@@ -402,7 +432,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                       <Text style={{fontWeight: '600'}}>View detail</Text>
                     </View>
                     <Image
-                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
+                      style={{height: 74, width: 74}}
                       source={GuildLineImage}
                       resizeMode="stretch"
                     />
@@ -426,11 +456,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                     resizeMode="stretch"
                     style={{
                       flex: 1,
-                      justifyContent: 'center',
+                      justifyContent: 'space-between',
                       alignItems: 'center',
                       flexDirection: 'row',
+                      padding: 20,
                     }}>
-                    <View style={{flexDirection: 'column'}}>
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                      }}>
                       <Text
                         style={{
                           marginRight: 36,
@@ -442,7 +477,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                       <Text style={{fontWeight: '600'}}>View detail</Text>
                     </View>
                     <Image
-                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
+                      style={{height: 74, width: 74}}
                       source={HouseHoldImage}
                       resizeMode="stretch"
                     />
@@ -466,11 +501,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                     resizeMode="stretch"
                     style={{
                       flex: 1,
-                      justifyContent: 'center',
+                      justifyContent: 'space-between',
                       alignItems: 'center',
                       flexDirection: 'row',
+                      padding: 20,
                     }}>
-                    <View style={{flexDirection: 'column'}}>
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                      }}>
                       <Text
                         style={{
                           marginRight: 36,
@@ -482,7 +522,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                       <Text style={{fontWeight: '600'}}>View detail</Text>
                     </View>
                     <Image
-                      style={{height: 74, width: 74, marginLeft: 70, right: 10}}
+                      style={{height: 74, width: 74}}
                       source={NewsImage}
                       resizeMode="stretch"
                     />
