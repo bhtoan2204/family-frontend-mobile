@@ -2,16 +2,17 @@ import React from 'react'
 import { Dimensions, View, Text, TouchableOpacity } from 'react-native'
 import RBSheet from 'react-native-raw-bottom-sheet'
 
-const PickImageSheet = ({ bottomSheetRef, handleTakePhoto, handlePickImage }: { bottomSheetRef: React.RefObject<RBSheet>, handleTakePhoto: () => Promise<void>, handlePickImage: () => Promise<void> }) => {
+const PickImageSheet = ({ bottomSheetRef, handleTakePhoto, handlePickImage }: { bottomSheetRef: React.RefObject<any>, handleTakePhoto: () => Promise<void>, handlePickImage: () => Promise<void> }) => {
     return (
         <RBSheet
             ref={bottomSheetRef}
-            closeOnDragDown={true}
             closeOnPressMask={true}
+            draggable
+            dragOnContent
             customStyles={{
                 container: {
                     backgroundColor: "white",
-                    height: Dimensions.get("window").height / 3,
+                    // height: Dimensions.get("window").height / 3,
                     borderTopLeftRadius: 20,
                     borderTopRightRadius: 20,
                 },
@@ -20,8 +21,9 @@ const PickImageSheet = ({ bottomSheetRef, handleTakePhoto, handlePickImage }: { 
                 }
             }}
         >
-            <View className='flex-col p-6 h-full bg-[#fafafa] justify-center'>
-                <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
+            <View className='flex-col p-6  h-full bg-[#fafafa] justify-center'>
+
+                <TouchableOpacity className='h-16 mb-8 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
                     await handleTakePhoto()
 
                 }}>

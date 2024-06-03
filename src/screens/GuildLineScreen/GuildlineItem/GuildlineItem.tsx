@@ -18,14 +18,14 @@ const GuildlineItem = ({ item, onPress }: any) => {
         </TouchableOpacity>
     );
     return (
-        <View className=''>
+        <View className='mx-2'>
             <Swipeable
                 renderRightActions={renderLeftActions}
                 overshootRight={false}
 
             >
                 <TouchableOpacity
-                    className="flex-row items-center py-6 px-4  bg-white mb-2"
+                    className="flex-row items-center py-5   bg-white mb-2 "
                     onPress={() => onPress()}
 
                 >
@@ -36,8 +36,12 @@ const GuildlineItem = ({ item, onPress }: any) => {
                         className="w-16 h-16 mr-4 ml-1  "
                     />
                     <View className="flex-grow">
-                        <Text className="text-xl font-bold" style={{ color: COLORS.primary }}>{item.name}</Text>
-                        <Text className="text-sm text-gray-600">{item.description}</Text>
+                        <View className='flex-1 flex-row'>
+                            <Text className="text-xl font-bold flex-1 flex-wrap" style={{ color: COLORS.AuroMetalSaurus }}>{item.name}</Text>
+                        </View>
+                        <View className='flex-1 flex-row'>
+                            <Text className="text-sm text-gray-600 flex-1 flex-wrap" >{item.description}</Text>
+                        </View>
                     </View>
                     <Icon name="chevron-forward" size={20} color={"grey"} />
 

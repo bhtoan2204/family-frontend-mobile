@@ -49,7 +49,7 @@ const HouseHoldItem = ({ item, setHouseHoldItem, index }: { item: HouseHoldItemI
                     <View className='m-4  flex-row items-center'>
                         <ImageComponent imageUrl={item.item_imageurl || ""} style={{ width: 70, height: 70 }} defaultImage={FamilyImage} className='rounded-lg ' />
                         <View className='flex-1 ml-4'>
-                            <Text className='font-semibold text-lg' style={{ color: COLORS.primary }}>{item.item_name}</Text>
+                            <Text className='font-semibold text-lg' style={{ color: COLORS.AuroMetalSaurus }}>{item.item_name}</Text>
                             <Text className='text-base text-gray-500' >{item.item_description}</Text>
                         </View>
                     </View>

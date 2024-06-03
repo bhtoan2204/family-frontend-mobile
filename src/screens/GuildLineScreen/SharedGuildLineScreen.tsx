@@ -50,7 +50,7 @@ const SharedGuildLineDetailScreen = ({ navigation, route }: any) => {
 
     const [isUploading, setIsUploading] = useState(false)
     const isKeyboardVisible = useKeyboardVisible();
-    const bottomSheetRef = React.useRef<RBSheet>(null);
+    const bottomSheetRef = React.useRef<any>(null);
     const [inputName, setInputName] = useState("");
     const [inputDescription, setInputDescription] = useState("");
 
@@ -168,14 +168,14 @@ const SharedGuildLineDetailScreen = ({ navigation, route }: any) => {
         <View className='flex-1 bg-[#fff] items-center '>
             <View className='w-full  flex-row justify-between items-center py-3 z-10 bg-white' >
                 <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
-                    <Material name="chevron-left" size={30} style={{ color: COLORS.primary, fontWeight: "bold" }} />
-                    <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Back</Text>
+                    <Material name="chevron-left" size={30} style={{ color: COLORS.AuroMetalSaurus, fontWeight: "bold" }} />
+                    <Text className='text-lg font-semibold' style={{ color: COLORS.AuroMetalSaurus }}>Back</Text>
                 </TouchableOpacity>
                 <View className='mr-3'>
                     <TouchableOpacity onPress={() => {
 
                     }}>
-                        <Material name="share-all-outline" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' />
+                        <Material name="share-all-outline" size={24} style={{ color: COLORS.AuroMetalSaurus, fontWeight: "bold" }} className='font-semibold' />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -213,7 +213,7 @@ const SharedGuildLineDetailScreen = ({ navigation, route }: any) => {
                                         <TouchableOpacity style={{
                                             ...styles.stepIndicator,
                                             width: currentStep === index ? screenWidth / guildLineSteps.length - 5 : screenWidth / guildLineSteps.length - 12,
-                                            backgroundColor: currentStep === index ? COLORS.primary : "#d1d1d1"
+                                            backgroundColor: currentStep === index ? COLORS.AuroMetalSaurus : "#d1d1d1"
                                         }} key={index}></TouchableOpacity>
                                     )
                                 })}
@@ -222,7 +222,7 @@ const SharedGuildLineDetailScreen = ({ navigation, route }: any) => {
                                 setInputName(guildLineSteps[currentStep].name)
                                 setInputDescription(guildLineSteps[currentStep].description)
                             }}>
-                                <Text className='text-center px-4 text-2xl font-bold mt-5 ' style={{ color: COLORS.primary }}>Step {currentStep + 1}: {guildLineSteps[currentStep].name != ""
+                                <Text className='text-center px-4 text-2xl font-bold mt-5 ' style={{ color: COLORS.AuroMetalSaurus }}>Step {currentStep + 1}: {guildLineSteps[currentStep].name != ""
                                     &&
                                     guildLineSteps[currentStep].name != null
                                     ? guildLineSteps[currentStep].name : "Add name"}</Text>
@@ -256,7 +256,7 @@ const SharedGuildLineDetailScreen = ({ navigation, route }: any) => {
                                 currentStep < guildLineSteps.length - 1 ? <TouchableOpacity
                                     onPress={() => nextStep()}
                                     style={{
-                                        backgroundColor: COLORS.primary,
+                                        backgroundColor: COLORS.AuroMetalSaurus,
                                         height: "auto",
                                         width: 80,
 
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
         paddingTop: 30,
     },
     navigationBtn: {
-        backgroundColor: COLORS.primary,
+        backgroundColor: COLORS.AuroMetalSaurus,
         height: "auto",
         width: 80,
         alignItems: "center"
