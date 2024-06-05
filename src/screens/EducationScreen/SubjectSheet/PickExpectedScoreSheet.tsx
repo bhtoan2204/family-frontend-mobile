@@ -66,7 +66,7 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, setSubjectDetailData, sco
                     ...prev,
                     final_score: {
                         ...prev.final_score,
-                        expected_score: parseInt(inputValue)
+                        expected_score: parseFloat(inputValue)
                     }
                 }
             })
@@ -76,7 +76,7 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, setSubjectDetailData, sco
                     ...prev,
                     midterm_score: {
                         ...prev.midterm_score,
-                        expected_score: parseInt(inputValue)
+                        expected_score: parseFloat(inputValue)
                     }
                 }
             })
@@ -88,7 +88,7 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, setSubjectDetailData, sco
                         if (i === index) {
                             return {
                                 ...item,
-                                expected_score: parseInt(inputValue)
+                                expected_score: parseFloat(inputValue)
                             }
                         }
                         return item

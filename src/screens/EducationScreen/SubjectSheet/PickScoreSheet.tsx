@@ -21,14 +21,7 @@ const isNumberInRange = (numberString: string) => {
 };
 
 const PickScoreSheet = ({ setScoreSheetRef, setSubjectDetailData, score, index }: PickScoreSheetProps) => {
-    const numbers = [];
 
-    for (let i = 0; i <= 9; i++) {
-        for (let j = 1; j <= 9; j++) {
-            const number = i + j * 0.1;
-            numbers.push(Math.round(number * 10) / 10);
-        }
-    }
 
     const [inputValue, setInputValue] = React.useState<string>(score?.toString() || '0')
     const [isFocus, setIsFocus] = React.useState<boolean>(false)
@@ -42,7 +35,9 @@ const PickScoreSheet = ({ setScoreSheetRef, setSubjectDetailData, score, index }
         setIsFocus(false)
     }
 
-
+    React.useEffect(() => {
+        setIsValid(isNumberInRange(inputValue))
+    }, [inputValue])
 
     const showText = (numberString: string) => {
         const number = parseFloat(numberString);
@@ -68,7 +63,7 @@ const PickScoreSheet = ({ setScoreSheetRef, setSubjectDetailData, score, index }
                     ...prev,
                     final_score: {
                         ...prev.final_score,
-                        score: parseInt(inputValue)
+                        score: parseFloat(inputValue)
                     }
                 }
             })
@@ -78,7 +73,7 @@ const PickScoreSheet = ({ setScoreSheetRef, setSubjectDetailData, score, index }
                     ...prev,
                     midterm_score: {
                         ...prev.midterm_score,
-                        score: parseInt(inputValue)
+                        score: parseFloat(inputValue)
                     }
                 }
             })
@@ -90,7 +85,7 @@ const PickScoreSheet = ({ setScoreSheetRef, setSubjectDetailData, score, index }
                         if (i === index) {
                             return {
                                 ...item,
-                                score: parseInt(inputValue)
+                                score: parseFloat(inputValue)
                             }
                         }
                         return item
@@ -203,7 +198,7 @@ const PickScoreSheet = ({ setScoreSheetRef, setSubjectDetailData, score, index }
                                 fontSize: 15
                             }}>
                                 <Text style={{
-
+                                    color: !isValid ? iOSColors.systemRed.defaultDark : undefined
                                 }}>{showText(inputValue)}</Text>
                             </Text>
                         </View>

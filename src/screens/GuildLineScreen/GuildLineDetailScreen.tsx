@@ -217,7 +217,6 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
     return (
         <SafeAreaView className='flex-1'>
             <View className='flex-1 bg-[#fff] items-center '>
-
                 <GuildLineHeader
                     isAdding={isAdding}
                     isEditing={isEditing}

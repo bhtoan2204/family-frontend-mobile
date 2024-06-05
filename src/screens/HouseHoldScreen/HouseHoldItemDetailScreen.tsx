@@ -107,18 +107,27 @@ const HouseHoldItemDetailScreen: React.FC<HouseHoldItemDetailScreenProps> = ({ n
                     </View>
                     <View className='px-3 shadow-lg overflow-hidden rounded-lg ' style={{ width: '100%', height: Dimensions.get('screen').height * 0.3 }} >
                         {/* <ImageComponent imageUrl={houseHoldItemDetail?.item_imageurl || ""} style={{ width: '100%', height: Dimensions.get('screen').height * 0.3 }} defaultImage={FamilyImage} className='rounded-lg ' resizeMethod='resize' resizeMode='cover' /> */}
-                        <>
-                            <TouchableOpacity className='bg-white rounded-lg items-center justify-center' style={{ width: '100%', height: Dimensions.get('screen').height * 0.3 }} activeOpacity={0.6}>
-                                <View className='my-2'>
-                                    <Material name="camera-iris" size={30} style={{ color: iOSGrayColors.systemGray2.defaultLight, fontWeight: "bold" }} />
-                                </View>
-                                <Text style={{
-                                    fontSize: 20,
-                                    fontWeight: 'bold',
-                                    color: iOSGrayColors.systemGray2.defaultLight
-                                }}>Add Image</Text>
-                            </TouchableOpacity>
-                        </>
+                        {
+                            isImageValid ? <>
+                                <TouchableOpacity>
+                                    <ImageComponent imageUrl={houseHoldItemDetail?.item_imageurl || ""} style={{ width: '100%', height: Dimensions.get('screen').height * 0.3 }} defaultImage={FamilyImage} className='rounded-lg ' resizeMethod='resize' resizeMode='cover' />
+                                </TouchableOpacity>
+                            </> : <>
+                                <>
+                                    <TouchableOpacity className='bg-white rounded-lg items-center justify-center' style={{ width: '100%', height: Dimensions.get('screen').height * 0.3 }} activeOpacity={0.6}>
+                                        <View className='my-2'>
+                                            <Material name="camera-iris" size={30} style={{ color: iOSGrayColors.systemGray2.defaultLight, fontWeight: "bold" }} />
+                                        </View>
+                                        <Text style={{
+                                            fontSize: 20,
+                                            fontWeight: 'bold',
+                                            color: iOSGrayColors.systemGray2.defaultLight
+                                        }}>Add Image</Text>
+                                    </TouchableOpacity>
+                                </>
+
+                            </>
+                        }
                     </View>
                     <View className='px-3 mt-3'>
                         <Text style={{

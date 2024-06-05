@@ -42,9 +42,10 @@ const StepGuideLineImage = ({
     const prevStepRef = React.useRef(currentStep);
     const isValid = useImageValid({ imageUrl: guideLineStepData.imageUrl });
     // const isKeyboardVisible = useKeyboardVisible();
-    const isInputing = isEditing && isKeyboardVisible
-    console.log(isInputing, isKeyboardVisible)
+    // const isInputing = isEditing && isKeyboardVisible
+    // console.log(isInputing, isKeyboardVisible)
     React.useEffect(() => {
+        console.log(prevStepRef.current, currentStep)
         prevStepRef.current = currentStep;
     }, [currentStep]);
 

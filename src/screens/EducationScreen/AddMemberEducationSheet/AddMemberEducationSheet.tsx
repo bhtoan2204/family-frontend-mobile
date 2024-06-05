@@ -7,6 +7,7 @@ import { Member } from 'src/interface/member/member'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import ImageComponent from 'src/components/Image/Image'
 import FamilyImage from 'src/assets/images/default_ava.png'
+import * as Animatable from 'react-native-animatable'
 const sheetIndex = [
     {
         id: 0,
@@ -51,9 +52,13 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
 
     }, [choosenMember])
 
+    React.useEffect(() => {
+
+    })
+
     const showHeader = () => {
         if (pickSheetIndex == 0) {
-            return <View className='w-full  flex-row justify-between items-center py-4 z-10 ' >
+            return <Animatable.View animation={"slideInLeft"} duration={400} className='w-full  flex-row justify-between items-center py-4 z-10 ' >
                 <TouchableOpacity
                     onPress={() => {
                         bottomSheetRef.current?.close()
@@ -98,9 +103,9 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                 }>
                     <Text className=' text-base font-semibold ' >Add</Text>
                 </TouchableOpacity>
-            </View>
+            </Animatable.View>
         } else if (pickSheetIndex == 1) {
-            return <View className='w-full  flex-row justify-between items-center py-4 z-10 ' >
+            return <Animatable.View animation={"slideInRight"} duration={400} className='w-full  flex-row justify-between items-center py-4 z-10 ' >
                 <TouchableOpacity
                     onPress={() => {
                         setPickSheetIndex(0)
@@ -120,7 +125,7 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                 }} className='pr-4 disabled:text-gray-600 text-blue-600' disabled={choosenMemberId == null || choosenMemberId == ""}>
                     <Text className=' text-base font-semibold ' >Done</Text>
                 </TouchableOpacity>
-            </View>
+            </Animatable.View>
         } else if (pickSheetIndex == 2) {
             return <View className='w-full  flex-row justify-between items-center py-4 z-10 ' >
                 <TouchableOpacity
@@ -168,7 +173,7 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
 
     const showContentIndex = () => {
         if (pickSheetIndex == 0) {
-            return <View className='p-4'>
+            return <Animatable.View animation={"slideInLeft"} duration={400} className='p-4'>
                 <View className='bg-white rounded-lg'>
                     <TouchableOpacity className='w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-0 px-2 py-3 rounded-tl-lg rounded-tr-lg'
                         onPress={() => { setPickSheetIndex(1) }}
@@ -226,12 +231,12 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                         </View>
                     </TouchableOpacity>
                 </View>
-                <View className='bg-white rounded-lg mt-10 border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-[#ccc] border-[0.5px]  px-2 py-3'>
+                {/* <View className='bg-white rounded-lg mt-10 border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-[#ccc] border-[0.5px]  px-2 py-3'>
                     <Text className='ml-2 text-[#F93E3E] font-medium text-base text-center'>Delete this member </Text>
-                </View>
-            </View>
+                </View> */}
+            </Animatable.View>
         } else if (pickSheetIndex == 1) {
-            return <View className='p-4'>
+            return <Animatable.View animation={"slideInRight"} duration={400} className='p-4'>
                 <View className='bg-white rounded-lg'>
                     {
                         members.map((item, index) => {
@@ -261,9 +266,9 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
 
                 </View>
 
-            </View>
+            </Animatable.View>
         } else if (pickSheetIndex == 2) {
-            return <View className='p-4'>
+            return <Animatable.View className='p-4'>
                 <View className='bg-white rounded-lg'>
                     <TextInput
                         style={{
@@ -286,9 +291,9 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
 
                 </View>
 
-            </View>
+            </Animatable.View>
         } else if (pickSheetIndex == 3) {
-            return <View className='p-4'>
+            return <Animatable.View className='p-4'>
                 <View className='bg-white rounded-lg'>
                     <TextInput
                         style={{
@@ -312,7 +317,7 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
 
                 </View>
 
-            </View>
+            </Animatable.View>
         }
     }
 
@@ -323,9 +328,7 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
             closeOnPressMask
             customStyles={{
                 container: {
-
                     backgroundColor: "#F2F1F6",
-
                     height: pickSheetIndex == 0 || pickSheetIndex == 1 ? Dimensions.get("window").height * 0.9 : Dimensions.get("window").height * 0.5,
                     borderTopLeftRadius: 20,
                     borderTopRightRadius: 20,
@@ -333,6 +336,9 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                 draggableIcon: {
                     display: "none",
                 }
+            }}
+            customModalProps={{
+                animationType: 'slide'
             }}
             onClose={() => {
                 setChoosenMemberId("")
@@ -345,7 +351,7 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                 {showHeader()}
                 <KeyboardAvoidingView className="flex-1 " behavior="padding">
                     <ScrollView showsVerticalScrollIndicator={true} className='flex-1 ' keyboardShouldPersistTaps="handled" >
-                        
+
                         {showContentIndex()}
                     </ScrollView>
                 </KeyboardAvoidingView>
