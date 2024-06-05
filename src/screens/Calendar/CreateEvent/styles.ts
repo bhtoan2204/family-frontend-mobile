@@ -11,39 +11,31 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    marginTop: 30, 
+    fontSize: 30,
+    fontWeight: '500',
+    color: '#fff',
+    marginTop: 20,
   },
   headerfile: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 0,
   },
   backButton: {
     color: COLORS.black,
   },
   inputControl: {
-
     borderColor: 'gray',
     borderRadius: 5,
     padding: 10,
   },
-  containerEnter: {
-
-    marginLeft:screenWidth*0.025,
-  },
   input1: {
     height: 30,
-    backgroundColor: '#fff',
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    fontSize: 25,
+    fontSize: 18,
     fontWeight: '500',
-    color: '#333',
-    right: 10,
+    color: '#fff',
+    borderBottomColor: '#fff',
+    borderBottomWidth: 2,
   },
   input2: {
     height: 20,
@@ -55,7 +47,6 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   button: {
-    backgroundColor: 'lightgray',
     padding: 10,
     marginVertical: 5,
     borderRadius: 5,
@@ -72,7 +63,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
     marginTop: 10,
-    color: '#222', 
+    color: '#222',
   },
 
   modalFooter: {
@@ -99,21 +90,20 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: '#ffffff', 
+    backgroundColor: '#ffffff',
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc', 
+    borderBottomColor: '#ccc',
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10
   },
   column: {
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
   modalBody: {
-    backgroundColor: '#ffffff', 
+    backgroundColor: '#ffffff',
     paddingHorizontal: 20,
     paddingVertical: 10,
     width: '100%',
@@ -148,35 +138,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   modalContainer: {
-    height: '100%', 
-    width: '100%', 
-    backgroundColor: 'white',
+    backgroundColor: '#353952',
+    flexDirection: 'column',
+  },
+  datetimeContainer: {
     flexDirection: 'column',
     padding: 20,
+    paddingBottom: -10,
+    bottom: 10,
   },
-   datetimeContainer: {
-    flexDirection: 'column',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    padding: 10,
-    marginTop: 20,
-   },
-   allDayConTainer: {
+  allDayConTainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc', 
     marginBottom: 10,
     alignItems: 'center',
+  },
 
-   },
-
-   text: {
+  text: {
     textAlign: 'center',
-    fontSize: 16,
-   },
-   switches: {
+    fontSize: 18,
+    color: '#fff',
+  },
+  switches: {
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 4,
