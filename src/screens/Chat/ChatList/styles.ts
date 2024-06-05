@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   },
   avatarContainer: {
@@ -102,6 +101,46 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 10,
+    backgroundColor: '#f0f0f0', 
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 100,
+    alignItems: 'center',
+
+  },
+  buttonSelected: {
+    flex: 1,
+    marginHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 100,
+    alignItems: 'center',
+    backgroundColor: 'gray'
+  },
+  buttonTextSelected: {
+    color: 'white',
+
+  },
+  buttonText: {
+    color: '#ccc',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  rightAction: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
+    marginVertical: 5,
+    backgroundColor: 'lightgray',
+    borderRadius: 5,
+},
 });
 
 export default styles;

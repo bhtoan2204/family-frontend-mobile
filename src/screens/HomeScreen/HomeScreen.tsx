@@ -90,7 +90,6 @@ const HomeScreen = ({
   });
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
 
-  //Trang thai cua pictures
   const handleScroll = (event: {
     nativeEvent: {layoutMeasurement: any; contentOffset: any};
   }) => {
@@ -110,9 +109,7 @@ const HomeScreen = ({
     });
   };
   const handleChat = () => {
-    navigation.navigate('ChatStack', {
-      screen: 'ChatList',
-    });
+    navigation.navigate('MessageTab', {screen: 'ChatList'});
   };
 
   const handleGetProfile = async () => {
@@ -230,7 +227,7 @@ const HomeScreen = ({
       icon: 'chat',
       label: 'Chat',
       onPress: () => {
-        console.log('Plumbing pressed');
+        handleChat();
       },
     },
     {

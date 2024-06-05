@@ -1,11 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, Text, View, TouchableOpacity, SafeAreaView, TextInput, ScrollView } from 'react-native';
-import { ChatListProps } from 'src/navigation/NavigationTypes';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Text,
+  View,
+  TouchableOpacity,
+  SafeAreaView,
+  TextInput,
+  ScrollView,
+  Alert,
+} from 'react-native';
+import { ChatListProps, PurchasedScreenProps, ViewAllFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import ChatServices from 'src/services/apiclient/ChatServices';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Profile } from 'src/interface/user/userProfile';
+import { Swipeable } from 'react-native-gesture-handler';
+import IconL from 'react-native-vector-icons/Ionicons';
 
-interface LastMessage {
+export interface LastMessage {
+  receiverId: string;
+  _id: string;
+  messages: Message[];
+  user: User;
+}
+export interface Message {
   senderId: string;
   receiverId: string;
   type: string;
@@ -13,59 +33,67 @@ interface LastMessage {
   isRead: boolean;
   timestamp: Date;
   _id: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
-interface User {
-  id_user: string;
+export interface User {
   firstname: string;
   lastname: string;
   avatar: string | null;
 }
 
-interface ChatItem {
-  _id: string;
-  lastMessage: LastMessage;
-  receiverId: string;
-  lastUpdated: Date;
-  user: User;
-}
-
-const ChatListScreen = ({ navigation, route }: ChatListProps) => {
-  const [chats, setChats] = useState<ChatItem[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
+const ChatListScreen = ({
+  navigation,
+}: PurchasedScreenProps & ViewAllFamilyScreenProps) => {
+  const [chats, setChats] = useState<LastMessage[]>([]);
+  const [users, setUsers] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [receiverId, setReceiverId] = useState('');
+  const [selectedButton, setSelectedButton] = useState<'Home' | 'Channels'>('Home');
 
-
-  const fetchUser =async () => {
-    try{
+  const fetchUser = async () => {
+    try {
       const response = await ChatServices.GetAllUser({ index: 0 });
       setUsers(response);
-
-    }
-    catch(error) {
+    } catch (error) {
       console.error('Error fetching user data:', error);
-
     }
-  }
-
+  };
 
   const formatDateTime = (dateTime: Date) => {
+    if (!dateTime) {
+      return '';
+    }
+
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
 
-    if (dateTime.getDate() === today.getDate() && dateTime.getMonth() === today.getMonth() && dateTime.getFullYear() === today.getFullYear()) {
-      return `${dateTime.getHours()}:${dateTime.getMinutes().toString().padStart(2, '0')}`;
-    } else if (dateTime.getDate() === yesterday.getDate() && dateTime.getMonth() === yesterday.getMonth() && dateTime.getFullYear() === yesterday.getFullYear()) {
-      return `Yesterday ${dateTime.getHours()}:${dateTime.getMinutes().toString().padStart(2, '0')}`;
+    if (
+      dateTime.getDate() === today.getDate() &&
+      dateTime.getMonth() === today.getMonth() &&
+      dateTime.getFullYear() === today.getFullYear()
+    ) {
+      return `${dateTime.getHours()}:${dateTime
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}`;
+    } else if (
+      dateTime.getDate() === yesterday.getDate() &&
+      dateTime.getMonth() === yesterday.getMonth() &&
+      dateTime.getFullYear() === yesterday.getFullYear()
+    ) {
+      return `Yesterday ${dateTime.getHours()}:${dateTime
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}`;
     } else {
-      return `${dateTime.getDate()}/${dateTime.getMonth() + 1}/${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes().toString().padStart(2, '0')}`;
+      return `${dateTime.getDate()}/${dateTime.getMonth() + 1}/${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}`;
     }
   };
 
@@ -73,14 +101,14 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
     try {
       setLoading(true);
       const response = await ChatServices.GetUserChat({ index: page });
-      const formattedResponse = response.map((item: ChatItem) => ({
+      const formattedResponse = response.map((item: LastMessage) => ({
         ...item,
-        lastMessage: {
-          ...item.lastMessage,
-          timestamp: new Date(item.lastMessage.timestamp), 
-        },
+        messages: item.messages.map((message) => ({
+          ...message,
+          timestamp: message.timestamp ? new Date(message.timestamp) : null,
+        })),
       }));
-      setChats(prevChats => [...prevChats, ...formattedResponse]);
+      setChats((prevChats) => [...prevChats, ...formattedResponse]);
       setTotalPages(formattedResponse.length > 0 ? page + 1 : page);
     } catch (error) {
       console.error('Error fetching chat data:', error);
@@ -88,21 +116,32 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
       setLoading(false);
     }
   };
-  
 
   const loadMoreMessages = () => {
     if (!loading && currentPage < totalPages) {
-      setCurrentPage(prevPage => prevPage + 1);
+      setCurrentPage((prevPage) => prevPage + 1);
     }
   };
 
   useEffect(() => {
     fetchData(currentPage);
-    fetchUser();
   }, [currentPage]);
 
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
   const handlePressChat = (receiverId?: string) => {
-    navigation.navigate('ChatUser', {  receiverId: receiverId });
+    navigation.navigate('ChatStack', {screen: 'ChatUser', params: { receiverId: receiverId }});
+  };
+
+  const handlePressHome = () => {
+    setSelectedButton('Home');
+  };
+
+  const handlePressChannels = () => {
+    setSelectedButton('Channels');
+
   };
 
   const renderAllUser = () => (
@@ -125,10 +164,47 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
       </ScrollView>
     </View>
   );
-  
+  const onDelete = async (event: Event) => {
+    Alert.alert(
+        'Confirm Delete',
+        'Are you sure you want to delete this event?',
+        [
+            {
+                text: 'Cancel',
+                style: 'cancel',
+            },
+            {
+                text: 'Delete',
+                onPress: async () => {
+                    try {
+                        //await CalendarServices.DeleteEvent(event.id_calendar);
+                        Alert.alert('Success', 'Event has been deleted successfully.');
+                        //await handleGetCalendar();
+                    } catch (error) {
+                        console.error('Error deleting event:', error);
+                        Alert.alert('Error', 'An error occurred while deleting the event.');
+                    }
+                },
+            },
+        ],
+        { cancelable: true }
+    );
+};
 
+const onUpdate = (event: Event) => {
+    //setEventDetails(event);
+    //bottomSheetRef.current?.open();
+};
 
-  const renderChatItem = ({ item }: { item: ChatItem }) => (
+  const renderRightActions = (event) => (
+    <View style={styles.rightAction}>
+        <IconL name="create-outline" size={35} color="gray" onPress={() => onUpdate(event)} />
+        <IconL name="trash-outline" size={35} color="red" onPress={() => onDelete(event)} />
+    </View>
+);
+  const renderChatItem = ({ item }: { item: LastMessage }) => (
+    <Swipeable renderRightActions={() => renderRightActions(item)}>
+
     <TouchableOpacity onPress={() => handlePressChat(item.receiverId)}>
       <View style={styles.chatItem}>
         <View style={styles.avatarContainer}>
@@ -140,15 +216,19 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
         </View>
         <View style={styles.messageContainer}>
           <Text style={styles.username}>{`${item.user.firstname} ${item.user.lastname}`}</Text>
-          {item.lastMessage.type === 'photo' ? (
+          {item.messages[0]?.type === 'photo' ? (
             <Text style={styles.messageText}>Sent image</Text>
           ) : (
-            <Text style={styles.messageText}>{item.lastMessage.content}</Text>
+            <Text style={styles.messageText}>{item.messages[0]?.content}</Text>
           )}
         </View>
-        <Text style={styles.messageTimestamp}>{formatDateTime(item.lastMessage.timestamp)}</Text>
+        <Text style={styles.messageTimestamp}>
+          {item.messages[0]?.timestamp ? formatDateTime(item.messages[0].timestamp) : ''}
+        </Text>
       </View>
     </TouchableOpacity>
+    </Swipeable>
+
   );
 
   return (
@@ -169,9 +249,23 @@ const ChatListScreen = ({ navigation, route }: ChatListProps) => {
         </View>
       </View>
       {renderAllUser()}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[styles.button, selectedButton === 'Home' && styles.buttonSelected]}
+          onPress={handlePressHome}
+        >
+          <Text style={[styles.buttonText, selectedButton === 'Home' && styles.buttonTextSelected]}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, selectedButton === 'Channels' && styles.buttonSelected]}
+          onPress={handlePressChannels}
+        >
+          <Text style={[styles.buttonText, selectedButton === 'Channels' && styles.buttonTextSelected]}>Channels</Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={chats}
-        keyExtractor={item => item._id}
+        keyExtractor={(item) => item._id}
         renderItem={renderChatItem}
         onEndReached={loadMoreMessages}
         onEndReachedThreshold={0.1}

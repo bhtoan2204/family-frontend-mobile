@@ -11,7 +11,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import ImageView from "react-native-image-viewing";
 import { Keyboard } from 'react-native';
-import { getSocket } from '../../services/apiclient/Socket';
+import { getSocket } from 'src/services/apiclient/Socket';
 import { useSelector } from 'react-redux';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 
@@ -20,6 +20,7 @@ interface Message {
   type: string;
   content: string;
   receiverId: string;
+  timestamp: Date;
 }
 
 interface Member {
@@ -68,7 +69,7 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
           if (message.type === 'photo') {
             setImages(prevImages => [...prevImages, message.content]);
           }
-          return message;
+          return { ...message, timestamp: new Date(message.timestamp) };
         });
         setMessages(prevMessages => [...prevMessages, ...newMessages]);
       }
@@ -220,80 +221,112 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
     navigation.navigate('ChatStack', {screen: 'CallVideo' , params: {receiverId: receiverId }});
   }
   
+  const formatDateTime = (dateTime: Date) => {
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
 
+    if (
+      dateTime.getDate() === today.getDate() &&
+      dateTime.getMonth() === today.getMonth() &&
+      dateTime.getFullYear() === today.getFullYear()
+    ) {
+      return `${dateTime.getHours()}:${dateTime
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}`;
+    } else if (
+      dateTime.getDate() === yesterday.getDate() &&
+      dateTime.getMonth() === yesterday.getMonth() &&
+      dateTime.getFullYear() === yesterday.getFullYear()
+    ) {
+      return `Yesterday ${dateTime.getHours()}:${dateTime
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}`;
+    } else {
+      return `${dateTime.getDate()}/${dateTime.getMonth() + 1}/${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}`;
+    }
+  };
 
   return (
-<KeyboardAvoidingView behavior="padding" style={{ flex: 1, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={24} style={styles.backButton} />
-        </TouchableOpacity>
-        <View style={styles.receiverInfo}>
-          {receiver && (
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1, position: 'absolute', top: 0, bottom: 0, left:0, right: 0}}>
+    <View style={styles.header}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Icon name="arrow-back" size={24} style={styles.backButton} />
+      </TouchableOpacity>
+      <View style={styles.receiverInfo}>
+        {receiver && (
+          <>
+            <Image source={{ uri: receiver.avatar }} style={styles.avatar} />
+            <Text>{receiver.firstname} {receiver.lastname}</Text>
+          </>
+        )}
+      </View>
+      <TouchableOpacity onPress={() =>handleVideoCall(receiverId)}>
+        <Icon name="videocam" size={36} style={styles.videoCallButton} />
+      </TouchableOpacity>
+    </View>
+    <FlatList
+      key={refreshFlatList ? 'refresh' : 'no-refresh'}
+      style={styles.messagesContainer}
+      contentContainerStyle={styles.contentContainer}
+      data={messages}
+      inverted
+      renderItem={({ item, index }) => (
+        <View style={[
+          styles.messageContainer,
+          item.senderId === profile.id_user ? styles.senderMessageContainer : styles.receiverMessageContainer
+        ]}>
+          {item.type === 'photo' ? (
+            <TouchableOpacity onPress={() => handleImagePress(item)}>
+              <View style={styles.messageContentContainer}>
+                <Image source={{ uri: item.content }} style={styles.imageMessage} />
+              </View>
+            </TouchableOpacity>
+          ) : (
             <>
-              <Image source={{ uri: receiver.avatar }} style={styles.avatar} />
-              <Text>{receiver.firstname} {receiver.lastname}</Text>
+              <Text style={styles.senderMessageContent}>{item.content}</Text>
+              <Text style={styles.timestamp}>{formatDateTime(item.timestamp)}</Text>
             </>
           )}
         </View>
-        <TouchableOpacity onPress={() =>handleVideoCall(receiverId)}>
-          <Icon name="videocam" size={36} style={styles.videoCallButton} />
+        )}
+        keyExtractor={(item, index) => index.toString()}
+        keyboardShouldPersistTaps="handled"
+        onEndReached={loadMoreMessages}
+        onEndReachedThreshold={0.1}
+      />
+    
+      <View style={[styles.inputContainer, keyboardIsOpen && { paddingBottom: 60 }]}>
+        <TextInput
+          style={styles.input}
+          value={message}
+          onChangeText={setMessage}
+          placeholder="Type your message here"
+        />
+        <TouchableOpacity onPress={handleOpenImageLibrary} style={{ marginLeft: 10 }}>
+          <Icon name="images" size={30} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleSendMessage} disabled={isTextInputEmpty} style={{ marginLeft: 10 }}>
+          <Icon name="send" size={30} />
         </TouchableOpacity>
       </View>
-      <FlatList
-        key={refreshFlatList ? 'refresh' : 'no-refresh'}
-        style={styles.messagesContainer}
-        contentContainerStyle={styles.contentContainer}
-        data={messages}
-        inverted
-        renderItem={({ item, index }) => (
-          <View style={[
-            styles.messageContainer,
-            item.senderId === profile.id_user ? styles.senderMessageContainer : styles.receiverMessageContainer
-          ]}>
-            {item.type === 'photo' ? (
-              <TouchableOpacity onPress={() => handleImagePress(item)}>
-                <View style={styles.messageContentContainer}>
-                  <Image source={{ uri: item.content }} style={styles.imageMessage} />
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <Text style={styles.senderMessageContent}>{item.content}</Text>
-            )}
-          </View>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          keyboardShouldPersistTaps="handled"
-          onEndReached={loadMoreMessages}
-          onEndReachedThreshold={0.1}
-        />
-      
-        <View style={[styles.inputContainer, keyboardIsOpen && { paddingBottom: 60 }]}>
-          <TextInput
-            style={styles.input}
-            value={message}
-            onChangeText={setMessage}
-            placeholder="Type your message here"
-          />
-          <TouchableOpacity onPress={handleOpenImageLibrary} style={{ marginLeft: 10 }}>
-            <Icon name="images" size={30} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleSendMessage} disabled={isTextInputEmpty} style={{ marginLeft: 10 }}>
-            <Icon name="send" size={30} />
-          </TouchableOpacity>
-        </View>
 
-      
-      <ImageView
-        images={images.map(image => ({ uri: image }))}
-        imageIndex={selectedImageIndex || 0}
-        visible={selectedImageIndex !== null}
-        onRequestClose={handleCloseModal}
-        backgroundColor="rgba(0, 0, 0, 0.8)"
-      />
+    
+    <ImageView
+      images={images.map(image => ({ uri: image }))}
+      imageIndex={selectedImageIndex || 0}
+      visible={selectedImageIndex !== null}
+      onRequestClose={handleCloseModal}
+      backgroundColor="rgba(0, 0, 0, 0.8)"
+    />
 
-    </KeyboardAvoidingView>
-  );
+  </KeyboardAvoidingView>
+);
 };
 
 export default ChatScreen;
