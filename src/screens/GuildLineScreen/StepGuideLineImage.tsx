@@ -53,10 +53,14 @@ const StepGuideLineImage = ({
             <Animatable.View animation={currentStep > prevStepRef.current ? 'bounceInRight' : 'bounceInLeft'} key={currentStep} duration={700} className='h-[50%] w-[90%] flex-col justify-center items-center mb-10  rounded-full mx-4 ' style={{
 
             }}>
-                <TouchableOpacity disabled={isKeyboardVisible == true} onPress={() => {
-                    console.log(currentStep)
-                    bottomSheetRef.current?.open()
-                }} >
+                <TouchableOpacity onPress={() => {
+                    if (isKeyboardVisible) {
+                        Keyboard.dismiss()
+                    } else {
+                        console.log(currentStep)
+                        bottomSheetRef.current?.open()
+                    }
+                }} activeOpacity={isKeyboardVisible ? 0.8 : 1}>
                     <ImageComponent defaultImage={Img} imageUrl={guideLineStepData.imageUrl} style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} />
                 </TouchableOpacity>
 

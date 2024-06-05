@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, TouchableOpacity, Image, ActivityIndicator, FlatList, TextInput, Dimensions, SafeAreaView, StatusBar } from 'react-native'
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, FlatList, TextInput, Dimensions, SafeAreaView, StatusBar, ScrollView } from 'react-native'
 import { Guildline } from 'src/interface/guideline/guideline'
 import { GuildLineScreenProps } from 'src/navigation/NavigationTypes'
 import GuildLineService from 'src/services/apiclient/GuildLineService'
@@ -11,6 +11,8 @@ import RBSheet from 'react-native-raw-bottom-sheet'
 import AddGuildLineSheet from './AddGuildLineSheet/AddGuildLineSheet'
 
 import GuildlineItem from './GuildlineItem/GuildlineItem'
+import { iOSColors, iOSGrayColors } from 'src/constants/ios-color'
+import * as Animatable from 'react-native-animatable';
 // id_item: number;
 //   name: string;
 //   description: string;
@@ -29,7 +31,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
     const [guidelines, setGuidelines] = React.useState<Guildline[]>([]);
     const [loading, setLoading] = React.useState(true);
     const refRBSheet = React.useRef<any>(null);
-
+    const [tab, setTab] = React.useState(0);
 
     useEffect(() => {
         const fetchGuidelines = async () => {
@@ -55,29 +57,6 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
 
     const renderItem = ({ item }: { item: any }) => (
         <>
-            {/* <Swipeable
-
-            >
-                <TouchableOpacity
-                    className="flex-row items-center py-6 px-4 rounded-lg bg-white mb-2"
-                    onPress={() => navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_item })}
-
-                >
-                    <Image
-                        source={MemberIcon} // assuming first step image is available
-                        width={70}
-                        height={70}
-                        className="w-16 h-16 mr-4 ml-1  "
-                    />
-                    <View className="flex-grow">
-                        <Text className="text-xl font-bold" style={{ color: COLORS.primary }}>{item.name}</Text>
-                        <Text className="text-sm text-gray-600">{item.description}</Text>
-                    </View>
-                    <Icon name="chevron-forward" size={20} color={"grey"} />
-
-
-                </TouchableOpacity>
-            </Swipeable> */}
             <GuildlineItem item={item} onPress={() => {
                 navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_item })
             }} />
@@ -94,7 +73,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                 <View className='w-full  flex-row justify-between items-center py-3 bg-white'>
                     <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
                         <Material name="chevron-left" size={30} style={{ color: COLORS.AuroMetalSaurus, fontWeight: "bold" }} />
-                        <Text className='text-lg font-semibold text-gray-600' style={{ color: COLORS.AuroMetalSaurus }}>Back</Text>
+                        {/* <Text className='text-lg font-semibold text-gray-600' style={{ color: COLORS.AuroMetalSaurus }}>Back</Text> */}
                     </TouchableOpacity>
                     <View className='mr-3'>
                         <TouchableOpacity onPress={() => {
@@ -106,15 +85,65 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                         </TouchableOpacity>
                     </View>
                 </View>
-                <FlatList
+
+                {/* <FlatList
                     data={guidelines}
                     renderItem={renderItem}
                     keyExtractor={(item) => item.id_item.toString()}
                     className='pt-2'
-                />
-                <GuildlineItem item={guildLineData} onPress={() => {
+                /> */}
+                <ScrollView className='pt-2' showsVerticalScrollIndicator={false}>
+                    <View className='flex-row px-3 py-2'>
+                        <TouchableOpacity className='flex-1 py-3 items-center justify-center ' style={{
+                            // backgroundColor: iOSGrayColors.systemGray6.defaultLight
+                            borderBottomColor: tab == 0 ? iOSColors.systemBlue.defaultLight : undefined,
+                            borderBottomWidth: tab == 0 ? 2 : undefined,
+
+                        }} onPress={() => {
+                            setTab(0)
+                        }}>
+                            <Text style={{
+                                color: iOSColors.systemBlue.defaultLight,
+                                fontWeight: 'bold'
+                            }}>Guidelines</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity className='flex-1  py-3 items-center justify-center ' style={{
+                            borderBottomColor: tab == 1 ? 'black' : undefined,
+                            borderBottomWidth: tab == 1 ? 2 : undefined,
+                        }} onPress={() => {
+                            setTab(1)
+                        }}>
+                            <Text style={{
+                                fontWeight: 'bold'
+                            }}>Shared guidelines</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <Animatable.View animation={tab == 0 ? 'bounceInLeft' : 'bounceInRight'} key={tab} duration={700} className='' style={{
+
+                    }}>
+                        {
+                            tab == 0 ? <>
+                                {
+                                    guidelines.map((item, index) => (
+                                        <React.Fragment key={index}>
+                                            <GuildlineItem item={item} onPress={() => {
+                                                navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_item })
+                                            }} key={index} />
+                                        </React.Fragment>
+                                    ))
+                                }
+
+                            </> : <>
+                                <GuildlineItem item={guildLineData} onPress={() => {
+                                    navigation.navigate('SharedGuildLine', { id_family: id_family, id_item: guildLineData.id_item })
+                                }} />
+                            </>
+                        }
+                    </Animatable.View>
+                </ScrollView>
+                {/* <GuildlineItem item={guildLineData} onPress={() => {
                     navigation.navigate('SharedGuildLine', { id_family: id_family, id_item: guildLineData.id_item })
-                }} />
+                }} /> */}
                 <AddGuildLineSheet refRBSheet={refRBSheet} setGuidelines={setGuidelines} />
             </View>
         </SafeAreaView>

@@ -7,9 +7,9 @@ export const iOSColors = {
   },
   systemGreen: {
     defaultLight: '#34C759',
-    defaultDark: '#30D158',
+    defaultDark: '#36D159',
     accessibleLight: '#248A3D',
-    accessibleDark: '#30DB5B',
+    accessibleDark: '#3ADB5B',
   },
   systemIndigo: {
     defaultLight: '#5856D6',

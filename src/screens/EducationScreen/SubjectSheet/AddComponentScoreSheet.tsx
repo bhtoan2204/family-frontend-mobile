@@ -9,9 +9,9 @@ import { useKeyboardVisible } from 'src/hooks/useKeyboardVisible';
 import * as ImagePicker from 'expo-image-picker';
 import { Subject } from 'src/interface/education/education';
 // import PickImageSheet from 'src/screens/GuildLineScreen/PickImageSheet/PickImageSheet';
-const AddComponentScoreSheet = ({ refRBSheet, setSubjectDetailData, id_education_progress, id_family, id_subject }: { refRBSheet: React.RefObject<RBSheet>, setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>, id_education_progress: number, id_family: number, id_subject: number }) => {
+const AddComponentScoreSheet = ({ refRBSheet, setSubjectDetailData, id_education_progress, id_family, id_subject }: { refRBSheet: React.RefObject<any>, setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>, id_education_progress: number, id_family: number, id_subject: number }) => {
     // const refRBSheet = React.useRef<RBSheet>(null);
-    const pickImageSheetRef = React.useRef<RBSheet>(null);
+    const pickImageSheetRef = React.useRef<any>(null);
     const [name, setName] = React.useState("");
     const [description, setDescription] = React.useState("");
     const isKeyboardVisible = useKeyboardVisible();
@@ -46,9 +46,7 @@ const AddComponentScoreSheet = ({ refRBSheet, setSubjectDetailData, id_education
     return (
         <RBSheet
             ref={refRBSheet}
-            closeOnDragDown
             closeOnPressBack
-            dragFromTopOnly
             closeOnPressMask
             // minClosingHeight={Dimensions.get("window").height * 0.5}
             // height={Dimensions.get("window").height * 0.6}

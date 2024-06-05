@@ -9,9 +9,9 @@ import { useKeyboardVisible } from 'src/hooks/useKeyboardVisible';
 import * as ImagePicker from 'expo-image-picker';
 import { EducationDetail, Subject } from 'src/interface/education/education';
 // import PickImageSheet from 'src/screens/GuildLineScreen/PickImageSheet/PickImageSheet';
-const AddSubjectSheet = ({ refRBSheet, setEducationDetailData, id_education_progress, id_family }: { refRBSheet: React.RefObject<RBSheet>, setEducationDetailData: React.Dispatch<React.SetStateAction<EducationDetail>>, id_education_progress: number, id_family: number }) => {
+const AddSubjectSheet = ({ refRBSheet, setEducationDetailData, id_education_progress, id_family }: { refRBSheet: React.RefObject<any>, setEducationDetailData: React.Dispatch<React.SetStateAction<EducationDetail>>, id_education_progress: number, id_family: number }) => {
     // const refRBSheet = React.useRef<RBSheet>(null);
-    const pickImageSheetRef = React.useRef<RBSheet>(null);
+    const pickImageSheetRef = React.useRef<any>(null);
     const [name, setName] = React.useState("");
     const [description, setDescription] = React.useState("");
     const isKeyboardVisible = useKeyboardVisible();
@@ -43,9 +43,8 @@ const AddSubjectSheet = ({ refRBSheet, setEducationDetailData, id_education_prog
     return (
         <RBSheet
             ref={refRBSheet}
-            closeOnDragDown
+
             closeOnPressBack
-            dragFromTopOnly
             closeOnPressMask
             // minClosingHeight={Dimensions.get("window").height * 0.5}
             // height={Dimensions.get("window").height * 0.6}

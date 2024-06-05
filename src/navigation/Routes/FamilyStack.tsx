@@ -5,7 +5,7 @@ import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
 import ViewFamilyScreen from 'src/screens/FamilyScreen';
 import ViewAllMemberScreen from 'src/screens/AllMember';
 import AddMemberScreen from 'src/screens/AddEditFamilyMemberScreen';
-import { AddEditFamilyMemberScreenProps, AllMemberScreenProps, CheckListDetailScreenProps, CheckListScreenProps, ContactScreenProps, CreateFamilyScreenProps, EducationDetailScreenProps, EducationScreenProps, GuildLineDetailScreenProps, GuildLineScreenProps, HouseHoldCategoryDetailScreenProps, HouseHoldCategoryScreenProps, HouseHoldScreenProps, NewsScreenProps, SharedGuildLineScreenProps, SubjectDetailScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
+import { AddEditFamilyMemberScreenProps, AllMemberScreenProps, CheckListDetailScreenProps, CheckListScreenProps, ContactScreenProps, CreateFamilyScreenProps, EducationDetailScreenProps, EducationScreenProps, GuildLineDetailScreenProps, GuildLineScreenProps, HouseHoldItemDetailScreenProps, HouseHoldItemScreenProps, HouseHoldScreenProps, NewsScreenProps, SharedGuildLineScreenProps, SubjectDetailScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
 import ContactListScreen from 'src/screens/ContactList/ContactList';
 import GuildLineScreen from 'src/screens/GuildLineScreen/GuildLineScreen';
 import GuildLineDetailScreen from 'src/screens/GuildLineScreen/GuildLineDetailScreen';
@@ -17,6 +17,8 @@ import ChecklistScreen from 'src/screens/CheckListScreen/CheckListScreen/CheckLi
 import NewsScreen from 'src/screens/NewsScreen/NewsScreen';
 import SharedGuildLineDetailScreen from 'src/screens/GuildLineScreen/SharedGuildLineScreen';
 import ChecklistDetailScreen from 'src/screens/CheckListScreen/CheckListDetailScreen';
+import HouseHoldItemScreen from 'src/screens/HouseHoldScreen/HouseHoldItemDetailScreen';
+import HouseHoldItemDetailScreen from 'src/screens/HouseHoldScreen/HouseHoldItemDetailScreen';
 const Stack = createNativeStackNavigator();
 
 const FamilyStack = () => {
@@ -66,6 +68,9 @@ const FamilyStack = () => {
       </Stack.Screen>
       <Stack.Screen name="HouseHold">
         {(props) => <HouseHoldScreen {...props as HouseHoldScreenProps} />}
+      </Stack.Screen>
+      <Stack.Screen name="HouseHoldItemDetail">
+        {(props) => <HouseHoldItemDetailScreen {...props as HouseHoldItemDetailScreenProps} />}
       </Stack.Screen>
       {/* <Stack.Screen name="HouseHoldCategory">
         {(props) => <HouseHoldCategoryScreen {...props as HouseHoldCategoryScreenProps} />}

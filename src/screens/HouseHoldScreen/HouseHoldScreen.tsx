@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native'
-import { HouseHoldCategoryScreenProps, HouseHoldScreenProps } from 'src/navigation/NavigationTypes'
+import { HouseHoldScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants';
 import ImageComponent from 'src/components/Image/Image';
@@ -10,6 +10,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import HouseHoldItem from './HouseHoldItem/HouseHoldItem';
 import { household_category_dat } from './const/data';
 import HouseHoldFilterBar from 'src/components/user/household/household-filter-bar';
+import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
 
 
 const household_items = [
@@ -29,38 +30,7 @@ const household_items = [
         "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713451468168",
         "id_category": 1
     },
-    {
-        "id_household_item": 6,
-        "id_family": 96,
-        "item_name": "tủ lạnh cùi",
-        "item_description": "cái tủ lạnh cùi vãi",
-        "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713454442646",
-        "id_category": 1
-    },
-    {
-        "id_household_item": 7,
-        "id_family": 96,
-        "item_name": "tủ lạnh cùi",
-        "item_description": "cái tủ lạnh cùi vãi",
-        "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713454456027",
-        "id_category": 1
-    },
-    {
-        "id_household_item": 8,
-        "id_family": 96,
-        "item_name": "tủ lạnh cùi",
-        "item_description": "cái tủ lạnh cùi vãi",
-        "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713454463179",
-        "id_category": 1
-    },
-    {
-        "id_household_item": 9,
-        "id_family": 96,
-        "item_name": "tủ lạnh cùi",
-        "item_description": "cái tủ lạnh cùi vãi",
-        "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713454518267",
-        "id_category": 1
-    },
+
     {
         "id_household_item": 10,
         "id_family": 96,
@@ -97,13 +67,27 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
 
     const showCategoryItems = () => {
         const categoryItems = householdItems.filter(item => item.id_category === choosenCategoryId);
-        return <View className='mt-2'>
-            {
-                categoryItems.map((item, index) => (
-                    <HouseHoldItem item={item} key={item.id_household_item} setHouseHoldItem={setHouseholdItems} index={index} />
-                ))
-            }
+        return <View className='flex-1  '>
+            <View className='mt-2  flex-row flex-wrap  mx-2  ' style={{
+                gap: 9
+            }}>
+                {
+                    categoryItems.map((item, index) => (
+                        <HouseHoldItem item={item} key={item.id_household_item} setHouseHoldItem={setHouseholdItems} index={index}
+                            navigateToHouseHoldItemDetail={navigateToHouseHoldItemDetail}
+                        />
+                    ))
+                }
+            </View>
         </View>
+    }
+
+    const navigateToHouseHoldItemDetail = (item: HouseHoldItemInterface) => {
+        navigation.navigate('HouseHoldItemDetail', {
+            id_family,
+            id_category: item.id_category,
+            id_item: item.id_household_item
+        })
     }
 
     return (
@@ -120,11 +104,13 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
 
                         }} >
                             {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
-                            <Text className='text-lg font-semibold' style={{ color: COLORS.AliceBlue }}>Add</Text>
+                            <Text className='text-lg font-semibold' style={{ color: COLORS.AuroMetalSaurus }}>Add</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
                 <HouseHoldFilterBar householdCategory={householdCategory} choosenCategoryId={choosenCategoryId} choosenCategoryIndex={choosenCategoryIndex} setChoosenCategoryId={setChoosenCategoryId} setChoosenCategoryIndex={setChoosenCategoryIndex} />
+                <View className='my-2'
+                ></View>
                 <ScrollView>
                     <View style={{ flex: 1 }}>
                         {showCategoryItems()}

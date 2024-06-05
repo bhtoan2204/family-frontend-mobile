@@ -1,11 +1,15 @@
 import React from 'react'
-import { Dimensions, TouchableOpacity, View, Text } from 'react-native'
+import { Dimensions, TouchableOpacity, View, Text, TouchableWithoutFeedback } from 'react-native'
 import RBSheet from 'react-native-raw-bottom-sheet'
 import { Picker } from '@react-native-picker/picker';
 import { ComponentScore, Subject } from 'src/interface/education/education';
-const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, setSubjectDetailData }: { bottomSheetRef: React.RefObject<RBSheet>, subjectComponentData: ComponentScore, index: number, setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>> }) => {
-    const setExpectedSheetRef = React.useRef<RBSheet>(null);
-    const setScoreSheetRef = React.useRef<RBSheet>(null);
+import { iOSColors } from 'src/constants/ios-color';
+import AutoHeightRBSheet from 'src/components/AutoHeightRBSheet/AutoHeightRBSheet';
+import PickExpectedScoreSheet from './PickExpectedScoreSheet';
+import PickScoreSheet from './PickScoreSheet';
+const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, setSubjectDetailData }: { bottomSheetRef: React.RefObject<any>, subjectComponentData: ComponentScore, index: number, setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>> }) => {
+    const setExpectedSheetRef = React.useRef<any>(null);
+    const setScoreSheetRef = React.useRef<any>(null);
     const [selectedLanguage, setSelectedLanguage] = React.useState();
     const numbers = [];
 
@@ -18,28 +22,25 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, setSubjectD
     numbers.push(10);
 
     return (
-        <RBSheet
+        <AutoHeightRBSheet
             ref={bottomSheetRef}
-            closeOnDragDown={true}
-            closeOnPressMask={true}
+            closeOnPressMask
             customStyles={{
                 container: {
                     backgroundColor: "white",
-                    height: Dimensions.get("window").height / 3 + 50,
                     borderTopLeftRadius: 20,
                     borderTopRightRadius: 20,
                 },
-                draggableIcon: {
-                    display: "none",
-                }
+                // draggableIcon: {
+                //     display: "none",
+                // }
             }}
         >
-            <View className='flex-col p-6 h-full bg-[#fafafa] justify-center'>
+            <View className='flex-col px-6 py-10 bg-[#fafafa] justify-center'>
                 <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={() => {
                     // bottomSheetRef.current?.close()
                     setExpectedSheetRef.current?.open()
                     // await handleTakePhoto()
-
                 }}>
                     <Text className='text-lg font-semibold'>Set expect score</Text>
                 </TouchableOpacity>
@@ -52,8 +53,6 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, setSubjectD
                     <Text className='text-lg font-semibold'>Set score</Text>
                 </TouchableOpacity>
                 <TouchableOpacity className='h-16 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
-                    // await handlePickImage()
-
                     if (index === -1) {
                         setSubjectDetailData((prev) => {
                             return {
@@ -96,28 +95,48 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, setSubjectD
                     }
                     bottomSheetRef.current?.close()
                 }}>
-                    <Text className='text-lg font-semibold text-red-600'>Clear data</Text>
+                    <Text className='text-lg font-semibold' style={{
+                        color: iOSColors.systemRed.defaultDark
+                    }}>Clear data</Text>
                 </TouchableOpacity>
             </View>
-            <RBSheet
+            <PickExpectedScoreSheet setExpectedSheetRef={setExpectedSheetRef} index={index} setSubjectDetailData={setSubjectDetailData} score={subjectComponentData.expected_score!} />
+            <PickScoreSheet setScoreSheetRef={setScoreSheetRef} index={index} setSubjectDetailData={setSubjectDetailData} score={subjectComponentData.score!} />
+            {/* <AutoHeightRBSheet
                 ref={setExpectedSheetRef}
-                closeOnDragDown={false}
-                // closeOnDragDown={true}
-                // closeOnPressMask={true}
                 customStyles={{
                     container: {
-                        backgroundColor: "white",
-                        height: Dimensions.get("window").height / 3 + 50,
+                        backgroundColor: "#fff",
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
                     },
-                    draggableIcon: {
-                        display: "none",
-                    }
-                }}>
+                    // draggableIcon: {
+                    //     display: "none",
+                    // }
+                }}
+            // closeOnDragDown={true}
+            // closeOnPressMask={true}
+            >
 
-                <View className='flex-col p-6 h-full bg-[#fafafa] justify-center'>
-                    <Text className='text-lg font-semibold'>Set expected score</Text>
+                <View className='flex-col p-6  bg-[#fafafa] justify-center'>
+                    <View className='flex-row items-center justify-between top-[-10] mb-8'>
+                        <TouchableWithoutFeedback onPress={() => {
+                            setExpectedSheetRef.current?.close()
+                        }} >
+                            <Text className='text-base font-semibold' style={{
+                                color: iOSColors.systemRed.defaultDark
+                            }}>Cancel</Text>
+                        </TouchableWithoutFeedback>
+                        <Text className='text-base font-semibold '>Set expected score</Text>
+                        <TouchableOpacity >
+                            <Text className='text-base font-semibold'
+                                style={{
+                                    color: iOSColors.systemBlue.defaultDark
+                                }}
+                            >Save</Text>
+                        </TouchableOpacity>
+                    </View>
+
                     <Picker
                         selectedValue={subjectComponentData.expected_score}
                         onValueChange={(itemValue) =>
@@ -171,26 +190,41 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, setSubjectD
                         }
                     </Picker>
                 </View>
-            </RBSheet>
-            <RBSheet
+            </AutoHeightRBSheet> */}
+            {/* <AutoHeightRBSheet
                 ref={setScoreSheetRef}
-                closeOnDragDown={false}
                 // closeOnDragDown={true}
                 // closeOnPressMask={true}
                 customStyles={{
                     container: {
                         backgroundColor: "white",
-                        height: Dimensions.get("window").height / 3 + 50,
+                        // height: Dimensions.get("window").height / 3 + 50,
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
                     },
-                    draggableIcon: {
-                        display: "none",
-                    }
+                    // draggableIcon: {
+                    //     display: "none",
+                    // }
                 }}>
 
-                <View className='flex-col p-6 h-full bg-[#fafafa] justify-center'>
-                    <Text className='text-lg font-semibold'>Set  score</Text>
+                <View className='flex-col p-6  bg-[#fafafa] justify-center'>
+                    <View className='flex-row items-center justify-between top-[-10] mb-8'>
+                        <TouchableWithoutFeedback onPress={() => {
+                            setScoreSheetRef.current?.close()
+                        }} >
+                            <Text className='text-base font-semibold' style={{
+                                color: iOSColors.systemRed.defaultDark
+                            }}>Cancel</Text>
+                        </TouchableWithoutFeedback>
+                        <Text className='text-base font-semibold '>Set score</Text>
+                        <TouchableOpacity >
+                            <Text className='text-base font-semibold'
+                                style={{
+                                    color: iOSColors.systemBlue.defaultDark
+                                }}
+                            >Save</Text>
+                        </TouchableOpacity>
+                    </View>
                     <Picker
                         selectedValue={subjectComponentData.score}
                         onValueChange={(itemValue) => {
@@ -242,8 +276,8 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, setSubjectD
                         }
                     </Picker>
                 </View>
-            </RBSheet>
-        </RBSheet>
+            </AutoHeightRBSheet> */}
+        </AutoHeightRBSheet>
     )
 }
 

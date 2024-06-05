@@ -194,11 +194,12 @@ export type FamilyStackParamList = {
     id_family: number | undefined;
     id_category: number;
   };
-  HouseHoldCategoryDetail: {
+  HouseHoldItemDetail: {
     id_family: number | undefined;
     id_category: number;
     id_item: number;
   };
+
   CheckList: {
     id_family: number | undefined;
   };
@@ -257,7 +258,7 @@ type EventListScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export interface EventListScreenProps {
-  navigation: EventListScreenNavigationProp ;
+  navigation: EventListScreenNavigationProp;
   route: RouteProp<CalendarStackParamList, 'EventListScreen'>;
 }
 type ScheduleScreenNavigationProp = NativeStackNavigationProp<
@@ -419,9 +420,9 @@ type HouseHoldCategoryNavigationProp = NativeStackNavigationProp<
   'HouseHoldCategory'
 >;
 
-type HouseHoldCategoryDetailNavigationProp = NativeStackNavigationProp<
+type HouseHoldItemDetailNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
-  'HouseHoldCategoryDetail'
+  'HouseHoldItemDetail'
 >;
 
 type CheckListNavigationProp = NativeStackNavigationProp<
@@ -458,14 +459,14 @@ export interface HouseHoldScreenProps {
   route: RouteProp<FamilyStackParamList, 'HouseHold'>;
 }
 
-export interface HouseHoldCategoryScreenProps {
+export interface HouseHoldItemScreenProps {
   navigation: HouseHoldCategoryNavigationProp;
   route: RouteProp<FamilyStackParamList, 'HouseHoldCategory'>;
 }
 
-export interface HouseHoldCategoryDetailScreenProps {
-  navigation: HouseHoldCategoryDetailNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'HouseHoldCategoryDetail'>;
+export interface HouseHoldItemDetailScreenProps {
+  navigation: HouseHoldItemDetailNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'HouseHoldItemDetail'>;
 }
 
 export interface SubjectDetailScreenProps {

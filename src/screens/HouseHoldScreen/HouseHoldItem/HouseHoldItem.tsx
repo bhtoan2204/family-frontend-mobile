@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Alert } from 'react-native'
+import { View, Text, Alert, Image, StyleSheet } from 'react-native'
 import { Swipeable, TouchableOpacity } from 'react-native-gesture-handler'
 import ImageComponent from 'src/components/Image/Image'
 import { COLORS } from 'src/constants'
@@ -7,8 +7,10 @@ import FamilyImage from 'src/assets/images/household.png'
 import RBSheet from 'react-native-raw-bottom-sheet'
 import EditHouseHoldItemSheet from '../AddHouseHoldItemSheet/EditHouseHoldItemSheet'
 import Icon from 'react-native-vector-icons/Ionicons';
+import { iOSGrayColors } from 'src/constants/ios-color'
+import Svg, { Rect, Mask, G } from 'react-native-svg';
 
-const HouseHoldItem = ({ item, setHouseHoldItem, index }: { item: HouseHoldItemInterface, setHouseHoldItem: React.Dispatch<React.SetStateAction<HouseHoldItemInterface[]>>, index: number }) => {
+const HouseHoldItem = ({ item, setHouseHoldItem, index, navigateToHouseHoldItemDetail }: { item: HouseHoldItemInterface, setHouseHoldItem: React.Dispatch<React.SetStateAction<HouseHoldItemInterface[]>>, index: number, navigateToHouseHoldItemDetail: (item: HouseHoldItemInterface) => void }) => {
     const editSheetRef = React.useRef<any>(null);
     const handleDelete = () => {
         console.log("Deleting item with id:", item.id_household_item);
@@ -28,7 +30,7 @@ const HouseHoldItem = ({ item, setHouseHoldItem, index }: { item: HouseHoldItemI
         ])
     }
     const renderLeftActions = () => (
-        <TouchableOpacity onPress={handleDelete} style={{ backgroundColor: '#EF3B4F', width: "auto" }} className='h-full flex-row items-center py-4 px-2  my-2 ' >
+        <TouchableOpacity onPress={handleDelete} style={{ backgroundColor: '#EF3B4F', width: "auto" }} className='h-full flex-row items-center py-4 px-2 mb-2' >
             <View className='flex-row items-center '>
                 <Icon name="trash" size={20} color={"white"} style={{ marginHorizontal: 4 }} />
                 <Text style={{ color: 'white', fontWeight: 'bold' }}>Delete</Text>
@@ -36,29 +38,57 @@ const HouseHoldItem = ({ item, setHouseHoldItem, index }: { item: HouseHoldItemI
         </TouchableOpacity>
     );
     return (
-        <View className=''>
-            <Swipeable
-                renderRightActions={renderLeftActions}
-                overshootRight={false}
+        // <View className=''>
+        //     <Swipeable
+        //         renderRightActions={renderLeftActions}
+        //         overshootRight={false}
 
-            >
-                <TouchableOpacity key={item.id_household_item} onPress={() => {
-                    editSheetRef.current?.open()
-                }} className='bg-white my-2'>
+        //     >
+        //         <TouchableOpacity key={item.id_household_item} onPress={() => {
+        //             // editSheetRef.current?.open()
+        //             navigateToHouseHoldItemDetail(item)
 
-                    <View className='m-4  flex-row items-center'>
-                        <ImageComponent imageUrl={item.item_imageurl || ""} style={{ width: 70, height: 70 }} defaultImage={FamilyImage} className='rounded-lg ' />
-                        <View className='flex-1 ml-4'>
-                            <Text className='font-semibold text-lg' style={{ color: COLORS.AuroMetalSaurus }}>{item.item_name}</Text>
-                            <Text className='text-base text-gray-500' >{item.item_description}</Text>
-                        </View>
-                    </View>
-                    <EditHouseHoldItemSheet refRBSheet={editSheetRef} item={item} id_category={item.id_category} id_family={item.id_family} setHouseHoldItem={setHouseHoldItem} index={index} />
-                </TouchableOpacity>
-            </Swipeable>
-        </View>
+        //         }} className='bg-white mb-2'>
+
+        //             <View className='m-4 flex-row items-center '>
+        //                 <ImageComponent imageUrl={item.item_imageurl || ""} style={{ width: 70, height: 70 }} defaultImage={FamilyImage} className='rounded-lg ' />
+        //                 <View className='flex-1 ml-4'>
+        //                     <Text className='font-semibold text-lg' style={{ color: COLORS.AuroMetalSaurus }}>{item.item_name}</Text>
+        //                     <Text className='text-base text-gray-500' >{item.item_description}</Text>
+        //                 </View>
+        //             </View>
+        //             <EditHouseHoldItemSheet refRBSheet={editSheetRef} item={item} id_category={item.id_category} id_family={item.id_family} setHouseHoldItem={setHouseHoldItem} index={index} />
+        //         </TouchableOpacity>
+        //     </Swipeable>
+        // </View>
+        <TouchableOpacity className='basis-[31%] rounded-md  justify-center items-center bg-white shadow-lg border-[1px] border-gray-200' style={{
+            width: 125, height: 'auto',
+            overflow: 'hidden'
+
+        }} onPress={() => {
+            navigateToHouseHoldItemDetail(item)
+        }}>
+            <View className=''>
+                <ImageComponent imageUrl={item.item_imageurl || ""} style={{ width: 125, height: 130, }} defaultImage={FamilyImage} resizeMode='cover' />
+
+            </View>
+            <View className='absolute  bottom-0 w-full' style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                <Text className='py-1 pl-3 font-bold text-start text-white '>{item.item_name}</Text>
+            </View>
+            {/* <Svg height="25%" width="100%" style={styles.blurOverlay}>
+                <Mask id="mask" x="0" y="0" width="100%" height="100%">
+                    <Rect x="0" y="0" width="100%" height="75%" fill="white" />
+                    <Rect x="0" y="75%" width="100%" height="25%" fill="black" />
+                </Mask>
+                <G mask="url(#mask)">
+                    <ImageComponent imageUrl={item.item_imageurl || ""} style={styles.image} defaultImage={FamilyImage} className='' resizeMode='cover' blurRadius={10} />
+                </G>
+            </Svg> */}
+
+        </TouchableOpacity>
 
     )
 }
+
 
 export default HouseHoldItem

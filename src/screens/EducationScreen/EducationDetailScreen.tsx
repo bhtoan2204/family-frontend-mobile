@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native'
 import { EducationDetailScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants';
@@ -42,49 +42,51 @@ const data = {
 const EducationDetailScreen: React.FC<EducationDetailScreenProps> = ({ navigation, route }) => {
     const { id_education_progress, id_family } = route.params
     const [educationDetailData, setEducationDetailData] = React.useState<EducationDetail>(data.data[0])
-    const refRBSheet = React.useRef<RBSheet>(null);
+    const refRBSheet = React.useRef<any>(null);
     return (
-        <View className="flex-1 bg-[#F7F7F7]">
-            <View className='w-full  flex-row justify-between items-center py-3 bg-white'>
-                <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
-                    <Material name="chevron-left" size={30} style={{ color: COLORS.primary, fontWeight: "bold" }} />
-                    <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Back</Text>
-                </TouchableOpacity>
-                <View className='mr-3'>
-                    <TouchableOpacity onPress={() => {
-                        refRBSheet.current?.open()
-                    }} >
-                        {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
-                        <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Add</Text>
+        <SafeAreaView className="flex-1 bg-[#F7F7F7]">
+            <View className="flex-1 bg-[#F7F7F7]">
+                <View className='w-full  flex-row justify-between items-center py-3 bg-white'>
+                    <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
+                        <Material name="chevron-left" size={30} style={{ color: COLORS.AuroMetalSaurus, fontWeight: "bold" }} />
+                        <Text className='text-lg font-semibold' style={{ color: COLORS.AuroMetalSaurus }}>Back</Text>
                     </TouchableOpacity>
+                    <View className='mr-3'>
+                        <TouchableOpacity onPress={() => {
+                            refRBSheet.current?.open()
+                        }} >
+                            {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
+                            <Text className='text-lg font-semibold' style={{ color: COLORS.AuroMetalSaurus }}>Add</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
+                <ScrollView className=' '>
+                    {
+                        educationDetailData && educationDetailData.subjects_info.map((item: any, index: number) => {
+                            return (
+                                <React.Fragment key={index}>
+                                    <CourseItem data={item} onPress={() => {
+                                        navigation.navigate('SubjectDetail', {
+                                            id_education_progress,
+                                            id_family,
+                                            id_subject: item.id_subject
+                                        })
+                                    }} />
+                                </React.Fragment>
+                            )
+                        })
+                    }
+
+                </ScrollView>
+
+                <AddSubjectSheet refRBSheet={refRBSheet}
+                    id_education_progress={id_education_progress}
+                    id_family={id_family!}
+                    setEducationDetailData={setEducationDetailData}
+                />
+
             </View>
-            <ScrollView className=' '>
-                {
-                    educationDetailData && educationDetailData.subjects_info.map((item: any, index: number) => {
-                        return (
-                            <React.Fragment key={index}>
-                                <CourseItem data={item} onPress={() => {
-                                    navigation.navigate('SubjectDetail', {
-                                        id_education_progress,
-                                        id_family,
-                                        id_subject: item.id_subject
-                                    })
-                                }} />
-                            </React.Fragment>
-                        )
-                    })
-                }
-
-            </ScrollView>
-
-            <AddSubjectSheet refRBSheet={refRBSheet}
-                id_education_progress={id_education_progress}
-                id_family={id_family!}
-                setEducationDetailData={setEducationDetailData}
-            />
-
-        </View>
+        </SafeAreaView>
 
     )
 }

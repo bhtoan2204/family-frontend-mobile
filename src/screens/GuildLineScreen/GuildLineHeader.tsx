@@ -76,7 +76,7 @@ const GuildLineHeader = ({
                                 handleSaveEdit()
                             }
                         }}>
-                            <Text className=' text-lg ' style={{ color: COLORS.AuroMetalSaurus }}>Save</Text>
+                            <Text className=' text-lg ' style={{ color: iOSColors.systemBlue.accessibleLight }}>Save</Text>
                         </TouchableOpacity>
 
                         : <View className='flex-row items-center'>
@@ -85,7 +85,9 @@ const GuildLineHeader = ({
                                     <Material name="dots-horizontal" size={24} style={{ color: COLORS.AuroMetalSaurus, fontWeight: "bold" }} className='font-semibold' />
                                 </MenuTrigger>
                                 <MenuOptions customStyles={optionsStyles} >
-                                    <MenuOption onSelect={() => alert(`Add`)} >
+                                    <MenuOption onSelect={() => {
+                                        handleIsAddingStep()
+                                    }} >
 
                                         <View className='flex-row items-center justify-between'>
                                             <Text className='text-base' style={{ color: iOSGrayColors.systemGray.defaultLight }}>Add</Text>
@@ -93,7 +95,9 @@ const GuildLineHeader = ({
                                         </View>
                                     </MenuOption>
                                     <Divider />
-                                    <MenuOption onSelect={() => alert(`Add`)} >
+                                    <MenuOption onSelect={() => {
+                                        setIsEditing(true)
+                                    }} >
 
                                         <View className='flex-row items-center justify-between'>
                                             <Text className='text-base' style={{ color: iOSGrayColors.systemGray.defaultLight }}>Update</Text>

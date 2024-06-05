@@ -9,7 +9,11 @@ import { connectSocket } from 'src/services/apiclient/Socket';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { MenuProvider } from 'react-native-popup-menu';
-
+import {
+  BottomSheetModal,
+  BottomSheetView,
+  BottomSheetModalProvider,
+} from '@gorhom/bottom-sheet';
 const App: React.FC = () => {
   useEffect(() => {
     connectSocket();
@@ -22,7 +26,10 @@ const App: React.FC = () => {
           <PaperProvider>
             <ActionSheetProvider>
               <MenuProvider>
-                <NavigationContainer />
+                <BottomSheetModalProvider>
+
+                  <NavigationContainer />
+                </BottomSheetModalProvider>
               </MenuProvider>
             </ActionSheetProvider>
           </PaperProvider>

@@ -35,7 +35,10 @@ const AddGuildLineSheet = ({ refRBSheet, setGuidelines }: { refRBSheet: React.Re
                     display: "none",
                 },
                 container: {
-                    height: 'auto'
+                    height: 'auto',
+                    borderTopLeftRadius: 15,
+                    borderTopRightRadius: 15,
+
                 }
             }}
         >

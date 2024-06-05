@@ -32,3 +32,38 @@ export const household_category_dat = [
     category_name: 'Outdoor and Garden',
   },
 ];
+
+export const category_colors = [
+  {
+    background_color: '#7ac3a2', // Màu xanh lá cây
+    border_color: '#ff7f0e', // Màu cam
+  },
+  {
+    background_color: '#a09e8c', // Màu xám
+    border_color: '#8c564b', // Màu nâu
+  },
+  {
+    background_color: '#f4bbca', // Màu hồng nhạt
+    border_color: '#a55194', // Màu tím nhạt
+  },
+  {
+    background_color: '#add8e6', // Màu xanh dương
+    border_color: '#4682b4', // Màu xanh dương
+  },
+  {
+    background_color: '#4682b4', // Màu xanh đậm
+    border_color: '#ff6347', // Màu đỏ gạch
+  },
+  {
+    background_color: '#808080', // Màu xám
+    border_color: '#8b4513', // Màu nâu
+  },
+  {
+    background_color: '#6c5b7b', // Màu xanh lam
+    border_color: '#ffb6c1', // Màu hồng nhạt
+  },
+  {
+    background_color: '#7ac3a2', // Màu xanh lá cây
+    border_color: '#8b4513', // Màu nâu đất
+  },
+];

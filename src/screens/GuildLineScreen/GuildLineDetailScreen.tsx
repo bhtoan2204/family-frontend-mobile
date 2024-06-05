@@ -217,46 +217,7 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
     return (
         <SafeAreaView className='flex-1'>
             <View className='flex-1 bg-[#fff] items-center '>
-                {/* <View className='w-full  flex-row justify-between items-center py-3 z-10 bg-white' >
-                    {
-                        isAdding || isEditing ?
-                            <TouchableOpacity
-                                onPress={() => {
-                                    if (isAdding) {
-                                        handleCancelAddStep()
-                                    } else {
-                                        handleCancelEdit()
-                                    }
-                                }}
-                            ><Text className='text-red-600 text-lg ml-3'>Cancel</Text>
-                            </TouchableOpacity>
-                            : <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
-                                <Material name="chevron-left" size={30} style={{ color: COLORS.AuroMetalSaurus, fontWeight: "bold" }} />
-                                <Text className='text-lg font-semibold' style={{ color: COLORS.AuroMetalSaurus }}>Back</Text>
-                            </TouchableOpacity>
-                    }
-                    <View className='mr-3'>
-                        {
-                            isAdding || isEditing
-                                ? <TouchableOpacity onPress={() => {
-                                    if (isAdding) {
-                                        handleSaveAddStep()
-                                    }
-                                    else {
-                                        handleSaveEdit()
-                                    }
-                                }}>
-                                    <Text className=' text-lg ' style={{ color: COLORS.AuroMetalSaurus }}>Save</Text>
-                                </TouchableOpacity>
 
-                                : <TouchableOpacity onPress={() => {
-                                    handleIsAddingStep()
-                                }}>
-                                    <Material name="plus" size={24} style={{ color: COLORS.AuroMetalSaurus, fontWeight: "bold" }} className='font-semibold' />
-                                </TouchableOpacity>
-                        }
-                    </View>
-                </View> */}
                 <GuildLineHeader
                     isAdding={isAdding}
                     isEditing={isEditing}

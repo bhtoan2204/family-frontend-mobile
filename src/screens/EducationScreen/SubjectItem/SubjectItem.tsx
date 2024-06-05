@@ -12,7 +12,7 @@ const SubjectItem = ({ isGraded, subjectComponentData, setSubjectDetailData, ind
     // const [expected, setExpected] = React.useState<number | null>(subjectComponentData.expected_score)
     // const [score, setScore] = React.useState<number | null>(subjectComponentData.score)
 
-    const bottomSheetRef = React.useRef<RBSheet>(null)
+    const bottomSheetRef = React.useRef<any>(null)
     React.useEffect(() => {
         if (subjectComponentData.score !== null) setIsGradded(true)
         else setIsGradded(false)
@@ -28,9 +28,9 @@ const SubjectItem = ({ isGraded, subjectComponentData, setSubjectDetailData, ind
             <View className=' w-36 items-center border-l-[1px] border-gray-200 py-6 px-5 bg-[#f8f7fd]'>
                 {
                     isGradded ?
-                        <><Text className='  text-base opacity-40' style={{ color: COLORS.primary }}>score</Text><Text className=' text-[#918D92] text-xl mt-1 opacity-40'>{subjectComponentData.score} / 10</Text></>
+                        <><Text className='  text-base opacity-40' style={{ color: COLORS.AuroMetalSaurus }}>score</Text><Text className=' text-[#918D92] text-xl mt-1 opacity-40'>{subjectComponentData.score} / 10</Text></>
                         :
-                        <><Text className='  text-base' style={{ color: COLORS.primary }}>need</Text><Text className='  text-xl mt-1'>{subjectComponentData.expected_score || 0}</Text></>
+                        <><Text className='  text-base' style={{ color: COLORS.AuroMetalSaurus }}>need</Text><Text className='  text-xl mt-1'>{subjectComponentData.expected_score || 0}</Text></>
                 }
 
             </View>

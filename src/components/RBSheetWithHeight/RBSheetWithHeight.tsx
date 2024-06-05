@@ -36,8 +36,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         width: '100%',
         overflow: 'hidden',
-        // borderTopLeftRadius: 20,
-        // borderTopRightRadius: 20
+        height: Dimensions.get('window').height * 0.5,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20
     }
 })
 

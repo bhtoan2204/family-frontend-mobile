@@ -8,9 +8,13 @@ interface ImageProps {
     defaultImage: ImageSourcePropType;
     style?: ImageStyle;
     className?: ImagePropsBase['className'];
+    resizeMode?: ImagePropsBase['resizeMode'];
+    resizeMethod?: ImagePropsBase['resizeMethod'];
+    blurRadius?: number;
+
 }
 
-const ImageComponent: React.FC<ImageProps> = ({ imageUrl, defaultImage, style, className }) => {
+const ImageComponent: React.FC<ImageProps> = ({ imageUrl, defaultImage, style, className, resizeMethod, resizeMode, blurRadius }) => {
     const [loading, setLoading] = React.useState(true);
     const [isValid, setIsValid] = React.useState<boolean | null>(null);
 
@@ -30,11 +34,11 @@ const ImageComponent: React.FC<ImageProps> = ({ imageUrl, defaultImage, style, c
 
     if (loading || isValid === false) {
         return <Image source={defaultImage} style={style}
-            className={className}
+            className={className} resizeMode={resizeMode} resizeMethod={resizeMethod} blurRadius={blurRadius}
         />;
     }
 
-    return <Image source={{ uri: imageUrl }} style={style} />;
+    return <Image source={{ uri: imageUrl }} style={style} resizeMode={resizeMode} resizeMethod={resizeMethod} blurRadius={blurRadius} />;
 }
 
 export default ImageComponent
