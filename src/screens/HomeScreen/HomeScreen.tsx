@@ -404,7 +404,7 @@ const HomeScreen = ({
                       }}>
                       <Image
                         source={icons[item.icon]}
-                        style={{width: '80%', height: '80%', borderRadius: 10}}
+                        style={{width: '75%', height: '75%'}}
                       />
                     </TouchableOpacity>
                     <Text

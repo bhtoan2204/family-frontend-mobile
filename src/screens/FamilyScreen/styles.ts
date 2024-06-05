@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   backButton: {
-    color: COLORS.black,
+    color: COLORS.white,
     padding: 10,
   },
   title: {
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginVertical: 0,
     marginHorizontal: 10,
-    shadowColor: COLORS.Blue,
+    //shadowColor: COLORS.Blue,
     shadowOffset: {
       width: 20,
       height: 1,

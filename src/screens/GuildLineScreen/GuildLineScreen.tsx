@@ -1,61 +1,72 @@
-import React, { useEffect } from 'react'
-import { View, Text, TouchableOpacity, Image, ActivityIndicator, FlatList, TextInput, Dimensions } from 'react-native'
-import { Guildline } from 'src/interface/guideline/guideline'
-import { GuildLineScreenProps } from 'src/navigation/NavigationTypes'
-import GuildLineService from 'src/services/apiclient/GuildLineService'
+import React, {useEffect} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+  FlatList,
+  TextInput,
+  Dimensions,
+  SafeAreaView,
+} from 'react-native';
+import {Guildline} from 'src/interface/guideline/guideline';
+import {GuildLineScreenProps} from 'src/navigation/NavigationTypes';
+import GuildLineService from 'src/services/apiclient/GuildLineService';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import { COLORS } from 'src/constants'
+import {COLORS} from 'src/constants';
 
-import RBSheet from 'react-native-raw-bottom-sheet'
-import AddGuildLineSheet from './AddGuildLineSheet/AddGuildLineSheet'
+import RBSheet from 'react-native-raw-bottom-sheet';
+import AddGuildLineSheet from './AddGuildLineSheet/AddGuildLineSheet';
 
-import GuildlineItem from './GuildlineItem/GuildlineItem'
+import GuildlineItem from './GuildlineItem/GuildlineItem';
 // id_item: number;
 //   name: string;
 //   description: string;
 //   created_at: string;
 //   updated_at: string;
 const guildLineData: Guildline = {
-    id_item: 1,
-    name: 'Shared guideline',
-    description: 'This is the shared guideline',
-    created_at: '2024-04-30T08:59:03.177Z',
-    updated_at: '2024-04-30T08:59:03.177Z'
-}
+  id_item: 1,
+  name: 'Shared guideline',
+  description: 'This is the shared guideline',
+  created_at: '2024-04-30T08:59:03.177Z',
+  updated_at: '2024-04-30T08:59:03.177Z',
+};
 
-const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) => {
-    const { id_family } = route.params
-    const [guidelines, setGuidelines] = React.useState<Guildline[]>([]);
-    const [loading, setLoading] = React.useState(true);
-    const refRBSheet = React.useRef<RBSheet>(null);
+const GuildLineScreen: React.FC<GuildLineScreenProps> = ({
+  navigation,
+  route,
+}) => {
+  const {id_family} = route.params;
+  const [guidelines, setGuidelines] = React.useState<Guildline[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const refRBSheet = React.useRef<RBSheet>(null);
 
+  useEffect(() => {
+    const fetchGuidelines = async () => {
+      try {
+        const response = await GuildLineService.getAllGuideLine(id_family!); // API call to fetch all guidelines
+        if (response) {
+          setGuidelines(response);
+        } else {
+          setGuidelines([]);
+        }
+        // setGuidelines(response);
+        setLoading(false);
 
-    useEffect(() => {
-        const fetchGuidelines = async () => {
-            try {
-                const response = await GuildLineService.getAllGuideLine(id_family!); // API call to fetch all guidelines
-                if (response) {
-                    setGuidelines(response);
-                }
-                else {
-                    setGuidelines([]);
-                }
-                // setGuidelines(response);
-                setLoading(false);
+        console.log('Guidelines:', response);
+      } catch (error) {
+        console.error('Error fetching guidelines:', error);
+        setLoading(false);
+      }
+    };
+    fetchGuidelines();
+  }, []);
 
-                console.log('Guidelines:', response)
-            } catch (error) {
-                console.error('Error fetching guidelines:', error);
-                setLoading(false);
-            }
-        };
-        fetchGuidelines();
-    }, []);
-
-    const renderItem = ({ item }: { item: any }) => (
-        <>
-            {/* <Swipeable
+  const renderItem = ({item}: {item: any}) => (
+    <>
+      {/* <Swipeable
 
             >
                 <TouchableOpacity
@@ -78,45 +89,81 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
 
                 </TouchableOpacity>
             </Swipeable> */}
-            <GuildlineItem item={item} onPress={() => {
-                navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_item })
-            }} />
-        </>
-    );
+      <GuildlineItem
+        item={item}
+        onPress={() => {
+          navigation.navigate('GuildLineDetail', {
+            id_family: id_family,
+            id_item: item.id_item,
+          });
+        }}
+      />
+    </>
+  );
 
-    if (loading) {
-        return <ActivityIndicator style={{ flex: 1, justifyContent: 'center' }} size="small" />;
-    }
-
+  if (loading) {
     return (
-        <View className="flex-1 bg-[#F7F7F7]">
-            <View className='w-full  flex-row justify-between items-center py-3 bg-white'>
-                <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
-                    <Material name="chevron-left" size={30} style={{ color: COLORS.primary, fontWeight: "bold" }} />
-                    <Text className='text-lg font-semibold text-gray-600' style={{ color: COLORS.primary }}>Back</Text>
-                </TouchableOpacity>
-                <View className='mr-3'>
-                    <TouchableOpacity onPress={() => {
-                        refRBSheet.current?.open()
+      <ActivityIndicator
+        style={{flex: 1, justifyContent: 'center'}}
+        size="small"
+      />
+    );
+  }
 
-                    }} >
-                        {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
-                        <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Add</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <FlatList
-                data={guidelines}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id_item.toString()}
-                className='pt-2'
+  return (
+    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+      <View className="flex-1 bg-[#F7F7F7]">
+        <View className="w-full  flex-row justify-between items-center py-3 bg-white">
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            className=" flex-row items-center">
+            <Material
+              name="chevron-left"
+              size={30}
+              style={{color: COLORS.primary, fontWeight: 'bold'}}
             />
-            <GuildlineItem item={guildLineData} onPress={() => {
-                navigation.navigate('SharedGuildLine', { id_family: id_family, id_item: guildLineData.id_item })
-            }} />
-            <AddGuildLineSheet refRBSheet={refRBSheet} setGuidelines={setGuidelines} />
+            <Text
+              className="text-lg font-semibold text-gray-600"
+              style={{color: COLORS.primary}}>
+              Back
+            </Text>
+          </TouchableOpacity>
+          <View className="mr-3">
+            <TouchableOpacity
+              onPress={() => {
+                refRBSheet.current?.open();
+              }}>
+              {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
+              <Text
+                className="text-lg font-semibold"
+                style={{color: COLORS.primary}}>
+                Add
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-    )
-}
+        <FlatList
+          data={guidelines}
+          renderItem={renderItem}
+          keyExtractor={item => item.id_item.toString()}
+          className="pt-2"
+        />
+        <GuildlineItem
+          item={guildLineData}
+          onPress={() => {
+            navigation.navigate('SharedGuildLine', {
+              id_family: id_family,
+              id_item: guildLineData.id_item,
+            });
+          }}
+        />
+        <AddGuildLineSheet
+          refRBSheet={refRBSheet}
+          setGuidelines={setGuidelines}
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
 
-export default GuildLineScreen
+export default GuildLineScreen;

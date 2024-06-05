@@ -295,6 +295,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                       title={TEXTS.LOGIN}
                       filled
                       onPress={handleSubmit}
+                      backgroundImage={require('../../assets/images/button.png')}
                     />
                   </View>
                 )}
