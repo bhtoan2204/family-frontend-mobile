@@ -10,6 +10,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     backgroundColor: '#ffffff',
+    justifyContent: 'space-between',
+
   },
   headerText: {
     marginLeft: 10,

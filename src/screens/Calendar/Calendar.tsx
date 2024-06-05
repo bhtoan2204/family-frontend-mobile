@@ -224,6 +224,10 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="chevron-back" size={30} color="black" />
           </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => pressSchedule()}>
+                    <Icon name="list" size={20} color="black" />
+                </TouchableOpacity>
         </View>
         <View
           style={{
