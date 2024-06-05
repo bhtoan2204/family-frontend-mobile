@@ -248,20 +248,26 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={24} style={styles.backButton} />
-        </TouchableOpacity>
+       
         <View style={styles.receiverInfo}>
-          {receiver && (
-            <>
-              <Image source={{ uri: receiver.avatar }} style={styles.avatar} />
-              <Text>{receiver.firstname} {receiver.lastname}</Text>
-            </>
-          )}
-        </View>
-        <TouchableOpacity onPress={() => handleVideoCall(receiverId)}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}> 
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Icon name="arrow-back" size={24} style={styles.backButton} />
+            </TouchableOpacity>
+            {receiver && (
+              <>
+              <View style={{    flexDirection: 'row',alignItems: 'center',}}> 
+                <Image source={{ uri: receiver.avatar }} style={styles.avatar} />
+                <Text style={styles.avatarText}> {receiver.firstname} {receiver.lastname}</Text>
+              </View>
+              </>
+            )}
+          </View>
+           <TouchableOpacity onPress={() => handleVideoCall(receiverId)}>
           <Icon name="videocam" size={36} style={styles.videoCallButton} />
         </TouchableOpacity>
+        </View>
+       
       </View>
       <FlatList
         key={refreshFlatList ? 'refresh' : 'no-refresh'}

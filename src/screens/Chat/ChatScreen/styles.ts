@@ -4,7 +4,7 @@ import {COLORS} from 'src/constants';
 const styles = StyleSheet.create({
   messagesContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
   },
   contentContainer: {
     flexGrow: 1,
@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
     borderTopWidth: 1,
     borderTopColor: '#ccc',
     backgroundColor: '#fff',
@@ -55,31 +55,34 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 40,
-    paddingHorizontal: 8,
+    paddingHorizontal: 15,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 20,
     marginRight: 8,
   },
   avatar: {
-    width: 60,
-    height: 60,
+    width: 40,
+    height: 40,
     borderRadius: 30,
-    //arginRight: 10,
-  },
+    marginLeft: 10,
+  }, 
+
   header: {
     backgroundColor: COLORS.white,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
     borderBottomWidth: 2,
     borderBottomColor: '#ccc',
+    padding: 15,
   },
   receiverInfo: {
     backgroundColor: COLORS.white,
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 30,
+    flexDirection: 'row',
   },
   messageContentContainer: {
     flexDirection: 'row',
@@ -107,7 +110,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   avatarText: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold'
   },
   modalContainer: {
