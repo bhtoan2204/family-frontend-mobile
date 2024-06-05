@@ -23,6 +23,7 @@ interface GuildLineHeaderProps {
     handleSaveEdit: () => void;
     navigationBack: () => void;
     handleIsAddingStep: () => void;
+    handleShareGuideline: () => Promise<void>
     bottomSheetRef: React.RefObject<any>;
 }
 
@@ -43,6 +44,7 @@ const GuildLineHeader = ({
     handleSaveEdit,
     navigationBack,
     handleIsAddingStep,
+    handleShareGuideline,
     bottomSheetRef
 }: GuildLineHeaderProps
 ) => {
@@ -105,11 +107,21 @@ const GuildLineHeader = ({
                                         </View>
                                     </MenuOption>
                                     <Divider />
-                                    <MenuOption onSelect={() => alert(`Add`)} >
+                                    <MenuOption onSelect={async () => {
+                                        await handleShareGuideline()
+                                    }} >
 
                                         <View className='flex-row items-center justify-between'>
                                             <Text className='text-base ' style={{ color: iOSColors.systemBlue.defaultLight }}>Share</Text>
                                             <Material name="share-all-outline" size={20} style={{ color: iOSColors.systemBlue.defaultLight, fontWeight: "bold" }} className='font-semibold' />
+                                        </View>
+                                    </MenuOption>
+                                    <Divider />
+                                    <MenuOption onSelect={() => alert(`Add`)} >
+
+                                        <View className='flex-row items-center justify-between'>
+                                            <Text className='text-base ' style={{ color: iOSColors.systemRed.defaultLight }}>Delete this step</Text>
+                                            <Material name="debug-step-over" size={20} style={{ color: iOSColors.systemRed.defaultLight, fontWeight: "bold" }} className='font-semibold' />
                                         </View>
                                     </MenuOption>
                                     <Divider />

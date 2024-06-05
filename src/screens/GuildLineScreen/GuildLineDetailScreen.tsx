@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Animated, SafeAreaView, TouchableOpacity, ScrollView, Image, StyleSheet, ActivityIndicator, Dimensions, TextInput, KeyboardAvoidingView, Platform } from 'react-native'
+import { View, Text, Animated, SafeAreaView, TouchableOpacity, ScrollView, Image, StyleSheet, ActivityIndicator, Dimensions, TextInput, KeyboardAvoidingView, Platform, Share } from 'react-native'
 import { COLORS } from 'src/constants';
 import Img from 'src/assets/images/guildline.png';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -214,6 +214,25 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
         }
     }
 
+    const handleShareGuideline = async () => {
+        try {
+            const result = await Share.share({
+                message: 'Check out this guideline!',
+                url: 'https://example.com',
+                title: 'Guideline'
+
+            })
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                } else {
+                }
+            } else if (result.action === Share.dismissedAction) {
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <SafeAreaView className='flex-1'>
             <View className='flex-1 bg-[#fff] items-center '>
@@ -224,7 +243,9 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
                     setIsEditing={setIsEditing}
                     handleCancelAddStep={handleCancelAddStep} handleCancelEdit={handleCancelEdit}
                     handleSaveAddStep={handleSaveAddStep} handleSaveEdit={handleSaveEdit}
-                    navigationBack={() => navigation.goBack()} handleIsAddingStep={handleIsAddingStep} bottomSheetRef={bottomSheetRef} />
+                    navigationBack={() => navigation.goBack()} handleIsAddingStep={handleIsAddingStep}
+                    handleShareGuideline={handleShareGuideline}
+                    bottomSheetRef={bottomSheetRef} />
                 <KeyboardAvoidingView className=' h-full flex flex-col items-center mt-3  ' behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
                     {
                         guildLineSteps && <>

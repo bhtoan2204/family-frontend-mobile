@@ -55,14 +55,6 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
         fetchGuidelines();
     }, []);
 
-    const renderItem = ({ item }: { item: any }) => (
-        <>
-            <GuildlineItem item={item} onPress={() => {
-                navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_item })
-            }} />
-        </>
-    );
-
     if (loading) {
         return <ActivityIndicator style={{ flex: 1, justifyContent: 'center' }} size="small" />;
     }
@@ -85,13 +77,6 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                         </TouchableOpacity>
                     </View>
                 </View>
-
-                {/* <FlatList
-                    data={guidelines}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id_item.toString()}
-                    className='pt-2'
-                /> */}
                 <ScrollView className='pt-2' showsVerticalScrollIndicator={false}>
                     <View className='flex-row px-3 py-2'>
                         <TouchableOpacity className='flex-1 py-3 items-center justify-center ' style={{
@@ -118,7 +103,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                             }}>Shared guidelines</Text>
                         </TouchableOpacity>
                     </View>
-                    <Animatable.View animation={tab == 0 ? 'bounceInLeft' : 'bounceInRight'} key={tab} duration={700} className='' style={{
+                    <Animatable.View animation={tab == 0 ? 'slideInLeft' : 'slideInRight'} key={tab} duration={400} className='' style={{
 
                     }}>
                         {

@@ -29,7 +29,6 @@ const AddGuildLineSheet = ({ refRBSheet, setGuidelines }: { refRBSheet: React.Re
                 setName("");
                 setDescription("");
             }}
-            draggable
             customStyles={{
                 draggableIcon: {
                     display: "none",
@@ -40,6 +39,9 @@ const AddGuildLineSheet = ({ refRBSheet, setGuidelines }: { refRBSheet: React.Re
                     borderTopRightRadius: 15,
 
                 }
+            }}
+            customModalProps={{
+                animationType: 'slide'
             }}
         >
             {/* <KeyboardAvoidingView className='flex-1'>

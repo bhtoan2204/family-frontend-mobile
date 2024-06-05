@@ -51,7 +51,7 @@ const StepGuideLineImage = ({
 
     return (
         <>
-            <Animatable.View animation={currentStep > prevStepRef.current ? 'bounceInRight' : 'bounceInLeft'} key={currentStep} duration={700} className='h-[50%] w-[90%] flex-col justify-center items-center mb-10  rounded-full mx-4 ' style={{
+            <Animatable.View animation={currentStep > prevStepRef.current ? 'bounceInRight' : 'bounceInLeft'} key={currentStep} duration={700}  className='h-[50%] w-[90%] flex-col justify-center items-center mb-10  rounded-full mx-4 ' style={{
 
             }}>
                 <TouchableOpacity onPress={() => {
