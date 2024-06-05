@@ -18,28 +18,10 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Profile } from 'src/interface/user/userProfile';
 import { Swipeable } from 'react-native-gesture-handler';
 import IconL from 'react-native-vector-icons/Ionicons';
+import { getSocket } from 'src/services/apiclient/Socket';
+import { LastMessage } from 'src/interface/chat/chat';
 
-export interface LastMessage {
-  receiverId: string;
-  _id: string;
-  messages: Message[];
-  user: User;
-}
-export interface Message {
-  senderId: string;
-  receiverId: string;
-  type: string;
-  content: string;
-  isRead: boolean;
-  timestamp: Date;
-  _id: string;
-}
 
-export interface User {
-  firstname: string;
-  lastname: string;
-  avatar: string | null;
-}
 
 const ChatListScreen = ({
   navigation,
@@ -52,6 +34,7 @@ const ChatListScreen = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [receiverId, setReceiverId] = useState('');
   const [selectedButton, setSelectedButton] = useState<'Home' | 'Channels'>('Home');
+  let socket = getSocket();
 
   const fetchUser = async () => {
     try {
@@ -97,10 +80,10 @@ const ChatListScreen = ({
     }
   };
 
-  const fetchData = async (page: number) => {
+  const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await ChatServices.GetUserChat({ index: page });
+      const response = await ChatServices.GetUserChat({ index: currentPage });
       const formattedResponse = response.map((item: LastMessage) => ({
         ...item,
         messages: item.messages.map((message) => ({
@@ -109,7 +92,7 @@ const ChatListScreen = ({
         })),
       }));
       setChats((prevChats) => [...prevChats, ...formattedResponse]);
-      setTotalPages(formattedResponse.length > 0 ? page + 1 : page);
+      setTotalPages(formattedResponse.length > 0 ? currentPage + 1 : currentPage);
     } catch (error) {
       console.error('Error fetching chat data:', error);
     } finally {
@@ -124,7 +107,7 @@ const ChatListScreen = ({
   };
 
   useEffect(() => {
-    fetchData(currentPage);
+    fetchData();
   }, [currentPage]);
 
   useEffect(() => {
@@ -191,14 +174,24 @@ const ChatListScreen = ({
     );
 };
 
-const onUpdate = (event: Event) => {
-    //setEventDetails(event);
-    //bottomSheetRef.current?.open();
-};
+useEffect(() => {
+  if (socket) {
+    socket.on('onNewMessage', fetchData);
+    socket.on('onNewImageMessage', fetchData);
 
-  const renderRightActions = (event) => (
+  }
+
+  return () => {
+    if (socket) {
+      socket.off('onNewMessage', fetchData);
+      socket.off('onNewImageMessage', fetchData);
+
+    }
+  };
+}, [socket]);
+
+  const renderRightActions = (event: LastMessage) => (
     <View style={styles.rightAction}>
-        <IconL name="create-outline" size={35} color="gray" onPress={() => onUpdate(event)} />
         <IconL name="trash-outline" size={35} color="red" onPress={() => onDelete(event)} />
     </View>
 );

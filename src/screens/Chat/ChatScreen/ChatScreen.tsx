@@ -14,14 +14,7 @@ import { Keyboard } from 'react-native';
 import { getSocket } from 'src/services/apiclient/Socket';
 import { useSelector } from 'react-redux';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
-
-interface Message {
-  senderId: string;
-  type: string;
-  content: string;
-  receiverId: string;
-  timestamp: Date;
-}
+import { Message } from 'src/interface/chat/chat';
 
 interface Member {
   id_user: string;
@@ -48,13 +41,20 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   const [keyboardIsOpen, setKeyboardIsOpen] = useState(false); 
   let socket = getSocket();
 
+  const markSeenMessage = async (receiverId?: string) => {
+    try {
+      await ChatServices.markSeenMessage({ receiver_id: receiverId });
+  
+    } catch (error) {
+      console.error('Error markSeenMessage:', error);
+    }
+  };
 
   const fetchMember = async (receiverId?: string, id_user?: string) => {
     try {
       const response: AxiosResponse<Member[]> = await FamilyServices.getMember({ id_user: receiverId });
-      //console.log(response)
       if (response && response.data.length > 0) {
-        setReceiver( response.data[0]);
+        setReceiver(response.data[0]);
       }
     } catch (error) {
       console.error('Error fetching member:', error);
@@ -77,7 +77,6 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
       console.error('Error fetching messages:', error);
     }
   };
-  
 
   const loadMoreMessages = () => {
     setCurrentIndex(currentIndex + 1);
@@ -86,13 +85,10 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
 
   const sendMessage = async () => {
     if (socket) {
-      //console.log(message);
       socket.emit('newMessage', {
         message: message,
         receiverId: receiverId,
       });
-      //console.log('Message sent!');
-
     }
     else {
       console.log('socket error');
@@ -106,12 +102,12 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
           receiverId: receiverId,
           imageData: base64Image,
         });
-        //console.log('Message sent!');
       }
     } catch (error) {
       console.error('Error sending image:', error);
     }
   };
+
   const fetchNewMessages = async () => {
     setRefreshFlatList(prevState => !prevState); 
     try {
@@ -127,20 +123,19 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
       console.error('Error fetching new messages:', error);
     }
   };
+
   const handleSendImage = async (base64Image: string) => {
     await sendImage(base64Image);
     await fetchMessages();
     await fetchNewMessages(); 
-
   };
-  
+
   const handleSendMessage = async () => {
     await sendMessage();
     setMessage('');
     await fetchNewMessages(); 
   };
-  
-  
+
   const handleOpenImageLibrary = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -172,10 +167,8 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   const handleImagePress = (item: Message) => {
     const itemIndex = messages.findIndex(message => message.senderId === item.senderId && message.content === item.content);
     setSelectedImageIndex(itemIndex-1);
-    console.log(itemIndex)
   };
-  
- 
+
   const handleCloseModal = () => {
     setSelectedImageIndex(null);
   };
@@ -196,31 +189,31 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-
+    markSeenMessage();
   }, [message]);
 
-   
+  useEffect(() => {
+    markSeenMessage(receiverId);
+  },[receiverId]);
 
   useEffect(() => {
     if (socket) {
       socket.on('onNewMessage', fetchNewMessages);
       socket.on('onNewImageMessage', fetchNewMessages);
-
     }
 
     return () => {
       if (socket) {
         socket.off('onNewMessage', fetchNewMessages);
         socket.off('onNewImageMessage', fetchNewMessages);
-
       }
     };
   }, [socket]);
 
-  const handleVideoCall = (receiverId?: string) =>{
-    navigation.navigate('ChatStack', {screen: 'CallVideo' , params: {receiverId: receiverId }});
+  const handleVideoCall = (receiverId?: string) => {
+    navigation.navigate('ChatStack', { screen: 'CallVideo', params: { receiverId: receiverId } });
   }
-  
+
   const formatDateTime = (dateTime: Date) => {
     const today = new Date();
     const yesterday = new Date(today);
@@ -253,54 +246,53 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
   };
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={{ flex: 1, position: 'absolute', top: 0, bottom: 0, left:0, right: 0}}>
-    <View style={styles.header}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Icon name="arrow-back" size={24} style={styles.backButton} />
-      </TouchableOpacity>
-      <View style={styles.receiverInfo}>
-        {receiver && (
-          <>
-            <Image source={{ uri: receiver.avatar }} style={styles.avatar} />
-            <Text>{receiver.firstname} {receiver.lastname}</Text>
-          </>
-        )}
-      </View>
-      <TouchableOpacity onPress={() =>handleVideoCall(receiverId)}>
-        <Icon name="videocam" size={36} style={styles.videoCallButton} />
-      </TouchableOpacity>
-    </View>
-    <FlatList
-      key={refreshFlatList ? 'refresh' : 'no-refresh'}
-      style={styles.messagesContainer}
-      contentContainerStyle={styles.contentContainer}
-      data={messages}
-      inverted
-      renderItem={({ item, index }) => (
-        <View style={[
-          styles.messageContainer,
-          item.senderId === profile.id_user ? styles.senderMessageContainer : styles.receiverMessageContainer
-        ]}>
-          {item.type === 'photo' ? (
-            <TouchableOpacity onPress={() => handleImagePress(item)}>
-              <View style={styles.messageContentContainer}>
-                <Image source={{ uri: item.content }} style={styles.imageMessage} />
-              </View>
-            </TouchableOpacity>
-          ) : (
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={24} style={styles.backButton} />
+        </TouchableOpacity>
+        <View style={styles.receiverInfo}>
+          {receiver && (
             <>
-              <Text style={styles.senderMessageContent}>{item.content}</Text>
-              <Text style={styles.timestamp}>{formatDateTime(item.timestamp)}</Text>
+              <Image source={{ uri: receiver.avatar }} style={styles.avatar} />
+              <Text>{receiver.firstname} {receiver.lastname}</Text>
             </>
           )}
         </View>
+        <TouchableOpacity onPress={() => handleVideoCall(receiverId)}>
+          <Icon name="videocam" size={36} style={styles.videoCallButton} />
+        </TouchableOpacity>
+      </View>
+      <FlatList
+        key={refreshFlatList ? 'refresh' : 'no-refresh'}
+        style={styles.messagesContainer}
+        contentContainerStyle={styles.contentContainer}
+        data={messages}
+        inverted
+        renderItem={({ item, index }) => (
+          <View style={[
+            styles.messageContainer,
+            item.senderId === profile.id_user ? styles.senderMessageContainer : styles.receiverMessageContainer
+          ]}>
+            {item.type === 'photo' ? (
+              <TouchableOpacity onPress={() => handleImagePress(item)}>
+                <View style={styles.messageContentContainer}>
+                  <Image source={{ uri: item.content }} style={styles.imageMessage} />
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <>
+                <Text style={styles.senderMessageContent}>{item.content}</Text>
+                <Text style={styles.timestamp}>{formatDateTime(item.timestamp)}</Text>
+              </>
+            )}
+          </View>
         )}
         keyExtractor={(item, index) => index.toString()}
         keyboardShouldPersistTaps="handled"
         onEndReached={loadMoreMessages}
         onEndReachedThreshold={0.1}
       />
-    
       <View style={[styles.inputContainer, keyboardIsOpen && { paddingBottom: 60 }]}>
         <TextInput
           style={styles.input}
@@ -315,18 +307,15 @@ const ChatScreen = ({ navigation, route }: ChatScreenProps) => {
           <Icon name="send" size={30} />
         </TouchableOpacity>
       </View>
-
-    
-    <ImageView
-      images={images.map(image => ({ uri: image }))}
-      imageIndex={selectedImageIndex || 0}
-      visible={selectedImageIndex !== null}
-      onRequestClose={handleCloseModal}
-      backgroundColor="rgba(0, 0, 0, 0.8)"
-    />
-
-  </KeyboardAvoidingView>
-);
+      <ImageView
+        images={images.map(image => ({ uri: image }))}
+        imageIndex={selectedImageIndex || 0}
+        visible={selectedImageIndex !== null}
+        onRequestClose={handleCloseModal}
+        backgroundColor="rgba(0, 0, 0, 0.8)"
+      />
+    </KeyboardAvoidingView>
+  );
 };
 
 export default ChatScreen;

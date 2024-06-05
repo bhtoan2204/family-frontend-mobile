@@ -45,7 +45,19 @@ const ChatServices = {
       console.error('Error in getUsersChat:', error.message);
     }
   },
-
+  markSeenMessage: async ({receiver_id }: {receiver_id?: string }) => {
+    try {
+      const response: AxiosResponse = await instance.get(
+        `${baseUrl}/api/v1/chat/markSeenMessage/${receiver_id}`
+      );
+      
+      if ( response) {
+        return response.data; 
+      }
+    } catch (error: any) {
+      console.error('Error in markSeenMessage:', error.message);
+    }
+  },
   GetAllUser: async ({index }: {index: number }) => {
     try {
       const response: AxiosResponse = await instance.get(
