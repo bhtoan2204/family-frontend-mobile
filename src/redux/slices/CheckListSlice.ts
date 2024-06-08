@@ -124,7 +124,7 @@ const checkListSlice = createSlice({
       action: PayloadAction<{
         id: number;
         id_checklist: string;
-        dueDate: Date;
+        dueDate: string;
       }>,
     ) {
       const checkListIndex = state.findIndex(

@@ -1,22 +1,34 @@
 import React from 'react'
 import { TouchableOpacity, Image, View, Text } from 'react-native'
-import { Swipeable } from 'react-native-gesture-handler'
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 import MemberIcon from 'src/assets/images/diversity.png'
 import { COLORS } from 'src/constants'
 import Icon from 'react-native-vector-icons/Ionicons';
-import { iOSGrayColors } from 'src/constants/ios-color'
+import { iOSColors, iOSGrayColors } from 'src/constants/ios-color'
 const GuildlineItem = ({ item, onPress }: any) => {
     const handleDelete = () => {
 
         console.log("Deleting item with id:", item.id_item);
     };
     const renderLeftActions = () => (
-        <TouchableOpacity onPress={handleDelete} style={{ backgroundColor: '#EF3B4F', width: "auto" }} className='flex-row items-center py-6 px-2  mb-3' >
-            <View className='flex-row items-center'>
-                <Icon name="trash" size={20} color={"white"} style={{ marginHorizontal: 4 }} />
-                <Text style={{ color: 'white', fontWeight: 'bold' }} >Delete</Text>
-            </View>
-        </TouchableOpacity>
+        <View className='mb-3 flex-row items-center w-[40%]'>
+            <TouchableOpacity onPress={handleDelete} style={{ backgroundColor: iOSColors.systemOrange.accessibleDark, width: "auto" }} className='flex-1 flex-row items-center h-full py-6 justify-center border-r-[1px] border-white' >
+                {/* py-6 px-2  mb-3 */}
+                <View className='flex-col items-center'>
+                    <Icon name="pencil-outline" size={20} color={"white"} style={{ marginHorizontal: 4 }} />
+                    <Text style={{ color: 'white', }} >Update</Text>
+                </View>
+
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleDelete} style={{ backgroundColor: '#EF3B4F', width: "auto" }} className='flex-1 flex-row items-center h-full py-6  justify-center border-r-[1px] border-white' >
+                {/* py-6 px-2  mb-3 */}
+                <View className='flex-col items-center '>
+                    <Icon name="trash" size={20} color={"white"} style={{ marginHorizontal: 4 }} />
+                    <Text style={{ color: 'white', }} >Delete</Text>
+                </View>
+            </TouchableOpacity>
+
+        </View>
     );
     return (
         <View className='mx-2'>

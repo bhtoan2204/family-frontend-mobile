@@ -17,6 +17,7 @@ const HouseHoldFilterBar = ({ householdCategory, choosenCategoryId, choosenCateg
         <ScrollView horizontal showsHorizontalScrollIndicator={false} ref={categoryRefScroll}>
             {householdCategory.map((category, index) => (
                 <TouchableOpacity
+                    activeOpacity={1}
                     key={category.id_category}
                     onPress={() => {
                         setChoosenCategoryIndex(index)
@@ -32,9 +33,10 @@ const HouseHoldFilterBar = ({ householdCategory, choosenCategoryId, choosenCateg
                         paddingHorizontal: 20,
                         paddingVertical: 10,
                         // borderBottomColor: COLORS.AuroMetalSaurus,
-                        marginHorizontal: 10,
+                        marginHorizontal: 5,
                         borderRadius: 15,
                         borderColor: category_colors[index].background_color,
+                        borderWidth: choosenCategoryIndex === index ? 2 : 1,
                         backgroundColor: choosenCategoryIndex === index ? category_colors[index].background_color : 'white'
                     }}
                     className='border-[1px]'

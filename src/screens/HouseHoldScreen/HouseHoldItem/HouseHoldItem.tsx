@@ -9,6 +9,7 @@ import EditHouseHoldItemSheet from '../AddHouseHoldItemSheet/EditHouseHoldItemSh
 import Icon from 'react-native-vector-icons/Ionicons';
 import { iOSGrayColors } from 'src/constants/ios-color'
 import Svg, { Rect, Mask, G } from 'react-native-svg';
+import { category_colors } from '../const/data'
 
 const HouseHoldItem = ({ item, setHouseHoldItem, index, navigateToHouseHoldItemDetail }: { item: HouseHoldItemInterface, setHouseHoldItem: React.Dispatch<React.SetStateAction<HouseHoldItemInterface[]>>, index: number, navigateToHouseHoldItemDetail: (item: HouseHoldItemInterface) => void }) => {
     const editSheetRef = React.useRef<any>(null);
@@ -61,19 +62,29 @@ const HouseHoldItem = ({ item, setHouseHoldItem, index, navigateToHouseHoldItemD
         //         </TouchableOpacity>
         //     </Swipeable>
         // </View>
-        <TouchableOpacity className='basis-[31%] rounded-md  justify-center items-center bg-white shadow-lg border-[1px] border-gray-200' style={{
+        <TouchableOpacity className='basis-[31%] rounded-md  justify-center items-center bg-white shadow-lg border-[1px] ' style={{
             width: 125, height: 'auto',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            borderColor: category_colors[item.id_category - 1].background_color
 
         }} onPress={() => {
             navigateToHouseHoldItemDetail(item)
         }}>
-            <View className=''>
+            <View className='' style={{
+
+            }}>
                 <ImageComponent imageUrl={item.item_imageurl || ""} style={{ width: 125, height: 130, }} defaultImage={FamilyImage} resizeMode='cover' />
 
             </View>
-            <View className='absolute  bottom-0 w-full' style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-                <Text className='py-1 pl-3 font-bold text-start text-white '>{item.item_name}</Text>
+            <View className='absolute  bottom-0 w-full overflow-hidden'
+            // style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+            >
+                <View className='absolute w-full h-full opacity-[0.9]' style={{
+                    backgroundColor: category_colors[item.id_category - 1].background_color
+                }}>
+
+                </View>
+                <Text className='py-1 pl-3 font-bold text-start text-white px-2 ' numberOfLines={1} >{item.item_name}</Text>
             </View>
             {/* <Svg height="25%" width="100%" style={styles.blurOverlay}>
                 <Mask id="mask" x="0" y="0" width="100%" height="100%">

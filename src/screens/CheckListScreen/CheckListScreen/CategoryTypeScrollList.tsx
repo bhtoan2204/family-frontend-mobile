@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native'
 import { ChecklistItemInterface, CheckListCategoryInterface } from 'src/interface/checklist/checklist';
-import ChecklistItemDetail from '../CheckListItemDetail';
 import ChecklistItemModal from '../AddItemCheckListSheet';
 import { CheckListScreenProps } from 'src/navigation/NavigationTypes';
 import RBSheet from 'react-native-raw-bottom-sheet';

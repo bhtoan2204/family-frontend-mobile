@@ -9,6 +9,7 @@ import { Picker } from '@react-native-picker/picker';
 import { AppDispatch } from 'src/redux/store';
 import { useDispatch } from 'react-redux';
 import { addNewCheckListItemToCheckList } from 'src/redux/slices/CheckListSlice';
+import AutoHeightRBSheet from 'src/components/AutoHeightRBSheet/AutoHeightRBSheet';
 
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#000'];
@@ -147,13 +148,14 @@ const AddItemCheckListSheet = ({ refRBSheet, id_checklist }: { refRBSheet: React
             <View className='w-full flex-row justify-end border-t-[1px] border-[#EAEAEA]'>
                 <TouchableOpacity
                     style={{
-                        backgroundColor: COLORS.primary,
+                        backgroundColor: COLORS.AuroMetalSaurus,
                         alignItems: "center",
 
                     }}
                     onPress={() => {
                         // setChecklist((prev) => [...prev, { id: (prev.length + 1).toString(), title: name, description: description, dueDate: dueDate != null ? new Date(dueDate) : new Date(), priority: priority, isCompleted: false, createdAt: new Date() }]);
-                        const newItem: ChecklistItemInterface = { id: "-1", title: name, description: description, dueDate: dueDate != null ? new Date(dueDate) : new Date(), priority: priority, isCompleted: false, createdAt: new Date() }
+
+                        const newItem: ChecklistItemInterface = { id: "-1", title: name, description: description, dueDate: dueDate != null ? new Date(dueDate).toDateString() : new Date().toDateString(), priority: priority, isCompleted: false, createdAt: new Date() }
                         dispatch(
                             addNewCheckListItemToCheckList({
                                 id: id_checklist,
@@ -190,7 +192,7 @@ export const TimePickerSheet = ({ refRBSheet, setSave, initialValue }: { refRBSh
         setSave(selectedDate || null)
     }
 
-    return <RBSheet
+    return <AutoHeightRBSheet
         ref={refRBSheet}
         onClose={() => {
             setSelectedDay((new Date().getDate()).toString().padStart(2, '0'))
@@ -205,9 +207,9 @@ export const TimePickerSheet = ({ refRBSheet, setSave, initialValue }: { refRBSh
                 borderTopRightRadius: 10,
 
             },
-            draggableIcon: {
-                display: "none",
-            }
+            // draggableIcon: {
+            //     display: "none",
+            // }
         }}
     >
         <View>
@@ -227,7 +229,7 @@ export const TimePickerSheet = ({ refRBSheet, setSave, initialValue }: { refRBSh
                 }}>
                     <Text className='text-base font-medium ' style={{
                         textAlign: "right",
-                        color: COLORS.primary
+                        color: COLORS.AuroMetalSaurus
                     }}>Save</Text>
                 </TouchableOpacity>
             </View>
@@ -265,7 +267,7 @@ export const TimePickerSheet = ({ refRBSheet, setSave, initialValue }: { refRBSh
             </View>
         </View>
 
-    </RBSheet>
+    </AutoHeightRBSheet>
 }
 const styles = StyleSheet.create({
     container: {

@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native'
 import { ChecklistItemInterface, CheckListCategoryInterface } from 'src/interface/checklist/checklist';
-import ChecklistItemDetail from '../CheckListItemDetail';
 import ChecklistItemModal from '../AddItemCheckListSheet';
 import { CheckListScreenProps } from 'src/navigation/NavigationTypes';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -23,21 +22,13 @@ const yesterday = new Date(today.setDate(today.getDate() - 1));
 const tomorrow = new Date(today.setDate(today.getDate() + 1));
 
 const checkListListData: CheckListCategoryInterface[] = [
-    { id: 1, id_item_type: 1, id_family: 1, title: 'Grocery Title 1', completed: 0, total: 0, createdAt: today, checklistItems: [] },
-    { id: 2, id_item_type: 2, id_family: 1, title: 'Random Title 2', completed: 0, total: 0, createdAt: yesterday, checklistItems: [] },
-    { id: 3, id_item_type: 3, id_family: 1, title: 'Random Title 3', completed: 0, total: 0, createdAt: tomorrow, checklistItems: [] },
-    { id: 4, id_item_type: 4, id_family: 1, title: 'Random Title 4', completed: 0, total: 0, createdAt: today, checklistItems: [] },
-    { id: 5, id_item_type: 5, id_family: 1, title: 'Random Title 5', completed: 0, total: 0, createdAt: yesterday, checklistItems: [] },
-    { id: 6, id_item_type: 6, id_family: 1, title: 'Random Title 6', completed: 0, total: 0, createdAt: tomorrow, checklistItems: [] },
+    { id: 1, id_item_type: 1, id_family: 1, title: 'Grocery Title 1', completed: 0, total: 0, createdAt: today.toDateString(), checklistItems: [] },
+    { id: 2, id_item_type: 2, id_family: 1, title: 'Random Title 2', completed: 0, total: 0, createdAt: yesterday.toDateString(), checklistItems: [] },
+    { id: 3, id_item_type: 3, id_family: 1, title: 'Random Title 3', completed: 0, total: 0, createdAt: tomorrow.toDateString(), checklistItems: [] },
+    { id: 4, id_item_type: 4, id_family: 1, title: 'Random Title 4', completed: 0, total: 0, createdAt: today.toDateString(), checklistItems: [] },
+    { id: 5, id_item_type: 5, id_family: 1, title: 'Random Title 5', completed: 0, total: 0, createdAt: yesterday.toDateString(), checklistItems: [] },
+    { id: 6, id_item_type: 6, id_family: 1, title: 'Random Title 6', completed: 0, total: 0, createdAt: tomorrow.toDateString(), checklistItems: [] },
 ]
-
-const checklistData: ChecklistItemInterface[] = [
-    { id: '1', title: 'Task 1', description: 'Description 1', dueDate: tomorrow, priority: 3, isCompleted: false, createdAt: new Date() },
-    { id: '2', title: 'Task 2', description: 'Description 2', dueDate: today, priority: 2, isCompleted: false, createdAt: new Date() },
-    { id: '3', title: 'Task 3', description: 'Description 3', dueDate: yesterday, priority: 1, isCompleted: true, createdAt: new Date() },
-    // Thêm các mục kiểm tra khác ở đây...
-];
-
 
 
 const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) => {
@@ -86,7 +77,7 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
         <View style={styles.container}>
             <View className='w-full  flex-row justify-between  items-center py-3 bg-white '>
                 <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center flex-1'>
-                    <Material name="chevron-left" size={30} style={{ color: COLORS.primary, fontWeight: "bold" }} />
+                    <Material name="chevron-left" size={30} style={{ color: COLORS.AuroMetalSaurus, fontWeight: "bold" }} />
                     {/* <Text className='text-lg font-semibold' style={{ color: COLORS.primary }}>Back</Text> */}
                 </TouchableOpacity>
                 {/* <View className='flex-1'>
@@ -141,7 +132,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        backgroundColor: COLORS.primary,
+        backgroundColor: COLORS.AuroMetalSaurus,
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 5,

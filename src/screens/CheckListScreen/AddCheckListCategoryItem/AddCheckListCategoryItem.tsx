@@ -14,6 +14,9 @@ import { TimePickerSheet } from '../AddItemCheckListSheet'
 import { AppDispatch } from 'src/redux/store'
 import { useDispatch } from 'react-redux'
 import { addNewCheckListItem } from 'src/redux/slices/CheckListSlice'
+import * as Animatable from 'react-native-animatable'
+import { iOSColors } from 'src/constants/ios-color'
+
 const sheetIndex = [
     {
         id: 0,
@@ -39,7 +42,7 @@ const AddCheckListCategoryItem = ({ bottomSheetRef, id_family }: {
     const timePickerSheetRef = React.useRef<any>(null)
     const [choosenCategory, setChoosenCategory] = React.useState<number | undefined>(undefined)
     const [inputProgressNote, setInputProgressNote] = React.useState<string>("")
-    const [inputSchoolInfo, setInputSchoolInfo] = React.useState<string>("")
+    const [tempChoosenCategory, setTempChoosenCategory] = React.useState<number | undefined>(undefined)
     const [inputProgressNote2, setInputProgressNote2] = React.useState<string>("")
     const [inputSchoolInfo2, setInputSchoolInfo2] = React.useState<string>("")
     const [pickSheetIndex, setPickSheetIndex] = React.useState<number>(0)
@@ -55,15 +58,17 @@ const AddCheckListCategoryItem = ({ bottomSheetRef, id_family }: {
 
     const showHeader = () => {
         if (pickSheetIndex == 0) {
-            return <View className='w-full  flex-row justify-between items-center py-4 z-10 ' >
+            return <Animatable.View animation={"slideInLeft"} duration={400} className='w-full  flex-row justify-between items-center py-4 z-10 ' >
                 <TouchableOpacity
                     onPress={() => {
                         bottomSheetRef.current?.close()
                         setChoosenCategory(6)
                         setInputProgressNote("")
-                        setInputSchoolInfo("")
                     }}
-                ><Text className='text-blue-600 text-base pl-4'>Cancel</Text>
+                ><Text className=' text-base pl-4 font-semibold' style={{
+                    color: iOSColors.systemBlue.defaultLight,
+
+                }}>Cancel</Text>
                 </TouchableOpacity>
 
                 <View>
@@ -78,7 +83,7 @@ const AddCheckListCategoryItem = ({ bottomSheetRef, id_family }: {
                         total: 0,
                         category_name: checklist_category_type.find((item) => item.id_item_type == choosenCategory)?.item_type_name,
                         id_family: id_family,
-                        createdAt: new Date(),
+                        createdAt: new Date().toDateString(),
                         title: inputProgressNote,
                         checklistItems: []
                     }
@@ -102,9 +107,9 @@ const AddCheckListCategoryItem = ({ bottomSheetRef, id_family }: {
                 }} className='pr-4 disabled:text-gray-600 text-blue-600' >
                     <Text className=' text-base font-semibold ' >Add</Text>
                 </TouchableOpacity>
-            </View>
+            </Animatable.View>
         } else if (pickSheetIndex == 1) {
-            return <View className='w-full  flex-row justify-between items-center py-4 z-10 ' >
+            return <Animatable.View animation={"slideInRight"} duration={400} className='w-full  flex-row justify-between items-center py-4 z-10 ' >
                 <TouchableOpacity
                     onPress={() => {
                         setPickSheetIndex(0)
@@ -124,9 +129,9 @@ const AddCheckListCategoryItem = ({ bottomSheetRef, id_family }: {
                 }} className='pr-4 disabled:text-gray-600 text-blue-600' >
                     <Text className=' text-base font-semibold ' >Done</Text>
                 </TouchableOpacity>
-            </View>
+            </Animatable.View>
         } else if (pickSheetIndex == 2) {
-            return <View className='w-full  flex-row justify-between items-center py-4 z-10 ' >
+            return <Animatable.View animation={"slideInRight"} duration={400} className='w-full  flex-row justify-between items-center py-4 z-10 ' >
                 <TouchableOpacity
                     onPress={() => {
                         setPickSheetIndex(0)
@@ -145,9 +150,9 @@ const AddCheckListCategoryItem = ({ bottomSheetRef, id_family }: {
                 }} className='pr-4 disabled:text-gray-600 text-blue-600' disabled={inputProgressNote2 == ""} >
                     <Text className=' text-base font-semibold ' >Done</Text>
                 </TouchableOpacity>
-            </View>
+            </Animatable.View>
         } else if (pickSheetIndex == 3) {
-            return <View className='w-full  flex-row justify-between items-center py-4 z-10 ' >
+            return <Animatable.View animation={"slideInRight"} duration={400} className='w-full  flex-row justify-between items-center py-4 z-10 ' >
                 <TouchableOpacity
                     onPress={() => {
                         setPickSheetIndex(0)
@@ -162,18 +167,17 @@ const AddCheckListCategoryItem = ({ bottomSheetRef, id_family }: {
                 </View>
 
                 <TouchableOpacity onPress={() => {
-                    setInputSchoolInfo(inputSchoolInfo2)
                     setPickSheetIndex(0)
                 }} className='pr-4 disabled:text-gray-600 text-blue-600' disabled={inputSchoolInfo2 == ""}>
                     <Text className=' text-base font-semibold ' >Done</Text>
                 </TouchableOpacity>
-            </View>
+            </Animatable.View>
         }
     }
 
     const showContentIndex = () => {
         if (pickSheetIndex == 0) {
-            return <View className='p-4'>
+            return <Animatable.View animation={"slideInLeft"} duration={400} className='p-4'>
                 <View className='bg-white rounded-lg'>
                     <TouchableOpacity className='w-full flex-row justify-between items-center border-[0.5px] border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-0 px-2 py-3 rounded-tl-lg rounded-tr-lg'
                         onPress={() => { setPickSheetIndex(1) }}
@@ -231,9 +235,9 @@ const AddCheckListCategoryItem = ({ bottomSheetRef, id_family }: {
                 {/* <View className='bg-white rounded-lg mt-10 border-t-[#ccc] border-l-[#ccc] border-r-[#ccc] border-b-[#ccc] border-[0.5px]  px-2 py-3'>
                     <Text className='ml-2 text-[#F93E3E] font-medium text-base text-center'>Delete this member </Text>
                 </View> */}
-            </View>
+            </Animatable.View>
         } else if (pickSheetIndex == 1) {
-            return <View className='p-4'>
+            return <Animatable.View animation={"slideInRight"} duration={400} className='p-4'>
                 <View className='bg-white rounded-lg'>
                     {
                         checklist_category_type.map((item, index) => {
@@ -270,9 +274,9 @@ const AddCheckListCategoryItem = ({ bottomSheetRef, id_family }: {
 
                 </View>
 
-            </View>
+            </Animatable.View>
         } else if (pickSheetIndex == 2) {
-            return <View className='p-4'>
+            return <Animatable.View animation={"slideInRight"} duration={400} className='p-4'>
                 <View className='bg-white rounded-lg'>
                     <TextInput
                         style={{
@@ -295,7 +299,7 @@ const AddCheckListCategoryItem = ({ bottomSheetRef, id_family }: {
 
                 </View>
 
-            </View>
+            </Animatable.View>
         } else if (pickSheetIndex == 3) {
             return <View className='p-4'>
 
@@ -338,7 +342,6 @@ const AddCheckListCategoryItem = ({ bottomSheetRef, id_family }: {
                 setPickSheetIndex(0)
                 setChoosenCategory(6)
                 setInputProgressNote("")
-                setInputSchoolInfo("")
                 timePickerSheetRef.current?.close()
                 setDueDate(null)
             }}

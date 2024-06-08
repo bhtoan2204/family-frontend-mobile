@@ -199,7 +199,11 @@ export type FamilyStackParamList = {
     id_category: number;
     id_item: number;
   };
-
+  AddHouseHoldItemDetail: {
+    id_family: number | undefined;
+    id_category: number;
+    id_item: number;
+  };
   CheckList: {
     id_family: number | undefined;
   };
@@ -425,6 +429,11 @@ type HouseHoldItemDetailNavigationProp = NativeStackNavigationProp<
   'HouseHoldItemDetail'
 >;
 
+type AddHouseHoldItemDetailNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'AddHouseHoldItemDetail'
+>;
+
 type CheckListNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'CheckList'
@@ -467,6 +476,11 @@ export interface HouseHoldItemScreenProps {
 export interface HouseHoldItemDetailScreenProps {
   navigation: HouseHoldItemDetailNavigationProp;
   route: RouteProp<FamilyStackParamList, 'HouseHoldItemDetail'>;
+}
+
+export interface AddHouseHoldItemDetailScreenProps {
+  navigation: AddHouseHoldItemDetailNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'AddHouseHoldItemDetail'>;
 }
 
 export interface SubjectDetailScreenProps {

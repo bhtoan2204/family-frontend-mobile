@@ -174,8 +174,13 @@ const HouseHoldItemDetailScreen: React.FC<HouseHoldItemDetailScreenProps> = ({ n
                                 </TouchableOpacity>
                                 <TouchableOpacity className='flex-1 bg-blue-100 py-3 items-center justify-center' style={{
                                     backgroundColor: iOSColors.systemGreen.defaultLight
-                                }} onPress={() => {
-                                    addProductInfoSheetRef.current?.open()
+                                }} activeOpacity={0.8} onPress={() => {
+                                    // addProductInfoSheetRef.current?.open()
+                                    navigation.navigate('AddHouseHoldItemDetail', {
+                                        id_family,
+                                        id_category,
+                                        id_item
+                                    })
                                 }}>
                                     <Text style={{
                                         color: 'white',

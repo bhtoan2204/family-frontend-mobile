@@ -1,3 +1,5 @@
+import {iOSColors, iOSGrayColors} from 'src/constants/ios-color';
+
 export const household_category_dat = [
   {
     id_category: 1,
@@ -35,35 +37,35 @@ export const household_category_dat = [
 
 export const category_colors = [
   {
-    background_color: '#7ac3a2', // Màu xanh lá cây
-    border_color: '#ff7f0e', // Màu cam
+    background_color: iOSColors.systemTeal.accessibleLight, // Màu xanh lá cây
+    border_color: iOSColors.systemTeal.accessibleDark, // Màu cam
   },
   {
-    background_color: '#a09e8c', // Màu xám
-    border_color: '#8c564b', // Màu nâu
+    background_color: iOSColors.systemYellow.defaultLight, // Màu xám
+    border_color: iOSColors.systemYellow.accessibleDark, // Màu nâu
   },
   {
-    background_color: '#f4bbca', // Màu hồng nhạt
-    border_color: '#a55194', // Màu tím nhạt
+    background_color: iOSColors.systemPink.defaultLight, // Màu hồng nhạt
+    border_color: iOSColors.systemPink.defaultLight, // Màu tím nhạt
   },
   {
-    background_color: '#add8e6', // Màu xanh dương
-    border_color: '#4682b4', // Màu xanh dương
+    background_color: iOSColors.systemBlue.accessibleDark, // Màu xanh dương
+    border_color: iOSColors.systemBlue.defaultLight, // Màu xanh dương
   },
   {
-    background_color: '#4682b4', // Màu xanh đậm
-    border_color: '#ff6347', // Màu đỏ gạch
+    background_color: iOSColors.systemIndigo.defaultLight, // Màu xanh đậm
+    border_color: iOSColors.systemIndigo.defaultDark, // Màu đỏ gạch
   },
   {
-    background_color: '#808080', // Màu xám
+    background_color: iOSGrayColors.systemGray.defaultLight, // Màu xám
     border_color: '#8b4513', // Màu nâu
   },
   {
-    background_color: '#6c5b7b', // Màu xanh lam
-    border_color: '#ffb6c1', // Màu hồng nhạt
+    background_color: iOSColors.systemPurple.accessibleLight, // Màu xanh lam
+    border_color: iOSColors.systemPurple.defaultLight, // Màu hồng nhạt
   },
   {
-    background_color: '#7ac3a2', // Màu xanh lá cây
-    border_color: '#8b4513', // Màu nâu đất
+    background_color: iOSColors.systemGreen.accessibleLight, // Màu xanh lá cây
+    border_color: iOSColors.systemGreen.accessibleDark, // Màu nâu đất
   },
 ];

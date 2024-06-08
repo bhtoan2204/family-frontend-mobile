@@ -21,7 +21,7 @@ const ChecklistDetailSheet = ({ refRBSheet, checklist_item, id_checklist }: { re
     const [description, setDescription] = React.useState(checklist_item.description);
     const [priority, setPriority] = React.useState(checklist_item.priority);
     const [isEditing, setIsEditing] = React.useState(false);
-    const [dueDate, setDueDate] = React.useState(checklist_item.dueDate)
+    const [dueDate, setDueDate] = React.useState(checklist_item.dueDate || new Date().toDateString())
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
@@ -96,7 +96,7 @@ const ChecklistDetailSheet = ({ refRBSheet, checklist_item, id_checklist }: { re
         dispatch(updateCheckListItemDueDate({
             id: id_checklist,
             id_checklist: checklist_item.id,
-            dueDate: dueDate || new Date(),
+            dueDate: dueDate?.toDateString() || new Date().toDateString(),
         }))
     }
 
@@ -200,7 +200,7 @@ const ChecklistDetailSheet = ({ refRBSheet, checklist_item, id_checklist }: { re
                         }}>
                             <Text className='text-base font-medium ' style={{
                                 textAlign: "right",
-                                color: COLORS.primary
+                                color: COLORS.AuroMetalSaurus
                             }}>Save</Text>
                         </TouchableOpacity>
                     </View> : <View className='w-full  flex-row justify-between  items-center py-3 bg-white px-4 z-10'>
@@ -302,7 +302,7 @@ const ChecklistDetailSheet = ({ refRBSheet, checklist_item, id_checklist }: { re
                                                 </> : <><View className='w-7 h-7  mr-4 flex flex-col items-center justify-center'>
                                                     <Material name="calendar-blank-outline" size={28} style={{ color: priorityColors[priority - 1] }} />
                                                 </View>
-                                                    <Text className='text-base'>{buildDate(dueDate)}</Text></>
+                                                    <Text className='text-base'>{buildDate(new Date(dueDate))}</Text></>
                                             }
                                         </TouchableOpacity>
                                     </View>
@@ -320,7 +320,7 @@ const ChecklistDetailSheet = ({ refRBSheet, checklist_item, id_checklist }: { re
                 </KeyboardAvoidingView>
 
             </View>
-            <TimePickerSheet refRBSheet={timePickerRBSheet} setSave={handleUpdateDueDate} initialValue={dueDate} />
+            <TimePickerSheet refRBSheet={timePickerRBSheet} setSave={handleUpdateDueDate} initialValue={new Date(dueDate)} />
 
         </RBSheet>
     )
