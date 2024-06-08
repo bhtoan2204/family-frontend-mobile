@@ -14,9 +14,16 @@ import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
 import useImageValid from 'src/hooks/useImageValid';
 import BoxImage from 'src/assets/images/household_assets/box.png';
 import InfoIcon from 'src/assets/images/household_assets/info.png';
+import InfoIcon2 from 'src/assets/images/household_assets/info_2.png';
 import BillsIcon from 'src/assets/images/household_assets/bills.png';
 import ReceiptImage from 'src/assets/images/household_assets/receipt.png';
 import AddHouseHoldItemInfoSheet from './AddHouseHoldItemInfoSheet/AddHouseHoldItemInfoSheet';
+import AddInfoBox from 'src/components/user/household/add-info-box';
+import InfoBox from 'src/components/user/household/info-box';
+import QuantityIcon from 'src/assets/images/household_assets/quantity.png';
+import BrandIcon from 'src/assets/images/household_assets/brand.png';
+import ExpenseIcon from 'src/assets/images/household_assets/expense.png';
+
 const household_items = [
     {
         "id_household_item": 4,
@@ -73,6 +80,7 @@ const HouseHoldItemDetailScreen: React.FC<HouseHoldItemDetailScreenProps> = ({ n
     const [householdCategory, setHouseholdCategory] = React.useState<HouseHoldCategoryInterface[]>(household_category_dat)
     const [householdItems, setHouseholdItems] = React.useState<HouseHoldItemInterface[]>(household_items)
     const isImageValid = useImageValid({ imageUrl: houseHoldItemDetail?.item_imageurl || "" })
+    const [quantity, setQuantity] = React.useState<number>(11111110)
 
 
 
@@ -139,17 +147,86 @@ const HouseHoldItemDetailScreen: React.FC<HouseHoldItemDetailScreenProps> = ({ n
                             Info
                         </Text>
                     </View>
-                    <View className='px-3 mt-3 shadow-lg overflow-hidden rounded-lg ' style={{ width: '100%', height: 'auto' }} >
+
+
+                    <InfoBox title='Quantity' iconImage={QuantityIcon}>
+                        <View className='w-full py-3 flex-row items-center justify-between '>
+                            <Text style={{
+                                fontSize: 15,
+                                marginLeft: 5,
+                                color: iOSGrayColors.systemGray6.defaultDark
+
+                            }}>Adjust quantity</Text>
+                            <View className='flex-row items-center w-[30%] justify-between' style={{
+                                borderColor: iOSGrayColors.systemGray6.defaultLight,
+                                borderWidth: 1,
+                                marginRight: 5,
+                            }}>
+                                <TouchableOpacity className='px-2 justify-center items-center py-2' style={{
+                                    backgroundColor: iOSGrayColors.systemGray6.defaultLight
+                                }} >
+                                    <Material name="plus" size={17} style={{ color: iOSColors.systemBlue.defaultLight, fontWeight: "bold" }} />
+                                </TouchableOpacity>
+                                <View className='px-2 justify-center items-center py-2 overflow-hidden w-12'>
+                                    <Text className='overflow-hidden' numberOfLines={1}>{quantity}</Text>
+                                </View>
+                                <TouchableOpacity className='px-2 justify-center items-center py-2' style={{
+                                    backgroundColor: iOSGrayColors.systemGray6.defaultLight
+                                }}>
+                                    <Material name="minus" size={17} style={{ color: iOSColors.systemBlue.defaultLight, fontWeight: "bold" }} />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </InfoBox>
+                    <InfoBox title='Brand' iconImage={BrandIcon}>
+                        <View className='w-full '>
+                            <Text style={{
+                                fontSize: 15,
+                                fontWeight: 500,
+                                color: iOSGrayColors.systemGray6.defaultDark
+
+                            }}>Softly</Text>
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    marginTop: 5,
+                                    fontWeight: 500,
+                                    color: iOSGrayColors.systemGray4.defaultLight
+
+                                }}
+                            >#0101</Text>
+                        </View>
+                    </InfoBox>
+                    <InfoBox title='Expenses' iconImage={ExpenseIcon}>
+                        <View className='w-full '>
+                            <Text style={{
+                                fontSize: 15,
+                                fontWeight: 500,
+                                color: iOSGrayColors.systemGray6.defaultDark
+
+                            }}>Softly</Text>
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    marginTop: 5,
+                                    fontWeight: 500,
+                                    color: iOSGrayColors.systemGray4.defaultLight
+
+                                }}
+                            >#0101</Text>
+                        </View>
+                    </InfoBox>
+                    {/* <View className='px-3 mt-3 shadow-lg overflow-hidden rounded-lg ' style={{ width: '100%', height: 'auto' }} >
                         <View className='w-full h-auto bg-white p-3 rounded-lg'>
                             <View className='flex-row items-center'>
-                                <Image source={InfoIcon} style={{ width: 20, height: 20 }} />
+                                <Image source={InfoIcon2} style={{ width: 20, height: 20 }} />
                                 <Text style={{
                                     fontSize: 15,
                                     marginLeft: 5,
-                                    fontWeight: 500,
+                                    fontWeight: 'bold',
                                     color: iOSGrayColors.systemGray6.defaultDark
 
-                                }}>Enter product info</Text>
+                                }}>Product info</Text>
                             </View>
                             <View className='flex-row items-start my-3'>
                                 <Image source={BoxImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
@@ -190,7 +267,92 @@ const HouseHoldItemDetailScreen: React.FC<HouseHoldItemDetailScreenProps> = ({ n
                             </View>
                         </View>
 
-                    </View>
+                    </View> */}
+                    <AddInfoBox
+                        title='Product info'
+                        iconImage={InfoIcon2}
+                        boxImage={BoxImage}
+                        description='Enter brands and model. This allow us to find useful info, such as manual, helpful vids, etc...'
+                        button1Text='Skip this'
+                        button2Text='Add info'
+                        button1Callback={() => { }}
+                        button2Callback={() => {
+                            navigation.navigate('AddHouseHoldItemDetail', {
+                                id_family,
+                                id_category,
+                                id_item
+                            })
+                        }}
+                    />
+                    <AddInfoBox
+                        title='Give us more product info'
+                        iconImage={InfoIcon}
+                        boxImage={BoxImage}
+                        description='Enter brands and model. This allow us to find useful info, such as manual, helpful vids, etc...'
+                        button1Text='Skip this'
+                        button2Text='Add info'
+                        button1Callback={() => { }}
+                        button2Callback={() => {
+                            navigation.navigate('AddHouseHoldItemDetail', {
+                                id_family,
+                                id_category,
+                                id_item
+                            })
+                        }}
+
+                    />
+                    {/* <View className='px-3 mt-3 shadow-lg overflow-hidden rounded-lg ' style={{ width: '100%', height: 'auto' }} >
+                        <View className='w-full h-auto bg-white p-3 rounded-lg'>
+                            <View className='flex-row items-center'>
+                                <Image source={InfoIcon} style={{ width: 20, height: 20 }} />
+                                <Text style={{
+                                    fontSize: 15,
+                                    marginLeft: 5,
+                                    fontWeight: 500,
+                                    color: iOSGrayColors.systemGray6.defaultDark
+
+                                }}>Give us more product info</Text>
+                            </View>
+                            <View className='flex-row items-start my-3'>
+                                <Image source={BoxImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
+                                <View className='ml-3 flex-1 wrap' >
+                                    <Text style={{
+                                        fontSize: 15,
+                                        marginLeft: 7,
+                                        fontWeight: 400,
+                                        color: iOSGrayColors.systemGray6.defaultDark
+
+                                    }}>Enter brands and model. This allow us to find useful info, such as manual, helpful vids, etc...</Text>
+                                </View>
+                            </View>
+                            <View className='gap-3 flex-row '>
+                                <TouchableOpacity className='flex-1 bg-blue-100 py-3 items-center justify-center' style={{
+                                    backgroundColor: iOSGrayColors.systemGray6.defaultLight
+                                }}>
+                                    <Text style={{
+                                        color: iOSColors.systemBlue.defaultLight,
+                                        fontWeight: 'bold'
+                                    }}>Skip this</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity className='flex-1 bg-blue-100 py-3 items-center justify-center' style={{
+                                    backgroundColor: iOSColors.systemGreen.defaultLight
+                                }} activeOpacity={0.8} onPress={() => {
+                                    // addProductInfoSheetRef.current?.open()
+                                    navigation.navigate('AddHouseHoldItemDetail', {
+                                        id_family,
+                                        id_category,
+                                        id_item
+                                    })
+                                }}>
+                                    <Text style={{
+                                        color: 'white',
+                                        fontWeight: 'bold'
+                                    }}>Add info</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                    </View> */}
                     <View className='px-3 mt-3'>
                         <Text style={{
                             fontSize: 25,

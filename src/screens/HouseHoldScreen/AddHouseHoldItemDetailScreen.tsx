@@ -18,6 +18,7 @@ import BillsIcon from 'src/assets/images/household_assets/bills.png';
 import ReceiptImage from 'src/assets/images/household_assets/receipt.png';
 import AddHouseHoldItemInfoSheet from './AddHouseHoldItemInfoSheet/AddHouseHoldItemInfoSheet';
 import StepIndicator from './AddHouseHoldItemInfoSheet/StepIndicator';
+import AddHouseholdStepIndicator from 'src/components/user/household/add-household-step-indicator';
 const household_items = [
     {
         "id_household_item": 4,
@@ -84,7 +85,6 @@ const screenHeigh = Dimensions.get('screen').height
 const AddHouseHoldItemDetailScreen: React.FC<AddHouseHoldItemDetailScreenProps> = ({ navigation, route }) => {
     const { id_family, id_category, id_item } = route.params
     // const ItemData = household_items.find(item => item.id_household_item === id_item)
-
     const [step, setStep] = React.useState(0);
 
 
@@ -111,8 +111,9 @@ const AddHouseHoldItemDetailScreen: React.FC<AddHouseHoldItemDetailScreenProps> 
                     </View>
                     {/* <Text>3-Step indicator here</Text> */}
                     <View className='w-full justify-center items-center my-3'>
-                        <StepIndicator currentStep={step} />
+                        <AddHouseholdStepIndicator currentStep={step} />
                     </View>
+
 
                 </View>
             </View>
