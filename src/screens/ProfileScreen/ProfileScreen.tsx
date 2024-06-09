@@ -9,14 +9,13 @@ import styles from './styles';
 import { UserProfile } from 'src/interface/user/userProfile';
 import { ProfileScreenProps } from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { RootState } from 'src/redux/store';
 
 const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
-  const [profile, setProfile] = useState<UserProfile>();
+  const profile = useSelector((state: RootState) => state.profile.profile);
   let user = useSelector(selectProfile);
 
-  useEffect(() => {
-    setProfile(user);
-  }, [user]);
+
 
   const handleSignOut = async () => {
     try {

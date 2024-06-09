@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { COLORS } from 'src/constants';
 
 const styles = StyleSheet.create({
@@ -27,27 +28,30 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   avatarImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
   },
-  editIcon: {
+  editContainer: {
     position: 'absolute',
     bottom: 0,
-    right: 0,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 5,
-    elevation: 2,
+    right: 20,
+    width: 40,
+    height: 40,
+    borderRadius: 100,
+    backgroundColor: COLORS.black,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  editIcon: {
+    color: COLORS.white,
   },
   inputContainer: {
     marginBottom: 20,
-    
   },
   input: {
     backgroundColor: COLORS.white,
-    marginBottom: 10,
-    borderRadius: 10, 
+    borderRadius: 10,
   },
   saveButton: {
     backgroundColor: '#0080FF',

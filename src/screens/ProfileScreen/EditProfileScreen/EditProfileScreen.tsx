@@ -2,32 +2,51 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { UserProfile } from 'src/interface/user/userProfile';
-import { useSelector } from 'react-redux';
-import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { TextInput } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectProfile, updateProfileSlice } from 'src/redux/slices/ProfileSclice';
+import {  TextInput } from 'react-native-paper';
 import styles from './styles';
+import * as ImagePicker from 'expo-image-picker';
+import { ProfileServices } from 'src/services/apiclient';
+import { AppDispatch, RootState } from 'src/redux/store';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const EditProfileScreen = () => {
 
-  const [profile, setProfile] = useState<UserProfile>();
-  let user = useSelector(selectProfile);
+  const profile = useSelector((state: RootState) => state.profile.profile);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [isUploadingImage, setIsUploadingImage] = React.useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>()
 
-  useEffect(() => {
-    setProfile(user);
-  }, [user]);
 
-  const handleChangeAvatar = () => {
-    // Thực hiện chức năng thay đổi avatar
-  };
 
   const handleSaveChanges = () => {
-    // Thực hiện lưu các thay đổi
   };
 
+  const handleChangeAvatar = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [3, 3],
+        quality: 1,
+    });
+    console.log('image')
+    console.log(result);
+
+    if (!result.canceled) {
+        const a = result.assets[0]!
+        const uri = a.uri
+        setIsUploadingImage(true)
+        const fileUrl = await ProfileServices.changeAvatar(uri)
+        dispatch(updateProfileSlice({ ...profile, avatar: fileUrl }))
+        setIsUploadingImage(false)
+        console.log("fileUrl", fileUrl)
+        // setImage(result.assets[0].uri);
+    }
+}
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -38,7 +57,9 @@ const EditProfileScreen = () => {
           <Image
             source={profile?.avatar !== "[NULL]" ? { uri: profile?.avatar } : require('../../../assets/images/avatar_default.jpg')}
             style={styles.avatarImage} />
-          <MaterialIcons name="edit" size={24} color="#333333" style={styles.editIcon} />
+            <View style={styles.editContainer}>
+            <Icon name="add" size={30}  style={styles.editIcon} />
+          </View>
         </TouchableOpacity>
       </View>
       <View style={styles.inputContainer}>
@@ -85,3 +106,4 @@ const EditProfileScreen = () => {
 };
 
 export default EditProfileScreen;
+

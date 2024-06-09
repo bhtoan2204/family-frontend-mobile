@@ -17,7 +17,7 @@ import {
   ViewAllFamilyScreenProps,
 } from 'src/navigation/NavigationTypes';
 import {Profile} from 'src/redux/slices/ProfileSclice';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {MaterialIcons} from '@expo/vector-icons';
 import {COLORS} from 'src/constants';
 import chat from 'src/assets/icons/chat.png';
@@ -32,6 +32,7 @@ import seemore from 'src/assets/icons/see-more.png';
 import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { UserProfile } from 'src/interface/user/userProfile';
+import { RootState } from 'src/redux/store';
 
 const icons = {
   bundle,
@@ -73,8 +74,9 @@ const HomeScreen = ({
   const [currentPage, setCurrentPage] = useState(0);
   const [displayedPage, setDisplayedPage] = useState(0);
   const dispatch = useDispatch();
-  const [profile, setProfile] = useState<UserProfile>();
   const [isLightMode, setIsLightMode] = useState(true);
+  const profile = useSelector((state: RootState) => state.profile.profile);
+
   const handlePress = () => {
     setIsLightMode(!isLightMode);
   };
@@ -111,7 +113,6 @@ const HomeScreen = ({
     try {
       const result = await PackageServices.getProfile();
       const id_user = result.data.id_user;
-      setProfile(result.data);
       dispatch(Profile(result.data));
 
     } catch (error: any) {
