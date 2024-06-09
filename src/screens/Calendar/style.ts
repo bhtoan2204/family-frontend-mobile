@@ -9,11 +9,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
+    backgroundColor: '#ffffff',
+    justifyContent: 'space-between',
+
   },
   headerText: {
     marginLeft: 10,
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  headerp: {
+    flexDirection: 'row',
+    marginTop: 40,
+    justifyContent: 'space-between',
   },
   subHeader: {
     flexDirection: 'row',
@@ -74,6 +82,13 @@ const styles = StyleSheet.create({
   actionButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  emptyDate: {
+    height: 15,
+    flex: 1,
+    paddingTop: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

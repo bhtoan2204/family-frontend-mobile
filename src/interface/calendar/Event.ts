@@ -1,3 +1,4 @@
+import { RecurrenceRule } from "react-native-calendar-events";
 
 export type Event = {
     id_calendar: number;
@@ -11,7 +12,7 @@ export type Event = {
     location: string; 
     recurrence_exception: string;
     recurrence_id: number;
-    recurrence_rule?: string;
+    recurrence_rule: RecurrenceRule;
     start_timezone: string;
     end_timezone: string;
 };

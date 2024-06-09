@@ -1,23 +1,24 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   TextInput,
   TouchableOpacity,
   Text,
   Alert,
-  Switch
+  Switch,
+  SafeAreaView,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CalendarServices from 'src/services/apiclient/CalendarService';
-import { CreateEventScreenProps } from 'src/navigation/NavigationTypes';
+import {CreateEventScreenProps} from 'src/navigation/NavigationTypes';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
-import * as CalendarEvents from 'react-native-calendar-events'; 
+import * as CalendarEvents from 'react-native-calendar-events';
 import ColorPicker from './ColorPicker';
-import { useSelector } from 'react-redux';
-import { getColor, getIDcate } from 'src/redux/slices/CalendarSlice';
+import {useSelector} from 'react-redux';
+import {getColor, getIDcate} from 'src/redux/slices/CalendarSlice';
 import IconL from 'react-native-vector-icons/EvilIcons';
 
 const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
@@ -29,7 +30,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   const [location, setLocation] = useState('');
   const [chosenDateStart, setChosenDateStart] = useState(new Date());
   const [chosenDateEnd, setChosenDateEnd] = useState(new Date());
-  const { id_family } = route.params;
+  const {id_family} = route.params;
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('none');
   const [isAllDay, setIsAllDay] = useState(false);
@@ -38,11 +39,11 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   let category = useSelector(getIDcate);
 
   const options = [
-    { label: 'None', value: 'none' },
-    { label: 'Daily', value: 'daily' },
-    { label: 'Weekly', value: 'weekly' },
-    { label: 'Monthly', value: 'monthly' },
-    { label: 'Yearly', value: 'yearly' },
+    {label: 'None', value: 'none'},
+    {label: 'Daily', value: 'daily'},
+    {label: 'Weekly', value: 'weekly'},
+    {label: 'Monthly', value: 'monthly'},
+    {label: 'Yearly', value: 'yearly'},
   ];
 
   const handleDateChangeStart = (event: any, selectedDate: any) => {
@@ -64,15 +65,16 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       time_start: chosenDateStart,
       time_end: chosenDateEnd,
       description: description,
-      color: color, 
+      color: color,
       is_all_day: isAllDay,
-      category: category, 
-      location: location, 
-      recurrence_exception: "",
-      recurrence_id: 0, 
-      recurrence_rule: selectedOption !== 'none' ? 'FREQ=' + selectedOption.toUpperCase() : "", 
-      start_timezone: "", 
-      end_timezone: "" 
+      category: category,
+      location: location,
+      recurrence_exception: '',
+      recurrence_id: 0,
+      recurrence_rule:
+        selectedOption !== 'none' ? 'FREQ=' + selectedOption.toUpperCase() : '',
+      start_timezone: '',
+      end_timezone: '',
     };
     try {
       const message = await CalendarServices.CreateEvent(
@@ -91,7 +93,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
         eventDetails.end_timezone,
         eventDetails.id_family,
       );
-  
+
       Alert.alert('Inform', message, [
         {
           text: 'OK',
@@ -104,90 +106,68 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       Alert.alert('Error', error.message);
     }
   };
-  
 
-     
   const handleRepeatEndDateChange = (event: any, selectedDate: any) => {
     if (selectedDate) {
       setRepeatEndDate(selectedDate);
     }
   };
   return (
-      <View style={styles.modalContainer}>
-        <View style={{ backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
-          <View style={styles.row}>
-            <Text style={styles.headerTitle}>Add New Event</Text>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Icon name="close" size={30} style={styles.backButton} />
-            </TouchableOpacity>
+    <View style={styles.modalContainer}>
+      <View
+        style={{
+          paddingVertical: 10,
+          padding: 20,
+          paddingTop: 60,
+        }}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back" size={30} color="white" />
+        </TouchableOpacity>
+        <View style={styles.row}>
+          <Text style={styles.headerTitle}>Create New Event</Text>
+        </View>
+      </View>
+      <View style={{padding: 20}}>
+        <Text
+          style={{
+            color: '#858AA2',
+            fontSize: 16,
+            marginBottom: 10,
+            fontWeight: '600',
+          }}>
+          TITLE
+        </Text>
+        <TextInput
+          style={styles.input1}
+          placeholderTextColor="white"
+          placeholder="Enter title"
+          value={title}
+          onChangeText={setTitle}
+        />
+      </View>
+      <View style={styles.datetimeContainer}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 10,
+          }}>
+          <View style={styles.allDayConTainer}>
+            <Text style={styles.text}> All day</Text>
           </View>
-          <View>
-            <Text style={{ color: 'gray', fontSize: 16 }}>Title</Text>
-            <TextInput
-              style={styles.input1}
-              placeholder="Enter title"
-              value={title}
-              onChangeText={setTitle}
-            />
+          <View style={styles.switches}>
+            <Switch value={isAllDay} onValueChange={setIsAllDay} />
           </View>
         </View>
-    <View style={styles.containerEnter}> 
-        <View style={{ ...styles.column, backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
-          <View style={[styles.row, { alignItems: 'center' }]}>
-          <Icon name="location" size={28} color="gray" />
-
-          
-          </View>
-          <TextInput
-            style={styles.input2}
-            placeholder="Enter location"
-            value={location}
-            onChangeText={setLocation}
-          />
-
-        </View>
-        <View style={{ ...styles.column, backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
-          <View style={[styles.row, { alignItems: 'center' }]}>
-            <MaterialCommunityIcons
-              name="playlist-edit"
-              size={30}
-              style={{ color: 'gray' }}
-            />
-          
-          </View>
-          <TextInput
-            style={styles.input2}
-            placeholder="Enter description"
-            value={description}
-            onChangeText={setDescription}
-      
-          />
-        </View>
-    </View>
-        <View style={styles.datetimeContainer}>
-
-          <View style= {styles.allDayConTainer}> 
-            <Text style= {styles.text}> All day</Text>
-
-            <View style={styles.switches}> 
-            <Switch
-                value={isAllDay}
-                onValueChange={setIsAllDay}
+        <View>
+          <View style={[styles.row, {alignItems: 'center'}]}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <MaterialCommunityIcons
+                name="clock-time-four-outline"
+                size={30}
+                style={{color: 'white', marginRight: 10}}
               />
-            </View>
-
-          </View>
-            <View>
-          <View style={[styles.row, { backgroundColor: '#ffffff', alignItems: 'center' }]}>
-            <View style={{ flexDirection: 'row',    alignItems: 'center', }}> 
-            <MaterialCommunityIcons
-              name="clock-time-four-outline"
-              size={30}
-              style={{ color: 'gray' }}
-            />
-            <Text style={{  fontSize: 16, color: 'gray' }}>
-              Start
-            </Text>
+              <Text style={{fontSize: 16, color: 'white'}}>Start time</Text>
             </View>
             <DateTimePicker
               value={chosenDateStart}
@@ -196,17 +176,23 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
               onChange={handleDateChangeStart}
             />
           </View>
- 
-          <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomColor: '#ccc', paddingVertical: 10, alignItems: 'center' }]}>
-          <View style={{ flexDirection: 'row',  alignItems: 'center',}}> 
-            <MaterialCommunityIcons
-              name="clock-time-four-outline"
-              size={30}
-              style={{ color: 'gray' }}
-            />
-            <Text style={{fontSize: 16, color: 'gray' }}>
-             End
-            </Text>
+
+          <View
+            style={[
+              styles.row,
+              {
+                borderBottomColor: '#ccc',
+                paddingVertical: 10,
+                alignItems: 'center',
+              },
+            ]}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <MaterialCommunityIcons
+                name="clock-time-four-outline"
+                size={30}
+                style={{color: 'white', marginRight: 10}}
+              />
+              <Text style={{fontSize: 16, color: 'white'}}>End time</Text>
             </View>
             <DateTimePicker
               value={chosenDateEnd}
@@ -216,17 +202,66 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
             />
           </View>
         </View>
-
       </View>
-        <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10, alignItems: 'center', zIndex: isPickerOpen ? 1000 : 1 }]}>
+      <View style={{backgroundColor: 'white', padding: 20}}>
+        <View
+          style={{
+            ...styles.column,
+            borderBottomWidth: 1,
+            borderBottomColor: '#ccc',
+            paddingVertical: 10,
+          }}>
+          <View style={[styles.row, {alignItems: 'center'}]}>
+            <Icon name="location" size={28} color="gray" />
+          </View>
+          <TextInput
+            style={styles.input2}
+            placeholder="Enter location"
+            value={location}
+            onChangeText={setLocation}
+          />
+        </View>
+        <View
+          style={{
+            ...styles.column,
+            backgroundColor: '#ffffff',
+            borderBottomWidth: 1,
+            borderBottomColor: '#ccc',
+            paddingVertical: 10,
+          }}>
+          <View style={[styles.row, {alignItems: 'center'}]}>
+            <MaterialCommunityIcons
+              name="playlist-edit"
+              size={30}
+              style={{color: 'gray'}}
+            />
+          </View>
+          <TextInput
+            style={styles.input2}
+            placeholder="Enter description"
+            value={description}
+            onChangeText={setDescription}
+          />
+        </View>
+
+        <View
+          style={[
+            styles.row,
+            {
+              backgroundColor: '#ffffff',
+              borderBottomWidth: 1,
+              borderBottomColor: '#ccc',
+              paddingVertical: 10,
+              alignItems: 'center',
+              zIndex: isPickerOpen ? 1000 : 1,
+            },
+          ]}>
           <MaterialCommunityIcons
             name="repeat"
             size={30}
-            style={{ color: 'gray' }}
+            style={{color: 'gray'}}
           />
-          <Text style={{ right: 30, fontSize: 16, color: 'gray' }}>
-            Repeat
-          </Text>
+          <Text style={{right: 30, fontSize: 16, color: 'gray'}}>Repeat</Text>
           <DropDownPicker
             open={isPickerOpen}
             setOpen={setIsPickerOpen}
@@ -234,16 +269,20 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
             items={options}
             setValue={setSelectedOption}
             placeholder="None"
-            containerStyle={{ height: 40, width: 200 }}
-            style={{ borderColor: 'white', borderWidth: 1 }}
-            dropDownContainerStyle={{ borderColor: '#ccc', borderWidth: 1, zIndex: 1000 }}
+            containerStyle={{height: 40, width: 200}}
+            style={{borderColor: 'white', borderWidth: 1}}
+            dropDownContainerStyle={{
+              borderColor: '#ccc',
+              borderWidth: 1,
+              zIndex: 1000,
+            }}
             zIndex={1000}
             zIndexInverse={1000}
           />
         </View>
         {selectedOption !== 'none' && (
           <View style={styles.datetimeContainer}>
-            <View style={[styles.row, { alignItems: 'center' }]}>
+            <View style={[styles.row, {alignItems: 'center'}]}>
               <MaterialCommunityIcons
                 name="calendar-end"
                 size={30}
@@ -259,18 +298,17 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
             </View>
           </View>
         )}
-                <ColorPicker navigation={navigation}/>
+        <ColorPicker navigation={navigation} />
 
-        <View style={[styles.formAction, { paddingVertical: 10 }]}>
+        <View style={[styles.formAction, {paddingVertical: 10}]}>
           <TouchableOpacity onPress={handleSubmit}>
             <View style={styles.btn}>
               <Text style={styles.btnText}>Submit</Text>
             </View>
           </TouchableOpacity>
         </View>
-
       </View>
-
+    </View>
   );
 };
 
