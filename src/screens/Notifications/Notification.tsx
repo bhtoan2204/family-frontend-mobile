@@ -7,32 +7,9 @@ import { FamilyServices } from 'src/services/apiclient';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import { HomeTabProps, LandingPageScreenProps, SignupScreenProps } from 'src/navigation/NavigationTypes';
+import { Family, Member, Message } from 'src/interface/notification/getNoti';
 
-interface Member {
-  id_user: string;
-  firstname: string;
-  lastname: string;
-  avatar: string;
-}
 
-interface Message {
-  senderId: string;
-  type: string;
-  content: string;
-  receiverId?: string;
-  _id: string;
-  isRead: boolean;
-  category: string; //user, family
-  familyId?: number;
-}
-
-interface Family {
-  id_family: number;
-  quantity: number;
-  description: string;
-  name: string;
-  avatar: string;
-}
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

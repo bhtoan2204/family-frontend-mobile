@@ -31,6 +31,7 @@ import news from 'src/assets/icons/news.png';
 import seemore from 'src/assets/icons/see-more.png';
 import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import { UserProfile } from 'src/interface/user/userProfile';
 
 const icons = {
   bundle,
@@ -61,13 +62,7 @@ interface Item {
   onPress: () => void;
 }
 
-type Profile = {
-  id_user: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  phone: string;
-};
+
 
 const HomeScreen = ({
   navigation,
@@ -78,7 +73,7 @@ const HomeScreen = ({
   const [currentPage, setCurrentPage] = useState(0);
   const [displayedPage, setDisplayedPage] = useState(0);
   const dispatch = useDispatch();
-  const [profile, setProfile] = useState<Profile>();
+  const [profile, setProfile] = useState<UserProfile>();
   const [isLightMode, setIsLightMode] = useState(true);
   const handlePress = () => {
     setIsLightMode(!isLightMode);
@@ -118,6 +113,7 @@ const HomeScreen = ({
       const id_user = result.data.id_user;
       setProfile(result.data);
       dispatch(Profile(result.data));
+
     } catch (error: any) {
       console.log('ProfileServices.getProfile error:', error);
     }
@@ -282,19 +278,19 @@ const HomeScreen = ({
                   fontWeight: 'bold',
                   marginBottom: 8,
                 }}>
-                Jennie Kim
+              {`${profile?.firstname} ${profile?.lastname}`}
               </Text>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <MaterialIcons name="location-on" size={22} color="#fff" />
                 <Text style={{color: 'white', fontSize: 17, right: 30}}>
-                  24 Tran Hung Dao
+                  
                 </Text>
               </View>
             </View>
             <View style={{flexDirection: 'row', right: 20}}>
               <Image
-                source={require('../../assets/images/avatar.png')}
+                source={profile?.avatar!== "[NULL]" ? { uri: profile?.avatar } : require('../../assets/images/avatar_default.jpg')}
                 resizeMode="contain"
                 style={{
                   width: 80,

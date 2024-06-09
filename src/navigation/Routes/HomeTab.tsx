@@ -14,6 +14,10 @@ import CategoryExpenseScreen from 'src/screens/ExpenseScreen/CategoryScreen';
 import WalletScreen from 'src/screens/ExpenseScreen/WalletScreen';
 import FamilyScreen from 'src/screens/ExpenseScreen/FamilyScreen';
 import CreateInvoiceScreen from 'src/screens/Invoice/CreateInvoice/CreateInvoice';
+import ProfileScreen from 'src/screens/ProfileScreen';
+import ChangePassword from 'src/screens/ProfileScreen/ChangePassword/ChangePassword';
+import EditProfile from 'src/screens/ProfileScreen/EditProfile/EditProfile';
+import EditProfileScreen from 'src/screens/EditProfileScreen/EditProfileScreen';
 
 const Tab = createBottomTabNavigator();
 const TabList = [
@@ -29,7 +33,7 @@ const TabList = [
     id: TEXTS.FAMILY_TAB,
     title: TEXTS.FAMILY_TAB,
     component: ViewAllFamilyScreen,
-    screen: 'ProfileScreen',
+    screen: 'ViewAllFamilyScreen',
     icon: 'account-group',
     visible: true,
   },
@@ -79,10 +83,24 @@ const TabList = [
   {
     id: TEXTS.MORE_TAB,
     title: TEXTS.MORE_TAB,
-    component: BottomSheetChild,
-    screen: 'BottomSheetChild',
+    component: ProfileScreen,
+    screen: 'ProfileScreen',
     icon: 'account-circle',
     visible: true,
+  },
+  {
+    id: 'ChangePassword',
+    title: 'ChangePassword',
+    component: ChangePassword,
+    screen: 'ChangePassword',
+    visible: false,
+  },
+  {
+    id: 'EditProfile',
+    title: 'EditProfile',
+    component: EditProfileScreen,
+    screen: 'EditProfile',
+    visible: false,
   },
 ];
 

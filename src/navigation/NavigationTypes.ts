@@ -729,6 +729,7 @@ export type ModelScreenParamsList = {
   CreateEvent: {
     id_family: number;
   };
+  Login: undefined;
 };
 
 type ProfileDetailNavigationProp = NativeStackNavigationProp<
@@ -740,6 +741,14 @@ export interface ProfileDetailScreenProps {
   navigation: ProfileDetailNavigationProp;
 }
 
+type LoginNavigationProp = NativeStackNavigationProp<
+  ModelScreenParamsList,
+  'Login'
+>;
+
+export interface LoginProps {
+  navigation: LoginNavigationProp;
+}
 type ChangePasswordNavigationProp = NativeStackNavigationProp<
   ModelScreenParamsList,
   'ChangePassword'

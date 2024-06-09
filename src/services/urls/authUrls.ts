@@ -9,6 +9,8 @@ const AuthUrl = {
   facebookCallback: `${baseUrl}/api/v1/auth/facebook/callback`,
   refreshToken: `${baseUrl}/api/v1/auth/refresh`,
   forgotPassword: `${baseUrl}/api/v1/user/forgotPassword`,
+  logout: `${baseUrl}/api/v1/auth/logout`,
+
 };
 
 export default AuthUrl;

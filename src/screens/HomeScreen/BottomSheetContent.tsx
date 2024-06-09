@@ -6,6 +6,7 @@ import {ModelScreenParamsList} from 'src/navigation/NavigationTypes';
 import ChangePassword from '../ModalScreen/ChangePassword';
 import MainProfile from '../ModalScreen/MainProfile';
 import ProfileDetail from '../ModalScreen/ProfileDetail';
+import LoginScreen from '../LoginScreen';
 
 const Stack = createNativeStackNavigator<ModelScreenParamsList>();
 
@@ -38,6 +39,15 @@ const BottomSheetChild = () => {
             }}
             name="ChangePassword"
             component={ChangePassword}
+          />
+          <Stack.Screen
+            options={{
+              headerShown: true,
+              headerBackTitle: 'Back',
+              headerTintColor: '#66c0f4',
+            }}
+            name="Login"
+            component={LoginScreen}
           />
         </Stack.Navigator>
       </PaperProvider>
