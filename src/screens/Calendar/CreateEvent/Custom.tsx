@@ -3,19 +3,21 @@ import { View, Text, TouchableOpacity, Modal } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { StyleSheet } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { RRule, RRuleSet } from 'rrule';
+import { RRule } from 'rrule';
 import { useDispatch } from 'react-redux';
-import { setFreq} from 'src/redux/slices/CalendarSlice';
+import styles from './StyleCustom';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
   const [number, setNumber] = useState<number>(1);
   const [unit, setUnit] = useState('daily');
   const [isPickerRepeatOpen, setIsPickerRepeatOpen] = useState(false);
   const [customOptions, setCustomOptions] = useState([]);
-  const [selectedDays, setSelectedDays] = useState<string>('');
-  const [selectedMonths, setSelectedMonths] = useState<string>('');
-  const [selectedYears, setSelectedYears] =useState<string>('');
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [selectedMonths, setSelectedMonths] = useState<string[]>([]);
+  const [selectedYears, setSelectedYears] = useState<string[]>([]);
   const dispatch = useDispatch();
+  const [isNumberPickerVisible, setIsNumberPickerVisible] = useState(false);
 
   const numbers = Array.from({ length: 999 }, (_, i) => i + 1);
 
@@ -46,23 +48,21 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
   }, [unit]);
 
   const renderCustomOptions = () => {
-    if (unit === 'daily') {
-      return customOptions.map((option, index) => (
-        <Text key={index} style={styles.customOption}>{option}</Text>
-      ));
-    } else if (unit === 'weekly') {
+    if (unit === 'weekly') {
       return (
         <View style={styles.weeklyContainer}>
           {customOptions.map((option, index) => (
             <TouchableOpacity
               key={index}
               onPress={() => handleDayClick(option)}
-              style={[
-                styles.weeklyDay,
-                selectedDays.includes(option) && styles.selectedDay,
-              ]}
+              style={styles.weeklyDay}
             >
-              <Text>{option}</Text>
+              <View style={styles.checkContainer}> 
+              <Text style={styles.weeklyDayText}>{option}</Text>
+              {selectedDays.includes(option) && (
+                <Icon name="check" size={20} color="green" style={styles.checkIcon} />
+              )}
+            </View>
             </TouchableOpacity>
           ))}
         </View>
@@ -94,10 +94,10 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
                 onPress={() => handleYearClick(option)}
                 style={[
                   styles.yearlyMonth,
-                  selectedYears.includes(option) && styles.selectedDay,
+                  selectedYears.includes(option) && styles.selectedMonth,
                 ]}
               >
-                <Text>{option}</Text>
+                <Text style={styles.yearlyMonthText}>{option}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -108,11 +108,11 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
                 onPress={() => handleYearClick(option)}
                 style={[
                   styles.yearlyMonth,
-                  selectedYears.includes(option) && styles.selectedDay,
+                  selectedYears.includes(option) && styles.selectedMonth,
                 ]}
               >
-                <Text>{option}</Text>
-              </TouchableOpacity>
+                <Text style={styles.yearlyMonthText}>{option}</Text>
+                </TouchableOpacity>
             ))}
           </View>
           <View style={styles.yearlyRow}>
@@ -122,11 +122,11 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
                 onPress={() => handleYearClick(option)}
                 style={[
                   styles.yearlyMonth,
-                  selectedYears.includes(option) && styles.selectedDay,
+                  selectedYears.includes(option) && styles.selectedMonth,
                 ]}
               >
-                <Text>{option}</Text>
-              </TouchableOpacity>
+                <Text style={styles.yearlyMonthText}>{option}</Text>
+                </TouchableOpacity>
             ))}
           </View>
         </View>
@@ -159,10 +159,41 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
   };
 
   const handleSave = () => {
-    //const freq= 'Event will occur every ' +{unit} + 'on'
-    //dispatch(setFreq());
-    
-    onSave(unit, number, selectedDays, selectedMonths, selectedYears);
+    const freqMap = {
+      daily: RRule.DAILY,
+      weekly: RRule.WEEKLY,
+      monthly: RRule.MONTHLY,
+      yearly: RRule.YEARLY,
+    };
+
+    const byweekday = selectedDays.map((day) => RRule[day.toUpperCase().slice(0, 2)]);
+    const bymonthday = selectedMonths.map(Number);
+    const bymonth = selectedYears.map((month) => customOptions.indexOf(month) + 1);
+
+    const rule = new RRule({
+      freq: freqMap[unit],
+      interval: number,
+      byweekday: byweekday.length > 0 ? byweekday : null,
+      bymonthday: bymonthday.length > 0 ? bymonthday : null,
+      bymonth: bymonth.length > 0 ? bymonth : null,
+    });
+
+    onSave(rule.toString());
+  };
+
+  const getUnitLabel = () => {
+    switch (unit) {
+      case 'daily':
+        return number > 1 ? 'days' : 'day';
+      case 'weekly':
+        return number > 1 ? 'weeks' : 'week';
+      case 'monthly':
+        return number > 1 ? 'months' : 'month';
+      case 'yearly':
+        return number > 1 ? 'years' : 'year';
+      default:
+        return '';
+    }
   };
 
   return (
@@ -171,8 +202,10 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
         <View style={styles.customModalContainer}>
           <Text style={styles.modalTitle}>Custom Repeat</Text>
 
-          <View style={[styles.row, { zIndex: 1000 }]}>
-            <Text style={styles.label}>Frequency</Text>
+        <View style={styles.container1}> 
+
+        <View style={[styles.row, { zIndex: 3000, borderBottomWidth: 1, borderColor: '#ccc' }]}>
+         <Text style={styles.label}>Frequency</Text>
             <DropDownPicker
               open={isPickerRepeatOpen}
               setOpen={setIsPickerRepeatOpen}
@@ -188,27 +221,28 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
             />
           </View>
 
-          <View style={[styles.row, { zIndex: 1000 }]}>
+          <TouchableOpacity  style={[styles.row, { zIndex: 1000 }]} onPress={() => setIsNumberPickerVisible(!isNumberPickerVisible)}>
             <Text style={styles.label}>Every</Text>
-            <Text style={styles.label}>{number} {unit}</Text>
-          </View>
+            <Text style={styles.label}>{number} {getUnitLabel()}</Text>
+          </TouchableOpacity>
 
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={number}
-              style={styles.picker}
-              onValueChange={(itemValue) => setNumber(itemValue)}
-            >
-              {numbers.map((num) => (
-                <Picker.Item key={num} label={num.toString()} value={num} />
-              ))}
-            </Picker>
-            <Text style={styles.unitLabel}>{unit}</Text>
-          </View>
-          
-        {renderCustomOptions()}
+          {isNumberPickerVisible && (
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={number}
+                style={styles.picker}
+                onValueChange={(itemValue) => setNumber(itemValue)}
+              >
+                {numbers.map((num) => (
+                  <Picker.Item key={num} label={num.toString()} value={num} />
+                ))}
+              </Picker>
+              <Text style={styles.unitLabel }>{getUnitLabel()}</Text>
 
-
+            </View>
+          )}
+            </View>
+          {renderCustomOptions()}
           <View style={styles.modalButtonContainer}>
             <TouchableOpacity onPress={onClose}>
               <Text style={styles.modalCancelButton}>Cancel</Text>
@@ -223,149 +257,5 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  customModalContainer: {
-    width: '90%',
-    height: '80%',
-    padding: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    color: 'gray',
-  },
-  dropDownContainer: {
-    width: 150,
-  },
-  dropDown: {
-    borderColor: 'white',
-  },
-  dropDownPicker: {
-    borderColor: '#ccc',
-    zIndex: 1000,
-  },
-  pickerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    marginBottom: 20,
-  },
-  picker: {
-    flex: 1,
-    height: 150,
-  },
-  unitLabel: {
-    fontSize: 16,
-    color: 'gray',
-    marginLeft: 10,
-  },
-  customOptionsContainer: {
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  customOption: {
-    fontSize: 16,
-    color: 'black',
-  },
-  weeklyContainer: {
-    height: '40%',
-    width: '110%',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 30,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-
-  },
-  weeklyDay: {
-    fontSize: 16,
-    color: 'black',
-    marginLeft: 20,
-    //borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  monthlyContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    width: '100%',
-    height: '40%',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 20,
-    marginTop: 30,
-
-  },
-  monthlyDay: {
-    fontSize: 16,
-    color: 'black',
-    marginBottom: 18,
-    marginRight : 15,
-  },
-  yearlyContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    width: 'auto',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 20,
-    marginTop : 80
-  },
-  yearlyRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 40,
-    marginLeft: 20
-    
-  },
-  yearlyMonth: {
-    fontSize: 16,
-    color: 'black',
-    width: '22%', 
-  },
-  modalButtonContainer: {
-    flex: 1,
-    alignItems: 'flex-end', 
-    justifyContent: 'center',
-    width: '100%',
-    flexDirection: 'row',
-  },
-  modalCancelButton: {
-    color: 'red',
-    fontSize: 16,
-    marginRight: 100,
-  },
-  modalSubmitButton: {
-    color: 'green',
-    fontSize: 16,
-  },
-  selectedDay: {
-    backgroundColor: 'lightblue', 
-    borderRadius: 100,
-    paddingHorizontal: 5,
-  },
-});
 
 export default CustomRepeatScreen;
