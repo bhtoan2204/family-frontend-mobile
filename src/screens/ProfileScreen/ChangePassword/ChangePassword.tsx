@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Image } from 'react-native';
+import { ScrollView, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Image, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import styles from './styles';
 import { ProfileScreenProps } from 'src/navigation/NavigationTypes';
+import { ProfileServices } from 'src/services/apiclient';
 
 const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -16,8 +17,15 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
   const toggleShowNewPassword = () => setShowNewPassword(prevState => !prevState);
   const toggleShowConfirmPassword = () => setShowConfirmPassword(prevState => !prevState);
 
-  const handleChangePassword = () => {
-    // Your password change logic here
+  const handleChangePassword = async () => {
+    try {
+        const result = await ProfileServices.changePassword({oldPassword: currentPassword, newPassword: newPassword, confirmPassword: confirmPassword});
+        Alert.alert('Success','Password changed successfully');
+      }
+    catch(error){
+      Alert.alert('Error');
+
+    }
   };
 
   return (
