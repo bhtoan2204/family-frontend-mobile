@@ -625,6 +625,7 @@ export type HomeTabParamList = {
   MoreScreen: undefined;
   Expenditure: undefined;
   CategoryExpense: undefined;
+
 };
 
 export type MessageTabParamList = {
@@ -656,10 +657,10 @@ type ProfileScreenNavigationProp = NativeStackNavigationProp<
   'ProfileScreen'
 >;
 
+
 export interface ProfileScreenProps {
   navigation: ProfileScreenNavigationProp;
 }
-
 type ReportScreenNavigationProp = NativeStackNavigationProp<
   HomeTabParamList,
   'ReportScreen'

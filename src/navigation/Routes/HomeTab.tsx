@@ -17,7 +17,7 @@ import CreateInvoiceScreen from 'src/screens/Invoice/CreateInvoice/CreateInvoice
 import ProfileScreen from 'src/screens/ProfileScreen';
 import ChangePassword from 'src/screens/ProfileScreen/ChangePassword/ChangePassword';
 import EditProfile from 'src/screens/ProfileScreen/EditProfile/EditProfile';
-import EditProfileScreen from 'src/screens/EditProfileScreen/EditProfileScreen';
+import EditProfileScreen from 'src/screens/ProfileScreen/EditProfileScreen/EditProfileScreen';
 
 const Tab = createBottomTabNavigator();
 const TabList = [
@@ -100,7 +100,6 @@ const TabList = [
     title: 'EditProfile',
     component: EditProfileScreen,
     screen: 'EditProfile',
-    visible: false,
   },
 ];
 
