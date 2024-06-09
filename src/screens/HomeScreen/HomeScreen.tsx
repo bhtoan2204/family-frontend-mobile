@@ -17,7 +17,7 @@ import {
   ViewAllFamilyScreenProps,
 } from 'src/navigation/NavigationTypes';
 import {Profile} from 'src/redux/slices/ProfileSclice';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {MaterialIcons} from '@expo/vector-icons';
 import {COLORS} from 'src/constants';
 import chat from 'src/assets/icons/chat.png';
@@ -31,6 +31,8 @@ import news from 'src/assets/icons/news.png';
 import seemore from 'src/assets/icons/see-more.png';
 import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import { UserProfile } from 'src/interface/user/userProfile';
+import { RootState } from 'src/redux/store';
 
 const icons = {
   bundle,
@@ -61,13 +63,7 @@ interface Item {
   onPress: () => void;
 }
 
-type Profile = {
-  id_user: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  phone: string;
-};
+
 
 const HomeScreen = ({
   navigation,
@@ -78,8 +74,9 @@ const HomeScreen = ({
   const [currentPage, setCurrentPage] = useState(0);
   const [displayedPage, setDisplayedPage] = useState(0);
   const dispatch = useDispatch();
-  const [profile, setProfile] = useState<Profile>();
   const [isLightMode, setIsLightMode] = useState(true);
+  const profile = useSelector((state: RootState) => state.profile.profile);
+
   const handlePress = () => {
     setIsLightMode(!isLightMode);
   };
@@ -90,7 +87,6 @@ const HomeScreen = ({
   });
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
 
-  //Trang thai cua pictures
   const handleScroll = (event: {
     nativeEvent: {layoutMeasurement: any; contentOffset: any};
   }) => {
@@ -110,17 +106,15 @@ const HomeScreen = ({
     });
   };
   const handleChat = () => {
-    navigation.navigate('ChatStack', {
-      screen: 'ChatList',
-    });
+    navigation.navigate('MessageTab', {screen: 'ChatList'});
   };
 
   const handleGetProfile = async () => {
     try {
       const result = await PackageServices.getProfile();
       const id_user = result.data.id_user;
-      setProfile(result.data);
       dispatch(Profile(result.data));
+
     } catch (error: any) {
       console.log('ProfileServices.getProfile error:', error);
     }
@@ -230,7 +224,7 @@ const HomeScreen = ({
       icon: 'chat',
       label: 'Chat',
       onPress: () => {
-        console.log('Plumbing pressed');
+        handleChat();
       },
     },
     {
@@ -285,19 +279,19 @@ const HomeScreen = ({
                   fontWeight: 'bold',
                   marginBottom: 8,
                 }}>
-                Jennie Kim
+              {`${profile?.firstname} ${profile?.lastname}`}
               </Text>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <MaterialIcons name="location-on" size={22} color="#fff" />
                 <Text style={{color: 'white', fontSize: 17, right: 30}}>
-                  24 Tran Hung Dao
+                  
                 </Text>
               </View>
             </View>
             <View style={{flexDirection: 'row', right: 20}}>
               <Image
-                source={require('../../assets/images/avatar.png')}
+                source={profile?.avatar!== "[NULL]" ? { uri: profile?.avatar } : require('../../assets/images/avatar_default.jpg')}
                 resizeMode="contain"
                 style={{
                   width: 80,

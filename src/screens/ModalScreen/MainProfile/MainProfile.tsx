@@ -1,51 +1,49 @@
 import {useEffect, useState} from 'react';
 import {Animated, Image, ScrollView, View} from 'react-native';
 import {Button, Card, PaperProvider, Text} from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import {COLORS, TEXTS} from 'src/constants';
+import { UserProfile } from 'src/interface/user/userProfile';
 import {
   ChangePasswordScreenProps,
+  LoginScreenProps,
   ProfileDetailScreenProps,
 } from 'src/navigation/NavigationTypes';
-import {ProfileServices} from 'src/services/apiclient';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
+import {AuthServices, ProfileServices} from 'src/services/apiclient';
 
-const initialProfile = {
-  avatar: '',
-  email: '',
-  firstname: '',
-  lastname: '',
-  phone: '',
-};
+
 
 const MainProfile = ({
   navigation,
-}: ProfileDetailScreenProps & ChangePasswordScreenProps) => {
-  const [profile, setProfile] = useState(initialProfile);
+}: ProfileDetailScreenProps & ChangePasswordScreenProps & LoginScreenProps) => {
+
+  const [profile, setProfile] = useState<UserProfile>();
   const scrollY = new Animated.Value(0);
+
+  let user = useSelector(selectProfile);
+
+  useEffect( ()=> {
+     setProfile(user);
+  },[])
+
   const translateY = scrollY.interpolate({
     inputRange: [0, 200],
     outputRange: [-200, 0],
     extrapolate: 'clamp',
   });
 
-  const loadData = async () => {
-    try {
-      const response = await ProfileServices.profile();
 
-      setProfile({
-        avatar: response.data.avatar,
-        email: response.data.email,
-        firstname: response.data.firstname,
-        lastname: response.data.lastname,
-        phone: response.data.phone,
-      });
+
+ 
+  const handleSignOut = async () => {
+    try {
+      await AuthServices.Logout();
+      navigation.navigate('Login');
     } catch (error) {
       console.log('error', error);
     }
   };
-
-  useEffect(() => {
-    loadData();
-  }, []);
 
   return (
     <PaperProvider>
@@ -61,11 +59,11 @@ const MainProfile = ({
           }}>
           <View>
             <Image
-              src={profile.avatar}
-              className="h-[30px] w-[30px] rounded-full self-center"
+                src={profile?.avatar!== "[NULL]" ? { uri: profile?.avatar } : require('../../../assets/images/avatar_default.jpg')}
+                className="h-[30px] w-[30px] rounded-full self-center"
             />
             <Text className={`text-xl text-center text-[${COLORS.primary}]`}>
-              {profile.firstname} {profile.lastname}
+              {profile?.firstname} {profile?.lastname}
             </Text>
           </View>
         </Animated.View>
@@ -76,15 +74,15 @@ const MainProfile = ({
             scrollY.setValue(e.nativeEvent.contentOffset.y);
           }}>
           <View className="flex-1">
-            <Image
-              src={profile.avatar}
-              className="h-[100px] w-[100px] rounded-full self-center mt-10"
+          <Image
+              source={profile?.avatar !== "[NULL]" ? { uri: profile?.avatar } : require('../../../assets/images/avatar_default.jpg')}
+              resizeMode="contain"
             />
             <Text
               variant="headlineSmall"
               className={`text-center text-[${COLORS.primary}] mt-3`}>
-              {profile.firstname} {profile.lastname}
-            </Text>
+              {profile?.firstname} {profile?.lastname}
+              </Text>
             <Card
               className="mt-10 mx-5 mb-1 z-[1]"
               onPress={() => navigation.navigate('ProfileDetail')}>
@@ -135,7 +133,7 @@ const MainProfile = ({
                 fontSize: 16,
               }}
               mode="outlined"
-              onPress={() => console.log('Logout')}>
+              onPress={() => handleSignOut}>
               {TEXTS.LOGOUT}
             </Button>
           </View>

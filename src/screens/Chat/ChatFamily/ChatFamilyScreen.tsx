@@ -150,6 +150,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   const sendImage = async (base64Image: string) => {
     try {
       if (socket) {
+        console.log('hi')
         socket.emit('newFamilyImageMessage', {
           familyId: id_family,
           imageData: base64Image,
@@ -276,7 +277,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         inverted
         renderItem={({ item, index }) => (
           <View>
-            {item.senderId !== id_user ? renderMemberMessage(item) : (
+            {item.senderId !== profile.id_user ? renderMemberMessage(item) : (
               <View style={[styles.messageContainer, styles.senderMessageContainer]}>
                 {item.type === 'photo' ? (
                   <TouchableOpacity onPress={() => handleImagePress(item)}>

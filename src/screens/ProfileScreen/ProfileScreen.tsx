@@ -1,74 +1,116 @@
-import {MaterialIcons} from '@expo/vector-icons';
-import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {COLORS} from 'src/constants';
-import {EditProfileScreenProps} from 'src/navigation/NavigationTypes';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, Text, TouchableOpacity, View, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import { useSelector } from 'react-redux';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
+import AuthServices from 'src/services/apiclient/AuthServices';
 import styles from './styles';
+import { UserProfile } from 'src/interface/user/userProfile';
+import { ProfileScreenProps } from 'src/navigation/NavigationTypes';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { RootState } from 'src/redux/store';
 
-const ProfileScreen = ({navigation}: EditProfileScreenProps) => {
-  const handleSignOut = () => {
-    // Sign out logic
+const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
+  const profile = useSelector((state: RootState) => state.profile.profile);
+  let user = useSelector(selectProfile);
+
+
+
+  const handleSignOut = async () => {
+    try {
+      await AuthServices.Logout();
+      navigation.navigate('LoginScreen');
+    } catch (error) {
+      console.log('error', error);
+    }
   };
+
+  const handleChangePassword = async () => {
+    try {
+      navigation.navigate('ChangePassword');
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+  const handleEditProfile = async () => {
+    try {
+      navigation.navigate('EditProfile');
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
   return (
-    <ScrollView style={styles.safeView}>
-      <SafeAreaView style={styles.safeView}>
-        <View style={styles.backgroundImageView}>
-          <Image style={styles.backgroundImage} resizeMode="cover" />
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <View style={styles.header}>
+          <MaterialIcons name="keyboard-arrow-left" size={30} color="#333333" />
+          <Text style={styles.headerText}>Profile</Text>
+          <MaterialIcons name="notifications" size={30} color="#333333" />
         </View>
         <View style={styles.profileView}>
           <Image
-            source={require('../../assets/images/google.png')}
-            resizeMode="contain"
+            source={profile?.avatar !== "[NULL]" ? { uri: profile?.avatar } : require('../../assets/images/avatar_default.jpg')}
+            resizeMode="cover"
             style={styles.profileImage}
           />
-          <Text style={styles.nameText}>Duong Pham</Text>
-          <Text style={styles.emailText}>duong@gmail.com</Text>
-          <View style={styles.locationView}>
-            <MaterialIcons
-              name="location-on"
-              size={24}
-              color={COLORS.primary}
-            />
-            <Text>Ho Chi Minh City, Vietnam</Text>
-          </View>
-          <View style={styles.infoView}>
-            <View style={styles.infoItemView}>
-              <Text style={styles.numberText}>122</Text>
-              <Text style={styles.infoItemText}>Owned Families</Text>
-            </View>
-            <View style={styles.infoItemView}>
-              <Text style={styles.numberText}>67</Text>
-              <Text style={styles.infoItemText}>Joined</Text>
-            </View>
-            <View style={styles.infoItemView}>
-              <Text style={styles.numberText}>77</Text>
-              <Text style={styles.infoItemText}>Friends</Text>
-            </View>
-          </View>
-          <View style={styles.buttonView}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => navigation.navigate('EditProfileScreen')}>
-              <Text style={styles.buttonText}>Edit Profile</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Add Friend</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.divider} />
-          <View style={styles.signOutView}>
-            <TouchableOpacity style={styles.changePasswordButton}>
-              <Text>Change Password</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.signoutButton}
-              onPress={handleSignOut}>
-              <Text style={styles.buttonText}>Sign Out</Text>
-            </TouchableOpacity>
+          <View>
+            <Text style={styles.nameText}>{profile?.firstname} {profile?.lastname}</Text>
+            <Text style={styles.emailText}>{profile?.email}</Text>
           </View>
         </View>
-      </SafeAreaView>
-    </ScrollView>
+        <View style={styles.section}>
+          <Text style={styles.sectionHeader}>General</Text>
+
+          <TouchableOpacity style={styles.item} onPress={handleEditProfile}>
+            <AntDesign name="user" size={24} color="#333333" style={styles.icon} />
+            <View style={styles.itemContent}>
+              <View>
+                <Text style={styles.itemText}>Edit Profile</Text>
+                <Text style={styles.itemSubText}>Change profile picture, number, E-mail, etc.</Text>
+              </View>
+              <Icon name="chevron-forward-outline" size={22} color="#1b2838" style={styles.iconChevron} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.item} onPress={handleChangePassword}>
+            <AntDesign name="lock" size={24} color="#333333" style={styles.icon} />
+            <View style={styles.itemContent}>
+              <View>
+                <Text style={styles.itemText}>Change Password</Text>
+                <Text style={styles.itemSubText}>Update and strengthen account security</Text>
+              </View>
+              <Icon name="chevron-forward-outline" size={22} color="#1b2838" style={styles.iconChevron} />
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionHeader}>Preferences</Text>
+          <TouchableOpacity style={styles.item} onPress={handleChangePassword}>
+            <AntDesign name="mail" size={24} color="#333333" style={styles.icon} />
+            <View style={styles.itemContent}>
+              <View>
+                <Text style={styles.itemText}>Feedback</Text>
+                <Text style={styles.itemSubText}>Provide us with your valuable feedback</Text>
+              </View>
+              <Icon name="chevron-forward-outline" size={22} color="#1b2838" style={styles.iconChevron} />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.item} onPress={handleSignOut}>
+          <AntDesign name="logout" size={24} color="#333333" style={styles.icon} />
+          <View style={styles.itemContent}>
+            <View>
+              <Text style={styles.itemText}>Log Out</Text>
+              <Text style={styles.itemSubText}>Securely log out of Account</Text>
+            </View>
+            <Icon name="chevron-forward-outline" size={22} color="#1b2838" style={styles.iconChevron} />
+          </View>
+        </TouchableOpacity>
+        </View>
+        
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

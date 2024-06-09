@@ -11,6 +11,8 @@ export type RootParamList = {
   ChatStack: NavigatorScreenParams<ChatStackParamList>;
   ExpenseStack: NavigatorScreenParams<ExpenseStackParamList>;
   IncomeStack: NavigatorScreenParams<IncomeStackParamList>;
+  MessageTab: NavigatorScreenParams<MessageTabParamList>;
+
 };
 
 export type ExpenseStackParamList = {
@@ -101,13 +103,13 @@ export interface ChatScreenProps {
 }
 
 type ChatListNavigationProp = NativeStackNavigationProp<
-  ChatStackParamList,
+MessageTabParamList,
   'ChatList'
 >;
 
 export interface ChatListProps {
-  navigation: ChatListNavigationProp & ChatScreenNavigationProp;
-  route: RouteProp<ChatStackParamList, 'ChatList'>;
+  navigation: ChatListNavigationProp;
+  route: RouteProp<MessageTabParamList, 'ChatList'>;
 }
 
 type CallVideoNavigationProp = NativeStackNavigationProp<
@@ -623,8 +625,13 @@ export type HomeTabParamList = {
   MoreScreen: undefined;
   Expenditure: undefined;
   CategoryExpense: undefined;
+
 };
 
+export type MessageTabParamList = {
+  ChatList: undefined;
+ 
+};
 type CategoryExpenseNavigationProp = NativeStackNavigationProp<
   HomeTabParamList,
   'CategoryExpense'
@@ -650,10 +657,10 @@ type ProfileScreenNavigationProp = NativeStackNavigationProp<
   'ProfileScreen'
 >;
 
+
 export interface ProfileScreenProps {
   navigation: ProfileScreenNavigationProp;
 }
-
 type ReportScreenNavigationProp = NativeStackNavigationProp<
   HomeTabParamList,
   'ReportScreen'
@@ -723,6 +730,7 @@ export type ModelScreenParamsList = {
   CreateEvent: {
     id_family: number;
   };
+  Login: undefined;
 };
 
 type ProfileDetailNavigationProp = NativeStackNavigationProp<
@@ -734,6 +742,14 @@ export interface ProfileDetailScreenProps {
   navigation: ProfileDetailNavigationProp;
 }
 
+type LoginNavigationProp = NativeStackNavigationProp<
+  ModelScreenParamsList,
+  'Login'
+>;
+
+export interface LoginProps {
+  navigation: LoginNavigationProp;
+}
 type ChangePasswordNavigationProp = NativeStackNavigationProp<
   ModelScreenParamsList,
   'ChangePassword'

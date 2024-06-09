@@ -1,119 +1,93 @@
-import {StyleSheet} from 'react-native';
-import {COLORS} from 'src/constants';
+import { StyleSheet } from 'react-native';
+import { COLORS } from 'src/constants';
 
 const styles = StyleSheet.create({
-  safeView: {
+  container: {
     flex: 1,
-    backgroundColor: COLORS.white,
   },
-  backgroundImageView: {
-    width: '100%',
+  scrollView: {
+    flexGrow: 1,
+    paddingHorizontal: 20,
   },
-  backgroundImage: {
-    width: '100%',
-    height: 130,
-    backgroundColor: COLORS.primary,
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 20,
+    paddingBottom: 10,
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333333',
   },
   profileView: {
-    flex: 1,
     alignItems: 'center',
+    flexDirection: 'row',
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    backgroundColor: COLORS.white,
+    borderWidth: 1,
+    borderColor:  '#f0f0f0', 
+    marginBottom: 20,
+
   },
   profileImage: {
-    height: 120,
-    width: 120,
-    borderRadius: 999,
-    borderColor: COLORS.primary,
-    borderWidth: 2,
-    marginTop: -80,
-    backgroundColor: COLORS.white,
-  },
-  locationView: {
-    flexDirection: 'row',
-    marginVertical: 6,
-    alignItems: 'center',
-  },
-  infoView: {
-    paddingVertical: 8,
-    flexDirection: 'row',
+    width: 60,
+    height: 60,
+    borderRadius: 60,
+    marginRight: 10,
   },
   nameText: {
-    marginVertical: 8,
-    color: COLORS.primary,
+    fontSize: 20,
     fontWeight: 'bold',
-    fontSize: 18,
-    lineHeight: 22,
+    color: '#333333',
+    marginBottom: 3,
   },
   emailText: {
-    color: COLORS.black,
-    fontSize: 18,
-    lineHeight: 22,
-  },
-  locationText: {
-    marginLeft: 4,
     fontSize: 14,
-    lineHeight: 20,
+    color: 'gray',
   },
-  infoItemView: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginHorizontal: 10,
+  section: {
+    marginBottom: 20,
+    backgroundColor: COLORS.white,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor:  '#f0f0f0', 
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
-  numberText: {
-    color: COLORS.primary,
-    fontWeight: 'bold',
-    lineHeight: 30,
+  sectionHeader: {
     fontSize: 20,
-  },
-  infoItemText: {
-    color: COLORS.black,
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  button: {
-    width: 124,
-    height: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: COLORS.primary,
-    borderRadius: 10,
-    marginHorizontal: 20,
-  },
-  buttonText: {
-    color: COLORS.white,
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  buttonView: {
-    flexDirection: 'row',
-    marginVertical: 5,
-  },
-  signOutView: {
-    width: '80%',
-    marginHorizontal: 15,
-    flexDirection: 'column',
-  },
-  signoutButton: {
-    width: '100%',
-    height: 45,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: COLORS.red,
-    borderRadius: 10,
-  },
-  changePasswordButton: {
+    color: '#ccc',
     marginBottom: 10,
-    width: '100%',
-    height: 45,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: COLORS.primaryLite,
-    borderRadius: 10,
   },
-  divider: {
-    width: '100%',
-    height: 1,
-    backgroundColor: COLORS.gray,
-    marginVertical: 20,
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomColor: '#ccc',
+  },
+  itemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
+  },
+  icon: {
+    marginRight: 20,
+  },
+  itemText: {
+    fontSize: 16,
+    color: '#333333',
+  },
+  itemSubText: {
+    fontSize: 12,
+    color: 'gray',
+  },
+  iconChevron: {
+    marginLeft: 'auto',
   },
 });
 

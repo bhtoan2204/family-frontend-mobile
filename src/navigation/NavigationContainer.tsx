@@ -8,6 +8,7 @@ import CalendarStack from './Routes/CalendarStack';
 import ChatStack from './Routes/ChatStack';
 import ExpenseStack from './Routes/ExpenseStack';
 import IncomeStack from './Routes/IncomeStack';
+import MessageTab from './Routes/MessageTab';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,8 @@ const Navigation = () => {
         <Stack.Screen name="ChatStack" component={ChatStack} />
         <Stack.Screen name="ExpenseStack" component={ExpenseStack} />
         <Stack.Screen name="IncomeStack" component={IncomeStack} />
+        <Stack.Screen name="MessageTab" component={MessageTab} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

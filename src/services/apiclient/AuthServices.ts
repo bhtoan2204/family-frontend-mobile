@@ -1,6 +1,7 @@
 import axios, {AxiosResponse} from 'axios';
 import {ERROR_TEXTS} from 'src/constants';
 import {AuthUrl} from '../urls';
+import instance from '../httpInterceptor';
 
 const AuthServices = {
   login: async ({email, password}: {email: string; password: string}) => {
@@ -21,6 +22,7 @@ const AuthServices = {
       throw new Error(ERROR_TEXTS.USER_NOT_FOUND);
     }
   },
+  
   signup: async ({
     email,
     password,
@@ -109,7 +111,19 @@ const AuthServices = {
       console.log(error);
       throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
     }
-  }
+  },
+  Logout: async () => {
+    try {
+      const response: AxiosResponse = await instance.get(AuthUrl.logout);
+      if (response.status === 200) {
+        return response;
+      } else {
+        console.error('Error in Logout');
+      }
+    } catch (error: any) {
+      console.error('Error in Logout', error.message);
+    }
+  },
 };
 
 export default AuthServices;
