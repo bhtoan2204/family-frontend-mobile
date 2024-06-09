@@ -354,6 +354,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                       filled
                       style={styles.button}
                       onPress={handleSubmit}
+                      backgroundImage={require('../../assets/images/button.png')}
                     />
                     {/* <View
                       style={{

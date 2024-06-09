@@ -1,5 +1,11 @@
 import React from 'react';
-import {Text, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+  ViewStyle,
+  View,
+} from 'react-native';
 import {COLORS} from 'src/constants';
 import styles from './styles';
 
@@ -11,6 +17,7 @@ type ButtonProps = {
   color?: string;
   outlinedColor?: string;
   className?: string;
+  backgroundImage?: any;
 };
 
 const CustomButton = (props: ButtonProps) => {
@@ -20,24 +27,44 @@ const CustomButton = (props: ButtonProps) => {
     ? filledBackgroundColor
     : outlinedBackgroundColor;
   const textColor = props.filled ? COLORS.white : '#2A475E';
+  const absoluteFillObject: ViewStyle = {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  };
 
   return (
     <TouchableOpacity
       className={props.className}
       style={{
         ...styles.touchable,
-        backgroundColor: backgroundColor,
         ...props.style,
+        overflow: 'hidden', // Add this line
       }}
       onPress={props.onPress}>
-      <Text
+      <View
         style={{
-          fontSize: 18,
-          color: textColor,
-          fontWeight: 'bold',
+          ...absoluteFillObject,
+          overflow: 'hidden',
+          borderRadius: styles.touchable.borderRadius,
         }}>
-        {props.title}
-      </Text>
+        <ImageBackground
+          source={props.backgroundImage}
+          style={absoluteFillObject}>
+          <Text
+            style={{
+              fontSize: 18,
+              color: textColor,
+              fontWeight: 'bold',
+              textAlign: 'center',
+              top: 15,
+            }}>
+            {props.title}
+          </Text>
+        </ImageBackground>
+      </View>
     </TouchableOpacity>
   );
 };
