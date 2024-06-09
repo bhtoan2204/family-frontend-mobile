@@ -178,7 +178,7 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
       bymonth: bymonth.length > 0 ? bymonth : null,
     });
 
-    onSave(rule.toString());
+    onSave(unit, number, selectedDays, selectedMonths, selectedYears);
   };
 
   const getUnitLabel = () => {

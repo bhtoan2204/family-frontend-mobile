@@ -70,33 +70,38 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
     const frequency = selectedOptionRepeat.toUpperCase();
     const interval = number;
     let count;
-
-    switch (frequency) {
-      case 'DAILY':
-        count = Math.floor(differenceInDays(timeEnd, timeStart) / interval);
-        break;
-      case 'WEEKLY':
-        count = Math.floor(differenceInWeeks(timeEnd, timeStart) / interval);
-        break;
-      case 'MONTHLY':
-        count = Math.floor(differenceInMonths(timeEnd, timeStart) / interval);
-        break;
-      case 'YEARLY':
-        count = Math.floor(differenceInYears(timeEnd, timeStart) / interval);
-        break;
-      default:
-        count = 0;
+  
+    if (timeEnd) {
+      switch (frequency) {
+        case 'DAILY':
+          count = Math.floor(differenceInDays(timeEnd, timeStart) / interval);
+          break;
+        case 'WEEKLY':
+          count = Math.floor(differenceInWeeks(timeEnd, timeStart) / interval);
+          break;
+        case 'MONTHLY':
+          count = Math.floor(differenceInMonths(timeEnd, timeStart) / interval);
+          break;
+        case 'YEARLY':
+          count = Math.floor(differenceInYears(timeEnd, timeStart) / interval);
+          break;
+        default:
+          count = 1;
+      }
     }
-
+  
     let recurrenceRule = '';
+  
     if (selectedOptionRepeat !== 'none') {
       const options: Partial<RRuleStrOptions> = {
         freq: RRule[frequency],
         interval: interval,
-        count: count,
       };
-      if (selectedDays) {
-        const daysMapping: { [key: string]: number } = {
+      if (count) {
+        options.count = count;
+      }
+      if (selectedDays && selectedDays.length > 0) {
+        const daysMapping: { [key: string]: any } = {
           'Monday': RRule.MO,
           'Tuesday': RRule.TU,
           'Wednesday': RRule.WE,
@@ -105,22 +110,26 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
           'Saturday': RRule.SA,
           'Sunday': RRule.SU,
         };
-        options.byweekday = selectedDays.split(',').map(day => daysMapping[day]);
+        options.byweekday = selectedDays.map(day => daysMapping[day]);
       }
       if (selectedMonths) {
-        options.bymonth = selectedMonths.split(',').map(month => parseInt(month, 10));
+        const parsedMonths = Array.isArray(selectedMonths) ? selectedMonths : selectedMonths.split(',').map(month => parseInt(month, 10));
+        options.bymonth = parsedMonths.filter(month => !isNaN(month));
       }
       if (selectedYears) {
-        options.byyearday = selectedYears.split(',').map(year => parseInt(year, 10));
+        const parsedYears = Array.isArray(selectedYears) ? selectedYears : selectedYears.split(',').map(year => parseInt(year, 10));
+        options.byyearday = parsedYears.filter(year => !isNaN(year));
       }
       if (selectedOptionEndRepeat === 'date') {
         options.until = repeatEndDate;
       }
-
+  
       const rule = new RRule(options as RRuleStrOptions);
       recurrenceRule = rule.toString();
+      // Remove RRULE: from the recurrence rule
+      recurrenceRule = recurrenceRule.replace(/^RRULE:/, '');
     }
-
+    console.log(recurrenceRule);
     const eventDetails = {
       id_family: id_family,
       title: title,
@@ -178,6 +187,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   const handleCustomModalSubmit = (unit: string, number: number, selectedDays: string, selectedMonths: string, selectedYears: string) => {
     setIsModalVisible(false);
     setSelectedOptionRepeat(unit);
+    console.log(unit)
     setNumber(number);
     switch (unit) {
       case 'weekly':
