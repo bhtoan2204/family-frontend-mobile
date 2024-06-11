@@ -109,7 +109,10 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
                         </TouchableOpacity>
                         <View className='mr-3'>
                             <TouchableOpacity onPress={() => {
-                                refRBSheet.current?.open()
+                                // refRBSheet.current?.open()
+                                navigation.navigate('AddHouseHoldItem', {
+                                    id_family
+                                })
 
                             }} >
                                 {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}

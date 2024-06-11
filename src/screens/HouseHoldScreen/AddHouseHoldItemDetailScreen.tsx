@@ -63,7 +63,7 @@ const household_items = [
     }
 ]
 
-const step = [
+const steps = [
     {
         title: "Step 0",
         description: "Intro"
@@ -111,7 +111,7 @@ const AddHouseHoldItemDetailScreen: React.FC<AddHouseHoldItemDetailScreenProps> 
                     </View>
                     {/* <Text>3-Step indicator here</Text> */}
                     <View className='w-full justify-center items-center my-3'>
-                        <AddHouseholdStepIndicator currentStep={step} />
+                        <AddHouseholdStepIndicator currentStep={step} steps={steps}/>
                     </View>
 
 

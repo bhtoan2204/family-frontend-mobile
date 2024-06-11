@@ -199,10 +199,26 @@ export type FamilyStackParamList = {
     id_category: number;
     id_item: number;
   };
+  AddHouseHoldItem: {
+    id_family: number | undefined;
+  };
   AddHouseHoldItemDetail: {
     id_family: number | undefined;
     id_category: number;
     id_item: number;
+  };
+  EditExpenseHouseHoldItem: {
+    id_family: number | undefined;
+    id_category: number;
+    id_item: number;
+  };
+  EditBrandHouseHoldItem: {
+    id_family: number | undefined;
+    id_category: number;
+    id_item: number;
+  };
+  AddHouseHoldRoom: {
+    id_family: number | undefined;
   };
   CheckList: {
     id_family: number | undefined;
@@ -433,6 +449,46 @@ type AddHouseHoldItemDetailNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'AddHouseHoldItemDetail'
 >;
+
+type AddHouseHoldItemNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'AddHouseHoldItem'
+>;
+
+export interface AddHouseHoldItemScreenProps {
+  navigation: AddHouseHoldItemNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'AddHouseHoldItem'>;
+}
+
+type EditExpenseHouseHoldItemNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'EditExpenseHouseHoldItem'
+>;
+
+export interface EditExpenseHouseHoldItemScreenProps {
+  navigation: EditExpenseHouseHoldItemNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'EditExpenseHouseHoldItem'>;
+}
+
+type EditBrandHouseHoldItemNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'EditBrandHouseHoldItem'
+>;
+
+export interface EditBrandHouseHoldItemScreenProps {
+  navigation: EditBrandHouseHoldItemNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'EditBrandHouseHoldItem'>;
+}
+
+type AddHouseHoldRoomNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'AddHouseHoldRoom'
+>;
+
+export interface AddHouseHoldRoomScreenProps {
+  navigation: AddHouseHoldRoomNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'AddHouseHoldRoom'>;
+}
 
 type CheckListNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,

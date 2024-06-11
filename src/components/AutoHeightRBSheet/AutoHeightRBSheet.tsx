@@ -1,7 +1,3 @@
-// This is basically a copy of
-// https://github.com/nysamnang/react-native-raw-bottom-sheet
-// but using only translate animations instead of height
-
 import React, {
     forwardRef, ReactNode,
     ForwardRefRenderFunction,
@@ -112,7 +108,7 @@ const AutoHeightRBSheet: AutoHeightRBSheet = (props, ref) => {
         onStartShouldSetPanResponder: () => !!props.closeOnSwipeDown,
         onPanResponderMove: (e, gestureState) => {
             if (gestureState.dy > 0) {
-                Animated.event([null, { dy: pan.y }])(e, gestureState)
+                Animated.event([null, { dy: pan.y }], { useNativeDriver: false })(e, gestureState)
             }
         },
         onPanResponderRelease: (_e, gestureState) => {

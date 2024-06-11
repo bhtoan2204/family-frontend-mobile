@@ -10,7 +10,6 @@ import AddItemCheckListSheet from '../AddItemCheckListSheet';
 import { compareDates } from 'src/utils/compareDate';
 import { checklist_category_type } from '../constant/checklist_category_type';
 import { shoppingListItemColor, shoppingListItemColorInside } from '../constant/color'
-import CircularProgress from '../../EducationScreen/CircularProgress';
 import ChecklistSections from './CheckListSections';
 import AddCheckListCategoryItem from '../AddCheckListCategoryItem/AddCheckListCategoryItem';
 import { AppDispatch, RootState } from 'src/redux/store';

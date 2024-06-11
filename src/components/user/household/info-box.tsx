@@ -5,11 +5,14 @@ interface InfoBoxProps {
     title: string,
     iconImage: ImageSourcePropType,
     children: React.ReactNode
+    onPress?: () => void
 }
 
-const InfoBox = ({ title, iconImage, children }: InfoBoxProps) => {
+const InfoBox = ({ title, iconImage, children, onPress }: InfoBoxProps) => {
     return (
-        <View className='px-3 mt-3 shadow-lg overflow-hidden rounded-lg ' style={{ width: '100%', height: 'auto' }} >
+        <TouchableOpacity className='px-3 mt-3 shadow-lg overflow-hidden rounded-lg ' activeOpacity={0.5} disabled={onPress === undefined} style={{ width: '100%', height: 'auto' }} onPress={() => {
+            onPress && onPress()
+        }} >
             <View className='w-full h-auto bg-white p-3 rounded-lg'>
                 <View className='flex-row items-center'>
                     <Image source={iconImage} style={{ width: 20, height: 20 }} />
@@ -28,7 +31,7 @@ const InfoBox = ({ title, iconImage, children }: InfoBoxProps) => {
 
             </View>
 
-        </View>
+        </TouchableOpacity>
     )
 }
 

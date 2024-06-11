@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Dimensions, View, Text, TouchableOpacity, KeyboardAvoidingView, ScrollView, TextInput, Switch } from 'react-native'
+import { Dimensions, View, Text, TouchableOpacity, KeyboardAvoidingView, ScrollView, TextInput, Switch, Platform } from 'react-native'
 import RBSheet from 'react-native-raw-bottom-sheet'
 import { Education } from 'src/interface/education/education'
 import { Member } from 'src/interface/member/member'
@@ -35,7 +35,7 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
     const [isEnabled, setIsEnabled] = React.useState(false);
     const [inputProgressNote2, setInputProgressNote2] = React.useState<string>("")
     const [inputSchoolInfo2, setInputSchoolInfo2] = React.useState<string>("")
-
+    const [startAnimation, setStartAnimation] = React.useState<boolean>(false)
 
     const [pickSheetIndex, setPickSheetIndex] = React.useState<number>(0)
 
@@ -52,9 +52,7 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
 
     }, [choosenMember])
 
-    React.useEffect(() => {
 
-    })
 
     const showHeader = () => {
         if (pickSheetIndex == 0) {
@@ -127,7 +125,7 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                 </TouchableOpacity>
             </Animatable.View>
         } else if (pickSheetIndex == 2) {
-            return <View className='w-full  flex-row justify-between items-center py-4 z-10 ' >
+            return <Animatable.View animation={"slideInRight"} duration={400} className='w-full  flex-row justify-between items-center py-4 z-10 ' >
                 <TouchableOpacity
                     onPress={() => {
                         setPickSheetIndex(0)
@@ -146,9 +144,9 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                 }} className='pr-4 disabled:text-gray-600 text-blue-600' disabled={inputProgressNote2 == ""} >
                     <Text className=' text-base font-semibold ' >Done</Text>
                 </TouchableOpacity>
-            </View>
+            </Animatable.View>
         } else if (pickSheetIndex == 3) {
-            return <View className='w-full  flex-row justify-between items-center py-4 z-10 ' >
+            return <Animatable.View animation={"slideInRight"} duration={400} className='w-full  flex-row justify-between items-center py-4 z-10 ' >
                 <TouchableOpacity
                     onPress={() => {
                         setPickSheetIndex(0)
@@ -167,7 +165,7 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                 }} className='pr-4 disabled:text-gray-600 text-blue-600' disabled={inputSchoolInfo2 == ""}>
                     <Text className=' text-base font-semibold ' >Done</Text>
                 </TouchableOpacity>
-            </View>
+            </Animatable.View>
         }
     }
 
@@ -268,7 +266,7 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
 
             </Animatable.View>
         } else if (pickSheetIndex == 2) {
-            return <Animatable.View className='p-4'>
+            return <Animatable.View animation={"slideInRight"} duration={400} className='p-4'>
                 <View className='bg-white rounded-lg'>
                     <TextInput
                         style={{
@@ -293,7 +291,7 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
 
             </Animatable.View>
         } else if (pickSheetIndex == 3) {
-            return <Animatable.View className='p-4'>
+            return <Animatable.View animation={"slideInRight"} duration={400} className='p-4'>
                 <View className='bg-white rounded-lg'>
                     <TextInput
                         style={{
@@ -329,23 +327,41 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
             customStyles={{
                 container: {
                     backgroundColor: "#F2F1F6",
-                    height: pickSheetIndex == 0 || pickSheetIndex == 1 ? Dimensions.get("window").height * 0.9 : Dimensions.get("window").height * 0.5,
+                    height: Platform.OS == 'ios' ? Dimensions.get('window').height * 1 : Dimensions.get('window').height * 0.8,
                     borderTopLeftRadius: 20,
                     borderTopRightRadius: 20,
                 },
+                wrapper: {
+                    backgroundColor: Platform.OS == 'ios' ? 'transparent' : undefined
+                },
                 draggableIcon: {
-                    display: "none",
-                }
+                    backgroundColor: '#CDCDCC',
+                },
             }}
             customModalProps={{
-                animationType: 'slide'
+                animationType: 'slide',
+                presentationStyle: Platform.OS == 'ios' ? 'formSheet' : undefined,
+                transparent: Platform.OS == 'ios' ? false : undefined,
+                statusBarTranslucent: true,
             }}
+            customAvoidingViewProps={{
+                enabled: false,
+            }}
+            // customModalProps={{
+            //     animationType: 'slide'
+            // }}
             onClose={() => {
                 setChoosenMemberId("")
                 setInputProgressNote("")
                 setInputSchoolInfo("")
                 setChoosenMember(undefined)
+                // setStartAnimation(false)
             }}
+            // onOpen={() => {
+            //     setTimeout(() => {
+            //         setStartAnimation(true)
+            //     }, 1000)
+            // }}
         >
             <View className='flex-1 '>
                 {showHeader()}

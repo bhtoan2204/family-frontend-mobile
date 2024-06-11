@@ -5,27 +5,31 @@ import { Step } from 'src/interface/guideline/guideline';
 
 interface AddHouseHoldInfoStepIndicatorProps {
     currentStep: number;
+    steps: {
+        title: string;
+        description: string;
+    }[];
     // guildLineSteps: Step[];
 
 }
 
-const steps = [
-    {
-        title: "Step 0",
-        description: "Intro"
-    },
-    {
-        title: "Step 1",
-        description: "Add item name and description"
-    },
-    {
-        title: "Step 2",
-        description: "Add item image"
-    }
-]
+// const steps = [
+//     {
+//         title: "Step 0",
+//         description: "Intro"
+//     },
+//     {
+//         title: "Step 1",
+//         description: "Add item name and description"
+//     },
+//     {
+//         title: "Step 2",
+//         description: "Add item image"
+//     }
+// ]
 
 const AddHouseholdStepIndicator = ({
-    currentStep
+    currentStep, steps
 }: AddHouseHoldInfoStepIndicatorProps) => {
     return (
         <View className='flex-row'>

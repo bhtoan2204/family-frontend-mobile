@@ -5,7 +5,7 @@ import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
 import ViewFamilyScreen from 'src/screens/FamilyScreen';
 import ViewAllMemberScreen from 'src/screens/AllMember';
 import AddMemberScreen from 'src/screens/AddEditFamilyMemberScreen';
-import { AddEditFamilyMemberScreenProps, AddHouseHoldItemDetailScreenProps, AllMemberScreenProps, CheckListDetailScreenProps, CheckListScreenProps, ContactScreenProps, CreateFamilyScreenProps, EducationDetailScreenProps, EducationScreenProps, GuildLineDetailScreenProps, GuildLineScreenProps, HouseHoldItemDetailScreenProps, HouseHoldItemScreenProps, HouseHoldScreenProps, NewsScreenProps, SharedGuildLineScreenProps, SubjectDetailScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
+import { AddEditFamilyMemberScreenProps, AddHouseHoldItemDetailScreenProps, AddHouseHoldItemScreenProps, AddHouseHoldRoomScreenProps, AllMemberScreenProps, CheckListDetailScreenProps, CheckListScreenProps, ContactScreenProps, CreateFamilyScreenProps, EditExpenseHouseHoldItemScreenProps, EducationDetailScreenProps, EducationScreenProps, GuildLineDetailScreenProps, GuildLineScreenProps, HouseHoldItemDetailScreenProps, HouseHoldItemScreenProps, HouseHoldScreenProps, NewsScreenProps, SharedGuildLineScreenProps, SubjectDetailScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
 import ContactListScreen from 'src/screens/ContactList/ContactList';
 import GuildLineScreen from 'src/screens/GuildLineScreen/GuildLineScreen';
 import GuildLineDetailScreen from 'src/screens/GuildLineScreen/GuildLineDetailScreen';
@@ -20,6 +20,9 @@ import ChecklistDetailScreen from 'src/screens/CheckListScreen/CheckListDetailSc
 import HouseHoldItemScreen from 'src/screens/HouseHoldScreen/HouseHoldItemDetailScreen';
 import HouseHoldItemDetailScreen from 'src/screens/HouseHoldScreen/HouseHoldItemDetailScreen';
 import AddHouseHoldItemDetailScreen from 'src/screens/HouseHoldScreen/AddHouseHoldItemDetailScreen';
+import EditExpenseScreen from 'src/screens/HouseHoldScreen/EditExpenseScreen';
+import AddHouseHoldItemScreen from 'src/screens/HouseHoldScreen/AddHouseHoldItemScreen';
+import AddRoomScreen from 'src/screens/HouseHoldScreen/AddRoomScreen';
 const Stack = createNativeStackNavigator();
 
 const FamilyStack = () => {
@@ -73,10 +76,23 @@ const FamilyStack = () => {
       <Stack.Screen name="HouseHoldItemDetail">
         {(props) => <HouseHoldItemDetailScreen {...props as HouseHoldItemDetailScreenProps} />}
       </Stack.Screen>
+      <Stack.Screen name="AddHouseHoldItem" options={{
+        animation: 'slide_from_bottom',
+      }}>
+        {(props) => <AddHouseHoldItemScreen {...props as AddHouseHoldItemScreenProps} />}
+      </Stack.Screen>
+      <Stack.Screen name="AddHouseHoldRoom" options={{
+        animation: 'slide_from_bottom',
+      }}>
+        {(props) => <AddRoomScreen {...props as AddHouseHoldRoomScreenProps} />}
+      </Stack.Screen>
       <Stack.Screen name="AddHouseHoldItemDetail" options={{
         animation: 'slide_from_bottom',
       }}>
         {(props) => <AddHouseHoldItemDetailScreen {...props as AddHouseHoldItemDetailScreenProps} />}
+      </Stack.Screen>
+      <Stack.Screen name="EditExpenseHouseHoldItem" >
+        {(props) => <EditExpenseScreen {...props as EditExpenseHouseHoldItemScreenProps} />}
       </Stack.Screen>
 
       {/* <Stack.Screen name="HouseHoldCategory">
