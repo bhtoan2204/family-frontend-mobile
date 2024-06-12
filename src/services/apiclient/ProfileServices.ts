@@ -59,7 +59,6 @@ const ProfileServices = {
     newPassword: string;
     confirmPassword: string;
   }) => {
-    console.log('oldPassword', oldPassword);
     const response: AxiosResponse = await instance.post(
       ProfileUrl.changePassword,
       {
@@ -69,10 +68,9 @@ const ProfileServices = {
       },
     );
 
-    console.log(response.status)
-
+    console.log(response)
     if (response.status === 200) {
-      return response.data;
+      return response.data.message;
     } else {
       throw new Error(response.data.statusCode);
     }
