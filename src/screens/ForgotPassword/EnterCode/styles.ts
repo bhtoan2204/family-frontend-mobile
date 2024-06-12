@@ -1,6 +1,10 @@
 
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {COLORS} from 'src/constants';
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
+const progressBarWidth = screenWidth*0.9; 
+const progressBarHeight = 10; 
 
 const styles = StyleSheet.create({
     keyboardView: {
@@ -69,6 +73,22 @@ const styles = StyleSheet.create({
       color: 'red',
       textAlign: 'center',
       marginVertical: 10,
+    },
+    progressBar: {
+      flexDirection: 'row',
+      width: progressBarWidth,
+      height: progressBarHeight,
+      backgroundColor: '#ddd', 
+      borderRadius: 5, 
+      overflow: 'hidden', 
+      marginLeft: 20,
+    },
+    progressStep: {
+      flex: 1,
+      height: '100%', 
+    },
+    activeStep: {
+      backgroundColor: COLORS.Rhino,
     },
   });
 export default styles;

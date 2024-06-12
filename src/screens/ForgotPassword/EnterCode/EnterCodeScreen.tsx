@@ -82,7 +82,9 @@ const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => {
           <TouchableOpacity style={styles.arrowButton} onPress={() => { navigation.navigate('ForgotPassword') }}>
             <Icon name="arrow-back" size={30} style={styles.backButton} />
           </TouchableOpacity>
+
           <View style={styles.container}>
+         
             <Text style={styles.title}>Enter Verification Code</Text> 
             <Text style={styles.subtitle}>Please enter the 6-digit code sent to your email or phone.</Text> 
             <Text style={styles.countdown}>{`Time remaining: ${countdown}s`}</Text>

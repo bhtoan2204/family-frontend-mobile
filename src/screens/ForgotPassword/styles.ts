@@ -3,6 +3,8 @@ import {COLORS} from 'src/constants';
 
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
+const progressBarWidth = screenWidth*0.9; 
+const progressBarHeight = 10; 
 
 const styles = StyleSheet.create({
   keyboardView: {
@@ -46,7 +48,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#f0f0f0',
-    marginHorizontal: 5, 
   },
   selectedOption: {
     backgroundColor: COLORS.Rhino,
@@ -144,6 +145,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     marginRight: 5,
+  },
+  progressBar: {
+    flexDirection: 'row',
+    width: progressBarWidth,
+    height: progressBarHeight,
+    backgroundColor: '#ddd', 
+    borderRadius: 5, 
+    overflow: 'hidden', 
+    marginLeft: 20,
+  },
+  progressStep: {
+    flex: 1,
+    height: '100%', 
+  },
+  activeStep: {
+    backgroundColor: COLORS.Rhino,
   },
 });
 

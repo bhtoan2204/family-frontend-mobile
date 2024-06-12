@@ -40,7 +40,15 @@ const ForgotPassword = ({ navigation }: ForgotPasswordScreenProps) => {
         <TouchableOpacity style={styles.arrowButton} onPress={() => { navigation.navigate('LoginScreen'); }}>
           <Icon name="arrow-back" size={30} style={styles.backButton} />
         </TouchableOpacity>
+        <View style={styles.progressBar}>
+          <View style={[styles.progressStep, styles.activeStep]}></View>
+          <View style={styles.progressStep}></View>
+          <View style={styles.progressStep}></View>
+        </View>
         <View style={styles.container}>
+
+      
+
           <Image
             source={{ uri: 'https://static.vecteezy.com/system/resources/previews/008/483/414/non_2x/the-concept-of-an-african-american-man-thinking-behind-a-laptop-vector.jpg' }}
             style={styles.image}
@@ -92,33 +100,34 @@ const ForgotPassword = ({ navigation }: ForgotPasswordScreenProps) => {
             </View>
           )}
 
-      {selectedOption === 'phone' && (
-        <View style={styles.inputContainer}>
-          <Text style={styles.title}>Phone</Text>
-          <View style={[styles.placeholder]}>
-            <View style={styles.inputContainerFlex}>
-              <Icon name="phone" size={24} color="black" style={styles.icon} />
-              <Text style={styles.countryCode}>+84</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder="Enter your phone"
-                placeholderTextColor="gray"
-                keyboardType="phone-pad"
-                onChangeText={text => setInputPhone(text)}
-                value={inputPhone}
-              />
+          {selectedOption === 'phone' && (
+            <View style={styles.inputContainer}>
+              <Text style={styles.title}>Phone</Text>
+              <View style={[styles.placeholder]}>
+                <View style={styles.inputContainerFlex}>
+                  <Icon name="phone" size={24} color="black" style={styles.icon} />
+                  <Text style={styles.countryCode}>+84</Text>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="Enter your phone"
+                    placeholderTextColor="gray"
+                    keyboardType="phone-pad"
+                    onChangeText={text => setInputPhone(text)}
+                    value={inputPhone}
+                  />
+                </View>
+              </View>
             </View>
+          )}
+
+          
+
+          <View style={styles.arrowContainer}>
+            <TouchableOpacity style={styles.enterCodeButton} onPress={handleSendSubmit}>
+              <Text style={styles.enterCodeButtonText}>Enter Code</Text>
+              <Icon name="arrow-forward" size={24} color="white" style={styles.enterCodeButtonIcon} />
+            </TouchableOpacity>
           </View>
-        </View>
-      )}
-
-      <View style={styles.arrowContainer}>
-        <TouchableOpacity style={styles.enterCodeButton} onPress={handleSendSubmit}>
-          <Text style={styles.enterCodeButtonText}>Enter Code</Text>
-          <Icon name="arrow-forward" size={24} color="white" style={styles.enterCodeButtonIcon} />
-        </TouchableOpacity>
-      </View>
-
         </View>
       </SafeAreaView>
     </KeyboardAvoidingView>

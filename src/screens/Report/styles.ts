@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { COLORS } from 'src/constants';
 
 const styles = StyleSheet.create({
     container: {
@@ -47,6 +48,17 @@ const styles = StyleSheet.create({
     },
     icon: {
       marginRight:10,  
-    }
+    },
+    progressStep: {
+      flex: 1,
+      height: 5,
+      backgroundColor: COLORS.gray,
+      marginHorizontal: 5,
+      borderRadius: 10,
+    },
+    activeStep: {
+      backgroundColor: COLORS.primary,
+    },
+  
   });
 export default styles;
