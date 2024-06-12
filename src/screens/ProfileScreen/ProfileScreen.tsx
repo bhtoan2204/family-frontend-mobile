@@ -19,7 +19,7 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
 
   const handleSignOut = async () => {
     try {
-      await AuthServices.Logout();
+      //await AuthServices.Logout();
       navigation.navigate('LoginScreen');
     } catch (error) {
       console.log('error', error);

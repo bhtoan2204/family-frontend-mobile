@@ -2,29 +2,39 @@ import React, { useState } from 'react';
 import { ScrollView, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Image, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import styles from './styles';
-import {ProfileServices} from 'src/services/apiclient';
-import { ProfileScreenProps } from 'src/navigation/NavigationTypes';
+import { useSelector } from 'react-redux';
+import { AuthServices } from 'src/services/apiclient';
+import { getPhone, getEmail, getCode } from 'src/redux/slices/ForgotPassword';
+import { ResetPasswordScreenProps } from 'src/navigation/NavigationTypes';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+const ResetPasswordScreen = ({ navigation }: ResetPasswordScreenProps) => {
+  const [newPassword, setNewPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const toggleShowCurrentPassword = () => setShowCurrentPassword(prevState => !prevState);
   const toggleShowNewPassword = () => setShowNewPassword(prevState => !prevState);
   const toggleShowConfirmPassword = () => setShowConfirmPassword(prevState => !prevState);
+  const phone = useSelector(getPhone);
+  const email = useSelector(getEmail);
+  const code = useSelector(getCode);
 
   const handleChangePassword = async () => {
     try {
-        await ProfileServices.changePassword({oldPassword: currentPassword, newPassword: newPassword, confirmPassword: confirmPassword});
-        //Alert.alert('Success','Password changed successfully');
+      console.log(email, phone, code, newPassword);
+      const response = await AuthServices.resetPassword({ email, phone, code, password: newPassword });
+      console.log(response);
+      if (response.message === 'Password has not been reset') {
+        Alert.alert('Error', 'Password reset failed.');
+        navigation.navigate('LoginScreen');
+      } else {
+        Alert.alert('Success', 'Password has been reset successfully.');
+        navigation.navigate('LoginScreen');
       }
-    catch(error){
-      //Alert.alert('Error');
-      console.log(error)
+    } catch (error) {
+      Alert.alert('Error', 'An error occurred while resetting the password.');
+      console.log(error);
     }
   };
 
@@ -32,9 +42,13 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -100}>
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -100}
+    >
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.header}>
+          <TouchableOpacity style={styles.arrowButton} onPress={() => navigation.navigate('ForgotPassword')}>
+            <Icon name="arrow-back" size={30} style={styles.backButton} />
+          </TouchableOpacity>
           <Text style={styles.headerText}>Change Password</Text>
         </View>
 
@@ -44,21 +58,6 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
             style={styles.image}
             resizeMode="contain"
           />
-        </View>
-
-        <Text style={styles.label}>Current Password</Text>
-        <View style={styles.inputContainer}>
-          <AntDesign name="lock" size={24} color="black" style={styles.icon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Enter current password"
-            secureTextEntry={!showCurrentPassword}
-            value={currentPassword}
-            onChangeText={setCurrentPassword}
-          />
-          <TouchableOpacity onPress={toggleShowCurrentPassword}>
-            <AntDesign name={showCurrentPassword ? 'eye' : 'eyeo'} size={24} color="black" style={styles.icon} />
-          </TouchableOpacity>
         </View>
 
         <Text style={styles.label}>New Password</Text>
@@ -99,4 +98,4 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
   );
 };
 
-export default ChangePasswordScreen;
+export default ResetPasswordScreen;

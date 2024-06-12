@@ -5,6 +5,7 @@ import financeReducer from './slices/FinanceSlice';
 import expenseAnalysisReducer from './slices/ExpenseAnalysis';
 import calendarReducer from './slices/CalendarSlice';
 import incomeAnalysisReducer from './slices/IncomeAnalysis';
+import forgorPasswordReducer from './slices/ForgotPassword';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     expenseAnalysis: expenseAnalysisReducer,
     calendar: calendarReducer,
     incomeAnalysis: incomeAnalysisReducer,
+    forgorPassword: forgorPasswordReducer,
   },
 });
 

@@ -128,6 +128,9 @@ export type AuthStackParamList = {
   LandingPage: undefined;
   Notification: undefined;
   WelcomeScreen: undefined;
+  EnterCodeScreen: undefined;
+  ResetPasswordScreen: undefined;
+
 };
 
 export type CalendarStackParamList = {
@@ -354,6 +357,14 @@ export interface LoginScreenProps {
   navigation: LoginScreenNavigationProp;
 }
 
+type EnterCodeScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'EnterCodeScreen'
+>;
+
+export interface EnterCodeScreenProps {
+  navigation: EnterCodeScreenNavigationProp;
+}
 type WelcomeScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
   'WelcomeScreen'

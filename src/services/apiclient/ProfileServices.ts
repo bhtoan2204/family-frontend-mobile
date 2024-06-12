@@ -3,6 +3,7 @@ import {ERROR_TEXTS} from 'src/constants';
 import instance from '../httpInterceptor';
 import {ProfileUrl} from '../urls';
 import {ImagePickerAsset} from 'expo-image-picker';
+import { Alert } from 'react-native';
 
 const ProfileServices = {
   profile: async () => {
@@ -59,22 +60,42 @@ const ProfileServices = {
     newPassword: string;
     confirmPassword: string;
   }) => {
-    const response: AxiosResponse = await instance.post(
-      ProfileUrl.changePassword,
-      {
-        oldPassword,
-        newPassword,
-        confirmPassword,
-      },
-    );
-
-    console.log(response)
-    if (response.status === 200) {
-      return response.data.message;
-    } else {
-      throw new Error(response.data.statusCode);
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  
+    if (!passwordRegex.test(newPassword)) {
+      Alert.alert(
+        'Error',
+        'New password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, and one number.'
+      );
+      return;
+    }
+  
+    try {
+      const response: AxiosResponse = await instance.post(
+        ProfileUrl.changePassword,
+        {
+          oldPassword,
+          newPassword,
+          confirmPassword,
+        },
+      );
+  
+      if (response.status === 200) {
+        Alert.alert('Success', 'Password changed successfully');
+      } else {
+        Alert.alert('Error', response.data.message);
+      }
+    } catch (error) {
+      if (error.response) {
+        Alert.alert('Error', error.response.data.message);
+      } else if (error.request) {
+        Alert.alert('Error', 'No response from server. Please try again.');
+      } else {
+        Alert.alert('Error', 'Something went wrong. Please try again.');
+      }
     }
   },
+  
   changeAvatar: async (uri: string) => {
     try {
       const createFormData = (uri: string): FormData => {

@@ -10,6 +10,8 @@ const AuthUrl = {
   refreshToken: `${baseUrl}/api/v1/auth/refresh`,
   forgotPassword: `${baseUrl}/api/v1/user/forgotPassword`,
   logout: `${baseUrl}/api/v1/auth/logout`,
+  checkOTPForgotPassword: `${baseUrl}/api/v1/user/checkOTPForgotPassword`,
+  resetPassword: `${baseUrl}/api/v1/user/resetPassword`,
 
 };
 

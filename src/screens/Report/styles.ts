@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#f2dede',
       padding: 15,
       borderRadius: 10,
+      flexDirection:'row',
     },
     incomeContainer: {
       marginBottom: 20,
@@ -33,6 +34,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#d9edf7',
       padding: 15,
       borderRadius: 10,
+      flexDirection:'row',
     },
     incomeAnalysis: {
       flex: 1,
@@ -40,6 +42,11 @@ const styles = StyleSheet.create({
       backgroundColor: '#fcf8e3',
       padding: 15,
       borderRadius: 10,
+      flexDirection:'row',
+
     },
+    icon: {
+      marginRight:10,  
+    }
   });
 export default styles;

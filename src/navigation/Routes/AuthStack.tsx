@@ -7,7 +7,8 @@ import {AuthStackParamList} from '../NavigationTypes';
 import LandingPage from 'src/screens/LandingPage/LandingPage';
 import Notification from 'src/screens/Notifications';
 import WelcomeScreen from 'src/screens/WelcomeScreen';
-
+import EnterCodeScreen from 'src/screens/ForgotPassword/EnterCode';
+import ResetPassword from 'src/screens/ForgotPassword/ResetPassword/ResetPassword';
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 const AuthStack = () => {
@@ -22,6 +23,9 @@ const AuthStack = () => {
       <Stack.Screen name="SignupScreen" component={SignupScreen} />
       <Stack.Screen name="ForgotPasswordScreen" component={ForgotPassword} />
       <Stack.Screen name="LandingPage" component={LandingPage} />
+      <Stack.Screen name="EnterCodeScreen" component={EnterCodeScreen} />
+      <Stack.Screen name="ResetPasswordScreen" component={ResetPassword} />
+
     </Stack.Navigator>
   );
 };
