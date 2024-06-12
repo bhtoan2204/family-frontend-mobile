@@ -7,36 +7,34 @@ import * as Haptics from 'expo-haptics';
 import { AppDispatch } from 'src/redux/store';
 import { useDispatch } from 'react-redux';
 import { updateCheckListItemCompleted } from 'src/redux/slices/CheckListSlice';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import CheckListDetailSheet from 'src/components/user/shoppinglist/checklist-item-sheet';
+
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
 
-const ChecklistItemDetail: React.FC<{ item: ChecklistItemInterface, id_checklist: number }> = ({ item, id_checklist }) => {
+interface ChecklistItemDetailProps {
+    item: ChecklistItemInterface,
+    id_checklist: number,
+    selectCheckListItem?: (item: string) => void
+}
+
+const ChecklistItemDetail = ({ item, id_checklist, selectCheckListItem }: ChecklistItemDetailProps) => {
     const refRBSheet = React.useRef<any>(null);
+    const bottomSheetRef = React.useRef<BottomSheet>(null);
     const dispatch = useDispatch<AppDispatch>();
     const handleUpdateComplete = () => {
-        // setChecklist((prev) => {
-        //     return [
-        //         ...prev.map((i) => {
-        //             if (i.id === item.id) {
-        //                 return {
-        //                     ...i,
-        //                     isCompleted: !item.isCompleted,
-        //                 };
-        //             }
-        //             return i;
-        //         })
-        //     ]
-        // })
         dispatch(updateCheckListItemCompleted({
             id: id_checklist,
             id_checklist: item.id,
             isCompleted: !item.isCompleted,
         }))
-
     }
 
     return <TouchableOpacity onPress={() => {
-        refRBSheet.current?.open();
+        // refRBSheet.current?.open();
+        selectCheckListItem?.(item.id)
+        // bottomSheetRef.current?.expand()
     }} style={styles.checklistItem} className='bg-white'>
         <View className='ml-1' >
             <View className='flex-row items-center'>
@@ -59,7 +57,8 @@ const ChecklistItemDetail: React.FC<{ item: ChecklistItemInterface, id_checklist
             <View className='ml-10'>
                 <Text className='text-sm text-gray-400'>{item.description}</Text>
             </View>
-            <ChecklistDetailSheet refRBSheet={refRBSheet} checklist_item={item} id_checklist={id_checklist} />
+            {/* <CheckListDetailSheet bottomSheetRef={bottomSheetRef} checklist_item={item} id_checklist={id_checklist} /> */}
+            {/* <ChecklistDetailSheet refRBSheet={refRBSheet} checklist_item={item} id_checklist={id_checklist} /> */}
         </View>
     </TouchableOpacity>
 };

@@ -12,8 +12,12 @@ import { useKeyboardVisible } from 'src/hooks/useKeyboardVisible';
 import StepGuideLineImage from './StepGuideLineImage';
 import GuildLineHeader from './GuildLineHeader';
 import StepIndicator from './StepIndicator';
+import { AppDispatch } from 'src/redux/store';
+import { useDispatch } from 'react-redux';
+import { deleteGuideline } from 'src/redux/slices/GuidelineSlice';
+import { GuildLineDetailScreenProps } from 'src/navigation/NavigationTypes';
 const screenWidth = Dimensions.get('window').width;
-const GuildLineDetailScreen = ({ navigation, route }: any) => {
+const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps) => {
     const { id_item, id_family } = route.params
     const [currentStep, setCurrentStep] = useState(0)
     const [guildLineDetail, setGuildLineDetail] = useState<GuildLineDetail>()
@@ -28,10 +32,12 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
     const [inputName, setInputName] = useState("");
     const [inputDescription, setInputDescription] = useState("");
 
+    const dispatch = useDispatch<AppDispatch>();
+
     useEffect(() => {
         const fetchGuildLineDetail = async () => {
             try {
-                const response = await GuildLineService.getGuildLineDetail(id_family, id_item); // API call to fetch guildline detail
+                const response = await GuildLineService.getGuildLineDetail(id_family!, id_item); // API call to fetch guildline detail
                 setGuildLineDetail(response);
                 if (response && response.steps) {
                     setGuildLineSteps(response.steps)
@@ -142,7 +148,21 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
         setInputName("");
     }
 
+    const handleDeleteCurrentStep = async () => {
+        setGuildLineSteps((prev) => {
+            return prev?.filter((step, index) => index !== currentStep)
+        })
+        if (currentStep > 0) {
+            setCurrentStep(currentStep - 1)
+        } else {
+            setCurrentStep(0)
+        }
+    }
 
+    const handleDeleteGuideline = async () => {
+        dispatch(deleteGuideline(id_item!))
+        navigation.goBack()
+    }
     if (loading) {
         return <ActivityIndicator style={{ flex: 1, justifyContent: 'center' }} size="small" />;
     }
@@ -160,7 +180,13 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
 
             if (!result.canceled) {
                 console.log(result.assets[0].uri);
-
+                await GuildLineService.updateImageStepGuildLine(
+                    result.assets[0].uri,
+                    id_family!,
+                    id_item!,
+                    guildLineSteps![currentStep],
+                    currentStep
+                )
                 setGuildLineSteps((prev) => {
                     return prev?.map((step, index) => {
                         if (index === currentStep) {
@@ -192,7 +218,13 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
 
             if (!result.canceled) {
                 console.log(currentStep)
-
+                await GuildLineService.updateImageStepGuildLine(
+                    result.assets[0].uri,
+                    id_family!,
+                    id_item!,
+                    guildLineSteps![currentStep],
+                    currentStep
+                )
                 setGuildLineSteps((prev) => {
                     return prev?.map((step, index) => {
                         if (index === currentStep) {
@@ -203,8 +235,8 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
                         }
                         return step
                     })
-
                 })
+
 
             }
             bottomSheetRef.current?.close()
@@ -245,7 +277,10 @@ const GuildLineDetailScreen = ({ navigation, route }: any) => {
                     handleSaveAddStep={handleSaveAddStep} handleSaveEdit={handleSaveEdit}
                     navigationBack={() => navigation.goBack()} handleIsAddingStep={handleIsAddingStep}
                     handleShareGuideline={handleShareGuideline}
-                    bottomSheetRef={bottomSheetRef} />
+                    bottomSheetRef={bottomSheetRef}
+                    handleDeleteCurrentStep={handleDeleteCurrentStep}
+                    handleDeleteGuideline={handleDeleteGuideline}
+                />
                 <KeyboardAvoidingView className=' h-full flex flex-col items-center mt-3  ' behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
                     {
                         guildLineSteps && <>

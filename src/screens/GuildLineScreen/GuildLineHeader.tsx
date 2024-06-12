@@ -24,6 +24,8 @@ interface GuildLineHeaderProps {
     navigationBack: () => void;
     handleIsAddingStep: () => void;
     handleShareGuideline: () => Promise<void>
+    handleDeleteCurrentStep: () => Promise<void>;
+    handleDeleteGuideline: () => Promise<void>;
     bottomSheetRef: React.RefObject<any>;
 }
 
@@ -45,6 +47,8 @@ const GuildLineHeader = ({
     navigationBack,
     handleIsAddingStep,
     handleShareGuideline,
+    handleDeleteCurrentStep,
+    handleDeleteGuideline,
     bottomSheetRef
 }: GuildLineHeaderProps
 ) => {
@@ -117,7 +121,9 @@ const GuildLineHeader = ({
                                         </View>
                                     </MenuOption>
                                     <Divider />
-                                    <MenuOption onSelect={() => alert(`Add`)} >
+                                    <MenuOption onSelect={async () => {
+                                        handleDeleteCurrentStep()
+                                    }} >
 
                                         <View className='flex-row items-center justify-between'>
                                             <Text className='text-base ' style={{ color: iOSColors.systemRed.defaultLight }}>Delete this step</Text>
@@ -125,7 +131,9 @@ const GuildLineHeader = ({
                                         </View>
                                     </MenuOption>
                                     <Divider />
-                                    <MenuOption onSelect={() => alert(`Add`)} >
+                                    <MenuOption onSelect={async () => {
+                                        handleDeleteGuideline()
+                                    }} >
 
                                         <View className='flex-row items-center justify-between'>
                                             <Text className='text-base ' style={{ color: iOSColors.systemRed.defaultLight }}>Delete</Text>

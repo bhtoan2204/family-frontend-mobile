@@ -153,9 +153,7 @@ const AddItemCheckListSheet = ({ refRBSheet, id_checklist }: { refRBSheet: React
 
                     }}
                     onPress={() => {
-                        // setChecklist((prev) => [...prev, { id: (prev.length + 1).toString(), title: name, description: description, dueDate: dueDate != null ? new Date(dueDate) : new Date(), priority: priority, isCompleted: false, createdAt: new Date() }]);
-
-                        const newItem: ChecklistItemInterface = { id: "-1", title: name, description: description, dueDate: dueDate != null ? new Date(dueDate).toDateString() : new Date().toDateString(), priority: priority, isCompleted: false, createdAt: new Date() }
+                        const newItem: ChecklistItemInterface = { id: "-1", title: name, description: description, dueDate: dueDate != null ? new Date(dueDate).toDateString() : new Date().toDateString(), priority: priority, isCompleted: false }
                         dispatch(
                             addNewCheckListItemToCheckList({
                                 id: id_checklist,

@@ -21,6 +21,7 @@ const screenWidth = Dimensions.get('screen').width
 
 
 // ]
+
 interface AddHouseHoldItemPickCategorySheetProps {
     refRBSheet: React.RefObject<BottomSheet>;
     onNavigateCreateCategory?: () => void,
@@ -53,13 +54,13 @@ const AddHouseHoldItemPickCategorySheet = ({
             }}
             keyboardBehavior="extend"
             keyboardBlurBehavior="restore"
-            // onChange={(index) => {
-            //     if (index == -1) {
-            //         if (pickCategory !== -1) {
-            //             setPickCategory(-1)
-            //         }
-            //     }
-            // }}
+        // onChange={(index) => {
+        //     if (index == -1) {
+        //         if (pickCategory !== -1) {
+        //             setPickCategory(-1)
+        //         }
+        //     }
+        // }}
         >
             <View className='flex-1 items-center bg-[#FBF8F1]'>
                 <View className='py-4'>

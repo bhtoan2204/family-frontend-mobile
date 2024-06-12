@@ -1,28 +1,44 @@
 import React, { useEffect, useState } from 'react'
-import { Dimensions, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Text, TextInput, TouchableOpacity, View, StyleSheet, Keyboard, Platform, ScrollView, KeyboardAvoidingView } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { COLORS } from 'src/constants';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { ChecklistItemInterface } from 'src/interface/checklist/checklist';
 import { Picker } from '@react-native-picker/picker';
-import { TimePickerSheet } from './AddItemCheckListSheet';
-import * as Haptics from 'expo-haptics';
 import { AppDispatch } from 'src/redux/store';
 import { useDispatch } from 'react-redux';
-import { updateCheckListItemCompleted, updateCheckListItemDueDate, updateCheckListItemPriority, updateCheckListItemTitleAndDescription } from 'src/redux/slices/CheckListSlice';
+import { addNewCheckListItemToCheckList, updateCheckListItemCompleted, updateCheckListItemDueDate, updateCheckListItemPriority, updateCheckListItemTitleAndDescription } from 'src/redux/slices/CheckListSlice';
+import AutoHeightRBSheet from 'src/components/AutoHeightRBSheet/AutoHeightRBSheet';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
+import CheckListTimePickerSheet from './date-picker-sheet';
+import { iOSGrayColors } from 'src/constants/ios-color';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as Haptics from 'expo-haptics';
 
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
-const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
+const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#000'];
 
-const ChecklistDetailSheet = ({ refRBSheet, checklist_item, id_checklist }: { refRBSheet: React.RefObject<any>, checklist_item: ChecklistItemInterface, id_checklist: number }) => {
+interface AddItemCheckListSheetProps {
+    bottomSheetRef: React.RefObject<BottomSheet>;
+    checklist_item: ChecklistItemInterface;
+    id_checklist: number;
+}
+
+
+const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: AddItemCheckListSheetProps) => {
     const timePickerRBSheet = React.useRef<any>();
     const [name, setName] = React.useState(checklist_item.title);
     const [description, setDescription] = React.useState(checklist_item.description);
     const [priority, setPriority] = React.useState(checklist_item.priority);
     const [isEditing, setIsEditing] = React.useState(false);
-    const [dueDate, setDueDate] = React.useState(checklist_item.dueDate || new Date().toDateString())
+    const [dueDate, setDueDate] = React.useState(checklist_item.dueDate)
     const dispatch = useDispatch<AppDispatch>();
+    const renderBackdrop = React.useCallback(
+        (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />,
+        []
+    );
+    const snapPoints = React.useMemo(() => ['90%'], []);
 
     useEffect(() => {
         setName(checklist_item.title)
@@ -99,35 +115,25 @@ const ChecklistDetailSheet = ({ refRBSheet, checklist_item, id_checklist }: { re
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
     }
 
+    const setSave = (date: Date) => {
+        // setDueDate(date)
+        handleUpdateDueDate(date)
+    }
+
     return (
-        <RBSheet
-            ref={refRBSheet}
-            closeOnPressBack
-            closeOnPressMask
+        <BottomSheet
+            ref={bottomSheetRef}
+            index={-1}
+            enableOverDrag
+            snapPoints={snapPoints}
+            enablePanDownToClose={true}
+            handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
+            backdropComponent={renderBackdrop}
             onClose={() => {
-                setIsEditing(false)
+                Keyboard.dismiss()
             }}
-            customStyles={{
-                wrapper: {
-                },
-
-                container: {
-                    height: isEditing ? Dimensions.get('window').height * 0.57 : Dimensions.get('window').height * 0.85,
-                    borderTopLeftRadius: 10,
-                    borderTopRightRadius: 10,
-                },
-                draggableIcon: {
-                    display: "none",
-                }
-            }}
-            customModalProps={{
-                animationType: 'slide',
-                statusBarTranslucent: true,
-            }}
-            customAvoidingViewProps={{
-                enabled: true,
-            }}
-
+            keyboardBehavior="extend"
+            keyboardBlurBehavior="restore"
         >
             <View className='flex-1'>
                 {
@@ -165,11 +171,11 @@ const ChecklistDetailSheet = ({ refRBSheet, checklist_item, id_checklist }: { re
 
                                     }} />
                                 </View>
-                                <View className='bg-gray-200 p-1 rounded-full'>
-                                    <Material name="close" size={22} style={{ color: COLORS.black }} onPress={() => {
-                                        refRBSheet.current?.close()
-                                    }} />
-                                </View>
+                                <TouchableOpacity className='bg-gray-200 p-1 rounded-full z-10' onPress={() => {
+                                    bottomSheetRef.current?.close()
+                                }}>
+                                    <Material name="close" size={22} style={{ color: COLORS.black }} />
+                                </TouchableOpacity>
                             </View>
                         </View>
 
@@ -266,11 +272,47 @@ const ChecklistDetailSheet = ({ refRBSheet, checklist_item, id_checklist }: { re
                 </KeyboardAvoidingView>
 
             </View>
-            <TimePickerSheet refRBSheet={timePickerRBSheet} setSave={handleUpdateDueDate} initialValue={new Date(dueDate)} />
-
-        </RBSheet>
+            <CheckListTimePickerSheet refRBSheet={timePickerRBSheet} setSave={handleUpdateDueDate} initialValue={new Date(checklist_item.dueDate)} />
+        </BottomSheet>
     )
 }
 
 
-export default ChecklistDetailSheet
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+    },
+    pickerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    picker: {
+        height: 150,
+        fontSize: 20,
+    },
+    yearPicker: {
+        flex: 1,
+    },
+    monthPicker: {
+        flex: 1,
+        // marginHorizontal: 5,
+    },
+    dayPicker: {
+        flex: 1,
+    },
+    confirmButton: {
+        marginTop: 20,
+        backgroundColor: '#007BFF',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+    },
+    confirmButtonText: {
+        color: 'white',
+        fontSize: 18,
+    },
+});
+export default CheckListDetailSheet

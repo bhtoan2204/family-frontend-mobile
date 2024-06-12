@@ -6,33 +6,34 @@ import ChecklistItemModal from './AddItemCheckListSheet';
 import { CheckListDetailScreenProps, CheckListScreenProps } from 'src/navigation/NavigationTypes';
 import { COLORS } from 'src/constants';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import AddItemCheckListSheet from './AddItemCheckListSheet';
+// import AddItemCheckListSheet from './AddItemCheckListSheet';
 import { shoppingListItemColor, shoppingListItemColorInside } from './constant/color';
 import CircularProgress from '../EducationScreen/CircularProgress';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/redux/store';
+import * as Animatable from 'react-native-animatable';
+import AddItemCheckListSheet from 'src/components/user/shoppinglist/add-item-checklist-sheet';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import CheckListDetailSheet from 'src/components/user/shoppinglist/checklist-item-sheet';
+import ChecklistItemDetail from './CheckListItem';
+
 const today = new Date();
 const yesterday = new Date(today.setDate(today.getDate() - 1));
 const tomorrow = new Date(today.setDate(today.getDate() + 1));
 
-const checklistData: ChecklistItemInterface[] = [
-    { id: '1', title: 'Task 1', description: 'Description 1', dueDate: today, priority: 3, isCompleted: false, createdAt: new Date() },
-    { id: '2', title: 'Task 2', description: 'Description 2', dueDate: today, priority: 2, isCompleted: false, createdAt: new Date() },
-    { id: '3', title: 'Task 3', description: 'Description 3', dueDate: today, priority: 1, isCompleted: true, createdAt: new Date() },
-    // Thêm các mục kiểm tra khác ở đây...
-];
-
-// const checkListCategoryData: CheckListCategoryInterface = { id: 1, id_item_type: 1, id_family: 1, title: 'Grocery Title 1', completed: 1, total: 10, createdAt: today }
 
 const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigation, route }) => {
     const { id_checklist, id_family } = route.params
-    const refRBSheet = useRef<any>();
+    const refRBSheet = useRef<BottomSheet>(null);
+    const refRBSheetDetail = useRef<BottomSheet>(null);
     const dispatch = useDispatch<AppDispatch>();
     const checkListCategoryData = useSelector((state: RootState) => state.checklist).find(item => item.id === id_checklist)!
     const checklist = useSelector((state: RootState) => state.checklist).find(item => item.id === id_checklist)!.checklistItems
     // const [checklist, setChecklist] = React.useState<ChecklistItemInterface[]>(checklistData);
     const [filteredChecklist, setFilteredChecklist] = React.useState<ChecklistItemInterface[]>()
-    // const sections: { title: string, data: ChecklistItemInterface[] }[] = [];
+    const [selectedChecklistItem, setSelectedChecklistItem] = React.useState<string | null>(
+        checklist.length > 0 ? checklist[0].id : null
+    )
     useEffect(() => {
         // setChecklist(checklistData)
 
@@ -42,17 +43,29 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
     }, [checklist])
 
 
+    const selectCheckListItem = (id: string) => {
+        setSelectedChecklistItem(id)
+        refRBSheetDetail.current?.expand()
+    }
+    // const selectCheckListItem = (item: ChecklistItemInterface) => {
+    //     setSelectedChecklistItem(item)
+    //     refRBSheetDetail.current?.expand()
+    // }
+
     const showContent = () => {
         const sortedCheckList = checklist.sort((a, b) => {
             return a.priority - b.priority
         })
         return <>
             {sortedCheckList.map((item, index) => {
-                return <ChecklistItem key={index} item={item} id_checklist={id_checklist} />
+                return <ChecklistItemDetail key={index} item={item} id_checklist={id_checklist} selectCheckListItem={selectCheckListItem} />
             })}
         </>
     }
 
+    const getChecklistItem = (id: string) => {
+        return checklist.find(item => item.id === id)
+    }
 
     return (
         <View style={styles.container} >
@@ -110,13 +123,16 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
                 {showContent()}
             </ScrollView>
             <TouchableOpacity onPress={() => {
-                refRBSheet.current.open()
+                refRBSheet.current?.expand()
             }} className='absolute bottom-6 right-4 bg-gray-200 h-16 w-16 flex-row items-center justify-center rounded-full' style={{
                 backgroundColor: shoppingListItemColor[checkListCategoryData.id_item_type - 1],
             }}>
                 <Text style={{ color: 'white', fontSize: 40 }}>+</Text>
             </TouchableOpacity>
-            <AddItemCheckListSheet refRBSheet={refRBSheet} id_checklist={id_checklist} />
+            <AddItemCheckListSheet bottomSheetRef={refRBSheet} id_checklist={id_checklist} />
+            {
+                selectedChecklistItem && <CheckListDetailSheet bottomSheetRef={refRBSheetDetail} id_checklist={id_checklist} checklist_item={getChecklistItem(selectedChecklistItem)!} />
+            }
         </View>
     );
 };
@@ -159,7 +175,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        backgroundColor: COLORS.primary,
+        backgroundColor: COLORS.AuroMetalSaurus,
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 5,

@@ -7,7 +7,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color'
 const GuildlineItem = ({ item, onPress }: any) => {
     const handleDelete = () => {
-
         console.log("Deleting item with id:", item.id_item);
     };
     const renderLeftActions = () => (

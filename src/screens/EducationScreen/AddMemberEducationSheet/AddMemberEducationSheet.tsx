@@ -373,23 +373,6 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                 </KeyboardAvoidingView>
 
             </View>
-            {/* <TextInput
-                                style={{
-                                    borderWidth: 1,
-                                    borderColor: "#ccc",
-                                    borderRadius: 5,
-                                    marginBottom: 20,
-                                    fontSize: 17,
-                                    padding: 17,
-                                }}
-                                ref={inputDescriptionRef}
-                                editable
-                                placeholder="Input subject name"
-                                value={inputDescription}
-                                onChangeText={(text) => setInputDescription(text)}
-                                className='bg-white'
-                                autoFocus
-                            /> */}
         </RBSheet>
     )
 }

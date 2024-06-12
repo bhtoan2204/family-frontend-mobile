@@ -13,6 +13,9 @@ import AddGuildLineSheet from './AddGuildLineSheet/AddGuildLineSheet'
 import GuildlineItem from './GuildlineItem/GuildlineItem'
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color'
 import * as Animatable from 'react-native-animatable';
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/redux/store'
+import { clearGuideline, setGuideline } from 'src/redux/slices/GuidelineSlice'
 // id_item: number;
 //   name: string;
 //   description: string;
@@ -28,7 +31,9 @@ const guildLineData: Guildline = {
 
 const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
-    const [guidelines, setGuidelines] = React.useState<Guildline[]>([]);
+    // const [guidelines, setGuidelines] = React.useState<Guildline[]>([]);
+    const dispatch = useDispatch<AppDispatch>();
+    const guidelines = useSelector((state: RootState) => state.guidelines)
     const [loading, setLoading] = React.useState(true);
     const refRBSheet = React.useRef<any>(null);
     const [tab, setTab] = React.useState(0);
@@ -38,10 +43,12 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
             try {
                 const response = await GuildLineService.getAllGuideLine(id_family!); // API call to fetch all guidelines
                 if (response) {
-                    setGuidelines(response);
+                    dispatch(setGuideline(response));
+                    // setGuidelines(response);
                 }
                 else {
-                    setGuidelines([]);
+                    dispatch(setGuideline([]));
+                    // setGuidelines([]);
                 }
                 // setGuidelines(response);
                 setLoading(false);
@@ -53,6 +60,11 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
             }
         };
         fetchGuidelines();
+
+        return () => {
+            console.log("clear guideline")
+            dispatch(clearGuideline())
+        }
     }, []);
 
     if (loading) {
@@ -129,7 +141,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                 {/* <GuildlineItem item={guildLineData} onPress={() => {
                     navigation.navigate('SharedGuildLine', { id_family: id_family, id_item: guildLineData.id_item })
                 }} /> */}
-                <AddGuildLineSheet refRBSheet={refRBSheet} setGuidelines={setGuidelines} />
+                <AddGuildLineSheet refRBSheet={refRBSheet} />
             </View>
         </SafeAreaView>
     )

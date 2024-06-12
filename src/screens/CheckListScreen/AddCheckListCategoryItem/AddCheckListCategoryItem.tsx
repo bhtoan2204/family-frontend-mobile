@@ -83,7 +83,6 @@ const AddCheckListCategoryItem = ({ bottomSheetRef, id_family }: {
                         total: 0,
                         category_name: checklist_category_type.find((item) => item.id_item_type == choosenCategory)?.item_type_name,
                         id_family: id_family,
-                        createdAt: new Date().toDateString(),
                         title: inputProgressNote,
                         checklistItems: []
                     }

@@ -11,7 +11,7 @@ export interface CheckListCategoryInterface {
   title: string;
   completed: number;
   total: number;
-  createdAt: string;
+  createdAt?: string;
   checklistItems: ChecklistItemInterface[];
 }
 
@@ -22,5 +22,5 @@ export interface ChecklistItemInterface {
   dueDate: string;
   priority: number;
   isCompleted: boolean;
-  createdAt: Date;
+  // createdAt: Date;
 }

@@ -6,6 +6,7 @@ import expenseAnalysisReducer from './slices/ExpenseAnalysis';
 import calendarReducer from './slices/CalendarSlice';
 import incomeAnalysisReducer from './slices/IncomeAnalysis';
 import roomReducer from './slices/RoomSlice';
+import guidelineReducer from './slices/GuidelineSlice';
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
@@ -15,6 +16,7 @@ export const store = configureStore({
     calendar: calendarReducer,
     incomeAnalysis: incomeAnalysisReducer,
     room: roomReducer,
+    guidelines: guidelineReducer,
   },
 });
 

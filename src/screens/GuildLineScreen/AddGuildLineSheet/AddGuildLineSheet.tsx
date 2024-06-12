@@ -1,24 +1,36 @@
 import React from 'react'
 import { Dimensions, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import { useDispatch } from 'react-redux';
 import { COLORS } from 'src/constants';
 import { Guildline } from 'src/interface/guideline/guideline';
+import { addGuideline } from 'src/redux/slices/GuidelineSlice';
+import { AppDispatch } from 'src/redux/store';
 
-const AddGuildLineSheet = ({ refRBSheet, setGuidelines }: { refRBSheet: React.RefObject<any>, setGuidelines: React.Dispatch<React.SetStateAction<Guildline[]>> }) => {
+const AddGuildLineSheet = ({ refRBSheet }: { refRBSheet: React.RefObject<any> }) => {
     // const refRBSheet = React.useRef<RBSheet>(null);
     const [name, setName] = React.useState("");
     const [description, setDescription] = React.useState("");
+    const dispatch = useDispatch<AppDispatch>();
     const handleAddGuildLine = () => {
         console.log("add guildline")
-        setGuidelines((prev: Guildline[]) => {
-            return [...prev, {
+        // setGuidelines((prev: Guildline[]) => {
+        //     return [...prev, {
+        //         id_item: Math.floor(Math.random()) * 100,
+        //         name: name,
+        //         description: description,
+        //         created_at: "",
+        //         updated_at: ""
+        //     }];
+        // });
+        dispatch(addGuideline(
+            {
                 id_item: Math.floor(Math.random()) * 100,
                 name: name,
                 description: description,
                 created_at: "",
                 updated_at: ""
-            }];
-        });
+            }))
         refRBSheet.current?.close();
     }
     return (
