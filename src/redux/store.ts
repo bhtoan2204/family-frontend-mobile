@@ -7,6 +7,8 @@ import calendarReducer from './slices/CalendarSlice';
 import incomeAnalysisReducer from './slices/IncomeAnalysis';
 import roomReducer from './slices/RoomSlice';
 import guidelineReducer from './slices/GuidelineSlice';
+import householdItemSlice from './slices/HouseHoldSlice';
+
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
@@ -17,6 +19,7 @@ export const store = configureStore({
     incomeAnalysis: incomeAnalysisReducer,
     room: roomReducer,
     guidelines: guidelineReducer,
+    householdItems: householdItemSlice,
   },
 });
 

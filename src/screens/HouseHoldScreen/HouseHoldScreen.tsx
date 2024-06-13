@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native'
 import { HouseHoldScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,6 +11,9 @@ import HouseHoldItem from './HouseHoldItem/HouseHoldItem';
 import { household_category_dat } from './const/data';
 import HouseHoldFilterBar from 'src/components/user/household/household-filter-bar';
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from 'src/redux/store';
+import { clearHouseholdItems, setHouseholdItems } from 'src/redux/slices/HouseHoldSlice';
 
 
 const household_items = [
@@ -69,9 +72,25 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
     const { id_family } = route.params
     const refRBSheet = React.useRef<any>(null);
     const [householdCategory, setHouseholdCategory] = React.useState<HouseHoldCategoryInterface[]>(household_category_dat)
-    const [householdItems, setHouseholdItems] = React.useState<HouseHoldItemInterface[]>(household_items)
+    // const [householdItems, setHouseholdItems] = React.useState<HouseHoldItemInterface[]>(household_items)
+    const householdItems = useSelector((state: RootState) => state.householdItems)
     const [choosenCategoryIndex, setChoosenCategoryIndex] = React.useState<number>(0)
     const [choosenCategoryId, setChoosenCategoryId] = React.useState<number>(householdCategory[0].id_category)
+
+    const dispatch = useDispatch<AppDispatch>()
+
+    useEffect(() => {
+        dispatch(setHouseholdItems(household_items))
+
+        return () => {
+            console.log("HouseHoldScreen unmounting")
+            dispatch(clearHouseholdItems())
+        }
+    }, [])
+
+    useEffect(() => {
+        console.log(householdItems)
+    }, [householdItems])
 
     const showCategoryItems = () => {
         const categoryItems = householdItems.filter(item => item.id_category === choosenCategoryId);
@@ -80,8 +99,8 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
                 gap: 9
             }}>
                 {
-                    categoryItems.map((item, index) => (
-                        <HouseHoldItem item={item} key={item.id_household_item} setHouseHoldItem={setHouseholdItems} index={index}
+                    categoryItems && categoryItems.map((item, index) => (
+                        <HouseHoldItem item={item} key={item.id_household_item} index={index}
                             navigateToHouseHoldItemDetail={navigateToHouseHoldItemDetail}
                         />
                     ))
@@ -127,7 +146,7 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
                         {showCategoryItems()}
                     </View>
                 </ScrollView>
-                <AddHouseHoldItemSheet refRBSheet={refRBSheet} setHouseHoldItem={setHouseholdItems} id_category={choosenCategoryId} id_family={id_family!} />
+                {/* <AddHouseHoldItemSheet refRBSheet={refRBSheet} setHouseHoldItem={setHouseholdItems} id_category={choosenCategoryId} id_family={id_family!} /> */}
             </View>
         </SafeAreaView>
     )

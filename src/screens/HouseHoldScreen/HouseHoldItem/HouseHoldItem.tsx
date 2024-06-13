@@ -10,9 +10,13 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { iOSGrayColors } from 'src/constants/ios-color'
 import Svg, { Rect, Mask, G } from 'react-native-svg';
 import { category_colors } from '../const/data'
+import { AppDispatch } from 'src/redux/store'
+import { useDispatch } from 'react-redux'
+import { deleteHouseholdItem } from 'src/redux/slices/HouseHoldSlice'
 
-const HouseHoldItem = ({ item, setHouseHoldItem, index, navigateToHouseHoldItemDetail }: { item: HouseHoldItemInterface, setHouseHoldItem: React.Dispatch<React.SetStateAction<HouseHoldItemInterface[]>>, index: number, navigateToHouseHoldItemDetail: (item: HouseHoldItemInterface) => void }) => {
+const HouseHoldItem = ({ item, index, navigateToHouseHoldItemDetail }: { item: HouseHoldItemInterface, index: number, navigateToHouseHoldItemDetail: (item: HouseHoldItemInterface) => void }) => {
     const editSheetRef = React.useRef<any>(null);
+    const dispatch = useDispatch<AppDispatch>()
     const handleDelete = () => {
         console.log("Deleting item with id:", item.id_household_item);
         Alert.alert("Delete Item", "Are you sure you want to delete this item?", [
@@ -23,9 +27,10 @@ const HouseHoldItem = ({ item, setHouseHoldItem, index, navigateToHouseHoldItemD
             {
                 text: "Delete",
                 onPress: () => {
-                    setHouseHoldItem((prev) => {
-                        return prev.filter((houseHoldItem) => houseHoldItem.id_household_item !== item.id_household_item)
-                    })
+                    dispatch(deleteHouseholdItem(item.id_household_item))
+                    // setHouseHoldItem((prev) => {
+                    //     return prev.filter((houseHoldItem) => houseHoldItem.id_household_item !== item.id_household_item)
+                    // })
                 }
             }
         ])

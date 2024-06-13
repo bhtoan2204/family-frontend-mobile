@@ -5,6 +5,7 @@ import PackageUrl from './packageUrls';
 import CalendarUrls from './Calendar';
 import GuildlineUrl from './guidelineUrl';
 import ShoppingListUrls from './checklistUrls';
+import EducationUrls from './eduUrls';
 export {
   AuthUrl,
   FamilyUrl,
@@ -13,4 +14,5 @@ export {
   CalendarUrls,
   GuildlineUrl,
   ShoppingListUrls,
+  EducationUrls,
 };

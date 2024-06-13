@@ -1,31 +1,30 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../store';
 
-interface RoomState {
-  id_room: number;
-  room_name: string;
-}
-
-const initialState: RoomState[] = [];
+const initialState: HouseHoldItemInterface[] = [];
 
 const householdSlice = createSlice({
   name: 'householdItems',
   initialState,
   reducers: {
-    setRoom(state, action: PayloadAction<RoomState[]>) {
+    setHouseholdItems(state, action: PayloadAction<HouseHoldItemInterface[]>) {
       return action.payload;
     },
-    clearRoom(state) {
+    clearHouseholdItems(state) {
       state = [];
     },
-    addRoom(state, action: PayloadAction<RoomState>) {
-      console.log(action.payload.id_room, action.payload.room_name);
+    addHouseholdItem(state, action: PayloadAction<HouseHoldItemInterface>) {
       state.push(action.payload);
-      console.log(state);
+    },
+    deleteHouseholdItem(state, action: PayloadAction<number>) {
+      return state.filter(
+        householdItem => householdItem.id_household_item !== action.payload,
+      );
     },
   },
 });
 
-export const {setRoom, clearRoom, addRoom} = householdSlice.actions;
+export const {setHouseholdItems, clearHouseholdItems, addHouseholdItem,deleteHouseholdItem} =
+  householdSlice.actions;
 
 export default householdSlice.reducer;

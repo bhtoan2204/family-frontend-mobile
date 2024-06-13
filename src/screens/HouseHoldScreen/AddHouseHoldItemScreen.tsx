@@ -31,6 +31,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/redux/store';
 import { clearRoom, setRoom } from 'src/redux/slices/RoomSlice';
 import AddHouseHoldItemPickCategorySheet from 'src/components/user/household/add-household-item-pickcategorysheet';
+import { addHouseholdItem } from 'src/redux/slices/HouseHoldSlice';
 
 const household_items = [
     {
@@ -130,6 +131,22 @@ const AddHouseHoldItemScreen: React.FC<AddHouseHoldItemScreenProps> = ({ navigat
         setHouseholdRoom(room)
     }
 
+    const handleAdd = () => {
+        console.log('add')
+        const newHouseholdItem: HouseHoldItemInterface = {
+            id_family: id_family!,
+            item_name: householdName,
+            item_description: '',
+            item_imageurl: '',
+            id_category: householdCategory,
+            id_household_item: Math.floor(Math.random() * 1000)
+        }
+        dispatch(addHouseholdItem(newHouseholdItem))
+    }
+
+    const navigationBack = () => {
+        navigation.goBack()
+    }
     React.useEffect(() => {
         console.log("a")
         dispatch(setRoom(roomsData))
@@ -137,6 +154,7 @@ const AddHouseHoldItemScreen: React.FC<AddHouseHoldItemScreenProps> = ({ navigat
             dispatch(clearRoom())
         }
     }, [])
+
     return (
         <SafeAreaView className="flex-1 bg-[#FBF8F1]">
             <View className='bg-[#F9F6F2] pt-8 rounded-tl-xl rounded-tr-xl flex-1' >
@@ -185,8 +203,9 @@ const AddHouseHoldItemScreen: React.FC<AddHouseHoldItemScreenProps> = ({ navigat
                                         id_family: id_family,
                                     })
                                 }
-                            } room={householdRoom} category={householdCategory} onSetRoom={onSetRoom} onSetCategory={onSetCategory
-                            } />
+                            } room={householdRoom} category={householdCategory} onSetRoom={onSetRoom} onSetCategory={onSetCategory} handleAdd={handleAdd} navigationBack={navigationBack}
+
+                            />
                         }
 
                     </View>
@@ -285,6 +304,7 @@ const Step2Component = ({ setStep, name, onSetName }: any) => {
                             placeholder='TV, Heat pump, Dishwasher, etc...'
                             onChangeText={(text) => {
                                 setText(text)
+                                // onSetName(text)
                             }}
                         />
                         <Animatable.View animation={text.length == 0 || text.length == 1 ? 'fadeIn' : undefined} key={text} className='w-[55%] py-2 mb-2 '>
@@ -296,10 +316,11 @@ const Step2Component = ({ setStep, name, onSetName }: any) => {
                                 backgroundColor: text == '' ? '#EEECEC' : iOSColors.systemBlue.defaultLight,
                             }} onPress={() => {
                                 if (text == '') {
-                                    console.log('1')
-                                    onSetName(text)
+                                    // console.log('1')
+                                    // onSetName(text)
                                 }
                                 else {
+                                    onSetName(text)
                                     setStep((prev: any) => prev + 1)
                                 }
                             }} className='py-2 mb-2 '>
@@ -320,9 +341,11 @@ const Step2Component = ({ setStep, name, onSetName }: any) => {
         </>
     )
 }
-const Step3Component = ({ setStep, rooms, onNavigateCreateRoom, room, category, onSetRoom, onSetCategory }: any) => {
+const Step3Component = ({ setStep, rooms, onNavigateCreateRoom, room, category, onSetRoom, onSetCategory, handleAdd, navigationBack }: any) => {
     const roomPickRef = useRef<BottomSheet>(null);
     const categoryPickRef = useRef<BottomSheet>(null);
+
+    const dispatch = useDispatch<AppDispatch>()
 
     const findRoomText = (id: number) => {
         return rooms.find((room: any) => room.id_room === id)?.room_name
@@ -330,6 +353,7 @@ const Step3Component = ({ setStep, rooms, onNavigateCreateRoom, room, category, 
     const findCategoryText = (id: number) => {
         return household_category_dat.find((category: any) => category.id_category === id)?.category_name
     }
+
 
     return (
         <>
@@ -408,7 +432,9 @@ const Step3Component = ({ setStep, rooms, onNavigateCreateRoom, room, category, 
                                 elevation: 3,
                                 backgroundColor: iOSColors.systemBlue.defaultLight,
                             }} onPress={() => {
-                                setStep((prev: any) => prev + 1)
+                                handleAdd()
+                                navigationBack()
+                                // setStep((prev: any) => prev + 1)
                             }} className='py-2 my-3 '>
                                 <Text className='text-white text-base font-bold' style={{
                                     color: 'white'
