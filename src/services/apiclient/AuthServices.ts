@@ -10,7 +10,7 @@ const AuthServices = {
         email,
         password,
       });
-
+      //console.log("helloGiang");
       const userData = response.data;
 
       if (response.status === 200) {

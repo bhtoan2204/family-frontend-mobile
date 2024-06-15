@@ -1,5 +1,5 @@
 {
-  "moduleResolution": "node",
+  "moduleResolution": "nodenext",
   "extends": [
     "@react-native/typescript-config/tsconfig.json",
     "expo/tsconfig.base"

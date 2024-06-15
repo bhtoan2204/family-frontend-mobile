@@ -77,6 +77,9 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
       await LocalStorage.StoreAccessToken(response.accessToken);
       await LocalStorage.StoreRefreshToken(response.refreshToken);
 
+      // console.log(response.accessToken);
+      // console.log(response.refreshToken);
+
       navigation.navigate('LandingPage');
       actions.setStatus({success: true});
     } catch (error: any) {
