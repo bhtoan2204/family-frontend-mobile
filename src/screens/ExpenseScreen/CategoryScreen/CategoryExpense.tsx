@@ -75,6 +75,7 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
   const fetchIncomeType = async (id_family: any) => {
     try {
       const response = await IncomeServices.getIncomeType(id_family);
+      //console.log(response);
       setIncomeCategories(response);
       setLoading(false);
     } catch (error: any) {

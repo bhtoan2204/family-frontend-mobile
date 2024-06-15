@@ -112,9 +112,9 @@ const HomeScreen = ({
   const handleGetProfile = async () => {
     try {
       const result = await PackageServices.getProfile();
-      const id_user = result.data.id_user;
-      dispatch(Profile(result.data));
-
+      const id_user = result.id_user;
+      dispatch(Profile(result));
+      //console.log(result)
     } catch (error: any) {
       console.log('ProfileServices.getProfile error:', error);
     }
@@ -291,7 +291,7 @@ const HomeScreen = ({
             </View>
             <View style={{flexDirection: 'row', right: 20}}>
               <Image
-                source={profile?.avatar!== "[NULL]" ? { uri: profile?.avatar } : require('../../assets/images/avatar_default.jpg')}
+                source={profile.avatar!== "[NULL]" ? { uri: profile.avatar } : require('../../assets/images/avatar_default.jpg')}
                 resizeMode="contain"
                 style={{
                   width: 80,
