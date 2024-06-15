@@ -227,15 +227,15 @@ useEffect(() => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-        <Text>FamFund</Text>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={24} style={styles.backButton} />
+        </TouchableOpacity>
+      <View style={{flexDirection:'row', justifyContent:'space-between', padding: 20}}>
+        <Text style={{fontSize:25, fontWeight:'600'}}>FamFund</Text>
         <MaterialCommunityIcons name="chat-plus-outline" size={24} color="black" />
       </View>
       {renderAllUser()}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={24} style={styles.backButton} />
-        </TouchableOpacity>
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
