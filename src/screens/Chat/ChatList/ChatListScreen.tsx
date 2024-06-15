@@ -20,6 +20,7 @@ import { Swipeable } from 'react-native-gesture-handler';
 import IconL from 'react-native-vector-icons/Ionicons';
 import { getSocket } from 'src/services/apiclient/Socket';
 import { LastMessage } from 'src/interface/chat/chat';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 
@@ -226,6 +227,11 @@ useEffect(() => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+        <Text>FamFund</Text>
+        <MaterialCommunityIcons name="chat-plus-outline" size={24} color="black" />
+      </View>
+      {renderAllUser()}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={24} style={styles.backButton} />
@@ -241,7 +247,6 @@ useEffect(() => {
           <Icon name="search" size={20} style={styles.searchIcon} />
         </View>
       </View>
-      {renderAllUser()}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[styles.button, selectedButton === 'Home' && styles.buttonSelected]}
