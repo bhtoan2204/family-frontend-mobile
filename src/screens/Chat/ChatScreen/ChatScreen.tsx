@@ -54,6 +54,10 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   const [isTextInputEmpty, setIsTextInputEmpty] = useState(true);
   const [refreshFlatList, setRefreshFlatList] = useState(false);
   const [keyboardIsOpen, setKeyboardIsOpen] = useState(false);
+  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
+    null,
+  );
+
   let socket = getSocket();
 
   const markSeenMessage = async (receiverId?: string) => {
@@ -202,6 +206,10 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
 
   const handleCloseModal = () => {
     setSelectedImageIndex(null);
+  };
+
+  const handlePressMessage = (messageId: string) => {
+    setSelectedMessageId(prevId => (prevId === messageId ? null : messageId));
   };
 
   useEffect(() => {
@@ -354,13 +362,13 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         </View>
       </View>
       <FlatList
-        key={refreshFlatList ? 'refresh' : 'no-refresh'}
         style={styles.messagesContainer}
         contentContainerStyle={styles.contentContainer}
         data={messages}
         inverted
         renderItem={({item, index}) => (
-          <View
+          <TouchableOpacity
+            onPress={() => handlePressMessage(item.id)}
             style={[
               styles.messageContainer,
               item.senderId === profile.id_user
@@ -368,23 +376,24 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
                 : styles.receiverMessageContainer,
             ]}>
             {item.type === 'photo' ? (
-              <TouchableOpacity onPress={() => handleImagePress(item)}>
-                <View style={styles.messageContentContainer}>
-                  <Image
-                    source={{uri: item.content}}
-                    style={styles.imageMessage}
-                  />
-                </View>
-              </TouchableOpacity>
+              <View style={styles.messageContentContainer}>
+                <Image
+                  source={{uri: item.content}}
+                  style={styles.imageMessage}
+                />
+              </View>
             ) : (
               <>
                 <Text style={styles.senderMessageContent}>{item.content}</Text>
-                <Text style={styles.timestamp}>
-                  {formatDateTime(item.timestamp)}
-                </Text>
               </>
             )}
-          </View>
+
+            {selectedMessageId === item.id && (
+              <Text style={styles.timestamp}>
+                {formatDateTime(item.timestamp)}
+              </Text>
+            )}
+          </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()}
         keyboardShouldPersistTaps="handled"
