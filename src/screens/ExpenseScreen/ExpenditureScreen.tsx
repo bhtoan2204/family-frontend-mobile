@@ -12,6 +12,7 @@ import {
   Animated,
   Dimensions,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ExpenseServices from 'src/services/apiclient/ExpenseServices';
@@ -51,14 +52,13 @@ import {RNTesseractOcr} from 'react-native-tesseract-ocr';
 import HomeTab from 'src/navigation/Routes/HomeTab';
 import {ExpenseType} from 'src/interface/expense/ExpenseType';
 import {IncomeType} from 'src/interface/income/IncomeType';
-import CreateInvoiceScreen from '../Invoice/CreateInvoice/CreateInvoice';
-import CreateInvoiceComponent from '../Invoice/CreateInvoice/CreateInvoice';
 import {FlatList} from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {COLORS} from 'src/constants';
 import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {LinearGradient} from 'expo-linear-gradient';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
 
 const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const [expenseType, setExpenseType] = useState<ExpenseType[]>([]);
@@ -91,8 +91,9 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const ExpenseName = useSelector(getExpenseName);
   const IncomeId = useSelector(getIncomeId);
   const IncomeName = useSelector(getIncomeName);
-  const [uriImage, setUriImage] = useState<string>('');
+  const [uriImage, setUriImage] = useState<string | null>(null);
   const [showLargeImage, setShowLargeImage] = useState(false);
+  const profile = useSelector(selectProfile);
 
   useEffect(() => {
     fetchAllFamily();
@@ -117,7 +118,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
         });
       }
     }
-  }, [ExpenseId, IncomeId, state, selectedMenu, selectedFamily]);
+  }, [ selectedFamily]);
 
   useEffect(() => {
     setSelectedMenu(state);
@@ -161,15 +162,31 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
     }
   };
 
-  const handleSubmit = () => {
-    console.log('Amount:', amount);
-    console.log('Selected Expense Type:', selectedExpenseType);
-    console.log('Description:', description);
-    console.log('Date:', date);
-    console.log('Wallet:', wallet);
-    console.log('Image:', image);
+  const handleSubmit = async () => {
+    if (!selectedFamily || !amount || !profile.id_user || !expenseCategory || !expenseCategory.id_expense_type || !date) {
+      Alert.alert('Error', 'Please fill in all required fields');
+      return;
+    }
+  
+    try {
+      const response = await ExpenseServices.createExpense(selectedFamily, amount, profile.id_user, expenseCategory.id_expense_type, date, description);
+      
+      if (uriImage) {
+        await ExpenseServices.uploadImageExpense(selectedFamily, response[0].id_expenditure, uriImage);
+        Alert.alert('Success', 'Expense created successfully');
+      } else {
+        Alert.alert('Success', 'Expense created successfully without an image');
+      }
+  
+      setAmount(null);
+      setDescription('');
+      setUriImage(null);
+  
+    } catch(error) {
+      Alert.alert('Error', 'Failed to create expense');
+    }
   };
-
+  
   const handleDateChange = (event: any, selectedDate?: Date) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
@@ -197,6 +214,10 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const headerPress = () => {
     setIsPickerOpen(!isPickerOpen);
   };
+  const handleRemoveImage = () => {
+    setUriImage('');
+    };
+
   const handleOpenImageLibrary = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -208,22 +229,8 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
       if (!result.canceled) {
         setUriImage(result.assets[0].uri);
 
-        //analyzeInvoice(result.assets[0].uri);
       }
-      //     const compressedImage = await ImageManipulator.manipulateAsync(result.assets[0].uri, [], { compress: 0.5 });
-      //     const fileInfo = await FileSystem.getInfoAsync(compressedImage.uri);
-
-      //     if (fileInfo.exists && fileInfo.size) {
-      //       if (fileInfo.size < 50000) {
-      //         const base64 = await FileSystem.readAsStringAsync(compressedImage.uri, { encoding: 'base64' });
-      //         await handleSendImage(base64);
-      //       } else {
-      //         alert('Selected image size exceeds 50KB limit');
-      //       }
-      //     } else {
-      //       console.error('File does not exist or size cannot be determined');
-      //     }
-      //   }
+    
     } catch (error) {
       console.error('Error opening image library:', error);
     }
@@ -251,28 +258,14 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
 
       if (!result.canceled) {
         setUriImage(result.assets[0].uri);
-        //analyzeInvoice(result.assets[0].uri);
       }
     } else {
       alert('Permission to access camera is required!');
     }
   };
 
-  const analyzeInvoice = async (uri: string) => {
-    try {
-      console.log(uri);
-      // const textRecognition =  RNTextDetector.detectFromUri(uri);
-      // console.log(textRecognition)
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  // const showInvoice = () => {
-  //   navigation.navigate('HomeTab', {screen: 'Invoice'});
-  // };
-  const handleRemoveImage = () => {
-    setUriImage('');
-  };
+ 
+
 
   const itemsPerPage = 6;
   const pages = [];
@@ -289,7 +282,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   }
 
   for (let i = 0; i < incomeType.length; i += itemsPerPage) {
-    pagesIncome.push(incomeType.slice(i, i + itemsPerPage)); // Fixed here
+    pagesIncome.push(incomeType.slice(i, i + itemsPerPage)); 
   }
   const scrollX = useRef(new Animated.Value(0)).current;
 
@@ -337,7 +330,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
             <TouchableOpacity
               style={styles.chevronContainer}
               onPress={handleSubmit}>
-              <Icon name="checkmark-done-sharp" color="#2a475e" size={25} />
+              <Icon name="checkmark-done-sharp" color="#2a475e" size={30} />
             </TouchableOpacity>
           </View>
           <View style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}} />
@@ -379,7 +372,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                 renderItem={({item: family}) =>
                   selectedFamily === family.id_family ? (
                     <LinearGradient
-                      colors={['#09203F', '#537895']} // Your gradient colors
+                      colors={['#09203F', '#537895']} 
                       style={[
                         styles.family,
                         styles.selectedFamily,
@@ -704,7 +697,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
               </View>
             )}
 
-            {selectedMenu === 'Invoice' && <CreateInvoiceComponent />}
+            {selectedMenu === 'Utilities' && <CreateInvoiceComponent />}
 
             <View style={styles.container}>
               <View style={styles.datePickerContainer}>
@@ -842,16 +835,16 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => handleOptionPress('Invoice')}>
+                    onPress={() => handleOptionPress('Utilities')}>
                     <View style={styles.menuItem}>
                       <Image
                         source={require('src/assets/icons/invoice.png')}
                         resizeMode="stretch"
                         style={styles.avatar}
                       />
-                      <Text style={styles.text}>Invoice</Text>
+                      <Text style={styles.text}>Utilities</Text>
                       <View style={styles.checkIcon}>
-                        {selectedMenu === 'Invoice' && (
+                        {selectedMenu === 'Utilities' && (
                           <Icon
                             name="checkmark-sharp"
                             size={20}
