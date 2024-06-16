@@ -11,6 +11,7 @@ import {
   Image,
   Dimensions,
   ScrollView,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import styles from './styles';
 import {ChatScreenProps} from 'src/navigation/NavigationTypes';
@@ -58,6 +59,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
     null,
   );
+  const [hasReceivedMessage, setHasReceivedMessage] = useState(false); // State to track if the user has received a message
 
   let socket = getSocket();
 
@@ -96,6 +98,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
           return {...message, timestamp: new Date(message.timestamp)};
         });
         setMessages(prevMessages => [...prevMessages, ...newMessages]);
+        setHasReceivedMessage(true); // Set to true once messages are fetched
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -144,6 +147,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
           setImages(prevImages => [firstMessage.content, ...prevImages]);
         }
         setMessages(prevMessages => [firstMessage, ...prevMessages]);
+        setHasReceivedMessage(true); // Set to true once new messages are fetched
       }
     } catch (error) {
       console.error('Error fetching new messages:', error);
@@ -256,6 +260,18 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
     };
   }, [socket]);
 
+  useEffect(() => {
+    // Check if the user has received any message from this receiver
+    if (!hasReceivedMessage) {
+      return () => {}; // Return an empty function as cleanup
+    }
+
+    // Ensure to return a cleanup function when effect dependencies change
+    return () => {
+      // Perform cleanup logic here if needed
+    };
+  }, [hasReceivedMessage]); // Include dependencies here if needed
+
   const handleVideoCall = (receiverId?: string) => {
     navigation.navigate('ChatStack', {
       screen: 'CallVideo',
@@ -362,67 +378,112 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
           </View>
         </View>
       </View>
-      <FlatList
-        style={styles.messagesContainer}
-        contentContainerStyle={styles.contentContainer}
-        data={messages}
-        inverted
-        renderItem={({item, index}) => (
-          <View
-            style={[
-              styles.messageWrapper,
-              item.senderId === profile.id_user
-                ? styles.messageRight
-                : styles.messageLeft,
-            ]}>
-            <TouchableOpacity
-              onPress={() => handlePressMessage(item.id)}
-              style={[
-                styles.messageContainer,
-                item.senderId === profile.id_user
-                  ? styles.senderMessageContainer
-                  : styles.receiverMessageContainer,
-              ]}>
-              {item.type === 'photo' ? (
-                <View style={styles.messageContentContainer}>
-                  <Image
-                    source={{uri: item.content}}
-                    style={styles.imageMessage}
-                  />
-                </View>
-              ) : (
-                <Text
-                  style={[
-                    styles.senderMessageContent,
-                    {
-                      color:
-                        item.senderId === profile.id_user ? 'white' : 'black',
-                    },
-                  ]}>
-                  {item.content}
-                </Text>
-              )}
-            </TouchableOpacity>
+      {hasReceivedMessage ? (
+        <FlatList
+          style={styles.messagesContainer}
+          contentContainerStyle={styles.contentContainer}
+          data={messages}
+          inverted
+          renderItem={({item, index}) => (
             <View
-              style={{
-                flexDirection: 'column',
-                marginHorizontal: 10,
-                alignItems:
-                  item.senderId === profile.id_user ? 'flex-end' : 'flex-start',
-              }}>
-              {selectedMessageId === item.id && (
-                <Text style={styles.timestamp}>
-                  {formatDateTime(item.timestamp)}
-                </Text>
-              )}
+              style={[
+                styles.messageWrapper,
+                item.senderId === profile.id_user
+                  ? styles.messageRight
+                  : styles.messageLeft,
+              ]}>
+              <TouchableOpacity
+                onPress={() => handlePressMessage(item.id)}
+                style={[
+                  styles.messageContainer,
+                  item.senderId === profile.id_user
+                    ? styles.senderMessageContainer
+                    : styles.receiverMessageContainer,
+                ]}>
+                {item.type === 'photo' ? (
+                  <View style={styles.messageContentContainer}>
+                    <Image
+                      source={{uri: item.content}}
+                      style={styles.imageMessage}
+                    />
+                  </View>
+                ) : (
+                  <Text
+                    style={[
+                      styles.senderMessageContent,
+                      {
+                        color:
+                          item.senderId === profile.id_user ? 'white' : 'black',
+                      },
+                    ]}>
+                    {item.content}
+                  </Text>
+                )}
+              </TouchableOpacity>
+              <View
+                style={{
+                  flexDirection: 'column',
+                  marginHorizontal: 10,
+                  alignItems:
+                    item.senderId === profile.id_user
+                      ? 'flex-end'
+                      : 'flex-start',
+                }}>
+                {selectedMessageId === item.id && (
+                  <Text style={styles.timestamp}>
+                    {formatDateTime(item.timestamp)}
+                  </Text>
+                )}
+              </View>
             </View>
-          </View>
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        keyboardShouldPersistTaps="handled"
-        onEndReached={loadMoreMessages}
-        onEndReachedThreshold={0.1}
-      />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          keyboardShouldPersistTaps="handled"
+          onEndReached={loadMoreMessages}
+          onEndReachedThreshold={0.1}
+        />
+      ) : (
+        <KeyboardAvoidingView
+          behavior="padding"
+          style={{
+            flex: 1,
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+          }}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.introContainer}>
+              {receiver && (
+                <>
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                    }}>
+                    <Image
+                      source={{uri: receiver.avatar}}
+                      style={styles.avatarFirst}
+                    />
+                    <Text style={styles.avatarTextFirst}>
+                      {' '}
+                      {receiver.firstname} {receiver.lastname}
+                    </Text>
+                  </View>
+                </>
+              )}
+              <Text style={styles.introText}>
+                You haven't received any message from {receiver?.firstname}{' '}
+                {receiver?.lastname} yet.
+              </Text>
+              <Text style={styles.introText}>
+                Start the conversation by sending a message.
+              </Text>
+              <View style={{backgroundColor: 'white', minHeight: 470}}></View>
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      )}
       <View
         style={[styles.inputContainer, keyboardIsOpen && {paddingBottom: 20}]}>
         <TouchableOpacity

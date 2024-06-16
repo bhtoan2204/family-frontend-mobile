@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     width: 'auto',
   },
   senderMessageContent: {
-    fontWeight:'500'
+    fontWeight: '500'
   },
   receiverMessageSenderName: {
     fontWeight: 'bold',
@@ -64,8 +64,14 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 30,
     marginLeft: 10,
-  }, 
-
+  },
+  avatarFirst: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginLeft: 10,
+    marginVertical: 10,
+  },
   header: {
     backgroundColor: 'white',
     flexDirection: 'row',
@@ -110,6 +116,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 10,
   },
+  avatarTextFirst: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginLeft: 10,
+    marginBottom: 10,
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -134,14 +146,27 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   messageWrapper: {
-  flexDirection: 'column',
-  marginVertical: 4,
-},
-messageRight: {
-  justifyContent: 'flex-end',
-},
-messageLeft: {
-  justifyContent: 'flex-start',
-},
+    flexDirection: 'column',
+    marginVertical: 4,
+  },
+  messageRight: {
+    justifyContent: 'flex-end',
+  },
+  messageLeft: {
+    justifyContent: 'flex-start',
+  },
+  introContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    position: 'absolute',
+    width: '100%',
+  },
+  introText: {
+    fontSize: 14,
+    color: '#8E8E8E',
+    width: '80%',
+    textAlign: 'center',
+  },
 });
 export default styles;
