@@ -8,6 +8,8 @@ interface Profile {
   email: string;
   phone: string;
   avatar: string;
+  genre: string;
+  birthdate: string;
 };
 
 interface ProfileSliceState {
@@ -21,6 +23,8 @@ const initialState: ProfileSliceState = {
     email: '',
     phone: '',
     avatar: '',
+    genre: '',
+    birthdate: '',
   },
 };
 

@@ -5,4 +5,6 @@ export interface UserProfile {
   email: string;
   phone: string;
   avatar: string;
+  genre: string;
+  birthdate: string;
 };

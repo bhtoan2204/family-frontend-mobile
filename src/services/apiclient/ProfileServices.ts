@@ -22,13 +22,13 @@ const ProfileServices = {
   updateProfile: async ({
     firstname,
     lastname,
-    // phone,
-    // email,
+    genre,
+    birthdate,
   }: {
     firstname: string;
     lastname: string;
-    // phone: string;
-    // email: string;
+    genre: string;
+    birthdate: string;
   }) => {
     try {
       const response: AxiosResponse = await instance.put(
@@ -36,8 +36,8 @@ const ProfileServices = {
         {
           firstname,
           lastname,
-          // phone,
-          // email,
+          genre,
+          birthdate,
         },
       );
 
