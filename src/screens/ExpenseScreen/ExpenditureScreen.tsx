@@ -104,25 +104,29 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
       fetchExpenseType(selectedFamily);
       fetchIncomeType(selectedFamily);
 
-      if (selectedMenu == 'Expense') {
-        selectExpenseCategory({
-          ...expenseCategory,
-          id_expense_type: ExpenseId,
-          category: ExpenseName,
-        });
-      } else if (selectedMenu == 'Income') {
-        selectIncomeCategory({
-          ...incomeCategory,
-          id_income_source: IncomeId,
-          category: IncomeName,
-        });
-      }
+      
     }
   }, [ selectedFamily]);
 
   useEffect(() => {
     setSelectedMenu(state);
-  }, []);
+
+  }, [state]);
+  useEffect(() => {
+      selectExpenseCategory({
+        ...expenseCategory,
+        id_expense_type: ExpenseId,
+        category: ExpenseName,
+      });
+
+      selectIncomeCategory({
+        ...incomeCategory,
+        id_income_source: IncomeId,
+        category: IncomeName,
+      })
+    
+  }, [ ExpenseId, IncomeId ])
+
 
   useEffect(() => {
     dispatch(setFamily(selectedFamily));
@@ -163,6 +167,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   };
 
   const handleSubmit = async () => {
+    if (selectedMenu === 'Expense') {
     if (!selectedFamily || !amount || !profile.id_user || !expenseCategory || !expenseCategory.id_expense_type || !date) {
       Alert.alert('Error', 'Please fill in all required fields');
       return;
@@ -185,6 +190,28 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
     } catch(error) {
       Alert.alert('Error', 'Failed to create expense');
     }
+  }
+  else if (selectedMenu === 'Income') {
+    if (!selectedFamily || !amount || !profile.id_user || !incomeCategory || !incomeCategory?.id_income_source || !date) {
+      Alert.alert('Error', 'Please fill in all required fields');
+      return;
+    }
+  
+    try {
+     await IncomeServices.createIncome(selectedFamily, amount, profile.id_user, incomeCategory?.id_income_source, date, description);
+      
+      
+      Alert.alert('Success', 'Expense created successfully');
+      
+  
+      setAmount(null);
+      setDescription('');
+      setUriImage(null);
+  
+    } catch(error) {
+      Alert.alert('Error', 'Failed to create expense');
+    }
+  }
   };
   
   const handleDateChange = (event: any, selectedDate?: Date) => {

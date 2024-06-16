@@ -156,4 +156,13 @@ export default StyleSheet.create({
     backgroundColor: 'gray',
     width: '50%',
   },
+  rightAction: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
+    marginVertical: 5,
+    backgroundColor: 'lightgray',
+    borderRadius: 5,
+},
 });

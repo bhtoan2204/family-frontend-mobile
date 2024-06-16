@@ -38,6 +38,22 @@ const ExpenseServices = {
       console.error('Error in createExpenseType:', error.message);
     }
   },
+  deleteExpenseType: async (id_family: number | null, id_expenditure_type: number) => {
+    try {
+      const response: AxiosResponse = await instance.delete(
+        `${baseUrl}/api/v1/finance/expenseditureType/deleteExpenseType/${id_family}/${id_expenditure_type }`,
+        
+      );
+      if (response.status === 204) {
+        return response.status;
+      } else {
+        console.error('Error in deleteExpenseType');
+      }
+    } catch (error: any) {
+      console.error('Error in deleteExpenseType:', error.message);
+    }
+  },
+
   getExpenseByYear: async (year: number, id_family?: number) => {
     try {
       const response: AxiosResponse = await instance.get(
