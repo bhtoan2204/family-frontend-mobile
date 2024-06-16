@@ -48,18 +48,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 15,
     paddingVertical: 15,
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
     backgroundColor: '#fff',
+    paddingBottom: 40,
   },
   input: {
     flex: 1,
     height: 40,
     paddingHorizontal: 15,
-    borderWidth: 1,
-    borderColor: '#ccc',
     borderRadius: 20,
     marginRight: 8,
+    backgroundColor: '#f2f2f2',
   },
   avatar: {
     width: 40,
@@ -69,19 +67,17 @@ const styles = StyleSheet.create({
   }, 
 
   header: {
-    backgroundColor: COLORS.white,
+    backgroundColor: 'white',
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: 2,
-    borderBottomColor: '#ccc',
     padding: 15,
   },
   receiverInfo: {
-    backgroundColor: COLORS.white,
+    backgroundColor: 'white',
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 25,
     flexDirection: 'row',
   },
   messageContentContainer: {
@@ -110,8 +106,9 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   avatarText: {
-    fontSize: 16,
-    fontWeight: 'bold'
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 10,
   },
   modalContainer: {
     flex: 1,

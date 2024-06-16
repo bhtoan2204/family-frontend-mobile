@@ -234,15 +234,18 @@ const ChatListScreen = ({
           <View style={styles.avatarContainer}>
             {item.user.avatar ? (
               <>
-                <Image source={{uri: item.user.avatar}} style={styles.avatar} />
-                <View style={styles.activeDot} />
+                <Image
+                  source={{uri: item.user.avatar}}
+                  style={[styles.avatar, {top: 5}]}
+                />
+                <View style={[styles.activeDot, {bottom: 15}]} />
               </>
             ) : (
               <>
                 <Text style={styles.avatarText}>
                   {`${item.user.firstname.charAt(0)}${item.user.lastname.charAt(0)}`}
                 </Text>
-                <View style={styles.activeDot} />
+                <View style={[styles.activeDot, {bottom: 15}]} />
               </>
             )}
           </View>
