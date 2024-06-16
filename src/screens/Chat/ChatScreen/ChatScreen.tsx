@@ -28,6 +28,7 @@ import {useSelector} from 'react-redux';
 import {selectProfile} from 'src/redux/slices/ProfileSclice';
 import {Message} from 'src/interface/chat/chat';
 import {Ionicons} from '@expo/vector-icons';
+import {COLORS} from 'src/constants';
 
 interface Member {
   id_user: string;
@@ -367,33 +368,55 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         data={messages}
         inverted
         renderItem={({item, index}) => (
-          <TouchableOpacity
-            onPress={() => handlePressMessage(item.id)}
+          <View
             style={[
-              styles.messageContainer,
+              styles.messageWrapper,
               item.senderId === profile.id_user
-                ? styles.senderMessageContainer
-                : styles.receiverMessageContainer,
+                ? styles.messageRight
+                : styles.messageLeft,
             ]}>
-            {item.type === 'photo' ? (
-              <View style={styles.messageContentContainer}>
-                <Image
-                  source={{uri: item.content}}
-                  style={styles.imageMessage}
-                />
-              </View>
-            ) : (
-              <>
-                <Text style={styles.senderMessageContent}>{item.content}</Text>
-              </>
-            )}
-
-            {selectedMessageId === item.id && (
-              <Text style={styles.timestamp}>
-                {formatDateTime(item.timestamp)}
-              </Text>
-            )}
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => handlePressMessage(item.id)}
+              style={[
+                styles.messageContainer,
+                item.senderId === profile.id_user
+                  ? styles.senderMessageContainer
+                  : styles.receiverMessageContainer,
+              ]}>
+              {item.type === 'photo' ? (
+                <View style={styles.messageContentContainer}>
+                  <Image
+                    source={{uri: item.content}}
+                    style={styles.imageMessage}
+                  />
+                </View>
+              ) : (
+                <Text
+                  style={[
+                    styles.senderMessageContent,
+                    {
+                      color:
+                        item.senderId === profile.id_user ? 'white' : 'black',
+                    },
+                  ]}>
+                  {item.content}
+                </Text>
+              )}
+            </TouchableOpacity>
+            <View
+              style={{
+                flexDirection: 'column',
+                marginHorizontal: 10,
+                alignItems:
+                  item.senderId === profile.id_user ? 'flex-end' : 'flex-start',
+              }}>
+              {selectedMessageId === item.id && (
+                <Text style={styles.timestamp}>
+                  {formatDateTime(item.timestamp)}
+                </Text>
+              )}
+            </View>
+          </View>
         )}
         keyExtractor={(item, index) => index.toString()}
         keyboardShouldPersistTaps="handled"
@@ -405,7 +428,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         <TouchableOpacity
           onPress={handleOpenImageLibrary}
           style={{marginRight: 15}}>
-          <Ionicons name="image" size={30} />
+          <Ionicons name="image" size={30} color={COLORS.DenimBlue} />
         </TouchableOpacity>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
           <TextInput
@@ -414,13 +437,13 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
             onChangeText={setMessage}
             placeholder="Aa"></TextInput>
           <TouchableOpacity style={{marginHorizontal: 15}}>
-            <Ionicons name="happy" size={30} />
+            <Ionicons name="happy" size={30} color={COLORS.DenimBlue} />
           </TouchableOpacity>
         </View>
         <TouchableOpacity
           onPress={handleSendMessage}
           disabled={isTextInputEmpty}>
-          <Ionicons name="send" size={30} />
+          <Ionicons name="send" size={30} color={COLORS.DenimBlue} />
         </TouchableOpacity>
       </View>
       <ImageView

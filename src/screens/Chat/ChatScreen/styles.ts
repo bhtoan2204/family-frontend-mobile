@@ -14,11 +14,11 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 8,
+    borderRadius: 10,
   },
   senderMessageContainer: {
     alignSelf: 'flex-end',
-    backgroundColor: COLORS.AliceBlue,
+    backgroundColor: COLORS.DenimBlue,
     padding: 10,
     margin: 10,
     borderRadius: 10,
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     width: 'auto',
   },
   senderMessageContent: {
-    color: COLORS.black,
+    fontWeight:'500'
   },
   receiverMessageSenderName: {
     fontWeight: 'bold',
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   backButton: {
-    color: COLORS.black,
+    color: COLORS.DenimBlue,
   },
   imageMessage: {
     width: 200,
@@ -123,10 +123,25 @@ const styles = StyleSheet.create({
   },
   videoCallButton: {
     marginLeft: 10,
+    color: COLORS.DenimBlue,
   },
   scrollViewContent: {
     flexGrow: 1,
     justifyContent: 'space-between',
   },
+  timestamp: {
+    color: '#cccccc',
+    fontSize: 12,
+  },
+  messageWrapper: {
+  flexDirection: 'column',
+  marginVertical: 4,
+},
+messageRight: {
+  justifyContent: 'flex-end',
+},
+messageLeft: {
+  justifyContent: 'flex-start',
+},
 });
 export default styles;
