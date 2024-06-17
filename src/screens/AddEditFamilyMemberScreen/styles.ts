@@ -9,12 +9,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
+    paddingVertical: 20,
     paddingTop: 20,
-    height: screenHeight*0.3,
+    height: screenHeight * 0.3,
+    backgroundColor: COLORS.white,
   },
   scrollViewContent: {
     flexGrow: 1,
     justifyContent: 'space-between',
+    backgroundColor: COLORS.white,
+    paddingHorizontal: 20,
   },
   headerfile: {
     flexDirection: 'row',
@@ -23,17 +27,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   backButton: {
-    color: COLORS.black,
+    color: COLORS.Rhino,
   },
-  saveButton: {
-    color: COLORS.Blue,
-  },
+  // saveButton: {
+  //   color: COLORS.Blue,
+  // },
   header: {
     marginBottom: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
+    alignSelf: 'center',
   },
   form: {
     marginTop: 20,
@@ -47,19 +52,28 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   inputPhone: {
-    borderWidth: 1,
-    borderColor: COLORS.EerieBlack,
-    borderRadius: 5,
+    borderWidth: 1.5,
+    borderColor: COLORS.Rhino,
+    borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 15,
-    flex:1,
+    height: 50,
+    width: '95%',
+    backgroundColor: COLORS.PaleAqua,
+    paddingLeft: 45,
   },
   inputControl: {
-    borderWidth: 1,
-    borderColor: COLORS.EerieBlack,
-    borderRadius: 5,
+    borderWidth: 1.5,
+    borderColor: COLORS.Rhino,
+    borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 15,
+    backgroundColor: COLORS.PaleAqua,
+    height: 50,
+    paddingLeft: 45,
+    width: '95%',
+    alignSelf: 'center',
+    zIndex: 0,
   },
   errorText: {
     color: COLORS.red,
@@ -82,7 +96,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    
+    alignSelf: 'center',
   },
   itemStyle: {
     justifyContent: 'flex-start',
@@ -104,12 +118,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   btn: {
-    color: COLORS.AliceBlue,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginTop: 20,
-    alignItems: 'center',
+    marginTop: screenHeight * 0.02,
+    marginBottom: screenHeight * 0.01,
+    borderColor: COLORS.Rhino,
   },
   btnText: {
     color: COLORS.black,
@@ -119,6 +130,7 @@ const styles = StyleSheet.create({
   addButtonContainer: {
   },
   contactIcon: {
+    color: COLORS.Rhino,
   },
   sheetHeader: {
     backgroundColor: COLORS.darkgray,

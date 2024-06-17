@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
     width: '80%',
     alignSelf: 'flex-end',
     marginRight: 15,
+    marginTop: -10,
   },
   avatarContainer: {
     marginRight: 10,
@@ -142,6 +143,7 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     flex: 1,
+    marginLeft: 10,
   },
   username: {
     fontSize: 16,
