@@ -37,6 +37,15 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   const [repeatEndDate, setRepeatEndDate] = useState(new Date());
   let color = useSelector(getColor);
   let category = useSelector(getIDcate);
+  const [count, setCount] = useState(1);
+
+  const handleDecrease = () => {
+    setCount(prevCount => Math.max(1, prevCount - 1));
+  };
+
+  const handleIncrease = () => {
+    setCount(prevCount => prevCount + 1);
+  };
 
   const optionRepeat = [
     { label: 'None', value: 'none' },
@@ -49,7 +58,9 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
 
   const optionEndRepeat = [
     { label: 'Never', value: 'never' },
-    { label: 'On date', value: 'date' },
+    { label: 'Until', value: 'date' },
+    { label: 'Count', value: 'count' },
+
   ];
 
   const handleDateChangeStart = (event: any, selectedDate: Date | undefined) => {
@@ -68,8 +79,10 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
     const timeStart = chosenDateStart;
     const timeEnd = chosenDateEnd;
     const frequency = selectedOptionRepeat.toUpperCase();
-    const interval = number;
+    const interval = number === 0 ? 1 : number; 
+  
     let count;
+    let until;
   
     if (timeEnd) {
       switch (frequency) {
@@ -90,6 +103,12 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       }
     }
   
+    if (selectedOptionEndRepeat === 'date') {
+      until = repeatEndDate;
+    } else if (selectedOptionEndRepeat === 'count') {
+      until = null;
+    }
+  
     let recurrenceRule = '';
   
     if (selectedOptionRepeat !== 'none') {
@@ -97,9 +116,11 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
         freq: RRule[frequency],
         interval: interval,
       };
-      if (count) {
+  
+      if (count && selectedOptionEndRepeat === 'count') {
         options.count = count;
       }
+  
       if (selectedDays && selectedDays.length > 0) {
         const daysMapping: { [key: string]: any } = {
           'Monday': RRule.MO,
@@ -120,15 +141,17 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
         const parsedYears = Array.isArray(selectedYears) ? selectedYears : selectedYears.split(',').map(year => parseInt(year, 10));
         options.byyearday = parsedYears.filter(year => !isNaN(year));
       }
-      if (selectedOptionEndRepeat === 'date') {
-        options.until = repeatEndDate;
+  
+      if (until) {
+        options.until = until;
       }
   
       const rule = new RRule(options as RRuleStrOptions);
       recurrenceRule = rule.toString();
-      // Remove RRULE: from the recurrence rule
       recurrenceRule = recurrenceRule.replace(/^RRULE:/, '');
+      recurrenceRule= recurrenceRule+';';
     }
+    
     console.log(recurrenceRule);
     const eventDetails = {
       id_family: id_family,
@@ -146,7 +169,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       start_timezone: "",
       end_timezone: ""
     };
-
+  
     try {
       const message = await CalendarServices.CreateEvent(
         eventDetails.title,
@@ -164,7 +187,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
         eventDetails.end_timezone,
         eventDetails.id_family,
       );
-
+  
       Alert.alert('Inform', message, [
         {
           text: 'OK',
@@ -177,6 +200,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       Alert.alert('Error', error.message);
     }
   };
+  
 
   const handleRepeatEndDateChange = (event: any, selectedDate: Date | undefined) => {
     if (selectedDate) {
@@ -363,7 +387,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
           />
         </View>
       )}
-      {selectedOptionEndRepeat !== 'never' && (
+      {selectedOptionEndRepeat === 'date' && (
         <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center' }]}>
           <MaterialCommunityIcons
             name="calendar-end"
@@ -379,6 +403,33 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
           />
         </View>
       )}
+     {selectedOptionEndRepeat === 'count' && (
+        <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center' }]}>
+          <MaterialCommunityIcons
+            name="calendar-end"
+            size={30}
+            style={styles.icon}
+          />
+          <Text style={{ right: 30, fontSize: 16, color: 'gray' }}>End Count</Text>
+          <TouchableOpacity onPress={handleDecrease}>
+            <MaterialCommunityIcons
+              name="minus-circle"
+              size={30}
+              style={[styles.icon, { marginRight: 5 }]}
+            />
+          </TouchableOpacity>
+          <Text>{count}</Text>
+          <TouchableOpacity onPress={handleIncrease}>
+            <MaterialCommunityIcons
+              name="plus-circle"
+              size={30}
+              style={[styles.icon, { marginLeft: 5 }]}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
+
+
       <ColorPicker navigation={navigation} />
       <View style={[styles.formAction, { paddingVertical: 10 }]}>
         <TouchableOpacity onPress={handleSubmit}>

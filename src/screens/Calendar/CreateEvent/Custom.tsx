@@ -226,6 +226,7 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
             <Text style={styles.label}>{number} {getUnitLabel()}</Text>
           </TouchableOpacity>
 
+
           {isNumberPickerVisible && (
             <View style={styles.pickerContainer}>
               <Picker

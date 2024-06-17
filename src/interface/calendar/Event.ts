@@ -12,7 +12,7 @@ export type Event = {
     location: string; 
     recurrence_exception: string;
     recurrence_id: number;
-    recurrence_rule: RecurrenceRule;
+    recurrence_rule: string;
     start_timezone: string;
     end_timezone: string;
 };
