@@ -39,7 +39,9 @@ const profileSlice = createSlice({
 
     },
     updateProfileSlice: (state, action: PayloadAction<Profile>) => {
+
       state.profile = {...state.profile, ...action.payload};
+
     },
   },
 });
