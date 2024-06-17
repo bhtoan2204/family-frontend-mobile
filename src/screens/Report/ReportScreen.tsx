@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import {View, Text, TouchableOpacity, Image, Animated} from 'react-native';
 import styles from './styles';
 import {ExpenditureScreenProps} from 'src/navigation/NavigationTypes';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -20,6 +20,25 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     navigation.navigate('IncomeStack', {screen: 'ChartInomeScreen'});
   };
 
+  const scaleAnim = useRef(new Animated.Value(1)).current; // Phóng to/thu nhỏ
+
+  useEffect(() => {
+    // Tạo animation phóng to/thu nhỏ liên tục
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(scaleAnim, {
+          toValue: 1.1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+  }, [scaleAnim]);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#f2f2f2'}}>
       <View style={styles.container}>
@@ -75,9 +94,13 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
               height: 150,
               bottom: 385,
             }}>
-            <Image
+            <Animated.Image
               source={require('../../assets/images/bar-chart.png')}
-              style={{width: '100%', height: '100%'}}
+              style={{
+                width: '100%',
+                height: '100%',
+                transform: [{scale: scaleAnim}],
+              }}
               resizeMode="contain"
             />
           </TouchableOpacity>
@@ -92,9 +115,13 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
               bottom: 230,
               zIndex: 2,
             }}>
-            <Image
+            <Animated.Image
               source={require('../../assets/images/pie-chart.png')}
-              style={{width: '100%', height: '100%'}}
+              style={{
+                width: '100%',
+                height: '100%',
+                transform: [{scale: scaleAnim}],
+              }}
               resizeMode="contain"
             />
           </TouchableOpacity>
@@ -109,9 +136,13 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
               top: 375,
               zIndex: 2,
             }}>
-            <Image
+            <Animated.Image
               source={require('../../assets/images/line-chart.png')}
-              style={{width: '100%', height: '100%'}}
+              style={{
+                width: '100%',
+                height: '100%',
+                transform: [{scale: scaleAnim}],
+              }}
               resizeMode="contain"
             />
           </TouchableOpacity>
