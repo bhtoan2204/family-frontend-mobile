@@ -3,7 +3,7 @@ import { View, ActivityIndicator, StyleSheet, TouchableOpacity, Text } from 'rea
 import { EventListScreenProps } from 'src/navigation/NavigationTypes';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import { AgendaEntry, AgendaSchedule, CalendarList, CalendarProvider, ExpandableCalendar, Timeline, CalendarUtils, TimelineList } from 'react-native-calendars';
-import { format, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
+import { format, startOfMonth, endOfMonth, addMonths, subMonths, getMonth } from 'date-fns';
 import { rrulestr } from 'rrule';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import _ from 'lodash'; 
@@ -37,6 +37,8 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
   useEffect(() => {
     setSelectedDate(date);
     handleGetCalendarForMonth(new Date(selectedDate));
+    handleGetCalendarForDay(new Date(selectedDate));
+
   }, [selectedDate, allEvent]);
 
   const fetchEvent = async() => {
@@ -117,12 +119,12 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
             });
     
             setEvents(prevEvents => ({ ...prevEvents, ...groupedEvents }));
-          } 
+         } 
         } catch(error){
           console.error('Error getting calendar for month:', error);
         }
       },
-      [allEvent, selectedDate],
+      [ allEvent, getMonth(selectedDate) ],
   );
   
 
@@ -138,7 +140,9 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
         
             allEvent.forEach(event => {
                 if (event.recurrence_rule) {
-                    const rule = rrulestr(event.recurrence_rule);
+                  const cleanedRecurrenceRule = cleanRecurrenceRule(event.recurrence_rule);
+
+                    const rule = rrulestr(cleanedRecurrenceRule);
                     const dates = rule.between(start, end);
                     dates.forEach(date => {
                         groupedEvents.push({
@@ -187,12 +191,12 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
             });
 
             setEventTL(preEventTL => ({ ...preEventTL, ...multiDayEvents }));
-          
       }
     } catch (error) {
         console.log('Error fetching calendar data:', error);
     }
-}, [id_family]);
+},       [ allEvent,getMonth(selectedDate) ],
+);
 
 
 
@@ -200,7 +204,6 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
 const loadItemsForMonth = async (data: any) => {
   const { year, month } = data[0];
 
-  console.log(data)
   const selectedMonth = new Date(year,month );
   await handleGetCalendarForMonth(selectedMonth);
   await handleGetCalendarForDay(selectedMonth)
@@ -222,19 +225,25 @@ const loadItemsForMonth = async (data: any) => {
     return markedDates;
   };
 
-  const formatEvent = (events: any ) => {
-    const allEvents = Object.values(events).flat().map(entry => ({
-      start: format(new Date(entry.time_start), 'yyyy-MM-dd HH:mm:ss'),
-      end: format(new Date(entry.time_end), 'yyyy-MM-dd HH:mm:ss'),
-      title: entry.title,
-      color: entry.color ,
-    }));
+  const formatEvent = (events: Event[]) => {
+    const allEvents = Object.values(events)
+      .flat()
+      .map((e: Event) => ({
+        start: format(new Date(e.time_start), 'yyyy-MM-dd HH:mm:ss'),
+        end: format(new Date(e.time_end), 'yyyy-MM-dd HH:mm:ss'),
+        title: e.title,
+        color: e.color,
+      }));
   
     const eventsByDate = _.groupBy(allEvents, (e) =>
       CalendarUtils.getCalendarDateString(e.end)
     );
     return eventsByDate;
-  }
+  };
+  
+  
+
+
   const pressList = () => {
     navigation.navigate('CalendarScreen', { id_family});
 

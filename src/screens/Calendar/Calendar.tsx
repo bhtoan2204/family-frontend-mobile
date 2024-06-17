@@ -17,6 +17,7 @@ import {RRule, rrulestr} from 'rrule';
 import {setSelectedDate} from 'src/redux/slices/ExpenseAnalysis';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Feather, Ionicons} from '@expo/vector-icons';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
 
 const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
   const {id_family} = route.params || {};
@@ -28,7 +29,7 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
   const [allEvent, setAllEvent] = useState<Event[] | null>(null);
 
   const [selectDate, setSelectDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
-  
+  const profile = useSelector(selectProfile);
   let date = useSelector(getDate);
   dispatch(setFamily(id_family));
 
@@ -281,7 +282,7 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
               Today
             </Text>
             <Text style={{fontSize: 14, fontWeight: '300'}}>
-              Welcome, Jennie
+              Welcome, {profile.firstname } {profile.lastname }
             </Text>
           </View>
           <TouchableOpacity
