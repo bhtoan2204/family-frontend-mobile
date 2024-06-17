@@ -343,6 +343,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
                     source={{uri: receiver.avatar}}
                     style={styles.avatar}
                   />
+                  <View style={[styles.activeDot, {top: 15, right: 10}]} />
                   <Text style={styles.avatarText}>
                     {' '}
                     {receiver.firstname} {receiver.lastname}
@@ -464,6 +465,9 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
                     <Image
                       source={{uri: receiver.avatar}}
                       style={styles.avatarFirst}
+                    />
+                    <View
+                      style={[styles.activeDotBig, {bottom: 40, left: 55}]}
                     />
                     <Text style={styles.avatarTextFirst}>
                       {' '}

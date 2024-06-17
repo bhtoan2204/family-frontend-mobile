@@ -168,5 +168,23 @@ const styles = StyleSheet.create({
     width: '80%',
     textAlign: 'center',
   },
+  activeDot: {
+    height: 15,
+    width: 15,
+    borderRadius: 7.5,
+    backgroundColor: 'green',
+    borderWidth: 2,
+    borderColor: 'white',
+    zIndex: 1,
+  },
+  activeDotBig: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    backgroundColor: 'green',
+    borderWidth: 2,
+    borderColor: 'white',
+    zIndex: 1,
+  },
 });
 export default styles;
