@@ -22,7 +22,7 @@ const ChecklistSections: React.FC<{ checklist: CheckListCategoryInterface[], sel
     React.useEffect(() => {
         const newSections: { title: string, data: CheckListCategoryInterface[] }[] = [];
         checklist.forEach(item => {
-            let dueDate = new Date(item.createdAt);
+            let dueDate = new Date(item.createdAt || '');
 
             if (compareDates(dueDate, today) === 0) {
                 const todayIndex = newSections.findIndex(section => section.title === 'Today');
@@ -62,8 +62,8 @@ const ChecklistSections: React.FC<{ checklist: CheckListCategoryInterface[], sel
             if (a.title !== "Today" && b.title === "Today") {
                 return 1;
             }
-            const dateA = new Date(a.data[0].createdAt);
-            const dateB = new Date(b.data[0].createdAt);
+            const dateA = new Date(a.data[0].createdAt || "");
+            const dateB = new Date(b.data[0].createdAt || "");
             return dateA.getTime() - dateB.getTime();
         });
         setSections(newSections);

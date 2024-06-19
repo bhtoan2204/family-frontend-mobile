@@ -4,5 +4,6 @@ const GuildlineUrl = {
   addGuildLine: '/api/v1/guideline/createGuideline',
   addStepGuildLine: '/api/v1/guideline/addStep',
   updateStepGuildLine: '/api/v1/guideline/updateStep',
+  deleteGuideline: '/api/v1/guideline/deleteGuideline',
 };
 export default GuildlineUrl;

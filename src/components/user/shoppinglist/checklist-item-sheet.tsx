@@ -28,11 +28,11 @@ interface AddItemCheckListSheetProps {
 
 const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: AddItemCheckListSheetProps) => {
     const timePickerRBSheet = React.useRef<any>();
-    const [name, setName] = React.useState(checklist_item.title);
+    const [name, setName] = React.useState(checklist_item.item_name);
     const [description, setDescription] = React.useState(checklist_item.description);
-    const [priority, setPriority] = React.useState(checklist_item.priority);
+    const [priority, setPriority] = React.useState(checklist_item.priority_level);
     const [isEditing, setIsEditing] = React.useState(false);
-    const [dueDate, setDueDate] = React.useState(checklist_item.dueDate)
+    const [dueDate, setDueDate] = React.useState(checklist_item.reminder_date)
     const dispatch = useDispatch<AppDispatch>();
     const renderBackdrop = React.useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />,
@@ -41,10 +41,10 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
     const snapPoints = React.useMemo(() => ['90%'], []);
 
     useEffect(() => {
-        setName(checklist_item.title)
+        setName(checklist_item.item_name)
         setDescription(checklist_item.description)
-        setPriority(checklist_item.priority)
-        setDueDate(checklist_item.dueDate)
+        setPriority(checklist_item.priority_level)
+        setDueDate(checklist_item.reminder_date)
     }, [checklist_item])
 
     const { showActionSheetWithOptions } = useActionSheet();
@@ -52,17 +52,16 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
     const handleUpdateChecklist = () => {
         dispatch(updateCheckListItemTitleAndDescription({
             id: id_checklist,
-            id_checklist: checklist_item.id,
+            id_checklist: checklist_item.id_item,
             title: name,
-            description: description,
+            description: description || "",
         }))
     }
 
     const handleUpdatePriority = (priority: number) => {
-        console.log(checklist_item.id, priority)
         dispatch(updateCheckListItemPriority({
             id: id_checklist,
-            id_checklist: checklist_item.id,
+            id_checklist: checklist_item.id_item,
             priority: priority,
         }))
     }
@@ -70,18 +69,20 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
     const handleUpdateDueDate = (dueDate: Date | null) => {
         dispatch(updateCheckListItemDueDate({
             id: id_checklist,
-            id_checklist: checklist_item.id,
+            id_checklist: checklist_item.id_item,
             dueDate: dueDate?.toDateString() || new Date().toDateString(),
         }))
+
     }
 
     const handleUpdateComplete = () => {
         dispatch(updateCheckListItemCompleted({
             id: id_checklist,
-            id_checklist: checklist_item.id,
-            isCompleted: !checklist_item.isCompleted,
+            id_checklist: checklist_item.id_item,
+            isCompleted: !checklist_item.is_purchased,
         }))
     }
+
 
     const onPressPriority = () => {
         const options = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Cancel',];
@@ -218,11 +219,11 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
                                                 )
                                             }}>
                                                 {
-                                                    checklist_item.isCompleted ? <Text className='text-white font-bold'>✓</Text> : <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[checklist_item.priority - 1] }}>
+                                                    checklist_item.is_purchased ? <Text className='text-white font-bold'>✓</Text> : <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[checklist_item.priority_level - 1] }}>
                                                     </View>
                                                 }
                                             </TouchableOpacity>
-                                            <Text className='text-lg font-semibold'>{checklist_item.title}</Text>
+                                            <Text className='text-lg font-semibold'>{checklist_item.item_name}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity className='flex-row items-center mt-5' onPress={() => {
                                             setIsEditing(true)
@@ -272,7 +273,7 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
                 </KeyboardAvoidingView>
 
             </View>
-            <CheckListTimePickerSheet refRBSheet={timePickerRBSheet} setSave={handleUpdateDueDate} initialValue={new Date(checklist_item.dueDate)} />
+            <CheckListTimePickerSheet refRBSheet={timePickerRBSheet} setSave={handleUpdateDueDate} initialValue={new Date(checklist_item.reminder_date)} />
         </BottomSheet>
     )
 }

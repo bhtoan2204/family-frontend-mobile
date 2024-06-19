@@ -4,7 +4,7 @@ export interface CheckListCategoryTypeInterface {
 }
 
 export interface CheckListCategoryInterface {
-  id: number;
+  id_list: number;
   id_item_type: number;
   category_name?: string;
   id_family: number;
@@ -16,11 +16,20 @@ export interface CheckListCategoryInterface {
 }
 
 export interface ChecklistItemInterface {
-  id: string;
-  title: string;
-  description: string;
-  dueDate: string;
-  priority: number;
-  isCompleted: boolean;
+  id_item: string;
+  id_list: number;
+  item_name: string;
+  quantity: number;
+  is_purchased: boolean;
+  priority_level: number;
+  reminder_date: string;
+  price: string;
+  description?: string;
+  id_item_type: number;
+  // title: string;
+  // description: string;
+  // dueDate: string;
+  // priority: number;
+  // isCompleted: boolean;
   // createdAt: Date;
 }

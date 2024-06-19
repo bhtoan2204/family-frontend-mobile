@@ -12,13 +12,14 @@ import { useKeyboardVisible } from 'src/hooks/useKeyboardVisible';
 import StepGuideLineImage from './StepGuideLineImage';
 import GuildLineHeader from './GuildLineHeader';
 import StepIndicator from './StepIndicator';
-import { AppDispatch } from 'src/redux/store';
-import { useDispatch } from 'react-redux';
+import { AppDispatch, RootState } from 'src/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteGuideline } from 'src/redux/slices/GuidelineSlice';
 import { GuildLineDetailScreenProps } from 'src/navigation/NavigationTypes';
+import GuildlineDetailInfo from './GuildlineDetailDescriptionInfo';
 const screenWidth = Dimensions.get('window').width;
 const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps) => {
-    const { id_item, id_family } = route.params
+    const { id_guide_item, id_family } = route.params
     const [currentStep, setCurrentStep] = useState(0)
     const [guildLineDetail, setGuildLineDetail] = useState<GuildLineDetail>()
     const [guildLineSteps, setGuildLineSteps] = useState<Step[]>()
@@ -28,19 +29,41 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
     const [isEditing, setIsEditing] = useState(false)
     const [isUploading, setIsUploading] = useState(false)
     const isKeyboardVisible = useKeyboardVisible();
-    const bottomSheetRef = React.useRef<any>(null);
     const [inputName, setInputName] = useState("");
     const [inputDescription, setInputDescription] = useState("");
+    const bottomSheetRef = React.useRef<any>(null);
+    const detailSheetRef = React.useRef<any>(null);
+
+    // const guidelineInfo = useSelector((state: RootState) => state.guidelines).find(item => item.id_guide_item === id_guide_item)!
+    // const stepFromStore = useSelector((state: RootState) => state.guidelines).find(item => item.id_guide_item === id_guide_item)!.steps || [
+    //     {
+    //         name: "",
+    //         description: "",
+    //         imageUrl: ""
+    //     }
+    // ]
+
+    const [contentSheet, setContentSheet] = useState<{
+        text: string;
+        type: number;
+    }>({
+        text: "",
+        type: 1
+    });
+
 
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
         const fetchGuildLineDetail = async () => {
             try {
-                const response = await GuildLineService.getGuildLineDetail(id_family!, id_item); // API call to fetch guildline detail
+                const response = await GuildLineService.getGuildLineDetail(id_family!, id_guide_item); // API call to fetch guildline detail
                 setGuildLineDetail(response);
+                console.log(response)
                 if (response && response.steps) {
+
                     setGuildLineSteps(response.steps)
+                    setCurrentStep(0)
                 } else {
                     console.log("cc")
                     setGuildLineSteps(
@@ -52,20 +75,24 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
                             }
                         ]
                     )
+                    setCurrentStep(0)
                 }
                 console.log(response)
                 setLoading(false);
             } catch (error) {
 
                 console.error('Error fetching guildline detail:', error);
+
             }
         };
         fetchGuildLineDetail();
     }, [])
 
+
     const nextStep = () => {
         setCurrentStep(currentStep + 1)
     }
+
     const prevStep = () => {
         setCurrentStep(currentStep <= 0 ? 0 : currentStep - 1)
     }
@@ -96,27 +123,53 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
     };
 
     const handleSaveAddStep = async () => {
-        setIsAdding(false);
-        setCurrentStep(currentStep);
+
         const newStep = guildLineSteps?.filter((step, index) => index === currentStep)[0];
+        console.log(inputName, inputDescription)
+
         if (newStep) {
+            const newStep2 = {
+                imageUrl: newStep.imageUrl,
+                name: inputName,
+                description: inputDescription
+            }
+            console.log(newStep2)
+            const a = await GuildLineService.addStepGuildLine(
+                id_guide_item!, id_family!, newStep2
+            )
+            // setGuildLineSteps((prev) => {
+            //     return prev?.map((step, index) => {
+            //         if (index === currentStep) {
+            //             return {
+            //                 imageUrl: newStep.imageUrl || "",
+            //                 name: inputName,
+            //                 description: inputDescription,
+            //             }
+            //         }
+            //         return step
+            //     })
+            // })
             setGuildLineSteps((prev) => {
                 return prev?.map((step, index) => {
                     if (index === currentStep) {
-                        return {
-                            imageUrl: newStep.imageUrl || "",
-                            name: inputName,
-                            description: inputDescription,
-                        }
+                        return newStep2
                     }
                     return step
                 })
             })
+
+
+            setIsAdding(false);
+            setCurrentStep(currentStep);
+            setInputDescription("");
+            setInputName("");
+
+        } else {
+            setIsAdding(false);
+            setCurrentStep(currentStep);
+            setInputDescription("");
+            setInputName("");
         }
-        setInputDescription("");
-        setInputName("");
-        console.log("cout<<")
-        console.log(newStep)
     }
 
     const handleSaveEdit = async () => {
@@ -124,6 +177,18 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
         const newStep = guildLineSteps?.filter((step, index) => index === currentStep)[0];
         console.log(newStep)
         if (newStep) {
+            const newStep2 = {
+                ...newStep,
+                name: inputName,
+                description: inputDescription
+            }
+            await GuildLineService.updateGuildLineDetail(
+                "",
+                id_family!,
+                id_guide_item!,
+                newStep2,
+                currentStep
+            )
             setGuildLineSteps((prev) => {
                 return prev?.map((step, index) => {
                     if (index === currentStep) {
@@ -142,6 +207,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
         setInputDescription("");
         setInputName("");
     }
+
     const handleCancelEdit = () => {
         setIsEditing(false);
         setInputDescription("");
@@ -149,20 +215,25 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
     }
 
     const handleDeleteCurrentStep = async () => {
-        setGuildLineSteps((prev) => {
-            return prev?.filter((step, index) => index !== currentStep)
-        })
-        if (currentStep > 0) {
-            setCurrentStep(currentStep - 1)
+        await GuildLineService.deleteStepGuildLine(id_family!, id_guide_item!, currentStep)
+        const currStep = currentStep
+        if (currStep > 0) {
+            setCurrentStep(currStep - 1)
         } else {
             setCurrentStep(0)
         }
+        setGuildLineSteps((prev) => {
+            return prev?.filter((step, index) => index !== currStep)
+        })
+
     }
 
     const handleDeleteGuideline = async () => {
-        dispatch(deleteGuideline(id_item!))
+        await GuildLineService.deleteGuideline(id_family!, id_guide_item!)
+        dispatch(deleteGuideline(id_guide_item!))
         navigation.goBack()
     }
+
     if (loading) {
         return <ActivityIndicator style={{ flex: 1, justifyContent: 'center' }} size="small" />;
     }
@@ -180,13 +251,15 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
 
             if (!result.canceled) {
                 console.log(result.assets[0].uri);
-                await GuildLineService.updateImageStepGuildLine(
-                    result.assets[0].uri,
-                    id_family!,
-                    id_item!,
-                    guildLineSteps![currentStep],
-                    currentStep
-                )
+                if (!isAdding) {
+                    await GuildLineService.updateGuildLineDetail(
+                        result.assets[0].uri,
+                        id_family!,
+                        id_guide_item!,
+                        guildLineSteps![currentStep],
+                        currentStep
+                    )
+                }
                 setGuildLineSteps((prev) => {
                     return prev?.map((step, index) => {
                         if (index === currentStep) {
@@ -218,13 +291,15 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
 
             if (!result.canceled) {
                 console.log(currentStep)
-                await GuildLineService.updateImageStepGuildLine(
-                    result.assets[0].uri,
-                    id_family!,
-                    id_item!,
-                    guildLineSteps![currentStep],
-                    currentStep
-                )
+                if (!isAdding) {
+                    await GuildLineService.updateGuildLineDetail(
+                        result.assets[0].uri,
+                        id_family!,
+                        id_guide_item!,
+                        guildLineSteps![currentStep],
+                        currentStep
+                    )
+                }
                 setGuildLineSteps((prev) => {
                     return prev?.map((step, index) => {
                         if (index === currentStep) {
@@ -265,6 +340,13 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
         }
     }
 
+    const handleEditGuildline = () => {
+        setIsEditing(true)
+        if (guildLineSteps) {
+            setInputName(guildLineSteps[currentStep].name)
+            setInputDescription(guildLineSteps[currentStep].description)
+        }
+    }
     return (
         <SafeAreaView className='flex-1'>
             <View className='flex-1 bg-[#fff] items-center '>
@@ -276,6 +358,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
                     handleCancelAddStep={handleCancelAddStep} handleCancelEdit={handleCancelEdit}
                     handleSaveAddStep={handleSaveAddStep} handleSaveEdit={handleSaveEdit}
                     navigationBack={() => navigation.goBack()} handleIsAddingStep={handleIsAddingStep}
+                    handleEditGuildline={handleEditGuildline}
                     handleShareGuideline={handleShareGuideline}
                     bottomSheetRef={bottomSheetRef}
                     handleDeleteCurrentStep={handleDeleteCurrentStep}
@@ -284,27 +367,42 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
                 <KeyboardAvoidingView className=' h-full flex flex-col items-center mt-3  ' behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
                     {
                         guildLineSteps && <>
-                            <StepGuideLineImage isAdding={isAdding} isEditing={isEditing} setAdding={setIsAdding} setEditing={setIsEditing} bottomSheetRef={bottomSheetRef} guideLineStepData={guildLineSteps[currentStep]} currentStep={currentStep} isKeyboardVisible={isKeyboardVisible} />
+                            <StepGuideLineImage
+                                isAdding={isAdding}
+                                isEditing={isEditing}
+                                setAdding={setIsAdding}
+                                setEditing={setIsEditing}
+                                bottomSheetRef={bottomSheetRef}
+                                guideLineStepData={guildLineSteps[currentStep]}
+                                currentStep={currentStep}
+                                isKeyboardVisible={isKeyboardVisible}
+                                guildLineSteps={guildLineSteps}
+                            />
                             <View className='bg-white  w-full'>
 
                                 <StepIndicator currentStep={currentStep} guildLineSteps={guildLineSteps} />
                                 {
                                     !isAdding && !isEditing ?
                                         <TouchableOpacity onPress={() => {
-                                            setIsEditing(true)
-                                            setInputName(guildLineSteps[currentStep].name)
-                                            setInputDescription(guildLineSteps[currentStep].description)
+                                            // setIsEditing(true)
+                                            // setInputName(guildLineSteps[currentStep].name)
+                                            // setInputDescription(guildLineSteps[currentStep].description)
+                                            setContentSheet({
+                                                text: guildLineSteps[currentStep].name,
+                                                type: 1
+                                            })
+                                            detailSheetRef.current?.expand()
+
+
                                         }}>
-                                            <Text className='text-center px-4 text-2xl font-bold mt-5 ' style={{ color: COLORS.AuroMetalSaurus }}>Step {currentStep + 1}: {guildLineSteps[currentStep].name != ""
+                                            <Text className='text-center px-4 text-2xl font-bold mt-5 ' numberOfLines={2} style={{ color: COLORS.AuroMetalSaurus }}>Step {currentStep + 1}: {guildLineSteps[currentStep].name != ""
                                                 &&
                                                 guildLineSteps[currentStep].name != null
                                                 ? guildLineSteps[currentStep].name : "Add name"}</Text>
                                         </TouchableOpacity>
-                                        : <TextInput className='text-center px-4 text-2xl font-bold mt-5 ' style={{ color: COLORS.AuroMetalSaurus }} placeholder='Enter name of step' autoFocus onChangeText={(text) => {
-
+                                        : <TextInput className='text-center px-4 text-2xl font-bold mt-5 ' style={{ color: COLORS.AuroMetalSaurus }} placeholder='Enter name of step' autoFocus maxLength={50} onChangeText={(text) => {
+                                            console.log("name step", text)
                                             setInputName(text)
-                                            // guildLineSteps[currentStep].name = e.nativeEvent.text
-
                                         }
                                         }
                                             value={inputName}
@@ -314,27 +412,22 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
                                     !isAdding && !isEditing
                                         ?
                                         <TouchableOpacity onPress={() => {
-                                            setIsEditing(true)
-                                            setInputName(guildLineSteps[currentStep].name)
-                                            setInputDescription(guildLineSteps[currentStep].description)
+                                            // setIsEditing(true)
+                                            // setInputName(guildLineSteps[currentStep].name)
+                                            // setInputDescription(guildLineSteps[currentStep].description)
+                                            setContentSheet({
+                                                text: guildLineSteps[currentStep].description,
+                                                type: 2
+                                            })
+                                            detailSheetRef.current?.expand()
+
                                         }}>
-                                            <Text className='text-center px-4 text-lg mt-5 text-[#a1a1a1]' >{guildLineSteps[currentStep].description != "" && guildLineSteps[currentStep].description != null ? guildLineSteps[currentStep].description : "Add description"}</Text>
+                                            <Text className='text-center px-4 text-lg mt-5 text-[#a1a1a1]' numberOfLines={2} >{guildLineSteps[currentStep].description != "" && guildLineSteps[currentStep].description != null ? guildLineSteps[currentStep].description : "Add description"}</Text>
                                         </TouchableOpacity>
                                         :
-                                        <TextInput className='text-center px-4 text-lg mt-5' placeholder='Enter description (optional)' onChangeText={(text) => {
+                                        <TextInput className='text-center px-4 text-lg mt-5 ' maxLength={50} placeholder='Enter description (optional)' onChangeText={(text) => {
+                                            console.log("desc step", text)
                                             setInputDescription(text)
-                                            // setGuildLineSteps((prev) => {
-                                            //     return prev?.map((step, index) => {
-                                            //         if (index === currentStep) {
-                                            //             return {
-                                            //                 ...step,
-                                            //                 description: text
-                                            //             }
-                                            //         }
-                                            //         return step
-                                            //     })
-
-                                            // })
                                         }}
                                             value={inputDescription}
                                         />
@@ -380,6 +473,19 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
                 </KeyboardAvoidingView>
                 <PickImageSheet bottomSheetRef={bottomSheetRef} handlePickImage={handlePickImage} handleTakePhoto={handleTakePhoto} />
             </View>
+            <GuildlineDetailInfo bottomSheetRef={detailSheetRef}
+                text={contentSheet.text}
+                type={contentSheet.type}
+                setText={(value) => {
+                    setContentSheet({
+                        ...contentSheet,
+                        text: value
+                    })
+
+                }}
+                handleEditGuildline={handleEditGuildline}
+
+            />
         </SafeAreaView>
     );
 }

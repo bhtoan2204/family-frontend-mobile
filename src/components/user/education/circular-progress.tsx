@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Svg, Circle } from 'react-native-svg';
+import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
 
 const CircularProgress = ({ size, progress, strokeWidth, backgroundColor, progressColor, disableProgressText }: any) => {
     const radius = (size - strokeWidth) / 2;
@@ -34,7 +35,9 @@ const CircularProgress = ({ size, progress, strokeWidth, backgroundColor, progre
                 />
                 {
                     disableProgressText ?? <View className='h-full w-full flex-col justify-center items-center'>
-                        <Text >{progress}%</Text>
+                        <Text className='font-normal' style={{
+                            color: iOSGrayColors.systemGray.accessibleDark
+                        }}>{progress}%</Text>
                     </View>
                 }
 

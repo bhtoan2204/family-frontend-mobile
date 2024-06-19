@@ -3,10 +3,12 @@ import { View, Text, TouchableOpacity, ScrollView, SafeAreaView } from 'react-na
 import { EducationDetailScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants';
-import CourseItem from './CourseItem';
+// import CourseItem from './CourseItem';
 import { EducationDetail } from 'src/interface/education/education';
 import AddSubjectSheet from './SubjectSheet/AddSubjectSheet';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import { gradients_list } from 'src/assets/images/gradients';
+import CourseItem from 'src/components/user/education/course-item';
 const data = {
     "message": "Success",
     "data": [
@@ -53,7 +55,11 @@ const EducationDetailScreen: React.FC<EducationDetailScreenProps> = ({ navigatio
                     </TouchableOpacity>
                     <View className='mr-3'>
                         <TouchableOpacity onPress={() => {
-                            refRBSheet.current?.open()
+                            // refRBSheet.current?.open()
+                            navigation.navigate("AddSubject", {
+                                id_family: id_family,
+                                id_education_progress: id_education_progress,
+                            })
                         }} >
                             {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
                             <Text className='text-lg font-semibold' style={{ color: COLORS.AuroMetalSaurus }}>Add</Text>
@@ -65,13 +71,25 @@ const EducationDetailScreen: React.FC<EducationDetailScreenProps> = ({ navigatio
                         educationDetailData && educationDetailData.subjects_info.map((item: any, index: number) => {
                             return (
                                 <React.Fragment key={index}>
+                                    {/* <CourseItem data={item} onPress={() => {
+                                        navigation.navigate('SubjectDetail', {
+                                            id_education_progress,
+                                            id_family,
+                                            id_subject: item.id_subject
+                                        })
+
+                                    }}
+                                        img={gradients_list[Math.floor(Math.random() * gradients_list.length)]} /> */}
                                     <CourseItem data={item} onPress={() => {
                                         navigation.navigate('SubjectDetail', {
                                             id_education_progress,
                                             id_family,
                                             id_subject: item.id_subject
                                         })
-                                    }} />
+
+                                    }}
+                                        img={gradients_list[Math.floor(Math.random() * gradients_list.length)]} />
+
                                 </React.Fragment>
                             )
                         })

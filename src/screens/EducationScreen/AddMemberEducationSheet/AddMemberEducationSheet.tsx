@@ -69,9 +69,9 @@ const AddMemberEducationSheet = ({ bottomSheetRef, setMemberEducationDatas, memb
                 </TouchableOpacity>
 
                 <View>
-                    <Text className='text-base font-semibold'>Add Member</Text>
+                    <Text className='text-base font-semibold'>Add Education</Text>
                 </View>
-
+                
                 <TouchableOpacity onPress={() => {
                     const newEdu: Education = {
                         id_education_progress: 0,

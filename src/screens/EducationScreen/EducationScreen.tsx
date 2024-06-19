@@ -4,9 +4,9 @@ import { EducationScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants';
 import EduImg from 'src/assets/images/education.png'
-import CircularProgress from './CircularProgress';
-import CourseItem from './CourseItem';
-import MemberEducationItem from './MemberEducationItem';
+// import CircularProgress from './CircularProgress';
+// import CourseItem from './CourseItem';
+// import MemberEducationItem from './MemberEducationItem';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
 import { Education } from 'src/interface/education/education';
@@ -14,6 +14,7 @@ import { Member } from 'src/interface/member/member';
 import { FamilyServices } from 'src/services/apiclient';
 import AddMemberEducationSheet from './AddMemberEducationSheet/AddMemberEducationSheet';
 import { ActivityIndicator } from 'react-native-paper';
+import MemberEducationItem from 'src/components/user/education/member-education-item';
 
 const data = {
     "message": "Success",
@@ -29,6 +30,18 @@ const data = {
             "avatar": "[NULL]",
             "firstname": "Tang",
             "lastname": "Long"
+        },
+        {
+            "id_education_progress": 2,
+            "id_user": "db31bfb8-ec15-4cb1-9cbe-ebe3edaca323",
+            "title": "Discrete Mathematic",
+            "progress_notes": "M",
+            "school_info": "Đại học Khoa học Tự Nhiên ÁDASDASDASDASDADASD",
+            "created_at": "2024-04-30T08:59:03.177Z",
+            "updated_at": "2024-04-30T08:59:03.177Z",
+            "avatar": "[NULL]",
+            "firstname": "Toan",
+            "lastname": "Banh"
         }
     ]
 }
@@ -38,7 +51,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     const [members, setMembers] = React.useState<Member[]>([]);
     const [filteredMembers, setFilteredMembers] = React.useState<Member[]>([])
     const [memberEducationData, setMemberEducationData] = React.useState<Education>()
-    const [memberEducationDatas, setMemberEducationDatas] = React.useState<Education[]>([data.data[0]])
+    const [memberEducationDatas, setMemberEducationDatas] = React.useState<Education[]>(data.data)
 
     const bottomSheetRef = React.useRef<any>(null);
 
@@ -54,6 +67,12 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
             }
         };
         handleViewAllMember()
+    }, [])
+
+    useEffect(() => {
+        const handleFetchEducation = async () => {
+
+        }
     }, [])
 
     // useEffect(() => {
@@ -87,6 +106,9 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                         <TouchableOpacity onPress={() => {
                             // refRBSheet.current?.open()
                             bottomSheetRef.current?.open()
+                            // navigation.navigate('AddEducation', {
+                            //     id_family
+                            // })
                         }} >
                             {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
                             <Text className='text-lg font-semibold' style={{ color: COLORS.AuroMetalSaurus }}>Add</Text>
@@ -98,6 +120,12 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                         memberEducationDatas != null ? memberEducationDatas.map((item: Education, index: number) => {
                             return (
                                 <React.Fragment key={index}>
+                                    {/* <MemberEducationItem data={item} onPress={() => {
+                                        navigation.navigate('EducationDetail', {
+                                            id_education_progress: item.id_education_progress,
+                                            id_family: route.params.id_family,
+                                        })
+                                    }} /> */}
                                     <MemberEducationItem data={item} onPress={() => {
                                         navigation.navigate('EducationDetail', {
                                             id_education_progress: item.id_education_progress,

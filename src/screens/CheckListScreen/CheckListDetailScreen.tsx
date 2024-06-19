@@ -8,7 +8,8 @@ import { COLORS } from 'src/constants';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 // import AddItemCheckListSheet from './AddItemCheckListSheet';
 import { shoppingListItemColor, shoppingListItemColorInside } from './constant/color';
-import CircularProgress from '../EducationScreen/CircularProgress';
+// import CircularProgress from '../EducationScreen/CircularProgress';
+import CircularProgress from 'src/components/user/education/circular-progress';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/redux/store';
 import * as Animatable from 'react-native-animatable';
@@ -27,24 +28,28 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
     const refRBSheet = useRef<BottomSheet>(null);
     const refRBSheetDetail = useRef<BottomSheet>(null);
     const dispatch = useDispatch<AppDispatch>();
-    const checkListCategoryData = useSelector((state: RootState) => state.checklist).find(item => item.id === id_checklist)!
-    const checklist = useSelector((state: RootState) => state.checklist).find(item => item.id === id_checklist)!.checklistItems
-    // const [checklist, setChecklist] = React.useState<ChecklistItemInterface[]>(checklistData);
+    const checkListCategoryData = useSelector((state: RootState) => state.checklist).find(item => item.id_list === id_checklist)!
+    const checklist = useSelector((state: RootState) => state.checklist).find(item => item.id_list === id_checklist)!.checklistItems
     const [filteredChecklist, setFilteredChecklist] = React.useState<ChecklistItemInterface[]>()
-    const [selectedChecklistItem, setSelectedChecklistItem] = React.useState<string | null>(
-        checklist.length > 0 ? checklist[0].id : null
-    )
+    const [selectedChecklistItem, setSelectedChecklistItem] = React.useState<string>("-1")
+    const [type, setType] = React.useState<number>(0)
     useEffect(() => {
         // setChecklist(checklistData)
 
     }, [])
     useEffect(() => {
-        setFilteredChecklist(checklist)
+        // setFilteredChecklist(checklist)
+        const findMax = () => {
+            let max = 0;
+
+        }
     }, [checklist])
 
 
-    const selectCheckListItem = (id: string) => {
-        setSelectedChecklistItem(id)
+
+    const selectCheckListItem = (item: string) => {
+        setSelectedChecklistItem(item)
+
         refRBSheetDetail.current?.expand()
     }
     // const selectCheckListItem = (item: ChecklistItemInterface) => {
@@ -54,7 +59,7 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
 
     const showContent = () => {
         const sortedCheckList = checklist.sort((a, b) => {
-            return a.priority - b.priority
+            return a.priority_level - b.priority_level
         })
         return <>
             {sortedCheckList.map((item, index) => {
@@ -63,8 +68,20 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
         </>
     }
 
-    const getChecklistItem = (id: string) => {
-        return checklist.find(item => item.id === id)
+    const getChecklistItem = (id: string | null) => {
+        const emptyItem: ChecklistItemInterface = {
+            id_item: '0',
+            item_name: '',
+            description: '',
+            priority_level: 4,
+            reminder_date: today.toDateString(),
+            is_purchased: false,
+            id_item_type: 0,
+            id_list: 0,
+            price: "0",
+            quantity: 0,
+        }
+        return checklist.find(item => item.id_item === id) || emptyItem
     }
 
     return (
@@ -130,9 +147,7 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
                 <Text style={{ color: 'white', fontSize: 40 }}>+</Text>
             </TouchableOpacity>
             <AddItemCheckListSheet bottomSheetRef={refRBSheet} id_checklist={id_checklist} />
-            {
-                selectedChecklistItem && <CheckListDetailSheet bottomSheetRef={refRBSheetDetail} id_checklist={id_checklist} checklist_item={getChecklistItem(selectedChecklistItem)!} />
-            }
+            <CheckListDetailSheet bottomSheetRef={refRBSheetDetail} id_checklist={id_checklist} checklist_item={getChecklistItem(selectedChecklistItem)} />
         </View>
     );
 };

@@ -5,7 +5,7 @@ import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
 import ViewFamilyScreen from 'src/screens/FamilyScreen';
 import ViewAllMemberScreen from 'src/screens/AllMember';
 import AddMemberScreen from 'src/screens/AddEditFamilyMemberScreen';
-import { AddEditFamilyMemberScreenProps, AddHouseHoldItemDetailScreenProps, AddHouseHoldItemScreenProps, AddHouseHoldRoomScreenProps, AllMemberScreenProps, CheckListDetailScreenProps, CheckListScreenProps, ContactScreenProps, CreateFamilyScreenProps, EditExpenseHouseHoldItemScreenProps, EducationDetailScreenProps, EducationScreenProps, GuildLineDetailScreenProps, GuildLineScreenProps, HouseHoldItemDetailScreenProps, HouseHoldItemScreenProps, HouseHoldScreenProps, NewsScreenProps, SharedGuildLineScreenProps, SubjectDetailScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
+import { AddEditFamilyMemberScreenProps, AddEducationScreenProps, AddGuildLineScreenProps, AddHouseHoldItemDetailScreenProps, AddHouseHoldItemScreenProps, AddHouseHoldRoomScreenProps, AddSubjectScreenProps, AllMemberScreenProps, CheckListDetailScreenProps, CheckListScreenProps, ContactScreenProps, CreateFamilyScreenProps, EditExpenseHouseHoldItemScreenProps, EducationDetailScreenProps, EducationScreenProps, GuildLineDetailScreenProps, GuildLineScreenProps, HouseHoldItemDetailScreenProps, HouseHoldItemScreenProps, HouseHoldScreenProps, NewsScreenProps, SharedGuildLineScreenProps, SubjectDetailScreenProps, UpdateGuildLineScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
 import ContactListScreen from 'src/screens/ContactList/ContactList';
 import GuildLineScreen from 'src/screens/GuildLineScreen/GuildLineScreen';
 import GuildLineDetailScreen from 'src/screens/GuildLineScreen/GuildLineDetailScreen';
@@ -23,6 +23,10 @@ import AddHouseHoldItemDetailScreen from 'src/screens/HouseHoldScreen/AddHouseHo
 import EditExpenseScreen from 'src/screens/HouseHoldScreen/EditExpenseScreen';
 import AddHouseHoldItemScreen from 'src/screens/HouseHoldScreen/AddHouseHoldItemScreen';
 import AddRoomScreen from 'src/screens/HouseHoldScreen/AddRoomScreen';
+import AddEducationScreen from 'src/screens/EducationScreen/AddEducationScreen';
+import AddSubjectScreen from 'src/screens/EducationScreen/AddSubjectScreen';
+import AddGuildLineScreen from 'src/screens/GuildLineScreen/AddGuildlineScreen';
+import UpdateGuildLineScreen from 'src/screens/GuildLineScreen/UpdateGuildlineScreen';
 const Stack = createNativeStackNavigator();
 
 const FamilyStack = () => {
@@ -52,6 +56,8 @@ const FamilyStack = () => {
       <Stack.Screen name="Contact" >
         {(props) => <ContactListScreen {...props as ContactScreenProps} />}
       </Stack.Screen>
+
+
       <Stack.Screen name="GuildLine">
         {(props) => <GuildLineScreen {...props as GuildLineScreenProps} />}
       </Stack.Screen>
@@ -61,15 +67,42 @@ const FamilyStack = () => {
       <Stack.Screen name="SharedGuildLine">
         {(props) => <SharedGuildLineDetailScreen {...props as SharedGuildLineScreenProps} />}
       </Stack.Screen>
+      <Stack.Screen name="AddGuildLine" options={{
+        animation: 'slide_from_bottom',
+        presentation: 'fullScreenModal',
+
+      }}>
+        {(props) => <AddGuildLineScreen {...props as AddGuildLineScreenProps} />}
+      </Stack.Screen>
+      <Stack.Screen name="UpdateGuildLine" options={{
+        animation: 'slide_from_bottom',
+        presentation: 'fullScreenModal',
+      }}>
+        {(props) => <UpdateGuildLineScreen {...props as UpdateGuildLineScreenProps} />}
+      </Stack.Screen>
+
       <Stack.Screen name="Education">
         {(props) => <EducationScreen {...props as EducationScreenProps} />}
       </Stack.Screen>
       <Stack.Screen name="EducationDetail">
         {(props) => <EducationDetailScreen {...props as EducationDetailScreenProps} />}
       </Stack.Screen>
+      <Stack.Screen name="AddEducation" options={{
+        animation: 'slide_from_bottom',
+      }}>
+        {(props) => <AddEducationScreen {...props as AddEducationScreenProps} />}
+      </Stack.Screen>
+      <Stack.Screen name="AddSubject" options={{
+        animation: 'slide_from_bottom',
+      }}>
+        {(props) => <AddSubjectScreen {...props as AddSubjectScreenProps} />}
+      </Stack.Screen>
       <Stack.Screen name="SubjectDetail">
         {(props) => <SubjectDetailScreen {...props as SubjectDetailScreenProps} />}
       </Stack.Screen>
+
+
+
       <Stack.Screen name="HouseHold">
         {(props) => <HouseHoldScreen {...props as HouseHoldScreenProps} />}
       </Stack.Screen>

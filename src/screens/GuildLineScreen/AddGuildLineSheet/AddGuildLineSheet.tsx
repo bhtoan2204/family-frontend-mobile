@@ -25,7 +25,8 @@ const AddGuildLineSheet = ({ refRBSheet }: { refRBSheet: React.RefObject<any> })
         // });
         dispatch(addGuideline(
             {
-                id_item: Math.floor(Math.random()) * 100,
+                id_guide_item: Math.floor(Math.random()) * 100,
+                id_family: 96,
                 name: name,
                 description: description,
                 created_at: "",

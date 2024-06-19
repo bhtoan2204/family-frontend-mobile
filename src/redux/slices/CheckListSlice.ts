@@ -22,7 +22,7 @@ const checkListSlice = createSlice({
       action: PayloadAction<{id: number; items: ChecklistItemInterface[]}>,
     ) {
       const checkListIndex = state.findIndex(
-        checklist => checklist.id === action.payload.id,
+        checklist => checklist.id_list === action.payload.id,
       );
       if (checkListIndex !== -1) {
         state[checkListIndex].checklistItems = action.payload.items;
@@ -40,19 +40,19 @@ const checkListSlice = createSlice({
       action: PayloadAction<{id: number}>,
     ) {
       const checkListIndex = state.findIndex(
-        checklist => checklist.id === action.payload.id,
+        checklist => checklist.id_list === action.payload.id,
       );
       state[checkListIndex].total += 1;
     },
     decreaseCompletedCheckListItem(state, action: PayloadAction<{id: number}>) {
       const checkListIndex = state.findIndex(
-        checklist => checklist.id === action.payload.id,
+        checklist => checklist.id_list === action.payload.id,
       );
       state[checkListIndex].completed += 1;
     },
     updateUnCompletedCheckListItem(state, action: PayloadAction<{id: number}>) {
       const checkListIndex = state.findIndex(
-        checklist => checklist.id === action.payload.id,
+        checklist => checklist.id_list === action.payload.id,
       );
       state[checkListIndex].completed -= 1;
     },
@@ -61,11 +61,11 @@ const checkListSlice = createSlice({
       action: PayloadAction<{id: number; item: ChecklistItemInterface}>,
     ) {
       const checkListIndex = state.findIndex(
-        checklist => checklist.id === action.payload.id,
+        checklist => checklist.id_list === action.payload.id,
       );
       if (checkListIndex !== -1 && state[checkListIndex].checklistItems) {
         const newItem: ChecklistItemInterface = action.payload.item;
-        newItem.id = `${state[checkListIndex].checklistItems.length + 1}`;
+        newItem.id_item = `${state[checkListIndex].checklistItems.length + 1}`;
         state[checkListIndex].checklistItems.push(newItem);
         state[checkListIndex].total += 1;
       }
@@ -80,16 +80,16 @@ const checkListSlice = createSlice({
       }>,
     ) {
       const checkListIndex = state.findIndex(
-        checklist => checklist.id === action.payload.id,
+        checklist => checklist.id_list === action.payload.id,
       );
       if (checkListIndex !== -1 && state[checkListIndex].checklistItems) {
         const checkListItemIndex = state[
           checkListIndex
         ].checklistItems.findIndex(
-          item => item.id === action.payload.id_checklist,
+          item => item.id_item === action.payload.id_checklist,
         );
         if (checkListItemIndex !== -1) {
-          state[checkListIndex].checklistItems[checkListItemIndex].title =
+          state[checkListIndex].checklistItems[checkListItemIndex].item_name =
             action.payload.title;
           state[checkListIndex].checklistItems[checkListItemIndex].description =
             action.payload.description;
@@ -104,18 +104,33 @@ const checkListSlice = createSlice({
         priority: number;
       }>,
     ) {
+      // const checkListIndex = state.findIndex(
+      //   checklist => checklist.id === action.payload.id,
+      // );
+      // if (checkListIndex !== -1 && state[checkListIndex].checklistItems) {
+      //   const checkListItemIndex = state[
+      //     checkListIndex
+      //   ].checklistItems.findIndex(
+      //     item => item.id === action.payload.id_checklist,
+      //   );
+      //   if (checkListItemIndex !== -1) {
+      //     state[checkListIndex].checklistItems[checkListItemIndex].priority =
+      //       action.payload.priority;
+      //   }
+      // }
       const checkListIndex = state.findIndex(
-        checklist => checklist.id === action.payload.id,
+        checklist => checklist.id_list === action.payload.id,
       );
-      if (checkListIndex !== -1 && state[checkListIndex].checklistItems) {
+      if (checkListIndex !== -1) {
         const checkListItemIndex = state[
           checkListIndex
-        ].checklistItems.findIndex(
-          item => item.id === action.payload.id_checklist,
+        ].checklistItems?.findIndex(
+          item => item.id_item === action.payload.id_checklist,
         );
-        if (checkListItemIndex !== -1) {
-          state[checkListIndex].checklistItems[checkListItemIndex].priority =
-            action.payload.priority;
+        if (checkListItemIndex !== undefined && checkListItemIndex !== -1) {
+          state[checkListIndex].checklistItems[
+            checkListItemIndex
+          ].priority_level = action.payload.priority;
         }
       }
     },
@@ -128,17 +143,18 @@ const checkListSlice = createSlice({
       }>,
     ) {
       const checkListIndex = state.findIndex(
-        checklist => checklist.id === action.payload.id,
+        checklist => checklist.id_list === action.payload.id,
       );
       if (checkListIndex !== -1 && state[checkListIndex].checklistItems) {
         const checkListItemIndex = state[
           checkListIndex
         ].checklistItems.findIndex(
-          item => item.id === action.payload.id_checklist,
+          item => item.id_item === action.payload.id_checklist,
         );
         if (checkListItemIndex !== -1) {
-          state[checkListIndex].checklistItems[checkListItemIndex].dueDate =
-            action.payload.dueDate;
+          state[checkListIndex].checklistItems[
+            checkListItemIndex
+          ].reminder_date = action.payload.dueDate;
         }
       }
     },
@@ -151,17 +167,18 @@ const checkListSlice = createSlice({
       }>,
     ) {
       const checkListIndex = state.findIndex(
-        checklist => checklist.id === action.payload.id,
+        checklist => checklist.id_list === action.payload.id,
       );
       if (checkListIndex !== -1 && state[checkListIndex].checklistItems) {
         const checkListItemIndex = state[
           checkListIndex
         ].checklistItems.findIndex(
-          item => item.id === action.payload.id_checklist,
+          item => item.id_item === action.payload.id_checklist,
         );
         if (checkListItemIndex !== -1) {
-          state[checkListIndex].checklistItems[checkListItemIndex].isCompleted =
-            action.payload.isCompleted;
+          state[checkListIndex].checklistItems[
+            checkListItemIndex
+          ].is_purchased = action.payload.isCompleted;
           if (action.payload.isCompleted) {
             state[checkListIndex].completed += 1;
           } else {

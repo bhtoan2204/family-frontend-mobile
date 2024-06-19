@@ -12,8 +12,11 @@ import { addNewCheckListItemToCheckList } from 'src/redux/slices/CheckListSlice'
 import AutoHeightRBSheet from 'src/components/AutoHeightRBSheet/AutoHeightRBSheet';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
 import CheckListTimePickerSheet from './date-picker-sheet';
-import { iOSGrayColors } from 'src/constants/ios-color';
+import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import NumberPickerSheet from '../sheet/number-picker';
+import PricePickerSheet from '../sheet/price-picker';
+import { formatVietNamCurrencyToDot } from 'src/utils/formatCurrency';
 
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#000'];
@@ -26,6 +29,8 @@ interface AddItemCheckListSheetProps {
 
 const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckListSheetProps) => {
     const timePickerRef = React.useRef<any>(null);
+    const quantityPickerRef = React.useRef<any>(null);
+    const pricePickerRef = React.useRef<any>(null);
     const inputRef = React.useRef<any>(null);
     // const snapPoints = React.useMemo(() => ['15%','25%','35%'], []);
     const renderBackdrop = React.useCallback(
@@ -36,6 +41,8 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
     const [description, setDescription] = React.useState("");
     const [priority, setPriority] = React.useState(4);
     const [dueDate, setDueDate] = React.useState<Date | null>(null);
+    const [quantity, setQuantity] = React.useState<number>(0);
+    const [price, setPrice] = React.useState<number>(0);
     const dispatch = useDispatch<AppDispatch>();
     const { showActionSheetWithOptions } = useActionSheet();
 
@@ -45,7 +52,7 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
 
 
     const onPressPriority = () => {
-        const options = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Cancel',];
+        const options = ['🟥 Priority 1', '🟧 Priority 2', '🟦 Priority 3', '⬜ Priority 4', 'Cancel',];
         const cancelButtonIndex = 4;
 
         showActionSheetWithOptions({
@@ -94,6 +101,7 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
                     setDescription("");
                     setPriority(4);
                     setDueDate(null);
+                    setQuantity(0);
                     Keyboard.dismiss()
                 } else {
                     inputRef.current?.focus()
@@ -132,12 +140,17 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
                         paddingLeft: 14,
                     }}
                 />
-                <ScrollView horizontal keyboardShouldPersistTaps="handled">
+                <ScrollView horizontal keyboardShouldPersistTaps="handled" showsHorizontalScrollIndicator={false}>
                     <View className='flex-row items-center my-5'>
-                        <TouchableOpacity className=' ml-4 px-4 py-3 flex-row justify-center items-center border-[1px] border-[#EAEAEA] rounded-lg ' onPress={() => {
+                        <TouchableOpacity className=' ml-4 px-4 py-3 flex-row justify-center items-center border-[1px]  rounded-lg ' onPress={() => {
                             console.log(1);
                             onPressPriority()
-                        }}>
+                        }}
+                            style={{
+                                borderColor: priority == 4 ? "#EAEAEA" : priorityColors[priority - 1],
+                            }}
+
+                        >
                             {
                                 priority == 4 ? <Material name="flag-outline" size={20} style={{ color: priorityColors[priority - 1], fontWeight: "bold" }} className='font-semibold' /> : <Material name="flag" size={20} style={{ color: priorityColors[priority - 1], fontWeight: "bold" }} className='font-semibold' />
                             }
@@ -145,8 +158,10 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
                                 color: priorityColors[priority - 1]
                             }}>Priority</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity className='ml-4 px-4 py-3 flex-row justify-center items-center border-[1px] border-[#EAEAEA] rounded-lg' onPress={() => {
+                        <TouchableOpacity className='ml-4 px-4 py-3 flex-row justify-center items-center border-[1px]  rounded-lg' onPress={() => {
                             timePickerRef.current?.open()
+                        }} style={{
+                            borderColor: dueDate == null ? "#EAEAEA" : iOSColors.systemIndigo.defaultLight,
                         }}>
                             {
                                 dueDate == null
@@ -156,8 +171,57 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
                                     </>
                                     :
                                     <>
-                                        <Material name="calendar-clock-outline" size={20} style={{ color: '#DDDDDD', fontWeight: "bold" }} className='font-semibold' />
-                                        <Text className='text-[#BBBBBB] font-semibold ml-1'>{buildDate(dueDate)}</Text>
+                                        {/* <Material name="calendar-clock-outline" size={20} style={{ color: '#DDDDDD', fontWeight: "bold" }} className='font-semibold' /> */}
+                                        <Text className='text-[#BBBBBB] font-semibold ml-1'
+                                            style={{
+                                                color: iOSColors.systemIndigo.defaultLight
+                                            }}
+                                        >{buildDate(dueDate)}</Text>
+                                    </>
+                            }
+                        </TouchableOpacity>
+                        <TouchableOpacity className='ml-4 px-4 py-3 flex-row justify-center items-center border-[1px]  rounded-lg' onPress={() => {
+                            quantityPickerRef.current?.open()
+                        }}
+                            style={{
+                                borderColor: quantity == 0 ? "#EAEAEA" : iOSColors.systemPurple.defaultLight,
+
+                            }}
+                        >
+                            {
+                                quantity == 0
+                                    ? <>
+                                        <Material name="numeric" size={20} style={{ color: '#DDDDDD', fontWeight: "bold" }} className='font-semibold' />
+                                        <Text className='text-[#BBBBBB] font-semibold ml-1'>Quantity</Text>
+                                    </>
+                                    :
+                                    <>
+                                        {/* <Material name="numeric" size={20} style={{ color: '#DDDDDD', fontWeight: "bold" }} className='font-semibold' /> */}
+                                        <Text className='text-[#BBBBBB] font-semibold ml-1' style={{
+                                            color: iOSColors.systemPurple.defaultLight
+                                        }}>{quantity.toString()}</Text>
+                                    </>
+                            }
+                        </TouchableOpacity>
+                        <TouchableOpacity className='ml-4 mr-4 px-4 py-3 flex-row justify-center items-center border-[1px]  rounded-lg' onPress={() => {
+                            pricePickerRef.current?.open()
+                        }}
+                            style={{
+                                borderColor: quantity == 0 ? "#EAEAEA" : iOSColors.systemPurple.defaultLight,
+                            }}
+                        >
+                            {
+                                price == 0
+                                    ? <>
+                                        <Material name="counter" size={20} style={{ color: '#DDDDDD', fontWeight: "bold" }} className='font-semibold' />
+                                        <Text className='text-[#BBBBBB] font-semibold ml-1'>Price</Text>
+                                    </>
+                                    :
+                                    <>
+                                        {/* <Material name="numeric" size={20} style={{ color: '#DDDDDD', fontWeight: "bold" }} className='font-semibold' /> */}
+                                        <Text className='text-[#BBBBBB] font-semibold ml-1' style={{
+                                            color: iOSColors.systemGreen.defaultLight
+                                        }}>{formatVietNamCurrencyToDot(price.toString())} VND</Text>
                                     </>
                             }
                         </TouchableOpacity>
@@ -170,7 +234,23 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
                             alignItems: "center",
                         }}
                         onPress={() => {
-                            const newItem: ChecklistItemInterface = { id: "-1", title: name, description: description, dueDate: dueDate != null ? new Date(dueDate).toDateString() : new Date().toDateString(), priority: priority, isCompleted: false }
+                            console.log("current priority", priority)
+                            console.log("current dueDate", dueDate)
+                            console.log("current quantity", quantity)
+                            console.log("current name", name)
+                            console.log("current description", description)
+                            const newItem: ChecklistItemInterface = {
+                                id_item: (Math.floor(Math.random() * 1000) + 1).toString(),
+                                item_name: name,
+                                description: description,
+                                reminder_date: dueDate != null ? new Date(dueDate).toDateString() : new Date().toDateString(),
+                                priority_level: priority,
+                                is_purchased: false,
+                                quantity: quantity,
+                                price: price.toString(),
+                                id_list: id_checklist,
+                                id_item_type: 0,
+                            }
                             dispatch(
                                 addNewCheckListItemToCheckList({
                                     id: id_checklist,
@@ -187,6 +267,12 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
                 </View>
             </BottomSheetView>
             <CheckListTimePickerSheet refRBSheet={timePickerRef} setSave={setDueDate} initialValue={dueDate} />
+            <NumberPickerSheet refRBSheet={quantityPickerRef} initialNumber={quantity} onSetNumber={(number) => {
+                setQuantity(number)
+            }} />
+            <PricePickerSheet refRBSheet={pricePickerRef} initialNumber={price} onSetNumber={(number) => {
+                setPrice(number)
+            }} />
         </BottomSheet>
     )
 }

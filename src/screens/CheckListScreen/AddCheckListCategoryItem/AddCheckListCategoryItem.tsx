@@ -77,7 +77,7 @@ const AddCheckListCategoryItem = ({ bottomSheetRef, id_family }: {
 
                 <TouchableOpacity onPress={() => {
                     const newCheckListCategory: CheckListCategoryInterface = {
-                        id: Math.floor(Math.random() * 1000),
+                        id_list: Math.floor(Math.random() * 1000),
                         id_item_type: choosenCategory!,
                         completed: 0,
                         total: 0,

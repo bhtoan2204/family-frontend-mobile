@@ -16,7 +16,7 @@ const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
 interface ChecklistItemDetailProps {
     item: ChecklistItemInterface,
     id_checklist: number,
-    selectCheckListItem?: (item: string) => void
+    selectCheckListItem: (item: string) => void
 }
 
 const ChecklistItemDetail = ({ item, id_checklist, selectCheckListItem }: ChecklistItemDetailProps) => {
@@ -26,19 +26,18 @@ const ChecklistItemDetail = ({ item, id_checklist, selectCheckListItem }: Checkl
     const handleUpdateComplete = () => {
         dispatch(updateCheckListItemCompleted({
             id: id_checklist,
-            id_checklist: item.id,
-            isCompleted: !item.isCompleted,
+            id_checklist: item.id_item,
+            isCompleted: !item.is_purchased,
         }))
     }
-
     return <TouchableOpacity onPress={() => {
         // refRBSheet.current?.open();
-        selectCheckListItem?.(item.id)
+        selectCheckListItem?.(item.id_item)
         // bottomSheetRef.current?.expand()
     }} style={styles.checklistItem} className='bg-white'>
         <View className='ml-1' >
             <View className='flex-row items-center'>
-                <TouchableOpacity className='w-6 h-6 rounded-full mr-3 flex flex-col items-center justify-center' style={{ backgroundColor: priorityColors[item.priority - 1] }} onPress={() => {
+                <TouchableOpacity className='w-6 h-6 rounded-full mr-3 flex flex-col items-center justify-center' style={{ backgroundColor: priorityColors[item.priority_level - 1] || priorityColors[0] }} onPress={() => {
                     Haptics.notificationAsync(
                         Haptics.NotificationFeedbackType.Success
                     )
@@ -46,13 +45,13 @@ const ChecklistItemDetail = ({ item, id_checklist, selectCheckListItem }: Checkl
 
                 }}>
                     {
-                        item.isCompleted ? <Text className='text-white ' style={{
+                        item.is_purchased ? <Text className='text-white ' style={{
                             fontWeight: 'bold'
-                        }}>✓</Text> : <View className=' z-10 w-5 h-5 rounded-full' style={{ backgroundColor: priorityColorsInside[item.priority - 1] }}>
+                        }}>✓</Text> : <View className=' z-10 w-5 h-5 rounded-full' style={{ backgroundColor: priorityColorsInside[item.priority_level - 1] || priorityColorsInside[0] }}>
                         </View>
                     }
                 </TouchableOpacity>
-                <Text className='text-base my-1' style={{}}>{item.title}</Text>
+                <Text className='text-base my-1' style={{}}>{item.item_name}</Text>
             </View>
             <View className='ml-10'>
                 <Text className='text-sm text-gray-400'>{item.description}</Text>

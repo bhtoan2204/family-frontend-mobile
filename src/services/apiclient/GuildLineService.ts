@@ -15,7 +15,7 @@ const GuildLineService = {
         baseUrl + GuildlineUrl.getGuideline + '/' + id_family.toString();
       console.log('url get all guildline', url);
       const res = await instance.get(url);
-      return res.data.data.items as Guildline[];
+      return res.data.data as Guildline[];
     } catch (error) {
       console.error('Error fetching guidelines:', error);
       throw error;
@@ -33,11 +33,11 @@ const GuildLineService = {
 
       const res = await instance.get(url);
       console.log(url);
-      const steps = res.data.data[0].step.steps as Step[];
+      // const steps = res.data.data[0].step.steps as Step[];
 
-      const dataDetail = res.data.data[0] as GuildLineDetail;
-      dataDetail.steps = steps;
-      delete dataDetail['step'];
+      const dataDetail = res.data.data as GuildLineDetail;
+      // dataDetail.steps = steps;
+      // delete dataDetail['step'];
       console.log('detail 1 guild line nè');
       console.log(dataDetail);
       return dataDetail;
@@ -58,7 +58,8 @@ const GuildLineService = {
     };
     try {
       const res = await instance.post(url, data);
-      return res.data;
+      const dataRes = res.data.data as Guildline;
+      return dataRes;
     } catch (error) {
       console.log('Error adding guildline:', error);
     }
@@ -71,7 +72,7 @@ const GuildLineService = {
     const url = baseUrl + GuildlineUrl.addStepGuildLine;
     const createFormData = (uri: string): FormData => {
       let formData = new FormData();
-      if (uri != null) {
+      if (uri != null && uri != '') {
         let filename = uri.split('/').pop()!;
         let match = /\.(\w+)$/.exec(filename);
         let type = match ? `image/${match[1]}` : `image`;
@@ -89,18 +90,22 @@ const GuildLineService = {
       return formData;
     };
     try {
-      const res = await instance.post(url, createFormData(step.imageUrl), {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          accept: '*/*',
+      const res = await instance.post(
+        url,
+        createFormData(step.imageUrl || ''),
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            accept: '*/*',
+          },
         },
-      });
+      );
       return res.data;
     } catch (error) {
       console.log('Error adding step guildline:', error);
     }
   },
-  updateImageStepGuildLine: async (
+  updateGuildLineDetail: async (
     fileUri: string,
     id_family: number,
     id_guideline: number,
@@ -110,7 +115,7 @@ const GuildLineService = {
     const url = baseUrl + GuildlineUrl.updateStepGuildLine;
     const createFormData = (uri: string): FormData => {
       let formData = new FormData();
-      if (uri != null) {
+      if (uri != null && uri != '') {
         let filename = uri.split('/').pop()!;
         let match = /\.(\w+)$/.exec(filename);
         let type = match ? `image/${match[1]}` : `image`;
@@ -139,6 +144,73 @@ const GuildLineService = {
       console.log(res.data);
     } catch (error) {
       console.log('Error updating step guildline:', error);
+    }
+  },
+  updateTitleAndDescriptionStepGuildLine: async (
+    id_family: number,
+    id_guideline: number,
+    step: Step,
+    index: number,
+  ) => {
+    const url = baseUrl + GuildlineUrl.updateStepGuildLine;
+    const createFormData = (): FormData => {
+      let formData = new FormData();
+      formData.append('id_family', id_family.toString());
+      formData.append('id_guideline', id_guideline.toString());
+      formData.append('name', step.name);
+      formData.append('description', step.description);
+      formData.append('index', index.toString());
+      return formData;
+    };
+    try {
+      const res = await instance.put(url, createFormData(), {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          accept: '*/*',
+        },
+      });
+      console.log('result from update api');
+      console.log(res.data);
+    } catch (error) {
+      console.log('Error updating step guildline:', error);
+    }
+  },
+  deleteGuideline: async (id_family: number, id_guide_item: number) => {
+    const url =
+      baseUrl +
+      GuildlineUrl.deleteGuideline +
+      '/' +
+      id_family.toString() +
+      '/' +
+      id_guide_item.toString();
+    console.log(url);
+    try {
+      const res = await instance.delete(url);
+      console.log('result from delete api');
+      console.log(res.data);
+    } catch (error) {
+      console.log('Error deleting guildline:', error);
+    }
+  },
+  deleteStepGuildLine: async (
+    id_family: number,
+    id_guideline: number,
+    index: number,
+  ) => {
+    const url =
+      baseUrl +
+      GuildlineUrl.deleteGuideline +
+      '/' +
+      id_family.toString() +
+      '/' +
+      id_guideline.toString() +
+      index.toString();
+    try {
+      const res = await instance.delete(url);
+      console.log('result from delete api');
+      console.log(res.data);
+    } catch (error) {
+      console.log('Error deleting guildline:', error);
     }
   },
 };

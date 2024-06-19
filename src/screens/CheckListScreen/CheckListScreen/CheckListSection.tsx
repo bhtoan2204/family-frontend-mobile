@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native'
 import { ChecklistItemInterface, CheckListCategoryInterface } from 'src/interface/checklist/checklist';
-import ChecklistItemDetail from '../CheckListItemDetail';
+// import ChecklistItemDetail from '../CheckListItemDetail';
 import ChecklistItemModal from '../AddItemCheckListSheet';
 import { CheckListScreenProps } from 'src/navigation/NavigationTypes';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -11,7 +11,8 @@ import AddItemCheckListSheet from '../AddItemCheckListSheet';
 import { compareDates } from 'src/utils/compareDate';
 import { checklist_category_type } from '../constant/checklist_category_type';
 import { shoppingListItemColor, shoppingListItemColorInside } from '../constant/color'
-import CircularProgress from '../../EducationScreen/CircularProgress';
+// import CircularProgress from '../../EducationScreen/CircularProgress';
+import CircularProgress from 'src/components/user/education/circular-progress';
 
 const today = new Date();
 const yesterday = new Date(today.setDate(today.getDate() - 1));
@@ -20,15 +21,19 @@ const tomorrow = new Date(today.setDate(today.getDate() + 1));
 const CheckListSection: React.FC<{ title: string, data: CheckListCategoryInterface[], handleNavigateCheckListDetail: (id_checklist: number) => void }> = ({ title, data, handleNavigateCheckListDetail }) => {
     return <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>{title}</Text>
-        {data.map(item => (
-            <TouchableOpacity key={item.id} onPress={() => {
-                handleNavigateCheckListDetail(item.id)
+        {data.map(item => {
+            const rand = Math.floor(Math.random() * shoppingListItemColorInside.length)
+
+            return <TouchableOpacity key={item.id_list} onPress={() => {
+                handleNavigateCheckListDetail(item.id_list)
             }}>
                 <View className='px-4 py-4 my-2 rounded-xl' style={{
                     backgroundColor: shoppingListItemColorInside[item.id_item_type - 1],
+                    // backgroundColor: shoppingListItemColorInside[rand],
                 }}>
                     <View style={{
                         backgroundColor: shoppingListItemColor[item.id_item_type - 1],
+                        // backgroundColor: shoppingListItemColor[rand],
                         alignSelf: 'flex-start'
                     }} className='w-auto px-2 py-1 rounded-2xl '>
                         <Text className='text-xs text-white font-medium '>{item.category_name!}</Text>
@@ -43,6 +48,7 @@ const CheckListSection: React.FC<{ title: string, data: CheckListCategoryInterfa
                                 strokeWidth={2}
                                 backgroundColor="#BEC8DF"
                                 progressColor={shoppingListItemColor[item.id_item_type - 1]}
+                                // progressColor={shoppingListItemColor[rand]}
                                 disableProgressText={true}
                             />
                         </View>
@@ -53,7 +59,7 @@ const CheckListSection: React.FC<{ title: string, data: CheckListCategoryInterfa
                     </View>
                 </View>
             </TouchableOpacity>
-        ))}
+        })}
     </View>
 }
 
@@ -95,7 +101,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        backgroundColor: COLORS.primary,
+        backgroundColor: COLORS.AuroMetalSaurus,
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 5,

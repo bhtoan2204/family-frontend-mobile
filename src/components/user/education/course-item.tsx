@@ -1,36 +1,38 @@
 import React from 'react'
 import { View, Text, Image, TouchableOpacity } from 'react-native'
-import CircularProgress from './CircularProgress'
+import CircularProgress from './circular-progress'
 import { COLORS } from 'src/constants'
 import EduImg from 'src/assets/images/education.png'
 import CourseImg from 'src/assets/images/course_2.png'
-
-const CourseItem = ({ data, onPress }: any) => {
-
+import { iOSColors, iOSGrayColors } from 'src/constants/ios-color'
+// import * as Gradients from 'src/assets/images/gradients'
+import { gradients_list } from 'src/assets/images/gradients'
+const CourseItem = ({ data, onPress, img }: any) => {
+    // const rand_gradient = gradients_list[Math.floor(Math.random() * gradients_list.length)]
     const getColor = (status: string) => {
-        if (status == 'done') return '#27AB6D';
-        if (status == 'in_progress') return '#56409e';
-        return '#EA5E68';
+        if (status == 'done') return iOSColors.systemGreen.defaultLight;
+        if (status == 'in_progress') return iOSColors.systemBlue.defaultLight;
+        return iOSColors.systemBlue.defaultLight;
     }
     const statusText = (status: string) => {
         if (status == 'done') return <Text className='text-base text-gray-600 flex-row items-center'>Status:
             <Text className='text-green-600'> Done</Text>
         </Text>;
         if (status == 'in_progress') return <Text className='text-base text-gray-600 flex-row items-center'>Status:
-            <Text style={{ color: COLORS.primary }}> In Progress</Text>
+            <Text style={{ color: COLORS.AuroMetalSaurus }}> In Progress</Text>
         </Text>;
         return 'Not Started';
     }
     return (
         data && <TouchableOpacity className=' h-auto  mt-4 ' onPress={onPress}>
             <View className='flex-row items-center bg-white p-4'>
-                <Image source={CourseImg} width={50}
+                <Image source={img} width={50}
                     height={50}
                     className="w-16 h-16 mr-4  " />
                 <View className='flex-1'>
-                    <Text className='font-semibold text-lg' style={{ color: COLORS.primary }}>{data.subject_name}</Text>
-                    
-                    <Text className='text-base text-gray-600'>Score: 91</Text>
+                    <Text className='font-light text-lg' style={{ color: iOSGrayColors.systemGray.accessibleDark }}>{data.subject_name}</Text>
+
+                    <Text className='text-base text-gray-600 font-light'>Score: 91</Text>
                 </View>
                 <View className='flex-row items-center  '>
                     <CircularProgress

@@ -26,6 +26,7 @@ interface GuildLineHeaderProps {
     handleShareGuideline: () => Promise<void>
     handleDeleteCurrentStep: () => Promise<void>;
     handleDeleteGuideline: () => Promise<void>;
+    handleEditGuildline: () => void;
     bottomSheetRef: React.RefObject<any>;
 }
 
@@ -49,6 +50,7 @@ const GuildLineHeader = ({
     handleShareGuideline,
     handleDeleteCurrentStep,
     handleDeleteGuideline,
+    handleEditGuildline,
     bottomSheetRef
 }: GuildLineHeaderProps
 ) => {
@@ -102,7 +104,8 @@ const GuildLineHeader = ({
                                     </MenuOption>
                                     <Divider />
                                     <MenuOption onSelect={() => {
-                                        setIsEditing(true)
+                                        // setIsEditing(true)
+                                        handleEditGuildline()
                                     }} >
 
                                         <View className='flex-row items-center justify-between'>

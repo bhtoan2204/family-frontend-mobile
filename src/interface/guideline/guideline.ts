@@ -1,19 +1,21 @@
 export interface Guildline {
-  id_item: number;
+  id_guide_item: number;
   name: string;
   description: string;
   created_at: string;
   updated_at: string;
+  id_family: number;
+  steps?: Step[];
 }
 
 export interface Step {
   name: string;
-  imageUrl: string;
+  imageUrl?: string;
   description: string;
 }
 
 export interface GuildLineDetail {
-  id_item: number;
+  id_guide_item: number;
   name: string;
   description: string;
   id_family: number;

@@ -164,19 +164,43 @@ export type FamilyStackParamList = {
   Contact: {
     id_family: number | undefined;
   };
+
+  //Guideline routes
   GuildLine: {
     id_family: number | undefined;
   };
-  GuildLineDetail: {
+  AddGuildLine: {
+    id_family: number | undefined;
+  };
+  UpdateGuildLine: {
     id_family: number | undefined;
     id_item: number;
+    title: string | null;
+    description: string | null;
+  };
+  GuildLineDetail: {
+    id_family: number | undefined;
+    id_guide_item: number;
   };
   SharedGuildLine: {
     id_family: number | undefined;
     id_item: number;
   };
+
+  //Education routes
   Education: {
     id_family: number | undefined;
+  };
+  AddEducation: {
+    id_family: number | undefined;
+  };
+  EditEducation: {
+    id_family: number | undefined;
+    id_education_progress: number;
+  };
+  AddSubject: {
+    id_family: number | undefined;
+    id_education_progress: number;
   };
   EducationDetail: {
     id_family: number | undefined;
@@ -187,6 +211,8 @@ export type FamilyStackParamList = {
     id_education_progress: number;
     id_subject: number;
   };
+
+  //HouseHold routes
   HouseHold: {
     id_family: number | undefined;
   };
@@ -220,6 +246,8 @@ export type FamilyStackParamList = {
   AddHouseHoldRoom: {
     id_family: number | undefined;
   };
+
+  //CheckList routes
   CheckList: {
     id_family: number | undefined;
   };
@@ -227,6 +255,11 @@ export type FamilyStackParamList = {
     id_family: number | undefined;
     id_checklist: number;
   };
+  AddCheckList: {
+    id_family: number | undefined;
+  };
+
+  //
   News: {
     id_family: number | undefined;
   };
@@ -420,10 +453,60 @@ type SharedGuildLineNavigationProp = NativeStackNavigationProp<
   'SharedGuildLine'
 >;
 
+type AddGuildLineNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'AddGuildLine'
+>;
+
+export interface AddGuildLineScreenProps {
+  navigation: AddGuildLineNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'AddGuildLine'>;
+}
+
+type UpdateGuildLineNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'UpdateGuildLine'
+>;
+
+export interface UpdateGuildLineScreenProps {
+  navigation: UpdateGuildLineNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'UpdateGuildLine'>;
+}
+
 type EducationNavigationprop = NativeStackNavigationProp<
   FamilyStackParamList,
   'Education'
 >;
+
+type AddEducationNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'AddEducation'
+>;
+
+export interface AddEducationScreenProps {
+  navigation: AddEducationNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'AddEducation'>;
+}
+
+type EditEducationNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'EditEducation'
+>;
+
+export interface EditEducationScreenProps {
+  navigation: EditEducationNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'EditEducation'>;
+}
+
+type AddSubjectNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'AddSubject'
+>;
+
+export interface AddSubjectScreenProps {
+  navigation: AddSubjectNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'AddSubject'>;
+}
 
 type SubjectDetailNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
@@ -503,6 +586,16 @@ type CheckListDetailNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'CheckListDetail'
 >;
+
+type AddCheckListNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'AddCheckList'
+>;
+
+export interface AddCheckListScreenProps {
+  navigation: AddCheckListNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'AddCheckList'>;
+}
 
 export interface CheckListDetailScreenProps {
   navigation: CheckListDetailNavigationProp;

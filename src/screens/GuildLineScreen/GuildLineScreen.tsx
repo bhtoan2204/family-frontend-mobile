@@ -22,7 +22,8 @@ import { clearGuideline, setGuideline } from 'src/redux/slices/GuidelineSlice'
 //   created_at: string;
 //   updated_at: string;
 const guildLineData: Guildline = {
-    id_item: 1,
+    id_guide_item: 1,
+    id_family: 96,
     name: 'Shared guideline',
     description: 'This is the shared guideline',
     created_at: '2024-04-30T08:59:03.177Z',
@@ -42,6 +43,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
         const fetchGuidelines = async () => {
             try {
                 const response = await GuildLineService.getAllGuideLine(id_family!); // API call to fetch all guidelines
+                console.log(response)
                 if (response) {
                     dispatch(setGuideline(response));
                     // setGuidelines(response);
@@ -81,7 +83,8 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                     </TouchableOpacity>
                     <View className='mr-3'>
                         <TouchableOpacity onPress={() => {
-                            refRBSheet.current?.open()
+                            // refRBSheet.current?.open()
+                            navigation.navigate('AddGuildLine', { id_family: id_family })
 
                         }} >
                             {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
@@ -123,17 +126,29 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                                 {
                                     guidelines.map((item, index) => (
                                         <React.Fragment key={index}>
-                                            <GuildlineItem item={item} onPress={() => {
-                                                navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_item })
-                                            }} key={index} />
+                                            <GuildlineItem item={item}
+                                                onPress={() => {
+                                                    navigation.navigate('GuildLineDetail', { id_family: id_family, id_guide_item: item.id_guide_item })
+                                                }}
+                                                key={index}
+                                                onUpdate={() => {
+                                                    navigation.navigate('UpdateGuildLine', {
+                                                        id_family: id_family, id_item: item.id_guide_item,
+                                                        title: item.name, description: item.description
+                                                    })
+                                                }}
+                                            />
                                         </React.Fragment>
                                     ))
                                 }
 
                             </> : <>
-                                <GuildlineItem item={guildLineData} onPress={() => {
-                                    navigation.navigate('SharedGuildLine', { id_family: id_family, id_item: guildLineData.id_item })
-                                }} />
+                                <GuildlineItem item={guildLineData}
+                                    onPress={() => {
+                                        navigation.navigate('SharedGuildLine', { id_family: id_family, id_item: guildLineData.id_guide_item })
+                                    }}
+                                    onUpdate={() => { }}
+                                />
                             </>
                         }
                     </Animatable.View>
