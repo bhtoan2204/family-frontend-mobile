@@ -5,6 +5,8 @@ import {ExpenditureScreenProps} from 'src/navigation/NavigationTypes';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS} from 'src/constants';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useDispatch, useSelector} from 'react-redux';
+import {getOption, setSelectedOption} from 'src/redux/slices/ExpenseAnalysis';
 
 const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
   const pressExVsIn = () => {
@@ -23,6 +25,9 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
   const scaleAnim = new Animated.Value(1); // Phóng to/thu nhỏ
   const [selectedButton, setSelectedButton] = useState('expenseAnalysis');
   const [currentScreen, setCurrentScreen] = useState('expenseAnalysis');
+  const [selectedCategoryType, setSelectedCategoryType] = useState<string>('');
+  let option = useSelector(getOption);
+  const dispatch = useDispatch();
 
   const handleButtonPress = (
     buttonName: 'expenseAnalysis' | 'incomeAnalysis' | 'expenseIncome',
@@ -44,6 +49,11 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     }
   };
 
+  const selectOption = (option: 'Day' | 'Month' | 'Year') => {
+    setSelectedCategoryType(option);
+    dispatch(setSelectedOption(option));
+  };
+
   // Hàm render cho Expense Analysis Screen
   const renderExpenseAnalysisScreen = () => (
     <View style={{flex: 1}}>
@@ -53,7 +63,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         resizeMode="contain"
       />
       <TouchableOpacity
-        onPress={pressExVsIn}
+        onPress={() => selectOption('Day')}
         style={{
           flex: 1,
           position: 'absolute',
@@ -73,7 +83,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={pressExpenseAnalysis}
+        onPress={() => selectOption('Month')}
         style={{
           flex: 1,
           position: 'absolute',
@@ -94,7 +104,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={pressIncomeAnalysis}
+        onPress={() => selectOption('Year')}
         style={{
           flex: 1,
           position: 'absolute',
@@ -233,42 +243,6 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.container}>
-        {/* <TouchableOpacity style={styles.expenseContainer} onPress={pressExVsIn}>
-          <Icon
-            name="compare-arrows"
-            size={35}
-            color={COLORS.black}
-            style={styles.icon}
-          />
-          <Text style={styles.heading}>Expense vs Income</Text>
-        </TouchableOpacity>
-
-        <View style={styles.analysisContainer}>
-          <TouchableOpacity
-            style={styles.expenseAnalysis}
-            onPress={pressExpenseAnalysis}>
-            <Icon
-              name="show-chart"
-              size={35}
-              color={COLORS.black}
-              style={styles.icon}
-            />
-            <Text style={styles.heading}>Expense Analysis</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.incomeAnalysis}
-            onPress={pressIncomeAnalysis}>
-            <Icon
-              name="bar-chart"
-              size={35}
-              color={COLORS.black}
-              style={styles.icon}
-            />
-            <Text style={styles.heading}>Income Analysis</Text>
-          </TouchableOpacity>
-        </View> */}
-
         <View
           style={{
             flexDirection: 'column',
@@ -294,7 +268,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
                   selectedButton === 'expenseAnalysis'
                     ? '#4480A2'
                     : 'transparent',
-                shadowOffset: {width: 0, height: 4},
+                shadowOffset: {width: 0, height: 10},
                 shadowOpacity: 0.35,
                 shadowRadius: 3.84,
               }}>
