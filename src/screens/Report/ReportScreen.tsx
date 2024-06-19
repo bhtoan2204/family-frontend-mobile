@@ -20,7 +20,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     navigation.navigate('IncomeStack', {screen: 'ChartInomeScreen'});
   };
 
-  const scaleAnim = useRef(new Animated.Value(1)).current; // Phóng to/thu nhỏ
+  const scaleAnim = new Animated.Value(1); // Phóng to/thu nhỏ
   const [selectedButton, setSelectedButton] = useState('expenseAnalysis');
   const [currentScreen, setCurrentScreen] = useState('expenseAnalysis');
 
@@ -48,7 +48,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
   const renderExpenseAnalysisScreen = () => (
     <View style={{flex: 1}}>
       <Image
-        source={require('../../assets/images/report-bg.png')}
+        source={require('../../assets/images/expense-bg.png')}
         style={{flex: 1, width: '100%', height: '100%'}}
         resizeMode="contain"
       />
@@ -57,10 +57,10 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         style={{
           flex: 1,
           position: 'absolute',
-          left: 200,
+          right: 110,
           width: 150,
           height: 150,
-          bottom: 385,
+          bottom: 170,
         }}>
         <Animated.Image
           source={require('../../assets/images/bar-chart.png')}
@@ -77,10 +77,10 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         style={{
           flex: 1,
           position: 'absolute',
-          right: 185,
-          width: 200,
-          height: 200,
-          bottom: 230,
+          left: 190,
+          width: 210,
+          height: 210,
+          bottom: 350,
           zIndex: 2,
         }}>
         <Animated.Image
@@ -98,10 +98,10 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         style={{
           flex: 1,
           position: 'absolute',
-          left: 210,
-          width: 150,
+          right: 180,
+          width: 250,
           height: 150,
-          top: 375,
+          top: 35,
           zIndex: 2,
         }}>
         <Animated.Image
@@ -118,10 +118,88 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
   );
 
   // Hàm render cho Income Analysis Screen
-  const renderIncomeAnalysisScreen = () => <Text>Income Analysis Screen</Text>;
+  const renderIncomeAnalysisScreen = () => (
+    <View style={{flex: 1}}>
+      <Image
+        source={require('../../assets/images/income-bg.png')}
+        style={{flex: 1, width: '100%', height: '100%'}}
+        resizeMode="contain"
+      />
+      <TouchableOpacity
+        onPress={pressExVsIn}
+        style={{
+          flex: 1,
+          position: 'absolute',
+          right: 120,
+          width: 145,
+          height: 145,
+          bottom: 180,
+        }}>
+        <Animated.Image
+          source={require('../../assets/images/income-bar-chart.png')}
+          style={{
+            width: '100%',
+            height: '100%',
+            transform: [{scale: scaleAnim}],
+          }}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={pressExpenseAnalysis}
+        style={{
+          flex: 1,
+          position: 'absolute',
+          right: 180,
+          width: 210,
+          height: 210,
+          bottom: 350,
+          zIndex: 2,
+        }}>
+        <Animated.Image
+          source={require('../../assets/images/income-month-chart.png')}
+          style={{
+            width: '100%',
+            height: '100%',
+            transform: [{scale: scaleAnim}],
+          }}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={pressIncomeAnalysis}
+        style={{
+          flex: 1,
+          position: 'absolute',
+          left: 130,
+          width: 250,
+          height: 150,
+          top: 15,
+          zIndex: 2,
+        }}>
+        <Animated.Image
+          source={require('../../assets/images/income-line-chart.png')}
+          style={{
+            width: '100%',
+            height: '100%',
+            transform: [{scale: scaleAnim}],
+          }}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+    </View>
+  );
 
   // Hàm render cho Expense vs Income Screen
-  const renderExVsInScreen = () => <Text>Expense vs Income Screen</Text>;
+  const renderExVsInScreen = () => (
+    <View style={{flex: 1}}>
+      <Image
+        source={require('../../assets/images/expense_income.png')}
+        style={{flex: 1, width: '100%', height: '100%'}}
+        resizeMode="contain"
+      />
+    </View>
+  );
 
   // Hàm chính để quyết định màn hình nào được hiển thị
   const renderScreen = () => {
