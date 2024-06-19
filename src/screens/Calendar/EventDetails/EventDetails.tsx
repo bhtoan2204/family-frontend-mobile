@@ -7,31 +7,19 @@ import { Event } from 'src/interface/calendar/Event';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import BottomSheet from '../BottomSheet';
+import { getEvent } from 'src/redux/slices/CalendarSlice';
+import { useSelector } from 'react-redux';
 
 const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
     const { id_family, id_calendar } = route.params;
-    const [event , setEvent ] = useState<Event>();
+    const [event , setEvent ] = useState<Event>(useSelector(getEvent));
     const bottomSheetRef = useRef<RBSheet>(null);
     const screenHeight = Dimensions.get('screen').height;
+   
 
-    useEffect(()=>{
-        fetchData();
-    },[])
-    const fetchData = async () => {
-        try {
-        const response = await CalendarServices.getCalendarDetail(id_calendar);
-        if (response) {
-            setEvent(response[0])
-        }
-    }
-        catch (error: any) {
-            console.error('Error in getCalendarDetail', error.message);
-
-        }
-    }
 
     const onUpdate =() => {
-        bottomSheetRef.current?.open();
+        navigation.navigate('UpdateEvent', {id_family});
     };
     const onDelete = async () => {
         Alert.alert(
@@ -81,8 +69,9 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
                 </View>
 
             </View>
+
     <View> 
-        <Text style={styles.title}>{event?.title}</Text>
+        <Text style={styles.title}>{event.title}</Text>
         <Text style={styles.description}>Description: {event?.description}</Text>
         <Text style={styles.location}>Location: {event?.location}</Text>
     </View>
@@ -94,26 +83,7 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
       </TouchableOpacity>
     </View>
 
-        <RBSheet
-                ref={bottomSheetRef}
-                closeOnDragDown={true}
-                height={screenHeight * 0.5}
-                customStyles={{
-                    container: {
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                    },
-                }}
-            >
-                {event && (
-                    <BottomSheet
-                        id_calendar={event.id_calendar}
-                        title={event.title}
-                        description={event.description}
-                        datetime={event.time_start}
-                    />
-                )}
-            </RBSheet>
+        
     </View>
   );
 };

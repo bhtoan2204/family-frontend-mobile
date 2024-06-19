@@ -153,6 +153,9 @@ export type CalendarStackParamList = {
     id_family: number | undefined;
     id_calendar: number | undefined;
   };
+  UpdateEvent: {
+    id_family: number | undefined;
+  }
 };
 
 export type FamilyStackParamList = {
@@ -362,6 +365,15 @@ type EnterCodeScreenNavigationProp = NativeStackNavigationProp<
   'EnterCodeScreen'
 >;
 
+export interface ResetPasswordScreenProps {
+  navigation: ResetPasswordScreenNavigationProp;
+}
+
+type ResetPasswordScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'ResetPasswordScreen'
+>;
+
 export interface EnterCodeScreenProps {
   navigation: EnterCodeScreenNavigationProp;
 }
@@ -542,13 +554,13 @@ export interface UpdateFamilyScreenProps {
 }
 
 export type UpdateEventNavigationProps = NativeStackNavigationProp<
-  ModelScreenParamsList,
+  CalendarStackParamList,
   'UpdateEvent'
 >;
 
 export interface UpdateEventScreenProps {
   navigation: UpdateEventNavigationProps;
-  route: RouteProp<ModelScreenParamsList, 'UpdateEvent'>;
+  route: RouteProp<CalendarStackParamList, 'UpdateEvent'>;
 }
 
 export type CreateEventNavigationProps = NativeStackNavigationProp<
@@ -745,9 +757,7 @@ export type ModelScreenParamsList = {
   };
   UpdateEvent: {
     id_calendar?: number;
-    title?: string;
-    description?: string;
-    datetime?: Date;
+    
   };
   AddEditFamilyMember: {
     id_family: number | undefined;

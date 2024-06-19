@@ -2,36 +2,52 @@ import { StyleSheet } from 'react-native';
 import { COLORS } from 'src/constants';
 
 const styles = StyleSheet.create({
+    header: {
+        backgroundColor: 'white',
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+      },
+      headerContent: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      },
+      headerSection: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      },
+      iconContainer: {
+        marginRight: 20, 
+      },
+      calendarIcon: {
+        marginLeft: 'auto', 
+      },
+      headerText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginLeft: 10, 
+      },
   calendar: {
     flex: 1,
 },
-header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#ffffff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
 
-},
-headerText: {
-    marginLeft: 10,
-    fontSize: 18,
-    fontWeight: 'bold',
-
-},
 headerp: {
     flexDirection: 'row',
     marginTop: 40,
+},
+
+icon: {
+    marginRight: 20,
+    alignContent: 'center',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    marginRight:40
-},
-
-headerContent: {
-  flexDirection: 'row',
-  alignItems: 'center',
 
 },
+
+
 subHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',

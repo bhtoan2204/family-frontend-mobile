@@ -1,4 +1,4 @@
-import {configureStore} from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import profileReducer from './slices/ProfileSclice';
 import checkListReducer from './slices/CheckListSlice';
 import financeReducer from './slices/FinanceSlice';
@@ -17,6 +17,10 @@ export const store = configureStore({
     incomeAnalysis: incomeAnalysisReducer,
     forgorPassword: forgorPasswordReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false, 
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -7,12 +7,10 @@ const Stack = createNativeStackNavigator();
 
 interface BottomSheetProps {
     id_calendar: number;
-    title: string;
-    description: string;
-    datetime: Date;
+ 
   }
   
-  const BottomSheet: React.FC<BottomSheetProps> = ({ id_calendar, title, description, datetime }) => {
+  const BottomSheet: React.FC<BottomSheetProps> = ({ id_calendar }) => {
   return (
     <SafeAreaProvider>
       <PaperProvider>
@@ -23,7 +21,7 @@ interface BottomSheetProps {
             }}
             name="UpdateEvent"
             component={UpdateEventScreen}
-            initialParams={{id_calendar, title, description, datetime }} 
+            initialParams={{id_calendar }} 
             
           />
    

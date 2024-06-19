@@ -6,11 +6,10 @@ import CalendarServices from 'src/services/apiclient/CalendarService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {format, startOfMonth, endOfMonth, addMonths, subMonths} from 'date-fns';
 import {useDispatch, useSelector} from 'react-redux';
-import {setFamily, setDate, getDate} from 'src/redux/slices/CalendarSlice';
+import {setFamily, setDate, getDate, setEvent} from 'src/redux/slices/CalendarSlice';
 import styles from './style';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import BottomSheet from './BottomSheet';
-import {Event} from 'src/interface/calendar/Event';
 import {Swipeable} from 'react-native-gesture-handler';
 import IconL from 'react-native-vector-icons/Ionicons';
 import {RRule, rrulestr} from 'rrule';
@@ -18,6 +17,7 @@ import {setSelectedDate} from 'src/redux/slices/ExpenseAnalysis';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Feather, Ionicons} from '@expo/vector-icons';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
+import type { Event } from 'src/interface/calendar/Event'
 
 const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
   const {id_family} = route.params || {};
@@ -34,14 +34,13 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
   dispatch(setFamily(id_family));
 
   useEffect(() => {
-    dispatch(setFamily(id_family));
     fetchEvent();
     handleGetCalendarForMonth(new Date(selectDate));
 
   }, []);
 
   useEffect(() => {
-    setSelectDate(date);
+    setSelectDate(format(new Date(date), 'yyyy-MM-dd'));
     handleGetCalendarForMonth(new Date(selectDate));
   }, [selectDate, allEvent]);
 
@@ -174,22 +173,7 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
     navigation.navigate('CreateEvent', {id_family});
   };
 
-  const renderRightActions = (event: Event) => (
-    <View style={styles.rightAction}>
-      <IconL
-        name="create-outline"
-        size={35}
-        color="gray"
-        onPress={() => onUpdate(event)}
-      />
-      <IconL
-        name="trash-outline"
-        size={35}
-        color="red"
-        onPress={() => onDelete(event)}
-      />
-    </View>
-  );
+  
 
   const pressSchedule = () => {
     navigation.navigate('EventListScreen', {id_family});
@@ -199,14 +183,16 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
     const selectedMonth = new Date(data.year, data.month - 1);
     await handleGetCalendarForMonth(selectedMonth);
   };
-  const handlePressEvent = (event: any) => {
+  const handlePressEvent = async (event: any) => {
+    console.log(event)
+    await dispatch(setEvent(event));
     navigation.navigate('EventDetailsScreen', {
       id_family: id_family,
       id_calendar: event.id_calendar,
     });
   };
+
   const renderItem = (item: any) => (
-    <Swipeable renderRightActions={() => renderRightActions(item)}>
       <TouchableOpacity onPress={() => handlePressEvent(item)}>
         <View style={[styles.agendaItem, {backgroundColor: item.color}]}>
           <Text
@@ -238,7 +224,6 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
           )}
         </View>
       </TouchableOpacity>
-    </Swipeable>
   );
 
   const renderEmptyDate = () => {
@@ -315,25 +300,7 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
           selected={selectDate}
         />
 
-        <RBSheet
-          ref={bottomSheetRef}
-          closeOnDragDown={true}
-          height={screenHeight * 0.5}
-          customStyles={{
-            container: {
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-            },
-          }}>
-          {eventDetails && (
-            <BottomSheet
-              id_calendar={eventDetails.id_calendar}
-              title={eventDetails.title}
-              description={eventDetails.description}
-              datetime={eventDetails.time_start}
-            />
-          )}
-        </RBSheet>
+        
       </View>
     </SafeAreaView>
   );
