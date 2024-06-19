@@ -94,7 +94,8 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
           <View style={styles.headerContainer}>
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('HomeTab', {screen: 'Expense'})
+                //navigation.navigate('HomeTab', {screen: 'Expense'})
+                navigation.goBack()
               }
               style={styles.headerButton}>
               <Icon name="arrow-back" size={30} style={styles.backButton} />

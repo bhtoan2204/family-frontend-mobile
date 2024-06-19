@@ -231,6 +231,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color:'#fff',
   },
+  legendLineText: {
+    fontSize: 16,
+    color:'#000',
+  },
   selectedLegendItem: {
     backgroundColor: '#ccc',
     borderWidth: 1,

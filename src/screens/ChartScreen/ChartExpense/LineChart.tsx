@@ -182,16 +182,35 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
         ];
 
   return (
-    <View>
-      <View style={{padding: 20}}>
-        <Text style={{color: 'white'}}>(Unit: VNĐ)</Text>
+    <View style={{height: '90%'}}>
+      <TouchableOpacity
+        style={[styles.monthPickerContainer, {zIndex: 1}]}
+        onPress={() => setYearPickerVisible(!isYearPickerVisible)}>
+        <View style={styles.monthContainer}>
+          <Text style={styles.monthText}>{selectedYear}</Text>
+        </View>
+      </TouchableOpacity>
+      {isYearPickerVisible && (
+        <View style={styles.yearPickerContainer}>
+          <Picker
+            selectedValue={selectedYear}
+            style={styles.dropdownYear}
+            onValueChange={itemValue => handleYearChange(itemValue)}>
+            {years.map((year: number) => (
+              <Picker.Item key={year} label={year.toString()} value={year} />
+            ))}
+          </Picker>
+        </View>
+      )}
+      <View style={styles.chartLineContainer}>
+        <Text>(Unit: VNĐ)</Text>
         {displayedDatasets.length > 0 && (
           <LineChart
             data={{
               labels: monthlyData.map(month => labels[month.month - 1]),
               datasets: displayedDatasets,
             }}
-            width={370}
+            width={400}
             height={220}
             chartConfig={{
               backgroundGradientFrom: '#FFFFFF',
@@ -239,6 +258,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
             }}
           />
         )}
+
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -268,69 +288,44 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
                     {backgroundColor: dataset.color()},
                   ]}
                 />
-                <Text style={styles.legendText}>{dataset.name}</Text>
+                <Text style={styles.legendLineText}>{dataset.name}</Text>
               </View>
             </TouchableOpacity>
           ))}
         </ScrollView>
-      </View>
-
-      <TouchableOpacity
-        style={[styles.monthPickerContainer, {zIndex: 1}]}
-        onPress={() => setYearPickerVisible(!isYearPickerVisible)}>
-        <View style={styles.monthContainer}>
-          <Text style={styles.monthText}>{selectedYear}</Text>
-        </View>
-      </TouchableOpacity>
-      {isYearPickerVisible && (
-        <View style={styles.yearPickerContainer}>
-          <Picker
-            selectedValue={selectedYear}
-            style={styles.dropdownYear}
-            onValueChange={itemValue => handleYearChange(itemValue)}>
-            {years.map((year: number) => (
-              <Picker.Item key={year} label={year.toString()} value={year} />
-            ))}
-          </Picker>
-        </View>
-      )}
-
-      <View style={styles.chartLineContainer}>
-        <View style={styles.ContainerCategory}>
-          <ScrollView>
-            {monthlyData.map(monthData => (
-              <TouchableOpacity
-                key={monthData.month}
-                style={styles.expenseItem}
-                onPress={() => handlePressMonth(`${monthData.month}`)}>
-                <View style={styles.expenseDetails}>
-                  <Image
-                    source={{uri: `${avatarUrlTemplate}${monthData.month}`}}
-                    style={styles.avatar}
-                  />
-                  <Text
-                    style={
-                      styles.expenseText
-                    }>{`Month ${monthData.month}`}</Text>
-                </View>
-                <View style={styles.expenseDetails}>
-                  {monthData.categories &&
-                    Array.isArray(monthData.categories) &&
-                    monthData.categories.map(category => (
-                      <View key={category.name}>
-                        <Text>{`${category.name}: ${category.amount}`}</Text>
-                      </View>
-                    ))}
-                  <Text
-                    style={
-                      styles.expenseAmount
-                    }>{`- ${monthData.total} đ`}</Text>
-                  <Icon name="chevron-right" size={20} color="#ccc" />
-                </View>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
+        <View style={{height: 1, backgroundColor: '#F3F1EE', marginTop: 10}} />
+        <Text style={{fontWeight: '500', marginVertical: 10, paddingTop: 10}}>
+          Details
+        </Text>
+        <ScrollView style={styles.ContainerCategory}>
+          {monthlyData.map(monthData => (
+            <TouchableOpacity
+              key={monthData.month}
+              style={styles.expenseItem}
+              onPress={() => handlePressMonth(`${monthData.month}`)}>
+              <View style={styles.expenseDetails}>
+                <Image
+                  source={{uri: `${avatarUrlTemplate}${monthData.month}`}}
+                  style={styles.avatar}
+                />
+                <Text
+                  style={styles.expenseText}>{`Month ${monthData.month}`}</Text>
+              </View>
+              <View style={styles.expenseDetails}>
+                {monthData.categories &&
+                  Array.isArray(monthData.categories) &&
+                  monthData.categories.map(category => (
+                    <View key={category.name}>
+                      <Text>{`${category.name}: ${category.amount}`}</Text>
+                    </View>
+                  ))}
+                <Text
+                  style={styles.expenseAmount}>{`- ${monthData.total} đ`}</Text>
+                <Icon name="chevron-right" size={20} color="#ccc" />
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
       <View
         style={{
