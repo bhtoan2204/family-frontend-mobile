@@ -7,20 +7,52 @@ import { Event } from 'src/interface/calendar/Event';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import BottomSheet from '../BottomSheet';
-import { getEvent } from 'src/redux/slices/CalendarSlice';
-import { useSelector } from 'react-redux';
-
+import { getEvent, setOnly } from 'src/redux/slices/CalendarSlice';
+import { useDispatch, useSelector } from 'react-redux';
 const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
     const { id_family, id_calendar } = route.params;
     const [event , setEvent ] = useState<Event>(useSelector(getEvent));
     const bottomSheetRef = useRef<RBSheet>(null);
     const screenHeight = Dimensions.get('screen').height;
-   
+    const dispatch = useDispatch();
 
 
-    const onUpdate =() => {
-        navigation.navigate('UpdateEvent', {id_family});
-    };
+
+    const onUpdate = async () => {
+        if (event.recurrence_rule){
+
+        
+        Alert.alert(
+          'Choose Edit Option',
+          'Do you want to edit only this event or all future events?',
+          [
+            {
+              text: 'Only this event',
+              onPress: async () => {
+                await dispatch(setOnly(true));
+                navigation.navigate('UpdateEvent', { id_family });
+              },
+            },
+            {
+              text: 'All future events',
+              onPress: async () => {
+                await dispatch(setOnly(false));
+                navigation.navigate('UpdateEvent', { id_family });
+              },
+            },
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+          ],
+          { cancelable: false }
+        );
+    } else{
+        await dispatch(setOnly(true));
+        navigation.navigate('UpdateEvent', { id_family });
+    }
+      };
+      
     const onDelete = async () => {
         Alert.alert(
             'Confirm Delete',
@@ -88,4 +120,5 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
   );
 };
 
-export default EventDetailsScreen
+export default EventDetailsScreen;
+

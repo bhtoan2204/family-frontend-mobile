@@ -2,37 +2,44 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, FlatList, Dimensions } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFamily, setColor, setIdcate } from 'src/redux/slices/CalendarSlice';
+import { getEvent, getFamily, setColor, setIdcate } from 'src/redux/slices/CalendarSlice';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import Navigation from 'src/navigation/NavigationContainer';
 import { CategoryEvent } from 'src/interface/calendar/CategoryEvent';
+import { Event } from 'src/interface/calendar/Event';
 
 
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('window').width;
 
 const ColorPicker = ({ navigation }) => {
-  const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(null);
+
+  const [event , setEvent ] = useState<Event>(useSelector(getEvent));
+
+  const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(event.category);
   const [availableColors, setAvailableColors] = useState<CategoryEvent[]>([]);
   const id_family = useSelector(getFamily);
   const dispatch = useDispatch();
+
   useEffect(() => {
+    console.log(event.category)
     const fetchData = async () => {
       try {
         const result = await CalendarServices.getAllCategoryEvent(id_family);
         setAvailableColors(result);
+
       } catch (error) {
         console.log('Error fetching colors:', error);
       }
-    };
 
+    };
     fetchData();
   }, [id_family]);
 
   const handleColorSelect = (index: number, item: CategoryEvent) => {
     dispatch(setColor(item.color))
     dispatch(setIdcate(item.id_category_event))
-    setSelectedColorIndex(selectedColorIndex === index ? null : index);
+    setSelectedColorIndex(selectedColorIndex === item.id_category_event ? null : item.id_category_event);
   };
 
   const handleCreateCategory= () => {
@@ -50,7 +57,7 @@ const ColorPicker = ({ navigation }) => {
         ]}
         onPress={() => handleColorSelect(index, item)}
       >
-        {selectedColorIndex === index && <View style={styles.selected} />}
+        {selectedColorIndex === item.id_category_event && <View style={styles.selected} />}
 
       </TouchableOpacity>
       <Text style= { styles.textHashtag}>#{item.title}</Text>

@@ -9,7 +9,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ColorPicker from './ColorPicker';
 import { useSelector } from 'react-redux';
-import { getColor, getEvent, getIDcate } from 'src/redux/slices/CalendarSlice';
+import { getColor, getEvent, getIDcate, getOnly } from 'src/redux/slices/CalendarSlice';
 import Custom from './Custom';
 import { RRule, RRuleStrOptions } from 'rrule';
 import { differenceInDays, differenceInWeeks, differenceInMonths, differenceInYears } from 'date-fns';
@@ -21,11 +21,11 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [event , setEvent ] = useState<Event>(useSelector(getEvent));
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [location, setLocation] = useState('');
-  const [chosenDateStart, setChosenDateStart] = useState(new Date());
-  const [chosenDateEnd, setChosenDateEnd] = useState(new Date());
+  const [title, setTitle] = useState(event.title);
+  const [description, setDescription] = useState(event.description);
+  const [location, setLocation] = useState(event.location);
+  const [chosenDateStart, setChosenDateStart] = useState(new Date(event.time_start));
+  const [chosenDateEnd, setChosenDateEnd] = useState(new Date(event.time_end));
   const [isPickerRepeatOpen, setIsPickerRepeatOpen] = useState(false);
   const [isPickerEndRepeatOpen, setIsPickerEndRepeatOpen] = useState(false);
   const [selectedOptionRepeat, setSelectedOptionRepeat] = useState('none');
@@ -35,11 +35,12 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
   const [selectedMonths, setSelectedMonths] = useState<string>('');
   const [selectedYears, setSelectedYears] = useState<string>('');
   const [number, setNumber] = useState<number>(1);
-  const [isAllDay, setIsAllDay] = useState(false);
+  const [isAllDay, setIsAllDay] = useState(event.is_all_day);
   const [repeatEndDate, setRepeatEndDate] = useState(new Date());
   let color = useSelector(getColor);
   let category = useSelector(getIDcate);
   const [count, setCount] = useState(1);
+  let isOnly = useSelector(getOnly);
 
   const handleDecrease = () => {
     setCount(prevCount => Math.max(1, prevCount - 1));
@@ -70,14 +71,18 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
       setChosenDateStart(selectedDate);
     }
   };
+ 
 
   const handleDateChangeEnd = (event: any, selectedDate: Date | undefined) => {
     if (selectedDate) {
       setChosenDateEnd(selectedDate);
     }
   };
+  const handleEditOnlyEvent = async () => {
 
-  const handleSubmit = async () => {
+  };
+  
+  const handleEditAllFutureEvents = async () => {
     const timeStart = chosenDateStart;
     const timeEnd = chosenDateEnd;
     const frequency = selectedOptionRepeat.toUpperCase();
@@ -156,7 +161,7 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
     
     console.log(recurrenceRule);
     const eventDetails = {
-      id_family: id_family,
+      id_calendar: event.id_calendar,
       title: title,
       time_start: chosenDateStart,
       time_end: chosenDateEnd,
@@ -171,9 +176,10 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
       start_timezone: "",
       end_timezone: ""
     };
-  
+    console.log(eventDetails)
     try {
-      const message = await CalendarServices.CreateEvent(
+      const message = await CalendarServices.UpdateEvent(
+        eventDetails.id_calendar,
         eventDetails.title,
         eventDetails.description,
         eventDetails.time_start,
@@ -187,7 +193,7 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
         eventDetails.recurrence_rule,
         eventDetails.start_timezone,
         eventDetails.end_timezone,
-        eventDetails.id_family,
+
       );
   
       Alert.alert('Inform', message, [
@@ -201,6 +207,16 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
     } catch (error) {
       Alert.alert('Error', error.message);
     }
+  };
+
+  const handleSubmit = async () => {
+  if (isOnly==false){
+      handleEditAllFutureEvents();
+  }
+  else {
+    handleEditOnlyEvent();
+  }
+    
   };
   
 
@@ -259,7 +275,7 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
           <TextInput
             style={styles.input1}
             placeholder="Enter title"
-            value={event.title}
+            value={title}
             onChangeText={setTitle}
           />
         </View>
@@ -272,7 +288,7 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
           <TextInput
             style={styles.input2}
             placeholder="Enter location"
-            value={event.location}
+            value={location}
             onChangeText={setLocation}
           />
         </View>
@@ -287,7 +303,7 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
           <TextInput
             style={styles.input2}
             placeholder="Enter description"
-            value={event.description}
+            value={description}
             onChangeText={setDescription}
           />
         </View>
@@ -297,7 +313,7 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
           <Text style={styles.text}>All day</Text>
           <View style={styles.switches}>
             <Switch
-              value={event.is_all_day}
+              value={isAllDay}
               onValueChange={setIsAllDay}
             />
           </View>
@@ -315,7 +331,7 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
               </Text>
             </View>
             <DateTimePicker
-              value={event.time_start}
+              value={chosenDateStart}
               mode={isAllDay ? 'date' : 'datetime'}
               display="default"
               onChange={handleDateChangeStart}
@@ -333,7 +349,7 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
               </Text>
             </View>
             <DateTimePicker
-              value={event.time_end}
+              value={chosenDateEnd}
               mode={isAllDay ? 'date' : 'datetime'}
               display="default"
               onChange={handleDateChangeEnd}
@@ -341,29 +357,31 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
           </View>
         </View>
       </View>
-      <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center', zIndex: isPickerRepeatOpen ? 1000 : 1 }]}>
-        <MaterialCommunityIcons
-          name="repeat"
-          size={30}
-          style={{ color: 'gray' }}
-        />
-        <Text style={{ right: 30, fontSize: 16, color: 'gray' }}>
-          Repeat
-        </Text>
-        <DropDownPicker
-          open={isPickerRepeatOpen}
-          setOpen={setIsPickerRepeatOpen}
-          value={selectedOptionRepeat}
-          items={optionRepeat}
-          setValue={setSelectedOptionRepeat}
-          placeholder="None"
-          containerStyle={{ height: 40, width: 100 }}
-          style={{ borderColor: 'white', borderWidth: 1 }}
-          dropDownContainerStyle={{ borderColor: '#ccc', borderWidth: 1, zIndex: 1000, width: 100 }}
-          zIndex={1000}
-          zIndexInverse={1000}
-        />
-      </View>
+      {isOnly===false && (
+  <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center', zIndex: isPickerRepeatOpen ? 1000 : 1 }]}>
+    <MaterialCommunityIcons
+      name="repeat"
+      size={30}
+      style={{ color: 'gray' }}
+    />
+    <Text style={{ fontSize: 16, color: 'gray' }}>Repeat</Text>
+    <DropDownPicker
+      open={isPickerRepeatOpen}
+      setOpen={setIsPickerRepeatOpen}
+      value={selectedOptionRepeat}
+      items={optionRepeat}
+      setValue={setSelectedOptionRepeat}
+      placeholder="None"
+      containerStyle={{ height: 40, width: 100 }}
+      style={{ borderColor: 'white', borderWidth: 1 }}
+      dropDownContainerStyle={{ borderColor: '#ccc', borderWidth: 1, zIndex: 1000, width: 100 }}
+      zIndex={1000}
+      zIndexInverse={1000}
+    />
+  </View>
+)}
+
+
       {selectedOptionRepeat !== 'none' && (
         <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center', zIndex: isPickerEndRepeatOpen ? 1000 : 1 }]}>
           <MaterialCommunityIcons
@@ -406,30 +424,31 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
         </View>
       )}
      {selectedOptionEndRepeat === 'count' && (
-        <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center' }]}>
-          <MaterialCommunityIcons
-            name="calendar-end"
-            size={30}
-            style={styles.icon}
-          />
-          <Text style={{ right: 30, fontSize: 16, color: 'gray' }}>End Count</Text>
-          <TouchableOpacity onPress={handleDecrease}>
-            <MaterialCommunityIcons
-              name="minus-circle"
-              size={30}
-              style={[styles.icon, { marginRight: 5 }]}
-            />
-          </TouchableOpacity>
-          <Text>{count}</Text>
-          <TouchableOpacity onPress={handleIncrease}>
-            <MaterialCommunityIcons
-              name="plus-circle"
-              size={30}
-              style={[styles.icon, { marginLeft: 5 }]}
-            />
-          </TouchableOpacity>
-        </View>
-      )}
+  <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center' }]}>
+    <MaterialCommunityIcons
+      name="calendar-end"
+      size={30}
+      style={styles.icon}
+    />
+    <Text style={{ right: 30, fontSize: 16, color: 'gray' }}>End Count</Text>
+    <TouchableOpacity onPress={handleDecrease}>
+      <MaterialCommunityIcons
+        name="minus-circle"
+        size={30}
+        style={[styles.icon, { marginRight: 5 }]}
+      />
+    </TouchableOpacity>
+    <Text>{count}</Text>
+    <TouchableOpacity onPress={handleIncrease}>
+      <MaterialCommunityIcons
+        name="plus-circle"
+        size={30}
+        style={[styles.icon, { marginLeft: 5 }]}
+      />
+    </TouchableOpacity>
+  </View>
+)}
+
 
 
       <ColorPicker navigation={navigation} />
@@ -440,6 +459,7 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
           </View>
         </TouchableOpacity>
       </View>
+           
       {selectedOptionRepeat === 'custom' && (
         <Custom
           isVisible={isModalVisible}
@@ -447,6 +467,7 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
           onSave={handleCustomModalSubmit}
         />
       )}
+      
     </View>
   );
 };

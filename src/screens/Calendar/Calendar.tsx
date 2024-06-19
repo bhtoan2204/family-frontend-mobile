@@ -299,7 +299,6 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
           onDayPress={days => handleDayPress(days)}
           selected={selectDate}
         />
-
         
       </View>
     </SafeAreaView>
