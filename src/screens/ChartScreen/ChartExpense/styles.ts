@@ -266,7 +266,8 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 30,
-    borderTopLeftRadius: 60,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
     width: '100%',
     alignSelf: 'center',
 
@@ -308,11 +309,8 @@ const styles = StyleSheet.create({
   },
   monthPickerContainer: {
     width: '100%',
-    alignItems: 'flex-end',
-    // borderColor: '#ccc',
-    // borderBottomWidth: 1,
+    alignItems: 'center',
     paddingVertical: 10,
-    right: 165,
   },
   monthContainer: {
     borderRadius: 10,
@@ -375,7 +373,6 @@ const styles = StyleSheet.create({
 
   linechart: {
     marginVertical: 8,
-    borderRadius: 16,
   },
   flatListContent: {
     paddingBottom: 20,

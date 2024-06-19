@@ -273,7 +273,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
         </View>
       )}
       <View style={styles.chartContainer}>
-        <ScrollView style={{flexGrow: 1}}>
+        <ScrollView style={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
           <View style={styles.ContainerCategory}>
             {dailyData.map((detail, index) => (
               <TouchableOpacity
