@@ -22,11 +22,119 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
 
   const scaleAnim = useRef(new Animated.Value(1)).current; // Phóng to/thu nhỏ
   const [selectedButton, setSelectedButton] = useState('expenseAnalysis');
+  const [currentScreen, setCurrentScreen] = useState('expenseAnalysis');
+
   const handleButtonPress = (
     buttonName: 'expenseAnalysis' | 'incomeAnalysis' | 'expenseIncome',
   ) => {
     setSelectedButton(buttonName);
+    setCurrentScreen(buttonName);
+    switch (buttonName) {
+      case 'expenseAnalysis':
+        renderExpenseAnalysisScreen();
+        break;
+      case 'incomeAnalysis':
+        renderIncomeAnalysisScreen();
+        break;
+      case 'expenseIncome':
+        renderExVsInScreen();
+        break;
+      default:
+        console.log('Invalid button name');
+    }
   };
+
+  // Hàm render cho Expense Analysis Screen
+  const renderExpenseAnalysisScreen = () => (
+    <View style={{flex: 1}}>
+      <Image
+        source={require('../../assets/images/report-bg.png')}
+        style={{flex: 1, width: '100%', height: '100%'}}
+        resizeMode="contain"
+      />
+      <TouchableOpacity
+        onPress={pressExVsIn}
+        style={{
+          flex: 1,
+          position: 'absolute',
+          left: 200,
+          width: 150,
+          height: 150,
+          bottom: 385,
+        }}>
+        <Animated.Image
+          source={require('../../assets/images/bar-chart.png')}
+          style={{
+            width: '100%',
+            height: '100%',
+            transform: [{scale: scaleAnim}],
+          }}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={pressExpenseAnalysis}
+        style={{
+          flex: 1,
+          position: 'absolute',
+          right: 185,
+          width: 200,
+          height: 200,
+          bottom: 230,
+          zIndex: 2,
+        }}>
+        <Animated.Image
+          source={require('../../assets/images/pie-chart.png')}
+          style={{
+            width: '100%',
+            height: '100%',
+            transform: [{scale: scaleAnim}],
+          }}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={pressIncomeAnalysis}
+        style={{
+          flex: 1,
+          position: 'absolute',
+          left: 210,
+          width: 150,
+          height: 150,
+          top: 375,
+          zIndex: 2,
+        }}>
+        <Animated.Image
+          source={require('../../assets/images/line-chart.png')}
+          style={{
+            width: '100%',
+            height: '100%',
+            transform: [{scale: scaleAnim}],
+          }}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+    </View>
+  );
+
+  // Hàm render cho Income Analysis Screen
+  const renderIncomeAnalysisScreen = () => <Text>Income Analysis Screen</Text>;
+
+  // Hàm render cho Expense vs Income Screen
+  const renderExVsInScreen = () => <Text>Expense vs Income Screen</Text>;
+
+  // Hàm chính để quyết định màn hình nào được hiển thị
+  const renderScreen = () => {
+    switch (currentScreen) {
+      case 'expenseAnalysis':
+        return renderExpenseAnalysisScreen();
+      case 'incomeAnalysis':
+        return renderIncomeAnalysisScreen();
+      case 'expenseIncome':
+        return renderExVsInScreen();
+    }
+  };
+
   useEffect(() => {
     // Tạo animation phóng to/thu nhỏ liên tục
     Animated.loop(
@@ -176,76 +284,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
             </Text>
           </TouchableOpacity>
         </View>
-
-        <View style={{flex: 1}}>
-          <Image
-            source={require('../../assets/images/report-bg.png')}
-            style={{flex: 1, width: '100%', height: '100%'}}
-            resizeMode="contain"
-          />
-          <TouchableOpacity
-            onPress={pressExVsIn}
-            style={{
-              flex: 1,
-              position: 'absolute',
-              left: 200,
-              width: 150,
-              height: 150,
-              bottom: 385,
-            }}>
-            <Animated.Image
-              source={require('../../assets/images/bar-chart.png')}
-              style={{
-                width: '100%',
-                height: '100%',
-                transform: [{scale: scaleAnim}],
-              }}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={pressExpenseAnalysis}
-            style={{
-              flex: 1,
-              position: 'absolute',
-              right: 185,
-              width: 200,
-              height: 200,
-              bottom: 230,
-              zIndex: 2,
-            }}>
-            <Animated.Image
-              source={require('../../assets/images/pie-chart.png')}
-              style={{
-                width: '100%',
-                height: '100%',
-                transform: [{scale: scaleAnim}],
-              }}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={pressIncomeAnalysis}
-            style={{
-              flex: 1,
-              position: 'absolute',
-              left: 210,
-              width: 150,
-              height: 150,
-              top: 375,
-              zIndex: 2,
-            }}>
-            <Animated.Image
-              source={require('../../assets/images/line-chart.png')}
-              style={{
-                width: '100%',
-                height: '100%',
-                transform: [{scale: scaleAnim}],
-              }}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View>
+        {renderScreen()}
       </View>
     </SafeAreaView>
   );
