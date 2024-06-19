@@ -78,6 +78,70 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           </TouchableOpacity>
         </View> */}
 
+        <View
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'space-around',
+            marginVertical: 20,
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginBottom: 20,
+              justifyContent: 'space-between',
+            }}>
+            <TouchableOpacity
+              style={{
+                alignItems: 'center',
+                backgroundColor: '#4480A2',
+                padding: 18,
+                borderRadius: 30,
+                paddingHorizontal: 30,
+                shadowColor: '#4480A2',
+                shadowOffset: {width: 0, height: 4},
+                shadowOpacity: 0.35,
+                shadowRadius: 3.84,
+              }}>
+              <Text style={{color: '#FFFFFF', fontWeight: '700', fontSize: 14}}>
+                Expense Analysis
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                alignItems: 'center',
+                backgroundColor: '#E77F27',
+                padding: 18,
+                borderRadius: 30,
+                paddingHorizontal: 30,
+                shadowColor: '#E77F27',
+                shadowOffset: {width: 0, height: 4},
+                shadowOpacity: 0.35,
+                shadowRadius: 3.84,
+              }}>
+              <Text style={{color: '#FFFFFF', fontWeight: '700', fontSize: 14}}>
+                Income Analysis
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity
+            style={{
+              alignItems: 'center',
+              backgroundColor: '#80C694',
+              padding: 18,
+              borderRadius: 30,
+              shadowColor: '#80C694',
+              shadowOffset: {width: 0, height: 4},
+              shadowOpacity: 0.35,
+              shadowRadius: 3.84,
+            }}>
+            <Text style={{color: '#FFFFFF', fontWeight: '700', fontSize: 14}}>
+              Expense & Income
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={{flex: 1}}>
           <Image
             source={require('../../assets/images/report-bg.png')}
