@@ -219,6 +219,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 10,
+    marginVertical: 5,
   },
   legendColor: {
     width: 20,
@@ -228,6 +229,7 @@ const styles = StyleSheet.create({
   },
   legendText: {
     fontSize: 16,
+    color:'#fff',
   },
   selectedLegendItem: {
     backgroundColor: '#ccc',
@@ -240,12 +242,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 10,
     paddingTop: 20,
-    borderTopLeftRadius: 60,
-    borderTopRightRadius: 60,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
     width: '100%',
     alignSelf: 'center',
-
     flexDirection: 'column',
+    height: '50%',
   },
   chartBarContainer: {
     bottom: 30,
@@ -277,6 +279,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: '#ccc',
     // borderRadius: 20,
+    flexGrow: 1,
   },
   expenseItem: {
     flexDirection: 'row',

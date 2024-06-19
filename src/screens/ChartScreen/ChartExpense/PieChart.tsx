@@ -231,7 +231,27 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
   };
 
   return (
-    <ScrollView style={{height: '80%'}}>
+    // <ScrollView style={{height: '80%'}}>
+
+    //   {/* <View style={styles.buttonContainer}>
+    //     <Button
+    //       title={showDetails ? 'Hide Details' : 'View Details'}
+    //       onPress={() => setShowDetails(!showDetails)}
+    //     />
+    //   </View> */}
+    // </ScrollView>
+    <View>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <PieChart
+          style={{height: 250, flex: 40}}
+          data={pieChartData}
+          outerRadius={'80%'}
+          innerRadius={'60%'}
+          labelRadius={120}>
+          <Labels slices={pieChartData} />
+        </PieChart>
+        <Legend data={pieChartData} style={{flex: 1}} />
+      </View>
       <View style={{flexDirection: 'row', top: 0, zIndex: 1}}>
         <TouchableOpacity
           style={styles.monthPickerContainer}
@@ -253,38 +273,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
         </View>
       )}
       <View style={styles.chartContainer}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <PieChart
-            style={{height: 250, flex: 40}}
-            data={pieChartData}
-            outerRadius={'80%'}
-            innerRadius={'60%'}
-            labelRadius={120}>
-            <Labels slices={pieChartData} />
-          </PieChart>
-          <Legend data={pieChartData} style={{flex: 1}} />
-        </View>
-        <View style={{height: 1, backgroundColor: '#F3F1EE', marginTop: -5}} />
-
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            padding: 10,
-            alignItems: 'center',
-            marginTop: 10,
-          }}
-          onPress={() => setShowDetails(!showDetails)}>
-          <Text style={{fontWeight: '500'}}>
-            {showDetails ? 'Hide details' : 'View details'}
-          </Text>
-          <Ionicons
-            name={showDetails ? 'chevron-down' : 'chevron-forward'}
-            size={20}
-            color="black"
-          />
-        </TouchableOpacity>
-        {showDetails && (
+        <ScrollView style={{flexGrow: 1}}>
           <View style={styles.ContainerCategory}>
             {dailyData.map((detail, index) => (
               <TouchableOpacity
@@ -307,24 +296,17 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
               </TouchableOpacity>
             ))}
           </View>
-        )}
+        </ScrollView>
       </View>
       <View
         style={{
           backgroundColor: 'white',
           width: '100%',
-          height: 400,
+          height: 600,
           marginTop: -30,
         }}
       />
-
-      {/* <View style={styles.buttonContainer}>
-        <Button
-          title={showDetails ? 'Hide Details' : 'View Details'}
-          onPress={() => setShowDetails(!showDetails)}
-        />
-      </View> */}
-    </ScrollView>
+    </View>
   );
 };
 
