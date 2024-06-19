@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, TouchableOpacity, Image, Animated} from 'react-native';
 import styles from './styles';
 import {ExpenditureScreenProps} from 'src/navigation/NavigationTypes';
@@ -21,7 +21,12 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
   };
 
   const scaleAnim = useRef(new Animated.Value(1)).current; // Phóng to/thu nhỏ
-
+  const [selectedButton, setSelectedButton] = useState('expenseAnalysis');
+  const handleButtonPress = (
+    buttonName: 'expenseAnalysis' | 'incomeAnalysis' | 'expenseIncome',
+  ) => {
+    setSelectedButton(buttonName);
+  };
   useEffect(() => {
     // Tạo animation phóng to/thu nhỏ liên tục
     Animated.loop(
@@ -40,7 +45,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     ).start();
   }, [scaleAnim]);
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#f2f2f2'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.container}>
         {/* <TouchableOpacity style={styles.expenseContainer} onPress={pressExVsIn}>
           <Icon
@@ -91,52 +96,82 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
               justifyContent: 'space-between',
             }}>
             <TouchableOpacity
+              onPress={() => handleButtonPress('expenseAnalysis')}
               style={{
                 alignItems: 'center',
-                backgroundColor: '#4480A2',
+                backgroundColor:
+                  selectedButton === 'expenseAnalysis' ? '#4480A2' : '#FFFFFF',
                 padding: 18,
                 borderRadius: 30,
                 paddingHorizontal: 30,
-                shadowColor: '#4480A2',
+                shadowColor:
+                  selectedButton === 'expenseAnalysis'
+                    ? '#4480A2'
+                    : 'transparent',
                 shadowOffset: {width: 0, height: 4},
                 shadowOpacity: 0.35,
                 shadowRadius: 3.84,
               }}>
-              <Text style={{color: '#FFFFFF', fontWeight: '700', fontSize: 14}}>
+              <Text
+                style={{
+                  color:
+                    selectedButton === 'expenseAnalysis' ? '#FFFFFF' : '#ccc',
+                  fontWeight: '700',
+                  fontSize: 14,
+                }}>
                 Expense Analysis
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
+              onPress={() => handleButtonPress('incomeAnalysis')}
               style={{
                 alignItems: 'center',
-                backgroundColor: '#E77F27',
+                backgroundColor:
+                  selectedButton === 'incomeAnalysis' ? '#E77F27' : '#FFFFFF',
                 padding: 18,
                 borderRadius: 30,
                 paddingHorizontal: 30,
-                shadowColor: '#E77F27',
+                shadowColor:
+                  selectedButton === 'incomeAnalysis'
+                    ? '#E77F27'
+                    : 'transparent',
                 shadowOffset: {width: 0, height: 4},
                 shadowOpacity: 0.35,
                 shadowRadius: 3.84,
               }}>
-              <Text style={{color: '#FFFFFF', fontWeight: '700', fontSize: 14}}>
+              <Text
+                style={{
+                  color:
+                    selectedButton === 'incomeAnalysis' ? '#FFFFFF' : '#ccc',
+                  fontWeight: '700',
+                  fontSize: 14,
+                }}>
                 Income Analysis
               </Text>
             </TouchableOpacity>
           </View>
 
           <TouchableOpacity
+            onPress={() => handleButtonPress('expenseIncome')}
             style={{
               alignItems: 'center',
-              backgroundColor: '#80C694',
+              backgroundColor:
+                selectedButton === 'expenseIncome' ? '#80C694' : '#FFFFFF',
               padding: 18,
               borderRadius: 30,
-              shadowColor: '#80C694',
+              shadowColor:
+                selectedButton === 'expenseIncome' ? '#80C694' : 'transparent',
               shadowOffset: {width: 0, height: 4},
               shadowOpacity: 0.35,
               shadowRadius: 3.84,
             }}>
-            <Text style={{color: '#FFFFFF', fontWeight: '700', fontSize: 14}}>
+            <Text
+              style={{
+                color: selectedButton === 'expenseIncome' ? '#FFFFFF' : '#ccc',
+                fontWeight: '700',
+                fontSize: 14,
+              }}>
               Expense & Income
             </Text>
           </TouchableOpacity>
