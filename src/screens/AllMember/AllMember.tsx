@@ -243,12 +243,9 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
                 </View>
               )}
               keyExtractor={(item, index) => index.toString()}
+              ListFooterComponent={<View style={{height: 250}} />}
+              showsVerticalScrollIndicator={false}
             />
-            <View style={{backgroundColor: 'white', height: 100}}>
-              {/* <Text>
-                No results found. Please try again with different keywords.
-              </Text> */}
-            </View>
           </View>
         </View>
 

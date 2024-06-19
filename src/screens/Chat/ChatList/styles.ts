@@ -1,8 +1,11 @@
 import { StyleSheet } from 'react-native';
+import { COLORS } from 'src/constants';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 20,
+    backgroundColor: '#fff',
   },
   header: {
     flexDirection: 'row',
@@ -10,20 +13,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
     backgroundColor: '#fff',
   },
   backButton: {
-    color: 'black',
+    color: COLORS.Rhino,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#f2f2f2',
-    borderRadius: 20,
+    borderRadius: 10,
     paddingHorizontal: 10,
     flex: 1,
+    padding: 1,
   },
   searchInput: {
     flex: 1,
@@ -38,7 +40,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    borderBottomColor: '#ccc',
+    marginHorizontal: 10,
+    marginBottom: 10,
   },
   avatarContainer: {
     width: 50,
@@ -50,11 +53,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 100,
-    borderColor: 'blue', 
-
+    width: 60,
+    height: 60,
+    borderRadius: 120, 
   },
   avatarText: {
     fontSize: 18,
@@ -62,6 +63,7 @@ const styles = StyleSheet.create({
   },
   messageContainer: {
     flex: 1,
+    marginLeft: 8,
   },
   username: {
     fontSize: 16,
@@ -78,6 +80,7 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: 12,
+    marginTop: 10,
   },
   userContainer: {
     flexDirection: 'column',
@@ -105,7 +108,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 10,
-    backgroundColor: '#f0f0f0', 
+    backgroundColor: '#ffffff',
+    padding: 5,
   },
   button: {
     flex: 1,
@@ -121,11 +125,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 100,
     alignItems: 'center',
-    backgroundColor: 'gray'
+    backgroundColor: '#f2f2f2'
   },
   buttonTextSelected: {
-    color: 'white',
-
+    color: '#000',
   },
   buttonText: {
     color: '#ccc',
@@ -133,14 +136,25 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   rightAction: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-between',
+    alignSelf:'center', 
+    padding: 10,
     paddingHorizontal: 15,
-    marginVertical: 5,
-    backgroundColor: 'lightgray',
-    borderRadius: 5,
-},
+    backgroundColor: '#A9A9A9',
+  },
+  activeDot: {
+    height: 15,
+    width: 15,
+    borderRadius: 7.5,
+    backgroundColor: 'green',
+    borderWidth: 2,
+    borderColor: 'white',
+    zIndex: 1,
+    bottom: 20,
+    left: 25,
+  },
 });
 
 export default styles;
