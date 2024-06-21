@@ -19,18 +19,17 @@ import {
 import ChatServices from 'src/services/apiclient/ChatServices';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Profile} from 'src/interface/user/userProfile';
 import {Swipeable} from 'react-native-gesture-handler';
 import IconL from 'react-native-vector-icons/Ionicons';
 import {getSocket} from 'src/services/apiclient/Socket';
 import {LastMessage} from 'src/interface/chat/chat';
 import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
-
+import { UserProfile } from 'src/interface/user/userProfile';
 const ChatListScreen = ({
   navigation,
 }: PurchasedScreenProps & ViewAllFamilyScreenProps) => {
   const [chats, setChats] = useState<LastMessage[]>([]);
-  const [users, setUsers] = useState<Profile[]>([]);
+  const [users, setUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
@@ -88,24 +87,23 @@ const ChatListScreen = ({
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await ChatServices.GetUserChat({index: currentPage});
-      const formattedResponse = response.map((item: LastMessage) => ({
+      const response = await ChatServices.GetUserChat({ index: currentPage });
+      const formattedResponse = response.map((item: { messages: any[]; }) => ({
         ...item,
-        messages: item.messages.map(message => ({
+        messages: item.messages.map((message) => ({
           ...message,
           timestamp: message.timestamp ? new Date(message.timestamp) : null,
         })),
       }));
-      setChats(prevChats => [...prevChats, ...formattedResponse]);
-      setTotalPages(
-        formattedResponse.length > 0 ? currentPage + 1 : currentPage,
-      );
+      setChats((prevChats) => [...prevChats, ...formattedResponse]);
+      setTotalPages(formattedResponse.length > 0 ? currentPage + 1 : currentPage);
     } catch (error) {
       console.error('Error fetching chat data:', error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   const loadMoreMessages = () => {
     if (!loading && currentPage < totalPages) {
@@ -170,7 +168,7 @@ const ChatListScreen = ({
       </ScrollView>
     </View>
   );
-  const onDelete = async (event: Event) => {
+  const onDelete = async (event: any) => {
     Alert.alert(
       'Confirm Delete',
       'Are you sure you want to delete this event?',

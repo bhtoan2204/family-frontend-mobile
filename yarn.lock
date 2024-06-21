@@ -2682,10 +2682,35 @@
   dependencies:
     "@syncfusion/ej2-icons" "~25.2.3"
 
+"@syncfusion/ej2-base@~26.1.35", "@syncfusion/ej2-base@~26.1.37":
+  version "26.1.37"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-base/-/ej2-base-26.1.37.tgz"
+  integrity sha512-aDnABkOg+5Uw9SiORkCas8p+5/U+GWI0lL1czZJAwsJ1OGw3vN1zju6klwTX8prefOEh9/aQ67pmt2yepO00bg==
+  dependencies:
+    "@syncfusion/ej2-icons" "~26.1.35"
+
 "@syncfusion/ej2-buttons@~25.2.3", "@syncfusion/ej2-buttons@~25.2.4":
   version "25.2.4"
   dependencies:
     "@syncfusion/ej2-base" "~25.2.3"
+
+"@syncfusion/ej2-buttons@~26.1.35":
+  version "26.1.35"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-buttons/-/ej2-buttons-26.1.35.tgz"
+  integrity sha512-NfJHzI5GuAjyttM2QS3rdbG03miOcIZ+pgbiIptBuo0d8oe5k7iOTAGLfN+y084qo6ZvTiNlE07UbqDb6Lko2w==
+  dependencies:
+    "@syncfusion/ej2-base" "~26.1.35"
+
+"@syncfusion/ej2-calendars@~26.1.38":
+  version "26.1.38"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-calendars/-/ej2-calendars-26.1.38.tgz"
+  integrity sha512-cRcbf1Fvrcc5d1MdTxvlO527mftmc+Oussn0e79khNwNC9LZTlHN1rThq+GOXqXkwXqb37rGUiZSAmO5QvRl3g==
+  dependencies:
+    "@syncfusion/ej2-base" "~26.1.37"
+    "@syncfusion/ej2-buttons" "~26.1.35"
+    "@syncfusion/ej2-inputs" "~26.1.38"
+    "@syncfusion/ej2-lists" "~26.1.35"
+    "@syncfusion/ej2-popups" "~26.1.38"
 
 "@syncfusion/ej2-calendars@25.2.4":
   version "25.2.4"
@@ -2696,6 +2721,13 @@
     "@syncfusion/ej2-lists" "~25.2.3"
     "@syncfusion/ej2-popups" "~25.2.4"
 
+"@syncfusion/ej2-compression@~26.1.35":
+  version "26.1.35"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-compression/-/ej2-compression-26.1.35.tgz"
+  integrity sha512-gTWqnDC3321mLaUE/T1LfdZ+Pu5NhY7Y7GlOX3Q1lqWKqE9BQDaIkZx31TqtmwwCQ35i/ZOFdg0F93Kb3PM8dA==
+  dependencies:
+    "@syncfusion/ej2-file-utils" "~26.1.35"
+
 "@syncfusion/ej2-data@~25.2.3":
   version "25.2.3"
   resolved "https://registry.npmjs.org/@syncfusion/ej2-data/-/ej2-data-25.2.3.tgz"
@@ -2703,10 +2735,48 @@
   dependencies:
     "@syncfusion/ej2-base" "~25.2.3"
 
+"@syncfusion/ej2-data@~26.1.35":
+  version "26.1.35"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-data/-/ej2-data-26.1.35.tgz"
+  integrity sha512-dlg+Ag+7lvU1wrfAtSF1pHABIC7PyD5RsAI5ju1io00z3cxfuoY6ctGamHLx2IYTDdM3q5WaPB13dayTBjuU4g==
+  dependencies:
+    "@syncfusion/ej2-base" "~26.1.35"
+
+"@syncfusion/ej2-dropdowns@~26.1.38":
+  version "26.1.38"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-dropdowns/-/ej2-dropdowns-26.1.38.tgz"
+  integrity sha512-hAFZ1tMSIgDynpdz+gMP4L5Qew5jh4EyjpmehFUPIj6DaVmfk3A+fWZjmdo355noqzFYrToEx36jVLqAD+yPyw==
+  dependencies:
+    "@syncfusion/ej2-base" "~26.1.37"
+    "@syncfusion/ej2-data" "~26.1.35"
+    "@syncfusion/ej2-inputs" "~26.1.38"
+    "@syncfusion/ej2-lists" "~26.1.35"
+    "@syncfusion/ej2-navigations" "~26.1.38"
+    "@syncfusion/ej2-notifications" "~26.1.35"
+    "@syncfusion/ej2-popups" "~26.1.38"
+
+"@syncfusion/ej2-excel-export@~26.1.35":
+  version "26.1.35"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-excel-export/-/ej2-excel-export-26.1.35.tgz"
+  integrity sha512-AlFYEBI97I0zjzGrVlqu18mux7TH6l7bSXNdWbjMf961tMSh/TkqjxkbsIWdUjqKz5M/6Vy7ElsnkjDGN1emIA==
+  dependencies:
+    "@syncfusion/ej2-base" "~26.1.35"
+    "@syncfusion/ej2-compression" "~26.1.35"
+
+"@syncfusion/ej2-file-utils@~26.1.35":
+  version "26.1.35"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-file-utils/-/ej2-file-utils-26.1.35.tgz"
+  integrity sha512-0aeFbfs1kL/UV/LV+jFeuY/63dN0N4z5xU7mhD+7W4wFyXH9S60rfgE/UawC+UFJAT7H+TrGdOGQ3ZfacQTEmQ==
+
 "@syncfusion/ej2-icons@~25.2.3":
   version "25.2.3"
   resolved "https://registry.npmjs.org/@syncfusion/ej2-icons/-/ej2-icons-25.2.3.tgz"
   integrity sha512-WptrAR3YShA8S+mushGCojRmBgLUCYpsYq1Nw1S1ynWNRcijlZgdil5L7LjaGA8H6CA/mFG5BMBDCmZ76hYX1A==
+
+"@syncfusion/ej2-icons@~26.1.35":
+  version "26.1.35"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-icons/-/ej2-icons-26.1.35.tgz"
+  integrity sha512-rhaJDhN+vDBai+7xSw+xMnzAvLtG75vYoWvVA7wgUawA4boA4ODtkEgNYbMPJOEbtYaEQO7s3b7nzzWbXI3v+Q==
 
 "@syncfusion/ej2-inputs@~25.2.3":
   version "25.2.3"
@@ -2715,6 +2785,16 @@
     "@syncfusion/ej2-buttons" "~25.2.3"
     "@syncfusion/ej2-popups" "~25.2.3"
     "@syncfusion/ej2-splitbuttons" "~25.2.3"
+
+"@syncfusion/ej2-inputs@~26.1.38":
+  version "26.1.38"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-inputs/-/ej2-inputs-26.1.38.tgz"
+  integrity sha512-sEq9deDyjwWn435xTz9MjdoYwAXPaAGLQeUdKKN9RdK0mJK8QJsr8+U1OmmBZujC0eJcSjYF1N5JTuEppOjtUg==
+  dependencies:
+    "@syncfusion/ej2-base" "~26.1.37"
+    "@syncfusion/ej2-buttons" "~26.1.35"
+    "@syncfusion/ej2-popups" "~26.1.38"
+    "@syncfusion/ej2-splitbuttons" "~26.1.35"
 
 "@syncfusion/ej2-lists@~25.2.3":
   version "25.2.3"
@@ -2726,16 +2806,62 @@
     "@syncfusion/ej2-data" "~25.2.3"
     "@syncfusion/ej2-popups" "~25.2.3"
 
+"@syncfusion/ej2-lists@~26.1.35":
+  version "26.1.35"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-lists/-/ej2-lists-26.1.35.tgz"
+  integrity sha512-XVLm+u11+63dpudZVrgrocK/DihYyAq9jTamfKQ1HkAV27gPTyilV+6ywizGmZmSystgMB+0YBKRDjqv85D1+A==
+  dependencies:
+    "@syncfusion/ej2-base" "~26.1.35"
+    "@syncfusion/ej2-buttons" "~26.1.35"
+    "@syncfusion/ej2-data" "~26.1.35"
+    "@syncfusion/ej2-popups" "~26.1.35"
+
+"@syncfusion/ej2-navigations@~26.1.38":
+  version "26.1.38"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-navigations/-/ej2-navigations-26.1.38.tgz"
+  integrity sha512-fuXsUaEb8fhL/qKIMRSzS16iP3XTeTjFtkdXER4oynMr+AKzllzEJhXj6ZEpL+mObRRBX2Zdd1nsgDmvqnLG7g==
+  dependencies:
+    "@syncfusion/ej2-base" "~26.1.37"
+    "@syncfusion/ej2-buttons" "~26.1.35"
+    "@syncfusion/ej2-data" "~26.1.35"
+    "@syncfusion/ej2-inputs" "~26.1.38"
+    "@syncfusion/ej2-lists" "~26.1.35"
+    "@syncfusion/ej2-popups" "~26.1.38"
+
+"@syncfusion/ej2-notifications@~26.1.35":
+  version "26.1.35"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-notifications/-/ej2-notifications-26.1.35.tgz"
+  integrity sha512-R8r1Wbfo2saM/jqbPmCfuZ9Y1Uq6QCjjEQkSzz8fSA/slddutl67RfVWCbjg9aTGx64sQctXHO7r3GjFqfPUjQ==
+  dependencies:
+    "@syncfusion/ej2-base" "~26.1.35"
+    "@syncfusion/ej2-buttons" "~26.1.35"
+    "@syncfusion/ej2-popups" "~26.1.35"
+
 "@syncfusion/ej2-popups@~25.2.3", "@syncfusion/ej2-popups@~25.2.4":
   version "25.2.4"
   dependencies:
     "@syncfusion/ej2-base" "~25.2.3"
     "@syncfusion/ej2-buttons" "~25.2.4"
 
+"@syncfusion/ej2-popups@~26.1.35", "@syncfusion/ej2-popups@~26.1.38":
+  version "26.1.38"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-popups/-/ej2-popups-26.1.38.tgz"
+  integrity sha512-XwXrB9EKZghX6xJNel5bDbeB6y/SdBonvLwGVxp2b+CYymdc+T03lQaDYO7FAtU2JlnaICsmx7OvoIIoYY+e3Q==
+  dependencies:
+    "@syncfusion/ej2-base" "~26.1.37"
+    "@syncfusion/ej2-buttons" "~26.1.35"
+
 "@syncfusion/ej2-react-base@~25.2.3":
   version "25.2.3"
   dependencies:
     "@syncfusion/ej2-base" "~25.2.3"
+
+"@syncfusion/ej2-react-base@~26.1.35":
+  version "26.1.35"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-react-base/-/ej2-react-base-26.1.35.tgz"
+  integrity sha512-TTSvdHLKFtCsuZ+lWrWXpUcz04sH5D+K+j4vuDGm/qZ9kGiQfGZKNkSkfQYHRyrquyU8zadeZzTDsLUZCR7THA==
+  dependencies:
+    "@syncfusion/ej2-base" "~26.1.35"
 
 "@syncfusion/ej2-react-calendars@^25.1.37":
   version "25.2.4"
@@ -2744,11 +2870,45 @@
     "@syncfusion/ej2-calendars" "25.2.4"
     "@syncfusion/ej2-react-base" "~25.2.3"
 
+"@syncfusion/ej2-react-schedule@^26.1.35":
+  version "26.1.38"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-react-schedule/-/ej2-react-schedule-26.1.38.tgz"
+  integrity sha512-ONmKpdUWiVO8jFKEdtBOqqZ9SwIbAqDik+Ubh3vVpwqYILeefm8CHsr5bZIEtBZSsJIvyzwnN2TP9vxY2JoePw==
+  dependencies:
+    "@syncfusion/ej2-base" "~26.1.37"
+    "@syncfusion/ej2-react-base" "~26.1.35"
+    "@syncfusion/ej2-schedule" "26.1.38"
+
+"@syncfusion/ej2-schedule@26.1.38":
+  version "26.1.38"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-schedule/-/ej2-schedule-26.1.38.tgz"
+  integrity sha512-Km83jRc9fkJlDG12YRgHOnlmeWK/JXLZi+2fIOv95TGd8PU6J/peNy0EM9W5rJzPIiKQGCj336Hski+uj2HqRg==
+  dependencies:
+    "@syncfusion/ej2-base" "~26.1.37"
+    "@syncfusion/ej2-buttons" "~26.1.35"
+    "@syncfusion/ej2-calendars" "~26.1.38"
+    "@syncfusion/ej2-data" "~26.1.35"
+    "@syncfusion/ej2-dropdowns" "~26.1.38"
+    "@syncfusion/ej2-excel-export" "~26.1.35"
+    "@syncfusion/ej2-inputs" "~26.1.38"
+    "@syncfusion/ej2-lists" "~26.1.35"
+    "@syncfusion/ej2-navigations" "~26.1.38"
+    "@syncfusion/ej2-popups" "~26.1.38"
+    "@types/requirejs" "^2.1.37"
+
 "@syncfusion/ej2-splitbuttons@~25.2.3":
   version "25.2.4"
   dependencies:
     "@syncfusion/ej2-base" "~25.2.3"
     "@syncfusion/ej2-popups" "~25.2.4"
+
+"@syncfusion/ej2-splitbuttons@~26.1.35":
+  version "26.1.35"
+  resolved "https://registry.npmjs.org/@syncfusion/ej2-splitbuttons/-/ej2-splitbuttons-26.1.35.tgz"
+  integrity sha512-c+iUzD+9rvbriglYzQGJRFAijZ0vRHxnsUNo5whSdDoQCjZnE8avuz/6cJpkY/HyGNIzTpDEayQXB4Z+JgMRqw==
+  dependencies:
+    "@syncfusion/ej2-base" "~26.1.35"
+    "@syncfusion/ej2-popups" "~26.1.35"
 
 "@types/babel__core@^7.1.14":
   version "7.20.5"
@@ -3148,7 +3308,7 @@
     csstype "^3.0.3"
     react-native "*"
 
-"@types/react-native-vector-icons@^6.4.10", "@types/react-native-vector-icons@^6.4.18":
+"@types/react-native-vector-icons@^6.4.10", "@types/react-native-vector-icons@^6.4.18", "@types/react-native-vector-icons@^6.4.6":
   version "6.4.18"
   resolved "https://registry.npmjs.org/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.18.tgz"
   integrity sha512-YGlNWb+k5laTBHd7+uZowB9DpIK3SXUneZqAiKQaj1jnJCZM0x71GDim5JCTMi4IFkhc9m8H/Gm28T5BjyivUw==
@@ -3184,6 +3344,11 @@
   dependencies:
     "@types/prop-types" "*"
     csstype "^3.0.2"
+
+"@types/requirejs@^2.1.37":
+  version "2.1.37"
+  resolved "https://registry.npmjs.org/@types/requirejs/-/requirejs-2.1.37.tgz"
+  integrity sha512-jmFgr3mwN2NSmtRP6IpZ2nfRS7ufSXuDYQ6YyPFArN8x5dARQcD/DXzT0J6NYbvquVT4pg9K9HWdi6e6DZR9iQ==
 
 "@types/semver@^7.3.12":
   version "7.5.8"
@@ -3656,6 +3821,13 @@ available-typed-arrays@^1.0.7:
   dependencies:
     possible-typed-array-names "^1.0.0"
 
+axios-retry@^4.4.0:
+  version "4.4.1"
+  resolved "https://registry.npmjs.org/axios-retry/-/axios-retry-4.4.1.tgz"
+  integrity sha512-JGzNoglDHtHWIEvvAampB0P7jxQ/sT4COmW0FgSQkVg6o4KqNjNMBI6uFVOq517hkw/OAYYAG08ADtBlV8lvmQ==
+  dependencies:
+    is-retry-allowed "^2.2.0"
+
 axios@^0.24.0:
   version "0.24.0"
   resolved "https://registry.npmjs.org/axios/-/axios-0.24.0.tgz"
@@ -3663,7 +3835,7 @@ axios@^0.24.0:
   dependencies:
     follow-redirects "^1.14.4"
 
-axios@^1.6.0, axios@^1.6.7:
+axios@^1.6.0, axios@^1.6.7, "axios@0.x || 1.x":
   version "1.6.8"
   dependencies:
     follow-redirects "^1.15.6"
@@ -5207,6 +5379,11 @@ emittery@^0.13.1:
   resolved "https://registry.npmjs.org/emittery/-/emittery-0.13.1.tgz"
   integrity sha512-DeWwawk6r5yR9jFgnDKYt4sLS0LmHJJi3ZOnb5/JdbYwj3nW+FxQnHIjhBKz8YLC7oRNPVM9NQ47I3CVx34eqQ==
 
+emoji-datasource@^6.0.0:
+  version "6.1.1"
+  resolved "https://registry.npmjs.org/emoji-datasource/-/emoji-datasource-6.1.1.tgz"
+  integrity sha512-fbS3QJpzGHhujvBULSKXcvsYmVg+1ldfI3VVXG3jnFuniZtkp7rz/OcTcQjbp3m43BYxmiJgKmaoOUPxXQupRQ==
+
 emoji-regex@^10.3.0:
   version "10.3.0"
   resolved "https://registry.npmjs.org/emoji-regex/-/emoji-regex-10.3.0.tgz"
@@ -6203,7 +6380,7 @@ form-data@^4.0.0:
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
-formik@^2.4.5:
+formik@^2.4.6:
   version "2.4.6"
   resolved "https://registry.npmjs.org/formik/-/formik-2.4.6.tgz"
   integrity sha512-A+2EI7U7aG296q2TLGvNapDNTZp1khVt5Vk0Q/fyfSROss0V/V6+txt2aJnwEos44IxTCW/LYAi/zgWzlevj+g==
@@ -6995,6 +7172,11 @@ is-regex@^1.1.4:
   dependencies:
     call-bind "^1.0.2"
     has-tostringtag "^1.0.0"
+
+is-retry-allowed@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.npmjs.org/is-retry-allowed/-/is-retry-allowed-2.2.0.tgz"
+  integrity sha512-XVm7LOeLpTW4jV19QSH38vkswxoLud8sQ57YwJVTPWdiaI9I8keEhGFpBlslyVsgdQy4Opg8QOLb8YRgsyZiQg==
 
 is-set@^2.0.3:
   version "2.0.3"
@@ -9581,6 +9763,27 @@ react-native-dropdown-picker@^5.4.6:
   resolved "https://registry.npmjs.org/react-native-dropdown-picker/-/react-native-dropdown-picker-5.4.6.tgz"
   integrity sha512-T1XBHbE++M6aRU3wFYw3MvcOuabhWZ29RK/Ivdls2r1ZkZ62iEBZknLUPeVLMX3x6iUxj4Zgr3X2DGlEGXeHsA==
 
+react-native-elements@^3.4.3:
+  version "3.4.3"
+  resolved "https://registry.npmjs.org/react-native-elements/-/react-native-elements-3.4.3.tgz"
+  integrity sha512-VtZc25EecPZyUBER85zFK9ZbY6kkUdcm1ZwJ9hdoGSCr1R/GFgxor4jngOcSYeMvQ+qimd5No44OVJW3rSJECA==
+  dependencies:
+    "@types/react-native-vector-icons" "^6.4.6"
+    color "^3.1.2"
+    deepmerge "^4.2.2"
+    hoist-non-react-statics "^3.3.2"
+    lodash.isequal "^4.5.0"
+    opencollective-postinstall "^2.0.3"
+    react-native-ratings "8.0.4"
+    react-native-size-matters "^0.3.1"
+
+react-native-emoji-selector@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/react-native-emoji-selector/-/react-native-emoji-selector-0.2.0.tgz"
+  integrity sha512-+rPPWG5vl5AexdH8udEwtzdq9QUGD6kp+dQ8C/459d3ScM0S3UnT/qAvhmpsTgCbgjpdwiJIcrKNxKmGEDb15g==
+  dependencies:
+    emoji-datasource "^6.0.0"
+
 react-native-events-calendar@^1.0.8:
   version "1.0.8"
   resolved "https://registry.npmjs.org/react-native-events-calendar/-/react-native-events-calendar-1.0.8.tgz"
@@ -9781,6 +9984,14 @@ react-native-pie-chart@^3.0.2:
   dependencies:
     d3-shape "3.2.0"
 
+react-native-popover-view@^5.1.8:
+  version "5.1.8"
+  resolved "https://registry.npmjs.org/react-native-popover-view/-/react-native-popover-view-5.1.8.tgz"
+  integrity sha512-kDH2liv/Xb8y0JCY25Ft2SiA5fJtVL4o7gk2dXyhXeNhjSEEss3Z3hZyeYMi4ctHimovWSBZz/CjfejNbUF1jA==
+  dependencies:
+    deprecated-react-native-prop-types "^2.3.0"
+    prop-types "^15.8.1"
+
 react-native-popup-menu@^0.16.1:
   version "0.16.1"
   resolved "https://registry.npmjs.org/react-native-popup-menu/-/react-native-popup-menu-0.16.1.tgz"
@@ -9795,6 +10006,13 @@ react-native-ratings@^8.1.0:
   version "8.1.0"
   resolved "https://registry.npmjs.org/react-native-ratings/-/react-native-ratings-8.1.0.tgz"
   integrity sha512-+QOJ4G3NjVkI1D+tk4EGx1dCvVfbD2nQdkrj9cXrcAoEiwmbep4z4bZbCKmWMpQ5h2dqbxABU8/eBnbDmvAc3g==
+  dependencies:
+    lodash "^4.17.15"
+
+react-native-ratings@8.0.4:
+  version "8.0.4"
+  resolved "https://registry.npmjs.org/react-native-ratings/-/react-native-ratings-8.0.4.tgz"
+  integrity sha512-Xczu5lskIIRD6BEdz9A0jDRpEck/SFxRqiglkXi0u67yAtI1/pcJC76P4MukCbT8K4BPVl+42w83YqXBoBRl7A==
   dependencies:
     lodash "^4.17.15"
 
@@ -9838,6 +10056,11 @@ react-native-safe-area-context@*, "react-native-safe-area-context@^3.1.9 || ^4.0
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
+
+react-native-size-matters@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.npmjs.org/react-native-size-matters/-/react-native-size-matters-0.3.1.tgz"
+  integrity sha512-mKOfBLIBFBcs9br1rlZDvxD5+mAl8Gfr5CounwJtxI6Z82rGrMO+Kgl9EIg3RMVf3G855a85YVqHJL2f5EDRlw==
 
 react-native-size-matters@^0.4.0:
   version "0.4.2"

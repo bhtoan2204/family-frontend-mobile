@@ -30,6 +30,7 @@ import {selectProfile} from 'src/redux/slices/ProfileSclice';
 import {Message} from 'src/interface/chat/chat';
 import {Ionicons} from '@expo/vector-icons';
 import {COLORS} from 'src/constants';
+import EmojiPicker from '../EmojiPicker';
 
 interface Member {
   id_user: string;
@@ -59,7 +60,8 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
     null,
   );
-  const [hasReceivedMessage, setHasReceivedMessage] = useState(false); // State to track if the user has received a message
+  const [hasReceivedMessage, setHasReceivedMessage] = useState(false); 
+  const [selectedEmoji, setSelectedEmoji] = useState('');
 
   let socket = getSocket();
 
@@ -147,7 +149,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
           setImages(prevImages => [firstMessage.content, ...prevImages]);
         }
         setMessages(prevMessages => [firstMessage, ...prevMessages]);
-        setHasReceivedMessage(true); // Set to true once new messages are fetched
+        setHasReceivedMessage(true); 
       }
     } catch (error) {
       console.error('Error fetching new messages:', error);
@@ -261,16 +263,13 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   }, [socket]);
 
   useEffect(() => {
-    // Check if the user has received any message from this receiver
     if (!hasReceivedMessage) {
-      return () => {}; // Return an empty function as cleanup
+      return () => {}; 
     }
 
-    // Ensure to return a cleanup function when effect dependencies change
     return () => {
-      // Perform cleanup logic here if needed
     };
-  }, [hasReceivedMessage]); // Include dependencies here if needed
+  }, [hasReceivedMessage]); 
 
   const handleVideoCall = (receiverId?: string) => {
     navigation.navigate('ChatStack', {
@@ -279,6 +278,12 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
     });
   };
 
+  const handleEmojiChange = (emoji) => {
+    setSelectedEmoji(emoji);
+    setMessage((prevMessage) => prevMessage + emoji);
+  };
+
+  
   const formatDateTime = (dateTime: Date) => {
     const today = new Date();
     const yesterday = new Date(today);
@@ -501,10 +506,10 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
             value={message}
             onChangeText={setMessage}
             placeholder="Aa"></TextInput>
-          <TouchableOpacity style={{marginHorizontal: 15}}>
-            <Ionicons name="happy" size={30} color={COLORS.DenimBlue} />
-          </TouchableOpacity>
+
+              <EmojiPicker onChange={handleEmojiChange} />
         </View>
+    
         <TouchableOpacity
           onPress={handleSendMessage}
           disabled={isTextInputEmpty}>
