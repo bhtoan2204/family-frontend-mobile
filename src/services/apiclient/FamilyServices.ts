@@ -234,6 +234,45 @@ const FamilyServices = {
       throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
     }
   },
+  changeAvatar: async ( id_family: number | undefined, uri: string) => {
+    try {
+      const createFormData = (uri: string): FormData => {
+        let formData = new FormData();
+        let filename = uri.split('/').pop()!;
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+        formData.append('avatar', {
+          uri,
+          name: filename,
+          type,
+        });
+        formData.append('id_family', String(id_family));
+
+        return formData;
+      };
+      const response: AxiosResponse = await instance.put(
+        FamilyUrl.changeAvatar,
+        createFormData(uri),
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            accept: '*/*',
+          },
+          
+          
+        },
+      );
+      console.log(response);
+      if (response.status === 200) {
+        return response.data.data.fileUrl;
+      } else {
+        throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+      }
+    } catch (error: any) {
+      console.log('Update Error', error);
+      throw new Error(ERROR_TEXTS.API_ERROR);
+    }
+  },
 };
 
 export default FamilyServices;

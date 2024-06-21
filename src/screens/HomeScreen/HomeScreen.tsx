@@ -180,6 +180,10 @@ const HomeScreen = ({
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+  const handleNavigateNews = () => {
+    navigation.navigate('FamilyStack', {screen: 'News'});
+  };
+
   const data: Item[] = [
     {
       icon: 'bundle',
@@ -205,9 +209,7 @@ const HomeScreen = ({
     {
       icon: 'news',
       label: 'Newspaper',
-      onPress: () => {
-        console.log('Newspaper pressed');
-      },
+      onPress: () => {handleNavigateNews()},
     },
     {
       icon: 'guideline',

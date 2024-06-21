@@ -215,9 +215,7 @@ export type FamilyStackParamList = {
     id_family: number | undefined;
     id_checklist: number;
   };
-  News: {
-    id_family: number | undefined;
-  };
+  News: undefined;
 };
 
 export type PackStackParamList = {
