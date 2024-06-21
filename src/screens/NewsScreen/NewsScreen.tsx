@@ -31,6 +31,9 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [refreshing, setRefreshing] = React.useState<boolean>(false);
   const categoryRefScroll = useRef<any>(null);
+  const [currentPage, setCurrentPage] = React.useState<number>(1);
+  const ITEMS_PER_PAGE = 10;
+  const [totalItems, setTotalItems] = React.useState<number>(0);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -39,7 +42,7 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
       try {
         // setLoading(true)
         setNewsItem(null);
-        const data = await NewsService.getNewsByCategory(type, null, null);
+        const data = await NewsService.getNewsByCategory(type, currentPage, ITEMS_PER_PAGE);
         setRefreshing(false);
         setNewsItem(data);
       } catch (error) {
@@ -89,34 +92,46 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
     const fetchNews = async () => {
       const type = news_category[choosenCategoryIndex].category_name;
       try {
-        // setLoading(true)
         setNewsItem(null);
-        const data = await NewsService.getNewsByCategory(type, null, null);
-        setNewsItem(data);
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        const data = await NewsService.getNewsByCategory(type, currentPage, ITEMS_PER_PAGE);
+        setNewsItem(data.items);
+        setTotalItems(data.totalItems); 
       } catch (error) {
         console.error('Error fetching news:', error);
       }
     };
     fetchNews();
-  }, [choosenCategoryIndex]);
-
+  }, [choosenCategoryIndex, currentPage]);
+  
+  const handleNextPage = () => {
+    setCurrentPage(prevPage => prevPage + 1);
+  };
+  
+  const handlePrevPage = () => {
+    setCurrentPage(prevPage => prevPage - 1);
+  };
+  
   const showCategoryItems = () => {
     const categoryItems = newsItem;
-    if (categoryItems === null)
-      return (
-        <View className="flex-1 flex-col mt-1/2 justify-center items-center">
-          <ActivityIndicator size="small" />
-        </View>
-      );
-    else {
-      categoryItems.forEach((item, index) => {
-        item.category = {
-          id: choosenNewsCategory,
-          category_name: news_category[choosenCategoryIndex].category_name,
-          title: news_category[choosenCategoryIndex].title,
-        };
-      });
-    }
+  if (categoryItems === null)
+    return (
+      <View className="flex-1 flex-col mt-1/2 justify-center items-center">
+        <ActivityIndicator size="small" />
+      </View>
+    );
+  else {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const itemsToShow = categoryItems.slice(startIndex, endIndex);
+
+    itemsToShow.forEach((item, index) => {
+      item.category = {
+        id: choosenNewsCategory,
+        category_name: news_category[choosenCategoryIndex].category_name,
+        title: news_category[choosenCategoryIndex].title,
+      };
+    });
     return (
       <View className="mt-2">
         {categoryItems.map((item, index) => (
@@ -153,7 +168,10 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
                       style={{
                         color: categoryColors[choosenCategoryIndex].textColor,
                       }}>
-                      {item.category!.title}
+                      {item.category && item.category.title && (
+  <Text>{item.category.title}</Text>
+)}
+
                     </Text>
                   </View>
                 </View>
@@ -164,7 +182,28 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
       </View>
     );
   };
-
+  };
+  const renderPagination = () => {
+    console.log(totalItems)
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+    return (
+      <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 10 }}>
+        <TouchableOpacity
+          onPress={handlePrevPage}
+          disabled={currentPage === 1}
+          style={{ paddingHorizontal: 10 }}>
+          <Text style={{ color: currentPage === 1 ? COLORS.gray : COLORS.primary }}>Prev</Text>
+        </TouchableOpacity>
+        <Text>{currentPage} / {totalPages}</Text>
+        <TouchableOpacity
+          onPress={handleNextPage}
+          disabled={currentPage === totalPages}
+          style={{ paddingHorizontal: 10 }}>
+          <Text style={{ color: currentPage === totalPages ? COLORS.gray : COLORS.primary }}>Next</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <View className="flex-1 bg-white">
@@ -208,6 +247,7 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
                       animated: true,
                     });
                   }
+                  setCurrentPage(1);
                 }}
                 style={{
                   paddingHorizontal: 20,
@@ -235,9 +275,11 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          style={{flex: 1}}>
+          style={{ flex: 1 }}>
           <View>{showCategoryItems()}</View>
+          {renderPagination()}
         </ScrollView>
+
       </View>
     </SafeAreaView>
   );
