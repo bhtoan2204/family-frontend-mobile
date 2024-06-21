@@ -7,6 +7,9 @@ import SubjectItem from './SubjectItem/SubjectItem';
 import { ComponentScore, EducationDetail, Subject } from 'src/interface/education/education';
 import AddComponentScoreSheet from './SubjectSheet/AddComponentScoreSheet';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/redux/store';
+import { ActivityIndicator } from 'react-native-paper';
 const data = {
     "message": "Success",
     "data": [
@@ -57,7 +60,8 @@ const data = {
 
 const SubjectDetailScreen: React.FC<SubjectDetailScreenProps> = ({ navigation, route }) => {
     const { id_education_progress, id_family, id_subject } = route.params
-    const [subjectDetailData, setSubjectDetailData] = React.useState<Subject>(data.data[0])
+    const subjectDetailData = useSelector((state: RootState) => state.educations).find((item) => item.id_education_progress === id_education_progress)!.subjects.find((item) => item.id_subject === id_subject)!
+    // const [subjectDetailData, setSubjectDetailData] = React.useState<Subject>(data.data[0])
     const [expectedGrade, setExpectedGrade] = React.useState<number>(0)
     const [currentGrade, setCurrentGrade] = React.useState<number>(0)
     const refRBSheet = React.useRef<any>(null)
@@ -73,45 +77,49 @@ const SubjectDetailScreen: React.FC<SubjectDetailScreenProps> = ({ navigation, r
             let scoreCount = 0
             let expectedCount = 0
 
-            if (subjectDetailData.final_score != null) {
-                if (subjectDetailData.final_score.score != null) {
-                    scoreCount += 1
-                    totalScore += parseFloat((subjectDetailData.final_score.score || 0).toString())
-                }
-                if (subjectDetailData.final_score.expected_score != null) {
-                    expectedCount += 1
-                    totalExpectedScore += parseFloat((subjectDetailData.final_score.expected_score || 0).toString())
-                }
-            }
-            if (subjectDetailData.midterm_score != null) {
-                if (subjectDetailData.midterm_score.score != null) {
-                    scoreCount += 1
-                    totalScore += parseFloat((subjectDetailData.midterm_score.score || 0).toString())
-                }
-                if (subjectDetailData.midterm_score.expected_score != null) {
-                    expectedCount += 1
-                    totalExpectedScore += parseFloat((subjectDetailData.midterm_score.expected_score || 0).toString())
-                }
-            }
-            if (subjectDetailData.component_scores != null) {
-                subjectDetailData.component_scores.map((item) => {
-                    if (item.score != null) {
+            if (subjectDetailData) {
+                if (subjectDetailData.final_score != null) {
+                    if (subjectDetailData.final_score.score != null) {
                         scoreCount += 1
-                        totalScore += parseFloat((item.score).toString())
+                        totalScore += parseFloat((subjectDetailData.final_score.score || 0).toString())
                     }
-                    if (item.expected_score != null) {
+                    if (subjectDetailData.final_score.expected_score != null) {
                         expectedCount += 1
-                        totalExpectedScore += parseFloat((item.expected_score).toString())
+                        totalExpectedScore += parseFloat((subjectDetailData.final_score.expected_score || 0).toString())
                     }
-                })
+                }
+                if (subjectDetailData.midterm_score != null) {
+                    if (subjectDetailData.midterm_score.score != null) {
+                        scoreCount += 1
+                        totalScore += parseFloat((subjectDetailData.midterm_score.score || 0).toString())
+                    }
+                    if (subjectDetailData.midterm_score.expected_score != null) {
+                        expectedCount += 1
+                        totalExpectedScore += parseFloat((subjectDetailData.midterm_score.expected_score || 0).toString())
+                    }
+                }
+                if (subjectDetailData.component_scores != null) {
+                    subjectDetailData.component_scores.map((item) => {
+                        if (item.score != null) {
+                            scoreCount += 1
+                            totalScore += parseFloat((item.score).toString())
+                        }
+                        if (item.expected_score != null) {
+                            expectedCount += 1
+                            totalExpectedScore += parseFloat((item.expected_score).toString())
+                        }
+                    })
 
+                }
+                setCurrentGrade(parseFloat((totalScore / scoreCount).toPrecision(2)) || 0)
+                setExpectedGrade(parseFloat((totalExpectedScore / expectedCount).toPrecision(2)) || 0)
             }
-            setCurrentGrade(parseFloat((totalScore / scoreCount).toPrecision(2)) || 0)
-            setExpectedGrade(parseFloat((totalExpectedScore / expectedCount).toPrecision(2)) || 0)
         }
         handleCalculateScore()
     }, [subjectDetailData])
 
+    if (!subjectDetailData) return
+    <ActivityIndicator size='large' color={COLORS.AuroMetalSaurus} />
 
     return (
         <SafeAreaView className="flex-1 bg-[#F7F7F7]">
@@ -122,7 +130,7 @@ const SubjectDetailScreen: React.FC<SubjectDetailScreenProps> = ({ navigation, r
                         <Text className='text-lg font-semibold' style={{ color: COLORS.AuroMetalSaurus }}>Back</Text>
                     </TouchableOpacity>
                     <View>
-                        <Text className='text-lg font-semibold' style={{ color: COLORS.AuroMetalSaurus }}>{getFirstLetterSubject(data.data[0].subject_name)}</Text>
+                        <Text className='text-lg font-semibold' style={{ color: COLORS.AuroMetalSaurus }}>{getFirstLetterSubject(subjectDetailData.subject_name)}</Text>
                     </View>
                     <View className='mr-3'>
                         <TouchableOpacity onPress={() => {
@@ -152,8 +160,20 @@ const SubjectDetailScreen: React.FC<SubjectDetailScreenProps> = ({ navigation, r
                 <ScrollView className=' '>
                     <View className='my-3'>
                         <Text className='ml-4 mb-3 text-lg font-medium'>Final & Mid</Text>
-                        <SubjectItem isGraded={subjectDetailData.midterm_score?.score != null} subjectComponentData={subjectDetailData.final_score} setSubjectDetailData={setSubjectDetailData} index={-1} />
-                        <SubjectItem isGraded={subjectDetailData.midterm_score?.score != null} subjectComponentData={subjectDetailData.midterm_score} setSubjectDetailData={setSubjectDetailData} index={-2} />
+                        <SubjectItem
+                            isGraded={subjectDetailData.midterm_score?.score != null} subjectComponentData={subjectDetailData.final_score}
+                            index={-1}
+                            id_education_progress={id_education_progress}
+                            id_subject={id_subject}
+                            id_family={id_family!}
+                        />
+                        <SubjectItem
+                            isGraded={subjectDetailData.midterm_score?.score != null} subjectComponentData={subjectDetailData.midterm_score}
+                            index={-2}
+                            id_education_progress={id_education_progress}
+                            id_subject={id_subject}
+                            id_family={id_family!}
+                        />
                     </View>
 
                     <View className='mb-3'>
@@ -164,7 +184,13 @@ const SubjectDetailScreen: React.FC<SubjectDetailScreenProps> = ({ navigation, r
                         {
                             subjectDetailData.component_scores.map((item, index) => {
                                 return (
-                                    <SubjectItem key={index} isGraded={item.score != null} subjectComponentData={item} setSubjectDetailData={setSubjectDetailData} index={index} />
+                                    <SubjectItem
+                                        key={index} isGraded={item.score != null} subjectComponentData={item}
+                                        index={index}
+                                        id_education_progress={id_education_progress}
+                                        id_subject={id_subject}
+                                        id_family={id_family!}
+                                    />
                                 )
                             })
                         }
@@ -173,7 +199,7 @@ const SubjectDetailScreen: React.FC<SubjectDetailScreenProps> = ({ navigation, r
 
 
                 </ScrollView>
-                <AddComponentScoreSheet refRBSheet={refRBSheet} setSubjectDetailData={setSubjectDetailData}
+                <AddComponentScoreSheet refRBSheet={refRBSheet}
                     id_education_progress={id_education_progress}
                     id_subject={id_subject}
                     id_family={id_family!}

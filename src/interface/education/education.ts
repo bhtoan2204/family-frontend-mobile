@@ -1,3 +1,5 @@
+import {Member} from '../member/member';
+
 const dataEducation = {
   id_education_progress: 1,
   id_user: 'db31bfb8-ec15-4cb1-9cbe-ebe3edaca323',
@@ -52,15 +54,21 @@ const subjectData = {
 
 export interface Education {
   id_education_progress: number;
+  id_family: number;
   id_user: string;
   title: string;
   progress_notes: string;
   school_info: string;
   created_at: string;
   updated_at: string;
-  avatar?: string;
-  firstname: string;
-  lastname: string;
+  subjects: Subject[];
+  user: {
+    firstname: string;
+    lastname: string;
+    avatar: string;
+    genre: string;
+    birthdate: string;
+  };
 }
 export interface EducationDetail {
   id_education_progress: number;
@@ -84,20 +92,23 @@ export interface EducationDetail {
 
 export interface Subject {
   id_subject: number;
+  id_education_progress: number;
   subject_name: string;
   description: string;
   component_scores: ComponentScore[];
-  midterm_score: ComponentScore;
-  final_score: ComponentScore;
-  bonus_score: number;
+  midterm_score: ComponentScore | null;
+  final_score: ComponentScore | null;
+  // midterm_score?: number | null;
+  // final_score?: number | null;
+  bonus_score?: number | null;
   status: string;
 }
 
 export interface ComponentScore {
-  expected_score: number | null;
-  score: number | null;
-  component_name: string;
-  id_family: number;
-  id_education_progress: number;
-  id_subject: number;
+  expected_score?: number | null;
+  score?: number | null;
+  component_name?: string;
+  // id_family: number;
+  // id_education_progress: number;
+  // id_subject: number;
 }

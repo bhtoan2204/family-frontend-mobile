@@ -17,6 +17,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import NumberPickerSheet from '../sheet/number-picker';
 import PricePickerSheet from '../sheet/price-picker';
 import { formatVietNamCurrencyToDot } from 'src/utils/formatCurrency';
+import { shoppingListItemColor } from 'src/screens/CheckListScreen/constant/color';
 
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#000'];
@@ -39,7 +40,7 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
     );
     const [name, setName] = React.useState("");
     const [description, setDescription] = React.useState("");
-    const [priority, setPriority] = React.useState(4);
+    const [priority, setPriority] = React.useState(3);
     const [dueDate, setDueDate] = React.useState<Date | null>(null);
     const [quantity, setQuantity] = React.useState<number>(0);
     const [price, setPrice] = React.useState<number>(0);
@@ -49,8 +50,6 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
     const buildDate = (date: Date) => {
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     }
-
-
     const onPressPriority = () => {
         const options = ['🟥 Priority 1', '🟧 Priority 2', '🟦 Priority 3', '⬜ Priority 4', 'Cancel',];
         const cancelButtonIndex = 4;
@@ -78,6 +77,32 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
             }
         });
     }
+    const onAddNewItem = async () => {
+        console.log("current priority", priority)
+        console.log("current dueDate", dueDate)
+        console.log("current quantity", quantity)
+        console.log("current name", name)
+        console.log("current description", description)
+        const newItem: ChecklistItemInterface = {
+            id_item: (Math.floor(Math.random() * 1000) + 1).toString(),
+            item_name: name,
+            description: description,
+            reminder_date: dueDate != null ? new Date(dueDate).toDateString() : new Date().toDateString(),
+            priority_level: priority,
+            is_purchased: false,
+            quantity: quantity,
+            price: price.toString(),
+            id_list: id_checklist,
+            id_item_type: 0,
+        }
+        dispatch(
+            addNewCheckListItemToCheckList({
+                id: id_checklist,
+                item: newItem
+            })
+        )
+        bottomSheetRef.current?.close();
+    }
 
     return (
         <BottomSheet
@@ -99,7 +124,7 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
                 if (index == -1) {
                     setName("");
                     setDescription("");
-                    setPriority(4);
+                    setPriority(3);
                     setDueDate(null);
                     setQuantity(0);
                     Keyboard.dismiss()
@@ -111,7 +136,6 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
         >
             <BottomSheetView style={{ minHeight: 100, flex: 0 }}>
                 <BottomSheetTextInput
-                    // autoFocus
                     ref={inputRef}
                     editable
                     placeholder="Checklist name "
@@ -124,15 +148,12 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
                         paddingBottom: 10,
                         paddingLeft: 14,
                     }}
-                // className='pl-4 pb-2 pt-5 text-lg font-semibold'
-
                 />
                 <BottomSheetTextInput
                     placeholder="Description"
                     value={description}
                     onChangeText={(text) => setDescription(text)}
                     numberOfLines={4}
-                    // className='pl-4  text-lg'
                     style={{
                         fontSize: 17,
                         color: 'black',
@@ -142,7 +163,7 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
                 />
                 <ScrollView horizontal keyboardShouldPersistTaps="handled" showsHorizontalScrollIndicator={false}>
                     <View className='flex-row items-center my-5'>
-                        <TouchableOpacity className=' ml-4 px-4 py-3 flex-row justify-center items-center border-[1px]  rounded-lg ' onPress={() => {
+                        {/* <TouchableOpacity className=' ml-4 px-4 py-3 flex-row justify-center items-center border-[1px]  rounded-lg ' onPress={() => {
                             console.log(1);
                             onPressPriority()
                         }}
@@ -157,7 +178,7 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
                             <Text className=' font-semibold ml-1' style={{
                                 color: priorityColors[priority - 1]
                             }}>Priority</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <TouchableOpacity className='ml-4 px-4 py-3 flex-row justify-center items-center border-[1px]  rounded-lg' onPress={() => {
                             timePickerRef.current?.open()
                         }} style={{
@@ -185,7 +206,6 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
                         }}
                             style={{
                                 borderColor: quantity == 0 ? "#EAEAEA" : iOSColors.systemPurple.defaultLight,
-
                             }}
                         >
                             {
@@ -196,7 +216,6 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
                                     </>
                                     :
                                     <>
-                                        {/* <Material name="numeric" size={20} style={{ color: '#DDDDDD', fontWeight: "bold" }} className='font-semibold' /> */}
                                         <Text className='text-[#BBBBBB] font-semibold ml-1' style={{
                                             color: iOSColors.systemPurple.defaultLight
                                         }}>{quantity.toString()}</Text>
@@ -218,7 +237,6 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
                                     </>
                                     :
                                     <>
-                                        {/* <Material name="numeric" size={20} style={{ color: '#DDDDDD', fontWeight: "bold" }} className='font-semibold' /> */}
                                         <Text className='text-[#BBBBBB] font-semibold ml-1' style={{
                                             color: iOSColors.systemGreen.defaultLight
                                         }}>{formatVietNamCurrencyToDot(price.toString())} VND</Text>
@@ -230,35 +248,11 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
                 <View className='w-full flex-row justify-end border-t-[1px] border-[#EAEAEA]'>
                     <TouchableOpacity
                         style={{
-                            backgroundColor: COLORS.AuroMetalSaurus,
+                            backgroundColor: shoppingListItemColor[2],
                             alignItems: "center",
                         }}
-                        onPress={() => {
-                            console.log("current priority", priority)
-                            console.log("current dueDate", dueDate)
-                            console.log("current quantity", quantity)
-                            console.log("current name", name)
-                            console.log("current description", description)
-                            const newItem: ChecklistItemInterface = {
-                                id_item: (Math.floor(Math.random() * 1000) + 1).toString(),
-                                item_name: name,
-                                description: description,
-                                reminder_date: dueDate != null ? new Date(dueDate).toDateString() : new Date().toDateString(),
-                                priority_level: priority,
-                                is_purchased: false,
-                                quantity: quantity,
-                                price: price.toString(),
-                                id_list: id_checklist,
-                                id_item_type: 0,
-                            }
-                            dispatch(
-                                addNewCheckListItemToCheckList({
-                                    id: id_checklist,
-                                    item: newItem
-                                })
-                            )
-                            bottomSheetRef.current?.close();
-                            // refRBSheet.current?.close();
+                        onPress={async () => {
+                            await onAddNewItem()
                         }}
                         className='my-2 w-auto h-auto mr-4 p-2 rounded-full'
                     >

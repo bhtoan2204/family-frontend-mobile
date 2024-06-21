@@ -30,6 +30,22 @@ const guidelineSlice = createSlice({
         state[index] = action.payload;
       }
     },
+    updateGuidelineTitleAndDescription(
+      state,
+      action: PayloadAction<{
+        id_guide_item: number;
+        title: string;
+        description: string;
+      }>,
+    ) {
+      const index = state.findIndex(
+        guideline => guideline.id_guide_item === action.payload.id_guide_item,
+      );
+      if (index !== -1) {
+        state[index].name = action.payload.title;
+        state[index].description = action.payload.description;
+      }
+    },
     updateGuidelineImage(
       state,
       action: PayloadAction<{

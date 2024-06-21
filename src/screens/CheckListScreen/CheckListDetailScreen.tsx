@@ -17,6 +17,7 @@ import AddItemCheckListSheet from 'src/components/user/shoppinglist/add-item-che
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import CheckListDetailSheet from 'src/components/user/shoppinglist/checklist-item-sheet';
 import ChecklistItemDetail from './CheckListItem';
+import { iOSGrayColors } from 'src/constants/ios-color';
 
 const today = new Date();
 const yesterday = new Date(today.setDate(today.getDate() - 1));
@@ -107,11 +108,13 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
             {/* <ChecklistSections checklist={checklist} setChecklist={setChecklist} /> */}
             <ScrollView className='flex-1 rounded-t-xl mt-[-10] pt-3  bg-white' showsVerticalScrollIndicator={false}>
                 <View className='pl-3 mt-2 py-3 mb-8' style={{
-                    backgroundColor: shoppingListItemColorInside[checkListCategoryData.id_item_type - 1],
+                    // backgroundColor: shoppingListItemColorInside[checkListCategoryData.id_item_type - 1],
+                    backgroundColor: shoppingListItemColorInside[2],
                 }}>
                     <Text className='text-xl font-bold mb-4'>{checkListCategoryData.title} </Text>
                     <View style={{
-                        backgroundColor: shoppingListItemColor[checkListCategoryData.id_item_type - 1],
+                        backgroundColor: shoppingListItemColor[2],
+                        // backgroundColor: iOSGrayColors.systemGray.defaultDark,
                         alignSelf: 'flex-start'
                     }} className='w-auto px-2 py-1 rounded-2xl mb-4 '>
                         <Text className='text-xs text-white font-medium '>Grocery</Text>
@@ -120,10 +123,10 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
                         <View className='mr-2'>
                             <CircularProgress
                                 size={20}
-                                progress={checkListCategoryData.completed / checkListCategoryData.total * 100}
+                                progress={checkListCategoryData.total === 0 ? 0 : checkListCategoryData.completed / checkListCategoryData.total * 100}
                                 strokeWidth={2}
                                 backgroundColor="#BEC8DF"
-                                progressColor={shoppingListItemColor[checkListCategoryData.id_item_type - 1]}
+                                progressColor={shoppingListItemColor[2]}
                                 disableProgressText={true}
                             />
                         </View>
@@ -142,7 +145,7 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
             <TouchableOpacity onPress={() => {
                 refRBSheet.current?.expand()
             }} className='absolute bottom-6 right-4 bg-gray-200 h-16 w-16 flex-row items-center justify-center rounded-full' style={{
-                backgroundColor: shoppingListItemColor[checkListCategoryData.id_item_type - 1],
+                backgroundColor: shoppingListItemColor[2],
             }}>
                 <Text style={{ color: 'white', fontSize: 40 }}>+</Text>
             </TouchableOpacity>

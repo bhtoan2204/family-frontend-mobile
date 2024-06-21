@@ -11,6 +11,7 @@ interface NumberPickerSheetProps {
     refRBSheet: React.RefObject<any>;
     initialNumber: number;
     onSetNumber: (number: number) => void
+    shouldReset?: boolean;
 }
 
 const isNumber = (numberString: string) => {
@@ -22,9 +23,9 @@ const isNumber = (numberString: string) => {
 };
 
 const NumberPickerSheet = ({
-    refRBSheet, initialNumber, onSetNumber
+    refRBSheet, initialNumber, onSetNumber, shouldReset
 }: NumberPickerSheetProps) => {
-    const [input, setInput] = React.useState<string>(initialNumber.toString() || "0")
+    const [input, setInput] = React.useState<string>(initialNumber == 0 ? "0" : initialNumber.toString())
     const [isValid, setIsValid] = React.useState<boolean>(isNumber(input))
     useEffect(() => {
         setIsValid(isNumber(input))
@@ -41,7 +42,9 @@ const NumberPickerSheet = ({
         <RBSheet
             ref={refRBSheet}
             onClose={() => {
-                setInput("0")
+                if (shouldReset) {
+                    setInput("0")
+                }
             }}
             customStyles={{
                 container: {
@@ -89,12 +92,12 @@ const NumberPickerSheet = ({
                             // onSetNumber(parseInt(text))
                             setInput(text)
                         }}
-                        onSubmitEditing={()=>{
-                            if(isValid){
+                        onSubmitEditing={() => {
+                            if (isValid) {
                                 onSetNumber(parseInt(input))
                                 refRBSheet.current?.close()
                             }
-                        
+
                         }}
                         className='mx-4 px-4 border-[1.2px] mt-4 my-4 py-4'
                         style={{

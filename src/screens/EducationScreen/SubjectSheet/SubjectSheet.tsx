@@ -7,12 +7,27 @@ import { iOSColors } from 'src/constants/ios-color';
 import AutoHeightRBSheet from 'src/components/AutoHeightRBSheet/AutoHeightRBSheet';
 import PickExpectedScoreSheet from './PickExpectedScoreSheet';
 import PickScoreSheet from './PickScoreSheet';
-const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, setSubjectDetailData }: { bottomSheetRef: React.RefObject<any>, subjectComponentData: ComponentScore, index: number, setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>> }) => {
+import { AppDispatch } from 'src/redux/store';
+import { useDispatch } from 'react-redux';
+import { clearScoreOfSubject } from 'src/redux/slices/EducationSlice';
+
+interface SubjectSheetProps {
+    bottomSheetRef: React.RefObject<any>,
+    subjectComponentData: ComponentScore,
+    index: number,
+    id_family: number,
+    id_education_progress: number,
+    id_subject: number,
+    // setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>
+
+}
+
+const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject, id_education_progress, id_family }: SubjectSheetProps) => {
     const setExpectedSheetRef = React.useRef<any>(null);
     const setScoreSheetRef = React.useRef<any>(null);
     const [selectedLanguage, setSelectedLanguage] = React.useState();
     const numbers = [];
-
+    const dispatch = useDispatch<AppDispatch>();
     for (let i = 0; i <= 9; i++) {
         for (let j = 1; j <= 9; j++) {
             const number = i + j * 0.1;
@@ -53,46 +68,11 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, setSubjectD
                     <Text className='text-lg font-semibold'>Set score</Text>
                 </TouchableOpacity>
                 <TouchableOpacity className='h-16 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
-                    if (index === -1) {
-                        setSubjectDetailData((prev) => {
-                            return {
-                                ...prev,
-                                final_score: {
-                                    ...prev.final_score,
-                                    score: null,
-                                    expected_score: null
-                                }
-                            }
-                        })
-                    } else if (index === -2) {
-                        setSubjectDetailData((prev) => {
-                            return {
-                                ...prev,
-                                midterm_score: {
-                                    ...prev.midterm_score,
-                                    score: null,
-                                    expected_score: null
-                                }
-                            }
-                        })
-                    } else {
-                        setSubjectDetailData((prev) => {
-                            return {
-                                ...prev,
-                                component_scores: prev.component_scores.map((item, i) => {
-                                    if (i === index) {
-                                        return {
-                                            ...item,
-                                            score: null,
-                                            expected_score: null
-                                        }
-                                    }
-                                    return item
-                                })
-                            }
-                        })
-
-                    }
+                    dispatch(clearScoreOfSubject({
+                        id_subject,
+                        id_education_progress,
+                        index,
+                    }))
                     bottomSheetRef.current?.close()
                 }}>
                     <Text className='text-lg font-semibold' style={{
@@ -100,8 +80,22 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, setSubjectD
                     }}>Clear data</Text>
                 </TouchableOpacity>
             </View>
-            <PickExpectedScoreSheet setExpectedSheetRef={setExpectedSheetRef} index={index} setSubjectDetailData={setSubjectDetailData} score={subjectComponentData.expected_score!} />
-            <PickScoreSheet setScoreSheetRef={setScoreSheetRef} index={index} setSubjectDetailData={setSubjectDetailData} score={subjectComponentData.score!} />
+            <PickExpectedScoreSheet
+                id_education_progress={id_education_progress}
+                id_family={id_family}
+                id_subject={id_subject}
+                setExpectedSheetRef={setExpectedSheetRef}
+                index={index}
+                score={subjectComponentData.expected_score!} />
+            <PickScoreSheet
+                id_education_progress={id_education_progress}
+                id_family={id_family}
+                id_subject={id_subject}
+                setScoreSheetRef={setScoreSheetRef}
+                index={index}
+                score={subjectComponentData.score!}
+
+            />
             {/* <AutoHeightRBSheet
                 ref={setExpectedSheetRef}
                 customStyles={{

@@ -6,10 +6,16 @@ import { Picker } from '@react-native-picker/picker';
 import { ComponentScore, Subject } from 'src/interface/education/education';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useKeyboardVisible } from 'src/hooks/useKeyboardVisible';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from 'src/redux/store';
+import { updateComponentScoreOfSubject, updateExpectedScoreOfSubject } from 'src/redux/slices/EducationSlice';
 
 interface PickExpectedScoreSheetProps {
+    id_family: number;
+    id_education_progress: number;
+    id_subject: number;
     setExpectedSheetRef: React.RefObject<any>;
-    setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>;
+    // setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>;
     score: number | null;
     index: number;
 }
@@ -21,13 +27,15 @@ const isNumberInRange = (numberString: string) => {
     return number >= 0 && number <= 10;
 };
 
-const PickExpectedScoreSheet = ({ setExpectedSheetRef, setSubjectDetailData, score, index }: PickExpectedScoreSheetProps) => {
+
+
+const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, id_education_progress, id_subject }: PickExpectedScoreSheetProps) => {
 
     const [inputValue, setInputValue] = React.useState<string>(score?.toString() || '0')
     const [isFocus, setIsFocus] = React.useState<boolean>(false)
     const [isValid, setIsValid] = React.useState<boolean>(isNumberInRange(inputValue))
     const inputRef = React.useRef<TextInput>(null)
-
+    const dispatch = useDispatch<AppDispatch>();
     useEffect(() => {
         setIsValid(isNumberInRange(inputValue))
     }, [inputValue])
@@ -60,43 +68,55 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, setSubjectDetailData, sco
         }
     };
     const handleSave = () => {
-        if (index === -1) {
-            setSubjectDetailData((prev) => {
-                return {
-                    ...prev,
-                    final_score: {
-                        ...prev.final_score,
-                        expected_score: parseFloat(inputValue)
-                    }
-                }
-            })
-        } else if (index === -2) {
-            setSubjectDetailData((prev) => {
-                return {
-                    ...prev,
-                    midterm_score: {
-                        ...prev.midterm_score,
-                        expected_score: parseFloat(inputValue)
-                    }
-                }
-            })
-        } else {
-            setSubjectDetailData((prev) => {
-                return {
-                    ...prev,
-                    component_scores: prev.component_scores.map((item, i) => {
-                        if (i === index) {
-                            return {
-                                ...item,
-                                expected_score: parseFloat(inputValue)
-                            }
-                        }
-                        return item
-                    })
-                }
-            })
+        dispatch(updateExpectedScoreOfSubject({
+            id_subject: id_subject!,
+            id_education_progress: id_education_progress,
+            score: parseFloat(inputValue),
+            index: index
+        }))
+        // if (index === -1) {
+        //     dispatch(updateComponentScoreOfSubject({
+        //         id_subject: id_subject!,
+        //         id_education_progress: id_education_progress,
+        //         score: parseFloat(inputValue),
+        //         index: index
+        //     }))
+        //     setSubjectDetailData((prev) => {
+        //         return {
+        //             ...prev,
+        //             final_score: {
+        //                 ...prev.final_score,
+        //                 expected_score: parseFloat(inputValue)
+        //             }
+        //         }
+        //     })
+        // } else if (index === -2) {
+        //     setSubjectDetailData((prev) => {
+        //         return {
+        //             ...prev,
+        //             midterm_score: {
+        //                 ...prev.midterm_score,
+        //                 expected_score: parseFloat(inputValue)
+        //             }
+        //         }
+        //     })
+        // } else {
+        //     setSubjectDetailData((prev) => {
+        //         return {
+        //             ...prev,
+        //             component_scores: prev.component_scores.map((item, i) => {
+        //                 if (i === index) {
+        //                     return {
+        //                         ...item,
+        //                         expected_score: parseFloat(inputValue)
+        //                     }
+        //                 }
+        //                 return item
+        //             })
+        //         }
+        //     })
 
-        }
+        // }
     }
 
 

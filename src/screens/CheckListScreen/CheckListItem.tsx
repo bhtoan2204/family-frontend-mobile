@@ -9,6 +9,8 @@ import { useDispatch } from 'react-redux';
 import { updateCheckListItemCompleted } from 'src/redux/slices/CheckListSlice';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import CheckListDetailSheet from 'src/components/user/shoppinglist/checklist-item-sheet';
+import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
+import * as Animatable from 'react-native-animatable';
 
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
@@ -37,21 +39,46 @@ const ChecklistItemDetail = ({ item, id_checklist, selectCheckListItem }: Checkl
     }} style={styles.checklistItem} className='bg-white'>
         <View className='ml-1' >
             <View className='flex-row items-center'>
-                <TouchableOpacity className='w-6 h-6 rounded-full mr-3 flex flex-col items-center justify-center' style={{ backgroundColor: priorityColors[item.priority_level - 1] || priorityColors[0] }} onPress={() => {
-                    Haptics.notificationAsync(
-                        Haptics.NotificationFeedbackType.Success
-                    )
-                    handleUpdateComplete()
+                <View className='flex-row items-center ' style={{
 
                 }}>
-                    {
-                        item.is_purchased ? <Text className='text-white ' style={{
-                            fontWeight: 'bold'
-                        }}>✓</Text> : <View className=' z-10 w-5 h-5 rounded-full' style={{ backgroundColor: priorityColorsInside[item.priority_level - 1] || priorityColorsInside[0] }}>
-                        </View>
-                    }
-                </TouchableOpacity>
-                <Text className='text-base my-1' style={{}}>{item.item_name}</Text>
+
+                    <TouchableOpacity className='w-7 h-7 rounded-full mr-3 flex flex-col items-center justify-center'
+                        style={{
+                            borderWidth: item.is_purchased ? 0 : 2,
+                            borderColor: iOSGrayColors.systemGray.accessibleDark,
+                            backgroundColor: item.is_purchased ? iOSColors.systemGreen.defaultLight : 'transparent'
+                        }}
+                        onPress={() => {
+                            Haptics.notificationAsync(
+                                Haptics.NotificationFeedbackType.Success
+                            )
+                            handleUpdateComplete()
+
+                        }}>
+                        {
+                            item.is_purchased && <Text className='text-white ' style={{
+                                fontWeight: 'bold',
+
+                            }}>✓</Text>
+                            // : <View className=' z-10 w-5 h-5 rounded-full' style={{ backgroundColor: priorityColorsInside[item.priority_level - 1] || priorityColorsInside[0] }}>
+                            // </View>
+                        }
+                    </TouchableOpacity>
+                    <View>
+                        {/* {
+                            item.is_purchased && 
+                        } */}
+                        <Animatable.View animation={item.is_purchased ? "fadeInLeft" : "fadeOutLeft"}  duration={200} className='absolute w-full top-[50%] border-b-[1.2px]'
+                            style={{
+                                borderColor: iOSGrayColors.systemGray3.defaultDark,
+                            }}
+                        >
+
+                        </Animatable.View>
+                        <Text className='text-lg my-1' >{item.quantity != 0 ? item.quantity + " " : ""}{item.item_name}</Text>
+                    </View>
+                </View>
             </View>
             <View className='ml-10'>
                 <Text className='text-sm text-gray-400'>{item.description}</Text>

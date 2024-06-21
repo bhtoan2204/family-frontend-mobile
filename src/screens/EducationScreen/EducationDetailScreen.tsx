@@ -4,11 +4,14 @@ import { EducationDetailScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants';
 // import CourseItem from './CourseItem';
-import { EducationDetail } from 'src/interface/education/education';
+import { EducationDetail, Subject } from 'src/interface/education/education';
 import AddSubjectSheet from './SubjectSheet/AddSubjectSheet';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { gradients_list } from 'src/assets/images/gradients';
 import CourseItem from 'src/components/user/education/course-item';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/redux/store';
+import { ActivityIndicator } from 'react-native-paper';
 const data = {
     "message": "Success",
     "data": [
@@ -43,8 +46,14 @@ const data = {
 }
 const EducationDetailScreen: React.FC<EducationDetailScreenProps> = ({ navigation, route }) => {
     const { id_education_progress, id_family } = route.params
-    const [educationDetailData, setEducationDetailData] = React.useState<EducationDetail>(data.data[0])
+    const educationDetailData = useSelector((state: RootState) => state.educations).find((item) => item.id_education_progress === id_education_progress)
+    // const [educationDetailData, setEducationDetailData] = React.useState<EducationDetail>(data.data[0])
     const refRBSheet = React.useRef<any>(null);
+
+    if (!educationDetailData == null) {
+        return <ActivityIndicator size="large" color={COLORS.AuroMetalSaurus} />
+    }
+
     return (
         <SafeAreaView className="flex-1 bg-[#F7F7F7]">
             <View className="flex-1 bg-[#F7F7F7]">
@@ -68,7 +77,7 @@ const EducationDetailScreen: React.FC<EducationDetailScreenProps> = ({ navigatio
                 </View>
                 <ScrollView className=' '>
                     {
-                        educationDetailData && educationDetailData.subjects_info.map((item: any, index: number) => {
+                        educationDetailData && educationDetailData.subjects.map((item: Subject, index: number) => {
                             return (
                                 <React.Fragment key={index}>
                                     {/* <CourseItem data={item} onPress={() => {
@@ -97,11 +106,11 @@ const EducationDetailScreen: React.FC<EducationDetailScreenProps> = ({ navigatio
 
                 </ScrollView>
 
-                <AddSubjectSheet refRBSheet={refRBSheet}
+                {/* <AddSubjectSheet refRBSheet={refRBSheet}
                     id_education_progress={id_education_progress}
                     id_family={id_family!}
                     setEducationDetailData={setEducationDetailData}
-                />
+                /> */}
 
             </View>
         </SafeAreaView>

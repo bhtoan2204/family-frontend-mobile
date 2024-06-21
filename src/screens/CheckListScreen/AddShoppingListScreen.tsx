@@ -1,8 +1,9 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
+import { AddShoppingListScreenProps } from 'src/navigation/NavigationTypes'
 
-const AddCheckListScreen = () => {
+const AddShoppingListScreen = ({ navigation, route }: AddShoppingListScreenProps) => {
     return (
         <View>
             <Text>Add CheckList Screen</Text>
@@ -10,4 +11,4 @@ const AddCheckListScreen = () => {
     )
 }
 
-export default AddCheckListScreen
+export default AddShoppingListScreen

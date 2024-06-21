@@ -8,16 +8,19 @@ import { ChecklistItemInterface } from 'src/interface/checklist/checklist';
 import { Picker } from '@react-native-picker/picker';
 import { AppDispatch } from 'src/redux/store';
 import { useDispatch } from 'react-redux';
-import { addNewCheckListItemToCheckList, updateCheckListItemCompleted, updateCheckListItemDueDate, updateCheckListItemPriority, updateCheckListItemTitleAndDescription } from 'src/redux/slices/CheckListSlice';
+import { addNewCheckListItemToCheckList, updateCheckListItemCompleted, updateCheckListItemDueDate, updateCheckListItemPrice, updateCheckListItemPriority, updateCheckListItemQuantity, updateCheckListItemTitleAndDescription } from 'src/redux/slices/CheckListSlice';
 import AutoHeightRBSheet from 'src/components/AutoHeightRBSheet/AutoHeightRBSheet';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
 import CheckListTimePickerSheet from './date-picker-sheet';
-import { iOSGrayColors } from 'src/constants/ios-color';
+import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
+import { formatVietNamCurrencyNoDot } from 'src/utils/formatCurrency';
+import PricePickerSheet from '../sheet/price-picker';
+import NumberPickerSheet from '../sheet/number-picker';
 
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
-const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#000'];
+const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
 
 interface AddItemCheckListSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>;
@@ -28,11 +31,23 @@ interface AddItemCheckListSheetProps {
 
 const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: AddItemCheckListSheetProps) => {
     const timePickerRBSheet = React.useRef<any>();
+    const quantityPickerRef = React.useRef<any>();
+    const pricePickerRef = React.useRef<any>();
+
     const [name, setName] = React.useState(checklist_item.item_name);
     const [description, setDescription] = React.useState(checklist_item.description);
-    const [priority, setPriority] = React.useState(checklist_item.priority_level);
+    // const [priority, setPriority] = React.useState(checklist_item.priority_level);
     const [isEditing, setIsEditing] = React.useState(false);
-    const [dueDate, setDueDate] = React.useState(checklist_item.reminder_date)
+    // const [dueDate, setDueDate] = React.useState(checklist_item.reminder_date)
+    // const [quantity, setQuantity] = React.useState<number>(checklist_item.quantity || 0);
+    // const [price, setPrice] = React.useState<number>(
+    //     parseInt(formatVietNamCurrencyNoDot(checklist_item.price)) || 0
+    // );
+    const checkListName = checklist_item.item_name;
+    const checkListDescription = checklist_item.description;
+    const checkListdueDate = checklist_item.reminder_date;
+    const checkListquantity = checklist_item.quantity || 0;
+    const checkListprice = parseInt(formatVietNamCurrencyNoDot(checklist_item.price)) || 0;
     const dispatch = useDispatch<AppDispatch>();
     const renderBackdrop = React.useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />,
@@ -43,13 +58,13 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
     useEffect(() => {
         setName(checklist_item.item_name)
         setDescription(checklist_item.description)
-        setPriority(checklist_item.priority_level)
-        setDueDate(checklist_item.reminder_date)
+        // setPriority(checklist_item.priority_level)
+        // setDueDate(checklist_item.reminder_date)
     }, [checklist_item])
 
-    const { showActionSheetWithOptions } = useActionSheet();
+    // const { showActionSheetWithOptions } = useActionSheet();
 
-    const handleUpdateChecklist = () => {
+    const handleUpdateTitleDesc = () => {
         dispatch(updateCheckListItemTitleAndDescription({
             id: id_checklist,
             id_checklist: checklist_item.id_item,
@@ -58,13 +73,13 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
         }))
     }
 
-    const handleUpdatePriority = (priority: number) => {
-        dispatch(updateCheckListItemPriority({
-            id: id_checklist,
-            id_checklist: checklist_item.id_item,
-            priority: priority,
-        }))
-    }
+    // const handleUpdatePriority = (priority: number) => {
+    //     dispatch(updateCheckListItemPriority({
+    //         id: id_checklist,
+    //         id_checklist: checklist_item.id_item,
+    //         priority: priority,
+    //     }))
+    // }
 
     const handleUpdateDueDate = (dueDate: Date | null) => {
         dispatch(updateCheckListItemDueDate({
@@ -83,34 +98,48 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
         }))
     }
 
-
-    const onPressPriority = () => {
-        const options = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Cancel',];
-        const cancelButtonIndex = 4;
-
-        showActionSheetWithOptions({
-            options,
-            cancelButtonIndex,
-        }, (i) => {
-            switch (i) {
-                case 0:
-                    handleUpdatePriority(1);
-                    break;
-                case 1:
-                    handleUpdatePriority(2);
-                    break;
-                case 2:
-                    handleUpdatePriority(3);
-                    break;
-                case 3:
-                    handleUpdatePriority(4);
-                    break;
-                case cancelButtonIndex:
-                    console.log('Cancel ', i);
-                // Canceled
-            }
-        });
+    const handleUpdateQuantity = (quantity: number) => {
+        dispatch(updateCheckListItemQuantity({
+            id: id_checklist,
+            id_checklist: checklist_item.id_item,
+            quantity: quantity,
+        }))
     }
+
+    const handleUpdatePrice = (price: number) => {
+        dispatch(updateCheckListItemPrice({
+            id: id_checklist,
+            id_checklist: checklist_item.id_item,
+            price: price.toString(),
+        }))
+    }
+    // const onPressPriority = () => {
+    //     const options = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Cancel',];
+    //     const cancelButtonIndex = 4;
+
+    //     showActionSheetWithOptions({
+    //         options,
+    //         cancelButtonIndex,
+    //     }, (i) => {
+    //         switch (i) {
+    //             case 0:
+    //                 handleUpdatePriority(1);
+    //                 break;
+    //             case 1:
+    //                 handleUpdatePriority(2);
+    //                 break;
+    //             case 2:
+    //                 handleUpdatePriority(3);
+    //                 break;
+    //             case 3:
+    //                 handleUpdatePriority(4);
+    //                 break;
+    //             case cancelButtonIndex:
+    //                 console.log('Cancel ', i);
+    //             // Canceled
+    //         }
+    //     });
+    // }
 
     const buildDate = (date: Date) => {
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
@@ -148,7 +177,7 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
                             <Text className='text-base font-medium text-center' >Edit</Text>
                         </View>
                         <TouchableOpacity className=' ' onPress={() => {
-                            handleUpdateChecklist()
+                            handleUpdateTitleDesc()
                             setIsEditing(false)
                         }}>
                             <Text className='text-base font-medium ' style={{
@@ -212,59 +241,97 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
                                         <TouchableOpacity className='flex-row items-center ' onPress={() => {
                                             setIsEditing(true)
                                         }}>
-                                            <TouchableOpacity className='w-7 h-7 rounded-full mr-4 flex flex-col items-center justify-center' style={{ backgroundColor: priorityColors[priority - 1] }} onPress={() => {
+                                            <TouchableOpacity className='w-7 h-7 rounded-full mr-4 flex flex-col items-center justify-center' style={{
+                                                borderWidth: checklist_item.is_purchased ? 0 : 2,
+                                                borderColor: iOSGrayColors.systemGray.accessibleDark,
+                                                backgroundColor: checklist_item.is_purchased ? iOSColors.systemGreen.defaultLight : 'transparent'
+                                            }} onPress={() => {
                                                 handleUpdateComplete()
                                                 Haptics.notificationAsync(
                                                     Haptics.NotificationFeedbackType.Success
                                                 )
                                             }}>
                                                 {
-                                                    checklist_item.is_purchased ? <Text className='text-white font-bold'>✓</Text> : <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[checklist_item.priority_level - 1] }}>
-                                                    </View>
+                                                    checklist_item.is_purchased && <Text className='text-white font-bold'>✓</Text>
+                                                    //  : <View className=' z-10 w-6 h-6 rounded-full' style={{ backgroundColor: priorityColorsInside[3] }}>
+                                                    // </View>
                                                 }
+
                                             </TouchableOpacity>
-                                            <Text className='text-lg font-semibold'>{checklist_item.item_name}</Text>
+                                            <Text className='text-lg font-semibold'>{checkListName}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity className='flex-row items-center mt-5' onPress={() => {
                                             setIsEditing(true)
                                         }}>
                                             <View className='w-7 h-7  mr-4 flex flex-col items-center justify-center'>
-                                                <Material name="tooltip-outline" size={26} style={{ color: priorityColors[priority - 1] }} />
+                                                <Material name="tooltip-outline" size={26} style={{ color: iOSGrayColors.systemGray.accessibleDark }} />
                                             </View>
-                                            <Text className='text-base'>{checklist_item.description}</Text>
+                                            <Text className='text-base' style={{ color: iOSGrayColors.systemGray.accessibleDark }}>Description: {checkListDescription}</Text>
                                         </TouchableOpacity>
 
-                                        <TouchableOpacity className='flex-row items-center mt-5' onPress={() => {
+                                        {/* <TouchableOpacity className='flex-row items-center mt-5' onPress={() => {
                                             onPressPriority()
                                         }}>
                                             <View className='w-7 h-7  mr-4 flex flex-col items-center justify-center'>
                                                 <Material name="flag-outline" size={28} style={{ color: priorityColors[priority - 1] }} />
                                             </View>
                                             <Text className='text-base'>Priority {priority}</Text>
+                                        </TouchableOpacity> */}
+                                        <TouchableOpacity className='flex-row items-center mt-5' onPress={() => {
+                                            // onPressPriority()
+                                            quantityPickerRef.current!.open()
+                                        }}>
+                                            <View className='w-7 h-7  mr-4 flex flex-col items-center justify-center'>
+                                                <Material name="numeric" size={28} style={{ color: iOSGrayColors.systemGray.accessibleDark }} />
+                                            </View>
+                                            <Text className='text-base'
+                                                style={{ color: iOSGrayColors.systemGray.accessibleDark }}
+                                            >{checkListquantity == 0 ? "Quantity: Not set" : "Quantity: " + checkListquantity}
+                                            </Text>
                                         </TouchableOpacity>
+
+                                        <TouchableOpacity className='flex-row items-center mt-5' onPress={() => {
+                                            // onPressPriority()
+                                            pricePickerRef.current!.open()
+                                        }}>
+                                            <View className='w-7 h-7  mr-4 flex flex-col items-center justify-center'>
+                                                <Material name="counter" size={28} style={{ color: iOSGrayColors.systemGray.accessibleDark }} />
+                                            </View>
+                                            <Text className='text-base'
+                                                style={{ color: iOSGrayColors.systemGray.accessibleDark }}
+                                            >{checkListprice == 0 ? "Price: Not set" : "Price: " + checkListprice + " VND"
+
+                                                }
+                                            </Text>
+                                        </TouchableOpacity>
+
 
                                         <TouchableOpacity className='flex-row items-center mt-5' onPress={() => {
                                             timePickerRBSheet!.current!.open()
                                         }}>
                                             {
-                                                dueDate == null ? <>
+                                                checkListdueDate == null ? <>
                                                     <View className='w-7 h-7  mr-4 flex flex-col items-center justify-center'>
-                                                        <Material name="calendar-blank-outline" size={28} style={{ color: priorityColors[priority - 1] }} />
+                                                        <Material name="calendar-blank-outline" size={28} style={{ color: iOSGrayColors.systemGray.accessibleDark }} />
                                                     </View>
                                                     <Text className='text-base'>Set reminder</Text>
                                                 </> : <><View className='w-7 h-7  mr-4 flex flex-col items-center justify-center'>
-                                                    <Material name="calendar-blank-outline" size={28} style={{ color: priorityColors[priority - 1] }} />
+                                                    <Material name="calendar-blank-outline" size={28} style={{ color: iOSGrayColors.systemGray.accessibleDark }} />
                                                 </View>
-                                                    <Text className='text-base'>{buildDate(new Date(dueDate))}</Text></>
+                                                    <Text className='text-base' style={{ color: iOSGrayColors.systemGray.accessibleDark }}>
+                                                        {
+                                                            checkListdueDate == null ? "Set reminder" : "Reminder date: " + buildDate(new Date(checkListdueDate))
+                                                        }
+                                                    </Text></>
                                             }
                                         </TouchableOpacity>
                                     </View>
                                     <View className='h-1 bg-gray-200 my-3'></View>
                                     <View className='flex-row items-center  ml-4'>
                                         <View className='w-7 h-7  mr-4 flex flex-col items-center justify-center'>
-                                            <Material name="plus" size={28} style={{ color: priorityColors[priority - 1] }} />
+                                            <Material name="plus" size={28} style={{ color: iOSGrayColors.systemGray.accessibleDark }} />
                                         </View>
-                                        <Text className='text-base'>Add sub task</Text>
+                                        <Text className='text-base' style={{ color: iOSGrayColors.systemGray.accessibleDark }}>Add sub task</Text>
                                     </View>
                                 </View>
 
@@ -274,6 +341,19 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
 
             </View>
             <CheckListTimePickerSheet refRBSheet={timePickerRBSheet} setSave={handleUpdateDueDate} initialValue={new Date(checklist_item.reminder_date)} />
+            <NumberPickerSheet
+                refRBSheet={quantityPickerRef} initialNumber={checkListquantity} onSetNumber={(number) => {
+                    handleUpdateQuantity(number)
+                }}
+                shouldReset={false}
+            />
+            <PricePickerSheet
+                refRBSheet={pricePickerRef} initialNumber={checkListprice}
+                onSetNumber={(number) => {
+                    handleUpdatePrice(number)
+                }}
+                shouldReset={false}
+            />
         </BottomSheet>
     )
 }

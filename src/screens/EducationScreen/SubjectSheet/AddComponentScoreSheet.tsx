@@ -8,8 +8,21 @@ import ImageComponent from 'src/components/Image/Image';
 import { useKeyboardVisible } from 'src/hooks/useKeyboardVisible';
 import * as ImagePicker from 'expo-image-picker';
 import { Subject } from 'src/interface/education/education';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from 'src/redux/store';
+import { addComponentScoreToSubject } from 'src/redux/slices/EducationSlice';
 // import PickImageSheet from 'src/screens/GuildLineScreen/PickImageSheet/PickImageSheet';
-const AddComponentScoreSheet = ({ refRBSheet, setSubjectDetailData, id_education_progress, id_family, id_subject }: { refRBSheet: React.RefObject<any>, setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>, id_education_progress: number, id_family: number, id_subject: number }) => {
+
+interface AddComponentScoreSheetProps {
+    refRBSheet: React.RefObject<any>;
+    // setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>;
+    id_education_progress: number;
+    id_family: number;
+    id_subject: number;
+
+}
+
+const AddComponentScoreSheet = ({ refRBSheet, id_education_progress, id_family, id_subject }: AddComponentScoreSheetProps) => {
     // const refRBSheet = React.useRef<RBSheet>(null);
     const pickImageSheetRef = React.useRef<any>(null);
     const [name, setName] = React.useState("");
@@ -17,26 +30,34 @@ const AddComponentScoreSheet = ({ refRBSheet, setSubjectDetailData, id_education
     const isKeyboardVisible = useKeyboardVisible();
     const nameInputRef = React.useRef<TextInput>(null);
     const descriptionInputRef = React.useRef<TextInput>(null);
-
+    const dispatch = useDispatch<AppDispatch>();
     const handleAddComponentScore = () => {
-        setSubjectDetailData((prev) => {
-            return {
-                ...prev,
-                component_scores: [
-                    ...prev.component_scores,
-                    {
-                        component_name: name,
-                        expected_score: null,
-                        score: null,
-                        id_family: id_family,
-                        id_education_progress: id_education_progress,
-                        id_subject: id_subject
-                    }
-                ]
-            }
+        // setSubjectDetailData((prev) => {
+        //     return {
+        //         ...prev,
+        //         component_scores: [
+        //             ...prev.component_scores,
+        //             {
+        //                 component_name: name,
+        //                 expected_score: null,
+        //                 score: null,
+        //                 id_family: id_family,
+        //                 id_education_progress: id_education_progress,
+        //                 id_subject: id_subject
+        //             }
+        //         ]
+        //     }
 
-        })
-
+        // })
+        dispatch(addComponentScoreToSubject({
+            component_name: name,
+            // expected_score: null,
+            score: null,
+            id_subject: id_subject,
+            id_family: id_family,
+            id_education_progress: id_education_progress,
+            
+        }))
         refRBSheet.current?.close()
     }
 

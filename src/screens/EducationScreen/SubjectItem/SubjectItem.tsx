@@ -6,24 +6,38 @@ import { COLORS } from 'src/constants'
 import SubjectSheet from '../SubjectSheet/SubjectSheet'
 import { ComponentScore, Subject } from 'src/interface/education/education'
 
-const SubjectItem = ({ isGraded, subjectComponentData, setSubjectDetailData, index }: { isGraded: boolean, subjectComponentData: ComponentScore, setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>, index: number }) => {
-    const [isEditing, setIsEditing] = React.useState(false)
-    const [isGradded, setIsGradded] = React.useState(subjectComponentData.score !== null)
+interface SubjectItemProps {
+    isGraded?: boolean,
+    subjectComponentData: ComponentScore | null,
+    id_education_progress: number,
+    id_family: number,
+    id_subject: number,
+    // setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>,
+    index: number
+}
+
+const SubjectItem = ({ isGraded, subjectComponentData, index, id_education_progress, id_family, id_subject }: SubjectItemProps) => {
+    // const [isEditing, setIsEditing] = React.useState(false)
+    const [isGradded, setIsGradded] = React.useState(subjectComponentData == null ? false : subjectComponentData.score !== null)
     // const [expected, setExpected] = React.useState<number | null>(subjectComponentData.expected_score)
     // const [score, setScore] = React.useState<number | null>(subjectComponentData.score)
 
     const bottomSheetRef = React.useRef<any>(null)
     React.useEffect(() => {
-        if (subjectComponentData.score !== null) setIsGradded(true)
-        else setIsGradded(false)
+        if (subjectComponentData) {
+            if (subjectComponentData.score !== null) setIsGradded(true)
+            else setIsGradded(false)
+        }
     }, [subjectComponentData])
 
     return (
-        <TouchableOpacity className='flex-row items-center  border-b-[1px] border-gray-200 bg-white' onPress={() => {
+        subjectComponentData ? <TouchableOpacity className='flex-row items-center  border-b-[1px] border-gray-200 bg-white' onPress={() => {
             bottomSheetRef.current?.open()
         }}>
             <View className='flex-1 py-6 ml-4 bg-[FFFFFE]'>
-                <Text className='text-2xl font-light'>{subjectComponentData.component_name}</Text>
+                <Text className='text-2xl font-light'>
+                    {subjectComponentData.component_name}
+                </Text>
             </View>
             <View className=' w-36 items-center border-l-[1px] border-gray-200 py-6 px-5 bg-[#f8f7fd]'>
                 {
@@ -35,7 +49,32 @@ const SubjectItem = ({ isGraded, subjectComponentData, setSubjectDetailData, ind
 
             </View>
 
-            <SubjectSheet bottomSheetRef={bottomSheetRef} subjectComponentData={subjectComponentData} index={index} setSubjectDetailData={setSubjectDetailData} />
+            <SubjectSheet
+                id_education_progress={id_education_progress}
+                id_family={id_family}
+                id_subject={id_subject}
+                bottomSheetRef={bottomSheetRef}
+                subjectComponentData={subjectComponentData}
+                index={index} />
+        </TouchableOpacity> : <TouchableOpacity className='flex-row items-center  border-b-[1px] border-gray-200 bg-white' onPress={() => {
+            bottomSheetRef.current?.open()
+        }}>
+            <View className='flex-1 py-6 ml-4 bg-[FFFFFE]'>
+                <Text className='text-2xl font-light'>
+                    Error
+                </Text>
+            </View>
+            <View className=' w-36 items-center border-l-[1px] border-gray-200 py-6 px-5 bg-[#f8f7fd]'>
+                {
+                    isGradded ?
+                        <><Text className='  text-base opacity-40' style={{ color: COLORS.AuroMetalSaurus }}>score</Text><Text className=' text-[#918D92] text-xl mt-1 opacity-40'>0 / 10</Text></>
+                        :
+                        <><Text className='  text-base' style={{ color: COLORS.AuroMetalSaurus }}>need</Text><Text className='  text-xl mt-1'>0</Text></>
+                }
+
+            </View>
+
+
         </TouchableOpacity>
     )
 }

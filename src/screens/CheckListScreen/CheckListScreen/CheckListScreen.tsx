@@ -84,8 +84,7 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
                 </View> */}
                 <View className=' flex-1'></View>
             </View>
-
-
+            
             <ChecklistSections checklist={filteredChecklist} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} handleNavigateCheckListDetail={handleNavigateCheckListDetail} searchString={searchString} setSearchString={setSearchString} bottomSheetRef={refRBSheet} />
 
             <AddCheckListCategoryItem bottomSheetRef={refRBSheet} id_family={id_family!} />

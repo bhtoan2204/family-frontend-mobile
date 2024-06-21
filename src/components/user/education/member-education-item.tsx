@@ -54,10 +54,10 @@ const MemberEducationItem = ({ data, onPress, index }: MemberEducationItemProps)
                     <View className='mb-3 flex-row items-center justify-between'>
                         <View className='flex-row items-center'>
                             <View className='mx-3'>
-                                <ImageComponent defaultImage={Img} imageUrl={data.avatar || ""}
-                                    style={{ height: 35, width: 35 }} />
+                                <ImageComponent defaultImage={Img} imageUrl={data.user.avatar || ""}
+                                    style={{ height: 35, width: 35 }} className='rounded-full' />
                             </View>
-                            <Text className='font-normal ' style={{ color: iOSGrayColors.systemGray5.defaultDark, fontSize: 17, textTransform: 'capitalize' }}>{data.firstname} {data.lastname}</Text>
+                            <Text className='font-normal ' style={{ color: iOSGrayColors.systemGray5.defaultDark, fontSize: 17, textTransform: 'capitalize' }}>{data.user.lastname} {data.user.firstname}</Text>
                         </View>
                         <TouchableOpacity className='mr-2'>
                             {/* <Material name='dots-horizontal' size={25} color={iOSColors.systemOrange.defaultDark} /> */}

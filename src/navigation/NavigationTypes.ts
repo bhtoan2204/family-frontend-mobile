@@ -255,6 +255,9 @@ export type FamilyStackParamList = {
     id_family: number | undefined;
     id_checklist: number;
   };
+  AddShoppingList: {
+    id_family: number | undefined;
+  };
   AddCheckList: {
     id_family: number | undefined;
   };
@@ -586,6 +589,16 @@ type CheckListDetailNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'CheckListDetail'
 >;
+
+type AddShoppingListNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'AddShoppingList'
+>;
+
+export interface AddShoppingListScreenProps {
+  navigation: AddShoppingListNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'AddShoppingList'>;
+}
 
 type AddCheckListNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,

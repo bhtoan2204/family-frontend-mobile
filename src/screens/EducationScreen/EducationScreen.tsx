@@ -15,6 +15,9 @@ import { FamilyServices } from 'src/services/apiclient';
 import AddMemberEducationSheet from './AddMemberEducationSheet/AddMemberEducationSheet';
 import { ActivityIndicator } from 'react-native-paper';
 import MemberEducationItem from 'src/components/user/education/member-education-item';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from 'src/redux/store';
+import { setEducation } from 'src/redux/slices/EducationSlice';
 
 const data = {
     "message": "Success",
@@ -46,13 +49,77 @@ const data = {
     ]
 }
 
+const data2 = {
+    "message": "Success",
+    "data": [
+        {
+            "id_education_progress": 1,
+            "id_family": 96,
+            "id_user": "bd94ba3a-b046-4a05-a260-890913e09df9",
+            "title": "string",
+            "progress_notes": "test",
+            "school_info": "test",
+            "created_at": "2024-06-19T17:57:02.288Z",
+            "updated_at": "2024-06-19T18:04:27.588Z",
+            "subjects": [
+                {
+                    "id_subject": 1,
+                    "id_education_progress": 1,
+                    "subject_name": "Math 2",
+                    "description": "Mathematics",
+                    "component_scores": [
+                        {
+                            "component_name": "Homework 4",
+                            "score": 8.9
+                        },
+                        {
+                            "component_name": "Homework 1",
+                            "score": 8.9
+                        }
+                    ],
+                    "midterm_score": null,
+                    "final_score": null,
+                    "bonus_score": null,
+                    "status": "done"
+                }
+            ],
+            "user": {
+                "firstname": "Toan",
+                "lastname": "Banh",
+                "avatar": "https://storage.googleapis.com/famfund-bucket/avatar/avatar_bd94ba3a-b046-4a05-a260-890913e09df9_1718554422671_A19FB315-F97A-429B-AB36-E9BFDA2CB5D4.jpg",
+                "genre": "male",
+                "birthdate": "2024-06-13"
+            }
+        },
+        {
+            "id_education_progress": 3,
+            "id_family": 96,
+            "id_user": "bd94ba3a-b046-4a05-a260-890913e09df9",
+            "title": "Đại học năm 3",
+            "progress_notes": "Đại học năm 3 - HKII",
+            "school_info": "Đại học Khoa học Tự Nhiên",
+            "created_at": "2024-06-20T10:42:46.935Z",
+            "updated_at": "2024-06-20T10:51:16.334Z",
+            "subjects": [],
+            "user": {
+                "firstname": "Toan",
+                "lastname": "Banh",
+                "avatar": "https://storage.googleapis.com/famfund-bucket/avatar/avatar_bd94ba3a-b046-4a05-a260-890913e09df9_1718554422671_A19FB315-F97A-429B-AB36-E9BFDA2CB5D4.jpg",
+                "genre": "male",
+                "birthdate": "2024-06-13"
+            }
+        }
+    ],
+    "total": 2
+}
 const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
     const [members, setMembers] = React.useState<Member[]>([]);
     const [filteredMembers, setFilteredMembers] = React.useState<Member[]>([])
     const [memberEducationData, setMemberEducationData] = React.useState<Education>()
-    const [memberEducationDatas, setMemberEducationDatas] = React.useState<Education[]>(data.data)
-
+    // const [memberEducationDatas, setMemberEducationDatas] = React.useState<Education[]>(data2.data)
+    const dispatch = useDispatch<AppDispatch>()
+    const memberEducationDatas = useSelector((state: RootState) => state.educations)
     const bottomSheetRef = React.useRef<any>(null);
 
     useEffect(() => {
@@ -71,8 +138,29 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
 
     useEffect(() => {
         const handleFetchEducation = async () => {
-
+            //api call here
+            // const edu = data2.data;
+            const edu = data2.data.map(education => {
+                return {
+                    ...education,
+                    subjects: education.subjects.map(subject => {
+                        return {
+                            ...subject,
+                            midterm_score: {
+                                component_name: 'Midterm',
+                                score: subject.midterm_score,
+                            },
+                            final_score: {
+                                component_name: 'Final',
+                                score: subject.final_score,
+                            },
+                        };
+                    }),
+                };
+            });
+            dispatch(setEducation(edu))
         }
+        handleFetchEducation()
     }, [])
 
     // useEffect(() => {
@@ -91,7 +179,9 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     //     }
     // }, [memberEducationDatas, members])
 
-
+    if (memberEducationDatas == null) {
+        return <ActivityIndicator size={"small"} />
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-[#F7F7F7]" >
@@ -139,7 +229,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                     }
 
                 </ScrollView>
-                <AddMemberEducationSheet bottomSheetRef={bottomSheetRef} setMemberEducationDatas={setMemberEducationDatas} members={filteredMembers} />
+                {/* <AddMemberEducationSheet bottomSheetRef={bottomSheetRef} setMemberEducationDatas={setMemberEducationDatas} members={filteredMembers} /> */}
 
             </View>
         </SafeAreaView>

@@ -11,7 +11,8 @@ import { formatVietNamCurrencyNoDot, formatVietNamCurrencyToDot, fromVietNamCurr
 interface PricePickerSheetProps {
     refRBSheet: React.RefObject<any>;
     initialNumber: number;
-    onSetNumber: (number: number) => void
+    onSetNumber: (number: number) => void;
+    shouldReset?: boolean;
 }
 
 const isNumber = (numberString: string) => {
@@ -23,9 +24,9 @@ const isNumber = (numberString: string) => {
 };
 
 const PricePickerSheet = ({
-    refRBSheet, initialNumber, onSetNumber
+    refRBSheet, initialNumber, onSetNumber, shouldReset
 }: PricePickerSheetProps) => {
-    const [input, setInput] = React.useState<string>(initialNumber.toString() || "0")
+    const [input, setInput] = React.useState<string>(initialNumber == 0 ? "0" : initialNumber.toString())
     const [isValid, setIsValid] = React.useState<boolean>(isNumber(input))
     const inputAccessoryViewID = 'uniqueID';
 
@@ -61,7 +62,9 @@ const PricePickerSheet = ({
             ref={refRBSheet}
             onClose={() => {
                 // setInput(initialNumber.toString())
-                setInput("0")
+                if (shouldReset == null || shouldReset == true) {
+                    setInput("0")
+                }
             }}
             onOpen={() => {
                 setInput(formatVietNamCurrencyToDot(initialNumber.toString()))

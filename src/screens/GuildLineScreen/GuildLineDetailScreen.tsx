@@ -213,7 +213,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
         setInputDescription("");
         setInputName("");
     }
-
+    
     const handleDeleteCurrentStep = async () => {
         await GuildLineService.deleteStepGuildLine(id_family!, id_guide_item!, currentStep)
         const currStep = currentStep

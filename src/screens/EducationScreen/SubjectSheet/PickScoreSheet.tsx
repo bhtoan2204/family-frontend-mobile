@@ -5,11 +5,17 @@ import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
 import { Picker } from '@react-native-picker/picker';
 import { ComponentScore, Subject } from 'src/interface/education/education';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import { AppDispatch } from 'src/redux/store';
+import { useDispatch } from 'react-redux';
+import { updateComponentScoreOfSubject } from 'src/redux/slices/EducationSlice';
 interface PickScoreSheetProps {
     setScoreSheetRef: React.RefObject<any>;
-    setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>;
+    // setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>;
     score: number | null;
     index: number;
+    id_family: number;
+    id_education_progress: number;
+    id_subject: number;
 }
 
 const isNumberInRange = (numberString: string) => {
@@ -20,13 +26,15 @@ const isNumberInRange = (numberString: string) => {
     return number >= 0 && number <= 10;
 };
 
-const PickScoreSheet = ({ setScoreSheetRef, setSubjectDetailData, score, index }: PickScoreSheetProps) => {
+const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress, id_family, id_subject }: PickScoreSheetProps) => {
 
 
     const [inputValue, setInputValue] = React.useState<string>(score?.toString() || '0')
     const [isFocus, setIsFocus] = React.useState<boolean>(false)
     const [isValid, setIsValid] = React.useState<boolean>(isNumberInRange(inputValue))
     const inputRef = React.useRef<TextInput>(null)
+    const dispatch = useDispatch<AppDispatch>();
+
     const handleFocus = () => {
         setIsFocus(true)
     }
@@ -57,41 +65,51 @@ const PickScoreSheet = ({ setScoreSheetRef, setSubjectDetailData, score, index }
         }
     };
     const handleSave = () => {
+        dispatch(updateComponentScoreOfSubject({
+            id_subject: id_subject!,
+            id_education_progress: id_education_progress,
+            score: parseFloat(inputValue),
+            index: index
+        }))
         if (index === -1) {
-            setSubjectDetailData((prev) => {
-                return {
-                    ...prev,
-                    final_score: {
-                        ...prev.final_score,
-                        score: parseFloat(inputValue)
-                    }
-                }
-            })
+            // dispatch(updateComponentScoreOfSubject({
+
+            // }))
+            // setSubjectDetai  lData((prev) => {
+            //     return {
+            //         ...prev,
+            //         final_score: {
+            //             ...prev.final_score,
+            //             score: parseFloat(inputValue)
+            //         }
+            //     }
+            // })
+
         } else if (index === -2) {
-            setSubjectDetailData((prev) => {
-                return {
-                    ...prev,
-                    midterm_score: {
-                        ...prev.midterm_score,
-                        score: parseFloat(inputValue)
-                    }
-                }
-            })
+            // setSubjectDetailData((prev) => {
+            //     return {
+            //         ...prev,
+            //         midterm_score: {
+            //             ...prev.midterm_score,
+            //             score: parseFloat(inputValue)
+            //         }
+            //     }
+            // })
         } else {
-            setSubjectDetailData((prev) => {
-                return {
-                    ...prev,
-                    component_scores: prev.component_scores.map((item, i) => {
-                        if (i === index) {
-                            return {
-                                ...item,
-                                score: parseFloat(inputValue)
-                            }
-                        }
-                        return item
-                    })
-                }
-            })
+            // setSubjectDetailData((prev) => {
+            //     return {
+            //         ...prev,
+            //         component_scores: prev.component_scores.map((item, i) => {
+            //             if (i === index) {
+            //                 return {
+            //                     ...item,
+            //                     score: parseFloat(inputValue)
+            //                 }
+            //             }
+            //             return item
+            //         })
+            //     }
+            // })
 
         }
     }
@@ -126,24 +144,24 @@ const PickScoreSheet = ({ setScoreSheetRef, setSubjectDetailData, score, index }
             <View className='flex-1 '>
                 <View className='flex-row items-center justify-between top-[-10] mb-6  z-[100000] pt-6 px-6' >
                     <TouchableOpacity onPress={() => {
-                        setScoreSheetRef.current?.close()
+                        // setScoreSheetRef.current?.close()
                     }} >
-                        <Text className='text-base font-semibold' style={{
+                        {/* <Text className='text-base font-semibold' style={{
                             color: iOSColors.systemRed.defaultDark
-                        }}>Cancel</Text>
+                        }}>Cancel</Text> */}
                     </TouchableOpacity >
                     <Text className='text-base font-semibold '>Set score </Text>
                     <TouchableOpacity onPress={() => {
-                        if (isNumberInRange(inputValue)) {
-                            handleSave()
-                            setScoreSheetRef.current?.close()
-                        }
+                        // if (isNumberInRange(inputValue)) {
+                        //     handleSave()
+                        //     setScoreSheetRef.current?.close()
+                        // }
                     }}>
-                        <Text className='text-base font-semibold'
+                        {/* <Text className='text-base font-semibold'
                             style={{
                                 color: iOSColors.systemBlue.defaultDark
                             }}
-                        >Save</Text>
+                        >Save</Text> */}
                     </TouchableOpacity>
                 </View>
 

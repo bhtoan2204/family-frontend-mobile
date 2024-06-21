@@ -187,6 +187,52 @@ const checkListSlice = createSlice({
         }
       }
     },
+    updateCheckListItemQuantity(
+      state,
+      action: PayloadAction<{
+        id: number;
+        id_checklist: string;
+        quantity: number;
+      }>,
+    ) {
+      const checkListIndex = state.findIndex(
+        checklist => checklist.id_list === action.payload.id,
+      );
+      if (checkListIndex !== -1) {
+        const checkListItemIndex = state[
+          checkListIndex
+        ].checklistItems?.findIndex(
+          item => item.id_item === action.payload.id_checklist,
+        );
+        if (checkListItemIndex !== undefined && checkListItemIndex !== -1) {
+          state[checkListIndex].checklistItems[checkListItemIndex].quantity =
+            action.payload.quantity;
+        }
+      }
+    },
+    updateCheckListItemPrice(
+      state,
+      action: PayloadAction<{
+        id: number;
+        id_checklist: string;
+        price: string;
+      }>,
+    ) {
+      const checkListIndex = state.findIndex(
+        checklist => checklist.id_list === action.payload.id,
+      );
+      if (checkListIndex !== -1) {
+        const checkListItemIndex = state[
+          checkListIndex
+        ].checklistItems?.findIndex(
+          item => item.id_item === action.payload.id_checklist,
+        );
+        if (checkListItemIndex !== undefined && checkListItemIndex !== -1) {
+          state[checkListIndex].checklistItems[checkListItemIndex].price =
+            action.payload.price;
+        }
+      }
+    },
   },
 });
 
@@ -202,6 +248,8 @@ export const {
   updateCheckListItemDueDate,
   setCheckListItemsForCheckList,
   updateCheckListItemCompleted,
+  updateCheckListItemPrice,
+  updateCheckListItemQuantity,
 } = checkListSlice.actions;
 
 export const selectProfile = (state: RootState) => state.profile;
