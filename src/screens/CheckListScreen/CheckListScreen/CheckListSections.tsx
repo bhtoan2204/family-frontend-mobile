@@ -3,7 +3,6 @@ import { KeyboardAvoidingView, Platform, ScrollView, View, Text, TouchableOpacit
 import { CheckListCategoryInterface } from "src/interface/checklist/checklist";
 import { compareDates } from "src/utils/compareDate";
 import CategoryTypeScrollList from "./CategoryTypeScrollList";
-import CheckListSection from "./CheckListSection";
 import SearchBar from "./SearchBar";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { AppDispatch } from "src/redux/store";
@@ -21,7 +20,18 @@ const today = new Date();
 const yesterday = new Date(today.setDate(today.getDate() - 1));
 const tomorrow = new Date(today.setDate(today.getDate() + 1));
 
-const ChecklistSections: React.FC<{ checklist: CheckListCategoryInterface[], selectedCategory: number | null, setSelectedCategory: React.Dispatch<React.SetStateAction<number | null>>, handleNavigateCheckListDetail: (id_checklist: number) => void, searchString: string, setSearchString: React.Dispatch<React.SetStateAction<string>>, bottomSheetRef: React.RefObject<any> }> = ({ checklist, selectedCategory, setSelectedCategory, handleNavigateCheckListDetail, searchString, setSearchString, bottomSheetRef }) => {
+interface ChecklistSectionsProps {
+    checklist: CheckListCategoryInterface[];
+    selectedCategory: number | null;
+    setSelectedCategory: React.Dispatch<React.SetStateAction<number | null>>;
+    handleNavigateCheckListDetail: (id_checklist: number) => void;
+    searchString: string;
+    setSearchString: React.Dispatch<React.SetStateAction<string>>;
+    bottomSheetRef: React.RefObject<any>;
+    handleNavigateOpenAddShoppingList: () => void;
+}
+
+const ChecklistSections = ({ checklist, selectedCategory, setSelectedCategory, handleNavigateCheckListDetail, searchString, setSearchString, bottomSheetRef, handleNavigateOpenAddShoppingList }: ChecklistSectionsProps) => {
     // const [sections, setSections] = React.useState<{ title: string, data: CheckListCategoryInterface[], }[]>([]);
     const dispatch = useDispatch<AppDispatch>();
 
@@ -80,6 +90,7 @@ const ChecklistSections: React.FC<{ checklist: CheckListCategoryInterface[], sel
         paddingHorizontal: 10,
     }}>
         <TouchableOpacity onPress={() => {
+            handleNavigateOpenAddShoppingList()
             // handleNavigateCheckListDetail(item.id_list)
         }}
         >

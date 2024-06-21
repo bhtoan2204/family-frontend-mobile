@@ -1,5 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../store';
+import {HouseHoldItemInterface} from 'src/interface/household/household_item';
 
 const initialState: HouseHoldItemInterface[] = [];
 
@@ -24,7 +25,11 @@ const householdSlice = createSlice({
   },
 });
 
-export const {setHouseholdItems, clearHouseholdItems, addHouseholdItem,deleteHouseholdItem} =
-  householdSlice.actions;
+export const {
+  setHouseholdItems,
+  clearHouseholdItems,
+  addHouseholdItem,
+  deleteHouseholdItem,
+} = householdSlice.actions;
 
 export default householdSlice.reducer;

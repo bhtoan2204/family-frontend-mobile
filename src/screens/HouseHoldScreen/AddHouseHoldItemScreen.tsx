@@ -32,6 +32,7 @@ import { AppDispatch, RootState } from 'src/redux/store';
 import { clearRoom, setRoom } from 'src/redux/slices/RoomSlice';
 import AddHouseHoldItemPickCategorySheet from 'src/components/user/household/add-household-item-pickcategorysheet';
 import { addHouseholdItem } from 'src/redux/slices/HouseHoldSlice';
+import { HouseHoldItemInterface } from 'src/interface/household/household_item';
 
 const household_items = [
     {

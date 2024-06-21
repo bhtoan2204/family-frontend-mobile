@@ -30,6 +30,8 @@ import * as Animatable from 'react-native-animatable';
 import HouseHoldItemDetailHeader from 'src/components/user/household/household-item-detail-header';
 import HouseHoldItemDetailImagePickerSheet from 'src/components/user/household/household-item-detail-image-picker-sheet';
 import * as ImagePicker from 'expo-image-picker';
+import { HouseHoldItemInterface } from 'src/interface/household/household_item';
+import { HouseHoldItemDetailInterface } from 'src/interface/household/household_item_detail';
 
 
 const household_items = [

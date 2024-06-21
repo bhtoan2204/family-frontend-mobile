@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native'
 import { CheckListCategoryInterface, ChecklistItemInterface } from 'src/interface/checklist/checklist';
 import ChecklistItem from './CheckListItem';
-import ChecklistItemModal from './AddItemCheckListSheet';
+// import ChecklistItemModal from './AddItemCheckListSheet';
 import { CheckListDetailScreenProps, CheckListScreenProps } from 'src/navigation/NavigationTypes';
 import { COLORS } from 'src/constants';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';

@@ -72,3 +72,7 @@ yarn-error.log
 
 # Enviorment variables
 .env
+# Expo
+.expo
+dist/
+web-build/

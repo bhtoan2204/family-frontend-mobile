@@ -90,6 +90,7 @@ const FamilyStack = () => {
       </Stack.Screen>
       <Stack.Screen name="AddEducation" options={{
         animation: 'slide_from_bottom',
+        presentation: 'fullScreenModal',
       }}>
         {(props) => <AddEducationScreen {...props as AddEducationScreenProps} />}
       </Stack.Screen>

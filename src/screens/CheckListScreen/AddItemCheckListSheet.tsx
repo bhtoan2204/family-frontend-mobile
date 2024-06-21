@@ -153,13 +153,13 @@ const AddItemCheckListSheet = ({ refRBSheet, id_checklist }: { refRBSheet: React
 
                     }}
                     onPress={() => {
-                        const newItem: ChecklistItemInterface = { id: "-1", title: name, description: description, dueDate: dueDate != null ? new Date(dueDate).toDateString() : new Date().toDateString(), priority: priority, isCompleted: false }
-                        dispatch(
-                            addNewCheckListItemToCheckList({
-                                id: id_checklist,
-                                item: newItem
-                            })
-                        )
+                        // const newItem: ChecklistItemInterface = { id: "-1", title: name, description: description, dueDate: dueDate != null ? new Date(dueDate).toDateString() : new Date().toDateString(), priority: priority, isCompleted: false }
+                        // dispatch(
+                        //     addNewCheckListItemToCheckList({
+                        //         id: id_checklist,
+                        //         item: newItem
+                        //     })
+                        // )
                         refRBSheet.current?.close();
                     }}
                     className='my-2 w-auto h-auto mr-4 p-2 rounded-full'

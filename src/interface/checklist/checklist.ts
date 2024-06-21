@@ -5,7 +5,7 @@ export interface CheckListCategoryTypeInterface {
 
 export interface CheckListCategoryInterface {
   id_list: number;
-  id_item_type: number;
+  id_item_type?: number;
   category_name?: string;
   id_family: number;
   title: string;

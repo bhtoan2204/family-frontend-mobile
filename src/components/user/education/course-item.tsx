@@ -12,10 +12,10 @@ import { Subject } from 'src/interface/education/education'
 interface CourseItemProps {
     data: Subject;
     onPress: () => void;
-    img: ImageSourcePropType | undefined;
+    index: number;
 }
 
-const CourseItem = ({ data, onPress, img }: CourseItemProps) => {
+const CourseItem = ({ data, onPress, index }: CourseItemProps) => {
     // const rand_gradient = gradients_list[Math.floor(Math.random() * gradients_list.length)]
     const getColor = (status: string) => {
         if (status == 'done') return iOSColors.systemGreen.defaultLight;
@@ -63,7 +63,7 @@ const CourseItem = ({ data, onPress, img }: CourseItemProps) => {
     return (
         data && <TouchableOpacity className=' h-auto  mt-4 ' onPress={onPress}>
             <View className='flex-row items-center bg-white p-4'>
-                <Image source={img} width={50}
+                <Image source={gradients_list[index % gradients_list.length]} width={50}
                     height={50}
                     className="w-16 h-16 mr-4  " />
                 <View className='flex-1'>

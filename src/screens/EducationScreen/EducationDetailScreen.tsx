@@ -95,9 +95,9 @@ const EducationDetailScreen: React.FC<EducationDetailScreenProps> = ({ navigatio
                                             id_family,
                                             id_subject: item.id_subject
                                         })
-
                                     }}
-                                        img={gradients_list[Math.floor(Math.random() * gradients_list.length)]} />
+                                        index={index}
+                                    />
 
                                 </React.Fragment>
                             )

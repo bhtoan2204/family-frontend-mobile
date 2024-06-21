@@ -17,7 +17,8 @@ import { ActivityIndicator } from 'react-native-paper';
 import MemberEducationItem from 'src/components/user/education/member-education-item';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/redux/store';
-import { setEducation } from 'src/redux/slices/EducationSlice';
+import { clearEducation, setEducation } from 'src/redux/slices/EducationSlice';
+import { clearMembers, setMembers } from 'src/redux/slices/MemberSlice';
 
 const data = {
     "message": "Success",
@@ -114,7 +115,7 @@ const data2 = {
 }
 const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
-    const [members, setMembers] = React.useState<Member[]>([]);
+    // const [members, setMembers] = React.useState<Member[]>([]);
     const [filteredMembers, setFilteredMembers] = React.useState<Member[]>([])
     const [memberEducationData, setMemberEducationData] = React.useState<Education>()
     // const [memberEducationDatas, setMemberEducationDatas] = React.useState<Education[]>(data2.data)
@@ -123,17 +124,22 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     const bottomSheetRef = React.useRef<any>(null);
 
     useEffect(() => {
-        const handleViewAllMember = async () => {
+        const handleFetchAllMember = async () => {
             try {
                 const result = await FamilyServices.getAllMembers({ id_family });
                 console.log('FamilyServices.getAllMembers result:', result);
-                setMembers(result);
-                setFilteredMembers(result)
+                dispatch(setMembers(result as Member[]))
+                // setMembers(result as Member[]);
+                // setFilteredMembers(result)
             } catch (error) {
                 console.log('FamilyServices.getAllMembers error:', error);
             }
         };
-        handleViewAllMember()
+        handleFetchAllMember()
+
+        return () => {
+            dispatch(clearMembers())
+        }
     }, [])
 
     useEffect(() => {
@@ -161,6 +167,10 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
             dispatch(setEducation(edu))
         }
         handleFetchEducation()
+
+        return () => {
+            dispatch(clearEducation())
+        }
     }, [])
 
     // useEffect(() => {
@@ -195,10 +205,10 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                     <View className='mr-3'>
                         <TouchableOpacity onPress={() => {
                             // refRBSheet.current?.open()
-                            bottomSheetRef.current?.open()
-                            // navigation.navigate('AddEducation', {
-                            //     id_family
-                            // })
+                            // bottomSheetRef.current?.open()
+                            navigation.navigate('AddEducation', {
+                                id_family
+                            })
                         }} >
                             {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
                             <Text className='text-lg font-semibold' style={{ color: COLORS.AuroMetalSaurus }}>Add</Text>
@@ -221,7 +231,9 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                                             id_education_progress: item.id_education_progress,
                                             id_family: route.params.id_family,
                                         })
-                                    }} />
+                                    }}
+                                        index={index}
+                                    />
                                 </React.Fragment>
                             )
                         }) : <ActivityIndicator size={"small"} />

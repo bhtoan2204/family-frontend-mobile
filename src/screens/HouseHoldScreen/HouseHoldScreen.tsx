@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { View, Text, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Dimensions } from 'react-native'
 import { HouseHoldScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants';
@@ -14,7 +14,13 @@ import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/redux/store';
 import { clearHouseholdItems, setHouseholdItems } from 'src/redux/slices/HouseHoldSlice';
-
+import GridView from 'src/components/user/household/grid-view';
+import { FlatGrid, SectionGrid } from 'react-native-super-grid';
+import { HouseHoldItemInterface } from 'src/interface/household/household_item';
+import { gradients_list } from 'src/assets/images/gradients';
+import AccordionItem from 'src/components/user/household/accordion-item';
+import SearchBar from 'src/components/user/household/search-bar';
+// import AccordionItem from 'src/components/AccordionItem/accordion-item';
 
 const household_items = [
     {
@@ -65,8 +71,19 @@ const household_items = [
         "item_description": "lalala",
         "item_imageurl": null,
         "id_category": 3
+    },
+
+    {
+        "id_household_item": 15,
+        "id_family": 96,
+        "item_name": "Adudu",
+        "item_description": "lalala",
+        "item_imageurl": null,
+        "id_category": 1
     }
 ]
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 
 const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
@@ -76,11 +93,20 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
     const householdItems = useSelector((state: RootState) => state.householdItems)
     const [choosenCategoryIndex, setChoosenCategoryIndex] = React.useState<number>(0)
     const [choosenCategoryId, setChoosenCategoryId] = React.useState<number>(householdCategory[0].id_category)
+    const [searchText, setSearchText] = React.useState<string>('')
 
     const dispatch = useDispatch<AppDispatch>()
 
     useEffect(() => {
-        dispatch(setHouseholdItems(household_items))
+        const newHouseholdItems: HouseHoldItemInterface[] = household_items.map(item => {
+            const gradient = gradients_list[Math.floor(Math.random() * gradients_list.length)]
+            return {
+                ...item,
+                item_image: gradient,
+            }
+        })
+        console.log(newHouseholdItems)
+        dispatch(setHouseholdItems(newHouseholdItems))
 
         return () => {
             console.log("HouseHoldScreen unmounting")
@@ -92,21 +118,69 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
         console.log(householdItems)
     }, [householdItems])
 
-    const showCategoryItems = () => {
+    useEffect(() => {
+        console.log(searchText)
+    }, [searchText])
+
+    // const showCategoryItems = () => {
+    //     const categoryItems = householdItems.filter(item => item.id_category === choosenCategoryId);
+    //     return <View className='flex-1 '>
+    //         <View className='grid grid-cols-3 gap-4 border-2' style={{
+
+    //         }}>
+    //             {
+    //                 categoryItems && categoryItems.map((item, index) => (
+    //                     <HouseHoldItem item={item} key={item.id_household_item} index={index}
+    //                         navigateToHouseHoldItemDetail={navigateToHouseHoldItemDetail}
+    //                     />
+    //                 ))
+    //             }
+    //         </View>
+    //     </View>
+    // }
+    const showContent = () => {
+        return <>
+            {
+                household_category_dat.map((category, index) => {
+                    const categoryItems = householdItems.filter(item => item.id_category === category.id_category && (item.item_name.toLowerCase().includes(searchText.toLowerCase())));
+                    return <View className='' key={index}>
+                        {/* <Text className='text-xl font-medium'>{category.category_name}</Text> */}
+                        <AccordionItem title={category.category_name} isExpanded={
+                            categoryItems.length > 0 ? true : false
+                        } >
+                            <FlatGrid
+                                maxItemsPerRow={3}
+                                itemDimension={screenWidth * 0.3}
+                                spacing={3}
+                                data={categoryItems}
+                                renderItem={renderItem}
+                                scrollEnabled={false}
+                            />
+                        </AccordionItem>
+
+                    </View>
+                })
+            }
+
+        </>
+    }
+
+    const renderItem = ({ item, index }: { item: HouseHoldItemInterface, index: number }) => {
+        return <HouseHoldItem item={item} key={item.id_household_item}
+            navigateToHouseHoldItemDetail={navigateToHouseHoldItemDetail} index={index} />
+    }
+
+    const gridView = () => {
         const categoryItems = householdItems.filter(item => item.id_category === choosenCategoryId);
-        return <View className='flex-1  '>
-            <View className='mt-2  flex-row flex-wrap  mx-2  ' style={{
-                gap: 9
-            }}>
-                {
-                    categoryItems && categoryItems.map((item, index) => (
-                        <HouseHoldItem item={item} key={item.id_household_item} index={index}
-                            navigateToHouseHoldItemDetail={navigateToHouseHoldItemDetail}
-                        />
-                    ))
-                }
-            </View>
-        </View>
+
+        return <FlatGrid
+            maxItemsPerRow={3}
+            itemDimension={screenWidth * 0.3}
+            spacing={3}
+            data={categoryItems}
+            renderItem={renderItem}
+            scrollEnabled={false}
+        />
     }
 
     const navigateToHouseHoldItemDetail = (item: HouseHoldItemInterface) => {
@@ -139,11 +213,15 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <HouseHoldFilterBar householdCategory={householdCategory} choosenCategoryId={choosenCategoryId} choosenCategoryIndex={choosenCategoryIndex} setChoosenCategoryId={setChoosenCategoryId} setChoosenCategoryIndex={setChoosenCategoryIndex} />
+                    <SearchBar searchString={searchText} setSearchString={setSearchText} />
+                    {/* <HouseHoldFilterBar householdCategory={householdCategory} choosenCategoryId={choosenCategoryId} choosenCategoryIndex={choosenCategoryIndex} setChoosenCategoryId={setChoosenCategoryId} setChoosenCategoryIndex={setChoosenCategoryIndex} /> */}
                     <View className='my-2'
                     ></View>
+                    {/* <View style={{ flex: 1 }}>
+                        {gridView()}
+                    </View> */}
                     <View style={{ flex: 1 }}>
-                        {showCategoryItems()}
+                        {showContent()}
                     </View>
                 </ScrollView>
                 {/* <AddHouseHoldItemSheet refRBSheet={refRBSheet} setHouseHoldItem={setHouseholdItems} id_category={choosenCategoryId} id_family={id_family!} /> */}

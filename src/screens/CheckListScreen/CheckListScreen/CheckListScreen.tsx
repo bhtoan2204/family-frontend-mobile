@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native'
 import { ChecklistItemInterface, CheckListCategoryInterface } from 'src/interface/checklist/checklist';
-import ChecklistItemModal from '../AddItemCheckListSheet';
+// import ChecklistItemModal from '../AddItemCheckListSheet';
 import { CheckListScreenProps } from 'src/navigation/NavigationTypes';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { COLORS } from 'src/constants';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import AddItemCheckListSheet from '../AddItemCheckListSheet';
+// import AddItemCheckListSheet from '../AddItemCheckListSheet';
 import { compareDates } from 'src/utils/compareDate';
 import { checklist_category_type } from '../constant/checklist_category_type';
 import { shoppingListItemColor, shoppingListItemColorInside } from '../constant/color'
@@ -84,8 +84,21 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
                 </View> */}
                 <View className=' flex-1'></View>
             </View>
-            
-            <ChecklistSections checklist={filteredChecklist} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} handleNavigateCheckListDetail={handleNavigateCheckListDetail} searchString={searchString} setSearchString={setSearchString} bottomSheetRef={refRBSheet} />
+
+            <ChecklistSections
+                checklist={filteredChecklist}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                handleNavigateCheckListDetail={handleNavigateCheckListDetail}
+                searchString={searchString}
+                setSearchString={setSearchString}
+                bottomSheetRef={refRBSheet}
+                handleNavigateOpenAddShoppingList={() => {
+                    navigation.navigate('AddShoppingList', {
+                        id_family
+                    })
+                }}
+            />
 
             <AddCheckListCategoryItem bottomSheetRef={refRBSheet} id_family={id_family!} />
         </View>

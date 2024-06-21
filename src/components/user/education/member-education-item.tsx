@@ -28,7 +28,7 @@ const Divider = () => {
 interface MemberEducationItemProps {
     data: Education;
     onPress: () => void;
-    index?: number;
+    index: number;
 }
 
 const MemberEducationItem = ({ data, onPress, index }: MemberEducationItemProps) => {
@@ -126,7 +126,8 @@ const MemberEducationItem = ({ data, onPress, index }: MemberEducationItemProps)
                     </View>
                     <View className='mx-3 mb-3  py-4 items-center justify-center'
                         style={{
-                            backgroundColor: colors[Math.floor(Math.random() * colors.length)].backgroundColor,
+                            
+                            backgroundColor: colors[index % colors.length].backgroundColor,
                             opacity: 0.9,
                         }}
                     >

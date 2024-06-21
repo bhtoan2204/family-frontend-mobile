@@ -1,4 +1,4 @@
-interface HouseHoldItemDetailInterface {
+export interface HouseHoldItemDetailInterface {
   id_household_item: number;
   id_family: number;
   item_name: string;
