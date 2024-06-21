@@ -6,6 +6,7 @@ import {NewsInterface} from 'src/interface/news/news';
 import RssUrl from '../urls/rssUrl';
 
 const NewsService = {
+
   getNewsByCategory: async (
     type: string,
     page: number | null,
@@ -14,10 +15,9 @@ const NewsService = {
     try {
       const url =
         RssUrl.news + `?type=${type}&page=${page}&itemsPerPage=${itemsPerPage}`;
-      console.log('url get all guildline', url);
       const res = await instance.get(url);
-      const data = res.data.items;
-      return data as NewsInterface[];
+      const data = res.data;
+      return data;
     } catch (error) {
       console.error('Error fetching news:', error);
       throw error;

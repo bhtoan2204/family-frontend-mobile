@@ -2,205 +2,86 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {COLORS} from 'src/constants';
 const halfScreenHeight = Dimensions.get('window').height / 1.8;
 
-const screenHeight = Dimensions.get('screen').height;
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: '#16202D',
-  },
-  settingItemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginRight: 10,
-  },
-  textContainer: {
-    flex: 1,
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 15,
-    padding: 0,
-    paddingHorizontal: 20,
-  },
 
-  headerfile: {
+const styles = {
+  headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginHorizontal: 20,
-    marginVertical: 10,
-  },
-  icon: {
-    shadowColor: COLORS.AuroMetalSaurus,
-    shadowOffset: {width: 1, height: 1},
-    shadowOpacity: 10,
-    shadowRadius: 2,
-    padding: 15,
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
   backButton: {
-    color: COLORS.white,
-    padding: 10,
+    color: 'white',
   },
-  title: {
+  headerText: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: 'white',
   },
-  cardContainer: {
-    backgroundColor: 'rgba(42, 71, 94, 0.5)',
+  headerIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatarButton: {
+    width: 190,
+    height: 120,
     borderRadius: 20,
-    marginVertical: 0,
-    marginHorizontal: 10,
-    //shadowColor: COLORS.Blue,
-    shadowOffset: {
-      width: 20,
-      height: 1,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 1,
-    borderWidth: 0,
-    borderColor: COLORS.gray,
-    alignItems: 'center',
-    padding: 16,
-    flexDirection: 'row',
-  },
-  menuContainer: {
-    backgroundColor: 'rgba(42, 71, 94, 0.5)',
-    borderRadius: 20,
-    marginVertical: 0,
-    marginHorizontal: 10,
-    alignItems: 'center',
-    padding: 1,
-    flexDirection: 'row',
-    width: '90%',
-    bottom: 8,
-  },
-  cardBackground: {
-    flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center',
-  },
-  text: {
-    fontSize: 16,
-    color: COLORS.white,
-  },
-  nameText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: COLORS.white,
-  },
-  functionContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 1,
-    //marginBottom: screenHeight * 0.35,
-    //marginBottom: 240,
-  },
-  fucntionText: {
-    fontWeight: 'bold',
-    fontSize: 14,
-    padding: 10,
-    flexDirection: 'row',
-  },
-  iconContainer: {
-    alignItems: 'center',
-  },
-  settingContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
-  settingItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  settingText: {
-    marginLeft: 10,
-    fontSize: 16,
-  },
-  centeredView: {
-    flex: 1,
+    overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    borderWidth: 2,
+    borderColor: 'white',
   },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+  imageContainer: {
+    width: '100%',
+    height: '100%',
   },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  circle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: 'rgba(42, 71, 94, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    //overflow: 'hidden',
-  },
-  chat: {
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.2)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 70,
-    height: 70,
-    backgroundColor: '#1D1441',
-    borderRadius: 100,
+  editContainer: {
     position: 'absolute',
-    bottom: 10,
-    right: 10,
+    bottom: 0,
+    right: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: 8,
+    borderRadius: 15,
   },
-  row: {
+  editIcon: {
+    color: 'white',
+  },
+  scrollView: {
+    flex: 1,
+    paddingHorizontal: 16,
+    marginTop: 24,
+  },
+  touchableOpacity: {
+    marginTop: 30,
+    marginBottom: 40,
+  },
+  imageBackground: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 10,
   },
-  containerBottom: {
-    height: halfScreenHeight,
-    backgroundColor: 'rgba(42, 71, 94, 0.5)',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    shadowRadius: 3.84,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    //marginTop: 25,
-    padding: 20, // Xếp hàng
-    justifyContent: 'space-between',
+  imageBackgroundIcon: {
+    width: 60,
+    height: 60,
   },
-});
+  imageBackgroundTextContainer: {
+    flex: 3,
+    marginLeft: 16,
+  },
+  imageBackgroundText: {
+    fontSize: 18,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  imageBackgroundDescription:{
+    color: '#ccc',
+
+  }
+};
 
 export default styles;

@@ -68,7 +68,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 11,
   },
   card: {
-    // backgroundColor: 'rgba(42, 71, 94, 0.5)',
     backgroundColor: '#D9E3EA',
     paddingTop: 20,
     paddingHorizontal: 5,
@@ -254,6 +253,34 @@ const styles = StyleSheet.create({
   },
   icon: {
     color: '#2a475e',
+  },
+  avatarsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start', 
+    marginTop: 10, 
+  },
+  avatarContainer: {
+    marginRight: 10, 
+  },
+  avatar: {
+    width: 30, 
+    height: 30,
+    borderRadius: 25,
+  },
+  moreAvatarContainer: {
+    width: 50, 
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10, 
+  },
+  moreAvatarText: {
+    color: '#fff', 
+    fontSize: 20, 
+    fontWeight: 'bold', 
   },
 });
 

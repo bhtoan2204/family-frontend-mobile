@@ -6,10 +6,12 @@ import expenseAnalysisReducer from './slices/ExpenseAnalysis';
 import calendarReducer from './slices/CalendarSlice';
 import incomeAnalysisReducer from './slices/IncomeAnalysis';
 import forgorPasswordReducer from './slices/ForgotPassword';
+import familyReducer from './slices/FamilySlice';
 
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
+    family: familyReducer,
     checklist: checkListReducer,
     finance: financeReducer,
     expenseAnalysis: expenseAnalysisReducer,

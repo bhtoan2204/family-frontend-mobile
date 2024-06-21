@@ -19,6 +19,7 @@ import {selectProfile} from 'src/redux/slices/ProfileSclice';
 import {useDispatch, useSelector} from 'react-redux';
 import {Family} from 'src/interface/family/family';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import { Member } from 'src/interface/member/member';
 
 type ButtonProps = {
   title: string;
@@ -39,6 +40,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
   const [isUp, setIsUp] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [buttonPosition, setButtonPosition] = useState({x: 0, y: 0});
+  const [membersMap, setMembersMap] = useState<{ [key: number]: Member[] }>({}); 
 
   const Button = ({title, buttonStyle}: ButtonProps) => (
     <TouchableOpacity
@@ -104,32 +106,36 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
       family.name?.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
-    setFilteredFamilies(result); // Update the displayed families based on the search result
+    setFilteredFamilies(result); 
   };
 
   useEffect(() => {
     const handleGetAllFamily = async () => {
       try {
-        const result = await FamilyServices.getAllFamily();
-        setFamilies(result);
-      } catch (error: any) {
-        console.log('FamilyServices.getAllFamily error:', error);
+        const allFamilies = await FamilyServices.getAllFamily();
+        const membersObject: { [key: number]: Member[] } = {};
+    
+        for (const family of allFamilies) {
+          const members = await FamilyServices.getAllMembers({ id_family: family.id_family });
+          membersObject[family.id_family] = members;
+        }
+        setFamilies(allFamilies);
+        setMembersMap(membersObject);
+      } catch (error) {
+        console.log('Error fetching families or members:', error);
       }
     };
-    const unsubscribe = navigation.addListener('focus', () => {
-      handleGetAllFamily();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
+    handleGetAllFamily();
+   
+  }, []);
 
   return (
     <ImageBackground
       source={require('../../assets/images/view-all-family-2.png')}
       style={{flex: 1}}
       resizeMode="stretch">
-      <SafeAreaView style={{flex: 1}}>
-        <View style={[{flex: 1}]}>
+      <SafeAreaView style={{flex: 1,}}>
+        <View style={[{flex: 1, }]}>
           <View style={styles.circleContainer}>
             <TouchableOpacity style={styles.circle}>
               <MaterialIcons
@@ -139,7 +145,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                 color="#2a475e"
               />
             </TouchableOpacity>
-            <Text style={styles.headerTitle1}>Family&Member</Text>
+            <Text style={styles.headerTitle1}>Family Hub</Text>
             <TouchableOpacity style={styles.circle}>
               <Material
                 name="home-plus-outline"
@@ -169,7 +175,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
             </TouchableOpacity>
           </View>
 
-          <View style={[styles.row, {padding: 5}, {margin: 3}]}>
+          {/* <View style={[styles.row, {padding: 5}, {margin: 3}]}>
             <Button title="Name" buttonStyle={{left: 10}} iconName={''} />
             <Button
               title="Date"
@@ -177,7 +183,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
               iconName={''}
             />
             <Button title="Recently" buttonStyle={{right: 10}} iconName={''} />
-          </View>
+          </View> */}
 
           <Animated.ScrollView
             contentContainerStyle={styles.content}
@@ -193,15 +199,34 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                 <View style={styles.card}>
                   <TouchableOpacity>
                     <Image
-                      source={require('../../assets/images/family.jpg')}
-                      resizeMode="center"
+                      source={{ uri: family.avatar }}
                       style={styles.image}
                     />
                   </TouchableOpacity>
                   <View style={[styles.row]}>
                     <View style={styles.cardContainer2}>
                       <Text style={styles.cardTitle}>{family.name}</Text>
-                      <View style={styles.ColorAndDescription}>
+
+                       <View style={styles.avatarsContainer}>
+            {membersMap[family.id_family] && Array.isArray(membersMap[family.id_family]) && (
+              membersMap[family.id_family].slice(0, 4).map((member, index) => (
+                <View key={index} style={styles.avatarContainer}>
+                  <Image
+                    source={{ uri: member.avatar }}
+                    style={styles.avatar}
+                  />
+                </View>
+              ))
+            )}
+            {membersMap[family.id_family] && Array.isArray(membersMap[family.id_family]) && membersMap[family.id_family].length > 4 && (
+              <View style={styles.moreAvatarContainer}>
+                <Text style={styles.moreAvatarText}>+{membersMap[family.id_family].length - 4}</Text>
+              </View>
+            )}
+          </View>
+
+                      
+                      {/* <View style={styles.ColorAndDescription}>
                         <TouchableOpacity style={styles.color}>
                           <Material
                             name="alien-outline"
@@ -213,7 +238,10 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                           style={[styles.cardDescription, {marginLeft: 10}]}>
                           {family.description}
                         </Text>
-                      </View>
+                      </View> */}
+
+
+
                       <View style={styles.buttonPos}>
                         <LinearGradient
                           colors={['#09203F', '#537895']}

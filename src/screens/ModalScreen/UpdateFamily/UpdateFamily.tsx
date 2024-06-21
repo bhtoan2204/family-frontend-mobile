@@ -9,7 +9,6 @@ import styles from './styles';
 
 
 interface FormValues {
-  id_user: string;
   id_family: number;
   name: string;
   description: string;
@@ -64,7 +63,6 @@ const UpdateFamilyScreen: React.FC<UpdateFamilyScreenProps> = ({ route, navigati
             <View style={{ flex: 1, marginHorizontal: 5, marginTop: 5 }}>
               <Formik
                 initialValues={{
-                  id_user,
                   id_family,
                   name,
                   description,
