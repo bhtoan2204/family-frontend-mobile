@@ -196,17 +196,17 @@ const HomeScreen = ({
       },
     },
     {
-      icon: 'news',
-      label: 'Newspaper',
-      onPress: () => {
-        console.log('Newspaper pressed');
-      },
-    },
-    {
       icon: 'feedback',
       label: 'Feedback',
       onPress: () => {
         console.log('Feedback pressed');
+      },
+    },
+    {
+      icon: 'news',
+      label: 'Newspaper',
+      onPress: () => {
+        console.log('Newspaper pressed');
       },
     },
     {
@@ -392,12 +392,25 @@ const HomeScreen = ({
                         shadowOffset: {width: 0, height: 1},
                         shadowOpacity: 0.2,
                         shadowRadius: 5,
-                        marginTop: 10,
+                        marginTop: 20,
+                        overflow: 'visible',
                       }}>
                       <Image
                         source={icons[item.icon]}
                         style={{width: '75%', height: '75%'}}
                       />
+                      {(item.icon === 'feedback' || item.icon === 'chat') && (
+                        <Image
+                          source={require('src/assets/images/New Button.png')} // Đường dẫn đến hình "new"
+                          style={{
+                            position: 'absolute',
+                            top: -5,
+                            right: -20,
+                            width: 40, // Kích thước của hình "new"
+                            height: 18,
+                          }}
+                        />
+                      )}
                     </TouchableOpacity>
                     <Text
                       style={{
