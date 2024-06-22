@@ -9,6 +9,7 @@ import Notification from 'src/screens/Notifications';
 import WelcomeScreen from 'src/screens/WelcomeScreen';
 import EnterCodeScreen from 'src/screens/ForgotPassword/EnterCode';
 import ResetPassword from 'src/screens/ForgotPassword/ResetPassword/ResetPassword';
+import FeedbackScreen from 'src/screens/FeedBack/FeedBack';
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 const AuthStack = () => {
@@ -25,7 +26,7 @@ const AuthStack = () => {
       <Stack.Screen name="LandingPage" component={LandingPage} />
       <Stack.Screen name="EnterCodeScreen" component={EnterCodeScreen} />
       <Stack.Screen name="ResetPasswordScreen" component={ResetPassword} />
-
+      <Stack.Screen name="Feedback" component={FeedbackScreen} />
     </Stack.Navigator>
   );
 };

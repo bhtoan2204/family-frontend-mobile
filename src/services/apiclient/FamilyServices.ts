@@ -198,7 +198,6 @@ const FamilyServices = {
     phone?: string;
     role?: string;
   }) => {
-    console.log('addMember called with:', {id_family, gmail, phone, role});
     try {
       const response: AxiosResponse = await instance.post(FamilyUrl.addMember, {
         id_family,
@@ -206,17 +205,13 @@ const FamilyServices = {
         phone,
         role,
       });
-      console.log('Response from FamilyUrl.addMember:', response);
-      if (response.status === 200) {
-        console.log('Response status is 200, returning data:', response.data);
+      if (response.status === 201) {
+        //console.log('Response status is 200, returning data:', response.data);
         return response.data;
-      } else {
-        console.log('Response status is not 200, throwing error');
-        throw new Error(ERROR_TEXTS.ADD_MEMBER_ERROR);
-      }
+      } 
     } catch (error) {
       console.error('Error in addMember:', error);
-      throw new Error(ERROR_TEXTS.ADD_MEMBER_ERROR);
+      //throw new Error(ERROR_TEXTS.ADD_MEMBER_ERROR);
     }
   },
 

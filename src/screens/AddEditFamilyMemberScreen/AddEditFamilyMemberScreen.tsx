@@ -46,27 +46,27 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
   const [email, setEmail] = useState('');
   const [p_phone, setPhone] = useState('');
 
-  useEffect(() => {
-    getRole();
-  }, []);
+  // useEffect(() => {
+  //   getRole();
+  // }, []);
 
-  const getRole = async () => {
-    try {
-      const result = await RoleService.getAllRole();
-      if (result && Array.isArray(result)) {
-        const roles = result.map((role: any) => ({
-          label: role.name,
-          value: role.role,
-        }));
-        setRoles(roles);
-        console.log('Role data found in response:', result);
-      } else {
-        console.log('Role data not found or invalid in response:', result);
-      }
-    } catch (error: any) {
-      console.log('Failed to get roles', error);
-    }
-  };
+  // const getRole = async () => {
+  //   try {
+  //     const result = await RoleService.getAllRole();
+  //     if (result && Array.isArray(result)) {
+  //       const roles = result.map((role: any) => ({
+  //         label: role.name,
+  //         value: role.role,
+  //       }));
+  //       setRoles(roles);
+  //       console.log('Role data found in response:', result);
+  //     } else {
+  //       console.log('Role data not found or invalid in response:', result);
+  //     }
+  //   } catch (error: any) {
+  //     console.log('Failed to get roles', error);
+  //   }
+  // };
 
   const openContacts = async () => {
     navigation.navigate('Contact', {id_family});
@@ -74,14 +74,16 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
 
   const handleAddMember = async () => {
     try {
-      console.log(email, phone, selectedRole);
+      //console.log(email, phone, selectedRole);
+
       const result = await FamilyServices.addMember({
         id_family: id_family,
         gmail: email,
         phone: phone,
-        role: selectedRole,
+        role: 'Member',
       });
-      Alert.alert('Inform', result);
+      //console.log(result);
+      Alert.alert('Inform', result.data);
       console.log('FamilyServices.addMember result:', result);
     } catch (error: any) {
       console.log('FamilyServices.addMember result:', error);
@@ -175,7 +177,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                   styles.input,
                   {flexDirection: 'row', position: 'relative'},
                 ]}>
-                <DropDownPicker
+                {/* <DropDownPicker
                   open={isPickerOpen}
                   setOpen={setIsPickerOpen}
                   value={selectedRole}
@@ -187,8 +189,8 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                   }}
                   containerStyle={{height: 100, zIndex: 1}}
                   style={[styles.inputControl, {zIndex: 1, paddingLeft: 45}]} // Adjust paddingLeft to make room for the icon
-                />
-                <MaterialCommunityIcons
+                /> */}
+                {/* <MaterialCommunityIcons
                   name="hand-heart-outline"
                   size={26}
                   style={{
@@ -198,7 +200,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                     color: COLORS.Rhino,
                     zIndex: 2, // Ensure zIndex is higher than DropDownPicker
                   }}
-                />
+                /> */}
               </View>
             </View>
           </View>

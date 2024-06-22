@@ -189,7 +189,7 @@ const HomeScreen = ({
       icon: 'bundle',
       label: 'Bundles',
       onPress: () => {
-        console.log('Bundles pressed');
+        handlePackage();
       },
     },
     {
@@ -203,13 +203,15 @@ const HomeScreen = ({
       icon: 'feedback',
       label: 'Feedback',
       onPress: () => {
-        console.log('Feedback pressed');
+        navigation.navigate('AuthStack', {screen: 'Feedback'});
       },
     },
     {
       icon: 'news',
       label: 'Newspaper',
-      onPress: () => {handleNavigateNews()},
+      onPress: () => {
+        handleNavigateNews();
+      },
     },
     {
       icon: 'guideline',

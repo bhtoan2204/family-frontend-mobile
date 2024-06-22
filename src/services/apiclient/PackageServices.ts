@@ -101,12 +101,11 @@ const PackageServices = {
       const response: AxiosResponse = await instance.get(
         PackageUrl.getAllPackage,
         {
-          headers: {
-            Authorization: `Bearer ${await LocalStorage.GetAccessToken()}`,
-          },
+          
         },
       );
       if (response.status === 200) {
+        console.log('getAllPackage:', response.data);
         return response.data;
       } else {
         throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);

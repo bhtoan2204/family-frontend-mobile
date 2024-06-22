@@ -85,7 +85,7 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
           <View
             style={{
               top: 250,
-              backgroundColor: 'white',
+              backgroundColor: '#f0f0f0',
               padding: 20,
               borderTopLeftRadius: 60,
               borderTopRightRadius: 60,
@@ -154,98 +154,101 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
                 </TouchableOpacity>
               </View>
             </View>
-            <FlatList
-              data={filteredMembers}
-              renderItem={({item: member}) => (
-                <View style={{padding: 11, paddingHorizontal: 0}}>
-                  <TouchableOpacity style={styles.card}>
-                    <View style={styles.iconContainer}>
-                      <View
-                        style={{
-                          justifyContent: 'space-between',
-                          alignSelf: 'center',
-                          padding: 10,
-                          marginHorizontal: 5,
-                        }}>
-                        <Image
-                          source={{uri: member.avatar}}
-                          style={styles.avatar}
-                        />
-                      </View>
-                      <View style={styles.InforContainer}>
-                        <Text style={styles.RoleText}>{member.role}</Text>
+
+            <View style={{backgroundColor: '#f0f0f0'}}>
+              <FlatList
+                data={filteredMembers}
+                renderItem={({item: member}) => (
+                  <View style={{padding: 11, paddingHorizontal: 0}}>
+                    <TouchableOpacity style={styles.card}>
+                      <View style={styles.iconContainer}>
                         <View
                           style={{
-                            flexDirection: 'row',
-                            justifyContent: 'flex-start',
-                            alignContent: 'center',
-                            width: '70%',
-                          }}>
-                          <MaterialIcons
-                            name="person"
-                            style={{
-                              fontSize: 20,
-                              color: 'black',
-                              marginRight: 5,
-                            }}
-                          />
-                          <Text style={styles.nameText}>
-                            {member.firstname} {member.lastname}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: 'row',
                             justifyContent: 'space-between',
-                            alignContent: 'center',
-                            width: '70%',
+                            alignSelf: 'center',
+                            padding: 10,
+                            marginHorizontal: 5,
                           }}>
-                          <MaterialCommunityIcons
-                            name="email-outline"
-                            style={{
-                              fontSize: 16,
-                              color: 'black',
-                              marginRight: 5,
-                            }}
+                          <Image
+                            source={{uri: member.avatar}}
+                            style={styles.avatar}
                           />
-                          <Text
-                            style={styles.cardText}
-                            numberOfLines={1}
-                            ellipsizeMode="tail">
-                            {member.email}
-                          </Text>
                         </View>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignContent: 'center',
-                            width: '70%',
-                          }}>
-                          <MaterialCommunityIcons
-                            name="phone-outline"
+                        <View style={styles.InforContainer}>
+                          <Text style={styles.RoleText}>{member.role}</Text>
+                          <View
                             style={{
-                              fontSize: 16,
-                              color: 'black',
-                              marginRight: 5,
-                            }}
-                          />
-                          <Text
-                            style={styles.cardText}
-                            numberOfLines={1}
-                            ellipsizeMode="tail">
-                            {member.phone}
-                          </Text>
+                              flexDirection: 'row',
+                              justifyContent: 'flex-start',
+                              alignContent: 'center',
+                              width: '70%',
+                            }}>
+                            <MaterialIcons
+                              name="person"
+                              style={{
+                                fontSize: 20,
+                                color: 'black',
+                                marginRight: 5,
+                              }}
+                            />
+                            <Text style={styles.nameText}>
+                              {member.firstname} {member.lastname}
+                            </Text>
+                          </View>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                              alignContent: 'center',
+                              width: '70%',
+                            }}>
+                            <MaterialCommunityIcons
+                              name="email-outline"
+                              style={{
+                                fontSize: 16,
+                                color: 'black',
+                                marginRight: 5,
+                              }}
+                            />
+                            <Text
+                              style={styles.cardText}
+                              numberOfLines={1}
+                              ellipsizeMode="tail">
+                              {member.email}
+                            </Text>
+                          </View>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                              alignContent: 'center',
+                              width: '70%',
+                            }}>
+                            <MaterialCommunityIcons
+                              name="phone-outline"
+                              style={{
+                                fontSize: 16,
+                                color: 'black',
+                                marginRight: 5,
+                              }}
+                            />
+                            <Text
+                              style={styles.cardText}
+                              numberOfLines={1}
+                              ellipsizeMode="tail">
+                              {member.phone}
+                            </Text>
+                          </View>
                         </View>
                       </View>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              )}
-              keyExtractor={(item, index) => index.toString()}
-              ListFooterComponent={<View style={{height: 250}} />}
-              showsVerticalScrollIndicator={false}
-            />
+                    </TouchableOpacity>
+                  </View>
+                )}
+                keyExtractor={(item, index) => index.toString()}
+                ListFooterComponent={<View style={{height: 250}} />}
+                showsVerticalScrollIndicator={false}
+              />
+            </View>
           </View>
         </View>
 
