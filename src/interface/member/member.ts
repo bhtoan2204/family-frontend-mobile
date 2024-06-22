@@ -6,4 +6,6 @@ export interface Member {
   phone?: string;
   avatar?: string;
   role: string;
+  birthdate?: string | null;
+  genre?: string | null;
 }

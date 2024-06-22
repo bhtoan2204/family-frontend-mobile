@@ -10,6 +10,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/redux/store';
 import { ActivityIndicator } from 'react-native-paper';
+import SubjectItemEmpty from './SubjectItem/SubjectItemEmp';
 const data = {
     "message": "Success",
     "data": [
@@ -182,7 +183,7 @@ const SubjectDetailScreen: React.FC<SubjectDetailScreenProps> = ({ navigation, r
                     <SubjectItem isGraded={true} title='Homework 2' />
                     <SubjectItem isGraded={false} title='Homework 3' /> */}
                         {
-                            subjectDetailData.component_scores.map((item, index) => {
+                            subjectDetailData.component_scores && subjectDetailData.component_scores.map((item, index) => {
                                 return (
                                     <SubjectItem
                                         key={index} isGraded={item.score != null} subjectComponentData={item}
@@ -193,6 +194,15 @@ const SubjectDetailScreen: React.FC<SubjectDetailScreenProps> = ({ navigation, r
                                     />
                                 )
                             })
+                        }
+                        {
+                            subjectDetailData && subjectDetailData.component_scores == null && <SubjectItemEmpty
+                                bottomSheetRef={refRBSheet}
+                                index={-3}
+                                id_education_progress={id_education_progress}
+                                id_subject={id_subject}
+                                id_family={id_family!}
+                            />
                         }
                     </View>
 

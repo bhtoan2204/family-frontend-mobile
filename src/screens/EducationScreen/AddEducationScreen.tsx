@@ -36,6 +36,8 @@ import { HouseHoldItemInterface } from 'src/interface/household/household_item';
 
 import EduImage from 'src/assets/images/education_assets/add_edu.png';
 import { addEducation } from 'src/redux/slices/EducationSlice';
+import { Education } from 'src/interface/education/education';
+import EducationServices from 'src/services/apiclient/EducationService';
 
 const household_items = [
     {
@@ -126,6 +128,7 @@ const AddEducationScreen: React.FC<AddEducationScreenProps> = ({ navigation, rou
     const [progressNotes, setProgressNotes] = React.useState<string>("")
     const [schoolInfo, setSchoolInfo] = React.useState<string>("")
 
+    const members = useSelector((state: RootState) => state.members)
     const onSetName = (name: string) => {
         setHouseholdName(name)
     }
@@ -153,7 +156,7 @@ const AddEducationScreen: React.FC<AddEducationScreenProps> = ({ navigation, rou
         setSchoolInfo(info)
     }
 
-    const handleAdd = () => {
+    const handleAdd = async () => {
         console.log('add')
         // const newHouseholdItem: HouseHoldItemInterface = {
         //     id_family: id_family!,
@@ -164,15 +167,39 @@ const AddEducationScreen: React.FC<AddEducationScreenProps> = ({ navigation, rou
         //     id_household_item: Math.floor(Math.random() * 1000)
         // }
         // dispatch(addHouseholdItem(newHouseholdItem))
-        // dispatch(addEducation({
-        //     id_education_progress: Math.floor(Math.random() * 1000),
-        //     id_family: id_family,
-        //     id_user: idUser,
-        //     title: title,
-        //     progress_notes: progressNotes,
-        //     school_info: schoolInfo
-
-        // }))
+        const memberData = members.find(member => member.id_user === idUser)
+        const res = await EducationServices.createEducation(
+            id_family!,
+            idUser,
+            title,
+            progressNotes,
+            schoolInfo
+        )
+        if (res) {
+            const newEducation: Education = {
+                id_education_progress: res.id_education_progress,
+                id_family: id_family!,
+                id_user: idUser,
+                created_at: res.created_at,
+                updated_at: res.updated_at,
+                title: res.title,
+                progress_notes: res.progress_notes,
+                school_info: res.school_info,
+                subjects: [],
+                user: {
+                    avatar: memberData?.avatar || '',
+                    birthdate: memberData?.birthdate || null,
+                    firstname: memberData?.firstname || '',
+                    lastname: memberData?.lastname || '',
+                    genre: memberData?.genre || '',
+                }
+            }
+            dispatch(addEducation(newEducation))
+            navigation.goBack()
+        } else {
+            console.log("error")
+            navigation.goBack();
+        }
     }
 
     const navigationBack = () => {
@@ -310,6 +337,7 @@ const Step2Component = ({ setStep, idUser, onSetIdUser }: any) => {
     // const [isEmpty, setIsEmpty] = React.useState(0)
     const members = useSelector((state: RootState) => state.members)
     const [memberId, setMemberId] = React.useState<string>(idUser || '')
+
     // React.useEffect(() => {
     //     if (text.length == 0) {
     //         setIsEmpty(1)
@@ -333,7 +361,7 @@ const Step2Component = ({ setStep, idUser, onSetIdUser }: any) => {
                         <View className='w-[90%] mt-6'>
                             {
                                 members.map((member, index) => {
-                                    return <>
+                                    return <React.Fragment key={index}>
                                         <TouchableOpacity className='w-[100%] bg-white my-1 px-2 py-5  rounded-lg' style={{
                                             borderColor: memberId === member.id_user ? iOSColors.systemBlue.defaultLight : iOSGrayColors.systemGray6.defaultLight,
                                             borderWidth: memberId === member.id_user ? 2 : 1,
@@ -341,6 +369,7 @@ const Step2Component = ({ setStep, idUser, onSetIdUser }: any) => {
                                             if (memberId === member.id_user) {
                                                 setMemberId('')
                                             } else {
+                                                console.log(member.id_user)
                                                 setMemberId(member.id_user)
                                             }
                                         }}>
@@ -371,7 +400,7 @@ const Step2Component = ({ setStep, idUser, onSetIdUser }: any) => {
 
                                             </View>
                                         </TouchableOpacity>
-                                    </>
+                                    </React.Fragment>
                                 })
                             }
                         </View>
@@ -580,10 +609,10 @@ const Step3Component = ({
 
                         <View className='flex-1 mt-2 h-20 justify-center items-center' >
                             <TouchableOpacity activeOpacity={0.65} disabled={
-                                titleInput.length == 0
+                                title.length == 0
                             } className='w-[50%] items-center py-4 rounded-lg' style={{
 
-                                backgroundColor: titleInput.length == 0 ? iOSGrayColors.systemGray.accessibleDark : iOSColors.systemBlue.defaultLight,
+                                backgroundColor: title.length == 0 ? iOSGrayColors.systemGray.accessibleDark : iOSColors.systemBlue.defaultLight,
                             }} onPress={async () => {
                                 await handleAddEdu()
                             }}>

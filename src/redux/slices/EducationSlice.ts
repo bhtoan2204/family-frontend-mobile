@@ -45,24 +45,14 @@ const educationSlice = createSlice({
     addEducation(state, action: PayloadAction<Education>) {
       state.push(action.payload);
     },
-    updateEducation(state, action: PayloadAction<Education>) {
-      const index = state.findIndex(
-        education =>
-          education.id_education_progress ===
-          action.payload.id_education_progress,
-      );
-      if (index !== -1) {
-        state[index] = action.payload;
-      }
-    },
-    addSubject(
+    updateEducation(
       state,
       action: PayloadAction<{
         id_education_progress: number;
-        id_subject: number;
         id_family: number;
-        subject_name: string;
-        description: string;
+        title: string;
+        progress_notes: string;
+        school_info: string;
       }>,
     ) {
       const index = state.findIndex(
@@ -71,18 +61,33 @@ const educationSlice = createSlice({
           action.payload.id_education_progress,
       );
       if (index !== -1) {
-        const newSubject: Subject = {
-          id_subject: action.payload.id_subject,
-          id_education_progress: action.payload.id_education_progress,
-          subject_name: action.payload.subject_name,
-          description: action.payload.description,
-          component_scores: [],
-          midterm_score: null,
-          final_score: null,
-          bonus_score: null,
-          status: 'in_progress',
+        state[index] = {
+          ...state[index],
+          title: action.payload.title,
+          progress_notes: action.payload.progress_notes,
+          school_info: action.payload.school_info,
         };
-        state[index].subjects.push(newSubject);
+      }
+    },
+    addSubject(state, action: PayloadAction<Subject>) {
+      const index = state.findIndex(
+        education =>
+          education.id_education_progress ===
+          action.payload.id_education_progress,
+      );
+      if (index !== -1) {
+        // const newSubject: Subject = {
+        //   id_subject: action.payload.id_subject,
+        //   id_education_progress: action.payload.id_education_progress,
+        //   subject_name: action.payload.subject_name,
+        //   description: action.payload.description,
+        //   component_scores: [],
+        //   midterm_score: null,
+        //   final_score: null,
+        //   bonus_score: null,
+        //   status: 'in_progress',
+        // };
+        state[index].subjects.push(action.payload);
       }
     },
     deleteSubject(

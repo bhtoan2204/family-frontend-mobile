@@ -66,8 +66,8 @@ export interface Education {
     firstname: string;
     lastname: string;
     avatar: string;
-    genre: string;
-    birthdate: string;
+    genre?: string | null;
+    birthdate?: string | null;
   };
 }
 export interface EducationDetail {

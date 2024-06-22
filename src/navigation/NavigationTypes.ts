@@ -197,6 +197,9 @@ export type FamilyStackParamList = {
   EditEducation: {
     id_family: number | undefined;
     id_education_progress: number;
+    title: string | null;
+    progress_notes: string | null;
+    school_info: string | null;
   };
   AddSubject: {
     id_family: number | undefined;

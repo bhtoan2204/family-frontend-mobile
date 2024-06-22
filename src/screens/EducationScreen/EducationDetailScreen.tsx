@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Dimensions } from 'react-native'
 import { EducationDetailScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants';
@@ -12,38 +12,40 @@ import CourseItem from 'src/components/user/education/course-item';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/redux/store';
 import { ActivityIndicator } from 'react-native-paper';
-const data = {
-    "message": "Success",
-    "data": [
-        {
-            "id_education_progress": 3,
-            "education_progress_info": {
-                "id_education_progress": 3,
-                "id_family": 96,
-                "id_user": "db31bfb8-ec15-4cb1-9cbe-ebe3edaca323",
-                "title": "Học trên trường",
-                "progress_notes": "tình hình ko ổn, lười học quá",
-                "created_at": "2024-04-09T04:29:20.875637",
-                "updated_at": "2024-04-09T04:39:57.716122",
-                "school_info": "địa chỉ cơ sở 2 nguyễn văn cừ, đh khoa học tự nhiên"
-            },
-            "subjects_info": [
-                {
-                    "id_subject": 6,
-                    "subject_name": "Introduction to Statistics",
-                    "description": "Stanford's \"Introduction to Statistics\" teaches you statistical thinking concepts that are essential for learning from data and communicating insights.",
-                    "status": "in_progress"
-                },
-                {
-                    "id_subject": 4,
-                    "subject_name": "Discrete mathematics",
-                    "description": "Discrete mathematics is the study of mathematical structures that can be considered \"discrete\" rather than \"continuous\". Objects studied in discrete mathematics include integers, graphs, and statements in logic.",
-                    "status": "done"
-                }
-            ]
-        }
-    ]
-}
+import { iOSGrayColors } from 'src/constants/ios-color';
+// const data = {
+//     "message": "Success",
+//     "data": [
+//         {
+//             "id_education_progress": 3,
+//             "education_progress_info": {
+//                 "id_education_progress": 3,
+//                 "id_family": 96,
+//                 "id_user": "db31bfb8-ec15-4cb1-9cbe-ebe3edaca323",
+//                 "title": "Học trên trường",
+//                 "progress_notes": "tình hình ko ổn, lười học quá",
+//                 "created_at": "2024-04-09T04:29:20.875637",
+//                 "updated_at": "2024-04-09T04:39:57.716122",
+//                 "school_info": "địa chỉ cơ sở 2 nguyễn văn cừ, đh khoa học tự nhiên"
+//             },
+//             "subjects_info": [
+//                 {
+//                     "id_subject": 6,
+//                     "subject_name": "Introduction to Statistics",
+//                     "description": "Stanford's \"Introduction to Statistics\" teaches you statistical thinking concepts that are essential for learning from data and communicating insights.",
+//                     "status": "in_progress"
+//                 },
+//                 {
+//                     "id_subject": 4,
+//                     "subject_name": "Discrete mathematics",
+//                     "description": "Discrete mathematics is the study of mathematical structures that can be considered \"discrete\" rather than \"continuous\". Objects studied in discrete mathematics include integers, graphs, and statements in logic.",
+//                     "status": "done"
+//                 }
+//             ]
+//         }
+//     ]
+// }
+const { height: screenHeight } = Dimensions.get("screen")
 const EducationDetailScreen: React.FC<EducationDetailScreenProps> = ({ navigation, route }) => {
     const { id_education_progress, id_family } = route.params
     const educationDetailData = useSelector((state: RootState) => state.educations).find((item) => item.id_education_progress === id_education_progress)
@@ -102,6 +104,24 @@ const EducationDetailScreen: React.FC<EducationDetailScreenProps> = ({ navigatio
                                 </React.Fragment>
                             )
                         })
+                    }
+
+                    {
+                        educationDetailData && educationDetailData.subjects.length == 0 && (
+                            <TouchableOpacity activeOpacity={0.65} className='flex-1  mt-4  rounded-lg bg-white' onPress={() => {
+                                navigation.navigate("AddSubject", {
+                                    id_family: id_family,
+                                    id_education_progress: id_education_progress,
+                                })
+                            }}>
+                                <View className=' flex-row items-center  p-4'>
+                                    <View className="w-16 h-16 mr-4  items-center justify-center">
+                                        <Material name="plus" size={20} style={{ fontWeight: "bold" }} />
+                                    </View>
+                                    <Text className='text-lg ' >Add a subject</Text>
+                                </View>
+                            </TouchableOpacity>
+                        )
                     }
 
                 </ScrollView>

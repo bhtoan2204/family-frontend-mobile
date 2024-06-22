@@ -17,8 +17,9 @@ import { ActivityIndicator } from 'react-native-paper';
 import MemberEducationItem from 'src/components/user/education/member-education-item';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/redux/store';
-import { clearEducation, setEducation } from 'src/redux/slices/EducationSlice';
+import { clearEducation, deleteEducation, setEducation } from 'src/redux/slices/EducationSlice';
 import { clearMembers, setMembers } from 'src/redux/slices/MemberSlice';
+import EducationServices from 'src/services/apiclient/EducationService';
 
 const data = {
     "message": "Success",
@@ -142,14 +143,16 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
         }
     }, [])
 
+
     useEffect(() => {
         const handleFetchEducation = async () => {
             //api call here
             // const edu = data2.data;
-            const edu = data2.data.map(education => {
+            const educationsData = await EducationServices.getAllEducation(id_family!);
+            const edu = educationsData.map((education: any) => {
                 return {
                     ...education,
-                    subjects: education.subjects.map(subject => {
+                    subjects: education.subjects.map((subject: any) => {
                         return {
                             ...subject,
                             midterm_score: {
@@ -163,7 +166,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                         };
                     }),
                 };
-            });
+            }) as Education[];
             dispatch(setEducation(edu))
         }
         handleFetchEducation()
@@ -233,6 +236,21 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                                         })
                                     }}
                                         index={index}
+                                        handleNavigationEdit={
+                                            () => {
+                                                navigation.navigate('EditEducation', {
+                                                    id_education_progress: item.id_education_progress,
+                                                    id_family: id_family,
+                                                    title: item.title,
+                                                    school_info: item.school_info,
+                                                    progress_notes: item.progress_notes,
+                                                })
+                                            }}
+                                        handleDeleteEducation={
+                                            async () => {
+                                                await EducationServices.deleteEducation(item.id_education_progress, id_family!)
+                                            }
+                                        }
                                     />
                                 </React.Fragment>
                             )

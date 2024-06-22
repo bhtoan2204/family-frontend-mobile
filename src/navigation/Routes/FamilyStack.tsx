@@ -5,7 +5,7 @@ import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
 import ViewFamilyScreen from 'src/screens/FamilyScreen';
 import ViewAllMemberScreen from 'src/screens/AllMember';
 import AddMemberScreen from 'src/screens/AddEditFamilyMemberScreen';
-import { AddEditFamilyMemberScreenProps, AddEducationScreenProps, AddGuildLineScreenProps, AddHouseHoldItemDetailScreenProps, AddHouseHoldItemScreenProps, AddHouseHoldRoomScreenProps, AddShoppingListScreenProps, AddSubjectScreenProps, AllMemberScreenProps, CheckListDetailScreenProps, CheckListScreenProps, ContactScreenProps, CreateFamilyScreenProps, EditExpenseHouseHoldItemScreenProps, EducationDetailScreenProps, EducationScreenProps, GuildLineDetailScreenProps, GuildLineScreenProps, HouseHoldItemDetailScreenProps, HouseHoldItemScreenProps, HouseHoldScreenProps, NewsScreenProps, SharedGuildLineScreenProps, SubjectDetailScreenProps, UpdateGuildLineScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
+import { AddEditFamilyMemberScreenProps, AddEducationScreenProps, AddGuildLineScreenProps, AddHouseHoldItemDetailScreenProps, AddHouseHoldItemScreenProps, AddHouseHoldRoomScreenProps, AddShoppingListScreenProps, AddSubjectScreenProps, AllMemberScreenProps, CheckListDetailScreenProps, CheckListScreenProps, ContactScreenProps, CreateFamilyScreenProps, EditEducationScreenProps, EditExpenseHouseHoldItemScreenProps, EducationDetailScreenProps, EducationScreenProps, GuildLineDetailScreenProps, GuildLineScreenProps, HouseHoldItemDetailScreenProps, HouseHoldItemScreenProps, HouseHoldScreenProps, NewsScreenProps, SharedGuildLineScreenProps, SubjectDetailScreenProps, UpdateGuildLineScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
 import ContactListScreen from 'src/screens/ContactList/ContactList';
 import GuildLineScreen from 'src/screens/GuildLineScreen/GuildLineScreen';
 import GuildLineDetailScreen from 'src/screens/GuildLineScreen/GuildLineDetailScreen';
@@ -28,6 +28,7 @@ import AddSubjectScreen from 'src/screens/EducationScreen/AddSubjectScreen';
 import AddGuildLineScreen from 'src/screens/GuildLineScreen/AddGuildlineScreen';
 import UpdateGuildLineScreen from 'src/screens/GuildLineScreen/UpdateGuildlineScreen';
 import AddShoppingListcreen from 'src/screens/CheckListScreen/AddShoppingListScreen';
+import EditEducationScreen from 'src/screens/EducationScreen/EditEducationScreen';
 const Stack = createNativeStackNavigator();
 
 const FamilyStack = () => {
@@ -93,6 +94,12 @@ const FamilyStack = () => {
         presentation: 'fullScreenModal',
       }}>
         {(props) => <AddEducationScreen {...props as AddEducationScreenProps} />}
+      </Stack.Screen>
+      <Stack.Screen name="EditEducation" options={{
+        animation: 'slide_from_bottom',
+        presentation: 'fullScreenModal',
+      }}>
+        {(props) => <EditEducationScreen {...props as EditEducationScreenProps} />}
       </Stack.Screen>
       <Stack.Screen name="AddSubject" options={{
         animation: 'slide_from_bottom',

@@ -19,6 +19,10 @@ import {
 
 } from 'react-native-popup-menu';
 import { colors } from './const/color';
+import { AppDispatch } from 'src/redux/store';
+import { useDispatch } from 'react-redux';
+import EducationServices from 'src/services/apiclient/EducationService';
+import { deleteEducation } from 'src/redux/slices/EducationSlice';
 const Divider = () => {
     return (
         <View style={{ borderBottomWidth: 1, borderBottomColor: '#7F8487', opacity: 0.3 }} />
@@ -29,16 +33,22 @@ interface MemberEducationItemProps {
     data: Education;
     onPress: () => void;
     index: number;
+    handleNavigationEdit: () => void;
+    handleDeleteEducation: () => Promise<void>;
 }
 
-const MemberEducationItem = ({ data, onPress, index }: MemberEducationItemProps) => {
-
-    const getColor = (progress: number) => {
-        if (progress < 30) return iOSColors.systemRed.defaultLight;
-        if (progress == 100) return iOSColors.systemGreen.defaultLight;
-        return iOSColors.systemBlue.defaultLight;
+const MemberEducationItem = ({ data, onPress, index, handleNavigationEdit, handleDeleteEducation }: MemberEducationItemProps) => {
+    const dispatch = useDispatch<AppDispatch>()
+    // const getColor = (progress: number) => {
+    //     if (progress < 30) return iOSColors.systemRed.defaultLight;
+    //     if (progress == 100) return iOSColors.systemGreen.defaultLight;
+    //     return iOSColors.systemBlue.defaultLight;
+    // }
+    const handleDelete = async () => {
+        await handleDeleteEducation()
+        dispatch(deleteEducation(data.id_education_progress))
+        // const res = await EducationServices.deleteEducation()
     }
-
     return (
         <TouchableOpacity activeOpacity={0.65} className=' h-auto  mt-4 mx-3 rounded-md border-[1px] overflow-hidden' onPress={onPress} style={{
             borderColor: iOSGrayColors.systemGray6.accessibleLight,
@@ -80,6 +90,7 @@ const MemberEducationItem = ({ data, onPress, index }: MemberEducationItemProps)
                                         <MenuOption onSelect={() => {
                                             // setIsEditing(true)
                                             // handleEditGuildline()
+                                            handleNavigationEdit()
                                         }} >
 
                                             <View className='flex-row items-center justify-between'>
@@ -110,6 +121,7 @@ const MemberEducationItem = ({ data, onPress, index }: MemberEducationItemProps)
                                         <Divider /> */}
                                         <MenuOption onSelect={async () => {
                                             // handleDeleteGuideline()
+                                            await handleDelete()
                                         }} >
 
                                             <View className='flex-row items-center justify-between'>
@@ -126,7 +138,7 @@ const MemberEducationItem = ({ data, onPress, index }: MemberEducationItemProps)
                     </View>
                     <View className='mx-3 mb-3  py-4 items-center justify-center'
                         style={{
-                            
+
                             backgroundColor: colors[index % colors.length].backgroundColor,
                             opacity: 0.9,
                         }}

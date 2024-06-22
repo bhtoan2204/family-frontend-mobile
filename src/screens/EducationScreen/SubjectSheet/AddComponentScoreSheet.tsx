@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { Dimensions, KeyboardAvoidingView, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { TextInput as TextInputPaper } from 'react-native-paper'
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { COLORS } from 'src/constants';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,6 +12,8 @@ import { Subject } from 'src/interface/education/education';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'src/redux/store';
 import { addComponentScoreToSubject } from 'src/redux/slices/EducationSlice';
+import { iOSColors } from 'src/constants/ios-color';
+import EducationServices from 'src/services/apiclient/EducationService';
 // import PickImageSheet from 'src/screens/GuildLineScreen/PickImageSheet/PickImageSheet';
 
 interface AddComponentScoreSheetProps {
@@ -31,7 +34,7 @@ const AddComponentScoreSheet = ({ refRBSheet, id_education_progress, id_family, 
     const nameInputRef = React.useRef<TextInput>(null);
     const descriptionInputRef = React.useRef<TextInput>(null);
     const dispatch = useDispatch<AppDispatch>();
-    const handleAddComponentScore = () => {
+    const handleAddComponentScore = async () => {
         // setSubjectDetailData((prev) => {
         //     return {
         //         ...prev,
@@ -49,16 +52,29 @@ const AddComponentScoreSheet = ({ refRBSheet, id_education_progress, id_family, 
         //     }
 
         // })
-        dispatch(addComponentScoreToSubject({
-            component_name: name,
-            // expected_score: null,
-            score: null,
-            id_subject: id_subject,
-            id_family: id_family,
-            id_education_progress: id_education_progress,
-            
-        }))
-        refRBSheet.current?.close()
+        const res = await EducationServices.addComponentScore(
+            id_subject
+            , id_education_progress
+            , id_family
+            , name
+            , 0
+        )
+        if (res) {
+            dispatch(addComponentScoreToSubject({
+                component_name: name,
+                // expected_score: null,
+                score: 0,
+                id_subject: id_subject,
+                id_family: id_family,
+                id_education_progress: id_education_progress,
+
+            }))
+            refRBSheet.current?.close()
+        }
+        else {
+            console.log("error")
+            refRBSheet.current?.close()
+        }
     }
 
 
@@ -93,15 +109,19 @@ const AddComponentScoreSheet = ({ refRBSheet, id_education_progress, id_family, 
                         onPress={() => {
                             refRBSheet.current?.close()
                         }}
-                    ><Text className='text-blue-600 text-base pl-4'>Cancel</Text>
+                    ><Text className=' text-base pl-4'
+                        style={{
+                            color: iOSColors.systemRed.defaultLight
+                        }}
+                    >Cancel</Text>
                     </TouchableOpacity>
 
                     <View>
-                        <Text className='text-base font-semibold'>Add Subject</Text>
+                        <Text className='text-base font-semibold'>Add Component Score</Text>
                     </View>
 
-                    <TouchableOpacity onPress={() => {
-                        handleAddComponentScore()
+                    <TouchableOpacity onPress={async () => {
+                        await handleAddComponentScore()
                     }} className='pr-4 disabled:text-gray-600 text-blue-600' disabled={
                         name === ""
                     }>
@@ -112,14 +132,18 @@ const AddComponentScoreSheet = ({ refRBSheet, id_education_progress, id_family, 
                     <ScrollView showsVerticalScrollIndicator={true} className='flex-1 ' keyboardShouldPersistTaps="handled" >
                         <View className='p-4'>
 
-                            <TextInput
+                            <TextInputPaper
+                                outlineColor='transparent'
+                                label={"Component Name"}
+
                                 style={{
                                     borderWidth: 1,
                                     borderColor: "#ccc",
                                     borderRadius: 5,
                                     marginBottom: 20,
                                     fontSize: 17,
-                                    padding: 17,
+                                    paddingLeft: 17,
+                                    paddingVertical: 13,
                                 }}
                                 ref={nameInputRef}
                                 editable
@@ -128,6 +152,12 @@ const AddComponentScoreSheet = ({ refRBSheet, id_education_progress, id_family, 
                                 onChangeText={(text) => setName(text)}
                                 className='bg-white'
                                 autoFocus
+                                returnKeyLabel='done'
+                                returnKeyType='done'
+                                onSubmitEditing={async () => {
+                                    await handleAddComponentScore()
+                                    // refRBSheet.current?.close()
+                                }}
                             />
 
                         </View>

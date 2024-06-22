@@ -19,6 +19,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/redux/store';
 import CourseIcon from 'src/assets/images/education_assets/course.png';
 import { useKeyboardVisible } from 'src/hooks/useKeyboardVisible';
+import EducationServices from 'src/services/apiclient/EducationService';
+import { Subject } from 'src/interface/education/education';
+import { addSubject } from 'src/redux/slices/EducationSlice';
 
 
 
@@ -26,13 +29,54 @@ const screenWidth = Dimensions.get('screen').width
 const screenHeight = Dimensions.get('screen').height
 
 const AddSubjectScreen: React.FC<AddSubjectScreenProps> = ({ navigation, route }) => {
-    const { id_family } = route.params
+    const { id_family, id_education_progress } = route.params
     // const [rooms, setRooms] = React.useState(roomsData)
     // const ItemData = household_items.find(item => item.id_household_item === id_item)
     // const isKeyboardVisible = useKeyboardVisible()
     const [isFocused, setIsFocused] = React.useState(false)
     const [text, setText] = React.useState('')
     const dispatch = useDispatch<AppDispatch>()
+
+    const handleAddSubject = async () => {
+        // const response = await EducationServices.createEducation(id_family, id_user, title, progress_notes, school_info)
+        const response = await EducationServices.createSubject(
+            id_education_progress,
+            id_family!,
+            text,
+            ""
+        )
+        if (response) {
+            // console.log(response)
+            const newSubject: Subject = {
+                component_scores: response.component_scores,
+                id_education_progress: id_education_progress,
+                id_subject: response.id_subject,
+                subject_name: response.subject_name,
+                description: response.description,
+                final_score: {
+                    score: response.final_score,
+                    // expected_score: response.final_score.expected_score
+                    component_name: "Final"
+                },
+                midterm_score: {
+                    score: response.midterm_score,
+                    // expected_score: response.midterm_score.expected_score
+                    component_name: "Midterm"
+
+                },
+                bonus_score: response.bonus_score,
+                status: response.status
+            }
+            dispatch(addSubject(newSubject))
+            navigation.goBack()
+        }
+        else {
+            console.log('error')
+            navigation.goBack()
+        }
+        // dispatch(addEducation(response))
+        // navigation.goBack()
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-[#FBF8F1]">
@@ -103,25 +147,16 @@ const AddSubjectScreen: React.FC<AddSubjectScreenProps> = ({ navigation, route }
                             }}
                             keyboardType='default'
                             keyboardAppearance='default'
-                            onSubmitEditing={() => {
-                                console.log(1)
-                                const fakeId = Math.floor(Math.random() * 1000)
-                                console.log({ id_room: fakeId, room_name: text })
-                                // dispatch(addRoom({
-                                //     id_room: fakeId, room_name: text
-                                // }))
-                                // onAddRoom ? ({
-                                //     id_room: Math.random(), room_name: text
-                                // })
-                                navigation.goBack()
+                            onSubmitEditing={async () => {
+                                await handleAddSubject()
                             }}
                             clearButtonMode="always"
                         />
                         <TouchableOpacity
                             activeOpacity={0.65}
                             disabled={text == ""}
-                            onPress={() => {
-
+                            onPress={async () => {
+                                await handleAddSubject()
                             }}
                             className=' bg-blue-200 items-center justify-center' style={{
                                 width: screenHeight * 0.08,
