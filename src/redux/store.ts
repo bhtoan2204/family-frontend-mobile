@@ -10,11 +10,13 @@ import guidelineReducer from './slices/GuidelineSlice';
 import householdItemSlice from './slices/HouseHoldSlice';
 import educationSlice from './slices/EducationSlice';
 import memberSlice from './slices/MemberSlice';
+import shoppingListSlice from './slices/ShoppingListSlice';
 
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
     checklist: checkListReducer,
+    shoppinglist: shoppingListSlice,
     finance: financeReducer,
     expenseAnalysis: expenseAnalysisReducer,
     calendar: calendarReducer,

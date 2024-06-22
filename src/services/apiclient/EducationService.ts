@@ -2,10 +2,7 @@ import {AxiosResponse} from 'axios';
 import {ERROR_TEXTS} from 'src/constants';
 import instance from '../httpInterceptor';
 import {ProfileUrl, ShoppingListUrls, EducationUrls} from '../urls';
-import {
-  CheckListCategoryInterface,
-  CheckListCategoryTypeInterface,
-} from 'src/interface/checklist/checklist';
+
 import {
   Education,
   EducationDetail,

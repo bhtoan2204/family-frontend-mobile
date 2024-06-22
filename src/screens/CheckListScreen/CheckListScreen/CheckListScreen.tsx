@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native'
-import { ChecklistItemInterface, CheckListCategoryInterface } from 'src/interface/checklist/checklist';
+import { ShoppingListItemInterface, ShoppingListCategoryInterface } from 'src/interface/checklist/checklist';
 // import ChecklistItemModal from '../AddItemCheckListSheet';
 import { CheckListScreenProps } from 'src/navigation/NavigationTypes';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -15,12 +15,13 @@ import AddCheckListCategoryItem from '../AddCheckListCategoryItem/AddCheckListCa
 import { AppDispatch, RootState } from 'src/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setInitialCheckList } from 'src/redux/slices/CheckListSlice';
+import { setInitialShoppingList } from 'src/redux/slices/ShoppingListSlice';
 
 const today = new Date();
 const yesterday = new Date(today.setDate(today.getDate() - 1));
 const tomorrow = new Date(today.setDate(today.getDate() + 1));
 
-const checkListListData: CheckListCategoryInterface[] = [
+const checkListListData: ShoppingListCategoryInterface[] = [
     { id_list: 1, id_item_type: 1, id_family: 1, title: 'Grocery Title 1', completed: 0, total: 0, createdAt: today.toDateString(), checklistItems: [] },
     { id_list: 2, id_item_type: 2, id_family: 1, title: 'Random Title 2', completed: 0, total: 0, createdAt: yesterday.toDateString(), checklistItems: [] },
     { id_list: 3, id_item_type: 3, id_family: 1, title: 'Random Title 3', completed: 0, total: 0, createdAt: tomorrow.toDateString(), checklistItems: [] },
@@ -37,11 +38,14 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
     const refRBSheet = React.useRef<any>(null);
     // const [checklist, setChecklist] = React.useState<CheckListCategoryInterface[]>([]);
     const checklist = useSelector((state: RootState) => state.checklist)
-    const [selectedItem, setSelectedItem] = React.useState<ChecklistItemInterface | null>(null);
-    const [sections, setSections] = React.useState<{ title: string, data: ChecklistItemInterface[] }[]>([]);
+    const shoppinglist = useSelector((state: RootState) => state.shoppinglist)
+
+    const [selectedItem, setSelectedItem] = React.useState<ShoppingListItemInterface | null>(null);
+    const [sections, setSections] = React.useState<{ title: string, data: ShoppingListItemInterface[] }[]>([]);
     const [selectedCategory, setSelectedCategory] = React.useState<number | null>(null);
     const [searchString, setSearchString] = React.useState<string>('');
-    const [filteredChecklist, setFilteredChecklist] = React.useState<CheckListCategoryInterface[]>([]);
+    const [filteredChecklist, setFilteredChecklist] = React.useState<ShoppingListCategoryInterface[]>([]);
+    const [filteredShoppingList, setFilteredShoppingList] = React.useState<ShoppingListCategoryInterface[]>([]);
     // const sections: { title: string, data: ChecklistItemInterface[] }[] = [];
 
     const handleNavigateCheckListDetail = (id_checklist: number) => {
@@ -54,6 +58,7 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
         })
 
         dispatch(setInitialCheckList(newCheckListData))
+        dispatch(setInitialShoppingList(newCheckListData))
         // setChecklist(newCheckListData)
 
     }, [])
@@ -64,11 +69,16 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
             (selectedCategory === null || item.id_item_type === selectedCategory) &&
             (searchString === '' || item.title.toLowerCase().includes(searchString.toLowerCase()))
         )
+        const filtered2 = shoppinglist.filter(item =>
+            (searchString === '' || item.title.toLowerCase().includes(searchString.toLowerCase()))
+        )
+
         filtered.map(item => {
             item.category_name = checklist_category_type.find(type => type.id_item_type === item.id_item_type)?.item_type_name
         })
         setFilteredChecklist(filtered)
-    }, [searchString, selectedCategory, checklist])
+        setFilteredShoppingList(filtered2)
+    }, [searchString, selectedCategory, checklist, shoppinglist])
 
 
 
@@ -86,6 +96,7 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
             </View>
 
             <ChecklistSections
+                shoppinglist={filteredShoppingList}
                 checklist={filteredChecklist}
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}

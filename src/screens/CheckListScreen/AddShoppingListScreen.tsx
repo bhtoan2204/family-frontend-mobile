@@ -53,7 +53,9 @@ const AddShoppingListScreen: React.FC<AddShoppingListScreenProps> = ({ navigatio
                     automaticallyAdjustKeyboardInsets={true}
                     automaticallyAdjustsScrollIndicatorInsets={true}
                     automaticallyAdjustContentInsets={true}
-                    keyboardShouldPersistTaps="handled">
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
+                >
                     <View className='flex-1 '>
                         <View className='w-full items-center mt-5 flex-row justify-between '>
                             <View style={{

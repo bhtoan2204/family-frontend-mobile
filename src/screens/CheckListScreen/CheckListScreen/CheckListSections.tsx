@@ -1,6 +1,6 @@
 import React from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { CheckListCategoryInterface } from "src/interface/checklist/checklist";
+import { ShoppingListCategoryInterface } from "src/interface/checklist/checklist";
 import { compareDates } from "src/utils/compareDate";
 import CategoryTypeScrollList from "./CategoryTypeScrollList";
 import SearchBar from "./SearchBar";
@@ -21,7 +21,8 @@ const yesterday = new Date(today.setDate(today.getDate() - 1));
 const tomorrow = new Date(today.setDate(today.getDate() + 1));
 
 interface ChecklistSectionsProps {
-    checklist: CheckListCategoryInterface[];
+    shoppinglist: ShoppingListCategoryInterface[];
+    checklist: ShoppingListCategoryInterface[];
     selectedCategory: number | null;
     setSelectedCategory: React.Dispatch<React.SetStateAction<number | null>>;
     handleNavigateCheckListDetail: (id_checklist: number) => void;
@@ -31,7 +32,7 @@ interface ChecklistSectionsProps {
     handleNavigateOpenAddShoppingList: () => void;
 }
 
-const ChecklistSections = ({ checklist, selectedCategory, setSelectedCategory, handleNavigateCheckListDetail, searchString, setSearchString, bottomSheetRef, handleNavigateOpenAddShoppingList }: ChecklistSectionsProps) => {
+const ChecklistSections = ({ shoppinglist, checklist, selectedCategory, setSelectedCategory, handleNavigateCheckListDetail, searchString, setSearchString, bottomSheetRef, handleNavigateOpenAddShoppingList }: ChecklistSectionsProps) => {
     // const [sections, setSections] = React.useState<{ title: string, data: CheckListCategoryInterface[], }[]>([]);
     const dispatch = useDispatch<AppDispatch>();
 

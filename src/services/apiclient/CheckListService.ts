@@ -2,7 +2,10 @@ import {AxiosResponse} from 'axios';
 import {ERROR_TEXTS} from 'src/constants';
 import instance from '../httpInterceptor';
 import {ProfileUrl, ShoppingListUrls} from '../urls';
-import {CheckListCategoryInterface, CheckListCategoryTypeInterface} from 'src/interface/checklist/checklist';
+import {
+  ShoppingListCategoryInterface,
+  ShoppingListCategoryTypeInterface,
+} from 'src/interface/checklist/checklist';
 
 const CheckListServices = {
   getAllShoppingListTypes: async () => {
@@ -12,7 +15,7 @@ const CheckListServices = {
       );
 
       if (response.status === 200) {
-        return response.data.data as CheckListCategoryTypeInterface[];
+        return response.data.data as ShoppingListCategoryTypeInterface[];
       } else {
         return [];
       }
@@ -27,8 +30,8 @@ const CheckListServices = {
       );
 
       if (response.status === 200) {
-        const resData = response.data.data as CheckListCategoryInterface[];
-        
+        const resData = response.data.data as ShoppingListCategoryInterface[];
+
         return response.data.data;
       } else {
         return [];

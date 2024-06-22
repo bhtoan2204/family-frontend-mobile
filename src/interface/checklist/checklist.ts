@@ -1,9 +1,9 @@
-export interface CheckListCategoryTypeInterface {
+export interface ShoppingListCategoryTypeInterface {
   id_item_type: number;
   item_type_name: string;
 }
 
-export interface CheckListCategoryInterface {
+export interface ShoppingListCategoryInterface {
   id_list: number;
   id_item_type?: number;
   category_name?: string;
@@ -12,10 +12,10 @@ export interface CheckListCategoryInterface {
   completed: number;
   total: number;
   createdAt?: string;
-  checklistItems: ChecklistItemInterface[];
+  checklistItems: ShoppingListItemInterface[];
 }
 
-export interface ChecklistItemInterface {
+export interface ShoppingListItemInterface {
   id_item: string;
   id_list: number;
   item_name: string;
