@@ -40,14 +40,14 @@ const ChatListScreen = ({
   );
   let socket = getSocket();
 
-  const fetchUser = async () => {
-    try {
-      const response = await ChatServices.GetAllUser({index: 0});
-      setUsers(response);
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  };
+  // const fetchUser = async () => {
+  //   try {
+  //     const response = await ChatServices.GetAllUser({index: 0});
+  //     setUsers(response);
+  //   } catch (error) {
+  //     console.error('Error fetching user data:', error);
+  //   }
+  // };
 
   const formatDateTime = (dateTime: Date) => {
     if (!dateTime) {
@@ -88,36 +88,60 @@ const ChatListScreen = ({
     try {
       setLoading(true);
       const response = await ChatServices.GetUserChat({ index: currentPage });
-      const formattedResponse = response.map((item: { messages: any[]; }) => ({
-        ...item,
-        messages: item.messages.map((message) => ({
-          ...message,
-          timestamp: message.timestamp ? new Date(message.timestamp) : null,
-        })),
-      }));
-      setChats((prevChats) => [...prevChats, ...formattedResponse]);
-      setTotalPages(formattedResponse.length > 0 ? currentPage + 1 : currentPage);
+      console.log(response);
+  
+      if (Array.isArray(response)) {
+        if (response.length > 0) {
+          const formattedResponse = response.map((item) => ({
+            ...item,
+            latestMessage: {
+              ...item.latestMessage,
+              timestamp: item.latestMessage.timestamp ? new Date(item.latestMessage.timestamp) : null,
+            },
+          }));
+          setChats((prevChats) => [...prevChats, ...formattedResponse]);
+          setTotalPages(currentPage + 1);
+        } else {
+          setTotalPages(currentPage);
+        }
+      } else if (typeof response === 'object' && response.latestMessage) {
+        const formattedResponse = {
+          ...response,
+          latestMessage: {
+            ...response.latestMessage,
+            timestamp: response.latestMessage.timestamp ? new Date(response.latestMessage.timestamp) : null,
+          },
+        };
+        setChats((prevChats) => [...prevChats, formattedResponse]);
+        setTotalPages(currentPage + 1);
+      } else {
+        // Handle unexpected response format
+        console.error('Unexpected response format:', response);
+        Alert.alert('Error', 'Unexpected response format. Please try again.');
+      }
+  
     } catch (error) {
       console.error('Error fetching chat data:', error);
+      Alert.alert('Error', 'Failed to fetch user data. Please try again.');
     } finally {
       setLoading(false);
     }
   };
   
-
+  
   const loadMoreMessages = () => {
-    if (!loading && currentPage < totalPages) {
-      setCurrentPage(prevPage => prevPage + 1);
-    }
+    // if (!loading && currentPage < totalPages) {
+    //   setCurrentPage(prevPage => prevPage + 1);
+    // }
   };
 
   useEffect(() => {
     fetchData();
-  }, [currentPage]);
-
-  useEffect(() => {
-    fetchUser();
   }, []);
+
+  // useEffect(() => {
+  //   fetchUser();
+  // }, []);
 
   const handlePressChat = (receiverId?: string) => {
     navigation.navigate('ChatStack', {
@@ -230,10 +254,10 @@ const ChatListScreen = ({
       <TouchableOpacity onPress={() => handlePressChat(item.receiverId)}>
         <View style={styles.chatItem}>
           <View style={styles.avatarContainer}>
-            {item.user.avatar ? (
+            {item.latestMessage.receiver.avatar ? (
               <>
                 <Image
-                  source={{uri: item.user.avatar}}
+                  source={{uri: item.latestMessage.receiver.avatar}}
                   style={[styles.avatar, {top: 5}]}
                 />
                 <View style={[styles.activeDot, {bottom: 15}]} />
@@ -241,7 +265,7 @@ const ChatListScreen = ({
             ) : (
               <>
                 <Text style={styles.avatarText}>
-                  {`${item.user.firstname.charAt(0)}${item.user.lastname.charAt(0)}`}
+                  {`${item.latestMessage.receiver.firstname.charAt(0)}${item.latestMessage.receiver.lastname.charAt(0)}`}
                 </Text>
                 <View style={[styles.activeDot, {bottom: 15}]} />
               </>
@@ -252,18 +276,18 @@ const ChatListScreen = ({
             <Text
               style={
                 styles.username
-              }>{`${item.user.firstname} ${item.user.lastname}`}</Text>
-            {item.messages[0]?.type === 'photo' ? (
+              }>{`${item.latestMessage.receiver.firstname} ${item.latestMessage.receiver.lastname}`}</Text>
+            {item.latestMessage.type === 'photo' ? (
               <Text style={styles.messageText}>Sent image</Text>
             ) : (
               <Text style={styles.messageText}>
-                {item.messages[0]?.content}
+                {item.latestMessage.content}
               </Text>
             )}
           </View>
           <Text style={styles.messageTimestamp}>
-            {item.messages[0]?.timestamp
-              ? formatDateTime(item.messages[0].timestamp)
+            {item.latestMessage.timestamp
+              ? formatDateTime(item.latestMessage.timestamp)
               : ''}
           </Text>
         </View>
@@ -305,7 +329,7 @@ const ChatListScreen = ({
           <Icon name="search" size={20} style={styles.searchIcon} />
         </View>
       </View>
-      {renderAllUser()}
+      {/* {renderAllUser()} */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[

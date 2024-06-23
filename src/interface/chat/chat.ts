@@ -1,9 +1,9 @@
 export interface LastMessage {
-  receiverId: string;
   _id: string;
-  messages: Message[];
-  user: User;
+  receiverId: string;
+  latestMessage: Message;
 }
+
 export interface Message {
   senderId: string;
   receiverId: string;
@@ -12,6 +12,7 @@ export interface Message {
   isRead: boolean;
   timestamp: Date;
   _id: string;
+  receiver: User; 
 }
 
 export interface User {

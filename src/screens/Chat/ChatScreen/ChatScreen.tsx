@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {
   Text,
   View,
@@ -12,6 +12,7 @@ import {
   Dimensions,
   ScrollView,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 import styles from './styles';
 import {ChatScreenProps} from 'src/navigation/NavigationTypes';
@@ -31,6 +32,9 @@ import {Message} from 'src/interface/chat/chat';
 import {Ionicons} from '@expo/vector-icons';
 import {COLORS} from 'src/constants';
 import EmojiPicker from '../EmojiPicker';
+import * as MediaLibrary from 'expo-media-library';
+import { Video } from 'expo-av';
+import MessageItem from './RenderMessage';
 
 interface Member {
   id_user: string;
@@ -86,120 +90,177 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
     }
   };
 
-  const fetchMessages = async () => {
+  const fetchMessages = useCallback(async () => {
     try {
       const response = await ChatServices.GetMessages({
         id_user: receiverId,
         index: currentIndex,
       });
       if (response) {
-        const newMessages = response.map((message: any) => {
+        const newMessages = response.map((message) => {
           if (message.type === 'photo') {
             setImages(prevImages => [...prevImages, message.content]);
           }
-          return {...message, timestamp: new Date(message.timestamp)};
+          return { ...message, timestamp: new Date(message.timestamp) };
         });
-        setMessages(prevMessages => [...prevMessages, ...newMessages]);
-        setHasReceivedMessage(true); // Set to true once messages are fetched
+        setMessages(newMessages);
+        setHasReceivedMessage(true); 
+        setCurrentIndex(currentIndex+1)
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
-  };
+  }, [receiverId, currentIndex]);
 
-  const loadMoreMessages = () => {
-    setCurrentIndex(currentIndex + 1);
+  useEffect(() => {
     fetchMessages();
-  };
+  }, [fetchMessages]);
 
+  
   const sendMessage = async () => {
-    if (socket) {
-      socket.emit('newMessage', {
+    try {
+      const response = await ChatServices.sendMessages({
         message: message,
         receiverId: receiverId,
       });
-    } else {
-      console.log('socket error');
-    }
-  };
-
-  const sendImage = async (base64Image: string) => {
-    try {
-      if (socket) {
-        socket.emit('newImageMessage', {
-          receiverId: receiverId,
-          imageData: base64Image,
-        });
-      }
+      fetchNewMessages(response);
     } catch (error) {
-      console.error('Error sending image:', error);
+      console.error('Error sending messages:', error);
     }
   };
 
-  const fetchNewMessages = async () => {
-    setRefreshFlatList(prevState => !prevState);
+  const sendImage = async (uri: string) => {
     try {
-      const response = await ChatServices.GetMessages({
-        id_user: receiverId,
-        index: 0,
+      const response = await ChatServices.sendImageMessage({
+        uri: uri,
+        receiverId: receiverId,
       });
-      if (response && response.length > 0) {
-        const firstMessage = response[0];
-        if (firstMessage.type === 'photo') {
-          setImages(prevImages => [firstMessage.content, ...prevImages]);
-        }
-        setMessages(prevMessages => [firstMessage, ...prevMessages]);
-        setHasReceivedMessage(true); 
-      }
+      fetchNewMessages(response);
     } catch (error) {
-      console.error('Error fetching new messages:', error);
+      console.error('Error sendImage:', error);
     }
   };
 
-  const handleSendImage = async (base64Image: string) => {
-    await sendImage(base64Image);
-    await fetchMessages();
-    await fetchNewMessages();
+  const fetchNewMessages = (newMessage: Message) => {
+    console.log(newMessage)
+    setMessages(prevMessages => [newMessage, ...prevMessages]);
+  };
+
+  const sendVideoMessage = async (uri: any) => {
+    try {
+      
+      const response = await ChatServices.sendVideoMessage(receiverId, uri)
+      const data = await response.json();
+      if (response) {
+
+      } else {
+        throw new Error('Failed to send video');
+      }
+    } catch (error) {
+      throw new Error('API request failed');
+    }
+  };
+
+  const handleSendImage = async (uri: string) => {
+    await sendImage(uri);
+   
   };
 
   const handleSendMessage = async () => {
     await sendMessage();
     setMessage('');
-    await fetchNewMessages();
+   
   };
+
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; 
 
   const handleOpenImageLibrary = async () => {
     try {
-      let result = await ImagePicker.launchImageLibraryAsync({
+      const { status: mediaLibraryStatus } = await MediaLibrary.requestPermissionsAsync();
+      if (mediaLibraryStatus !== 'granted') {
+        Alert.alert('Permission required', 'Permission to access media library is required.');
+        return;
+      }
+  
+      const { status: imagePickerStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (imagePickerStatus !== 'granted') {
+        Alert.alert('Permission required', 'Permission to access image library is required.');
+        return;
+      }
+  
+      const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         aspect: [4, 3],
         quality: 1,
       });
-
-      if (!result.canceled) {
-        const compressedImage = await ImageManipulator.manipulateAsync(
-          result.assets[0].uri,
-          [],
-          {compress: 0.5},
-        );
-        const fileInfo = await FileSystem.getInfoAsync(compressedImage.uri);
-
-        if (fileInfo.exists && fileInfo.size) {
-          if (fileInfo.size < 50000) {
-            const base64 = await FileSystem.readAsStringAsync(
-              compressedImage.uri,
-              {encoding: 'base64'},
-            );
-            await handleSendImage(base64);
+  
+      console.log('ImagePicker result:', result);
+  
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const asset = result.assets[0];
+        const uri = asset.uri;
+        console.log('Selected URI:', uri);
+  
+        if (!uri) {
+          console.error('No URI returned from ImagePicker');
+          Alert.alert('Error', 'Failed to pick an image or video.');
+          return;
+        }
+  
+        if (asset.type === 'image') {
+          const compressedImage = await ImageManipulator.manipulateAsync(
+            uri,
+            [],
+            { compress: 0.5 },
+          );
+  
+          console.log('Compressed Image URI:', compressedImage.uri);
+  
+          const fileInfo = await FileSystem.getInfoAsync(compressedImage.uri);
+          console.log('File info:', fileInfo);
+  
+          if (fileInfo.exists && fileInfo.size && fileInfo.size < MAX_FILE_SIZE) {
+            
+            await handleSendImage(compressedImage.uri);
           } else {
-            alert('Selected image size exceeds 50KB limit');
+            Alert.alert('Selected file size exceeds the limit or could not determine file size');
+          }
+        } else if (asset.type === 'video') {
+          const savedAsset = await MediaLibrary.createAssetAsync(uri);
+          console.log('Created Asset info:', savedAsset);
+  
+          if (!savedAsset) {
+            console.error('No asset information returned from MediaLibrary');
+            Alert.alert('Error', 'Failed to save video to media library.');
+            return;
+          }
+  
+          const assetInfo = await MediaLibrary.getAssetInfoAsync(savedAsset.id);
+          console.log('Asset Info:', assetInfo);
+  
+          if (assetInfo && assetInfo.localUri) {
+            const fileInfo = await FileSystem.getInfoAsync(assetInfo.localUri);
+            console.log('File info:', fileInfo);
+  
+            if (fileInfo.exists && fileInfo.size && fileInfo.size < MAX_FILE_SIZE) {
+              await sendVideoMessage(assetInfo.localUri);
+            } else {
+              Alert.alert('Selected file size exceeds the limit or could not determine file size');
+            }
+          } else {
+            console.error('Could not retrieve local URI for the video');
+            Alert.alert('Error', 'Failed to retrieve local URI for the video.');
           }
         } else {
-          console.error('File does not exist or size cannot be determined');
+          Alert.alert('Unsupported file type');
         }
+      } else {
+        console.error('No valid assets returned from ImagePicker');
+        Alert.alert('Error', 'No valid assets returned from ImagePicker');
       }
     } catch (error) {
       console.error('Error opening image library:', error);
+      Alert.alert('Error opening image library. Please try again.');
     }
   };
 
@@ -220,8 +281,11 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   };
 
   useEffect(() => {
-    fetchMessages();
     fetchMember(receiverId, profile.id_user);
+  },[])
+
+  useEffect(() => {
+    
     setIsTextInputEmpty(message.trim() === '');
 
     const keyboardDidShowListener = Keyboard.addListener(
@@ -241,7 +305,6 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-    markSeenMessage();
   }, [message]);
 
   useEffect(() => {
@@ -251,26 +314,16 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   useEffect(() => {
     if (socket) {
       socket.on('onNewMessage', fetchNewMessages);
-      socket.on('onNewImageMessage', fetchNewMessages);
     }
 
     return () => {
       if (socket) {
         socket.off('onNewMessage', fetchNewMessages);
-        socket.off('onNewImageMessage', fetchNewMessages);
       }
     };
   }, [socket]);
 
-  useEffect(() => {
-    if (!hasReceivedMessage) {
-      return () => {}; 
-    }
-
-    return () => {
-    };
-  }, [hasReceivedMessage]); 
-
+  
   const handleVideoCall = (receiverId?: string) => {
     navigation.navigate('ChatStack', {
       screen: 'CallVideo',
@@ -314,6 +367,10 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         .padStart(2, '0')}`;
     }
   };
+
+  const  loadMoreMessages = () => {
+
+  }
 
   return (
     <KeyboardAvoidingView
@@ -385,70 +442,26 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         </View>
       </View>
       {hasReceivedMessage ? (
-        <FlatList
-          style={styles.messagesContainer}
-          contentContainerStyle={styles.contentContainer}
-          data={messages}
-          inverted
-          renderItem={({item, index}) => (
-            <View
-              style={[
-                styles.messageWrapper,
-                item.senderId === profile.id_user
-                  ? styles.messageRight
-                  : styles.messageLeft,
-              ]}>
-              <TouchableOpacity
-                onPress={() => handlePressMessage(item.id)}
-                style={[
-                  styles.messageContainer,
-                  item.senderId === profile.id_user
-                    ? styles.senderMessageContainer
-                    : styles.receiverMessageContainer,
-                ]}>
-                {item.type === 'photo' ? (
-                  <View style={styles.messageContentContainer}>
-                    <Image
-                      source={{uri: item.content}}
-                      style={styles.imageMessage}
-                    />
-                  </View>
-                ) : (
-                  <Text
-                    style={[
-                      styles.senderMessageContent,
-                      {
-                        color:
-                          item.senderId === profile.id_user ? 'white' : 'black',
-                      },
-                    ]}>
-                    {item.content}
-                  </Text>
-                )}
-              </TouchableOpacity>
-              <View
-                style={{
-                  flexDirection: 'column',
-                  marginHorizontal: 10,
-                  alignItems:
-                    item.senderId === profile.id_user
-                      ? 'flex-end'
-                      : 'flex-start',
-                }}>
-                {selectedMessageId === item.id && (
-                  <Text style={styles.timestamp}>
-                    {formatDateTime(item.timestamp)}
-                  </Text>
-                )}
-              </View>
-            </View>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          keyboardShouldPersistTaps="handled"
-          onEndReached={loadMoreMessages}
-          onEndReachedThreshold={0.1}
-        />
-      ) : (
+           <FlatList
+             style={styles.messagesContainer}
+             contentContainerStyle={styles.contentContainer}
+             data={messages}
+             inverted
+             renderItem={({ item, index }) => (
+               <MessageItem
+                 item={item}
+                 profileId={profile.id_user}
+                 onMessagePress={handlePressMessage}
+                 isSelected={selectedMessageId === item._id}
+                 formatDateTime={formatDateTime}
+               />
+             )}
+             keyExtractor={(item, index) => index.toString()}
+             keyboardShouldPersistTaps="handled"
+             onEndReached={loadMoreMessages}
+             onEndReachedThreshold={0.1}
+           />
+         ) : (
         <KeyboardAvoidingView
           behavior="padding"
           style={{
