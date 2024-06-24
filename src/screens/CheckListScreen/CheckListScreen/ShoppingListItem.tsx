@@ -2,11 +2,11 @@ import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { shoppingListItemColor, shoppingListItemColorInside } from '../constant/color';
 import CircularProgress from 'src/components/user/education/circular-progress';
-import { CheckListCategoryInterface } from 'src/interface/checklist/checklist';
+import { ShoppingListCategoryInterface } from 'src/interface/checklist/checklist';
 import { iOSGrayColors } from 'src/constants/ios-color';
 
 interface ShoppingListItemProps {
-    item: CheckListCategoryInterface;
+    item: ShoppingListCategoryInterface;
     handleNavigateCheckListDetail: (id_checklist: number) => void;
     index: number
 }

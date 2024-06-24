@@ -132,12 +132,12 @@ const AddHouseHoldItemScreen: React.FC<AddHouseHoldItemScreenProps> = ({ navigat
         setHouseholdRoom(room)
     }
 
-    const handleAdd = () => {
+    const handleAdd = async () => {
         console.log('add')
         const newHouseholdItem: HouseHoldItemInterface = {
             id_family: id_family!,
             item_name: householdName,
-            item_description: '',
+            description: '',
             item_imageurl: '',
             id_category: householdCategory,
             id_household_item: Math.floor(Math.random() * 1000)
@@ -432,15 +432,15 @@ const Step3Component = ({ setStep, rooms, onNavigateCreateRoom, room, category, 
                                 borderRadius: 12,
                                 elevation: 3,
                                 backgroundColor: iOSColors.systemBlue.defaultLight,
-                            }} onPress={() => {
-                                handleAdd()
+                            }} onPress={async () => {
+                                await handleAdd()
                                 navigationBack()
                                 // setStep((prev: any) => prev + 1)
                             }} className='py-2 my-3 '>
                                 <Text className='text-white text-base font-bold' style={{
                                     color: 'white'
                                 }}>
-                                    Next
+                                    Add
 
                                 </Text>
                             </TouchableOpacity>

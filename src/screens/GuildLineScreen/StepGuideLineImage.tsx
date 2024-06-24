@@ -53,7 +53,7 @@ const StepGuideLineImage = ({
 
     return (
         <>
-            <Animatable.View animation={currentStep > prevStepRef.current ? 'bounceInRight' : 'bounceInLeft'} key={currentStep} duration={700} className='h-[50%] w-[90%] flex-col justify-center items-center mb-10  rounded-full mx-4 ' style={{
+            {/* <Animatable.View animation={currentStep > prevStepRef.current ? 'bounceInRight' : 'bounceInLeft'} key={currentStep} duration={700} className='h-[50%] w-[90%] flex-col justify-center items-center mb-10  rounded-full mx-4 ' style={{
 
             }}>
                 <TouchableOpacity onPress={() => {
@@ -90,12 +90,12 @@ const StepGuideLineImage = ({
                     </TouchableOpacity>
                 }
 
-            </Animatable.View >
-            {/* {
+            </Animatable.View > */}
+            {
                 guildLineSteps.map((step, index) => {
                     return <React.Fragment key={index}>
                         {
-                            currentStep === index && <Animatable.View animation={prevStepRef.current < index ? 'bounceInRight' : 'bounceInLeft'} key={currentStep} duration={700} className='h-[50%] w-[90%] flex-col justify-center items-center mb-10  rounded-full mx-4 ' style={{
+                            currentStep === index && <Animatable.View animation={prevStepRef.current <= index ? 'bounceInRight' : 'bounceInLeft'} key={index} duration={700} className='h-[50%] w-[90%] flex-col justify-center items-center mb-10  rounded-full mx-4 ' style={{
 
                             }}>
                                 <TouchableOpacity onPress={() => {
@@ -106,7 +106,7 @@ const StepGuideLineImage = ({
                                         bottomSheetRef.current?.open()
                                     }
                                 }} activeOpacity={isKeyboardVisible ? 0.8 : 1}>
-                                    <ImageComponent defaultImage={Img} imageUrl={step.imageUrl} style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} />
+                                    <ImageComponent defaultImage={Img} imageUrl={step.imageUrl || ""} style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} />
                                 </TouchableOpacity>
                                 {
                                     !isValid
@@ -131,7 +131,7 @@ const StepGuideLineImage = ({
 
                     </React.Fragment>
                 })
-            } */}
+            }
 
 
         </>

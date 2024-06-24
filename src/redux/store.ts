@@ -8,6 +8,7 @@ import incomeAnalysisReducer from './slices/IncomeAnalysis';
 import roomReducer from './slices/RoomSlice';
 import guidelineReducer from './slices/GuidelineSlice';
 import householdItemSlice from './slices/HouseHoldSlice';
+import HouseHoldDetailSlice from './slices/HouseHoldDetailSlice';
 import educationSlice from './slices/EducationSlice';
 import memberSlice from './slices/MemberSlice';
 import shoppingListSlice from './slices/ShoppingListSlice';
@@ -24,6 +25,7 @@ export const store = configureStore({
     room: roomReducer,
     guidelines: guidelineReducer,
     householdItems: householdItemSlice,
+    householdItemDetail: HouseHoldDetailSlice,
     educations: educationSlice,
     members: memberSlice,
   },

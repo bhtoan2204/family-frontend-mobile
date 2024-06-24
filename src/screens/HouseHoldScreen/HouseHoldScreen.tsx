@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Dimensions } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, ActivityIndicator } from 'react-native'
 import { HouseHoldScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants';
@@ -20,6 +20,8 @@ import { HouseHoldItemInterface } from 'src/interface/household/household_item';
 import { gradients_list } from 'src/assets/images/gradients';
 import AccordionItem from 'src/components/user/household/accordion-item';
 import SearchBar from 'src/components/user/household/search-bar';
+import { HouseHoldCategoryInterface } from 'src/interface/household/household_category';
+import HouseHoldService from 'src/services/apiclient/HouseHoldService';
 // import AccordionItem from 'src/components/AccordionItem/accordion-item';
 
 const household_items = [
@@ -27,7 +29,7 @@ const household_items = [
         "id_household_item": 4,
         "id_family": 96,
         "item_name": "Máy giặt",
-        "item_description": "máy giặt toshiba nhà tao",
+        "description": "máy giặt toshiba nhà tao",
         "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713451417048",
         "id_category": 1
     },
@@ -35,7 +37,7 @@ const household_items = [
         "id_household_item": 5,
         "id_family": 96,
         "item_name": "Hủ muối tiêu",
-        "item_description": "ai mà ăn muối tiêu chanh này sẽ bị ám suốt đời",
+        "description": "ai mà ăn muối tiêu chanh này sẽ bị ám suốt đời",
         "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713451468168",
         "id_category": 1
     },
@@ -44,7 +46,7 @@ const household_items = [
         "id_household_item": 10,
         "id_family": 96,
         "item_name": "tủ lạnh cùiiiiiiiiiiiiiii",
-        "item_description": "cái tủ lạnh cùi vãi",
+        "description": "cái tủ lạnh cùi vãi",
         "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713454576319",
         "id_category": 1
     },
@@ -52,7 +54,7 @@ const household_items = [
         "id_household_item": 11,
         "id_family": 96,
         "item_name": "eulaaaaa",
-        "item_description": "đây là bé eula dễ thương",
+        "description": "đây là bé eula dễ thương",
         "item_imageurl": "https://storage.googleapis.com/famfund-bucket/household/household_bd94ba3a-b046-4a05-a260-890913e09df9_1713502246879",
         "id_category": 1
     },
@@ -60,7 +62,7 @@ const household_items = [
         "id_household_item": 13,
         "id_family": 96,
         "item_name": "Adudu",
-        "item_description": "lalala",
+        "description": "lalala",
         "item_imageurl": null,
         "id_category": 2
     },
@@ -68,7 +70,7 @@ const household_items = [
         "id_household_item": 14,
         "id_family": 96,
         "item_name": "Adudu",
-        "item_description": "lalala",
+        "description": "lalala",
         "item_imageurl": null,
         "id_category": 3
     },
@@ -77,7 +79,7 @@ const household_items = [
         "id_household_item": 15,
         "id_family": 96,
         "item_name": "Adudu",
-        "item_description": "lalala",
+        "description": "lalala",
         "item_imageurl": null,
         "id_category": 1
     }
@@ -92,31 +94,57 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
     // const [householdItems, setHouseholdItems] = React.useState<HouseHoldItemInterface[]>(household_items)
     const householdItems = useSelector((state: RootState) => state.householdItems)
     const [choosenCategoryIndex, setChoosenCategoryIndex] = React.useState<number>(0)
-    const [choosenCategoryId, setChoosenCategoryId] = React.useState<number>(householdCategory[0].id_category)
+    const [choosenCategoryId, setChoosenCategoryId] = React.useState<number>(householdCategory[0].id_household_item_category)
     const [searchText, setSearchText] = React.useState<string>('')
 
     const dispatch = useDispatch<AppDispatch>()
 
     useEffect(() => {
-        const newHouseholdItems: HouseHoldItemInterface[] = household_items.map(item => {
-            const gradient = gradients_list[Math.floor(Math.random() * gradients_list.length)]
-            return {
-                ...item,
-                item_image: gradient,
-            }
-        })
-        console.log(newHouseholdItems)
-        dispatch(setHouseholdItems(newHouseholdItems))
-
+        const fetchHouseholdData = async () => {
+            // const data = household_items
+            const data = await HouseHoldService.getHouseHoldItems(
+                id_family!,
+                1, 100
+            )
+            const newHouseholdItems: HouseHoldItemInterface[] = data.map((item, index) => {
+                const gradient = gradients_list[Math.floor(index % gradients_list.length)]
+                return {
+                    ...item,
+                    item_image: gradient,
+                }
+            })
+            console.log(newHouseholdItems)
+            dispatch(setHouseholdItems(newHouseholdItems))
+        }
+        fetchHouseholdData()
         return () => {
             console.log("HouseHoldScreen unmounting")
             dispatch(clearHouseholdItems())
         }
     }, [])
 
-    useEffect(() => {
-        console.log(householdItems)
-    }, [householdItems])
+    // useEffect(() => {
+    //     const fetchHouseholdData = async () => {
+    //         const data = await HouseHoldService.getHouseHoldItems(
+    //             id_family!,
+    //             1, 100
+    //         )
+    //         const newHouseholdItems: HouseHoldItemInterface[] = data.map((item, index) => {
+    //             const gradient = gradients_list[Math.floor(index % gradients_list.length)]
+    //             return {
+    //                 ...item,
+    //                 item_image: gradient,
+    //             }
+    //         })
+    //         console.log(newHouseholdItems)
+    //         dispatch(setHouseholdItems(newHouseholdItems))
+    //     }
+    //     fetchHouseholdData()
+    //     if (householdItems.length == 0) {
+
+    //     }
+
+    // }, [householdItems])
 
     useEffect(() => {
         console.log(searchText)
@@ -142,11 +170,11 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
         return <>
             {
                 household_category_dat.map((category, index) => {
-                    const categoryItems = householdItems.filter(item => item.id_category === category.id_category && (item.item_name.toLowerCase().includes(searchText.toLowerCase())));
+                    const categoryItems = householdItems.filter(item => item.id_category === category.id_household_item_category && (item.item_name.toLowerCase().includes(searchText.toLowerCase())));
                     return <View className='' key={index}>
                         {/* <Text className='text-xl font-medium'>{category.category_name}</Text> */}
                         <AccordionItem title={category.category_name} isExpanded={
-                            categoryItems.length > 0 ? true : false
+                            index == 0 || index == 1 ? true : false
                         } >
                             <FlatGrid
                                 maxItemsPerRow={3}
@@ -158,7 +186,7 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
                             />
                         </AccordionItem>
 
-                    </View>
+                    </View >
                 })
             }
 
@@ -170,25 +198,16 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route }) 
             navigateToHouseHoldItemDetail={navigateToHouseHoldItemDetail} index={index} />
     }
 
-    const gridView = () => {
-        const categoryItems = householdItems.filter(item => item.id_category === choosenCategoryId);
-
-        return <FlatGrid
-            maxItemsPerRow={3}
-            itemDimension={screenWidth * 0.3}
-            spacing={3}
-            data={categoryItems}
-            renderItem={renderItem}
-            scrollEnabled={false}
-        />
-    }
-
     const navigateToHouseHoldItemDetail = (item: HouseHoldItemInterface) => {
         navigation.navigate('HouseHoldItemDetail', {
             id_family,
             id_category: item.id_category,
             id_item: item.id_household_item
         })
+    }
+
+    if (!householdItems) {
+        return <ActivityIndicator size="large" color={COLORS.AuroMetalSaurus} />
     }
 
     return (

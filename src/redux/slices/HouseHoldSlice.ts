@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../store';
 import {HouseHoldItemInterface} from 'src/interface/household/household_item';
+import {gradients_list} from 'src/assets/images/gradients';
 
 const initialState: HouseHoldItemInterface[] = [];
 
@@ -15,7 +16,15 @@ const householdSlice = createSlice({
       state = [];
     },
     addHouseholdItem(state, action: PayloadAction<HouseHoldItemInterface>) {
-      state.push(action.payload);
+      const gradient =
+        gradients_list[Math.floor(state.length % gradients_list.length)];
+
+      const newItem: HouseHoldItemInterface = {
+        ...action.payload,
+        item_image: gradient,
+      };
+      console.log(newItem);
+      state.push(newItem);
     },
     deleteHouseholdItem(state, action: PayloadAction<number>) {
       return state.filter(

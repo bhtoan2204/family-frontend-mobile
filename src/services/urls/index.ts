@@ -6,6 +6,7 @@ import CalendarUrls from './Calendar';
 import GuildlineUrl from './guidelineUrl';
 import ShoppingListUrls from './checklistUrls';
 import EducationUrls from './eduUrls';
+import HouseHoldUrls from './householdUrls';
 export {
   AuthUrl,
   FamilyUrl,
@@ -15,4 +16,5 @@ export {
   GuildlineUrl,
   ShoppingListUrls,
   EducationUrls,
+  HouseHoldUrls,
 };

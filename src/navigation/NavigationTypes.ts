@@ -246,6 +246,25 @@ export type FamilyStackParamList = {
     id_category: number;
     id_item: number;
   };
+  EditDescriptionHouseHoldItem: {
+    id_family: number | undefined;
+    id_category: number;
+    id_item: number;
+    description: string;
+  };
+  AddConsumableHouseHoldItem: {
+    id_family: number | undefined;
+    id_category: number;
+    id_item: number;
+  };
+  EditConsumableHouseHoldItem: {
+    id_family: number | undefined;
+    id_category: number;
+    id_item: number;
+    quantity: number;
+    threshhold: number;
+    expired_date: string;
+  };
   AddHouseHoldRoom: {
     id_family: number | undefined;
   };
@@ -577,6 +596,36 @@ type AddHouseHoldRoomNavigationProp = NativeStackNavigationProp<
 export interface AddHouseHoldRoomScreenProps {
   navigation: AddHouseHoldRoomNavigationProp;
   route: RouteProp<FamilyStackParamList, 'AddHouseHoldRoom'>;
+}
+
+type EditDescriptionHouseHoldItemNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'EditDescriptionHouseHoldItem'
+>;
+
+export interface EditDescriptionHouseHoldItemScreenProps {
+  navigation: EditDescriptionHouseHoldItemNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'EditDescriptionHouseHoldItem'>;
+}
+
+type EditConsumableHouseHoldItemNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'EditConsumableHouseHoldItem'
+>;
+
+export interface EditConsumableHouseHoldItemScreenProps {
+  navigation: EditConsumableHouseHoldItemNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'EditConsumableHouseHoldItem'>;
+}
+
+type AddConsumableHouseHoldItemNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'AddConsumableHouseHoldItem'
+>;
+
+export interface AddConsumableHouseHoldItemScreenProps {
+  navigation: AddConsumableHouseHoldItemNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'AddConsumableHouseHoldItem'>;
 }
 
 type CheckListNavigationProp = NativeStackNavigationProp<

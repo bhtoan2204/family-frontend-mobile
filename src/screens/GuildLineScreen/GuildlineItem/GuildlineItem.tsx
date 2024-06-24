@@ -79,7 +79,7 @@ const GuildlineItem = ({ item, onPress, onUpdate }: GuildlineItemProps) => {
                                 ? ""
                                 : item.steps.length == 0
                                     ? ""
-                                    : item.steps[0].imageUrl
+                                    : item.steps[0].imageUrl || ""
                         }
                         style={{
                             width: screenHeight * 0.1,

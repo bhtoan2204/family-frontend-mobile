@@ -1,11 +1,11 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../store';
 import {
-  CheckListCategoryInterface,
-  ChecklistItemInterface,
+  ShoppingListCategoryInterface,
+  ShoppingListItemInterface,
 } from 'src/interface/checklist/checklist';
 
-const initialState: CheckListCategoryInterface[] = [];
+const initialState: ShoppingListCategoryInterface[] = [];
 
 const checkListSlice = createSlice({
   name: 'checklist',
@@ -13,13 +13,13 @@ const checkListSlice = createSlice({
   reducers: {
     setInitialCheckList(
       state,
-      action: PayloadAction<CheckListCategoryInterface[]>,
+      action: PayloadAction<ShoppingListCategoryInterface[]>,
     ) {
       return action.payload;
     },
     setCheckListItemsForCheckList(
       state,
-      action: PayloadAction<{id: number; items: ChecklistItemInterface[]}>,
+      action: PayloadAction<{id: number; items: ShoppingListItemInterface[]}>,
     ) {
       const checkListIndex = state.findIndex(
         checklist => checklist.id_list === action.payload.id,
@@ -31,7 +31,7 @@ const checkListSlice = createSlice({
 
     addNewCheckListItem(
       state,
-      action: PayloadAction<CheckListCategoryInterface>,
+      action: PayloadAction<ShoppingListCategoryInterface>,
     ) {
       state.push(action.payload);
     },
@@ -58,13 +58,13 @@ const checkListSlice = createSlice({
     },
     addNewCheckListItemToCheckList(
       state,
-      action: PayloadAction<{id: number; item: ChecklistItemInterface}>,
+      action: PayloadAction<{id: number; item: ShoppingListItemInterface}>,
     ) {
       const checkListIndex = state.findIndex(
         checklist => checklist.id_list === action.payload.id,
       );
       if (checkListIndex !== -1 && state[checkListIndex].checklistItems) {
-        const newItem: ChecklistItemInterface = action.payload.item;
+        const newItem: ShoppingListItemInterface = action.payload.item;
         newItem.id_item = `${state[checkListIndex].checklistItems.length + 1}`;
         state[checkListIndex].checklistItems.push(newItem);
         state[checkListIndex].total += 1;

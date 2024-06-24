@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native'
-import { CheckListCategoryInterface, ChecklistItemInterface } from 'src/interface/checklist/checklist';
+import { ShoppingListCategoryInterface, ShoppingListItemInterface } from 'src/interface/checklist/checklist';
 import ChecklistItem from './CheckListItem';
 // import ChecklistItemModal from './AddItemCheckListSheet';
 import { CheckListDetailScreenProps, CheckListScreenProps } from 'src/navigation/NavigationTypes';
@@ -31,7 +31,7 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
     const dispatch = useDispatch<AppDispatch>();
     const checkListCategoryData = useSelector((state: RootState) => state.checklist).find(item => item.id_list === id_checklist)!
     const checklist = useSelector((state: RootState) => state.checklist).find(item => item.id_list === id_checklist)!.checklistItems
-    const [filteredChecklist, setFilteredChecklist] = React.useState<ChecklistItemInterface[]>()
+    const [filteredChecklist, setFilteredChecklist] = React.useState<ShoppingListItemInterface[]>()
     const [selectedChecklistItem, setSelectedChecklistItem] = React.useState<string>("-1")
     const [type, setType] = React.useState<number>(0)
     useEffect(() => {
@@ -70,7 +70,7 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
     }
 
     const getChecklistItem = (id: string | null) => {
-        const emptyItem: ChecklistItemInterface = {
+        const emptyItem: ShoppingListItemInterface = {
             id_item: '0',
             item_name: '',
             description: '',

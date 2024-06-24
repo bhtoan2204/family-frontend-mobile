@@ -1,5 +1,5 @@
 import React from 'react'
-import { ChecklistItemInterface } from 'src/interface/checklist/checklist';
+import { ShoppingListItemInterface } from 'src/interface/checklist/checklist';
 import { View, Text, StyleSheet, TouchableOpacity, Vibration, } from 'react-native'
 import RBSheet from 'react-native-raw-bottom-sheet';
 import ChecklistDetailSheet from './CheckListDetailSheet';
@@ -11,12 +11,13 @@ import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTex
 import CheckListDetailSheet from 'src/components/user/shoppinglist/checklist-item-sheet';
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
 import * as Animatable from 'react-native-animatable';
+import { formatVietNamCurrencyNoDot, formatVietNamCurrencyToDot } from 'src/utils/formatCurrency';
 
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
 
 interface ChecklistItemDetailProps {
-    item: ChecklistItemInterface,
+    item: ShoppingListItemInterface,
     id_checklist: number,
     selectCheckListItem: (item: string) => void
 }
@@ -32,6 +33,20 @@ const ChecklistItemDetail = ({ item, id_checklist, selectCheckListItem }: Checkl
             isCompleted: !item.is_purchased,
         }))
     }
+
+    const buildDescriptionText = () => {
+        console.log(item.price)
+        const quantity = item.quantity != 0 ? item.quantity : 1
+
+        if (item.price != "0") {
+            const price = parseInt(formatVietNamCurrencyNoDot(item.price)) * quantity
+            return formatVietNamCurrencyToDot(price.toString()) + " VNĐ"
+        }
+        if (item.description != "") {
+            return item.description
+        }
+    }
+
     return <TouchableOpacity onPress={() => {
         // refRBSheet.current?.open();
         selectCheckListItem?.(item.id_item)
@@ -69,7 +84,7 @@ const ChecklistItemDetail = ({ item, id_checklist, selectCheckListItem }: Checkl
                         {/* {
                             item.is_purchased && 
                         } */}
-                        <Animatable.View animation={item.is_purchased ? "fadeInLeft" : "fadeOutLeft"}  duration={200} className='absolute w-full top-[50%] border-b-[1.2px]'
+                        <Animatable.View animation={item.is_purchased ? "fadeInLeft" : "fadeOutLeft"} duration={200} className='absolute w-full top-[50%] border-b-[1.2px]'
                             style={{
                                 borderColor: iOSGrayColors.systemGray3.defaultDark,
                             }}
@@ -80,8 +95,17 @@ const ChecklistItemDetail = ({ item, id_checklist, selectCheckListItem }: Checkl
                     </View>
                 </View>
             </View>
-            <View className='ml-10'>
-                <Text className='text-sm text-gray-400'>{item.description}</Text>
+            <View className='ml-10 '>
+                {/* <Animatable.View animation={item.is_purchased ? "fadeInLeft" : "fadeOutLeft"} duration={200} className='absolute w-full top-[50%] border-b-[1.2px]'
+                    style={{
+                        borderColor: iOSGrayColors.systemGray3.defaultDark,
+                    }}
+                >
+
+                </Animatable.View> */}
+                <Text className='text-sm text-gray-400' >{
+                    buildDescriptionText()
+                }</Text>
             </View>
             {/* <CheckListDetailSheet bottomSheetRef={bottomSheetRef} checklist_item={item} id_checklist={id_checklist} /> */}
             {/* <ChecklistDetailSheet refRBSheet={refRBSheet} checklist_item={item} id_checklist={id_checklist} /> */}
