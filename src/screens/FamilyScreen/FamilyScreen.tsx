@@ -35,9 +35,12 @@ import { selectfamily } from 'src/redux/slices/FamilySlice';
 import { AppDispatch } from 'src/redux/store';
 import * as ImagePicker from 'expo-image-picker';
 import { updateFamily } from 'src/redux/slices/FamilySlice';
+import FamilyList from './FamilyList';
+import FamilyListModal from './FamilyList';
+import { Member } from 'src/interface/member/member';
 
 const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
-  const { id_family } = route.params || {};
+  let { id_family } = route.params || {};
   const [family, setFamily] = useState<Family>();
   const bottomSheetRef = useRef<RBSheet>(null);
   const allMemberRef = useRef<RBSheet>(null);
@@ -45,16 +48,35 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   let profile = useSelector(selectProfile);
   const [isUploadingImage, setIsUploadingImage] = React.useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>()
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  
+  const [families, setFamilies] = useState<Family[]>([]);
+  const [membersMap, setMembersMap] = useState<{ [key: number]: Member[] }>({});
 
-  const handleGetFamily = async () => {
-    try {
-      const familyInfo = await FamilyServices.getFamily({id_family});
-      console.log('familyInfo', familyInfo);
-      setFamily(familyInfo[0]);
-    } catch (error: any) {
-      console.log('FamilyServices.getFamily error:', error);
-    }
-  };
+  useEffect(() => {
+      const fetchFamiliesAndMembers = async () => {
+        try {
+          const allFamilies = await FamilyServices.getAllFamily();
+          const membersObject: { [key: number]: Member[] } = {};
+
+          for (const family of allFamilies) {
+            const members = await FamilyServices.getAllMembers({ id_family: family.id_family });
+            membersObject[family.id_family] = members;
+          }
+          setFamily(allFamilies[0]);
+          setFamilies(allFamilies);
+          setMembersMap(membersObject);
+        } catch (error) {
+          console.error('Error fetching families or members:', error);
+        }
+      };
+
+      fetchFamiliesAndMembers();
+    
+  }, []);
+
+
+
 
   const handleDeleteFamily = async (id_family: number) => {
     try {
@@ -124,13 +146,11 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const handleNavigateNews = () => {
     navigation.navigate('News');
   };
+  const handleSelectFamily = (id_family: number) => {
+    //navigation.navigate('ViewFamilyScreen', { id_family });
+  };
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      handleGetFamily();
-    });
-    return unsubscribe;
-  }, [navigation]);
+
 
   const handleChangeAvatar = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -153,6 +173,13 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         // setImage(result.assets[0].uri);
     }
 }
+const toggleDropdown = () => {
+  setIsDropdownVisible(!isDropdownVisible);
+};
+const handleCloseModal = (family: any) => {
+  setFamily(family);
+  setIsDropdownVisible(false); 
+};
 
   return (
     <ImageBackground
@@ -165,7 +192,9 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
             <Icon name="arrow-back" size={28} style={styles.backButton} />
           </TouchableOpacity>
           {family != null && (
-            <Text style={styles.headerText}>{family.name}</Text>
+            <TouchableOpacity onPress={toggleDropdown}>
+              <Text style={styles.headerText}>{family.name}</Text>
+            </TouchableOpacity>
           )}
           <View style={styles.headerIcon}>
             <TouchableOpacity onPress={handleOpenBottomSheet}>
@@ -173,6 +202,8 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
             </TouchableOpacity>
           </View>
         </View>
+        <FamilyListModal visible={isDropdownVisible} onClose={handleCloseModal}  families={families} membersMap={membersMap} selectedFamily={family}/>
+
         <View className="flex-col justify-center items-center pt-4 ">
         <TouchableOpacity style={styles.avatarButton} onPress={handleChangeAvatar}>
 

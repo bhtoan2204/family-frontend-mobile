@@ -12,6 +12,7 @@ export type RootParamList = {
   ExpenseStack: NavigatorScreenParams<ExpenseStackParamList>;
   IncomeStack: NavigatorScreenParams<IncomeStackParamList>;
   MessageTab: NavigatorScreenParams<MessageTabParamList>;
+  FamilyTab: NavigatorScreenParams<FamilyTabParamList>;
 
 };
 
@@ -110,6 +111,16 @@ MessageTabParamList,
 export interface ChatListProps {
   navigation: ChatListNavigationProp;
   route: RouteProp<MessageTabParamList, 'ChatList'>;
+}
+
+type FamilyNavigationProp = NativeStackNavigationProp<
+FamilyTabParamList,
+  'Family'
+>;
+
+export interface FamilyProps {
+  navigation: FamilyNavigationProp;
+  route: RouteProp<FamilyTabParamList, 'Family'>;
 }
 
 type CallVideoNavigationProp = NativeStackNavigationProp<
@@ -673,6 +684,10 @@ export type HomeTabParamList = {
 
 export type MessageTabParamList = {
   ChatList: undefined;
+ 
+};
+export type FamilyTabParamList = {
+  Family: undefined;
  
 };
 type CategoryExpenseNavigationProp = NativeStackNavigationProp<

@@ -255,9 +255,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                               shadowOpacity: 0.25,
                             }}
                             onPress={() =>
-                              navigation.navigate('ViewFamily', {
-                                id_family: family.id_family,
-                              })
+                              navigation.navigate('FamilyTab', {screen: 'Family', params: { id_family: family.id_family,}})
                             }>
                             <Text
                               style={[
