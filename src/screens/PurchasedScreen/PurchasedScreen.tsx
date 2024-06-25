@@ -26,17 +26,17 @@ const PurchasedScreen = ({navigation, route}: PurchasedScreenProps) => {
   const [value, setValue] = useState(0);
   const [purchasedItems, setPurchasedItems] = useState<Purchased[]>([]);
 
-  const handleGetPurchased = async () => {
-    try {
-      const result = await PackageServices.getOrderSucessful();
-      result.forEach((item: {order_expired_at: string | number | Date}) => {
-        item.order_expired_at = new Date(item.order_expired_at);
-      });
-      setPurchasedItems(result);
-    } catch (error: any) {
-      console.log('PackageServices.getPackage error:', error);
-    }
-  };
+  // const handleGetPurchased = async () => {
+  //   try {
+  //     const result = await PackageServices.getOrderSucessful();
+  //     result.forEach((item: {order_expired_at: string | number | Date}) => {
+  //       item.order_expired_at = new Date(item.order_expired_at);
+  //     });
+  //     setPurchasedItems(result);
+  //   } catch (error: any) {
+  //     console.log('PackageServices.getPackage error:', error);
+  //   }
+  // };
 
   const handleViewAllPackage = () => {
     const id_family = undefined;
@@ -50,9 +50,9 @@ const PurchasedScreen = ({navigation, route}: PurchasedScreenProps) => {
     console.log('Extend family for package:', pkg);
   };
 
-  useEffect(() => {
-    handleGetPurchased();
-  }, []);
+  // useEffect(() => {
+  //   handleGetPurchased();
+  // }, []);
 
   return (
     <SafeAreaView>

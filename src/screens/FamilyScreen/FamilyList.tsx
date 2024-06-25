@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Text, TouchableOpacity, View, StyleSheet, TouchableWithoutFeedback, Image } from 'react-native';
+import { Modal, Text, TouchableOpacity, View, StyleSheet, TouchableWithoutFeedback, Image, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Family } from 'src/interface/family/family';
 import { Member } from 'src/interface/member/member';
@@ -7,12 +7,9 @@ import { FamilyServices } from 'src/services/apiclient';
 
 const FamilyListModal = ({ visible, onClose, families, membersMap, selectedFamily }) => {
   const [familySelect, setFamilySelect] = useState<any>(selectedFamily);
-  useEffect(() => {
-    const updateFamilySelect = async () => {
-      setFamilySelect(selectedFamily);
-    };
 
-    updateFamilySelect();
+  useEffect(() => {
+    setFamilySelect(selectedFamily);
   }, [selectedFamily]);
  
   const handleSelectFamily = (family: Family) => {
@@ -34,23 +31,31 @@ const FamilyListModal = ({ visible, onClose, families, membersMap, selectedFamil
         <View style={modalStyles.modalOverlay}>
           <TouchableWithoutFeedback>
             <View style={modalStyles.modalContent}>
-              {families.map((family: Family) => (
-                <TouchableOpacity key={family.id_family} onPress={() => handleSelectFamily(family)}>
-                  <View style={modalStyles.familyItemContainer}>
-                    <Text style={modalStyles.familyItemText}>{family.name}</Text>
-                    {familySelect?.id_family === family.id_family && (
-                      <Icon name="checkmark-circle-outline" size={20} color="green" style={modalStyles.checkIcon} />
-                    )}
-                  </View>
-                  <View style={modalStyles.membersList}>
-                    {membersMap[family.id_family]?.map((member: { id_user: React.Key | null | undefined; avatar: any; }) => (
-                      <View key={member.id_user} style={modalStyles.memberItemContainer}>
-                        <Image source={{ uri: member.avatar }} style={modalStyles.avatar} />
+              <View style={modalStyles.header}>
+                <Text style={modalStyles.headerText}>Select a Family</Text>
+              </View>
+              <ScrollView>
+                {families.map((family: Family) => (
+                  <TouchableOpacity key={family.id_family} onPress={() => handleSelectFamily(family)} style={modalStyles.familyItem}>
+                    <View style={modalStyles.familyItemContainer}>
+                      <View style={modalStyles.familyInfo}>
+                        <Image source={{ uri: family.avatar }} style={modalStyles.avatarFamily} />
+                        <Text style={modalStyles.familyItemText}>{family.name}</Text>
                       </View>
-                    ))}
-                  </View>
-                </TouchableOpacity>
-              ))}
+                      {familySelect?.id_family === family.id_family && (
+                        <Icon name="checkmark-circle-outline" size={30} color="green" style={modalStyles.checkIcon} />
+                      )}
+                    </View>
+                    <View style={modalStyles.membersList}>
+                      {membersMap[family.id_family]?.map((member: Member) => (
+                        <View key={member.id_user} style={modalStyles.memberItemContainer}>
+                          <Image source={{ uri: member.avatar }} style={modalStyles.avatar} />
+                        </View>
+                      ))}
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -66,25 +71,42 @@ const modalStyles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalContent: {
-    width: '100%',
     backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    maxHeight: '80%',
+  },
+  header: {
+    backgroundColor: '#f2f2f2',
+    paddingVertical: 15,
     paddingHorizontal: 20,
-    paddingVertical: 10,
-    maxHeight: '50%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  familyItem: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
   },
   familyItemContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    paddingHorizontal: 20,
+  },
+  familyInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   familyItemText: {
     fontSize: 18,
-    color: 'black',
+    color: 'gray',
+    marginLeft: 10,
   },
   checkIcon: {
     marginLeft: 10,
@@ -92,18 +114,24 @@ const modalStyles = StyleSheet.create({
   membersList: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingTop: 10,
-    paddingLeft: 10,
+    justifyContent: 'flex-end',
+    paddingHorizontal: 20,
+    paddingBottom: 10,
   },
   memberItemContainer: {
     alignItems: 'center',
-    marginBottom: 10,
-    marginRight: 10,
+    marginBottom: 5,
+    marginRight: 5,
   },
   avatar: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     borderRadius: 20,
+  },
+  avatarFamily: {
+    width: 60,
+    height: 50,
+    borderRadius: 40,
   },
 });
 

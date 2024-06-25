@@ -28,13 +28,14 @@ import {Keyboard} from 'react-native';
 import {getSocket} from 'src/services/apiclient/Socket';
 import {useSelector} from 'react-redux';
 import {selectProfile} from 'src/redux/slices/ProfileSclice';
-import {Message} from 'src/interface/chat/chat';
+import {Message, User} from 'src/interface/chat/chat';
 import {Ionicons} from '@expo/vector-icons';
 import {COLORS} from 'src/constants';
 import EmojiPicker from '../EmojiPicker';
 import * as MediaLibrary from 'expo-media-library';
 import { Video } from 'expo-av';
 import MessageItem from './RenderMessage';
+import { selectLastMessage } from 'src/redux/slices/MessageUser';
 
 interface Member {
   id_user: string;
@@ -52,7 +53,8 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [receiver, setReceiver] = useState<Member>();
+  const [receiver, setReceiver] = useState<User>();
+
   const {receiverId} = route.params || {};
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
     null,
@@ -68,44 +70,37 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   const [selectedEmoji, setSelectedEmoji] = useState('');
 
   let socket = getSocket();
-
+  let LastMessage = useSelector(selectLastMessage);
+  
   const markSeenMessage = async (receiverId?: string) => {
     try {
       await ChatServices.markSeenMessage({receiver_id: receiverId});
+
     } catch (error) {
       console.error('Error markSeenMessage:', error);
     }
   };
 
-  const fetchMember = async (receiverId?: string, id_user?: string) => {
-    try {
-      const response: AxiosResponse<Member[]> = await FamilyServices.getMember({
-        id_user: receiverId,
-      });
-      if (response && response.data.length > 0) {
-        setReceiver(response.data[0]);
-      }
-    } catch (error) {
-      console.error('Error fetching member:', error);
-    }
-  };
+
 
   const fetchMessages = useCallback(async () => {
+    setReceiver(LastMessage.latestMessage.receiver);
+    console.log(receiverId, currentIndex)
     try {
       const response = await ChatServices.GetMessages({
         id_user: receiverId,
         index: currentIndex,
       });
-      if (response) {
-        const newMessages = response.map((message) => {
+      if (response.length > 0) {
+        const newMessages = response.map((message: Message) => {
           if (message.type === 'photo') {
             setImages(prevImages => [...prevImages, message.content]);
           }
           return { ...message, timestamp: new Date(message.timestamp) };
         });
-        setMessages(newMessages);
+        setMessages((prevMessages) => [...prevMessages, ...newMessages]);
         setHasReceivedMessage(true); 
-        setCurrentIndex(currentIndex+1)
+        setCurrentIndex(currentIndex+1);
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -114,7 +109,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
 
   useEffect(() => {
     fetchMessages();
-  }, [fetchMessages]);
+  }, [currentIndex]);
 
   
   const sendMessage = async () => {
@@ -194,7 +189,6 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         quality: 1,
       });
   
-      console.log('ImagePicker result:', result);
   
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const asset = result.assets[0];
@@ -276,13 +270,20 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
     setSelectedImageIndex(null);
   };
 
-  const handlePressMessage = (messageId: string) => {
-    setSelectedMessageId(prevId => (prevId === messageId ? null : messageId));
+  const handlePressMessage = (item: Message) => {
+    if( item.type === 'photo'){
+
+    const itemIndex = messages.findIndex(
+      message =>
+        message.senderId === item.senderId && message.content === item.content,
+    );
+  
+    setSelectedImageIndex(itemIndex );
+  }
+    setSelectedMessageId(prevId => (prevId === item._id ? null : item._id));
   };
 
-  useEffect(() => {
-    fetchMember(receiverId, profile.id_user);
-  },[])
+
 
   useEffect(() => {
     

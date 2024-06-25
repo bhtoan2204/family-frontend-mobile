@@ -4,7 +4,7 @@ import {COLORS} from 'src/constants';
 const styles = StyleSheet.create({
   messagesContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
   },
   contentContainer: {
     flexGrow: 1,
@@ -14,11 +14,11 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 8,
+    borderRadius: 10,
   },
   senderMessageContainer: {
     alignSelf: 'flex-end',
-    backgroundColor: COLORS.AliceBlue,
+    backgroundColor: COLORS.DenimBlue,
     padding: 10,
     margin: 10,
     borderRadius: 10,
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     width: 'auto',
   },
   senderMessageContent: {
-    color: COLORS.black,
+    fontWeight: '500'
   },
   receiverMessageSenderName: {
     fontWeight: 'bold',
@@ -46,47 +46,52 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
+    paddingHorizontal: 15,
+    paddingVertical: 15,
     backgroundColor: '#fff',
+    paddingBottom: 40,
   },
   input: {
     flex: 1,
     height: 40,
-    paddingHorizontal: 8,
-    borderWidth: 1,
-    borderColor: '#ccc',
+    paddingHorizontal: 15,
     borderRadius: 20,
     marginRight: 8,
+    backgroundColor: '#f2f2f2',
   },
   avatar: {
     width: 40,
     height: 40,
     borderRadius: 30,
-    //arginRight: 10,
+    marginLeft: 10,
+  },
+  avatarFirst: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginLeft: 10,
+    marginVertical: 10,
   },
   header: {
-    backgroundColor: COLORS.white,
+    backgroundColor: 'white',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
-    borderBottomWidth: 2,
-    borderBottomColor: '#ccc',
+    padding: 15,
   },
   receiverInfo: {
-    backgroundColor: COLORS.white,
+    backgroundColor: 'white',
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 25,
+    flexDirection: 'row',
   },
   messageContentContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   backButton: {
-    color: COLORS.black,
+    color: COLORS.DenimBlue,
   },
   imageMessage: {
     width: 200,
@@ -107,8 +112,15 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   avatarText: {
-    fontSize: 20,
-    fontWeight: 'bold'
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  avatarTextFirst: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginLeft: 10,
+    marginBottom: 10,
   },
   modalContainer: {
     flex: 1,
@@ -123,9 +135,60 @@ const styles = StyleSheet.create({
   },
   videoCallButton: {
     marginLeft: 10,
+    color: COLORS.DenimBlue,
   },
-  nameText: {
-
-  }
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'space-between',
+  },
+  timestamp: {
+    color: '#cccccc',
+    fontSize: 12,
+  },
+  messageWrapper: {
+    flexDirection: 'column',
+    marginVertical: 4,
+  },
+  messageRight: {
+    justifyContent: 'flex-end',
+  },
+  messageLeft: {
+    justifyContent: 'flex-start',
+  },
+  introContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    position: 'absolute',
+    width: '100%',
+  },
+  introText: {
+    fontSize: 14,
+    color: '#8E8E8E',
+    width: '80%',
+    textAlign: 'center',
+  },
+  activeDot: {
+    height: 15,
+    width: 15,
+    borderRadius: 7.5,
+    backgroundColor: 'green',
+    borderWidth: 2,
+    borderColor: 'white',
+    zIndex: 1,
+  },
+  activeDotBig: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    backgroundColor: 'green',
+    borderWidth: 2,
+    borderColor: 'white',
+    zIndex: 1,
+  },
+  videoMessage: {
+    width: '100%',
+    height: '100%',
+  },
 });
 export default styles;

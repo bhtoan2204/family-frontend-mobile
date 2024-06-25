@@ -10,6 +10,7 @@ import {
   Image,
   ScrollView,
   ImageBackground,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -35,48 +36,46 @@ import { selectfamily } from 'src/redux/slices/FamilySlice';
 import { AppDispatch } from 'src/redux/store';
 import * as ImagePicker from 'expo-image-picker';
 import { updateFamily } from 'src/redux/slices/FamilySlice';
-import FamilyList from './FamilyList';
 import FamilyListModal from './FamilyList';
 import { Member } from 'src/interface/member/member';
 
 const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
-  let { id_family } = route.params || {};
   const [family, setFamily] = useState<Family>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const bottomSheetRef = useRef<RBSheet>(null);
   const allMemberRef = useRef<RBSheet>(null);
   const screenHeight = Dimensions.get('screen').height;
   let profile = useSelector(selectProfile);
   const [isUploadingImage, setIsUploadingImage] = React.useState<boolean>(false);
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useDispatch<AppDispatch>();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-  
   const [families, setFamilies] = useState<Family[]>([]);
   const [membersMap, setMembersMap] = useState<{ [key: number]: Member[] }>({});
+  const source = family?.avatar && family.avatar !== "[NULL]" ? { uri: family.avatar } : require('../../assets/images/default_ava.png');
 
   useEffect(() => {
-      const fetchFamiliesAndMembers = async () => {
-        try {
-          const allFamilies = await FamilyServices.getAllFamily();
-          const membersObject: { [key: number]: Member[] } = {};
+    const fetchFamiliesAndMembers = async () => {
+      try {
+        const allFamilies = await FamilyServices.getAllFamily();
+        setFamily(allFamilies[0]);
 
-          for (const family of allFamilies) {
-            const members = await FamilyServices.getAllMembers({ id_family: family.id_family });
-            membersObject[family.id_family] = members;
-          }
-          setFamily(allFamilies[0]);
-          setFamilies(allFamilies);
-          setMembersMap(membersObject);
-        } catch (error) {
-          console.error('Error fetching families or members:', error);
+        const membersObject: { [key: number]: Member[] } = {};
+
+        for (const family of allFamilies) {
+          const members = await FamilyServices.getAllMembers({ id_family: family.id_family });
+          membersObject[family.id_family] = members;
         }
-      };
+        setFamilies(allFamilies);
+        setMembersMap(membersObject);
+      } catch (error) {
+        console.error('Error fetching families or members:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-      fetchFamiliesAndMembers();
-    
+    fetchFamiliesAndMembers();
   }, []);
-
-
-
 
   const handleDeleteFamily = async (id_family: number) => {
     try {
@@ -112,18 +111,18 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const handleChatPress = () => {
     navigation.navigate('ChatStack', {
       screen: 'ChatFamily',
-      params: { id_family: id_family },
+      params: { id_family: family!.id_family },
     });
   };
 
   const handleEducationPress = () => {
-    navigation.navigate('Education', {id_family: id_family});
+    navigation.navigate('Education', {id_family: family!.id_family});
   };
 
   const handleCalendarPress = () => {
     navigation.navigate('CalendarStack', {
       screen: 'CalendarScreen',
-      params: {id_family: id_family},
+      params: {id_family: family!.id_family},
     });
   };
 
@@ -132,25 +131,20 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   };
 
   const handleNavigateGuildLine = () => {
-    navigation.navigate('GuildLine', {id_family: id_family});
+    navigation.navigate('GuildLine', {id_family: family!.id_family});
   };
 
   const handleNavigateHouseHold = () => {
-    navigation.navigate('HouseHold', {id_family: id_family});
+    navigation.navigate('HouseHold', {id_family: family!.id_family});
   };
 
   const handleNavigateChecklist = () => {
-    navigation.navigate('CheckList', {id_family: id_family});
+    navigation.navigate('CheckList', {id_family: family!.id_family});
   };
 
-  const handleNavigateNews = () => {
-    navigation.navigate('News');
-  };
   const handleSelectFamily = (id_family: number) => {
     //navigation.navigate('ViewFamilyScreen', { id_family });
   };
-
-
 
   const handleChangeAvatar = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -159,28 +153,35 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         aspect: [3, 3],
         quality: 1,
     });
-    console.log('image')
-    console.log(result);
+
 
     if (!result.canceled) {
         const a = result.assets[0]!
         const uri = a.uri
         setIsUploadingImage(true)
-        const fileUrl = await FamilyServices.changeAvatar(id_family, uri)
-        dispatch(updateFamily({ ...family, avatar: fileUrl }))
+        const fileUrl = await FamilyServices.changeAvatar(family!.id_family, uri)
+        console.log(fileUrl)
+        //dispatch(updateFamily({ ...family!, avatar: fileUrl }))
         setIsUploadingImage(false)
-        console.log("fileUrl", fileUrl)
-        // setImage(result.assets[0].uri);
     }
-}
-const toggleDropdown = () => {
-  setIsDropdownVisible(!isDropdownVisible);
-};
-const handleCloseModal = (family: any) => {
-  setFamily(family);
-  setIsDropdownVisible(false); 
-};
+  };
 
+  const toggleDropdown = () => {
+    setIsDropdownVisible(!isDropdownVisible);
+  };
+
+  const handleCloseModal = (family: Family) => {
+    setFamily(family);
+    setIsDropdownVisible(false); 
+  };
+
+  if (isLoading || family === null) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+    );
+  }
   return (
     <ImageBackground
       source={require('../../assets/images/FamilyBG.png')}
@@ -205,16 +206,15 @@ const handleCloseModal = (family: any) => {
         <FamilyListModal visible={isDropdownVisible} onClose={handleCloseModal}  families={families} membersMap={membersMap} selectedFamily={family}/>
 
         <View className="flex-col justify-center items-center pt-4 ">
-        <TouchableOpacity style={styles.avatarButton} onPress={handleChangeAvatar}>
-
-          <Image
-            source={require('../../assets/images/family-1.jpg')}
-            resizeMode="stretch"
-            style={styles.imageContainer}
-          />
-           <View style={styles.editContainer}>
-            <Icon name="add" size={30}  style={styles.editIcon} />
-          </View>
+          <TouchableOpacity style={styles.avatarButton} onPress={handleChangeAvatar}>
+            <Image
+              source={source}
+              resizeMode="stretch"
+              style={styles.imageContainer}
+            />
+            <View style={styles.editContainer}>
+              <Icon name="add" size={30}  style={styles.editIcon} />
+            </View>
           </TouchableOpacity>
 
         </View>
@@ -223,7 +223,7 @@ const handleCloseModal = (family: any) => {
             <View className="">
               <View className="mt-2">
                 <TouchableOpacity
-                  onPress={() => handleOpenAllMemberModal(family!.id_family)}
+                  onPress={() => handleOpenAllMemberModal(family.id_family)}
                   style={styles.touchableOpacity}>
                   <ImageBackground
                     source={require('../../assets/images/family-item-bg-3.png')}
@@ -400,25 +400,7 @@ const handleCloseModal = (family: any) => {
                 </ImageBackground>
               </TouchableOpacity>
 
-              <TouchableOpacity
-                onPress={handleNavigateNews}
-                style={styles.touchableOpacity}>
-                <ImageBackground
-                  source={require('../../assets/images/family-item-bg-2.png')}
-                  resizeMode="stretch"
-                  style={styles.imageBackground}>
-                  <View style={{ flex: 2 }}>
-                    <Image
-                      source={NewsImage}
-                      style={styles.imageBackgroundIcon}
-                      resizeMode="contain"
-                    />
-                  </View>
-                  <View style={styles.imageBackgroundTextContainer}>
-                    <Text style={styles.imageBackgroundText}>News</Text>
-                  </View>
-                </ImageBackground>
-              </TouchableOpacity>
+              
             </View>
           </ScrollView>
         )}
@@ -434,7 +416,7 @@ const handleCloseModal = (family: any) => {
             },
           }}>
             <BottomSheet
-            id_family={id_family}
+            id_family={family!.id_family}
             name={family?.name}
             description={family?.description}
             />
@@ -446,5 +428,3 @@ const handleCloseModal = (family: any) => {
 };
 
 export default ViewFamilyScreen;
-
-

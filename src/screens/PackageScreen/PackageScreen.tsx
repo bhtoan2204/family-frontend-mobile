@@ -11,14 +11,10 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import { ViewAllPackageScreenProps } from 'src/navigation/NavigationTypes';
 import {RouteProp} from '@react-navigation/native';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { useSelector } from 'react-redux';
-type Package = {
-  id_package: number;
-  name: string;
-  price: number;
-  description: string;
-  expired: number;
-};
+import { useDispatch, useSelector } from 'react-redux';
+import { Package } from 'src/interface/package/mainPackage';
+import { setPackage } from 'src/redux/slices/PackageSlice';
+
 
 const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
   const [value, setValue] = React.useState(0);
@@ -27,25 +23,16 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
   const [selectedMount, setSelectedMount] = useState<number>(0);
   const [packages, setPackages] = useState<Package[]>([]);
   const profile = useSelector(selectProfile);
-
-  const handleSelectPackage = (
-    id_user?: string,
-    id_family?: number,
-    id_package?: number,
-    amount?: number,
-  ) => {
-    navigation.navigate('OrderDetailScreen', {
-      id_family,
-      id_package,
-      amount,
-    });
+  const dispatch = useDispatch();
+  
+  const handleSelectPackage = (pkg: Package) => {
+    dispatch(setPackage(pkg));
+    navigation.navigate('OrderDetailScreen', {id_family});
   };
 
   const handleGetPackages = async () => {
     try {
-      //console.log('Hello World');
       const result = await PackageServices.getAllPackage();
-      //console.log('PackageServices.getPackage result:', result);
       setPackages(result);
     } catch (error: any) {
       console.log('PackageServices.getPackage error:', error);
@@ -71,11 +58,11 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
             const isActive = value === index;
             return (
               <TouchableOpacity
-                key={pkg.id_package}
+                key={pkg.id_main_package}
                 onPress={() => {
                   setValue(index);
-                  setSelectedPackage(pkg); // Cập nhật selectedPackage
-                  setSelectedMount(pkg.price); // Cập nhật selectedMount
+                  setSelectedPackage(pkg); 
+                  setSelectedMount(pkg.price);
                 }}>
                 <View style={[styles.radio, isActive && styles.radioActive]}>
                   <Text style={styles.radioLabel}>{pkg.name}</Text>
@@ -84,7 +71,7 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
 
                   <View style={styles.radioBadge}>
                     <Text style={styles.radioBadgeText}>
-                      {pkg.expired} month(s)
+                      {pkg.duration_months} month(s)
                     </Text>
                   </View>
 
@@ -104,12 +91,7 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
             style={styles.btn}
             onPress={() =>
               selectedPackage &&
-              handleSelectPackage(
-                profile.id_user,
-                id_family,
-                selectedPackage.id_package,
-                selectedMount,
-              )
+              handleSelectPackage(selectedPackage)
             }>
             <Text style={styles.btnText}>{TEXTS.PACKAGE_REGISTER}</Text>
           </TouchableOpacity>

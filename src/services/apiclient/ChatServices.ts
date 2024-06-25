@@ -25,7 +25,7 @@ const ChatServices = {
         `${baseUrl}/api/v1/chat/getMessages/${id_user}/${index}`
       );
       
-      if ( response.status ===200) {
+      if ( response.status === 200) {
         return response.data; 
       }
     } catch (error: any) {
@@ -47,6 +47,22 @@ const ChatServices = {
       }
     } catch (error: any) {
       console.error('Error in sendMessages:', error.message);
+    }
+  },
+  sendFamilyMessage: async ({ message, familyId }: { message: string; familyId?: number }) => {
+    try {
+      const response: AxiosResponse = await instance.post(
+        `${baseUrl}/api/v1/chat/sendFamilyMessage`, 
+        {
+          message, familyId
+        }
+      );
+      
+      if ( response.status === 200) {
+        return response.data; 
+      }
+    } catch (error: any) {
+      console.error('Error in sendFamilyMessage:', error.message);
     }
   },
   sendImageMessage: async ({ uri, receiverId }: { uri: string; receiverId?: string }) => {
@@ -87,6 +103,44 @@ const ChatServices = {
       console.error('Error in sendImageMessage:', error.message);
     }
   },
+  sendFamilyImage: async ({ uri, familyId }: { uri: string; familyId: number | undefined }) => {
+    try {
+      const createFormData = (uri: string, familyId?: number): FormData => {
+        let formData = new FormData();
+        let filename = uri.split('/').pop()!;
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+        const file = {
+          uri,
+          name: filename,
+          type,
+        };
+        formData.append('image', file);
+        formData.append('familyId', familyId);
+
+        return formData;
+      };
+
+      const response: AxiosResponse = await instance.post(
+        `${baseUrl}/api/v1/chat/sendFamilyImage`, 
+        createFormData(uri, familyId),
+          {
+            
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              accept: '*/*',
+            },
+           
+          }
+      );
+      
+      if ( response.status === 200) {
+        return response.data; 
+      }
+    } catch (error: any) {
+      console.error('Error in sendFamilyImage:', error.message);
+    }
+  },
 
   GetUserChat: async ({index }: {index: number }) => {
     try {
@@ -99,6 +153,19 @@ const ChatServices = {
       }
     } catch (error: any) {
       console.error('Error in getUsersChat:', error.message);
+    }
+  },
+  getFamilyChats: async () => {
+    try {
+      const response: AxiosResponse = await instance.get(
+        `${baseUrl}/api/v1/chat/getFamilyChats`
+      );
+      
+      if ( response) {
+        return response.data; 
+      }
+    } catch (error: any) {
+      console.error('Error in getFamilyChats:', error.message);
     }
   },
   markSeenMessage: async ({receiver_id }: {receiver_id?: string }) => {
@@ -114,10 +181,14 @@ const ChatServices = {
       console.error('Error in markSeenMessage:', error.message);
     }
   },
-  GetAllUser: async ({index }: {index: number }) => {
+  GetAllUser: async ({search }: {search: string }) => {
     try {
       const response: AxiosResponse = await instance.get(
-        `${baseUrl}/api/v1/user/getAllUser`
+        `${baseUrl}/api/v1/chat/getLinkedUser`,{
+          params: {
+            search,
+          }
+        }
       );
       if ( response) {
         return response.data; 
@@ -156,6 +227,44 @@ const ChatServices = {
         },
       );
       console.log(response);
+      if (response.status === 200) {
+        return response.data.data.fileUrl;
+      } else {
+        throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+      }
+    } catch (error: any) {
+      console.log('Update Error', error);
+      throw new Error(ERROR_TEXTS.API_ERROR);
+    }
+  },
+  sendFamilyVideo: async ( familyId: number | undefined, uri: string) => {
+    try {
+      const createFormData = (uri: string): FormData => {
+        let formData = new FormData();
+        let filename = uri.split('/').pop()!;
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `video/${match[1]}` : `video`;
+        formData.append('video', {
+          uri,
+          name: filename,
+          type,
+        });
+        formData.append('familyId', String(familyId));
+
+        return formData;
+      };
+      const response: AxiosResponse = await instance.put(
+        `${baseUrl}/api/v1/chat/sendFamilyVideo`,
+        createFormData(uri),
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            accept: '*/*',
+          },
+          
+          
+        },
+      );
       if (response.status === 200) {
         return response.data.data.fileUrl;
       } else {

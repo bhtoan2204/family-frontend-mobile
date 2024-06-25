@@ -9,13 +9,14 @@ import {
   SafeAreaView,
   StyleSheet,
 } from 'react-native';
-import {Profile} from 'src/interface/user/userProfile';
 import ChatServices from 'src/services/apiclient/ChatServices';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { User } from 'src/interface/chat/chat';
 
 const PeopleScreen = () => {
-  const [users, setUsers] = useState<Profile[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState<string>('');
 
   useEffect(() => {
     fetchUser();
@@ -24,7 +25,7 @@ const PeopleScreen = () => {
   const fetchUser = async () => {
     try {
       setLoading(true);
-      const response = await ChatServices.GetAllUser({index: 0});
+      const response = await ChatServices.GetAllUser({search});
       setUsers(response);
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -33,7 +34,7 @@ const PeopleScreen = () => {
     }
   };
 
-  const renderUserItem = ({item}: {item: Profile}) => (
+  const renderUserItem = ({item}: {item: User}) => (
     <View>
       <TouchableOpacity style={styles.userItem}>
         <View style={styles.avatarContainer}>

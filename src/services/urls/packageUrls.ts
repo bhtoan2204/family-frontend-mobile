@@ -1,7 +1,7 @@
 import baseUrl from './baseUrl';
 
 const PackageUrl = {
-  getAllPackage: `${baseUrl}/api/v1/payment/getAllPackage`,
+  getAllPackage: `${baseUrl}/api/v1/payment/getMainPackage`,
   getPackage: `${baseUrl}/api/v1/payment/getPackage`,
   getProfile: `${baseUrl}/api/v1/user/profile`,
   getPaymentMethod: `${baseUrl}/api/v1/payment/getMethod`,

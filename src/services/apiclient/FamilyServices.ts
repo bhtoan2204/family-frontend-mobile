@@ -259,7 +259,7 @@ const FamilyServices = {
       );
       console.log(response);
       if (response.status === 200) {
-        return response.data.data.fileUrl;
+        return response.data.data;
       } else {
         throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
       }

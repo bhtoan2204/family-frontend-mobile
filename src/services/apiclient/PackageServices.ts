@@ -7,7 +7,7 @@ import baseUrl from '../urls/baseUrl';
 
 const PackageServices = {
   //da xong
-  getPackage: async ({id_package}: {id_package: number}) => {
+  getPackage: async ({id_package}: {id_package?: number}) => {
     try {
       console.log('getPackage called with id:', id_package);
       const response: AxiosResponse = await instance.get(
@@ -94,19 +94,14 @@ const PackageServices = {
     }
   },
 
-  //da xong
   getAllPackage: async () => {
     try {
-      console.log('getAllPackage called');
       const response: AxiosResponse = await instance.get(
         PackageUrl.getAllPackage,
-        {
-          
-        },
+       
       );
       if (response.status === 200) {
-        console.log('getAllPackage:', response.data);
-        return response.data;
+        return response.data.data;
       } else {
         throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
       }

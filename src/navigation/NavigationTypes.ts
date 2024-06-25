@@ -177,9 +177,7 @@ export type FamilyStackParamList = {
 
   InviteMembers: undefined;
 
-  ViewFamily: {
-    id_family: number | undefined;
-  };
+  ViewFamily: undefined;
 
   AllMember: {
     id_family: number | undefined;
@@ -247,8 +245,7 @@ export type PackStackParamList = {
   };
   OrderDetailScreen: {
     id_family: number | undefined;
-    id_package: number | undefined;
-    amount: number | undefined;
+    
   };
 
   ZaloPayScreen: undefined;
