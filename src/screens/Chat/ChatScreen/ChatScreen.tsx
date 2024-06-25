@@ -85,7 +85,6 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
 
   const fetchMessages = useCallback(async () => {
     setReceiver(LastMessage.latestMessage.receiver);
-    console.log(receiverId, currentIndex)
     try {
       const response = await ChatServices.GetMessages({
         id_user: receiverId,
@@ -258,13 +257,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
     }
   };
 
-  const handleImagePress = (item: Message) => {
-    const itemIndex = messages.findIndex(
-      message =>
-        message.senderId === item.senderId && message.content === item.content,
-    );
-    setSelectedImageIndex(itemIndex - 1);
-  };
+
 
   const handleCloseModal = () => {
     setSelectedImageIndex(null);

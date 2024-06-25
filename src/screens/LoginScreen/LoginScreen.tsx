@@ -10,6 +10,7 @@ import Checkbox from 'expo-checkbox';
 import {Formik, FormikHelpers} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   Image,
   ImageBackground,
   KeyboardAvoidingView,
@@ -32,7 +33,7 @@ import {
   SignupScreenProps,
   WelcomeScreenProps,
 } from 'src/navigation/NavigationTypes';
-import {AuthServices} from 'src/services/apiclient';
+import {AuthServices, ChatServices} from 'src/services/apiclient';
 import {AuthUrl} from 'src/services/urls';
 import LocalStorage from 'src/store/localstorage';
 import * as Yup from 'yup';
@@ -40,6 +41,7 @@ import styles from './styles';
 import {useDispatch} from 'react-redux';
 import * as WebBrowser from 'expo-web-browser';
 import {makeRedirectUri, useAuthRequest} from 'expo-auth-session';
+import * as Notifications from 'expo-notifications';
 
 interface FormValues {
   email: string;
@@ -63,6 +65,34 @@ const discovery = {
 const LoginScreen = ({navigation}: CombinedScreenProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const projectId = "f5584d17-960b-4d2e-9f4d-1a6681f0bbea"; 
+
+  const getExpoFCMToken = async () => {
+    try {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+
+      if (finalStatus === 'granted') {
+        const tokenResponse = await Notifications.getExpoPushTokenAsync({ projectId });
+        const token = tokenResponse.data;
+        const regex = /\[([^\]]+)\]/;
+        const match = regex.exec(token);
+
+       
+        const expoToken = match ? match[1] : null;
+        await ChatServices.saveFCMToken({fcmToken: expoToken});
+      } else {
+        throw new Error('Permission to receive notifications was not granted');
+      }
+    } catch (error) {
+      console.error('Failed to get Expo FCM token:', error);
+    }
+  };
 
   const handleLogin = async (
     values: FormValues,
@@ -77,8 +107,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
       await LocalStorage.StoreAccessToken(response.accessToken);
       await LocalStorage.StoreRefreshToken(response.refreshToken);
 
-      // console.log(response.accessToken);
-      // console.log(response.refreshToken);
+      getExpoFCMToken();
 
       navigation.navigate('LandingPage');
       actions.setStatus({success: true});

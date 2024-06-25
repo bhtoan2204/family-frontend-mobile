@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {View } from 'react-native';
+import {Alert, View } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { getSocket } from "src/services/apiclient/Socket";
 import { AxiosResponse } from 'axios';
-import { FamilyServices } from 'src/services/apiclient';
+import { ChatServices, FamilyServices } from 'src/services/apiclient';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import { HomeTabProps, LandingPageScreenProps, SignupScreenProps } from 'src/navigation/NavigationTypes';
@@ -148,6 +148,7 @@ const Notification = ({navigation}: CombinedScreenProps) => {
     }
     return true;
 };
+
 useEffect(() => {
     checkNotificationPermission();
       if (socket) {

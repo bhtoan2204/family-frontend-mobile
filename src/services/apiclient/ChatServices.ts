@@ -4,6 +4,23 @@ import baseUrl from '../urls/baseUrl';
 import { ERROR_TEXTS } from 'src/constants';
 
 const ChatServices = {
+  saveFCMToken: async ({fcmToken}: {fcmToken: string | null}) => {
+    try {
+      const response: AxiosResponse = await instance.post(
+        `${baseUrl}/api/v1/auth/firebase/saveFCMToken`,{
+          fcmToken
+        }
+
+      );
+      if (response.status === 200) {
+        return response.message;
+      } else {
+        console.error('Error in saveFCMToken');
+      }
+    } catch (error: any) {
+      console.error('Error in saveFCMToken:', error.message);
+    }
+  },
   GetFamilyMessages: async ({id_family, index}: {id_family?: number, index: number}) => {
     try {
       const response: AxiosResponse = await instance.get(
