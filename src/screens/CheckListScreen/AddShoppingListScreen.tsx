@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/redux/store';
 import ShoppingListIcon from 'src/assets/images/checklist_assets/shopping_list.png';
 import { addNewCheckListItem } from 'src/redux/slices/CheckListSlice';
+import CheckListServices from 'src/services/apiclient/CheckListService';
 
 
 const screenWidth = Dimensions.get('screen').width
@@ -32,15 +33,17 @@ const AddShoppingListScreen: React.FC<AddShoppingListScreenProps> = ({ navigatio
     const dispatch = useDispatch<AppDispatch>()
 
     const handleAddNewShoppingList = async () => {
-        dispatch(addNewCheckListItem({
-            id_list: Math.floor(Math.random() * 1000),
-            id_family: id_family!,
-            title: text,
-            completed: 0,
-            total: 0,
-            checklistItems: []
-        }))
-        navigation.goBack()
+        const newShoppingList = await CheckListServices.addNewShoppingList(
+            id_family!,
+            text,
+            description
+        )
+
+        if (newShoppingList) {
+            dispatch(addNewCheckListItem(newShoppingList))
+            navigation.goBack()
+        }
+        // handle show error
     }
 
     return (

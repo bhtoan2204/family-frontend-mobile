@@ -64,9 +64,9 @@ const checkListSlice = createSlice({
         checklist => checklist.id_list === action.payload.id,
       );
       if (checkListIndex !== -1 && state[checkListIndex].checklistItems) {
-        const newItem: ShoppingListItemInterface = action.payload.item;
-        newItem.id_item = state[checkListIndex].checklistItems.length + 1;
-        state[checkListIndex].checklistItems.push(newItem);
+        // const newItem: ShoppingListItemInterface = action.payload.item;
+        // newItem.id_item = state[checkListIndex].checklistItems.length + 1;
+        state[checkListIndex].checklistItems.push(action.payload.item);
         state[checkListIndex].total += 1;
       }
     },

@@ -72,6 +72,36 @@ const CheckListServices = {
       throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
+  addNewShoppingList: async (
+    id_family: number,
+    title: string,
+    description: string,
+  ) => {
+    try {
+      const response: AxiosResponse = await instance.post(
+        ShoppingListUrls.createShoppingList,
+        {
+          id_family: id_family,
+          title,
+          description,
+        },
+      );
+
+      if (response.status === 201) {
+        const newShoppingList: ShoppingListCategoryInterface =
+          response.data.data;
+        newShoppingList.checklistItems = [];
+        newShoppingList.completed = 0;
+        newShoppingList.total = 0;
+
+        return newShoppingList;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      throw new Error(ERROR_TEXTS.API_ERROR);
+    }
+  },
   addItemToShoppingList: async (
     id_list: number,
     item_name: string,
@@ -79,7 +109,7 @@ const CheckListServices = {
     id_item_type: number,
     priority_level: number,
     reminder_date: string,
-    price: string,
+    price: number,
     description: string,
   ) => {
     try {
@@ -97,7 +127,7 @@ const CheckListServices = {
         },
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         return response.data.data as ShoppingListItemInterface;
       } else {
         return null;
@@ -119,21 +149,21 @@ const CheckListServices = {
     id_item_type: number,
   ) => {
     try {
-      const url = ShoppingListUrls.updateShoppingListItem
-      console.log(url)
+      const url = ShoppingListUrls.updateShoppingListItem;
+      console.log(url);
       const response: AxiosResponse = await instance.put(
         ShoppingListUrls.updateShoppingListItem,
         {
-          "id_item":id_item,
-          "id_list":id_list,
-          "id_item_type":id_item_type,
-          "item_name":item_name,
-          "description":description,
-          "quantity": quantity,
-          "is_purchased":is_purchased,
-          "priority_level":priority_level,
-         "reminder_date": reminder_date,
-          "price":price,
+          id_item: id_item,
+          id_list: id_list,
+          id_item_type: id_item_type,
+          item_name: item_name,
+          description: description,
+          quantity: quantity,
+          is_purchased: is_purchased,
+          priority_level: priority_level,
+          reminder_date: reminder_date,
+          price: price,
         },
       );
       if (response.status === 200) {

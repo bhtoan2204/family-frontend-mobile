@@ -34,13 +34,13 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
     const [filteredChecklist, setFilteredChecklist] = React.useState<ShoppingListItemInterface[]>()
     const [selectedChecklistItem, setSelectedChecklistItem] = React.useState<number>(-1)
     const [type, setType] = React.useState<number>(0)
-    useEffect(() => {
-        // setChecklist(checklistData)
-        setTimeout(() => {
-            console.log('checklist', checklist)
-            console.log('checklist category', checkListCategoryData)
-        }, 4000)
-    }, [])
+    // useEffect(() => {
+    //     // setChecklist(checklistData)
+    //     setTimeout(() => {
+    //         console.log('checklist', checklist)
+    //         console.log('checklist category', checkListCategoryData)
+    //     }, 4000)
+    // }, [])
 
 
 
@@ -155,7 +155,7 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
             }}>
                 <Text style={{ color: 'white', fontSize: 40 }}>+</Text>
             </TouchableOpacity>
-            {/* <AddItemCheckListSheet bottomSheetRef={refRBSheet} id_checklist={id_checklist} /> */}
+            <AddItemCheckListSheet bottomSheetRef={refRBSheet} id_checklist={id_checklist} />
             <CheckListDetailSheet bottomSheetRef={refRBSheetDetail} id_checklist={id_checklist} checklist_item={getChecklistItem(selectedChecklistItem)} />
         </View>
     );

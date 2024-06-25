@@ -4,7 +4,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { COLORS } from 'src/constants';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { ChecklistItemInterface } from 'src/interface/checklist/checklist';
+import { ShoppingListItemInterface } from 'src/interface/checklist/checklist';
 import { Picker } from '@react-native-picker/picker';
 import { AppDispatch } from 'src/redux/store';
 import { useDispatch } from 'react-redux';
@@ -18,6 +18,7 @@ import NumberPickerSheet from '../sheet/number-picker';
 import PricePickerSheet from '../sheet/price-picker';
 import { formatVietNamCurrencyToDot } from 'src/utils/formatCurrency';
 import { shoppingListItemColor } from 'src/screens/CheckListScreen/constant/color';
+import CheckListServices from 'src/services/apiclient/CheckListService';
 
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#000'];
@@ -83,24 +84,34 @@ const AddItemCheckListSheet = ({ bottomSheetRef, id_checklist }: AddItemCheckLis
         console.log("current quantity", quantity)
         console.log("current name", name)
         console.log("current description", description)
-        const newItem: ChecklistItemInterface = {
-            id_item: (Math.floor(Math.random() * 1000) + 1).toString(),
-            item_name: name,
-            description: description,
-            reminder_date: dueDate != null ? new Date(dueDate).toDateString() : new Date().toDateString(),
-            priority_level: priority,
-            is_purchased: false,
-            quantity: quantity,
-            price: price.toString(),
-            id_list: id_checklist,
-            id_item_type: 0,
-        }
-        dispatch(
-            addNewCheckListItemToCheckList({
-                id: id_checklist,
-                item: newItem
-            })
+        // await CheckListServices.
+        //(id_list: number, item_name: string, quantity: number, id_item_type: number, priority_level: number, reminder_date: string, price: string, description: string)
+        console.log(id_checklist,
+            name,
+            quantity,
+            6,
+            4,
+            dueDate != null ? new Date(dueDate).toISOString() : new Date().toISOString(),
+            price,
+            description)
+        const newItem = await CheckListServices.addItemToShoppingList(
+            id_checklist,
+            name,
+            quantity,
+            6,
+            4,
+            dueDate != null ? dueDate.toISOString() : new Date().toISOString(),
+            price,
+            description
         )
+        if (newItem != null) {
+            dispatch(
+                addNewCheckListItemToCheckList({
+                    id: id_checklist,
+                    item: newItem
+                })
+            )
+        }
         bottomSheetRef.current?.close();
     }
 
