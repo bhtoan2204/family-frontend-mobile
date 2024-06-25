@@ -177,7 +177,7 @@ const ChecklistSections = ({ shoppinglist, checklist, selectedCategory, setSelec
                 <View className="py-3">
 
                 </View>
-                <AccordionItem title="Shopping"
+                <AccordionItem title="Groceries"
                     persistComponent={persistantComponentShoppingList}
                 >
                     <Animatable.View className="" style={{
@@ -192,7 +192,7 @@ const ChecklistSections = ({ shoppinglist, checklist, selectedCategory, setSelec
                         }
                     </Animatable.View>
                 </AccordionItem>
-                <AccordionItem title="Todo"
+                <AccordionItem title="To Do's"
                     persistComponent={persistantComponentTodoList}
                 >
                     <Animatable.View className="" style={{

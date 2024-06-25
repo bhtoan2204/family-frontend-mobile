@@ -43,6 +43,8 @@ const EditConsumableHouseHoldItemScreen = ({ navigation, route }: EditConsumable
         }
 
     }
+    console.log('expired_date', consumableData?.expired_date)
+    console.log(expiredDateInput.toISOString().split('T')[0].toString())
 
     const handleCancel = () => {
         setQuantityInput(quantity)
@@ -54,13 +56,13 @@ const EditConsumableHouseHoldItemScreen = ({ navigation, route }: EditConsumable
         dispatch(
             updateComsumableItem({
                 id_household_item: id_item,
-                expired_date: expiredDateInput.toDateString(),
+                expired_date: new Date(expiredDateInput.toLocaleDateString()).toISOString().split('T')[0].toString(),
                 quantity: quantityInput,
                 threshold: threshholdInput
             })
         )
 
-
+        navigation.goBack()
     }
 
     const buildDate = useCallback(() => {
@@ -75,7 +77,7 @@ const EditConsumableHouseHoldItemScreen = ({ navigation, route }: EditConsumable
                 <View>
                     <View className='w-full  flex-row justify-between items-center py-3 '>
                         {
-                            (quantityInput != consumableData?.quantity || threshholdInput != consumableData?.threshold || expiredDateInput.toDateString() != consumableData?.expired_date) ? <>
+                            (quantityInput != consumableData?.quantity || threshholdInput != consumableData?.threshold || expiredDateInput.toISOString().split('T')[0] != consumableData?.expired_date) ? <>
                                 <TouchableOpacity onPress={() => {
                                     console.log(quantityInput, quantity, threshholdInput, threshhold, expiredDateInput, expired_date)
                                     setQuantityInput(quantity)

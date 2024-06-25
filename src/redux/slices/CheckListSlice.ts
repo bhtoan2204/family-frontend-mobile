@@ -65,7 +65,7 @@ const checkListSlice = createSlice({
       );
       if (checkListIndex !== -1 && state[checkListIndex].checklistItems) {
         const newItem: ShoppingListItemInterface = action.payload.item;
-        newItem.id_item = `${state[checkListIndex].checklistItems.length + 1}`;
+        newItem.id_item = state[checkListIndex].checklistItems.length + 1;
         state[checkListIndex].checklistItems.push(newItem);
         state[checkListIndex].total += 1;
       }
@@ -74,7 +74,7 @@ const checkListSlice = createSlice({
       state,
       action: PayloadAction<{
         id: number;
-        id_checklist: string;
+        id_checklist: number;
         title: string;
         description: string;
       }>,
@@ -100,7 +100,7 @@ const checkListSlice = createSlice({
       state,
       action: PayloadAction<{
         id: number;
-        id_checklist: string;
+        id_checklist: number;
         priority: number;
       }>,
     ) {
@@ -138,7 +138,7 @@ const checkListSlice = createSlice({
       state,
       action: PayloadAction<{
         id: number;
-        id_checklist: string;
+        id_checklist: number;
         dueDate: string;
       }>,
     ) {
@@ -162,7 +162,7 @@ const checkListSlice = createSlice({
       state,
       action: PayloadAction<{
         id: number;
-        id_checklist: string;
+        id_checklist: number;
         isCompleted: boolean;
       }>,
     ) {
@@ -191,7 +191,7 @@ const checkListSlice = createSlice({
       state,
       action: PayloadAction<{
         id: number;
-        id_checklist: string;
+        id_checklist: number;
         quantity: number;
       }>,
     ) {
@@ -214,7 +214,7 @@ const checkListSlice = createSlice({
       state,
       action: PayloadAction<{
         id: number;
-        id_checklist: string;
+        id_checklist: number;
         price: string;
       }>,
     ) {

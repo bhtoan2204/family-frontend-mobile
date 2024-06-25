@@ -19,9 +19,9 @@ import CheckListDetailSheet from 'src/components/user/shoppinglist/checklist-ite
 import ChecklistItemDetail from './CheckListItem';
 import { iOSGrayColors } from 'src/constants/ios-color';
 
-const today = new Date();
-const yesterday = new Date(today.setDate(today.getDate() - 1));
-const tomorrow = new Date(today.setDate(today.getDate() + 1));
+// const today = new Date();
+// const yesterday = new Date(today.setDate(today.getDate() - 1));
+// const tomorrow = new Date(today.setDate(today.getDate() + 1));
 
 
 const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigation, route }) => {
@@ -29,26 +29,22 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
     const refRBSheet = useRef<BottomSheet>(null);
     const refRBSheetDetail = useRef<BottomSheet>(null);
     const dispatch = useDispatch<AppDispatch>();
-    const checkListCategoryData = useSelector((state: RootState) => state.checklist).find(item => item.id_list === id_checklist)!
+    const checkListCategoryData = useSelector((state: RootState) => state.checklist).find(item => item.id_list === id_checklist)
     const checklist = useSelector((state: RootState) => state.checklist).find(item => item.id_list === id_checklist)!.checklistItems
     const [filteredChecklist, setFilteredChecklist] = React.useState<ShoppingListItemInterface[]>()
-    const [selectedChecklistItem, setSelectedChecklistItem] = React.useState<string>("-1")
+    const [selectedChecklistItem, setSelectedChecklistItem] = React.useState<number>(-1)
     const [type, setType] = React.useState<number>(0)
     useEffect(() => {
         // setChecklist(checklistData)
-
+        setTimeout(() => {
+            console.log('checklist', checklist)
+            console.log('checklist category', checkListCategoryData)
+        }, 4000)
     }, [])
-    useEffect(() => {
-        // setFilteredChecklist(checklist)
-        const findMax = () => {
-            let max = 0;
-
-        }
-    }, [checklist])
 
 
 
-    const selectCheckListItem = (item: string) => {
+    const selectCheckListItem = (item: number) => {
         setSelectedChecklistItem(item)
 
         refRBSheetDetail.current?.expand()
@@ -59,23 +55,23 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
     // }
 
     const showContent = () => {
-        const sortedCheckList = checklist.sort((a, b) => {
-            return a.priority_level - b.priority_level
-        })
-        return <>
-            {sortedCheckList.map((item, index) => {
-                return <ChecklistItemDetail key={index} item={item} id_checklist={id_checklist} selectCheckListItem={selectCheckListItem} />
-            })}
-        </>
+        // const sortedCheckList = checklist.sort((a, b) => {
+        //     return a.priority_level - b.priority_level
+        // })
+        return (
+            checklist.map((item, index) => {
+                return <ChecklistItemDetail key={index} item={item} id_checklist={item.id_list} selectCheckListItem={selectCheckListItem} />
+            })
+        )
     }
 
-    const getChecklistItem = (id: string | null) => {
+    const getChecklistItem = (id: number | null) => {
         const emptyItem: ShoppingListItemInterface = {
-            id_item: '0',
-            item_name: '',
-            description: '',
+            id_item: -1,
+            item_name: '0',
+            description: '0',
             priority_level: 4,
-            reminder_date: today.toDateString(),
+            reminder_date: new Date().toDateString(),
             is_purchased: false,
             id_item_type: 0,
             id_list: 0,
@@ -85,6 +81,16 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
         return checklist.find(item => item.id_item === id) || emptyItem
     }
 
+    if (!checklist || !checkListCategoryData) {
+        return <View style={styles.container}>
+            <Text>Not Found</Text>
+        </View>
+    }
+    // return (
+    //     <View>
+    //         <Text>lol</Text>
+    //     </View>
+    // )
     return (
         <View style={styles.container} >
             <View className=' ' style={{
@@ -149,7 +155,7 @@ const ChecklistDetailScreen: React.FC<CheckListDetailScreenProps> = ({ navigatio
             }}>
                 <Text style={{ color: 'white', fontSize: 40 }}>+</Text>
             </TouchableOpacity>
-            <AddItemCheckListSheet bottomSheetRef={refRBSheet} id_checklist={id_checklist} />
+            {/* <AddItemCheckListSheet bottomSheetRef={refRBSheet} id_checklist={id_checklist} /> */}
             <CheckListDetailSheet bottomSheetRef={refRBSheetDetail} id_checklist={id_checklist} checklist_item={getChecklistItem(selectedChecklistItem)} />
         </View>
     );

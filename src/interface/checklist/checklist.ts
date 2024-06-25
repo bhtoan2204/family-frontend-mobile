@@ -16,7 +16,7 @@ export interface ShoppingListCategoryInterface {
 }
 
 export interface ShoppingListItemInterface {
-  id_item: string;
+  id_item: number;
   id_list: number;
   item_name: string;
   quantity: number;

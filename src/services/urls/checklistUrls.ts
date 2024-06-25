@@ -6,6 +6,7 @@ const ShoppingListUrls = {
   getShoppingListItem: `${baseUrl}/api/v1/shopping/getShoppingItem`,
   createShoppingList: `${baseUrl}/api/v1/shopping/createShoppingList`,
   createShoppingListItem: `${baseUrl}/api/v1/shopping/createShoppingItem`,
+  updateShoppingListItem: `${baseUrl}/api/v1/shopping/updateShoppingItem`,
 };
 
 export default ShoppingListUrls;

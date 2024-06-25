@@ -35,7 +35,7 @@ const educationSlice = createSlice({
       return action.payload;
     },
     clearEducation(state) {
-      state = [];
+      return [];
     },
     deleteEducation(state, action: PayloadAction<number>) {
       return state.filter(

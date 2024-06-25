@@ -12,7 +12,7 @@ const guidelineSlice = createSlice({
       return action.payload;
     },
     clearGuideline(state) {
-      state = [];
+      return [];
     },
     deleteGuideline(state, action: PayloadAction<number>) {
       return state.filter(

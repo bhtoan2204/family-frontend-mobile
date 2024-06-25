@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
 import { ShoppingListItemInterface, ShoppingListCategoryInterface } from 'src/interface/checklist/checklist';
 // import ChecklistItemModal from '../AddItemCheckListSheet';
 import { CheckListScreenProps } from 'src/navigation/NavigationTypes';
@@ -16,6 +16,7 @@ import { AppDispatch, RootState } from 'src/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setInitialCheckList } from 'src/redux/slices/CheckListSlice';
 import { setInitialShoppingList } from 'src/redux/slices/ShoppingListSlice';
+import CheckListServices from 'src/services/apiclient/CheckListService';
 
 const today = new Date();
 const yesterday = new Date(today.setDate(today.getDate() - 1));
@@ -48,20 +49,26 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
     const [filteredShoppingList, setFilteredShoppingList] = React.useState<ShoppingListCategoryInterface[]>([]);
     // const sections: { title: string, data: ChecklistItemInterface[] }[] = [];
 
+    const [loading, setLoading] = React.useState<boolean>(false);
+
     const handleNavigateCheckListDetail = (id_checklist: number) => {
-        navigation.navigate('CheckListDetail', { id_family, id_checklist })
-    }
-    useEffect(() => {
-        const newCheckListData = checkListListData.map(item => {
-            const newItem = { ...item, category_name: checklist_category_type.find(type => type.id_item_type === item.id_item_type)?.item_type_name }
-            return newItem;
+        console.log(id_checklist)
+        navigation.navigate('CheckListDetail', {
+            id_family: id_family,
+            id_checklist: id_checklist
         })
+    }
+    // useEffect(() => {
+    //     const newCheckListData = checkListListData.map(item => {
+    //         const newItem = { ...item, category_name: checklist_category_type.find(type => type.id_item_type === item.id_item_type)?.item_type_name }
+    //         return newItem;
+    //     })
 
-        dispatch(setInitialCheckList(newCheckListData))
-        dispatch(setInitialShoppingList(newCheckListData))
-        // setChecklist(newCheckListData)
+    //     dispatch(setInitialCheckList(newCheckListData))
+    //     dispatch(setInitialShoppingList(newCheckListData))
+    //     // setChecklist(newCheckListData)
 
-    }, [])
+    // }, [])
 
     useEffect(() => {
 
@@ -80,6 +87,28 @@ const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) 
         setFilteredShoppingList(filtered2)
     }, [searchString, selectedCategory, checklist, shoppinglist])
 
+    useEffect(() => {
+        const fetchShoppingList = async () => {
+            setLoading(true)
+            try {
+                const data = await CheckListServices.getShoppingListByFamilyId(id_family!)
+                console.log(data)
+                dispatch(setInitialCheckList(data))
+                setLoading(false)
+            } catch (error) {
+                setLoading(false)
+            }
+        }
+        fetchShoppingList()
+    }, [])
+
+    if (loading) {
+        return (
+            <View className='flex-1 justify-center items-center'>
+                <ActivityIndicator size="large" color={COLORS.AuroMetalSaurus} />
+            </View>
+        )
+    }
 
 
     return (

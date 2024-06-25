@@ -4,7 +4,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { COLORS } from 'src/constants';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { ChecklistItemInterface } from 'src/interface/checklist/checklist';
+import { ShoppingListItemInterface } from 'src/interface/checklist/checklist';
 import { Picker } from '@react-native-picker/picker';
 import { AppDispatch } from 'src/redux/store';
 import { useDispatch } from 'react-redux';
@@ -18,13 +18,14 @@ import * as Haptics from 'expo-haptics';
 import { formatVietNamCurrencyNoDot } from 'src/utils/formatCurrency';
 import PricePickerSheet from '../sheet/price-picker';
 import NumberPickerSheet from '../sheet/number-picker';
+import CheckListServices from 'src/services/apiclient/CheckListService';
 
 const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
 const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
 
 interface AddItemCheckListSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>;
-    checklist_item: ChecklistItemInterface;
+    checklist_item: ShoppingListItemInterface;
     id_checklist: number;
 }
 
@@ -64,7 +65,31 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
 
     // const { showActionSheetWithOptions } = useActionSheet();
 
-    const handleUpdateTitleDesc = () => {
+    const handleUpdateTitleDesc = async () => {
+        // (id_item: number, id_list: number, item_name: string, quantity: number, is_purchased: boolean, priority_level: number, reminder_date: string, price: string, description: string, id_item_type: number)
+        console.log(
+            checklist_item.id_item,
+            id_checklist,
+            name,
+            checklist_item.quantity,
+            checklist_item.is_purchased,
+            checklist_item.priority_level,
+            checklist_item.reminder_date,
+            parseInt(checklist_item.price),
+            description || "",
+            checklist_item.id_item_type)
+        await CheckListServices.updateShoppingListItem(
+            checklist_item.id_item,
+            id_checklist,
+            name,
+            checklist_item.quantity,
+            checklist_item.is_purchased,
+            checklist_item.priority_level,
+            checklist_item.reminder_date,
+            parseInt(checklist_item.price),
+            description || "",
+            checklist_item.id_item_type
+        )
         dispatch(updateCheckListItemTitleAndDescription({
             id: id_checklist,
             id_checklist: checklist_item.id_item,
@@ -81,7 +106,19 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
     //     }))
     // }
 
-    const handleUpdateDueDate = (dueDate: Date | null) => {
+    const handleUpdateDueDate = async (dueDate: Date | null) => {
+        await CheckListServices.updateShoppingListItem(
+            checklist_item.id_item,
+            id_checklist,
+            checklist_item.item_name,
+            checklist_item.quantity,
+            checklist_item.is_purchased,
+            checklist_item.priority_level,
+            dueDate?.toISOString() || new Date().toISOString(),
+            parseInt(checklist_item.price),
+            checklist_item.description || "",
+            checklist_item.id_item_type
+        )
         dispatch(updateCheckListItemDueDate({
             id: id_checklist,
             id_checklist: checklist_item.id_item,
@@ -90,15 +127,49 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
 
     }
 
-    const handleUpdateComplete = () => {
+    const handleUpdateComplete = async () => {
         dispatch(updateCheckListItemCompleted({
             id: id_checklist,
             id_checklist: checklist_item.id_item,
             isCompleted: !checklist_item.is_purchased,
         }))
+        console.log(checklist_item.id_item,
+            id_checklist,
+            checklist_item.item_name,
+            checklist_item.quantity,
+            !checklist_item.is_purchased,
+            checklist_item.priority_level,
+            checklist_item.reminder_date,
+            parseInt(checklist_item.price),
+            checklist_item.description || "",
+            checklist_item.id_item_type)
+        await CheckListServices.updateShoppingListItem(
+            checklist_item.id_item,
+            id_checklist,
+            checklist_item.item_name,
+            checklist_item.quantity,
+            !checklist_item.is_purchased,
+            checklist_item.priority_level,
+            checklist_item.reminder_date,
+            parseInt(checklist_item.price),
+            checklist_item.description || "",
+            checklist_item.id_item_type
+        )
     }
 
-    const handleUpdateQuantity = (quantity: number) => {
+    const handleUpdateQuantity = async (quantity: number) => {
+        await CheckListServices.updateShoppingListItem(
+            checklist_item.id_item,
+            id_checklist,
+            checklist_item.item_name,
+            quantity,
+            checklist_item.is_purchased,
+            checklist_item.priority_level,
+            checklist_item.reminder_date,
+            parseInt(checklist_item.price),
+            checklist_item.description || "",
+            checklist_item.id_item_type
+        )
         dispatch(updateCheckListItemQuantity({
             id: id_checklist,
             id_checklist: checklist_item.id_item,
@@ -106,7 +177,19 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
         }))
     }
 
-    const handleUpdatePrice = (price: number) => {
+    const handleUpdatePrice = async (price: number) => {
+        await CheckListServices.updateShoppingListItem(
+            checklist_item.id_item,
+            id_checklist,
+            checklist_item.item_name,
+            checklist_item.quantity,
+            checklist_item.is_purchased,
+            checklist_item.priority_level,
+            checklist_item.reminder_date,
+            price,
+            checklist_item.description || "",
+            checklist_item.id_item_type
+        )
         dispatch(updateCheckListItemPrice({
             id: id_checklist,
             id_checklist: checklist_item.id_item,
@@ -176,8 +259,8 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
                         <View className=' '>
                             <Text className='text-base font-medium text-center' >Edit</Text>
                         </View>
-                        <TouchableOpacity className=' ' onPress={() => {
-                            handleUpdateTitleDesc()
+                        <TouchableOpacity className=' ' onPress={async () => {
+                            await handleUpdateTitleDesc()
                             setIsEditing(false)
                         }}>
                             <Text className='text-base font-medium ' style={{
@@ -245,8 +328,8 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
                                                 borderWidth: checklist_item.is_purchased ? 0 : 2,
                                                 borderColor: iOSGrayColors.systemGray.accessibleDark,
                                                 backgroundColor: checklist_item.is_purchased ? iOSColors.systemGreen.defaultLight : 'transparent'
-                                            }} onPress={() => {
-                                                handleUpdateComplete()
+                                            }} onPress={async () => {
+                                                await handleUpdateComplete()
                                                 Haptics.notificationAsync(
                                                     Haptics.NotificationFeedbackType.Success
                                                 )
@@ -342,15 +425,15 @@ const CheckListDetailSheet = ({ bottomSheetRef, checklist_item, id_checklist }: 
             </View>
             <CheckListTimePickerSheet refRBSheet={timePickerRBSheet} setSave={handleUpdateDueDate} initialValue={new Date(checklist_item.reminder_date)} />
             <NumberPickerSheet
-                refRBSheet={quantityPickerRef} initialNumber={checkListquantity} onSetNumber={(number) => {
-                    handleUpdateQuantity(number)
+                refRBSheet={quantityPickerRef} initialNumber={checkListquantity} onSetNumber={async (number) => {
+                    await handleUpdateQuantity(number)
                 }}
                 shouldReset={false}
             />
             <PricePickerSheet
                 refRBSheet={pricePickerRef} initialNumber={checkListprice}
-                onSetNumber={(number) => {
-                    handleUpdatePrice(number)
+                onSetNumber={async (number) => {
+                    await handleUpdatePrice(number)
                 }}
                 shouldReset={false}
             />

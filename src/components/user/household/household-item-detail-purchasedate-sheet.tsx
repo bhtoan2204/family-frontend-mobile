@@ -20,20 +20,25 @@ interface HouseHoldItemDetailPurchaseSheetProps {
 const HouseHoldItemDetailPurchaseSheet = ({
     sheetRef, initialValue, onSave
 }: HouseHoldItemDetailPurchaseSheetProps) => {
+    // console.log(initialValue?.getFullYear().toString() || (new Date().getFullYear()).toString())
     const [selectedYear, setSelectedYear] = useState(initialValue?.getFullYear().toString() || (new Date().getFullYear()).toString());
     const [selectedMonth, setSelectedMonth] = useState(initialValue != null ? (initialValue!.getMonth() + 1).toString().padStart(2, '0') : (new Date().getMonth() + 1).toString().padStart(2, '0'));
     const [selectedDay, setSelectedDay] = useState(initialValue?.getDate().toString().padStart(2, '0') || (new Date().getDate()).toString().padStart(2, '0'));
     const [selectedDate, setSelectedDate] = useState<Date>();
 
     useEffect(() => {
-        setSelectedDate(new Date(
+        const newDate = new Date(
             parseInt(selectedYear),
             parseInt(selectedMonth) - 1,
             parseInt(selectedDay)
-        ))
+        )
+        console.log(newDate.toLocaleDateString())
+        console.log(new Date(newDate.toLocaleString("en-US", { timeZone: "America/New_York" })))
+        setSelectedDate(newDate)
 
     }, [selectedDay, selectedMonth, selectedYear])
     const handleSave = () => {
+        console.log('selectedDate', selectedDate)
         onSave(selectedDate || null)
     }
 
@@ -107,7 +112,7 @@ const HouseHoldItemDetailPurchaseSheet = ({
                     style={[styles.picker, styles.yearPicker]}
                 >
                     {[...Array(10).keys()].map(year => (
-                        <Picker.Item key={year} label={`${2024 + year}`} value={`${2024 + year}`} />
+                        <Picker.Item key={year} label={`${2020 + year}`} value={`${2020 + year}`} />
                     ))}
                 </Picker>
             </View>

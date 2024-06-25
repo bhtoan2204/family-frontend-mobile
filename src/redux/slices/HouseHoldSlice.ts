@@ -13,7 +13,7 @@ const householdSlice = createSlice({
       return action.payload;
     },
     clearHouseholdItems(state) {
-      state = [];
+      return [];
     },
     addHouseholdItem(state, action: PayloadAction<HouseHoldItemInterface>) {
       const gradient =

@@ -12,14 +12,15 @@ import CheckListDetailSheet from 'src/components/user/shoppinglist/checklist-ite
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
 import * as Animatable from 'react-native-animatable';
 import { formatVietNamCurrencyNoDot, formatVietNamCurrencyToDot } from 'src/utils/formatCurrency';
+import CheckListServices from 'src/services/apiclient/CheckListService';
 
-const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
-const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
+// const priorityColors = ['#D74638', '#EB8909', '#007BFF', '#808080'];
+// const priorityColorsInside = ['#F9EAE3', '#FAEFD1', '#EAF0FB', '#fff'];
 
 interface ChecklistItemDetailProps {
     item: ShoppingListItemInterface,
     id_checklist: number,
-    selectCheckListItem: (item: string) => void
+    selectCheckListItem: (item: number) => void
 }
 
 const ChecklistItemDetail = ({ item, id_checklist, selectCheckListItem }: ChecklistItemDetailProps) => {
@@ -32,17 +33,30 @@ const ChecklistItemDetail = ({ item, id_checklist, selectCheckListItem }: Checkl
             id_checklist: item.id_item,
             isCompleted: !item.is_purchased,
         }))
+        //(id_item: number, id_list: number, item_name: string, quantity: number, is_purchased: boolean, priority_level: number, reminder_date: string, price: string, description: string, id_item_type: number)
+        CheckListServices.updateShoppingListItem(
+            item.id_item,
+            item.id_list,
+            item.item_name,
+            item.quantity,
+            !item.is_purchased,
+            item.priority_level,
+            item.reminder_date,
+            parseInt(item.price),
+            item.description || "",
+            item.id_item_type
+        )
     }
 
     const buildDescriptionText = () => {
         console.log(item.price)
         const quantity = item.quantity != 0 ? item.quantity : 1
 
-        if (item.price != "0") {
+        if (item.price !== "0") {
             const price = parseInt(formatVietNamCurrencyNoDot(item.price)) * quantity
             return formatVietNamCurrencyToDot(price.toString()) + " VNĐ"
         }
-        if (item.description != "") {
+        if (item.description !== "") {
             return item.description
         }
     }
