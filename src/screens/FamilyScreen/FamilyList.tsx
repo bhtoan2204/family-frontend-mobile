@@ -10,6 +10,7 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {COLORS} from 'src/constants';
 import {Family} from 'src/interface/family/family';
 import {Member} from 'src/interface/member/member';
 import {FamilyServices} from 'src/services/apiclient';
@@ -46,15 +47,20 @@ const FamilyListModal = ({
         <View style={modalStyles.modalOverlay}>
           <TouchableWithoutFeedback>
             <View style={modalStyles.modalContent}>
-              {/* <View style={modalStyles.header}>
-                <Text style={modalStyles.headerText}>Select a Family</Text>
-              </View> */}
               <ScrollView>
-                {families.map((family: Family) => (
+                {families.map((family: Family, index: number) => (
                   <TouchableOpacity
                     key={family.id_family}
                     onPress={() => handleSelectFamily(family)}
-                    style={modalStyles.familyItem}>
+                    style={[
+                      modalStyles.familyItem,
+                      familySelect?.id_family === family.id_family
+                        ? [
+                            modalStyles.selectedFamilyItem,
+                            index === 0 ? modalStyles.firstItemSelected : {},
+                          ] // Áp dụng style bo tròn cho phần tử đầu tiên
+                        : {},
+                    ]}>
                     <View style={modalStyles.familyItemContainer}>
                       <View style={modalStyles.familyInfo}>
                         <Image
@@ -65,14 +71,6 @@ const FamilyListModal = ({
                           {family.name}
                         </Text>
                       </View>
-                      {familySelect?.id_family === family.id_family && (
-                        <Icon
-                          name="checkmark-circle-outline"
-                          size={30}
-                          color="green"
-                          style={modalStyles.checkIcon}
-                        />
-                      )}
                     </View>
                     <View style={modalStyles.membersList}>
                       {membersMap[family.id_family]?.map((member: Member) => (
@@ -138,8 +136,9 @@ const modalStyles = StyleSheet.create({
   },
   familyItemText: {
     fontSize: 18,
-    color: 'gray',
+    color: COLORS.Rhino,
     marginLeft: 10,
+    fontWeight: 'bold',
   },
   checkIcon: {
     marginLeft: 10,
@@ -163,8 +162,16 @@ const modalStyles = StyleSheet.create({
   },
   avatarFamily: {
     width: 60,
-    height: 50,
-    borderRadius: 40,
+    height: 60,
+    borderRadius: 30,
+    marginRight: 10,
+  },
+  selectedFamilyItem: {
+    backgroundColor: '#E0F7FA',
+  },
+  firstItemSelected: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
 });
 
