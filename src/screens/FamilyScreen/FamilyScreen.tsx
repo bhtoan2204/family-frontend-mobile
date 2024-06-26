@@ -41,6 +41,51 @@ import FamilyListModal from './FamilyList';
 import {Member} from 'src/interface/member/member';
 import {MaterialIcons} from '@expo/vector-icons';
 
+const cards = [
+  {
+    id: 1,
+    title: 'Members',
+    detail: 'Manage family members.',
+    icon: require('../../assets/icons/family-member.png'),
+  },
+  {
+    id: 2,
+    title: 'Chats',
+    detail: 'Communicate with family members.',
+    icon: require('../../assets/icons/chat-with-members.png'),
+  },
+  {
+    id: 3,
+    title: 'Education',
+    detail: 'Monitor educational progress',
+    icon: require('../../assets/icons/manage-eduction.png'),
+  },
+  {
+    id: 4,
+    title: 'Calendar',
+    detail: 'Organize events and activities.',
+    icon: require('../../assets/icons/calendar-scheduling.png'),
+  },
+  {
+    id: 5,
+    title: 'Guideline',
+    detail: 'Provides for family activities.',
+    icon: require('../../assets/icons/guideline-items.png'),
+  },
+  {
+    id: 6,
+    title: 'Household',
+    detail: 'Optimize household devices.',
+    icon: require('../../assets/icons/household-appliances.png'),
+  },
+  {
+    id: 7,
+    title: 'Check List',
+    detail: 'Manage family task lists.',
+    icon: require('../../assets/icons/checklist.png'),
+  },
+];
+
 const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const [family, setFamily] = useState<Family>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -487,8 +532,8 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
             source={require('../../assets/images/family-avatar.jpg')}
             resizeMode="cover"
             style={{
-              width: 219,
-              height: 145,
+              width: 219 + 30,
+              height: 145 + 30,
               alignSelf: 'center',
               borderRadius: 20,
               borderWidth: 3,
@@ -498,8 +543,8 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           <TouchableOpacity
             style={{
               position: 'absolute',
-              top: 120,
-              right: 80,
+              top: 120 + 30,
+              right: 60,
               backgroundColor: '#2a475ee8',
               padding: 5,
               borderRadius: 20,
@@ -513,10 +558,10 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         source={require('../../assets/images/family-today-event.png')}
         resizeMode="cover"
         style={{
-          width: 334,
-          height: 197,
+          width: 324,
+          height: 217,
           alignSelf: 'center',
-          marginTop: 80,
+          marginTop: 110,
         }}
       />
       <Image
@@ -531,6 +576,18 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           left: 15,
         }}
       />
+      <ScrollView showsVerticalScrollIndicator={false} style={{bottom: 150}}>
+        <View style={styles.container}>
+          {cards.map(card => (
+            <View key={card.id} style={styles.card}>
+              <Text style={styles.title}>{card.title}</Text>
+              <Text style={styles.detail}>{card.detail}</Text>
+              <Image source={card.icon} style={styles.icon} />
+            </View>
+          ))}
+        </View>
+        <View style={{height: 550}}></View>
+      </ScrollView>
     </View>
   );
 };
