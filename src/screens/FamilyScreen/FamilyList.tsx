@@ -58,13 +58,17 @@ const FamilyListModal = ({
                         ? [
                             modalStyles.selectedFamilyItem,
                             index === 0 ? modalStyles.firstItemSelected : {},
-                          ] // Áp dụng style bo tròn cho phần tử đầu tiên
+                          ]
                         : {},
                     ]}>
                     <View style={modalStyles.familyItemContainer}>
                       <View style={modalStyles.familyInfo}>
                         <Image
-                          source={{uri: family.avatar}}
+                          source={
+                            family.avatar
+                              ? {uri: family.avatar}
+                              : require('../../assets/images/big-family_4441180.png')
+                          }
                           style={modalStyles.avatarFamily}
                         />
                         <Text style={modalStyles.familyItemText}>

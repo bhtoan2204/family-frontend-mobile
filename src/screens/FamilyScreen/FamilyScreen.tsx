@@ -109,7 +109,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const source =
     family?.avatar && family.avatar !== '[NULL]'
       ? {uri: family.avatar}
-      : require('../../assets/images/default_ava.png');
+      : require('../../assets/images/big-family_4441180.png');
 
   useEffect(() => {
     const fetchFamiliesAndMembers = async () => {
@@ -135,44 +135,6 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     };
 
     fetchFamiliesAndMembers();
-
-    const animation = Animated.loop(
-      Animated.sequence([
-        Animated.timing(shakeAnimation, {
-          toValue: -5,
-          duration: 500,
-          useNativeDriver: true,
-          easing: Easing.linear,
-        }),
-        Animated.timing(shakeAnimation, {
-          toValue: 15,
-          duration: 300,
-          useNativeDriver: true,
-          easing: Easing.linear,
-        }),
-        Animated.timing(shakeAnimationX, {
-          toValue: 10,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-        Animated.timing(shakeAnimationX, {
-          toValue: -10,
-          duration: 100,
-          useNativeDriver: true,
-        }),
-        Animated.timing(shakeAnimationX, {
-          toValue: 0,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-      ]),
-      {
-        iterations: -1, // Lặp lại vô hạn
-      },
-    );
-
-    animation.start();
-    return () => animation.stop();
   }, []);
 
   const handleDeleteFamily = async (id_family: number) => {
@@ -222,10 +184,6 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
       screen: 'CalendarScreen',
       params: {id_family: family!.id_family},
     });
-  };
-
-  const handleOpenAllMemberModal = (id_family: number) => {
-    navigation.navigate('AllMember', {id_family: id_family});
   };
 
   const handleNavigateGuildLine = () => {
@@ -286,10 +244,14 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     }
   };
 
+  const handleOpenAllMemberModal = (id_family: number) => {
+    navigation.navigate('AllMember', {id_family: id_family});
+  };
+
   const handlePress = (cardId: number) => {
     switch (cardId) {
       case 1:
-        handleOpenAllMemberModal(family.id_family);
+        handleOpenAllMemberModal(family!.id_family);
         break;
       case 2:
         handleChatPress();
