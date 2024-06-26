@@ -1,12 +1,15 @@
 import React from 'react';
 import {SafeAreaView, View, Image, Text, TouchableOpacity} from 'react-native';
 import styles from './styles';
-import {HomeTabProps, SignupScreenProps} from 'src/navigation/NavigationTypes';
+import {
+  HomeTabProps,
+  LandingPage2ScreenProps,
+} from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/Ionicons'; // Đảm bảo đã cài đặt thư viện này
 
-type CombinedScreenProps = SignupScreenProps & HomeTabProps;
+type CombinedScreenProps = LandingPage2ScreenProps & HomeTabProps;
 
-const LandingPage = ({navigation}: CombinedScreenProps) => {
+const LandingPage3 = ({navigation}: CombinedScreenProps) => {
   const handleGoButtonPress = () => {
     navigation.navigate('HomeTab', {screen: 'HomeScreen'});
   };
@@ -49,4 +52,4 @@ const LandingPage = ({navigation}: CombinedScreenProps) => {
   );
 };
 
-export default LandingPage;
+export default LandingPage3;

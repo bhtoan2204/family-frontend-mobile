@@ -137,6 +137,8 @@ export type AuthStackParamList = {
   SignupScreen: undefined;
   ForgotPasswordScreen: undefined;
   LandingPage: undefined;
+  LandingPage2: undefined;
+  LandingPage3: undefined;
   Notification: undefined;
   WelcomeScreen: undefined;
   EnterCodeScreen: undefined;
@@ -660,6 +662,21 @@ type LandingPageNavigationProp = NativeStackNavigationProp<
 export interface LandingPageScreenProps {
   navigation: LandingPageNavigationProp;
 }
+
+type LandingPage2NavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'LandingPage2'
+>;
+
+export interface LandingPage2ScreenProps { navigation: LandingPage2NavigationProp; }
+
+type LandingPage3NavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'LandingPage3'
+>;
+
+export interface LandingPage3ScreenProps {navigation: LandingPage3NavigationProp;}  
+
 type ViewAllPackageNavigationProp = NativeStackNavigationProp<
   PackStackParamList,
   'ViewAllPackage'
