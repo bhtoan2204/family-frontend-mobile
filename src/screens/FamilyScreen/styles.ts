@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   detail: {
     textAlign: 'left',
     color: '#B2C2CE', 
-    fontSize: 14,
+    fontSize: 13,
     width: '70%',
     position: 'absolute',
     top: 40,
