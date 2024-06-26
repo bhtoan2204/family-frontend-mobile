@@ -227,6 +227,32 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     setIsDropdownVisible(false);
   };
 
+  const handlePress = (cardId: number) => {
+    switch (cardId) {
+      case 1:
+        handleOpenAllMemberModal(family.id_family);
+        break;
+      case 2:
+        handleChatPress();
+        break;
+      case 3:
+        handleEducationPress();
+        break;
+      case 4:
+        handleCalendarPress();
+        break;
+      case 5:
+        handleNavigateGuildLine();
+        break;
+      case 6:
+        handleNavigateHouseHold();
+        break;
+      case 7:
+        handleNavigateChecklist();
+        break;
+    }
+  };
+
   if (isLoading || family === null) {
     return (
       <View style={styles.loadingContainer}>
@@ -454,23 +480,23 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     //       </ScrollView>
     //     )}
     //   </SafeAreaView>
-    //   <RBSheet
-    //       ref={bottomSheetRef}
-    //       closeOnDragDown={true}
-    //       height={screenHeight * 0.5}
-    //       customStyles={{
-    //         container: {
-    //           borderTopLeftRadius: 20,
-    //           borderTopRightRadius: 20,
-    //         },
-    //       }}>
-    //         <BottomSheet
-    //         id_family={family!.id_family}
-    //         name={family?.name}
-    //         description={family?.description}
-    //         />
+    // <RBSheet
+    //     ref={bottomSheetRef}
+    //     closeOnDragDown={true}
+    //     height={screenHeight * 0.5}
+    //     customStyles={{
+    //       container: {
+    //         borderTopLeftRadius: 20,
+    //         borderTopRightRadius: 20,
+    //       },
+    //     }}>
+    //       <BottomSheet
+    //       id_family={family!.id_family}
+    //       name={family?.name}
+    //       description={family?.description}
+    //       />
 
-    //   </RBSheet>
+    // </RBSheet>
 
     // </ImageBackground>
 
@@ -579,15 +605,34 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
       <ScrollView showsVerticalScrollIndicator={false} style={{bottom: 150}}>
         <View style={styles.container}>
           {cards.map(card => (
-            <View key={card.id} style={styles.card}>
+            <TouchableOpacity
+              key={card.id}
+              onPress={() => handlePress(card.id)}
+              style={styles.card}>
               <Text style={styles.title}>{card.title}</Text>
               <Text style={styles.detail}>{card.detail}</Text>
               <Image source={card.icon} style={styles.icon} />
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
         <View style={{height: 550}}></View>
       </ScrollView>
+      <RBSheet
+        ref={bottomSheetRef}
+        closeOnDragDown={true}
+        height={screenHeight * 0.5}
+        customStyles={{
+          container: {
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+          },
+        }}>
+        <BottomSheet
+          id_family={family!.id_family}
+          name={family?.name}
+          description={family?.description}
+        />
+      </RBSheet>
     </View>
   );
 };
