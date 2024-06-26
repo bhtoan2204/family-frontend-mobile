@@ -509,6 +509,28 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           </TouchableOpacity>
         </View>
       </View>
+      <Image
+        source={require('../../assets/images/family-today-event.png')}
+        resizeMode="cover"
+        style={{
+          width: 334,
+          height: 197,
+          alignSelf: 'center',
+          marginTop: 80,
+        }}
+      />
+      <Image
+        source={require('../../assets/images/clock.png')}
+        resizeMode="cover"
+        style={{
+          width: 62.16,
+          height: 69.88,
+          alignSelf: 'center',
+          marginTop: 80,
+          bottom: 200,
+          left: 15,
+        }}
+      />
     </View>
   );
 };
