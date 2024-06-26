@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.white,
     flex: 1,
+    
   },
   title: {
     fontSize: screenHeight * 0.03,
@@ -73,7 +74,9 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: COLORS.white,
   },
-  icon: {left: screenWidth * 0.3},
+  icon: { left: screenWidth * 0.3 },
+
+  backButton:{color: COLORS.Rhino,},
 });
 
 export default styles;
