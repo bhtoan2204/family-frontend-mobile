@@ -1,17 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { Modal, Text, TouchableOpacity, View, StyleSheet, TouchableWithoutFeedback, Image, ScrollView } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Modal,
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Image,
+  ScrollView,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Family } from 'src/interface/family/family';
-import { Member } from 'src/interface/member/member';
-import { FamilyServices } from 'src/services/apiclient';
+import {Family} from 'src/interface/family/family';
+import {Member} from 'src/interface/member/member';
+import {FamilyServices} from 'src/services/apiclient';
 
-const FamilyListModal = ({ visible, onClose, families, membersMap, selectedFamily }) => {
+const FamilyListModal = ({
+  visible,
+  onClose,
+  families,
+  membersMap,
+  selectedFamily,
+}) => {
   const [familySelect, setFamilySelect] = useState<any>(selectedFamily);
 
   useEffect(() => {
     setFamilySelect(selectedFamily);
   }, [selectedFamily]);
- 
+
   const handleSelectFamily = (family: Family) => {
     setFamilySelect(family);
     onClose(family);
@@ -23,7 +38,7 @@ const FamilyListModal = ({ visible, onClose, families, membersMap, selectedFamil
 
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={visible}
       onRequestClose={handleBackdropPress}>
@@ -31,25 +46,43 @@ const FamilyListModal = ({ visible, onClose, families, membersMap, selectedFamil
         <View style={modalStyles.modalOverlay}>
           <TouchableWithoutFeedback>
             <View style={modalStyles.modalContent}>
-              <View style={modalStyles.header}>
+              {/* <View style={modalStyles.header}>
                 <Text style={modalStyles.headerText}>Select a Family</Text>
-              </View>
+              </View> */}
               <ScrollView>
                 {families.map((family: Family) => (
-                  <TouchableOpacity key={family.id_family} onPress={() => handleSelectFamily(family)} style={modalStyles.familyItem}>
+                  <TouchableOpacity
+                    key={family.id_family}
+                    onPress={() => handleSelectFamily(family)}
+                    style={modalStyles.familyItem}>
                     <View style={modalStyles.familyItemContainer}>
                       <View style={modalStyles.familyInfo}>
-                        <Image source={{ uri: family.avatar }} style={modalStyles.avatarFamily} />
-                        <Text style={modalStyles.familyItemText}>{family.name}</Text>
+                        <Image
+                          source={{uri: family.avatar}}
+                          style={modalStyles.avatarFamily}
+                        />
+                        <Text style={modalStyles.familyItemText}>
+                          {family.name}
+                        </Text>
                       </View>
                       {familySelect?.id_family === family.id_family && (
-                        <Icon name="checkmark-circle-outline" size={30} color="green" style={modalStyles.checkIcon} />
+                        <Icon
+                          name="checkmark-circle-outline"
+                          size={30}
+                          color="green"
+                          style={modalStyles.checkIcon}
+                        />
                       )}
                     </View>
                     <View style={modalStyles.membersList}>
                       {membersMap[family.id_family]?.map((member: Member) => (
-                        <View key={member.id_user} style={modalStyles.memberItemContainer}>
-                          <Image source={{ uri: member.avatar }} style={modalStyles.avatar} />
+                        <View
+                          key={member.id_user}
+                          style={modalStyles.memberItemContainer}>
+                          <Image
+                            source={{uri: member.avatar}}
+                            style={modalStyles.avatar}
+                          />
                         </View>
                       ))}
                     </View>

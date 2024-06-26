@@ -103,6 +103,9 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const [membersMap, setMembersMap] = useState<{[key: number]: Member[]}>({});
   const shakeAnimation = useRef(new Animated.Value(0)).current;
   const shakeAnimationX = new Animated.Value(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const rotateAnimation = useRef(new Animated.Value(0)).current;
+
   const source =
     family?.avatar && family.avatar !== '[NULL]'
       ? {uri: family.avatar}
@@ -262,11 +265,25 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
 
   const toggleDropdown = () => {
     setIsDropdownVisible(!isDropdownVisible);
+    setIsDropdownOpen(!isDropdownOpen);
+    Animated.timing(rotateAnimation, {
+      toValue: isDropdownOpen ? 0 : 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
   };
 
   const handleCloseModal = (family: Family) => {
     setFamily(family);
     setIsDropdownVisible(false);
+    if (isDropdownOpen) {
+      setIsDropdownOpen(false);
+      Animated.timing(rotateAnimation, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
   };
 
   const handlePress = (cardId: number) => {
@@ -294,6 +311,11 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         break;
     }
   };
+
+  const rotate = rotateAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '180deg'], // Xoay từ 0 đến 180 độ
+  });
 
   if (isLoading || family === null) {
     return (
@@ -336,11 +358,13 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                 alignItems: 'center',
               }}>
               <Text style={styles.headerText}>{family.name}</Text>
-              <MaterialIcons
-                name="arrow-drop-down"
-                size={30}
-                style={styles.backButton}
-              />
+              <Animated.View style={{transform: [{rotate}]}}>
+                <MaterialIcons
+                  name="arrow-drop-down"
+                  size={30}
+                  style={styles.backButton}
+                />
+              </Animated.View>
             </TouchableOpacity>
           )}
           <View style={styles.headerIcon}>
