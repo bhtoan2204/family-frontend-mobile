@@ -17,6 +17,9 @@ import CreateInvoiceScreen from 'src/screens/Invoice/CreateInvoice/CreateInvoice
 import ProfileScreen from 'src/screens/ProfileScreen';
 import ChangePassword from 'src/screens/ProfileScreen/ChangePassword/ChangePassword';
 import EditProfileScreen from 'src/screens/ProfileScreen/EditProfileScreen/EditProfileScreen';
+import ChatListScreen from 'src/screens/Chat/ChatList/ChatListScreen';
+import MessageTab from './MessageTab';
+import { useNavigation } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 const TabList = [
@@ -30,43 +33,24 @@ const TabList = [
   },
 
   {
-    id: 'Expense',
-    title: 'Expense',
-    component: ExpenditureScreen,
-    screen: 'Expense',
-    icon: 'plus',
+    id: 'ChatList',
+    title: 'Chat',
+    component: HomeScreen, 
+    screen: 'ChatList', 
+    icon: 'chat',
     visible: true,
-  },
-  {
-    id: 'Invoice',
-    title: 'Invoice',
-    component: CreateInvoiceScreen,
-    screen: 'Invoice',
-    icon: 'plus',
-    visible: false,
-  },
-  {
-    id: 'CategoryExpense',
-    component: CategoryExpenseScreen,
-    screen: 'CategoryExpense',
-    visible: false,
-  },
-  
-  {
-    id: 'FamilyFinace',
-    component: FamilyScreen,
-    screen: 'FamilyFinace',
-    visible: false,
   },
 
+
   {
-    id: TEXTS.REPORT_TAB,
-    title: TEXTS.REPORT_TAB,
-    component: ReportScreen,
-    screen: 'ReportScreen',
-    icon: 'notebook',
+    id: 'Notification',
+    title: 'Notification',
+    component: ChatListScreen,
+    screen: 'Notification',
+    icon: 'bell',
     visible: true,
   },
+
   {
     id: TEXTS.MORE_TAB,
     title: TEXTS.MORE_TAB,
@@ -91,10 +75,20 @@ const TabList = [
 ];
 
 const TabBarButton = (props: BottomTabBarButtonProps, tab: any) => {
+  const navigation = useNavigation();
+
+  const handlePress = () => {
+    if (tab.id === 'ChatList') {
+      navigation.navigate('MessageTab', {screen: 'MessageTab'});
+    } else {
+      props.onPress();
+    }
+  };
+
   return (
     <TabButton
       accessibilityState={props.accessibilityState}
-      onPress={props.onPress}
+      onPress={handlePress}
       item={tab}
     />
   );
