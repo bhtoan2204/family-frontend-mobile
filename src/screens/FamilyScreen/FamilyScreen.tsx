@@ -382,7 +382,8 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         />
         <View>
           <Image
-            source={require('../../assets/images/family-avatar.jpg')}
+            //source={require('../../assets/images/family-avatar.jpg')}
+            source={source}
             resizeMode="cover"
             style={{
               width: 219 + 30,
@@ -407,33 +408,43 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           </TouchableOpacity>
         </View>
       </View>
-      <Image
-        source={require('../../assets/images/family-today-event.png')}
-        resizeMode="cover"
+      <Text
         style={{
-          width: 324,
-          height: 217,
+          color: COLORS.Rhino,
+          fontWeight: 'bold',
+          fontSize: 20,
           alignSelf: 'center',
-          marginTop: 110,
-        }}
-      />
-      <Animated.Image
-        source={require('../../assets/images/clock.png')}
-        resizeMode="cover"
-        style={{
-          width: 62.16,
-          height: 69.88,
-          alignSelf: 'center',
-          marginTop: 80,
-          bottom: 200,
-          left: 15,
-          transform: [
-            {translateY: shakeAnimation},
-            {translateX: shakeAnimationX},
-          ],
-        }}
-      />
-      <ScrollView showsVerticalScrollIndicator={false} style={{bottom: 150}}>
+          top: 90,
+          paddingVertical: 20,
+        }}>
+        A group of sailors on the Red Sea
+      </Text>
+      <ScrollView showsVerticalScrollIndicator={false} style={{top: 120}}>
+        {/* <Image
+          source={require('../../assets/images/family-today-event.png')}
+          resizeMode="cover"
+          style={{
+            width: 324,
+            height: 217,
+            alignSelf: 'center',
+          }}
+        />
+        <Animated.Image
+          source={require('../../assets/images/clock.png')}
+          resizeMode="cover"
+          style={{
+            width: 62.16,
+            height: 69.88,
+            alignSelf: 'center',
+            marginTop: 80,
+            bottom: 200,
+            left: 15,
+            transform: [
+              {translateY: shakeAnimation},
+              {translateX: shakeAnimationX},
+            ],
+          }}
+        /> */}
         <View style={styles.container}>
           {cards.map(card => (
             <TouchableOpacity
@@ -446,7 +457,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
             </TouchableOpacity>
           ))}
         </View>
-        <View style={{height: 550}}></View>
+        <View style={{height: 480}}></View>
       </ScrollView>
       <RBSheet
         ref={bottomSheetRef}

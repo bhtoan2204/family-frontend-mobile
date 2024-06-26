@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     padding: 20,
+    
   },
   card: {
     width: '48%', // Giả sử mỗi card chiếm khoảng 48% chiều rộng của container để có chút không gian giữa chúng

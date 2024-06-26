@@ -230,6 +230,7 @@ export type FamilyStackParamList = {
     id_checklist: number;
   };
   News: undefined;
+  UpcomingEvents: undefined;
 };
 
 export type PackStackParamList = {
@@ -254,6 +255,8 @@ export type PackStackParamList = {
 };
 
 /////
+
+
 type CalendarStackNavigationProp = NativeStackNavigationProp<
   RootParamList,
   'CalendarStack'
@@ -642,11 +645,19 @@ export interface AddEditFamilyMemberScreenProps {
 type InviteMembersNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'InviteMembers'
->;
+  >;
 
 export interface InviteMembersScreenProps {
   navigation: InviteMembersNavigationProp;
 }
+
+type UpcomingEventsNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'UpcomingEvents'
+  >;
+
+export interface UpcomingEventsScreenProps { navigation: UpcomingEventsNavigationProp; }
+
 type ForgotPasswordScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
   'ForgotPasswordScreen'
