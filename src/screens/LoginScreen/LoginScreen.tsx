@@ -85,6 +85,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
 
        
         const expoToken = match ? match[1] : null;
+        console.log(expoToken)
         await ChatServices.saveFCMToken({fcmToken: expoToken});
       } else {
         throw new Error('Permission to receive notifications was not granted');

@@ -8,13 +8,17 @@ import { connectSocket } from 'src/services/apiclient/Socket';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import * as Notifications from 'expo-notifications';
+import messaging from '@react-native-firebase/messaging';
 
 
 const App: React.FC = () => {
   useEffect(() => {
     connectSocket();
 
-   
+    const fcmToken =  messaging().getToken();
+    if (fcmToken) {
+       console.log(fcmToken);
+    } 
     const notificationListener = Notifications.addNotificationReceivedListener(notification => {
       console.log('Notification received:', notification);
     });
@@ -23,6 +27,7 @@ const App: React.FC = () => {
       Notifications.removeNotificationSubscription(notificationListener);
     };
   }, []);
+
   return (
     <Provider store={store}>
       <SafeAreaProvider>
