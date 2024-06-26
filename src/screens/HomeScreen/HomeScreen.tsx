@@ -97,9 +97,7 @@ const HomeScreen = ({
     });
   };
   const handleFamily = () => {
-    navigation.navigate('FamilyStack', {
-      screen: 'ViewFamily',
-    });
+    navigation.navigate('FamilyTab', {screen: 'Family', params: { id_family: 0}});
   };
   const handleChat = () => {
     navigation.navigate('MessageTab', {screen: 'ChatList'});
