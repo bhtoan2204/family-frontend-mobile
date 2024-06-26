@@ -3,13 +3,13 @@ import {COLORS} from 'src/constants';
 const halfScreenHeight = Dimensions.get('window').height / 1.8;
 
 
-const styles = {
+const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingTop: 16,
+    marginBottom: 26,
   },
   backButton: {
     color: 'white',
@@ -82,6 +82,6 @@ const styles = {
     color: '#ccc',
 
   }
-};
+});
 
 export default styles;

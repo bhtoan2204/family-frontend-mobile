@@ -11,6 +11,7 @@ import {
   ScrollView,
   ImageBackground,
   ActivityIndicator,
+  TouchableOpacityBase,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,14 +31,15 @@ import DeleteImage from 'src/assets/images/remove.png';
 import HouseHoldImage from 'src/assets/icons/household-appliances.png';
 import CheckListImage from 'src/assets/icons/checklist.png';
 import NewsImage from 'src/assets/images/news.png';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { selectfamily } from 'src/redux/slices/FamilySlice';
-import { AppDispatch } from 'src/redux/store';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectProfile} from 'src/redux/slices/ProfileSclice';
+import {selectfamily} from 'src/redux/slices/FamilySlice';
+import {AppDispatch} from 'src/redux/store';
 import * as ImagePicker from 'expo-image-picker';
-import { updateFamily } from 'src/redux/slices/FamilySlice';
+import {updateFamily} from 'src/redux/slices/FamilySlice';
 import FamilyListModal from './FamilyList';
-import { Member } from 'src/interface/member/member';
+import {Member} from 'src/interface/member/member';
+import {MaterialIcons} from '@expo/vector-icons';
 
 const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const [family, setFamily] = useState<Family>();
@@ -46,12 +48,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const allMemberRef = useRef<RBSheet>(null);
   const screenHeight = Dimensions.get('screen').height;
   let profile = useSelector(selectProfile);
-  const [isUploadingImage, setIsUploadingImage] = React.useState<boolean>(false);
+  const [isUploadingImage, setIsUploadingImage] =
+    React.useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [families, setFamilies] = useState<Family[]>([]);
-  const [membersMap, setMembersMap] = useState<{ [key: number]: Member[] }>({});
-  const source = family?.avatar && family.avatar !== "[NULL]" ? { uri: family.avatar } : require('../../assets/images/default_ava.png');
+  const [membersMap, setMembersMap] = useState<{[key: number]: Member[]}>({});
+  const source =
+    family?.avatar && family.avatar !== '[NULL]'
+      ? {uri: family.avatar}
+      : require('../../assets/images/default_ava.png');
 
   useEffect(() => {
     const fetchFamiliesAndMembers = async () => {
@@ -59,10 +65,12 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         const allFamilies = await FamilyServices.getAllFamily();
         setFamily(allFamilies[0]);
 
-        const membersObject: { [key: number]: Member[] } = {};
+        const membersObject: {[key: number]: Member[]} = {};
 
         for (const family of allFamilies) {
-          const members = await FamilyServices.getAllMembers({ id_family: family.id_family });
+          const members = await FamilyServices.getAllMembers({
+            id_family: family.id_family,
+          });
           membersObject[family.id_family] = members;
         }
         setFamilies(allFamilies);
@@ -111,7 +119,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const handleChatPress = () => {
     navigation.navigate('ChatStack', {
       screen: 'ChatFamily',
-      params: { id_family: family!.id_family },
+      params: {id_family: family!.id_family},
     });
   };
 
@@ -148,21 +156,20 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
 
   const handleChangeAvatar = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [3, 3],
-        quality: 1,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [3, 3],
+      quality: 1,
     });
 
-
     if (!result.canceled) {
-        const a = result.assets[0]!
-        const uri = a.uri
-        setIsUploadingImage(true)
-        const fileUrl = await FamilyServices.changeAvatar(family!.id_family, uri)
-        console.log(fileUrl)
-        //dispatch(updateFamily({ ...family!, avatar: fileUrl }))
-        setIsUploadingImage(false)
+      const a = result.assets[0]!;
+      const uri = a.uri;
+      setIsUploadingImage(true);
+      const fileUrl = await FamilyServices.changeAvatar(family!.id_family, uri);
+      console.log(fileUrl);
+      //dispatch(updateFamily({ ...family!, avatar: fileUrl }))
+      setIsUploadingImage(false);
     }
   };
 
@@ -172,7 +179,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
 
   const handleCloseModal = (family: Family) => {
     setFamily(family);
-    setIsDropdownVisible(false); 
+    setIsDropdownVisible(false);
   };
 
   if (isLoading || family === null) {
@@ -183,18 +190,283 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     );
   }
   return (
-    <ImageBackground
-      source={require('../../assets/images/FamilyBG.png')}
-      style={{ flex: 1 }}
-      resizeMode="stretch">
-      <SafeAreaView style={{ flex: 1 }}>
+    // <ImageBackground
+    //   source={require('../../assets/images/FamilyBG.png')}
+    //   style={{ flex: 1 }}
+    //   resizeMode="stretch">
+    //   <SafeAreaView style={{ flex: 1 }}>
+    // <View style={styles.headerContainer}>
+    //   <TouchableOpacity onPress={() => navigation.goBack()}>
+    //     <Icon name="arrow-back" size={28} style={styles.backButton} />
+    //   </TouchableOpacity>
+    //   {family != null && (
+    //     <TouchableOpacity onPress={toggleDropdown}>
+    //       <Text style={styles.headerText}>{family.name}</Text>
+    //     </TouchableOpacity>
+    //   )}
+    //   <View style={styles.headerIcon}>
+    //     <TouchableOpacity onPress={handleOpenBottomSheet}>
+    //       <Material name="pencil" size={24} color="white" />
+    //     </TouchableOpacity>
+    //   </View>
+    // </View>
+    // <FamilyListModal visible={isDropdownVisible} onClose={handleCloseModal}  families={families} membersMap={membersMap} selectedFamily={family}/>
+
+    //     <View className="flex-col justify-center items-center pt-4 ">
+    //       <TouchableOpacity style={styles.avatarButton} onPress={handleChangeAvatar}>
+    //         <Image
+    //           source={source}
+    //           resizeMode="stretch"
+    //           style={styles.imageContainer}
+    //         />
+    //         <View style={styles.editContainer}>
+    //           <Icon name="add" size={30}  style={styles.editIcon} />
+    //         </View>
+    //       </TouchableOpacity>
+
+    //     </View>
+    //     {family != null && (
+    //       <ScrollView style={styles.scrollView}>
+    //         <View className="">
+    //           <View className="mt-2">
+    //             <TouchableOpacity
+    //               onPress={() => handleOpenAllMemberModal(family.id_family)}
+    //               style={styles.touchableOpacity}>
+    //               <ImageBackground
+    //                 source={require('../../assets/images/family-item-bg-3.png')}
+    //                 resizeMode="stretch"
+    //                 style={styles.imageBackground}>
+    //                 <View style={{ flex: 2 }}>
+    //                   <Image
+    //                     source={MemberImage}
+    //                     style={styles.imageBackgroundIcon}
+    //                     resizeMode="contain"
+    //                   />
+    //                 </View>
+    //                 <View style={styles.imageBackgroundTextContainer}>
+    //                   <Text style={styles.imageBackgroundText}>
+    //                     Members
+    //                   </Text>
+    //                   <Text style={styles.imageBackgroundDescription}>
+    //                     View and manage family members
+    //                   </Text>
+    //                 </View>
+    //               </ImageBackground>
+    //             </TouchableOpacity>
+    //           </View>
+
+    //           <TouchableOpacity
+    //             onPress={handleChatPress}
+    //             style={styles.touchableOpacity}>
+    //             <ImageBackground
+    //               source={require('../../assets/images/family-item-bg-2.png')}
+    //               resizeMode="stretch"
+    //               style={styles.imageBackground}>
+    //               <View style={{ flex: 2 }}>
+    //                 <Image
+    //                   source={ChatImage}
+    //                   style={styles.imageBackgroundIcon}
+    //                   resizeMode="contain"
+    //                 />
+    //               </View>
+    //               <View style={styles.imageBackgroundTextContainer}>
+    //                 <Text style={styles.imageBackgroundText}>
+    //                   Chat with members
+    //                 </Text>
+    //                 <Text style={styles.imageBackgroundDescription}>
+    //                   Communicate easily with family members
+    //                 </Text>
+    //               </View>
+    //             </ImageBackground>
+    //           </TouchableOpacity>
+
+    //           <TouchableOpacity
+    //             onPress={handleEducationPress}
+    //             style={styles.touchableOpacity}>
+    //             <ImageBackground
+    //               source={require('../../assets/images/family-item-bg-1.png')}
+    //               resizeMode="stretch"
+    //               style={styles.imageBackground}>
+    //               <View style={{ flex: 2 }}>
+    //                 <Image
+    //                   source={EducationImage}
+    //                   style={styles.imageBackgroundIcon}
+    //                   resizeMode="contain"
+    //                 />
+    //               </View>
+    //               <View style={styles.imageBackgroundTextContainer}>
+    //                 <Text style={styles.imageBackgroundText}>
+    //                   Manage education
+    //                 </Text>
+    //                 <Text style={styles.imageBackgroundDescription}>
+    //                   Monitor educational progress and activities
+    //                 </Text>
+    //               </View>
+    //             </ImageBackground>
+    //           </TouchableOpacity>
+
+    //           <TouchableOpacity
+    //             onPress={handleCalendarPress}
+    //             style={styles.touchableOpacity}>
+    //             <ImageBackground
+    //               source={require('../../assets/images/family-item-bg-3.png')}
+    //               resizeMode="stretch"
+    //               style={styles.imageBackground}>
+    //               <View style={{ flex: 2 }}>
+    //                 <Image
+    //                   source={CalenderImage}
+    //                   style={styles.imageBackgroundIcon}
+    //                   resizeMode="contain"
+    //                 />
+    //               </View>
+    //               <View style={styles.imageBackgroundTextContainer}>
+    //                 <Text style={styles.imageBackgroundText}>
+    //                   Calendar scheduling
+    //                 </Text>
+    //                 <Text style={styles.imageBackgroundDescription}>
+    //                   Organize family events and activities
+    //                 </Text>
+    //               </View>
+    //             </ImageBackground>
+    //           </TouchableOpacity>
+
+    //           <TouchableOpacity
+    //             onPress={handleNavigateGuildLine}
+    //             style={styles.touchableOpacity}>
+    //             <ImageBackground
+    //               source={require('../../assets/images/family-item-bg-2.png')}
+    //               resizeMode="stretch"
+    //               style={styles.imageBackground}>
+    //               <View style={{ flex: 2 }}>
+    //                 <Image
+    //                   source={GuildLineImage}
+    //                   style={styles.imageBackgroundIcon}
+    //                   resizeMode="contain"
+    //                 />
+    //               </View>
+    //               <View style={styles.imageBackgroundTextContainer}>
+    //                 <Text style={styles.imageBackgroundText}>GuildLine</Text>
+    //                 <Text style={styles.imageBackgroundDescription}>
+    //                   Provide guidelines for family activities
+    //                 </Text>
+    //               </View>
+
+    //             </ImageBackground>
+    //           </TouchableOpacity>
+
+    //           <TouchableOpacity
+    //             onPress={handleNavigateHouseHold}
+    //             style={styles.touchableOpacity}>
+    //             <ImageBackground
+    //               source={require('../../assets/images/family-item-bg-1.png')}
+    //               resizeMode="stretch"
+    //               style={styles.imageBackground}>
+    //               <View style={{ flex: 2 }}>
+    //                 <Image
+    //                   source={HouseHoldImage}
+    //                   style={styles.imageBackgroundIcon}
+    //                   resizeMode="contain"
+    //                 />
+    //               </View>
+    //               <View style={styles.imageBackgroundTextContainer}>
+    //                 <Text style={styles.imageBackgroundText}>
+    //                   Household appliances
+    //                 </Text>
+    //                 <Text style={styles.imageBackgroundDescription}>
+    //                   Manage and optimize household devices
+    //                 </Text>
+    //               </View>
+    //             </ImageBackground>
+    //           </TouchableOpacity>
+
+    //           <TouchableOpacity
+    //             onPress={handleNavigateChecklist}
+    //             style={styles.touchableOpacity}>
+    //             <ImageBackground
+    //               source={require('../../assets/images/family-item-bg-4.png')}
+    //               resizeMode="stretch"
+    //               style={styles.imageBackground}>
+
+    //               <View style={{ flex: 2 }}>
+    //                 <Image
+    //                   source={CheckListImage}
+    //                   style={styles.imageBackgroundIcon}
+    //                   resizeMode="contain"
+    //                 />
+    //               </View>
+    //               <View style={styles.imageBackgroundTextContainer}>
+    //                 <Text style={styles.imageBackgroundText}>Checklist</Text>
+
+    //                 <Text style={styles.imageBackgroundDescription}>
+    //                   Create and manage family task lists
+    //                 </Text>
+    //               </View>
+
+    //             </ImageBackground>
+    //           </TouchableOpacity>
+
+    //         </View>
+    //       </ScrollView>
+    //     )}
+    //   </SafeAreaView>
+    //   <RBSheet
+    //       ref={bottomSheetRef}
+    //       closeOnDragDown={true}
+    //       height={screenHeight * 0.5}
+    //       customStyles={{
+    //         container: {
+    //           borderTopLeftRadius: 20,
+    //           borderTopRightRadius: 20,
+    //         },
+    //       }}>
+    //         <BottomSheet
+    //         id_family={family!.id_family}
+    //         name={family?.name}
+    //         description={family?.description}
+    //         />
+
+    //   </RBSheet>
+
+    // </ImageBackground>
+
+    <View style={{position: 'relative'}}>
+      <Image
+        source={require('../../assets/images/header-family.png')}
+        resizeMode="stretch"
+        style={{width: '100%', height: 220, alignSelf: 'center'}}
+      />
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 220, // Match the height of the Image or adjust as needed
+          paddingTop: 60,
+          padding: 10,
+        }}>
         <View style={styles.headerContainer}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" size={28} style={styles.backButton} />
+            <MaterialIcons
+              name="chevron-left"
+              size={40}
+              style={styles.backButton}
+            />
           </TouchableOpacity>
           {family != null && (
-            <TouchableOpacity onPress={toggleDropdown}>
+            <TouchableOpacity
+              onPress={toggleDropdown}
+              style={{
+                flexDirection: 'row',
+                marginLeft: 15,
+                alignItems: 'center',
+              }}>
               <Text style={styles.headerText}>{family.name}</Text>
+              <MaterialIcons
+                name="arrow-drop-down"
+                size={30}
+                style={styles.backButton}
+              />
             </TouchableOpacity>
           )}
           <View style={styles.headerIcon}>
@@ -203,227 +475,41 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
             </TouchableOpacity>
           </View>
         </View>
-        <FamilyListModal visible={isDropdownVisible} onClose={handleCloseModal}  families={families} membersMap={membersMap} selectedFamily={family}/>
-
-        <View className="flex-col justify-center items-center pt-4 ">
-          <TouchableOpacity style={styles.avatarButton} onPress={handleChangeAvatar}>
-            <Image
-              source={source}
-              resizeMode="stretch"
-              style={styles.imageContainer}
-            />
-            <View style={styles.editContainer}>
-              <Icon name="add" size={30}  style={styles.editIcon} />
-            </View>
+        <FamilyListModal
+          visible={isDropdownVisible}
+          onClose={handleCloseModal}
+          families={families}
+          membersMap={membersMap}
+          selectedFamily={family}
+        />
+        <View>
+          <Image
+            source={require('../../assets/images/family-avatar.jpg')}
+            resizeMode="cover"
+            style={{
+              width: 219,
+              height: 145,
+              alignSelf: 'center',
+              borderRadius: 20,
+              borderWidth: 3,
+              borderColor: 'white',
+            }}
+          />
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              top: 120,
+              right: 80,
+              backgroundColor: '#2a475ee8',
+              padding: 5,
+              borderRadius: 20,
+            }}
+            onPress={handleChangeAvatar}>
+            <MaterialIcons name="camera-alt" size={25} color="white" />
           </TouchableOpacity>
-
         </View>
-        {family != null && (
-          <ScrollView style={styles.scrollView}>
-            <View className="">
-              <View className="mt-2">
-                <TouchableOpacity
-                  onPress={() => handleOpenAllMemberModal(family.id_family)}
-                  style={styles.touchableOpacity}>
-                  <ImageBackground
-                    source={require('../../assets/images/family-item-bg-3.png')}
-                    resizeMode="stretch"
-                    style={styles.imageBackground}>
-                    <View style={{ flex: 2 }}>
-                      <Image
-                        source={MemberImage}
-                        style={styles.imageBackgroundIcon}
-                        resizeMode="contain"
-                      />
-                    </View>
-                    <View style={styles.imageBackgroundTextContainer}>
-                      <Text style={styles.imageBackgroundText}>
-                        Members
-                      </Text>
-                      <Text style={styles.imageBackgroundDescription}>
-                        View and manage family members
-                      </Text>
-                    </View>
-                  </ImageBackground>
-                </TouchableOpacity>
-              </View>
-
-              <TouchableOpacity
-                onPress={handleChatPress}
-                style={styles.touchableOpacity}>
-                <ImageBackground
-                  source={require('../../assets/images/family-item-bg-2.png')}
-                  resizeMode="stretch"
-                  style={styles.imageBackground}>
-                  <View style={{ flex: 2 }}>
-                    <Image
-                      source={ChatImage}
-                      style={styles.imageBackgroundIcon}
-                      resizeMode="contain"
-                    />
-                  </View>
-                  <View style={styles.imageBackgroundTextContainer}>
-                    <Text style={styles.imageBackgroundText}>
-                      Chat with members
-                    </Text>
-                    <Text style={styles.imageBackgroundDescription}>
-                      Communicate easily with family members
-                    </Text>
-                  </View>
-                </ImageBackground>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={handleEducationPress}
-                style={styles.touchableOpacity}>
-                <ImageBackground
-                  source={require('../../assets/images/family-item-bg-1.png')}
-                  resizeMode="stretch"
-                  style={styles.imageBackground}>
-                  <View style={{ flex: 2 }}>
-                    <Image
-                      source={EducationImage}
-                      style={styles.imageBackgroundIcon}
-                      resizeMode="contain"
-                    />
-                  </View>
-                  <View style={styles.imageBackgroundTextContainer}>
-                    <Text style={styles.imageBackgroundText}>
-                      Manage education
-                    </Text>
-                    <Text style={styles.imageBackgroundDescription}>
-                      Monitor educational progress and activities
-                    </Text>
-                  </View>
-                </ImageBackground>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={handleCalendarPress}
-                style={styles.touchableOpacity}>
-                <ImageBackground
-                  source={require('../../assets/images/family-item-bg-3.png')}
-                  resizeMode="stretch"
-                  style={styles.imageBackground}>
-                  <View style={{ flex: 2 }}>
-                    <Image
-                      source={CalenderImage}
-                      style={styles.imageBackgroundIcon}
-                      resizeMode="contain"
-                    />
-                  </View>
-                  <View style={styles.imageBackgroundTextContainer}>
-                    <Text style={styles.imageBackgroundText}>
-                      Calendar scheduling
-                    </Text>
-                    <Text style={styles.imageBackgroundDescription}>
-                      Organize family events and activities
-                    </Text>
-                  </View>
-                </ImageBackground>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={handleNavigateGuildLine}
-                style={styles.touchableOpacity}>
-                <ImageBackground
-                  source={require('../../assets/images/family-item-bg-2.png')}
-                  resizeMode="stretch"
-                  style={styles.imageBackground}>
-                  <View style={{ flex: 2 }}>
-                    <Image
-                      source={GuildLineImage}
-                      style={styles.imageBackgroundIcon}
-                      resizeMode="contain"
-                    />
-                  </View>
-                  <View style={styles.imageBackgroundTextContainer}>
-                    <Text style={styles.imageBackgroundText}>GuildLine</Text>
-                    <Text style={styles.imageBackgroundDescription}>
-                      Provide guidelines for family activities
-                    </Text>
-                  </View>
-                  
-                </ImageBackground>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={handleNavigateHouseHold}
-                style={styles.touchableOpacity}>
-                <ImageBackground
-                  source={require('../../assets/images/family-item-bg-1.png')}
-                  resizeMode="stretch"
-                  style={styles.imageBackground}>
-                  <View style={{ flex: 2 }}>
-                    <Image
-                      source={HouseHoldImage}
-                      style={styles.imageBackgroundIcon}
-                      resizeMode="contain"
-                    />
-                  </View>
-                  <View style={styles.imageBackgroundTextContainer}>
-                    <Text style={styles.imageBackgroundText}>
-                      Household appliances
-                    </Text>
-                    <Text style={styles.imageBackgroundDescription}>
-                      Manage and optimize household devices
-                    </Text>
-                  </View>
-                </ImageBackground>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={handleNavigateChecklist}
-                style={styles.touchableOpacity}>
-                <ImageBackground
-                  source={require('../../assets/images/family-item-bg-4.png')}
-                  resizeMode="stretch"
-                  style={styles.imageBackground}>
-                     
-
-                  <View style={{ flex: 2 }}>
-                    <Image
-                      source={CheckListImage}
-                      style={styles.imageBackgroundIcon}
-                      resizeMode="contain"
-                    />
-                  </View>
-                  <View style={styles.imageBackgroundTextContainer}>
-                    <Text style={styles.imageBackgroundText}>Checklist</Text>
-
-                    <Text style={styles.imageBackgroundDescription}>
-                      Create and manage family task lists
-                    </Text>
-                  </View>
-
-                  
-                </ImageBackground>
-              </TouchableOpacity>
-
-              
-            </View>
-          </ScrollView>
-        )}
-      </SafeAreaView>
-      <RBSheet
-          ref={bottomSheetRef}
-          closeOnDragDown={true}
-          height={screenHeight * 0.5}
-          customStyles={{
-            container: {
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-            },
-          }}>
-            <BottomSheet
-            id_family={family!.id_family}
-            name={family?.name}
-            description={family?.description}
-            />
-          
-      </RBSheet>
-
-    </ImageBackground>
+      </View>
+    </View>
   );
 };
 
