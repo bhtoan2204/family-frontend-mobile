@@ -52,6 +52,11 @@ const AddComponentScoreSheet = ({ refRBSheet, id_education_progress, id_family, 
         //     }
 
         // })
+        console.log(id_subject
+            , id_education_progress
+            , id_family
+            , name
+            , 0)
         const res = await EducationServices.addComponentScore(
             id_subject
             , id_education_progress

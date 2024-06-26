@@ -233,6 +233,11 @@ const checkListSlice = createSlice({
         }
       }
     },
+    sortShoppingListCategory(state) {
+      return state.slice().sort((a, b) => {
+        return a.created_at! > b.created_at! ? -1 : 1;
+      });
+    },
   },
 });
 
@@ -250,6 +255,7 @@ export const {
   updateCheckListItemCompleted,
   updateCheckListItemPrice,
   updateCheckListItemQuantity,
+  sortShoppingListCategory,
 } = checkListSlice.actions;
 
 export const selectProfile = (state: RootState) => state.profile;

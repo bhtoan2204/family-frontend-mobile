@@ -20,7 +20,7 @@ import { AppDispatch, RootState } from 'src/redux/store';
 import CourseIcon from 'src/assets/images/education_assets/course.png';
 import HelpIcon from 'src/assets/images/guideline_assets/help.png';
 import UpdateIcon from 'src/assets/images/guideline_assets/update.png';
-import { updateGuideline } from 'src/redux/slices/GuidelineSlice';
+import { updateGuideline, updateGuidelineTitleAndDescription } from 'src/redux/slices/GuidelineSlice';
 
 const screenWidth = Dimensions.get('screen').width
 const screenHeight = Dimensions.get('screen').height
@@ -40,7 +40,11 @@ const UpdateGuildLineScreen: React.FC<UpdateGuildLineScreenProps> = ({ navigatio
     const dispatch = useDispatch<AppDispatch>()
 
     const handleUpdateGuildLine = async () => {
-        // dispatch(updateGuideline)
+        dispatch(updateGuidelineTitleAndDescription({
+            id_guide_item: id_item,
+            title: text,
+            description: desc
+        }))
         navigation.goBack()
     }
 

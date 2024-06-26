@@ -251,7 +251,7 @@ const EducationServices = {
       if (response.status === 201) {
         return response.data.data;
       } else {
-        throw new Error(ERROR_TEXTS.API_ERROR);
+        return null;
       }
     } catch (error: any) {
       console.log(error.message);

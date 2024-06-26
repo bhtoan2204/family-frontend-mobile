@@ -70,6 +70,7 @@ const guidelineSlice = createSlice({
         state[index] = action.payload;
       }
     },
+
   },
 });
 
@@ -80,6 +81,8 @@ export const {
   addGuideline,
   updateGuideline,
   updateGuidelineData,
+  updateGuidelineTitleAndDescription,
+  
 } = guidelineSlice.actions;
 
 export default guidelineSlice.reducer;

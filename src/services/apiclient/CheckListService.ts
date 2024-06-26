@@ -49,7 +49,10 @@ const CheckListServices = {
           resData[i].completed = completed;
           resData[i].total = total;
         }
-        return response.data.data;
+        resData.sort((a, b) => {
+          return a.created_at! > b.created_at! ? -1 : 1;
+        });
+        return resData;
       } else {
         return [];
       }

@@ -11,7 +11,7 @@ export interface ShoppingListCategoryInterface {
   title: string;
   completed: number;
   total: number;
-  createdAt?: string;
+  created_at?: string;
   checklistItems: ShoppingListItemInterface[];
 }
 
