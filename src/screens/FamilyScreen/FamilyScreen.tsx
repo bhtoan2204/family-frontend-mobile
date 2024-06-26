@@ -12,6 +12,8 @@ import {
   ImageBackground,
   ActivityIndicator,
   TouchableOpacityBase,
+  Animated,
+  Easing,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -99,6 +101,8 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [families, setFamilies] = useState<Family[]>([]);
   const [membersMap, setMembersMap] = useState<{[key: number]: Member[]}>({});
+  const shakeAnimation = useRef(new Animated.Value(0)).current;
+  const shakeAnimationX = new Animated.Value(0);
   const source =
     family?.avatar && family.avatar !== '[NULL]'
       ? {uri: family.avatar}
@@ -128,6 +132,46 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     };
 
     fetchFamiliesAndMembers();
+
+    const animation = Animated.loop(
+      Animated.sequence([
+        // Di chuyển hình ảnh sang trái
+        Animated.timing(shakeAnimation, {
+          toValue: -5,
+          duration: 500,
+          useNativeDriver: true,
+          easing: Easing.linear,
+        }),
+        // Di chuyển hình ảnh sang phải
+        Animated.timing(shakeAnimation, {
+          toValue: 15,
+          duration: 300,
+          useNativeDriver: true,
+          easing: Easing.linear,
+        }),
+        Animated.timing(shakeAnimationX, {
+          toValue: 10,
+          duration: 100,
+          useNativeDriver: true,
+        }),
+        Animated.timing(shakeAnimationX, {
+          toValue: -10,
+          duration: 100,
+          useNativeDriver: true,
+        }),
+        Animated.timing(shakeAnimationX, {
+          toValue: 0,
+          duration: 100,
+          useNativeDriver: true,
+        }),
+      ]),
+      {
+        iterations: -1, // Lặp lại vô hạn
+      },
+    );
+
+    animation.start();
+    return () => animation.stop();
   }, []);
 
   const handleDeleteFamily = async (id_family: number) => {
@@ -590,7 +634,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           marginTop: 110,
         }}
       />
-      <Image
+      <Animated.Image
         source={require('../../assets/images/clock.png')}
         resizeMode="cover"
         style={{
@@ -600,6 +644,10 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           marginTop: 80,
           bottom: 200,
           left: 15,
+          transform: [
+            {translateY: shakeAnimation},
+            {translateX: shakeAnimationX},
+          ],
         }}
       />
       <ScrollView showsVerticalScrollIndicator={false} style={{bottom: 150}}>
