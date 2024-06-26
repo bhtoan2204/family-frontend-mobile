@@ -1,14 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
-import { LineChart } from 'react-native-chart-kit';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from 'react-native';
+import {LineChart} from 'react-native-chart-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
-import { Picker } from '@react-native-picker/picker';
-import { useDispatch } from 'react-redux';
-import { setSelectedDate, setSelectedOption } from 'src/redux/slices/ExpenseAnalysis';
+import {Picker} from '@react-native-picker/picker';
+import {useDispatch} from 'react-redux';
+import {
+  setSelectedDate,
+  setSelectedOption,
+} from 'src/redux/slices/ExpenseAnalysis';
 import moment from 'moment';
-import { ExpenseServices } from 'src/services/apiclient';
-import { Ionicons } from '@expo/vector-icons';
+import {ExpenseServices} from 'src/services/apiclient';
+import {Ionicons} from '@expo/vector-icons';
 
 interface Category {
   name: string;
@@ -26,7 +36,7 @@ interface LineChartScreenProps {
   id_family: number;
 }
 
-const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
+const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
   const [showDetails, setShowDetails] = useState<boolean>(false);
   const [selectedLegends, setSelectedLegends] = useState<string[]>(['Total']);
   const [isYearPickerVisible, setYearPickerVisible] = useState<boolean>(false);
@@ -34,16 +44,26 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
   const [years, setYears] = useState<number[]>([]);
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const dispatch = useDispatch();
-  const labels= ['Jan','Feb', 'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
+  const labels = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
 
   useEffect(() => {
     const recentYears = generateRecentYears();
     setYears(recentYears);
     fetchData(selectedYear, id_family);
   }, [selectedYear, id_family]);
-
-  
 
   const generateRecentYears = () => {
     const currentYear = moment().year();
@@ -62,7 +82,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
         total: monthData.total,
         categories: monthData.categories
           ? monthData.categories.reduce(
-              (acc: { [key: string]: number }, category: Category) => {
+              (acc: {[key: string]: number}, category: Category) => {
                 acc[category.name] = category.amount;
                 return acc;
               },
@@ -85,8 +105,6 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
     );
   };
 
-
-
   const calculateMonthlyTotals = () => {
     return monthlyData.map(month => month.total);
   };
@@ -105,7 +123,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
     dispatch(setSelectedDate(date));
   };
 
-  const categoryColors: { [key: string]: string } = {
+  const categoryColors: {[key: string]: string} = {
     1: `rgba(255, 0, 0, 1)`,
     2: `rgba(0, 255, 0, 1)`,
     3: `rgba(0, 0, 255, 1)`,
@@ -150,23 +168,24 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
     });
   }
 
-  const displayedDatasets = selectedLegends.length > 0
-    ? categoryDatasets.filter(dataset => selectedLegends.includes(dataset.name))
-    : [
-        ...categoryDatasets,
-        {
-          data: monthlyTotals,
-          color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-        },
-      ];
-     
-      
+  const displayedDatasets =
+    selectedLegends.length > 0
+      ? categoryDatasets.filter(dataset =>
+          selectedLegends.includes(dataset.name),
+        )
+      : [
+          ...categoryDatasets,
+          {
+            data: monthlyTotals,
+            color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
+          },
+        ];
+
   return (
-    <ScrollView style={{ height: '80%' }}>
+    <View style={{height: '90%'}}>
       <TouchableOpacity
-        style={[styles.monthPickerContainer, { zIndex: 1 }]}
-        onPress={() => setYearPickerVisible(!isYearPickerVisible)}
-      >
+        style={[styles.monthPickerContainer, {zIndex: 1}]}
+        onPress={() => setYearPickerVisible(!isYearPickerVisible)}>
         <View style={styles.monthContainer}>
           <Text style={styles.monthText}>{selectedYear}</Text>
         </View>
@@ -176,8 +195,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
           <Picker
             selectedValue={selectedYear}
             style={styles.dropdownYear}
-            onValueChange={itemValue => handleYearChange(itemValue)}
-          >
+            onValueChange={itemValue => handleYearChange(itemValue)}>
             {years.map((year: number) => (
               <Picker.Item key={year} label={year.toString()} value={year} />
             ))}
@@ -187,55 +205,58 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
       <View style={styles.chartLineContainer}>
         <Text>(Unit: VNĐ)</Text>
         {displayedDatasets.length > 0 && (
-           <LineChart
-           data={{
-             labels: monthlyData.map(month => labels[month.month - 1]),
-             datasets: displayedDatasets,
-           }}
-           width={400}
-           height={220}
-           chartConfig={{
-             backgroundGradientFrom: '#FFFFFF',
-             backgroundGradientTo: '#FFFFFF',
-             decimalPlaces: 2,
-             color: (opacity = 1) => `#ccc`,
-             labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-             propsForDots: {
-               r: '2',
-               strokeWidth: '2',
-               stroke: '#ffa726',
-             },
-             propsForBackgroundLines: {
-               strokeWidth: 0.1,
-             },
-           }}
-           // bezier
-           style={styles.linechart}
-           renderDotContent={({ x, y, index }) => {
-            const month = monthlyData[index];
-            let categoryAmount = 0;
-            
-            if (selectedLegends.length === 1 ) {
+          <LineChart
+            data={{
+              labels: monthlyData.map(month => labels[month.month - 1]),
+              datasets: displayedDatasets,
+            }}
+            width={400}
+            height={220}
+            chartConfig={{
+              backgroundGradientFrom: '#FFFFFF',
+              backgroundGradientTo: '#FFFFFF',
+              decimalPlaces: 2,
+              color: (opacity = 1) => `#ccc`,
+              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              propsForDots: {
+                r: '2',
+                strokeWidth: '2',
+                stroke: '#ffa726',
+              },
+              propsForBackgroundLines: {
+                strokeWidth: 0.1,
+              },
+            }}
+            // bezier
+            style={styles.linechart}
+            renderDotContent={({x, y, index}) => {
+              const month = monthlyData[index];
+              let categoryAmount = 0;
+
+              if (selectedLegends.length === 1) {
                 if (selectedLegends[0] === 'Total') {
                   categoryAmount = month.total;
-                } else if (month.categories[selectedLegends[0]] ) {
-                  categoryAmount = month.categories[selectedLegends[0]] 
-                }
-              else categoryAmount = 0;
+                } else if (month.categories[selectedLegends[0]]) {
+                  categoryAmount = month.categories[selectedLegends[0]];
+                } else categoryAmount = 0;
                 return (
-                  <View> 
-                    <Text key={index} style={{ position: 'absolute', left: x, top: y - 20, fontSize: 10, color: 'gray'}}>
+                  <View>
+                    <Text
+                      key={index}
+                      style={{
+                        position: 'absolute',
+                        left: x,
+                        top: y - 20,
+                        fontSize: 10,
+                        color: 'gray',
+                      }}>
                       {categoryAmount.toFixed(0)} VNĐ
                     </Text>
                   </View>
                 );
-              
-    
-            }}}
-         />
-         
-         
-         
+              }
+            }}
+          />
         )}
 
         <ScrollView
@@ -248,81 +269,63 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
             flexWrap: 'wrap',
           }}>
           {categoryDatasets.map((dataset, index) => (
-          
-                <TouchableOpacity
-                  key={index}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                  onPress={() => toggleLegend(dataset.name)}>
-                    <View style= { [styles.legendItem,
-              selectedLegends.includes(dataset.name) && styles.selectedLegendItem,]}> 
-                  <View
-                    style={[styles.legendColor, { backgroundColor: dataset.color() }]}
-                  />
-                  <Text style={styles.legendText}>{dataset.name}</Text>
-                  </View>
-
-                </TouchableOpacity>
+            <TouchableOpacity
+              key={index}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+              onPress={() => toggleLegend(dataset.name)}>
+              <View
+                style={[
+                  styles.legendItem,
+                  selectedLegends.includes(dataset.name) &&
+                    styles.selectedLegendItem,
+                ]}>
+                <View
+                  style={[
+                    styles.legendColor,
+                    {backgroundColor: dataset.color()},
+                  ]}
+                />
+                <Text style={styles.legendLineText}>{dataset.name}</Text>
+              </View>
+            </TouchableOpacity>
           ))}
         </ScrollView>
-        <View style={{ height: 1, backgroundColor: '#F3F1EE', marginTop: 10 }} />
-
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            padding: 10,
-            alignItems: 'center',
-            marginTop: 10,
-          }}
-          onPress={() => setShowDetails(!showDetails)}>
-          <Text style={{ fontWeight: '500' }}>
-            {showDetails ? 'Hide details' : 'View details'}
-          </Text>
-          <Ionicons
-            name={showDetails ? 'chevron-down' : 'chevron-forward'}
-            size={20}
-            color="black"
-          />
-        </TouchableOpacity>
-
-        {showDetails && (
-          <View style={styles.ContainerCategory}>
-            {monthlyData.map(monthData => (
-              <TouchableOpacity
-                key={monthData.month}
-                style={styles.expenseItem}
-                onPress={() => handlePressMonth(`${monthData.month}`)}>
-                <View style={styles.expenseDetails}>
-                  <Image
-                    source={{ uri: `${avatarUrlTemplate}${monthData.month}` }}
-                    style={styles.avatar}
-                  />
-                  <Text
-                    style={
-                      styles.expenseText
-                    }>{`Month ${monthData.month}`}</Text>
-                </View>
-                <View style={styles.expenseDetails}>
-                  {monthData.categories &&
-                    Array.isArray(monthData.categories) &&
-                    monthData.categories.map(category => (
-                      <View key={category.name}>
-                        <Text>{`${category.name}: ${category.amount}`}</Text>
-                      </View>
-                    ))}
-                  <Text
-                    style={
-                      styles.expenseAmount
-                    }>{`- ${monthData.total} đ`}</Text>
-                  <Icon name="chevron-right" size={20} color="#ccc" />
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
+        <View style={{height: 1, backgroundColor: '#F3F1EE', marginTop: 10}} />
+        <Text style={{fontWeight: '500', marginVertical: 10, paddingTop: 10}}>
+          Details
+        </Text>
+        <ScrollView style={styles.ContainerCategory}>
+          {monthlyData.map(monthData => (
+            <TouchableOpacity
+              key={monthData.month}
+              style={styles.expenseItem}
+              onPress={() => handlePressMonth(`${monthData.month}`)}>
+              <View style={styles.expenseDetails}>
+                <Image
+                  source={{uri: `${avatarUrlTemplate}${monthData.month}`}}
+                  style={styles.avatar}
+                />
+                <Text
+                  style={styles.expenseText}>{`Month ${monthData.month}`}</Text>
+              </View>
+              <View style={styles.expenseDetails}>
+                {monthData.categories &&
+                  Array.isArray(monthData.categories) &&
+                  monthData.categories.map(category => (
+                    <View key={category.name}>
+                      <Text>{`${category.name}: ${category.amount}`}</Text>
+                    </View>
+                  ))}
+                <Text
+                  style={styles.expenseAmount}>{`- ${monthData.total} đ`}</Text>
+                <Icon name="chevron-right" size={20} color="#ccc" />
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
       <View
         style={{
@@ -332,7 +335,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
           marginTop: -30,
         }}
       />
-    </ScrollView>
+    </View>
   );
 };
 

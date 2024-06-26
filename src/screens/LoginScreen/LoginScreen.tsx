@@ -77,6 +77,9 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
       await LocalStorage.StoreAccessToken(response.accessToken);
       await LocalStorage.StoreRefreshToken(response.refreshToken);
 
+      // console.log(response.accessToken);
+      // console.log(response.refreshToken);
+
       navigation.navigate('LandingPage');
       actions.setStatus({success: true});
     } catch (error: any) {
@@ -295,6 +298,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                       title={TEXTS.LOGIN}
                       filled
                       onPress={handleSubmit}
+                      backgroundImage={require('../../assets/images/button.png')}
                     />
                   </View>
                 )}

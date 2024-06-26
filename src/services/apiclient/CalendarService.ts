@@ -98,6 +98,24 @@ const CalendarServices = {
       console.error('Error in getCalendar', error.message);
     }},
 
+    getCalendarDetail: async (id_calendar?: number) => {
+      try {
+ 
+        const response: AxiosResponse = await instance.get(`${baseUrl}/api/v1/calendar/getCalendarDetail/${id_calendar}`, { 
+          params: {
+            id_calendar,
+          }
+        }
+      );
+        if (response.status === 200) {
+          return response.data.data;
+        } else {
+          console.error('Error in getCalendarDetail');
+        }
+      } catch (error: any) {
+        console.error('Error in getCalendarDetail', error.message);
+      }},
+  
   getEventOnDate: async (id_family?: number, date?: String) => {
     try {
       const response: AxiosResponse = await instance.post(`${baseUrl}/api/v1/calendar/getEventOnDate`, 
@@ -122,30 +140,7 @@ const CalendarServices = {
     }
   },
 
-  UpdateEvent: async (id_calendar: number, title: string, description: string, datetime: string) => {
-    try {
-      const response: AxiosResponse = await instance.put(CalendarUrls.updateCalender, 
-        {
-          id_calendar,
-          title,
-          description,
-          datetime,
-        },
-      );
-      
-      if (response) {
-        if (response.status === 200) {
-          return response.data;
-        } else {
-          console.error('Error in getEventOnDate');
-        }
-      } else {
-        console.error('Error: No response received');
-      }
-    } catch (error: any) {
-      console.error('Error in getEventOnDate', error.message);
-    }
-  },
+
 
   DeleteEvent: async (id_calendar?: number) => {
     try {
@@ -176,6 +171,24 @@ const CalendarServices = {
        return 'Failed to create event'
     }
   },
+  UpdateEvent: async (id_calendar: number, title: string, description: string, time_start: Date, time_end: Date, color: string, is_all_day: boolean, category: number, location: string, recurrence_exception: string, recurrence_id: number, recurrence_rule: string, start_timezone:string, end_timezone: string) => {
+    try {
+      const response: AxiosResponse = await instance.put(CalendarUrls.updateCalender, {
+
+        id_calendar, title, description, time_start, time_end, color, is_all_day, category, location, recurrence_exception,recurrence_id, recurrence_rule,start_timezone, end_timezone,       
+      }
+      );
+      
+      
+      if (response.status === 200 ){
+          return 'Successfully!'
+      }
+        
+    } catch (error: any) {
+      console.error('Error in UpdateEvent', error.message);
+    }
+  },
+
   
 };
 

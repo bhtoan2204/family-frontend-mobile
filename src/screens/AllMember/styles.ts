@@ -11,16 +11,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#e3e3e3',
   },
-  iconContainer:{
+  iconContainer: {
     flexDirection: 'row',
-
   },
   backButton: {
     color: COLORS.black,
   },
-  InforContainer:{
-    paddingVertical: 20,
-
+  InforContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
   },
   headerAction: {
     width: 40,
@@ -29,13 +28,9 @@ const styles = StyleSheet.create({
   },
   headerSearch: {
     position: 'relative',
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    backgroundColor: '#F0F0F0',
     borderRadius: 12,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     flexDirection: 'row',
   },
   headerSearchIcon: {
@@ -50,11 +45,10 @@ const styles = StyleSheet.create({
   },
   headerSearchInput: {
     paddingVertical: 8,
-    paddingHorizontal: 12,
-    paddingLeft: 34,
     width: '100%',
     fontSize: 16,
     fontWeight: '500',
+    color: 'white',
   },
   container: {
     padding: 0,
@@ -85,35 +79,43 @@ const styles = StyleSheet.create({
   avatar: {
     width: 100,
     height: 100,
-    borderRadius: 50,
-    marginRight: 10,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: {width: 5, height: 5},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    marginBottom: 10,
   },
   card: {
-    backgroundColor: COLORS.AliceBlue,
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
+    backgroundColor: '#fff',
+    paddingTop: 10,
+    paddingHorizontal: 5,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    borderRadius: 10,
+    marginHorizontal: 10,
+    shadowColor: 'gray',
+    shadowOffset: {width: 1, height: 2},
+    shadowOpacity: 0.25,
   },
   nameText: {
-    fontSize: 16,
-    color: COLORS.black,
-    marginBottom: 5,
+    color: '#1b2838',
+    fontSize: 20,
     fontWeight: 'bold',
-
+    marginBottom: 5,
   },
 
   cardText: {
-    fontSize: 16,
-    color: COLORS.black,
+    fontSize: 14,
+    color: 'gray',
     marginBottom: 5,
-
+    flex: 1,
   },
   RoleText: {
     fontSize: 16,
-    color: COLORS.PhilippineSilver,
+    color: '#FFBC27',
     marginBottom: 5,
     fontWeight: 'bold',
-
   },
   rowFront: {
     backgroundColor: '#FFF',

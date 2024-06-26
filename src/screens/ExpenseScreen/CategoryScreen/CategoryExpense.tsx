@@ -10,6 +10,7 @@ import {
   TextInput,
   Button,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import ExpenseServices from 'src/services/apiclient/ExpenseServices';
@@ -29,6 +30,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {IncomeServices} from 'src/services/apiclient';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS} from 'src/constants';
+import { Swipeable } from 'react-native-gesture-handler';
 
 interface ExpenseType {
   id_expense_type: number;
@@ -75,6 +77,7 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
   const fetchIncomeType = async (id_family: any) => {
     try {
       const response = await IncomeServices.getIncomeType(id_family);
+      //console.log(response);
       setIncomeCategories(response);
       setLoading(false);
     } catch (error: any) {
@@ -87,6 +90,7 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
   };
 
   const createCategory = async () => {
+    if (selectedCategoryType === 'Expense'){
     try {
       await ExpenseServices.createExpenseType(id_family, newCategoryName);
       fetchExpenseType(id_family);
@@ -95,6 +99,18 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
     } catch (error: any) {
       console.error('Error creating category:', error.message);
     }
+  }
+   else if (selectedCategoryType === 'Income'){
+
+      try {
+        await IncomeServices.createIncomeType(id_family, newCategoryName);
+        fetchExpenseType(id_family);
+        toggleModal();
+        setNewCategoryName('');
+      } catch (error: any) {
+        console.error('Error creating createIncome:', error.message);
+      }
+   }
   };
 
   if (loading) {
@@ -105,19 +121,83 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
     );
   }
   const selectCategory = async (item: any) => {
+    console.log(item)
     dispatch(setType(selectedCategoryType));
-    if (selectedCategoryType == 'Expense') {
+    if (selectedCategoryType === 'Expense') {
       dispatch(setExpenseCategory_id(item.id_expense_type));
       dispatch(setExpenseCategory_name(item.category));
-    } else if (selectedCategoryType == 'Income') {
+    } else if (selectedCategoryType === 'Income') {
       dispatch(setIncomeCategory_id(item.id_income_source));
       dispatch(setIncomeCategory_name(item.category));
     }
     navigation.navigate('HomeTab', {screen: 'Expense'});
   };
+
+  const onDeleteIncome = async (event: any) => {
+    Alert.alert(
+        'Confirm Delete',
+        'Are you sure you want to delete this category?',
+        [
+            {
+                text: 'Cancel',
+                style: 'cancel',
+            },
+            {
+                text: 'Delete',
+                onPress: async () => {
+                    try {
+                        await IncomeServices.deleteIncomeSource(id_family,event.id_income_source );
+                        Alert.alert('Success', 'The category has been deleted successfully.');
+                        fetchIncomeType(id_family);
+                      } catch (error) {
+                        console.error('Error deleting event:', error);
+                        Alert.alert('Error', 'An error occurred while deleting the category.');
+                      }
+                },
+            },
+        ],
+        { cancelable: true }
+    );
+};
+const onDeleteExpense = async (event: any) => {
+  Alert.alert(
+      'Confirm Delete',
+      'Are you sure you want to delete this category?',
+      [
+          {
+              text: 'Cancel',
+              style: 'cancel',
+          },
+          {
+              text: 'Delete',
+              onPress: async () => {
+                  try {
+                      await ExpenseServices.deleteExpenseType(id_family, event.id_expense_type);
+                      Alert.alert('Success', 'The category has been deleted successfully.');
+                      fetchExpenseType(id_family);
+                  } catch (error) {
+                      console.error('Error deleting event:', error);
+                      Alert.alert('Error', 'An error occurred while deleting the category.');
+                  }
+              },
+          },
+      ],
+      { cancelable: true }
+  );
+};
   const selectOption = async (option: string) => {
     setSelectedCategoryType(option);
   };
+  const renderRightActionsExpense = (item: any) => (
+    <View style={styles.rightAction}>
+        <Icon name="trash-outline" size={35} color="red" onPress={() => onDeleteExpense(item)} />
+    </View>
+);
+const renderRightActionsIncome = (item: any) => (
+  <View style={styles.rightAction}>
+      <Icon name="trash-outline" size={35} color="red" onPress={() => onDeleteIncome(item)} />
+  </View>
+);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
       <View style={styles.container}>
@@ -195,17 +275,23 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
         <ScrollView style={styles.scrollView}>
           {selectedCategoryType === 'Expense' &&
             expenseType.map((item, index) => (
-              <TouchableOpacity
-                key={index.toString()}
-                onPress={() => selectCategory(item)}
-                style={styles.categoryItemContainer}>
-                <Image source={{uri: urlFood}} style={styles.categoryImage} />
-                <Text style={styles.categoryName}>{item.category}</Text>
-              </TouchableOpacity>
+              <Swipeable renderRightActions={() => renderRightActionsExpense(item)}>
+
+                <TouchableOpacity
+                  key={index.toString()}
+                  onPress={() => selectCategory(item)}
+                  style={styles.categoryItemContainer}>
+                  <Image source={{uri: urlFood}} style={styles.categoryImage} />
+                  <Text style={styles.categoryName}>{item.category}</Text>
+                </TouchableOpacity>
+              </Swipeable>
+
             ))}
 
           {selectedCategoryType === 'Income' &&
             incomeCategories.map((item, index) => (
+              <Swipeable renderRightActions={() => renderRightActionsIncome(item)}>
+
               <TouchableOpacity
                 key={index.toString()}
                 onPress={() => selectCategory(item)}
@@ -213,6 +299,8 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
                 <Image source={{uri: urlFood}} style={styles.categoryImage} />
                 <Text style={styles.categoryName}>{item.category}</Text>
               </TouchableOpacity>
+              </Swipeable>
+
             ))}
         </ScrollView>
 

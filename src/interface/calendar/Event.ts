@@ -1,5 +1,4 @@
-
-export type Event = {
+export interface Event {
     id_calendar: number;
     title: string;
     time_start: Date;
@@ -8,10 +7,10 @@ export type Event = {
     color: string;
     is_all_day: boolean;
     category: number;
-    location: string; 
+    location: string;
     recurrence_exception: string;
     recurrence_id: number;
-    recurrence_rule?: string;
+    recurrence_rule: string;
     start_timezone: string;
     end_timezone: string;
-};
+  };

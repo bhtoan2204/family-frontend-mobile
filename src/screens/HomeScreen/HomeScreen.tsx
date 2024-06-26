@@ -17,57 +17,49 @@ import {
   ViewAllFamilyScreenProps,
 } from 'src/navigation/NavigationTypes';
 import {Profile} from 'src/redux/slices/ProfileSclice';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {MaterialIcons} from '@expo/vector-icons';
 import {COLORS} from 'src/constants';
 import chat from 'src/assets/icons/chat.png';
-import report from 'src/assets/icons/report.png';
-import bundle from 'src/assets/icons/bundle.png';
-import calendar from 'src/assets/icons/calendar.png';
-import collectiable from 'src/assets/icons/collectiable.png';
+import feedback from 'src/assets/icons/feedback.png';
+import bundle from 'src/assets/icons/bundles.png';
+import language from 'src/assets/icons/language.png';
 import guideline from 'src/assets/icons/guideline.png';
 import family from 'src/assets/icons/family.png';
 import news from 'src/assets/icons/news.png';
-import seemore from 'src/assets/icons/see-more.png';
+import theme from 'src/assets/icons/theme.png';
 import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {UserProfile} from 'src/interface/user/userProfile';
+import {RootState} from 'src/redux/store';
 
 const icons = {
   bundle,
-  calendar,
-  collectiable,
-  report,
+  feedback,
+  language,
   guideline,
   family,
   chat,
   news,
-  seemore,
+  theme,
 };
 
 type IconKey =
   | 'bundle'
   | 'calendar'
-  | 'collectiable'
-  | 'report'
+  | 'language'
+  | 'feedback'
   | 'guideline'
   | 'family'
   | 'chat'
   | 'news'
-  | 'seemore';
+  | 'theme';
 
 interface Item {
   icon: IconKey;
   label: string;
   onPress: () => void;
 }
-
-type Profile = {
-  id_user: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  phone: string;
-};
 
 const HomeScreen = ({
   navigation,
@@ -78,8 +70,9 @@ const HomeScreen = ({
   const [currentPage, setCurrentPage] = useState(0);
   const [displayedPage, setDisplayedPage] = useState(0);
   const dispatch = useDispatch();
-  const [profile, setProfile] = useState<Profile>();
   const [isLightMode, setIsLightMode] = useState(true);
+  const profile = useSelector((state: RootState) => state.profile.profile);
+
   const handlePress = () => {
     setIsLightMode(!isLightMode);
   };
@@ -90,7 +83,6 @@ const HomeScreen = ({
   });
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
 
-  //Trang thai cua pictures
   const handleScroll = (event: {
     nativeEvent: {layoutMeasurement: any; contentOffset: any};
   }) => {
@@ -110,17 +102,15 @@ const HomeScreen = ({
     });
   };
   const handleChat = () => {
-    navigation.navigate('ChatStack', {
-      screen: 'ChatList',
-    });
+    navigation.navigate('MessageTab', {screen: 'ChatList'});
   };
 
   const handleGetProfile = async () => {
     try {
       const result = await PackageServices.getProfile();
-      const id_user = result.data.id_user;
-      setProfile(result.data);
-      dispatch(Profile(result.data));
+      const id_user = result.id_user;
+      dispatch(Profile(result));
+      //console.log(result)
     } catch (error: any) {
       console.log('ProfileServices.getProfile error:', error);
     }
@@ -190,33 +180,16 @@ const HomeScreen = ({
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+  const handleNavigateNews = () => {
+    navigation.navigate('FamilyStack', {screen: 'News'});
+  };
+
   const data: Item[] = [
     {
       icon: 'bundle',
       label: 'Bundles',
       onPress: () => {
-        console.log('Bundle pressed');
-      },
-    },
-    {
-      icon: 'calendar',
-      label: 'Calendar',
-      onPress: () => {
-        console.log('Calendar pressed');
-      },
-    },
-    {
-      icon: 'report',
-      label: 'Report Bugs',
-      onPress: () => {
-        console.log('Electrical pressed');
-      },
-    },
-    {
-      icon: 'guideline',
-      label: 'Guideline',
-      onPress: () => {
-        console.log('Guideline pressed');
+        handlePackage();
       },
     },
     {
@@ -227,24 +200,45 @@ const HomeScreen = ({
       },
     },
     {
-      icon: 'chat',
-      label: 'Chat',
+      icon: 'feedback',
+      label: 'Feedback',
       onPress: () => {
-        console.log('Plumbing pressed');
+        navigation.navigate('AuthStack', {screen: 'Feedback'});
       },
     },
     {
       icon: 'news',
       label: 'Newspaper',
       onPress: () => {
-        console.log('Newspaper pressed');
+        handleNavigateNews();
       },
     },
     {
-      icon: 'seemore',
-      label: 'See More',
+      icon: 'guideline',
+      label: 'Guideline',
       onPress: () => {
-        console.log('See More pressed');
+        console.log('Guideline pressed');
+      },
+    },
+    {
+      icon: 'chat',
+      label: 'Chat',
+      onPress: () => {
+        handleChat();
+      },
+    },
+    {
+      icon: 'language',
+      label: 'Language',
+      onPress: () => {
+        console.log('Language pressed');
+      },
+    },
+    {
+      icon: 'theme',
+      label: 'Theme',
+      onPress: () => {
+        console.log('Theme pressed');
       },
     },
   ];
@@ -285,19 +279,21 @@ const HomeScreen = ({
                   fontWeight: 'bold',
                   marginBottom: 8,
                 }}>
-                Jennie Kim
+                {`${profile?.firstname} ${profile?.lastname}`}
               </Text>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <MaterialIcons name="location-on" size={22} color="#fff" />
-                <Text style={{color: 'white', fontSize: 17, right: 30}}>
-                  24 Tran Hung Dao
-                </Text>
+                <Text style={{color: 'white', fontSize: 17, right: 30}}></Text>
               </View>
             </View>
             <View style={{flexDirection: 'row', right: 20}}>
               <Image
-                source={require('../../assets/images/avatar.png')}
+                source={
+                  profile.avatar !== '[NULL]'
+                    ? {uri: profile.avatar}
+                    : require('../../assets/images/avatar_default.jpg')
+                }
                 resizeMode="contain"
                 style={{
                   width: 80,
@@ -364,7 +360,7 @@ const HomeScreen = ({
                     </View>
                     <View style={{flexDirection: 'column'}}>
                       <Text style={styles.title}>Let's Start with Service</Text>
-                      <Text
+                      {/* <Text
                         style={{
                           fontSize: 15,
                           color: 'gray',
@@ -372,7 +368,7 @@ const HomeScreen = ({
                           bottom: 15,
                         }}>
                         We found 100 services in your area
-                      </Text>
+                      </Text> */}
                       <View style={{flexDirection: 'row'}}></View>
                     </View>
                   </>
@@ -400,12 +396,25 @@ const HomeScreen = ({
                         shadowOffset: {width: 0, height: 1},
                         shadowOpacity: 0.2,
                         shadowRadius: 5,
-                        marginTop: 10,
+                        marginTop: 20,
+                        overflow: 'visible',
                       }}>
                       <Image
                         source={icons[item.icon]}
-                        style={{width: '80%', height: '80%', borderRadius: 10}}
+                        style={{width: '75%', height: '75%'}}
                       />
+                      {(item.icon === 'feedback' || item.icon === 'chat') && (
+                        <Image
+                          source={require('src/assets/images/New Button.png')} // Đường dẫn đến hình "new"
+                          style={{
+                            position: 'absolute',
+                            top: -5,
+                            right: -20,
+                            width: 40, // Kích thước của hình "new"
+                            height: 18,
+                          }}
+                        />
+                      )}
                     </TouchableOpacity>
                     <Text
                       style={{

@@ -219,6 +219,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 10,
+    marginVertical: 5,
   },
   legendColor: {
     width: 20,
@@ -228,6 +229,11 @@ const styles = StyleSheet.create({
   },
   legendText: {
     fontSize: 16,
+    color:'#fff',
+  },
+  legendLineText: {
+    fontSize: 16,
+    color:'#000',
   },
   selectedLegendItem: {
     backgroundColor: '#ccc',
@@ -240,12 +246,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 10,
     paddingTop: 20,
-    borderTopLeftRadius: 60,
-    borderTopRightRadius: 60,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
     width: '100%',
     alignSelf: 'center',
-
     flexDirection: 'column',
+    height: '50%',
   },
   chartBarContainer: {
     bottom: 30,
@@ -264,7 +270,8 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 30,
-    borderTopLeftRadius: 60,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
     width: '100%',
     alignSelf: 'center',
 
@@ -277,6 +284,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: '#ccc',
     // borderRadius: 20,
+    flexGrow: 1,
   },
   expenseItem: {
     flexDirection: 'row',
@@ -305,11 +313,8 @@ const styles = StyleSheet.create({
   },
   monthPickerContainer: {
     width: '100%',
-    alignItems: 'flex-end',
-    // borderColor: '#ccc',
-    // borderBottomWidth: 1,
+    alignItems: 'center',
     paddingVertical: 10,
-    right: 165,
   },
   monthContainer: {
     borderRadius: 10,
@@ -372,7 +377,6 @@ const styles = StyleSheet.create({
 
   linechart: {
     marginVertical: 8,
-    borderRadius: 16,
   },
   flatListContent: {
     paddingBottom: 20,
@@ -454,12 +458,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   dotContent: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Màu nền của nội dung
-    borderRadius: 5, // Độ cong của góc
-    padding: 5, // Khoảng cách nội dung với viền
-    borderWidth: 1, // Độ rộng của viền
-    borderColor: '#ccc', // Màu của viền
-    fontSize: 12, // Kích thước chữ
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: 5, 
+    padding: 5, 
+    borderWidth: 1, 
+    borderColor: '#ccc', 
+    fontSize: 12, 
   },
 });
 export default styles;

@@ -22,14 +22,14 @@ const today = new Date();
 const yesterday = new Date(today.setDate(today.getDate() - 1));
 const tomorrow = new Date(today.setDate(today.getDate() + 1));
 
-const checkListListData: ShoppingListCategoryInterface[] = [
-    { id_list: 1, id_item_type: 1, id_family: 1, title: 'Grocery Title 1', completed: 0, total: 0, createdAt: today.toDateString(), checklistItems: [] },
-    { id_list: 2, id_item_type: 2, id_family: 1, title: 'Random Title 2', completed: 0, total: 0, createdAt: yesterday.toDateString(), checklistItems: [] },
-    { id_list: 3, id_item_type: 3, id_family: 1, title: 'Random Title 3', completed: 0, total: 0, createdAt: tomorrow.toDateString(), checklistItems: [] },
-    { id_list: 4, id_item_type: 4, id_family: 1, title: 'Random Title 4', completed: 0, total: 0, createdAt: today.toDateString(), checklistItems: [] },
-    { id_list: 5, id_item_type: 5, id_family: 1, title: 'Random Title 5', completed: 0, total: 0, createdAt: yesterday.toDateString(), checklistItems: [] },
-    { id_list: 6, id_item_type: 6, id_family: 1, title: 'Random Title 6', completed: 0, total: 0, createdAt: tomorrow.toDateString(), checklistItems: [] },
-]
+// const checkListListData: ShoppingListCategoryInterface[] = [
+//     { id_list: 1, id_item_type: 1, id_family: 1, title: 'Grocery Title 1', completed: 0, total: 0, createdAt: today.toDateString(), checklistItems: [] },
+//     { id_list: 2, id_item_type: 2, id_family: 1, title: 'Random Title 2', completed: 0, total: 0, createdAt: yesterday.toDateString(), checklistItems: [] },
+//     { id_list: 3, id_item_type: 3, id_family: 1, title: 'Random Title 3', completed: 0, total: 0, createdAt: tomorrow.toDateString(), checklistItems: [] },
+//     { id_list: 4, id_item_type: 4, id_family: 1, title: 'Random Title 4', completed: 0, total: 0, createdAt: today.toDateString(), checklistItems: [] },
+//     { id_list: 5, id_item_type: 5, id_family: 1, title: 'Random Title 5', completed: 0, total: 0, createdAt: yesterday.toDateString(), checklistItems: [] },
+//     { id_list: 6, id_item_type: 6, id_family: 1, title: 'Random Title 6', completed: 0, total: 0, createdAt: tomorrow.toDateString(), checklistItems: [] },
+// ]
 
 
 const ChecklistScreen: React.FC<CheckListScreenProps> = ({ navigation, route }) => {

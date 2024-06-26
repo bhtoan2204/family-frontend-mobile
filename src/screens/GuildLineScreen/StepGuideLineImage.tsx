@@ -121,7 +121,7 @@ const StepGuideLineImage = ({
                                     }}>
                                         <View className='opacity-80 bg-white h-full w-full flex justify-center items-center rounded'>
 
-                                            <Material name="file-image-plus" size={30} style={{ color: "gray" }} className='' />
+                                            <Material name="file-image-plus" size={30} style={{ color: "gray" }} />
                                         </View>
                                     </TouchableOpacity>
                                 }

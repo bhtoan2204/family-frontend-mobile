@@ -11,6 +11,8 @@ export type RootParamList = {
   ChatStack: NavigatorScreenParams<ChatStackParamList>;
   ExpenseStack: NavigatorScreenParams<ExpenseStackParamList>;
   IncomeStack: NavigatorScreenParams<IncomeStackParamList>;
+  MessageTab: NavigatorScreenParams<MessageTabParamList>;
+
 };
 
 export type ExpenseStackParamList = {
@@ -101,13 +103,13 @@ export interface ChatScreenProps {
 }
 
 type ChatListNavigationProp = NativeStackNavigationProp<
-  ChatStackParamList,
+MessageTabParamList,
   'ChatList'
 >;
 
 export interface ChatListProps {
-  navigation: ChatListNavigationProp & ChatScreenNavigationProp;
-  route: RouteProp<ChatStackParamList, 'ChatList'>;
+  navigation: ChatListNavigationProp;
+  route: RouteProp<MessageTabParamList, 'ChatList'>;
 }
 
 type CallVideoNavigationProp = NativeStackNavigationProp<
@@ -126,6 +128,9 @@ export type AuthStackParamList = {
   LandingPage: undefined;
   Notification: undefined;
   WelcomeScreen: undefined;
+  EnterCodeScreen: undefined;
+  ResetPasswordScreen: undefined;
+  Feedback: undefined;
 };
 
 export type CalendarStackParamList = {
@@ -144,6 +149,13 @@ export type CalendarStackParamList = {
   EventListScreen: {
     id_family: number | undefined;
   };
+  EventDetailsScreen: {
+    id_family: number | undefined;
+    id_calendar: number | undefined;
+  };
+  UpdateEvent: {
+    id_family: number | undefined;
+  }
 };
 
 export type FamilyStackParamList = {
@@ -277,6 +289,7 @@ export type FamilyStackParamList = {
     id_family: number | undefined;
     id_checklist: number;
   };
+<<<<<<< HEAD
   AddShoppingList: {
     id_family: number | undefined;
   };
@@ -288,6 +301,9 @@ export type FamilyStackParamList = {
   News: {
     id_family: number | undefined;
   };
+=======
+  News: undefined;
+>>>>>>> dev
 };
 
 export type PackStackParamList = {
@@ -348,6 +364,17 @@ export interface ScheduleScreenProps {
   navigation: ScheduleScreenNavigationProp;
   route: RouteProp<CalendarStackParamList, 'ScheduleScreen'>;
 }
+
+type EventDetailsScreenNavigationProp = NativeStackNavigationProp<
+  CalendarStackParamList,
+  'EventDetailsScreen'
+>;
+
+export interface EventDetailsScreenProps {
+  navigation: EventDetailsScreenNavigationProp;
+  route: RouteProp<CalendarStackParamList, 'EventDetailsScreen'>;
+}
+
 type FamilyStackNavigationProp = NativeStackNavigationProp<
   RootParamList,
   'FamilyStack'
@@ -416,6 +443,30 @@ export interface LoginScreenProps {
   navigation: LoginScreenNavigationProp;
 }
 
+type EnterCodeScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'EnterCodeScreen'
+>;
+
+export interface ResetPasswordScreenProps {
+  navigation: ResetPasswordScreenNavigationProp;
+}
+
+type FeedBackNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'Feedback'
+>;
+export interface FeedbackProps {
+  navigation: FeedBackNavigationProp;
+}
+
+type ResetPasswordScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'ResetPasswordScreen'
+>;
+export interface EnterCodeScreenProps {
+  navigation: EnterCodeScreenNavigationProp;
+}
 type WelcomeScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
   'WelcomeScreen'
@@ -743,13 +794,13 @@ export interface UpdateFamilyScreenProps {
 }
 
 export type UpdateEventNavigationProps = NativeStackNavigationProp<
-  ModelScreenParamsList,
+  CalendarStackParamList,
   'UpdateEvent'
 >;
 
 export interface UpdateEventScreenProps {
   navigation: UpdateEventNavigationProps;
-  route: RouteProp<ModelScreenParamsList, 'UpdateEvent'>;
+  route: RouteProp<CalendarStackParamList, 'UpdateEvent'>;
 }
 
 export type CreateEventNavigationProps = NativeStackNavigationProp<
@@ -852,8 +903,13 @@ export type HomeTabParamList = {
   MoreScreen: undefined;
   Expenditure: undefined;
   CategoryExpense: undefined;
+
 };
 
+export type MessageTabParamList = {
+  ChatList: undefined;
+ 
+};
 type CategoryExpenseNavigationProp = NativeStackNavigationProp<
   HomeTabParamList,
   'CategoryExpense'
@@ -879,10 +935,10 @@ type ProfileScreenNavigationProp = NativeStackNavigationProp<
   'ProfileScreen'
 >;
 
+
 export interface ProfileScreenProps {
   navigation: ProfileScreenNavigationProp;
 }
-
 type ReportScreenNavigationProp = NativeStackNavigationProp<
   HomeTabParamList,
   'ReportScreen'
@@ -941,9 +997,7 @@ export type ModelScreenParamsList = {
   };
   UpdateEvent: {
     id_calendar?: number;
-    title?: string;
-    description?: string;
-    datetime?: Date;
+    
   };
   AddEditFamilyMember: {
     id_family: number | undefined;
@@ -952,6 +1006,7 @@ export type ModelScreenParamsList = {
   CreateEvent: {
     id_family: number;
   };
+  Login: undefined;
 };
 
 type ProfileDetailNavigationProp = NativeStackNavigationProp<
@@ -963,6 +1018,14 @@ export interface ProfileDetailScreenProps {
   navigation: ProfileDetailNavigationProp;
 }
 
+type LoginNavigationProp = NativeStackNavigationProp<
+  ModelScreenParamsList,
+  'Login'
+>;
+
+export interface LoginProps {
+  navigation: LoginNavigationProp;
+}
 type ChangePasswordNavigationProp = NativeStackNavigationProp<
   ModelScreenParamsList,
   'ChangePassword'

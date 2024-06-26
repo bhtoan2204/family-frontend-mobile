@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { COLORS } from 'src/constants';
 
 const styles = StyleSheet.create({
     container: {
@@ -16,6 +17,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#f2dede',
       padding: 15,
       borderRadius: 10,
+      flexDirection:'row',
     },
     incomeContainer: {
       marginBottom: 20,
@@ -33,6 +35,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#d9edf7',
       padding: 15,
       borderRadius: 10,
+      flexDirection:'row',
     },
     incomeAnalysis: {
       flex: 1,
@@ -40,6 +43,22 @@ const styles = StyleSheet.create({
       backgroundColor: '#fcf8e3',
       padding: 15,
       borderRadius: 10,
+      flexDirection:'row',
+
     },
+    icon: {
+      marginRight:10,  
+    },
+    progressStep: {
+      flex: 1,
+      height: 5,
+      backgroundColor: COLORS.gray,
+      marginHorizontal: 5,
+      borderRadius: 10,
+    },
+    activeStep: {
+      backgroundColor: COLORS.primary,
+    },
+  
   });
 export default styles;

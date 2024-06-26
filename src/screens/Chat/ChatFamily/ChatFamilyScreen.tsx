@@ -12,6 +12,7 @@ import styles from './styles';
 import { Keyboard } from 'react-native';
 import { getSocket } from '../../../services/apiclient/Socket';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
+import EmojiPicker from '../EmojiPicker';
 
 interface Message {
   senderId: string;
@@ -48,6 +49,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   const [refreshFlatList, setRefreshFlatList] = useState(false); 
   const [keyboardIsOpen, setKeyboardIsOpen] = useState(false); 
   let socket = getSocket();
+  const [selectedEmoji, setSelectedEmoji] = useState('');
 
   useEffect(() => {
     fetchMember();
@@ -150,6 +152,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   const sendImage = async (base64Image: string) => {
     try {
       if (socket) {
+        console.log('hi')
         socket.emit('newFamilyImageMessage', {
           familyId: id_family,
           imageData: base64Image,
@@ -250,6 +253,10 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
 
   const handleVideoCall = () => {};
 
+  const handleEmojiChange = (emoji) => {
+    setSelectedEmoji(emoji);
+    setMessage((prevMessage) => prevMessage + emoji);
+  };
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <View style={styles.header}>
@@ -276,7 +283,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         inverted
         renderItem={({ item, index }) => (
           <View>
-            {item.senderId !== id_user ? renderMemberMessage(item) : (
+            {item.senderId !== profile.id_user ? renderMemberMessage(item) : (
               <View style={[styles.messageContainer, styles.senderMessageContainer]}>
                 {item.type === 'photo' ? (
                   <TouchableOpacity onPress={() => handleImagePress(item)}>
@@ -303,6 +310,8 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
           onChangeText={setMessage}
           placeholder="Type your message here"
         />
+         <EmojiPicker onChange={handleEmojiChange} />
+
         <TouchableOpacity onPress={handleOpenImageLibrary} style={{ marginLeft: 10 }}>
           <Icon name="images" size={30} />
         </TouchableOpacity>

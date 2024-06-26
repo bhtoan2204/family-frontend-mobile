@@ -1,127 +1,132 @@
-import {Formik, FormikHelpers} from 'formik';
-import {useState} from 'react';
-import {
-  KeyboardAvoidingView,
-  Pressable,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import CustomButton from 'src/components/Button';
-import {COLORS, TEXTS} from 'src/constants';
-import {LoginScreenProps} from 'src/navigation/NavigationTypes';
-import {AuthServices} from 'src/services/apiclient';
-import * as Yup from 'yup';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native'; 
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { AuthServices } from 'src/services/apiclient';
 import styles from './styles';
+import { ForgotPasswordScreenProps } from 'src/navigation/NavigationTypes';
+import { useDispatch } from 'react-redux';
+import { setEmail, setPhone } from 'src/redux/slices/ForgotPassword';
 
-interface FormValues {
-  email: string;
-  submit: null;
-}
+const ForgotPassword = ({ navigation }: ForgotPasswordScreenProps) => {
+  const [inputEmail, setInputEmail] = useState<string>('');
+  const [inputPhone, setInputPhone] = useState<string>('');
+  const [selectedOption, setSelectedOption] = useState<'email' | 'phone'>('email');
+  const dispatch = useDispatch(); 
 
-const ForgotPassword = ({navigation}: LoginScreenProps) => {
-  const [isSent, setIsSent] = useState(false);
-
-  const handleSendSubmit = (
-    values: FormValues,
-    actions: FormikHelpers<FormValues>,
-  ) => {
+  const handleSendSubmit = async () => {
     try {
-      if (!isSent) {
-        const response = AuthServices.forgotPassword({
-          email: values.email,
-        });
-        setIsSent(true);
-      } else {
-        setIsSent(false);
-        values.email = '';
+      if (selectedOption === 'email') {
+        dispatch(setEmail(inputEmail));
+        await AuthServices.forgotPassword({ email: inputEmail, phone: '' });
+      } else if (selectedOption === 'phone') {
+        dispatch(setPhone(inputPhone));
+        await AuthServices.forgotPassword({ email: '', phone: inputPhone });
       }
-      actions.setStatus({success: true});
-    } catch (error: any) {
-      actions.setStatus({
-        success: false,
-      });
-      actions.setErrors({submit: error.message});
+      navigateToEnterCodeScreen();
+    } catch (error) {
+      console.error(error);
     }
+  };
+
+  const navigateToEnterCodeScreen = () => {
+    navigation.navigate('EnterCodeScreen'); 
   };
 
   return (
     <KeyboardAvoidingView style={styles.keyboardView} behavior="padding">
       <SafeAreaView style={styles.safeAreaStyle}>
-        <View style={styles.marginHorizontal}>
-          <View style={styles.marginVertical}>
-            <Text style={styles.forgotPasswordTitle}>
-              {TEXTS.FORGOT_PASSWORD_TITLE}
-            </Text>
-            <Text style={styles.accountTitle}>
-              {TEXTS.FORGOT_PASSWORD_DESCRIPTION}
-            </Text>
+        <TouchableOpacity style={styles.arrowButton} onPress={() => { navigation.navigate('LoginScreen'); }}>
+          <Icon name="arrow-back" size={30} style={styles.backButton} />
+        </TouchableOpacity>
+        <View style={styles.progressBar}>
+          <View style={[styles.progressStep, styles.activeStep]}></View>
+          <View style={styles.progressStep}></View>
+          <View style={styles.progressStep}></View>
+        </View>
+        <View style={styles.container}>
+
+      
+
+          <Image
+            source={{ uri: 'https://static.vecteezy.com/system/resources/previews/008/483/414/non_2x/the-concept-of-an-african-american-man-thinking-behind-a-laptop-vector.jpg' }}
+            style={styles.image}
+          />
+          <Text style={styles.forgotPasswordTitle}>
+            Forgot Your Password?
+          </Text>
+          <Text style={styles.accountTitle}>
+            Please select an option and enter your email or phone number to reset your password.
+          </Text>
+
+          <View style={styles.optionContainer}>
+            <TouchableOpacity
+              style={[
+                styles.optionButton,
+                selectedOption === 'email' && styles.selectedOption,
+              ]}
+              onPress={() => setSelectedOption('email')}
+            >
+              <Text style={selectedOption === 'email' ? styles.selectedOptionText : styles.optionText}>Email</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.optionButton,
+                selectedOption === 'phone' && styles.selectedOption,
+              ]}
+              onPress={() => setSelectedOption('phone')}
+            >
+              <Text style={selectedOption === 'phone' ? styles.selectedOptionText : styles.optionText}>Phone</Text>
+            </TouchableOpacity>
           </View>
-          <Formik
-            initialValues={{email: '', submit: null}}
-            onSubmit={handleSendSubmit}
-            validationSchema={Yup.object().shape({
-              email: Yup.string()
-                .email(TEXTS.INVALID_EMAIL)
-                .required(TEXTS.EMAIL_REQUIRED),
-            })}>
-            {({
-              errors,
-              handleBlur,
-              handleChange,
-              handleSubmit,
-              isSubmitting,
-              touched,
-              values,
-            }) => (
-              <View>
-                <View style={styles.marginBottom}>
-                  <Text style={styles.title}>{TEXTS.EMAIL}</Text>
-                  <View
-                    style={{
-                      ...styles.placeholder,
-                      borderColor: errors.email ? COLORS.red : COLORS.black,
-                    }}>
-                    <TextInput
-                      style={styles.textInput}
-                      placeholder={TEXTS.EMAIL_PLACEHOLDER}
-                      placeholderTextColor={
-                        errors.email ? COLORS.red : COLORS.gray
-                      }
-                      keyboardType="email-address"
-                      onBlur={handleBlur('email')}
-                      onChangeText={handleChange('email')}
-                      value={values.email}
-                    />
-                  </View>
-                  {errors.email && touched.email && (
-                    <View>
-                      <Text style={styles.errorText}>{errors.email}</Text>
-                    </View>
-                  )}
+
+          {selectedOption === 'email' && (
+            <View style={styles.inputContainer}>
+              <Text style={styles.title}>Email</Text>
+              <View style={[styles.placeholder]}>
+                <View style={styles.inputContainerFlex}>
+                  <Icon name="email" size={24} color="black" style={styles.icon} />
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="Enter your email"
+                    placeholderTextColor="gray"
+                    keyboardType="email-address"
+                    onChangeText={text => setInputEmail(text)}
+                    value={inputEmail}
+                  />
                 </View>
-                {errors.submit && (
-                  <View>
-                    <Text style={styles.errorText}>{errors.submit}</Text>
-                  </View>
-                )}
-                <CustomButton
-                  title={isSent ? TEXTS.TRY_AGAIN : TEXTS.SEND}
-                  filled
-                  style={styles.button}
-                  onPress={handleSubmit}
-                />
               </View>
-            )}
-          </Formik>
-          <View style={styles.marginVerticalCenterSmall}>
-            <Pressable
-              onPress={() => {
-                navigation.navigate('LoginScreen');
-              }}>
-              <Text style={styles.backText}>{TEXTS.BACK_TO_LOGIN}</Text>
-            </Pressable>
+            </View>
+          )}
+
+          {selectedOption === 'phone' && (
+            <View style={styles.inputContainer}>
+              <Text style={styles.title}>Phone</Text>
+              <View style={[styles.placeholder]}>
+                <View style={styles.inputContainerFlex}>
+                  <Icon name="phone" size={24} color="black" style={styles.icon} />
+                  <Text style={styles.countryCode}>+84</Text>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="Enter your phone"
+                    placeholderTextColor="gray"
+                    keyboardType="phone-pad"
+                    onChangeText={text => setInputPhone(text)}
+                    value={inputPhone}
+                  />
+                </View>
+              </View>
+            </View>
+          )}
+
+          
+
+          <View style={styles.arrowContainer}>
+            <TouchableOpacity style={styles.enterCodeButton} onPress={handleSendSubmit}>
+              <Text style={styles.enterCodeButtonText}>Enter Code</Text>
+              <Icon name="arrow-forward" size={24} color="white" style={styles.enterCodeButtonIcon} />
+            </TouchableOpacity>
           </View>
         </View>
       </SafeAreaView>

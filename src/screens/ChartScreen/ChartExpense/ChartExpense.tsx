@@ -94,7 +94,8 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
           <View style={styles.headerContainer}>
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('HomeTab', {screen: 'Expense'})
+                //navigation.navigate('HomeTab', {screen: 'Expense'})
+                navigation.goBack()
               }
               style={styles.headerButton}>
               <Icon name="arrow-back" size={30} style={styles.backButton} />
@@ -128,7 +129,7 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
               Here you can view brief overview of your budget.
             </Text>
           </View>
-          <View style={styles.containerTab}>
+          {/* <View style={styles.containerTab}>
             <TouchableOpacity
               onPress={() => selectOption('Day')}
               style={[
@@ -174,7 +175,7 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
                 Year
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
           {selectedCategoryType === 'Day' && (
             <View>
               <BarChartScreen id_family={selectedFamily} />
