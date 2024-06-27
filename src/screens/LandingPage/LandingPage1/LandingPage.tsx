@@ -77,7 +77,9 @@ const LandingPage = ({navigation}: CombinedScreenProps) => {
     // </SafeAreaView>
     <SafeAreaView style={styles.container}>
       <View style={{padding: 10}}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          //onPress={() => navigation.goBack()}
+          onPress={handleGoButtonPress}>
           <MaterialIcons
             name="chevron-left"
             size={45}

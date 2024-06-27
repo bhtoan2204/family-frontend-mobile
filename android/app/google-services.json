@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "294131212826",
+    "project_id": "famfund-d9403",
+    "storage_bucket": "famfund-d9403.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:294131212826:android:4fe8183f5e15781a8fe7a3",
+        "android_client_info": {
+          "package_name": "com.anonymous.mobile_shell"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnaPPxdCXP8Z8wvMnkQ_jhBvVJMeyUApw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
