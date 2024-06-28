@@ -115,6 +115,27 @@ const ExpenseServices = {
       }
       
     },
+    getExpenseByDateRange: async (page: number, itemsPerPage: number, option: number,  id_family?: number) => {
+
+      try {
+        const response: AxiosResponse = await instance.get(
+          `${baseUrl}/api/v1/finance/expensediture/getExpenseByDateRange/${id_family}`,
+          {
+            params: {
+              page, itemsPerPage, option
+            }
+          }
+        );
+        if (response.status === 200) {
+          return response.data;
+        } else {
+          console.error('Error in getExpenseByDateRange');
+        }
+      } catch (error: any) {
+        console.error('Error in getExpenseByDateRange:', error.message);
+      }
+      
+    },
     createExpense: async (id_family: number | null, amount: number | null, id_created_by: string, id_expense_type?: number, expenditure_date?: Date, description?: string) => {
       try {
 

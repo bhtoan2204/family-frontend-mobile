@@ -217,23 +217,24 @@ const ChatServices = {
 
   sendVideoMessage: async ( id_user: string | undefined, uri: string) => {
     try {
-      const createFormData = (uri: string): FormData => {
+      const createFormData = (uri: string, id_user:  string | undefined): FormData => {
         let formData = new FormData();
         let filename = uri.split('/').pop()!;
         let match = /\.(\w+)$/.exec(filename);
         let type = match ? `video/${match[1]}` : `video`;
-        formData.append('video', {
+        const file = {
           uri,
           name: filename,
           type,
-        });
+        };
+        formData.append('video', file);
         formData.append('receiverId', String(id_user));
 
         return formData;
       };
-      const response: AxiosResponse = await instance.put(
+      const response: AxiosResponse = await instance.post(
         `${baseUrl}/api/v1/chat/sendVideoMessage`,
-        createFormData(uri),
+        createFormData(uri, id_user),
         {
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -243,9 +244,8 @@ const ChatServices = {
           
         },
       );
-      console.log(response);
       if (response.status === 200) {
-        return response.data.data.fileUrl;
+        return response.data;
       } else {
         throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
       }

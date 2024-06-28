@@ -169,8 +169,8 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
                         color: categoryColors[choosenCategoryIndex].textColor,
                       }}>
                       {item.category && item.category.title && (
-  <Text>{item.category.title}</Text>
-)}
+                        <Text>{item.category.title}</Text>
+                      )}
 
                     </Text>
                   </View>

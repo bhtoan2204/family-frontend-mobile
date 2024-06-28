@@ -306,7 +306,7 @@ const ChatListScreen = ({
     </Swipeable>
   );
   const handlePressChatFamily = (message: FamilyLastMessage) => {
-    dispatch(setFamilyLastMessage(message))
+    dispatch(setFamilyLastMessage(message));
     navigation.navigate('ChatStack', {
       screen: 'ChatFamily',
       params: { id_family: message.familyId },

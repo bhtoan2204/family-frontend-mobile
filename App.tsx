@@ -4,33 +4,33 @@ import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import NavigationContainer from 'src/navigation';
 import { store } from 'src/redux/store';
+import Notification from 'src/screens/Notifications';
 import { connectSocket } from 'src/services/apiclient/Socket';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
-import * as Notifications from 'expo-notifications';
-
-
+import { MenuProvider } from 'react-native-popup-menu';
+import {
+  BottomSheetModal,
+  BottomSheetView,
+  BottomSheetModalProvider,
+} from '@gorhom/bottom-sheet';
 const App: React.FC = () => {
   useEffect(() => {
     connectSocket();
-
-
-    const notificationListener = Notifications.addNotificationReceivedListener(notification => {
-      console.log('Notification received:', notification);
-    });
-
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener);
-    };
   }, []);
-
+  
   return (
     <Provider store={store}>
       <SafeAreaProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <PaperProvider>
             <ActionSheetProvider>
-              <NavigationContainer />
+              <MenuProvider>
+                <BottomSheetModalProvider>
+
+                  <NavigationContainer />
+                </BottomSheetModalProvider>
+              </MenuProvider>
             </ActionSheetProvider>
           </PaperProvider>
         </GestureHandlerRootView>

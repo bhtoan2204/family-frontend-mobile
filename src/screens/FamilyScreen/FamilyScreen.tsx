@@ -35,7 +35,7 @@ import CheckListImage from 'src/assets/icons/checklist.png';
 import NewsImage from 'src/assets/images/news.png';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectProfile} from 'src/redux/slices/ProfileSclice';
-import {selectfamily} from 'src/redux/slices/FamilySlice';
+import {selectfamily, setForFamily} from 'src/redux/slices/FamilySlice';
 import {AppDispatch} from 'src/redux/store';
 import * as ImagePicker from 'expo-image-picker';
 import {updateFamily} from 'src/redux/slices/FamilySlice';
@@ -109,13 +109,15 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const source =
     family?.avatar && family.avatar !== '[NULL]'
       ? {uri: family.avatar}
-      : require('../../assets/images/big-family_4441180.png');
+      : require('../../assets/images/default_ava.png');
 
   useEffect(() => {
     const fetchFamiliesAndMembers = async () => {
       try {
         const allFamilies = await FamilyServices.getAllFamily();
         setFamily(allFamilies[0]);
+      
+        dispatch(setForFamily(allFamilies[0]));
 
         const membersObject: {[key: number]: Member[]} = {};
 
@@ -123,6 +125,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           const members = await FamilyServices.getAllMembers({
             id_family: family.id_family,
           });
+
           membersObject[family.id_family] = members;
         }
         setFamilies(allFamilies);
@@ -135,6 +138,44 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     };
 
     fetchFamiliesAndMembers();
+
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(shakeAnimation, {
+          toValue: -5,
+          duration: 500,
+          useNativeDriver: true,
+          easing: Easing.linear,
+        }),
+        Animated.timing(shakeAnimation, {
+          toValue: 15,
+          duration: 300,
+          useNativeDriver: true,
+          easing: Easing.linear,
+        }),
+        Animated.timing(shakeAnimationX, {
+          toValue: 10,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+        Animated.timing(shakeAnimationX, {
+          toValue: -10,
+          duration: 100,
+          useNativeDriver: true,
+        }),
+        Animated.timing(shakeAnimationX, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]),
+      {
+        iterations: -1,
+      },
+    );
+
+    animation.start();
+    return () => animation.stop();
   }, []);
 
   const handleDeleteFamily = async (id_family: number) => {
@@ -184,6 +225,10 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
       screen: 'CalendarScreen',
       params: {id_family: family!.id_family},
     });
+  };
+
+  const handleOpenAllMemberModal = (id_family: number) => {
+    navigation.navigate('AllMember', {id_family: id_family});
   };
 
   const handleNavigateGuildLine = () => {
@@ -244,14 +289,10 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     }
   };
 
-  const handleOpenAllMemberModal = (id_family: number) => {
-    navigation.navigate('AllMember', {id_family: id_family});
-  };
-
   const handlePress = (cardId: number) => {
     switch (cardId) {
       case 1:
-        handleOpenAllMemberModal(family!.id_family);
+        handleOpenAllMemberModal(family.id_family);
         break;
       case 2:
         handleChatPress();

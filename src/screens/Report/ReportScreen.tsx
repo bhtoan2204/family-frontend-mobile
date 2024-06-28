@@ -53,7 +53,6 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     }
   };
 
-  // Hàm render cho Expense Analysis Screen
   const renderExpenseAnalysisScreen = () => (
     <View style={{flex: 1}}>
       <Image
@@ -126,7 +125,6 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     </View>
   );
 
-  // Hàm render cho Income Analysis Screen
   const renderIncomeAnalysisScreen = () => (
     <View style={{flex: 1}}>
       <Image
@@ -201,13 +199,18 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
 
   // Hàm render cho Expense vs Income Screen
   const renderExVsInScreen = () => (
-    <View style={{flex: 1}}>
-      <Image
-        source={require('../../assets/images/expense_income.png')}
-        style={{flex: 1, width: '100%', height: '100%'}}
-        resizeMode="contain"
-      />
-    </View>
+    navigation.navigate('ExpenseStack', {screen: 'IncomeExpenseScreen'})
+    // <TouchableOpacity> 
+
+    // <View style={{flex: 1}}>
+    //   <Image
+    //     source={require('../../assets/images/expense_income.png')}
+    //     style={{flex: 1, width: '100%', height: '100%'}}
+    //     resizeMode="contain"
+    //   />
+    // </View>
+    // </TouchableOpacity>
+
   );
 
   // Hàm chính để quyết định màn hình nào được hiển thị

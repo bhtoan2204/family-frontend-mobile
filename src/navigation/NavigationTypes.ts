@@ -23,6 +23,8 @@ export type ExpenseStackParamList = {
     id_family: number | undefined;
   };
   ChartExpense: undefined;
+  IncomeExpenseScreen: undefined;
+
 };
 
 export type IncomeStackParamList = {
@@ -49,6 +51,15 @@ export interface ChartExpenseProps {
   route: RouteProp<ExpenseStackParamList, 'ChartExpense'>;
 }
 
+type IncomeExpenseScreenNavigationProp = NativeStackNavigationProp<
+  ExpenseStackParamList,
+  'IncomeExpenseScreen'
+>;
+
+export interface IncomeExpenseScreenProps {
+  navigation: IncomeExpenseScreenNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'IncomeExpenseScreen'>;
+}
 type CategoryExpenseScreenNavigationProp = NativeStackNavigationProp<
   ExpenseStackParamList,
   'CategoryExpense'

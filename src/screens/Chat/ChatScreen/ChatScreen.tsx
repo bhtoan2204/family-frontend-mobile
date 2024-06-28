@@ -144,12 +144,10 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
     try {
       
       const response = await ChatServices.sendVideoMessage(receiverId, uri)
-      const data = await response.json();
+      const data: Message = response;
       if (response) {
-
-      } else {
-        throw new Error('Failed to send video');
-      }
+        fetchNewMessages(data);
+      } 
     } catch (error) {
       throw new Error('API request failed');
     }
@@ -220,39 +218,32 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
           }
         } else if (asset.type === 'video') {
           const savedAsset = await MediaLibrary.createAssetAsync(uri);
-          console.log('Created Asset info:', savedAsset);
   
           if (!savedAsset) {
-            console.error('No asset information returned from MediaLibrary');
-            Alert.alert('Error', 'Failed to save video to media library.');
             return;
           }
   
           const assetInfo = await MediaLibrary.getAssetInfoAsync(savedAsset.id);
-          console.log('Asset Info:', assetInfo);
   
           if (assetInfo && assetInfo.localUri) {
             const fileInfo = await FileSystem.getInfoAsync(assetInfo.localUri);
             console.log('File info:', fileInfo);
   
             if (fileInfo.exists && fileInfo.size && fileInfo.size < MAX_FILE_SIZE) {
-              await sendVideoMessage(assetInfo.localUri);
+              await sendVideoMessage(uri);
             } else {
               Alert.alert('Selected file size exceeds the limit or could not determine file size');
             }
           } else {
-            console.error('Could not retrieve local URI for the video');
             Alert.alert('Error', 'Failed to retrieve local URI for the video.');
           }
         } else {
           Alert.alert('Unsupported file type');
         }
       } else {
-        console.error('No valid assets returned from ImagePicker');
         Alert.alert('Error', 'No valid assets returned from ImagePicker');
       }
     } catch (error) {
-      console.error('Error opening image library:', error);
       Alert.alert('Error opening image library. Please try again.');
     }
   };

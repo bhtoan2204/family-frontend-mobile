@@ -112,6 +112,27 @@ const IncomeServices = {
       }
       
     },
+    getIncomeByDateRange: async (page: number, itemsPerPage: number, option: number,  id_family?: number) => {
+
+      try {
+        const response: AxiosResponse = await instance.get(
+          `${baseUrl}/api/v1/finance/income/getIncomeByDateRange/${id_family}`,
+          {
+            params: {
+              page, itemsPerPage, option
+            }
+          }
+        );
+        if (response.status === 200) {
+          return response.data;
+        } else {
+          console.error('Error in getIncomeByDateRange');
+        }
+      } catch (error: any) {
+        console.error('Error in getIncomeByDateRange:', error.message);
+      }
+      
+    },
     createIncome: async (id_family: number | null, amount: number | null, id_created_by: string, id_income_source?: number, income_date?: Date, description?: string) => {
       try {
 

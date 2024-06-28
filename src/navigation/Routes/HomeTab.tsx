@@ -13,7 +13,6 @@ import BottomSheetChild from 'src/screens/HomeScreen/BottomSheetContent';
 import CategoryExpenseScreen from 'src/screens/ExpenseScreen/CategoryScreen';
 import WalletScreen from 'src/screens/ExpenseScreen/WalletScreen';
 import FamilyScreen from 'src/screens/ExpenseScreen/FamilyScreen';
-import CreateInvoiceScreen from 'src/screens/Invoice/CreateInvoice/CreateInvoice';
 import ProfileScreen from 'src/screens/ProfileScreen';
 import ChangePassword from 'src/screens/ProfileScreen/ChangePassword/ChangePassword';
 import EditProfileScreen from 'src/screens/ProfileScreen/EditProfileScreen/EditProfileScreen';

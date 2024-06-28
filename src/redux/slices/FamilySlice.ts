@@ -26,7 +26,7 @@ interface FamilyState {
     initialState,
     reducers: {
   
-      setFamily(state, action: PayloadAction<Family>) {
+      setForFamily(state, action: PayloadAction<Family>) {
         state.family = action.payload;
   
       },
@@ -37,7 +37,7 @@ interface FamilyState {
     },
   });
   
-  export const { setFamily, updateFamily } = familySlice.actions;
+  export const { setForFamily, updateFamily } = familySlice.actions;
   
   export const selectfamily = (state: RootState) => state.family.family;
   
