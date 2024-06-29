@@ -6,4 +6,5 @@ export interface Expenditure {
     description: string;
     name: string;
     expense_category: string;
+    image_url: string;
 }

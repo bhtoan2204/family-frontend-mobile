@@ -1,34 +1,38 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import moment from 'moment';
 import { RootState } from '../store';
 
-interface ExpenseAnalysisState {
-  selectedOption: 'Day' | 'Month' | 'Year';
-  selectedDate: string;
+export interface Expenditure {
+  id_expenditure: number;
+  id_expense_type: number;
+  expense_amount: string;
+  expenditure_date: string;
+  description: string;
+  name: string;
+  expense_category: string;
+  image_url: string;
 }
 
-const initialState: ExpenseAnalysisState = {
-  selectedOption: 'Day',
-  selectedDate: new Date().toISOString().split('T')[0],
+interface ExpenseSliceState {
+  expense: Expenditure | null; 
+}
+
+const initialState: ExpenseSliceState = {
+  expense: null,
 };
 
-const expenseAnalysisSlice = createSlice({
-  name: 'expenseAnalysis',
+const expenseSlice = createSlice({
+  name: 'expense',
   initialState,
   reducers: {
-    setSelectedOption(state, action: PayloadAction<'Day' | 'Month' | 'Year'>) {
-      state.selectedOption = action.payload;
-    },
-    setSelectedDate(state, action: PayloadAction<string>) {
-      state.selectedDate = action.payload;
+    setExpense: (state, action: PayloadAction<Expenditure>) => {
+      state.expense = action.payload;
     },
   },
 });
 
-export const { setSelectedOption, setSelectedDate } = expenseAnalysisSlice.actions;
+export const { setExpense } = expenseSlice.actions;
 
-export const getOption= (state: RootState) => state.expenseAnalysis.selectedOption;
-export const getDate= (state: RootState) => state.expenseAnalysis.selectedDate;
+export const selectExpense = (state: RootState) => state.expense.expense;
 
-export default expenseAnalysisSlice.reducer;
+export default expenseSlice.reducer;

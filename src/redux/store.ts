@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import profileReducer from './slices/ProfileSclice';
 import checkListReducer from './slices/CheckListSlice';
 import financeReducer from './slices/FinanceSlice';
-import expenseAnalysisReducer from './slices/ExpenseAnalysis';
+import expenseReducer from './slices/ExpenseAnalysis';
 import calendarReducer from './slices/CalendarSlice';
 import incomeAnalysisReducer from './slices/IncomeAnalysis';
 import forgorPasswordReducer from './slices/ForgotPassword';
@@ -17,7 +17,7 @@ export const store = configureStore({
     family: familyReducer,
     checklist: checkListReducer,
     finance: financeReducer,
-    expenseAnalysis: expenseAnalysisReducer,
+    expense: expenseReducer,
     calendar: calendarReducer,
     incomeAnalysis: incomeAnalysisReducer,
     forgorPassword: forgorPasswordReducer,

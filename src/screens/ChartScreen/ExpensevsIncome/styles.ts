@@ -2,77 +2,89 @@ import { StyleSheet } from 'react-native';
 import { COLORS } from 'src/constants';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-  },
   headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    backgroundColor: 'transparent',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    backgroundColor: '#ccc', 
-    borderBottomWidth: 1,
-    borderBottomColor: '#cccccc', 
-  },
-  headerButton: {
-    padding: 10,
-  },
-  backButton: {
-    color: '#333333',
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333333', 
+    marginBottom: 20,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    height: '7%',
+    marginHorizontal: 10,
   },
   headerTitleContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
     alignItems: 'center',
+    marginLeft: 15,
   },
-  filterButton: {
-    color: '#333333', 
+  headerButton: {
+    paddingHorizontal: 0,
   },
+  headerText: {
+    fontSize: 18,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+
   containerTab: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: '#f0f0f0', 
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#cccccc',
+    backgroundColor: COLORS.lightGray,
+    borderRadius: 20,
+    marginVertical: 10,
+    marginHorizontal: 20,
+    overflow: 'hidden',
   },
   tabButton: {
     flex: 1,
-    paddingVertical: 15,
+    paddingVertical: 10,
+    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: COLORS.white,
   },
   selectedTabButton: {
-    borderBottomWidth: 2,
-    borderBottomColor: '#333333',
+    backgroundColor: COLORS.BlueLight,
   },
   tabButtonText: {
+    color: '#ccc',
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333333',
+    fontWeight: '500',
+  },
+  selectedTabText: {
+    color: COLORS.white,
   },
   bottomLine: {
     position: 'absolute',
     bottom: 0,
-    height: 2,
     width: '50%',
-    backgroundColor: '#333333', 
+    height: 4,
+    backgroundColor: COLORS.primary,
+    transition: 'left 0.3s',
+  },
+  container: {
+    flex: 1,
+  },
+  
+  backButton: {
+    color: 'white',
+  },
+  filterButton:{
+    color: 'white',
+  },
+  forwardIcon: {
+   marginLeft: 10,
   },
   sumContainer: {
     paddingHorizontal: 10,
     paddingVertical: 10,
-    backgroundColor: 'white', 
+    backgroundColor: '#f0f0f0', 
     borderBottomWidth: 1,
     borderBottomColor: '#ccc', 
+    flexDirection: 'row',
   },
   sumText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333333', 
+    color: 'gray', 
   },
   expenseItem: {
     padding: 10,
@@ -147,6 +159,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'red',
   },  
+  amount: {
+    fontSize: 14,
+  },  
   incomeAmount: {
     fontSize: 14,
     color: 'green',
@@ -159,6 +174,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
+    
   },
   modalBackground: {
     width: '100%',
@@ -181,6 +197,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 5,
   },
   paginationContainer: {
     flexDirection: 'row',
@@ -192,6 +209,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     fontSize: 16,
     color: '#333',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

@@ -1,11 +1,11 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ExpenditureScreen from 'src/screens/ExpenseScreen';
-import { CategoryExpenseScreenProps, ChartExpenseProps, ExpenditureScreenProps, FamilySpecProps } from '../NavigationTypes';
+import { CategoryExpenseScreenProps, ChartExpenseProps, ExpenditureScreenProps, ExpenseDetailScreenProps, FamilySpecProps, IncomeExpenseScreenProps } from '../NavigationTypes';
 import CategoryExpenseScreen from 'src/screens/ExpenseScreen/CategoryScreen';
 import FamilySpec from 'src/screens/ExpenseScreen/FamilySpec';
 import ChartExpenseScreen from 'src/screens/ChartScreen/ChartExpense';
-import IncomeExpenseScreen from 'src/screens/ChartScreen/ExpensevsIncome/Details';
-
+import IncomeExpenseScreen from 'src/screens/ChartScreen/ExpensevsIncome/ExpensevsIncome';
+import ExpenseDetailScreen from 'src/screens/ChartScreen/Details/ExpenseDetails';
 const Stack = createNativeStackNavigator();
 
 const ExpenseStack = () => {
@@ -20,7 +20,8 @@ const ExpenseStack = () => {
      <Stack.Screen name="CategoryExpense">{(props) => <CategoryExpenseScreen {...props as CategoryExpenseScreenProps} />}</Stack.Screen>
      <Stack.Screen name="FamilySpec">{(props) => <FamilySpec {...props as FamilySpecProps} />}</Stack.Screen>
      <Stack.Screen name="ChartExpense">{(props) => <ChartExpenseScreen {...props as ChartExpenseProps} />}</Stack.Screen>
-     <Stack.Screen name="IncomeExpenseScreen">{(props) => <IncomeExpenseScreen {...props as IncomeExpenseScreen} />}</Stack.Screen>
+     <Stack.Screen name="IncomeExpenseScreen">{(props) => <IncomeExpenseScreen {...props as IncomeExpenseScreenProps} />}</Stack.Screen>
+     <Stack.Screen name="ExpenseDetailScreen">{(props) => <ExpenseDetailScreen {...props as ExpenseDetailScreenProps} />}</Stack.Screen>
 
     </Stack.Navigator>
   );

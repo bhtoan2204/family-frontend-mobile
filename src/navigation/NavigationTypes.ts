@@ -24,7 +24,7 @@ export type ExpenseStackParamList = {
   };
   ChartExpense: undefined;
   IncomeExpenseScreen: undefined;
-
+  ExpenseDetailScreen: undefined;
 };
 
 export type IncomeStackParamList = {
@@ -60,6 +60,17 @@ export interface IncomeExpenseScreenProps {
   navigation: IncomeExpenseScreenNavigationProp;
   route: RouteProp<ExpenseStackParamList, 'IncomeExpenseScreen'>;
 }
+
+type ExpenseDetailScreenNavigationProp = NativeStackNavigationProp<
+  ExpenseStackParamList,
+  'ExpenseDetailScreen'
+>;
+
+export interface ExpenseDetailScreenProps {
+  navigation: ExpenseDetailScreenNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'ExpenseDetailScreen'>;
+}
+
 type CategoryExpenseScreenNavigationProp = NativeStackNavigationProp<
   ExpenseStackParamList,
   'CategoryExpense'

@@ -111,34 +111,37 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
       ? {uri: family.avatar}
       : require('../../assets/images/default_ava.png');
 
-  useEffect(() => {
-    const fetchFamiliesAndMembers = async () => {
-      try {
-        const allFamilies = await FamilyServices.getAllFamily();
-        setFamily(allFamilies[0]);
-      
-        dispatch(setForFamily(allFamilies[0]));
+  const fetchFamiliesAndMembers = async () => {
+    try {
+      const allFamilies = await FamilyServices.getAllFamily();
+      setFamily(allFamilies[0]);
+      setFamilies(allFamilies);
 
-        const membersObject: {[key: number]: Member[]} = {};
+      dispatch(setForFamily(allFamilies[0]));
 
-        for (const family of allFamilies) {
-          const members = await FamilyServices.getAllMembers({
-            id_family: family.id_family,
-          });
+      const membersObject: {[key: number]: Member[]} = {};
 
-          membersObject[family.id_family] = members;
-        }
-        setFamilies(allFamilies);
+      for (const family of allFamilies) {
+        const members = await FamilyServices.getAllMembers({
+          id_family: family.id_family,
+        });
+        membersObject[family.id_family] = members;
         setMembersMap(membersObject);
-      } catch (error) {
-        console.error('Error fetching families or members:', error);
-      } finally {
-        setIsLoading(false);
       }
-    };
-
+    
+      
+    } catch (error) {
+      console.error('Error fetching families or members:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    
     fetchFamiliesAndMembers();
+  },[]);
 
+  useEffect(() => {
     const animation = Animated.loop(
       Animated.sequence([
         Animated.timing(shakeAnimation, {
@@ -317,7 +320,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
 
   const rotate = rotateAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '180deg'], // Xoay từ 0 đến 180 độ
+    outputRange: ['0deg', '180deg'],
   });
 
   if (isLoading || family === null) {

@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Dimensions, StyleSheet, FlatList, TouchableOpacity, Modal, Image, ImageBackground, SafeAreaView } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, FlatList, TouchableOpacity, Modal, Image, ImageBackground, SafeAreaView, ActivityIndicator } from 'react-native';
 import moment from 'moment';
 import { Expenditure } from 'src/interface/expense/getExpense';
 import { Income } from 'src/interface/income/getIncome';
 import { Family } from 'src/interface/family/family';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectfamily } from 'src/redux/slices/FamilySlice';
 import { ExpenseServices, IncomeServices } from 'src/services/apiclient';
 import styles from './styles';
 import { IncomeExpenseScreenProps } from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS } from 'src/constants';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
+import { setExpense } from 'src/redux/slices/ExpenseAnalysis';
 
 const screenWidth = Dimensions.get('window').width;
 
 const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
   const [expenses, setExpenses] = useState<Expenditure[]>([]);
   const [income, setIncome] = useState<Income[]>([]);
-  const [filteredExpenses, setFilteredExpenses] = useState<Expenditure[]>([]);
-  const [filteredIncome, setFilteredIncome] = useState<Income[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPageExpense, setCurrentPageExpense] = useState<number>(1);
+  const [currentPageIncome, setCurrentPageIncome] = useState<number>(1);
+
   const [totalPageExpense, setTotalPageExpense] = useState<number>(1);
   const [totalPageIncome, setTotalPageIncome] = useState<number>(1);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
@@ -33,56 +35,69 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
   const familyUri = 'https://t3.ftcdn.net/jpg/06/75/38/14/360_F_675381468_yjYEK9SvCRYpRUyKNRWsnArIalbMeBU4.jpg';
   const family = useSelector(selectfamily);
   const itemsPerPage = 10;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  let profile = useSelector(selectProfile);
+  const dispatch = useDispatch();
 
-  const fetchDataExpense = async () => {
+  const fetchDataExpense = async (page: number, reset: boolean = false) => {
+    setIsLoading(true);
     try {
-      const response = await ExpenseServices.getExpenseByDateRange(currentPage, itemsPerPage, selectedFilter, family.id_family);
+      const response = await ExpenseServices.getExpenseByDateRange(page, itemsPerPage, selectedFilter, family.id_family);
       setTotalPageExpense(response.total_pages);
-      setExpenses(prevExpenses => [...prevExpenses, ...response.expenses]);
+      setExpenses(prevExpenses => reset ? response.expenses : [...prevExpenses, ...response.expenses]);
+      setSumExpense(response.total_expense);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const fetchDataIncome = async () => {
+  const fetchDataIncome = async (page: number, reset: boolean = false) => {
+    setIsLoading(true);
     try {
-      const response = await IncomeServices.getIncomeByDateRange(currentPage, itemsPerPage, selectedFilter, family.id_family);
+      const response = await IncomeServices.getIncomeByDateRange(page, itemsPerPage, selectedFilter, family.id_family);
       setTotalPageIncome(response.total_pages);
-      setIncome(prevIncome => [...prevIncome, ...response.income]);
+      setIncome(prevIncome => reset ? response.income : [...prevIncome, ...response.income]);
+      setSumIncome(response.total_income);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
+  useEffect(() => {
+    setCurrentPageExpense(1);
+
+      fetchDataExpense(currentPageExpense, true);
+    
+  }, [selectedFilter]);
 
   useEffect(() => {
-    if (selectedCategoryType === 'Expense') {
-      fetchDataExpense();
-    }
-  }, [selectedCategoryType, currentPage]);
+
+      fetchDataExpense(currentPageExpense, true);
+    
+  }, [currentPageExpense]);
 
   useEffect(() => {
-    if (selectedCategoryType === 'Income') {
-      fetchDataIncome();
-    }
-  }, [selectedCategoryType, currentPage]);
 
-  const loadMoreData = () => {
-    if (selectedCategoryType === 'Expense' && currentPage < totalPageExpense) {
-      setCurrentPage(prevPage => prevPage + 1);
-    } else if (selectedCategoryType === 'Income' && currentPage < totalPageIncome) {
-      setCurrentPage(prevPage => prevPage + 1);
-    }
-  };
+      fetchDataIncome(currentPageIncome, true);
+    
+  }, [currentPageIncome]);
+
+  useEffect(() => {
+    setCurrentPageIncome(1);
+
+      fetchDataIncome(currentPageIncome, true);
+    
+  }, [selectedFilter]);
 
   const filter = (option: number) => {
     setFilterModalVisible(false);
     setSelectedFilter(option);
-    setCurrentPage(1); 
-    if (selectedCategoryType === 'Expense') {
-      setExpenses([]);
-    } else {
-      setIncome([]);
-    }
+    setCurrentPageExpense(1);
+    setCurrentPageIncome(1);
+
   };
 
   const formatDate = (isoDateTime: string) => {
@@ -91,27 +106,40 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
 
   const selectOption = (option: string) => {
     setSelectedCategoryType(option);
-  };
+ 
 
+  };
+  const formatCurrency = (amount: any) => {
+    return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  };
+  const handlePressExpenseItem = async (item: Expenditure)=> {
+    console.log(item);
+    await dispatch(setExpense(item));
+    navigation.navigate('ExpenseDetailScreen');
+  }
   const renderExpenseItem = ({ item }: { item: Expenditure }) => (
-    <TouchableOpacity style={styles.expenseItem}>
+    <TouchableOpacity onPress={() => {handlePressExpenseItem(item)}} style={styles.expenseItem}>
       <View style={styles.itemContainer}>
         <View style={styles.expenseContent}>
           <View>
             <Text style={styles.expenseCategory}>{item.expense_category}</Text>
             <View style={styles.row}>
-              <Text>Amount: </Text>
-              <Text style={styles.expenseAmount}>-{item.expense_amount}đ</Text>
-            </View>
+              <Text style={styles.amount}>Amount: </Text>
+              <Text style={styles.expenseAmount}>-{formatCurrency(item.expense_amount)}</Text>
+              </View>
             <Text style={styles.expenseDescription}>{item.description}</Text>
           </View>
-          <View style={{ justifyContent: 'center' }}>
+          <View style={{ justifyContent: 'center', }}>
             <View style={styles.row}>
               <Text>By: </Text>
               <Text style={styles.expenseName}>{item.name}</Text>
+              <Icon name="chevron-forward" size={20} style={styles.forwardIcon} />
+
             </View>
             <Text style={styles.expenseDate}>{formatDate(item.expenditure_date)}</Text>
+         
           </View>
+         
         </View>
       </View>
     </TouchableOpacity>
@@ -125,7 +153,7 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
             <Text style={styles.expenseCategory}>{item.income_category}</Text>
             <View style={styles.row}>
               <Text>Amount: </Text>
-              <Text style={styles.incomeAmount}>+{item.income_amount}đ</Text>
+            <Text style={styles.incomeAmount}>+{formatCurrency(item.income_amount)}</Text>
             </View>
             <Text style={styles.expenseDescription}>{item.description}</Text>
           </View>
@@ -133,6 +161,8 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
             <View style={styles.row}>
               <Text>By: </Text>
               <Text style={styles.expenseName}>{item.name}</Text>
+              <Icon name="chevron-forward" size={20} style={styles.forwardIcon} />
+
             </View>
             <Text style={styles.expenseDate}>{formatDate(item.income_date)}</Text>
           </View>
@@ -147,34 +177,48 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
   };
 
 
-  const handlePrevPage = () => {
-    setCurrentPage(prevPage => prevPage - 1);
-  };
-  const handleNextPage = () => {
-    setCurrentPage(prevPage => prevPage + 1);
-  };
-  
-  const renderPagination = () => {
+
+  const renderPaginationExpense = () => {
     const totalPages = totalPageExpense;
     return (
       <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 10 }}>
         <TouchableOpacity
-          onPress={handlePrevPage}
-          disabled={currentPage === 1}
+          onPress={ () => setCurrentPageExpense(currentPageExpense - 1)}
+          disabled={currentPageExpense === 1}
           style={{ paddingHorizontal: 10 }}>
-          <Text style={{ color: currentPage === 1 ? COLORS.gray : COLORS.primary }}>Prev</Text>
+          <Text style={{ color: currentPageExpense === 1 ? COLORS.gray : COLORS.primary }}>Prev</Text>
         </TouchableOpacity>
-        <Text>{currentPage} / {totalPages}</Text>
+        <Text>{currentPageExpense} / {totalPages}</Text>
         <TouchableOpacity
-          onPress={handleNextPage}
-          disabled={currentPage === totalPages}
+          onPress={()=> setCurrentPageExpense(currentPageExpense + 1)}
+          disabled={currentPageExpense === totalPages}
           style={{ paddingHorizontal: 10 }}>
-          <Text style={{ color: currentPage === totalPages ? COLORS.gray : COLORS.primary }}>Next</Text>
+          <Text style={{ color: currentPageExpense === totalPages ? COLORS.gray : COLORS.primary }}>Next</Text>
         </TouchableOpacity>
       </View>
     );
   };
-  
+
+  const renderPaginationIncome = () => {
+    const totalPages = totalPageIncome;
+    return (
+      <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 10 }}>
+        <TouchableOpacity
+          onPress={() => setCurrentPageIncome(currentPageIncome - 1)}
+          disabled={currentPageIncome === 1}
+          style={{ paddingHorizontal: 10 }}>
+          <Text style={{ color: currentPageIncome === 1 ? COLORS.gray : COLORS.primary }}>Prev</Text>
+        </TouchableOpacity>
+        <Text>{currentPageIncome} / {totalPages}</Text>
+        <TouchableOpacity
+          onPress={() => setCurrentPageIncome(currentPageIncome + 1)}
+          disabled={currentPageIncome === totalPages}
+          style={{ paddingHorizontal: 10 }}>
+          <Text style={{ color: currentPageIncome === totalPages ? COLORS.gray : COLORS.primary }}>Next</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <ImageBackground
@@ -183,61 +227,109 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
       resizeMode="stretch">
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.container}>
+
           <View style={styles.headerContainer}>
-            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerButton}>
+            <TouchableOpacity
+              onPress={() =>
+                //navigation.navigate('HomeTab', {screen: 'Expense'})
+                navigation.goBack()
+              }
+              style={styles.headerButton}>
               <Icon name="arrow-back" size={30} style={styles.backButton} />
             </TouchableOpacity>
             <View style={styles.headerTitleContainer}>
-              <Text style={styles.headerText}>Expense Analysis</Text>
+              <Text style={styles.headerText}>Expense vs Income</Text>
             </View>
-            <TouchableOpacity style={styles.headerButton} onPress={() => setFilterModalVisible(!filterModalVisible)}>
+            <TouchableOpacity
+              style={styles.headerButton}
+              onPress={() => setFilterModalVisible(!filterModalVisible)}>
               <Icon name="filter" size={30} style={styles.filterButton} />
             </TouchableOpacity>
           </View>
+          <View
+            style={{
+              flexDirection: 'column',
+              marginHorizontal: 20,
+              bottom: 5,
+              marginBottom: 20,
+            }}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: '600',
+                marginBottom: 5,
+                color: 'white',
+              }}>
+              Hello, {profile.firstname}
+            </Text>
+            <Text style={{fontSize: 15, color: 'white'}}>
+            Manage your finances efficiently with a clear view of your income and expenses.
 
+            </Text>
+          </View>
+        <View style={{backgroundColor: '#f0f0f0', flex: 1,}}>
           <View style={styles.containerTab}>
             <TouchableOpacity
               onPress={() => selectOption('Income')}
-              style={[styles.tabButton, selectedCategoryType === 'Income' && styles.selectedTabButton]}>
-              <Text style={styles.tabButtonText}>Income</Text>
+              style={[
+                styles.tabButton,
+                selectedCategoryType === 'Income' && styles.selectedTabButton,
+                { borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }
+              ]}>
+              <Text style={[styles.tabButtonText, selectedCategoryType === 'Income' && styles.selectedTabText]}>Income</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => selectOption('Expense')}
-              style={[styles.tabButton, selectedCategoryType === 'Expense' && styles.selectedTabButton]}>
-              <Text style={styles.tabButtonText}>Expense</Text>
+              style={[
+                styles.tabButton,
+                selectedCategoryType === 'Expense' && styles.selectedTabButton,
+                { borderTopRightRadius: 20, borderBottomRightRadius: 20 }
+              ]}>
+              <Text style={[styles.tabButtonText, selectedCategoryType === 'Expense' && styles.selectedTabText]}>Expense</Text>
             </TouchableOpacity>
-            <View style={[styles.bottomLine, { left: selectedCategoryType === 'Income' ? 0 : '50%' }]} />
+            <View
+              style={[
+                styles.bottomLine,
+                { left: selectedCategoryType === 'Income' ? 0 : '50%', borderRadius: 20 }
+              ]}
+            />
           </View>
+
+
           {selectedCategoryType === 'Expense' && (
             <View style={styles.sumContainer}>
-              <Text style={styles.sumText}>Total Expense: {sumExpense}</Text>
-            </View>
+              <Text style={styles.sumText}>Total Expense: </Text>
+              <Text style={[styles.sumText, { color: 'red' }]}>-{formatCurrency(sumExpense)} </Text>
+              </View>
           )}
           {selectedCategoryType === 'Income' && (
             <View style={styles.sumContainer}>
-              <Text style={styles.sumText}>Total Income: {sumIncome}</Text>
+              <Text style={styles.sumText}>Total Income: </Text>
+              <Text style={[styles.sumText, { color: 'green' }]}> +{formatCurrency(sumIncome)} </Text>
+              </View>
+          )}
+           {isLoading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color={COLORS.primary} />
             </View>
+          ) : selectedCategoryType === 'Expense' ? (
+            <FlatList
+              data={expenses}
+              renderItem={renderExpenseItem}
+              keyExtractor={(item, index) => `${item.id_expenditure}_${index}`}
+              onEndReachedThreshold={0.1}
+              ListFooterComponent={renderPaginationExpense}
+            />
+          ) : (
+            <FlatList
+              data={income}
+              renderItem={renderIncomeItem}
+              keyExtractor={(item, index) => `${item.id_income_source}_${index}`}
+              onEndReachedThreshold={0.1}
+              ListFooterComponent={renderPaginationIncome}
+            />
           )}
-          {/* {selectedCategoryType === 'Expense' && (
-            // <FlatList
-            //   data={expenses}
-            //   renderItem={renderExpenseItem}
-            //   keyExtractor={(item, index) => `${item.id_expenditure}_${index}`}
-            //   onEndReached={loadMoreData}
-            //   onEndReachedThreshold={0.1}
-            //   ListFooterComponent={renderPagination}
-            //   />
-          )}
-          {selectedCategoryType === 'Income' && (
-            // <FlatList
-            //   data={income}
-            //   renderItem={renderIncomeItem}
-            //   keyExtractor={(item, index) => `${item.id_income_source}_${index}`}
-            //   onEndReached={loadMoreData}
-            //   onEndReachedThreshold={0.1}
-            //   ListFooterComponent={renderPagination}
-            //   />
-          )} */}
+       
           <Modal
             visible={filterModalVisible}
             animationType="slide"
@@ -302,8 +394,12 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
             </TouchableOpacity>
           </Modal>
         </View>
+        </View>
+
       </SafeAreaView>
+      
     </ImageBackground>
+
   );
 };
 
