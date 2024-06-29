@@ -5,6 +5,7 @@ import OrderDetailScreen from 'src/screens/OrderDetailScreen';
 import ZaloPayScreen from 'src/screens/ZaloPayScreen';
 import PurchasedScreen from 'src/screens/PurchasedScreen';
 import {PackStackParamList} from '../NavigationTypes';
+import ComboScreen from 'src/screens/ComboScreen';
 
 const Stack = createNativeStackNavigator<PackStackParamList>();
 
@@ -19,7 +20,7 @@ const PackStack = () => {
       <Stack.Screen name="ViewAllPackage" component={PackageScreen} />
       <Stack.Screen name="BankInfoScreen" component={BankInfoScreen} />
       <Stack.Screen name="ViewAllPurchased" component={PurchasedScreen} />
-
+      <Stack.Screen name="ComboScreen" component={ComboScreen} />
     </Stack.Navigator>
   );
 };

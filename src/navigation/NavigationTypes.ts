@@ -270,10 +270,9 @@ export type PackStackParamList = {
   };
   OrderDetailScreen: {
     id_family: number | undefined;
-    
   };
-
   ZaloPayScreen: undefined;
+  ComboScreen: undefined;
 };
 
 /////
@@ -345,7 +344,7 @@ type ChatStackNavigationProp = NativeStackNavigationProp<
   RootParamList,
   'ChatStack'
 >;
-export interface ChattackProps {
+export interface ChatStackProps {
   navigation: ChatStackNavigationProp;
 }
 //
@@ -354,6 +353,9 @@ type ZaloPayScreenNavigationProp = NativeStackNavigationProp<
   'ZaloPayScreen'
 >;
 export type ZaloPayScreenProps = {navigation: ZaloPayScreenNavigationProp};
+
+type ComboScreenNavigationProp = NativeStackNavigationProp<PackStackParamList, 'ComboScreen'>;
+export type ComboScreenProps = { navigation: ComboScreenNavigationProp };
 
 type OrderDetailScreenNavigationProp = NativeStackNavigationProp<
   PackStackParamList,
