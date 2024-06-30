@@ -160,8 +160,32 @@ const ExpenseServices = {
       }
     },
 
+    updateExpense: async (id_expenditure: number | null, id_created_by: number | null, id_expense_type: string, amount?: number, expenditure_date?: Date, description?: string) => {
+      try {
 
-    uploadImageExpense: async (
+        const response: AxiosResponse = await instance.post(
+          `${baseUrl}/api/v1/finance/expensediture/updateExpense`,
+          {
+        
+              id_expenditure,
+              id_created_by,
+              id_expense_type,
+              amount,
+              expenditure_date,
+              description
+            
+          }
+        );
+        if (response.status === 200) {
+          return response.data;
+        } 
+      } catch (error: any) {
+        console.error('Error in updateExpense:', error.message);
+      }
+    },
+    
+
+     uploadImageExpense: async (
       id_family: number | null,
       id_expenditure: number,
       uri: string
@@ -178,24 +202,18 @@ const ExpenseServices = {
             type,
           };
           formData.append('expenseImg', file);
-  
           return formData;
         };
     
         const response: AxiosResponse = await instance.post(
-          `https://api.rancher.io.vn/api/v1/finance/expensediture/uploadImageExpense/${id_family}/${id_expenditure}`,
-          
+          `${baseUrl}/api/v1/finance/expensediture/uploadImageExpense/${id_family}/${id_expenditure}`,
           createFormData(uri),
           {
-            
             headers: {
               'Content-Type': 'multipart/form-data',
               accept: '*/*',
             },
-           
           }
-          
-          
         );
     
         if (response.status === 200) {
@@ -205,6 +223,7 @@ const ExpenseServices = {
         console.error('Error in uploadImageExpense:', error.message);
       }
     },
+    
     
     
 

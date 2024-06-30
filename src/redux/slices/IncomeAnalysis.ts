@@ -3,32 +3,36 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import moment from 'moment';
 import { RootState } from '../store';
 
-interface IncomeAnalysisState {
-  selectedOption: 'Day' | 'Month' | 'Year';
-  selectedDate: string;
+interface Income {
+  id_income: number;
+  id_income_source: number;
+  income_amount: string;
+  income_date: string;
+  description: string;
+  income_category: string;
+  name: string;
 }
 
-const initialState: IncomeAnalysisState = {
-  selectedOption: 'Day',
-  selectedDate: new Date().toISOString().split('T')[0],
+interface IncomeSliceState {
+  income: Income | null; 
+}
+
+const initialState: IncomeSliceState = {
+  income: null,
 };
 
-const incomeAnalysisSlice = createSlice({
-  name: 'incomeAnalysis',
+const incomeSlice = createSlice({
+  name: 'income',
   initialState,
   reducers: {
-    setSelectedOption(state, action: PayloadAction<'Day' | 'Month' | 'Year'>) {
-      state.selectedOption = action.payload;
-    },
-    setSelectedDate(state, action: PayloadAction<string>) {
-      state.selectedDate = action.payload;
+    setIncomeDetails: (state, action: PayloadAction<Income>) => {
+      state.income = action.payload;
     },
   },
 });
 
-export const { setSelectedOption, setSelectedDate } = incomeAnalysisSlice.actions;
+export const { setIncomeDetails } = incomeSlice.actions;
 
-export const getOption= (state: RootState) => state.incomeAnalysis.selectedOption;
-export const getDate= (state: RootState) => state.incomeAnalysis.selectedDate;
+export const getIncome= (state: RootState) => state.income.income;
 
-export default incomeAnalysisSlice.reducer;
+export default incomeSlice.reducer;

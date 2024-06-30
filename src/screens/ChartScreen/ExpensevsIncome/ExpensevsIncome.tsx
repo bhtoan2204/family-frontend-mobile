@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS } from 'src/constants';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import { setExpense } from 'src/redux/slices/ExpenseAnalysis';
-
+import { setIncomeDetails } from 'src/redux/slices/IncomeAnalysis';
 const screenWidth = Dimensions.get('window').width;
 
 const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
@@ -113,7 +113,6 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
     return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   };
   const handlePressExpenseItem = async (item: Expenditure)=> {
-    console.log(item);
     await dispatch(setExpense(item));
     navigation.navigate('ExpenseDetailScreen');
   }
@@ -144,9 +143,13 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
       </View>
     </TouchableOpacity>
   );
-
+  const handlePressIncomeItem = async (item: Income)=> {
+    await dispatch(setIncomeDetails(item));
+    navigation.navigate('IncomeStack', {screen: 'IncomeDetailScreen'});
+  }
+  
   const renderIncomeItem = ({ item }: { item: Income }) => (
-    <TouchableOpacity style={styles.expenseItem}>
+    <TouchableOpacity onPress={() => {handlePressIncomeItem(item)}} style={styles.expenseItem}>
       <View style={styles.itemContainer}>
         <View style={styles.expenseContent}>
           <View>

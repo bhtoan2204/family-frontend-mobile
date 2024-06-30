@@ -4,7 +4,7 @@ import checkListReducer from './slices/CheckListSlice';
 import financeReducer from './slices/FinanceSlice';
 import expenseReducer from './slices/ExpenseAnalysis';
 import calendarReducer from './slices/CalendarSlice';
-import incomeAnalysisReducer from './slices/IncomeAnalysis';
+import incomeReducer from './slices/IncomeAnalysis';
 import forgorPasswordReducer from './slices/ForgotPassword';
 import familyReducer from './slices/FamilySlice';
 import packagedReducer from './slices/PackageSlice';
@@ -19,7 +19,7 @@ export const store = configureStore({
     finance: financeReducer,
     expense: expenseReducer,
     calendar: calendarReducer,
-    incomeAnalysis: incomeAnalysisReducer,
+    income: incomeReducer,
     forgorPassword: forgorPasswordReducer,
     package: packagedReducer,
     messageFamily: messageFamilyReducer,

@@ -28,10 +28,15 @@ const expenseSlice = createSlice({
     setExpense: (state, action: PayloadAction<Expenditure>) => {
       state.expense = action.payload;
     },
+    updateExpense :  (state, action: PayloadAction<Expenditure>) => {
+
+      state.expense = {...state.expense, ...action.payload};
+
+    },
   },
 });
 
-export const { setExpense } = expenseSlice.actions;
+export const { setExpense, updateExpense} = expenseSlice.actions;
 
 export const selectExpense = (state: RootState) => state.expense.expense;
 

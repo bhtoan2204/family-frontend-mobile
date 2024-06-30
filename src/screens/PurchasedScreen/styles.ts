@@ -1,144 +1,93 @@
-import {StyleSheet} from 'react-native';
-import {COLORS} from 'src/constants';
+import { StyleSheet } from 'react-native';
+import { ScreenHeight } from 'react-native-elements/dist/helpers';
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 24,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: COLORS.EerieBlack,
-    marginBottom: 12,
-  },
-  smallText: {
-    fontSize: 15,
-    color: 'black',
-  }
-,  buttonContainer: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginTop: 10,
-  padding: 10,
-},
-  /** Radio */
-  radio: {
-    position: 'relative',
-    backgroundColor: COLORS.white,
-    marginBottom: 12,
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'flex-start',
-    borderWidth: 2,
-    borderColor: 'transparent',
-    shadowColor: COLORS.black,
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-  },
-  radioActive: {
-    borderColor: COLORS.BrandeisBlue1,
-  },
-  radioLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    letterSpacing: 1.2,
-    color: COLORS.gray,
-    textTransform: 'uppercase',
-    marginBottom: 8,
-  },
-  radioPrice: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: COLORS.DarkCharcoal,
-    marginBottom: 12,
-  },
-  radioBadge: {
-    backgroundColor: COLORS.AliceBlue,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-    marginBottom: 12,
-  },
-  radioBadgeText: {
-    fontSize: 15,
-    fontWeight: '500',
-    color: COLORS.BrandeisBlue1,
-  },
-  radioDescription: {
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#848a96',
-  },
-  viewfamilybtn: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  Extendbtn: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: COLORS.Coral,
-    justifyContent: 'flex-end', 
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  viewButton: {
-    backgroundColor: '#4884D3',
-    borderRadius: 5,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-  },
-  radioInput: {
-    position: 'absolute',
-    top: 16,
-    right: 16,
-    width: 24,
-    height: 24,
-    borderRadius: 9999,
-    borderWidth: 2,
-    borderColor: COLORS.SilverFoil,
-  },
-  radioInputActive: {
-    borderWidth: 7,
-    borderColor: COLORS.BrandeisBlue1,
-  },
-  btn: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 6,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: COLORS.BrandeisBlue1,
-    backgroundColor: COLORS.BrandeisBlue1,
-    marginBottom: 12,
-  },
-  btnText: {
-    fontSize: 19,
-    fontWeight: '600',
-    color: COLORS.white,
-  },
-  backButton: {
-    color: COLORS.black,
-  },
-  saveButton: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  headerfile: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 24,
-  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 36,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  backButton: {
+    color: '#333',
+  },
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    height: ScreenHeight*0.12,
+    
+  },
+  button: {
+    flex: 1,
+    backgroundColor: 'lightblue',
+    borderRadius: 10,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    marginRight: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5, 
+  },
+  
+  serviceButton: {
+    backgroundColor: '#AEC6CF',
+  },
+  buttonText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 20,
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  packageName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  infoContainer: {
+    marginBottom: 10,
+  },
+  infoText: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  actions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  actionButton: {
+    backgroundColor: '#007BFF', 
+    borderRadius: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 5,
+  },
+  actionText: {
+    color: '#fff',
+    textAlign: 'center',
   },
 });
 

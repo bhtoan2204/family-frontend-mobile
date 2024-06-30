@@ -112,40 +112,20 @@ const PackageServices = {
   },
 
   //da xong
-  createPaymentURL: async ({
-    id_package,
-    id_family,
-    bankCode,
-    amount,
-    language,
-    method,
-  }: {
-    id_package: number;
-    id_family: number;
-    bankCode: string;
-    amount: number;
-    language: string;
-    method: string;
-  }) => {
+  createPaymentURL: async (id_main_package?: number, bankCode?: string , ) => {
     try {
+      console.log( id_main_package, bankCode)
       const response: AxiosResponse = await instance.post(
         PackageUrl.createPaymentURL,
         {
-          id_package,
-          id_family,
-          bankCode,
-          amount,
-          language,
-          method,
+          id_main_package,
+          bankCode
         },
       );
-      const isSuccess = response.data.isSuccess;
-      const paymentUrl = response.data.paymentUrl;
 
-      console.log('Success:', isSuccess);
-      console.log('Payment URL:', paymentUrl);
 
-      if (response.data.isSuccess === true) {
+
+      if (response.status === 200) {
         return response.data;
       } else {
         throw new Error(ERROR_TEXTS.CREATE_ORDER_ERROR);
