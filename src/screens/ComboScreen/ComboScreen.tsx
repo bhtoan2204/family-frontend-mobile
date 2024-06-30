@@ -8,6 +8,7 @@ import {COLORS, TEXTS} from 'src/constants';
 import {PackageServices} from 'src/services/apiclient';
 import stylesAnalysis from './styles/stylesAnalysis';
 import stylesChat from './styles/stylesChat';
+import stylesCalendar from './styles/stylesCalendar';
 
 const ComboScreen = () => {
   return (
@@ -61,7 +62,6 @@ const ComboScreen = () => {
               style={stylesAnalysis.imageFront}
             />
           </View>
-
           <View style={stylesAnalysis.bottomField}>
             <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/background-bottom.png')}
@@ -74,12 +74,12 @@ const ComboScreen = () => {
               flow with loved ones.
             </Text>
           </View>
-
           <Image
             source={require('../../assets/images/combo-package/Chat/connect.png')}
             resizeMode="stretch"
             style={stylesChat.imageConnect}
           />
+
           <View
             style={{backgroundColor: 'white', height: 2000, zIndex: -1}}></View>
 
@@ -142,6 +142,62 @@ const ComboScreen = () => {
               style={stylesChat.redGradient}
             />
           </View>
+
+          {/* Bat dau Calendar */}
+          <Image
+            source={require('../../assets/images/combo-package/Calendar/background.png')}
+            resizeMode="stretch"
+            style={stylesCalendar.imageBackground}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Calendar/tablet.png')}
+            resizeMode="stretch"
+            style={stylesCalendar.imageTablet}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Calendar/right-side.png')}
+            resizeMode="stretch"
+            style={stylesCalendar.imageRightSide}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Calendar/character.png')}
+            resizeMode="stretch"
+            style={stylesCalendar.imageCharacter}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Calendar/bottom-back.png')}
+            resizeMode="stretch"
+            style={stylesCalendar.imageBottomBack}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Calendar/bottom-front.png')}
+            resizeMode="stretch"
+            style={stylesCalendar.imageFrontBack}
+          />
+          <View style={stylesCalendar.bottomField}></View>
+          <Image
+            source={require('../../assets/images/combo-package/Calendar/blue-circle.png')}
+            resizeMode="stretch"
+            style={stylesCalendar.imageBlueGradient}
+          />
+          <View style={{bottom: 2040}}>
+            <Text style={stylesCalendar.title}>Canlendar & Schedule</Text>
+            <Text style={stylesCalendar.detail}>
+              The shared calendar syncs schedules and activities, ensuring you
+              never miss a birthday or special event.
+            </Text>
+          </View>
+          <Image
+            source={require('../../assets/images/combo-package/Calendar/left-side.png')}
+            resizeMode="stretch"
+            style={stylesCalendar.imageLeftSide}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Calendar/wave.png')}
+            resizeMode="stretch"
+            style={stylesCalendar.imageBottomWave}
+          />
+          <View></View>
         </View>
       </View>
     </ScrollView>

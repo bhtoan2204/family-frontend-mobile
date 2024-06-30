@@ -87,7 +87,6 @@ const stylesChat = StyleSheet.create({
     left: 340,
     bottom: 1100,
   },
-  
   imageBottomBack: {
     height: 119,
     width: 487,
