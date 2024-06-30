@@ -1,14 +1,13 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 
-import {Text, Image, View} from 'react-native';
+import {Text, Image, View, ScrollView} from 'react-native';
 
 import {COLORS, TEXTS} from 'src/constants';
 
 import {PackageServices} from 'src/services/apiclient';
 import stylesAnalysis from './styles/stylesAnalysis';
 import stylesChat from './styles/stylesChat';
-import {ScrollView} from 'react-native-gesture-handler';
 
 const ComboScreen = () => {
   return (
@@ -16,6 +15,11 @@ const ComboScreen = () => {
       <View style={stylesAnalysis.container}>
         <View style={stylesAnalysis.analysis}>
           <View style={{bottom: 10}}>
+            <Image
+              source={require('../../assets/images/combo-package/Analysis_Finance/background-top.png')}
+              resizeMode="stretch"
+              style={stylesAnalysis.imageTop}
+            />
             <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/Information.png')}
               resizeMode="stretch"
@@ -69,18 +73,60 @@ const ComboScreen = () => {
               flow with loved ones.
             </Text>
           </View>
+
           <Image
-            source={require('../../assets/images/combo-package/Analysis_Finance/wave-bottom.png')}
+            source={require('../../assets/images/combo-package/Chat/connect.png')}
             resizeMode="stretch"
-            style={stylesAnalysis.imageBottomWave}
+            style={stylesChat.imageConnect}
           />
-          <Image
-            source={require('../../assets/images/combo-package/Analysis_Finance/background-top.png')}
-            resizeMode="stretch"
-            style={stylesAnalysis.imageTop}
-          />
+          <View
+            style={{backgroundColor: 'white', height: 2000, zIndex: -1}}></View>
+
+          <View style={stylesChat.chat}>
+            <Image
+              source={require('../../assets/images/combo-package/Chat/image-big.png')}
+              resizeMode="stretch"
+              style={stylesChat.imageBig}
+            />
+            <Image
+              source={require('../../assets/images/combo-package/Chat/like.png')}
+              resizeMode="stretch"
+              style={stylesChat.imageLike}
+            />
+            <Image
+              source={require('../../assets/images/combo-package/Chat/thumb-up.png')}
+              resizeMode="stretch"
+              style={stylesChat.imageThumbUp}
+            />
+            <Image
+              source={require('../../assets/images/combo-package/Chat/left-side.png')}
+              resizeMode="stretch"
+              style={stylesChat.imageLeftSide}
+            />
+            <Image
+              source={require('../../assets/images/combo-package/Chat/oval.png')}
+              resizeMode="stretch"
+              style={stylesChat.imageOval}
+            />
+
+            <Text style={stylesChat.title}>Communication Hub</Text>
+            <Text style={stylesChat.detail}>
+              Stay connected with instant messaging. Send texts, photo, emojis
+              and videos privately and securely.
+            </Text>
+
+            <Image
+              source={require('../../assets/images/combo-package/Chat/bottom-back.png')}
+              resizeMode="stretch"
+              style={stylesChat.imageBottomBack}
+            />
+            <Image
+              source={require('../../assets/images/combo-package/Chat/bottom-front.png')}
+              resizeMode="stretch"
+              style={stylesChat.imageBottomFront}
+            />
+          </View>
         </View>
-        <View style={{}}></View>
       </View>
     </ScrollView>
   );

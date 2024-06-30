@@ -9,7 +9,7 @@ const stylesAnalysis = StyleSheet.create({
   imageTop: {
     height: 390,
     width: 402,
-    bottom: 280,
+    top: 180,
     left: 5,
   },
   redGradient: {
@@ -22,7 +22,7 @@ const stylesAnalysis = StyleSheet.create({
   imageCharacter: {
     height: 450,
     width: 206,
-    top: 200,
+    bottom: 200,
     zIndex:1,
   },
   imageInformation: {
@@ -75,7 +75,7 @@ const stylesAnalysis = StyleSheet.create({
     position: 'absolute',
     top: 640,
     left: 0,
-    zIndex:4,
+    zIndex:1,
     backgroundColor: COLORS.Rhino,
   },
   imageBottom: {
