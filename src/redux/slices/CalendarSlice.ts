@@ -28,6 +28,7 @@ const initialState: CalendarState = {
     recurrence_rule: '',
     start_timezone: '',
     end_timezone: '',
+    name_category: '',
   },
   id_family: 0,
   selectDate: (new Date()).toString(),

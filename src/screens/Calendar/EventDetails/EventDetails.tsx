@@ -9,6 +9,8 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import BottomSheet from '../BottomSheet';
 import { getEvent, setOnly } from 'src/redux/slices/CalendarSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { Feather } from '@expo/vector-icons';
+import { COLORS } from 'src/constants';
 const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
     const { id_family, id_calendar } = route.params;
     const [event , setEvent ] = useState<Event>(useSelector(getEvent));
@@ -88,35 +90,60 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Icon name="arrow-left" size={20} color="black" />
                     </TouchableOpacity>
-                </View>
-
-                <View style={styles.headerp}>
                     <Text style={styles.headerText}>Event Detail</Text>
-
                 </View>
+
+               
+
                 <View style={styles.headerp}>
-                    <TouchableOpacity onPress={()=> onUpdate()}> 
-                        <Text style={styles.textDelete}> Edit</Text>
-                    </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={onUpdate}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      backgroundColor: '#00adf5',
+                      padding: 15,
+                      borderRadius: 30,
+                      paddingHorizontal: 20,
+                      shadowColor: '#00adf5',
+                      shadowOffset: {width: 0, height: 4},
+                      shadowOpacity: 0.3,
+                      shadowRadius: 2,
+                    }}>
+                    <Feather name="edit" size={20} color="white" />
+                    <Text style={{marginLeft: 10, fontWeight: '700', color: 'white'}}>
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
                 </View>
 
             </View>
+            <View style={styles.card}>
 
-    <View> 
-        <Text style={styles.title}>{event.title}</Text>
-        <Text style={styles.description}>Description: {event?.description}</Text>
-        <Text style={styles.location}>Location: {event?.location}</Text>
-    </View>
-    
-    
-    <View style={styles.containerBtnDelete}>
-      <TouchableOpacity style={styles.button} onPress={() => onDelete()}>
-        <Text style={styles.textDelete}>Delete event</Text>
-      </TouchableOpacity>
-    </View>
+                <View> 
+                    <Text style={styles.title}>{event.title}</Text>
+                    <Text style={styles.description}>Description: {event?.description}</Text>
+                    <View style={styles.locationContainer}> 
+                      <Text style={styles.location}>Location: </Text>
+                      <Text style={{color: COLORS.DenimBlue,fontSize: 16, }}> {event?.location}</Text>
+                    </View>
+                    <View style={styles.locationContainer}> 
+                    <Text style={styles.location}>Category: </Text>
+                    <Text style={{color: event.color,fontSize: 16, }}> {event?.name_category}</Text>
+                    </View>
+                </View>
+                
+                </View>
 
-        
-    </View>
+                <View style={styles.containerBtnDelete}>
+                  <TouchableOpacity style={styles.button} onPress={() => onDelete()}>
+                    <Text style={styles.textDelete}>Delete event</Text>
+                  </TouchableOpacity>
+                </View>
+
+                    
+                
+            </View>
   );
 };
 

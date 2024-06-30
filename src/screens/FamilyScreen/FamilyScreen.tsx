@@ -220,7 +220,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   };
 
   const handleEducationPress = () => {
-    navigation.navigate('Education', {id_family: family!.id_family});
+    navigation.navigate('FamilyStack', {screen: 'Education',params: {id_family: family!.id_family}});
   };
 
   const handleCalendarPress = () => {
@@ -235,15 +235,15 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   };
 
   const handleNavigateGuildLine = () => {
-    navigation.navigate('GuildLine', {id_family: family!.id_family});
+    navigation.navigate('FamilyStack', {screen: 'GuildLine',params: {id_family: family!.id_family}});
   };
 
   const handleNavigateHouseHold = () => {
-    navigation.navigate('HouseHold', {id_family: family!.id_family});
+    navigation.navigate('FamilyStack', {screen: 'HouseHold', params: {id_family: family!.id_family}});
   };
 
   const handleNavigateChecklist = () => {
-    navigation.navigate('CheckList', {id_family: family!.id_family});
+    navigation.navigate('FamilyStack', {screen: 'CheckList',params: {id_family: family!.id_family}});
   };
 
   const handleSelectFamily = (id_family: number) => {

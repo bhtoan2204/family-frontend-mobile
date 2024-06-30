@@ -13,4 +13,5 @@ export interface Event {
     recurrence_rule: string;
     start_timezone: string;
     end_timezone: string;
+    name_category: string;
   };
