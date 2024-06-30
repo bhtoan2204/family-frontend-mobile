@@ -9,6 +9,7 @@ import {PackageServices} from 'src/services/apiclient';
 import stylesAnalysis from './styles/stylesAnalysis';
 import stylesChat from './styles/stylesChat';
 import stylesCalendar from './styles/stylesCalendar';
+import stylesList from './styles/stylesList';
 
 const ComboScreen = () => {
   return (
@@ -181,7 +182,7 @@ const ComboScreen = () => {
             style={stylesCalendar.imageBlueGradient}
           />
           <View style={{bottom: 2040}}>
-            <Text style={stylesCalendar.title}>Canlendar & Schedule</Text>
+            <Text style={stylesCalendar.title}>Calendar & Schedule</Text>
             <Text style={stylesCalendar.detail}>
               The shared calendar syncs schedules and activities, ensuring you
               never miss a birthday or special event.
@@ -197,7 +198,63 @@ const ComboScreen = () => {
             resizeMode="stretch"
             style={stylesCalendar.imageBottomWave}
           />
-          <View></View>
+
+          {/* Bat dau check list */}
+          <View
+            style={{
+              backgroundColor: '#32546F',
+              height: 640,
+              bottom: 2150,
+            }}></View>
+          <Image
+            source={require('../../assets/images/combo-package/Lists/background.png')}
+            resizeMode="stretch"
+            style={stylesList.background}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Analysis_Finance/red-gradient.png')}
+            resizeMode="stretch"
+            style={stylesList.redGradient}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Lists/list.png')}
+            resizeMode="stretch"
+            style={stylesList.checkList}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Lists/speech-bubble.png')}
+            resizeMode="stretch"
+            style={stylesList.speechBubble}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Lists/character.png')}
+            resizeMode="stretch"
+            style={stylesList.character}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Lists/light-bulb.png')}
+            resizeMode="stretch"
+            style={stylesList.bulb}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Lists/bottom-back.png')}
+            resizeMode="stretch"
+            style={stylesList.bottomBack}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Lists/bottom-front.png')}
+            resizeMode="stretch"
+            style={stylesList.bottomFront}
+          />
+          <View style={{bottom: 2450}}>
+            <Text style={stylesList.title}>Check list & Shopping list</Text>
+            <Text style={stylesList.detail}>
+              Keep all your lists in one place. Create and update custom lists
+              automatically to track task.
+            </Text>
+          </View>
+
+          {/* Bat dau cua education */}
         </View>
       </View>
     </ScrollView>
