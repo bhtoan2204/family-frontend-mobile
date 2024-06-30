@@ -61,6 +61,7 @@ const ComboScreen = () => {
               style={stylesAnalysis.imageFront}
             />
           </View>
+
           <View style={stylesAnalysis.bottomField}>
             <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/background-bottom.png')}
@@ -124,6 +125,21 @@ const ComboScreen = () => {
               source={require('../../assets/images/combo-package/Chat/bottom-front.png')}
               resizeMode="stretch"
               style={stylesChat.imageBottomFront}
+            />
+            <Image
+              source={require('../../assets/images/combo-package/Chat/header.png')}
+              resizeMode="stretch"
+              style={stylesChat.header}
+            />
+            <Image
+              source={require('../../assets/images/combo-package/Chat/oval.png')}
+              resizeMode="stretch"
+              style={stylesChat.imageOval1}
+            />
+            <Image
+              source={require('../../assets/images/combo-package/Analysis_Finance/red-gradient.png')}
+              resizeMode="stretch"
+              style={stylesChat.redGradient}
             />
           </View>
         </View>

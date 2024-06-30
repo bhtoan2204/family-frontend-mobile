@@ -6,7 +6,7 @@ const stylesChat = StyleSheet.create({
     height: 112,
     width: '100%',
     position: 'absolute',
-    top:20,
+    top:1020,
   },
   imageConnect: {
     height: 224,
@@ -81,6 +81,13 @@ const stylesChat = StyleSheet.create({
     left: 355,
     
   },
+  imageOval1: {
+    height: 50,
+    width: 44,
+    left: 340,
+    bottom: 1100,
+  },
+  
   imageBottomBack: {
     height: 119,
     width: 487,
@@ -92,6 +99,14 @@ const stylesChat = StyleSheet.create({
     width: 487,
     zIndex: 7,
     bottom: 50,
+  },
+  redGradient: {
+    height: 130,
+    width: 100,
+    position: 'absolute',
+    top: 990,
+    left: 90,
+    zIndex: 8,
   },
 });
 
