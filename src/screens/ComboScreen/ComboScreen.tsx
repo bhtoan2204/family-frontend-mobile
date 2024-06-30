@@ -10,6 +10,8 @@ import stylesAnalysis from './styles/stylesAnalysis';
 import stylesChat from './styles/stylesChat';
 import stylesCalendar from './styles/stylesCalendar';
 import stylesList from './styles/stylesList';
+import stylesEducation from './styles/stylesEducation';
+import stylesHousehold from './styles/stylesHousehold';
 
 const ComboScreen = () => {
   return (
@@ -255,6 +257,105 @@ const ComboScreen = () => {
           </View>
 
           {/* Bat dau cua education */}
+          <Image
+            source={require('../../assets/images/combo-package/Education/Background.png')}
+            resizeMode="stretch"
+            style={stylesEducation.background}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Education/Elements.png')}
+            resizeMode="stretch"
+            style={stylesEducation.elements}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Education/bottom-back.png')}
+            resizeMode="stretch"
+            style={stylesEducation.bottomBack}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Education/bottom-front.png')}
+            resizeMode="stretch"
+            style={stylesEducation.bottomFront}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Education/Character.png')}
+            resizeMode="stretch"
+            style={stylesEducation.character}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Education/Rectangle 38.png')}
+            resizeMode="stretch"
+            style={stylesEducation.rec}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Analysis_Finance/background-bottom.png')}
+            resizeMode="stretch"
+            style={stylesEducation.backgroundBottom}
+          />
+          <View style={{bottom: 1600}}>
+            <Text style={stylesEducation.title}>Learning Hub</Text>
+            <Text style={stylesEducation.detail}>
+              The education feature organizes schedules, assignments and
+              deadlines for academic success.
+            </Text>
+          </View>
+          <Image
+            source={require('../../assets/images/combo-package/Chat/connect.png')}
+            resizeMode="stretch"
+            style={stylesEducation.imageConnect}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Education/Rectangle 39.png')}
+            resizeMode="stretch"
+            style={stylesEducation.rec39}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Household/background.png')}
+            resizeMode="stretch"
+            style={stylesHousehold.background}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Household/Character.png')}
+            resizeMode="stretch"
+            style={stylesHousehold.character}
+          />
+          <View style={{bottom: 720}}>
+            <Text style={stylesEducation.title}>Household</Text>
+            <Text style={stylesEducation.detail}>
+              Simplifies and streamlines household task management for
+              efficiency and convenience.
+            </Text>
+          </View>
+          <Image
+            source={require('../../assets/images/combo-package/Chat/left-side.png')}
+            resizeMode="stretch"
+            style={stylesHousehold.imageLeftSide}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Household/bottom-back.png')}
+            resizeMode="stretch"
+            style={stylesHousehold.bottomBack}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Household/bottom-front.png')}
+            resizeMode="stretch"
+            style={stylesHousehold.bottomFront}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Household/oval.png')}
+            resizeMode="stretch"
+            style={stylesHousehold.oval}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Household/Rectangle 38.png')}
+            resizeMode="stretch"
+            style={stylesHousehold.rec38}
+          />
+          <Image
+            source={require('../../assets/images/combo-package/Household/upsidedown.png')}
+            resizeMode="stretch"
+            style={stylesHousehold.upSideDown}
+          />
         </View>
       </View>
     </ScrollView>
