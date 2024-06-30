@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native';
 import {COLORS} from 'src/constants';
 
-const styles = StyleSheet.create({
+const stylesAnalysis = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
@@ -110,4 +110,4 @@ const styles = StyleSheet.create({
   analysis:{flex: 1, position: 'relative'},
 });
 
-export default styles;
+export default stylesAnalysis;

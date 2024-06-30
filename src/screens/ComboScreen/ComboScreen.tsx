@@ -6,64 +6,65 @@ import {Text, Image, View} from 'react-native';
 import {COLORS, TEXTS} from 'src/constants';
 
 import {PackageServices} from 'src/services/apiclient';
-import styles from './styles';
+import stylesAnalysis from './styles/stylesAnalysis';
+import stylesChat from './styles/stylesChat';
 import {ScrollView} from 'react-native-gesture-handler';
 
 const ComboScreen = () => {
   return (
     <ScrollView>
-      <View style={styles.container}>
-        <View style={styles.analysis}>
+      <View style={stylesAnalysis.container}>
+        <View style={stylesAnalysis.analysis}>
           <View style={{bottom: 10}}>
             <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/Information.png')}
               resizeMode="stretch"
-              style={styles.imageInformation}
+              style={stylesAnalysis.imageInformation}
             />
             <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/red-gradient.png')}
               resizeMode="stretch"
-              style={styles.redGradient}
+              style={stylesAnalysis.redGradient}
             />
             <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/Character.png')}
               resizeMode="stretch"
-              style={styles.imageCharacter}
+              style={stylesAnalysis.imageCharacter}
             />
             <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/linechart.png')}
               resizeMode="stretch"
-              style={styles.imageLineChart}
+              style={stylesAnalysis.imageLineChart}
             />
             <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/piechart.png')}
               resizeMode="stretch"
-              style={styles.imagePieChart}
+              style={stylesAnalysis.imagePieChart}
             />
             <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/barchart.png')}
               resizeMode="stretch"
-              style={styles.imageBarChart}
+              style={stylesAnalysis.imageBarChart}
             />
             <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/back.png')}
               resizeMode="stretch"
-              style={styles.imageBack}
+              style={stylesAnalysis.imageBack}
             />
             <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/front.png')}
               resizeMode="stretch"
-              style={styles.imageFront}
+              style={stylesAnalysis.imageFront}
             />
           </View>
-          <View style={styles.bottomField}>
+          <View style={stylesAnalysis.bottomField}>
             <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/background-bottom.png')}
               resizeMode="stretch"
-              style={styles.imageBottom}
+              style={stylesAnalysis.imageBottom}
             />
-            <Text style={styles.title}>Analysis Finance</Text>
-            <Text style={styles.detail}>
+            <Text style={stylesAnalysis.title}>Analysis Finance</Text>
+            <Text style={stylesAnalysis.detail}>
               Track finances, analyze spending, plan budgets and visualize money
               flow with loved ones.
             </Text>
@@ -71,14 +72,15 @@ const ComboScreen = () => {
           <Image
             source={require('../../assets/images/combo-package/Analysis_Finance/wave-bottom.png')}
             resizeMode="stretch"
-            style={styles.imageBottomWave}
+            style={stylesAnalysis.imageBottomWave}
           />
           <Image
             source={require('../../assets/images/combo-package/Analysis_Finance/background-top.png')}
             resizeMode="stretch"
-            style={styles.imageTop}
+            style={stylesAnalysis.imageTop}
           />
         </View>
+        <View style={{}}></View>
       </View>
     </ScrollView>
   );
