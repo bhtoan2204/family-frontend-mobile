@@ -19,6 +19,7 @@ export interface LastMessage {
   }
   
   export interface User {
+    id_user: string;
     firstname: string;
     lastname: string;
     avatar: string;
@@ -41,9 +42,10 @@ const initialState: MessageFamilySliceState = {
         timestamp: new Date(),
         _id: "6675a2147bb424164f4eec79",
         receiver: {
+          id_user: '',
           firstname: "Sample",
           lastname: "User",
-          avatar: null,
+          avatar: '',
         }
       }
     }
@@ -58,12 +60,15 @@ const messageSlice = createSlice({
       state.message = action.payload;
 
     },
-
+    setUserMessage(state, action: PayloadAction<User>) {
+      state.message.latestMessage.receiver = action.payload;
+    },
   },
 });
 
-export const { setLastMessage} = messageSlice.actions;
+export const { setLastMessage, setUserMessage} = messageSlice.actions;
 
 export const selectLastMessage = (state: RootState) => state.message.message
+export const selectReceiver = (state: RootState) => state.message.message.latestMessage.receiver;
 
 export default messageSlice.reducer;

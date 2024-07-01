@@ -1,12 +1,21 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Linking, Modal, FlatList, Button, Dimensions, ActivityIndicator } from 'react-native';
 import { Avatar, Header, Icon } from 'react-native-elements';
+import { useDispatch } from 'react-redux';
 import { COLORS } from 'src/constants';
-import { Member } from 'src/interface/member/member';
+import { Member, Role } from 'src/interface/member/member';
 import { MemberDetailsScreenProps } from 'src/navigation/NavigationTypes';
+import { setUserMessage } from 'src/redux/slices/MessageUser';
+import RoleService from 'src/services/apiclient/RoleServices';
+const screenHeight = Dimensions.get('screen').height;
 
 const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) => {
   const { member } = route.params; 
+  const [newRole, setNewRole] = useState(member.familyRoles.role_name_en);
+  const [role, setRole] = useState<Role[]>([]);
+  const [modalVisible, setModalVisible] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const handlePhonePress = () => {
     Linking.openURL(`tel:${member.user.phone}`); 
@@ -20,7 +29,42 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
   const handleEmailPress = () => {
     Linking.openURL(`mailto:${member.user.email}`); 
   };
-
+  const handleChangeRole = async () => {
+    setIsLoading(true);
+      try {
+        const data = await RoleService.getAllRole();
+        setRole(data);
+        setModalVisible(true);
+      } catch (error) {
+        console.log('Error fetching roles:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+  
+   const handleRoleSelect = async (roleName: Role) => {
+    try {
+        setIsLoading(true);
+        await RoleService.assignRole(member.id_user, member.id_family, roleName.id_family_role)
+        setNewRole(roleName.role_name_en); 
+        setModalVisible(false);
+    }catch (error){
+        console.log(error);
+    } finally {
+        setIsLoading(false);
+    }
+  };
+  const renderRoleItem = ({ item }: { item: Role }) => (
+    <TouchableOpacity style={styles.roleItem} onPress={() => handleRoleSelect(item)}>
+      <Text style={styles.roleItem}>{item.role_name_en}</Text>
+    </TouchableOpacity>
+  );
+  const handlePressMessage = async () => {
+    await dispatch(setUserMessage(member.user));
+    navigation.navigate('ChatStack', {screen: 'ChatUser', params: { receiverId: member.user.id_user}});
+  }
+  
   return (
     <View style={styles.container}>
     <Header
@@ -49,14 +93,16 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
         </View>
         <View style={styles.nameContainer}>
           <Text style={styles.name}>{member.user.firstname} {member.user.lastname}</Text>
-          <TouchableOpacity>
-            <Text style={styles.role}>{member.familyRoles.role_name_en}</Text>
+          <TouchableOpacity style={styles.roleContainer} onPress={handleChangeRole}>
+            <Text style={styles.role}>{newRole}</Text>
+            <Icon name="edit" type="feather" color={COLORS.DenimBlue} size={20} />
+
           </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button,{ backgroundColor: COLORS.DenimBlue, }]}>
+        <TouchableOpacity style={[styles.button,{ backgroundColor: COLORS.DenimBlue, }]} onPress={handlePressMessage}>
           <Text style={styles.buttonText}>Message</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, { backgroundColor: '#ff6347' }]}>
@@ -90,6 +136,35 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
         <Text style={[styles.infoText, { textAlign: 'left' }]}>Joined: {formattedCreatedAt}</Text>
 
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+        >
+        <TouchableOpacity
+            style={styles.centeredView}
+            activeOpacity={1} 
+            onPressOut={() => setModalVisible(false)} 
+        >
+   
+            <View style={styles.modalView}>
+                <Text style={styles.modalTitle}>Select Role</Text>
+                {isLoading ? (
+                <ActivityIndicator size="large" color='#ccc' />
+                ) : (
+                <FlatList
+                    data={role}
+                    renderItem={renderRoleItem}
+                    keyExtractor={(item) => item.id_family_role.toString()}
+                    style={{ marginBottom: 20}}
+                />
+                )}
+  
+            </View>
+        </TouchableOpacity>
+        </Modal>
+
 
     
     </View>
@@ -141,8 +216,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'white',
   },
+  roleContainer: {
+    flexDirection: 'row',
+
+  },
   name: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#333', 
   },
@@ -154,7 +233,8 @@ const styles = StyleSheet.create({
   },
   role: {
     fontSize: 18,
-    color: '#666',
+    color: COLORS.DenimBlue,
+    marginRight: 7,
   },
   infoContainer: {
     marginTop: 20,
@@ -194,6 +274,43 @@ const styles = StyleSheet.create({
     color: '#555', 
     marginLeft : 10,
   },
+  modalView: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    maxHeight: '70%', 
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+    color: '#333',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+  },
+  
+  roleItem: {
+    fontSize: 18,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    color: '#555',
+  },
+
 });
 
 export default MemberDetailsScreen;

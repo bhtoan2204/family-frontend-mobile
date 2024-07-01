@@ -35,7 +35,6 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
   const handleViewAllMember = async () => {
     try {
       const result = await FamilyServices.getAllMembers({id_family});
-      console.log('FamilyServices.getAllMembers result:', result);
       setMembers(result);
     } catch (error) {
       console.log('FamilyServices.getAllMembers error:', error);
@@ -168,7 +167,7 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
                           />
                         </View>
                         <View style={styles.InforContainer}>
-                          <Text style={styles.RoleText}>{member.role}</Text>
+                          <Text style={styles.RoleText}>{member.familyRoles.role_name_en}</Text>
                           <View
                             style={{
                               flexDirection: 'row',

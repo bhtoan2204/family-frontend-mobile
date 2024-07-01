@@ -53,7 +53,6 @@ const EducationScreen: React.FC<EducationScreenProps> = ({
     const handleViewAllMember = async () => {
       try {
         const result = await FamilyServices.getAllMembers({id_family});
-        console.log('FamilyServices.getAllMembers result:', result);
         setMembers(result);
         setFilteredMembers(result);
       } catch (error) {

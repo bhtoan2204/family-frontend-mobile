@@ -27,7 +27,7 @@ import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 import { UserProfile } from 'src/interface/user/userProfile';
 import { FamilyLastMessage } from 'src/interface/chat/family';
 import { useDispatch } from 'react-redux';
-import { setLastMessage } from 'src/redux/slices/MessageUser';
+import { setLastMessage, setUserMessage } from 'src/redux/slices/MessageUser';
 import { setFamilyLastMessage } from 'src/redux/slices/MessageFamily';
 const ChatListScreen = ({
   navigation,
@@ -151,7 +151,7 @@ const ChatListScreen = ({
   }, []);
 
   const handlePressChat = (message: LastMessage) => {
-    dispatch(setLastMessage(message));
+    dispatch(setUserMessage(message.latestMessage.receiver));
     navigation.navigate('ChatStack', {
       screen: 'ChatUser',
       params: {receiverId: message.receiverId},
@@ -167,40 +167,40 @@ const ChatListScreen = ({
     setSelectedButton('Channels');
   };
 
-  const renderAllUser = () => (
-    <View style={styles.userHeaderContainer}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {users.map((user, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => handlePressChat(user.id_user)}>
-            <View
-              style={[
-                styles.userContainer,
-                !user.avatar && styles.userContainerWithoutAvatar,
-              ]}>
-              {user.avatar ? (
-                <Image source={{uri: user.avatar}} style={styles.avatar} />
-              ) : (
-                <View style={styles.avatarPlaceholder}>
-                  <Text
-                    style={
-                      styles.avatarText
-                    }>{`${user.firstname.charAt(0)}${user.lastname.charAt(0)}`}</Text>
-                </View>
-              )}
-              {/* {user.isActive && <View style={styles.activeDot} />}  Chỉ hiển thị khi user.isActive là true */}
-              <View style={styles.activeDot} />
-              <Text
-                style={
-                  styles.userName
-                }>{`${user.firstname} ${user.lastname}`}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-    </View>
-  );
+  // const renderAllUser = () => (
+  //   <View style={styles.userHeaderContainer}>
+  //     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+  //       {users.map((user, index) => (
+  //         <TouchableOpacity
+  //           key={index}
+  //           onPress={() => handlePressChat(user.id_user)}>
+  //           <View
+  //             style={[
+  //               styles.userContainer,
+  //               !user.avatar && styles.userContainerWithoutAvatar,
+  //             ]}>
+  //             {user.avatar ? (
+  //               <Image source={{uri: user.avatar}} style={styles.avatar} />
+  //             ) : (
+  //               <View style={styles.avatarPlaceholder}>
+  //                 <Text
+  //                   style={
+  //                     styles.avatarText
+  //                   }>{`${user.firstname.charAt(0)}${user.lastname.charAt(0)}`}</Text>
+  //               </View>
+  //             )}
+  //             {/* {user.isActive && <View style={styles.activeDot} />}  Chỉ hiển thị khi user.isActive là true */}
+  //             <View style={styles.activeDot} />
+  //             <Text
+  //               style={
+  //                 styles.userName
+  //               }>{`${user.firstname} ${user.lastname}`}</Text>
+  //           </View>
+  //         </TouchableOpacity>
+  //       ))}
+  //     </ScrollView>
+  //   </View>
+  // );
   const onDelete = async (event: any) => {
     Alert.alert(
       'Confirm Delete',

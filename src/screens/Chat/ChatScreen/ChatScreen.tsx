@@ -35,17 +35,9 @@ import EmojiPicker from '../EmojiPicker';
 import * as MediaLibrary from 'expo-media-library';
 import { Video } from 'expo-av';
 import MessageItem from './RenderMessage';
-import { selectLastMessage } from 'src/redux/slices/MessageUser';
+import { selectLastMessage, selectReceiver } from 'src/redux/slices/MessageUser';
 
-interface Member {
-  id_user: string;
-  email: string;
-  phone: string;
-  language: string | null;
-  firstname: string;
-  lastname: string;
-  avatar: string;
-}
+
 
 const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   const profile = useSelector(selectProfile);
@@ -68,9 +60,8 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   );
   const [hasReceivedMessage, setHasReceivedMessage] = useState(false); 
   const [selectedEmoji, setSelectedEmoji] = useState('');
-
+  const user = useSelector(selectReceiver);
   let socket = getSocket();
-  let LastMessage = useSelector(selectLastMessage);
   
   const markSeenMessage = async (receiverId?: string) => {
     try {
@@ -84,7 +75,8 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
 
 
   const fetchMessages = useCallback(async () => {
-    setReceiver(LastMessage.latestMessage.receiver);
+    setReceiver(user);
+
     try {
       const response = await ChatServices.GetMessages({
         id_user: receiverId,
