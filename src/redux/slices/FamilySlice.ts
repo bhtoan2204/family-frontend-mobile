@@ -34,6 +34,9 @@ interface FamilyState {
       updateFamily: (state, action: PayloadAction<Family>) => {
         state.family = {...state.family, ...action.payload};
       },
+      // updateAvatar(state, action: PayloadAction<string>) {
+      //   state.family.avatar = action.payload;
+      // },
     },
   });
   

@@ -13,7 +13,6 @@ import BottomSheet from './BottomSheet';
 import {Swipeable} from 'react-native-gesture-handler';
 import IconL from 'react-native-vector-icons/Ionicons';
 import {RRule, rrulestr} from 'rrule';
-import {setSelectedDate} from 'src/redux/slices/ExpenseAnalysis';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Feather, Ionicons} from '@expo/vector-icons';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
@@ -239,7 +238,7 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
   };
 
   const handleDayPress = (date: any) => {
-    setSelectedDate(date.dateString);
+    setSelectDate(date.dateString);
     dispatch(setDate(date.dateString));
   };
 

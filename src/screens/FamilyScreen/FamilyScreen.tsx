@@ -89,7 +89,6 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const allMemberRef = useRef<RBSheet>(null);
   const screenHeight = Dimensions.get('screen').height;
   let profile = useSelector(selectProfile);
-  const [isUploadingImage, setIsUploadingImage] = React.useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [families, setFamilies] = useState<Family[]>([]);
@@ -99,6 +98,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const rotateAnimation = useRef(new Animated.Value(0)).current;
   const [isOptionsModalVisible,setIsOptionsModalVisible] = useState(false);
+
   const source =
     family?.avatar && family.avatar !== '[NULL]'
       ? {uri: family.avatar}
@@ -111,6 +111,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   },[family])
   
   const fetchFamiliesAndMembers = async () => {
+    setIsLoading(true);
     try {
       const allFamilies = await FamilyServices.getAllFamily();
       setFamily(allFamilies[0]);
@@ -135,6 +136,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
     
     fetchFamiliesAndMembers();
@@ -229,7 +231,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     });
   };
 
-  const handleOpenAllMemberModal = (id_family: number) => {
+  const handleOpenAllMemberModal = () => {
     navigation.navigate('FamilyStack', {screen: 'AllMember',params: {id_family: family.id_family}});
   };
 
@@ -260,11 +262,18 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     if (!result.canceled) {
       const a = result.assets[0]!;
       const uri = a.uri;
-      setIsUploadingImage(true);
-      const fileUrl = await FamilyServices.changeAvatar(family!.id_family, uri);
-      console.log(fileUrl);
-      //dispatch(updateFamily({ ...family!, avatar: fileUrl }))
-      setIsUploadingImage(false);
+      if (uri) {
+        try {
+          setIsLoading(true);
+          const fileUrl = await FamilyServices.changeAvatar(family!.id_family, uri);
+          dispatch(updateFamily({ ...family!, avatar: fileUrl }));
+          setFamily({...family!, avatar: fileUrl });
+        } catch (error) {
+          console.error('Error updating avatar:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
     }
   };
 
@@ -294,7 +303,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const handlePress = (cardId: number) => {
     switch (cardId) {
       case 1:
-        handleOpenAllMemberModal(family.id_family);
+        handleOpenAllMemberModal();
         break;
       case 2:
         handleChatPress();
