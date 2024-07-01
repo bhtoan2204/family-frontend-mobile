@@ -206,7 +206,6 @@ const FamilyServices = {
         role,
       });
       if (response.status === 201) {
-        //console.log('Response status is 200, returning data:', response.data);
         return response.data;
       } 
     } catch (error) {
@@ -217,14 +216,14 @@ const FamilyServices = {
 
   kickMember: async (id_user: string, id_family: number) => {
     try {
-      const response: AxiosResponse = await axios.delete(`${FamilyUrl.kickMember}`, {
+      const response: AxiosResponse = await instance.delete(`${FamilyUrl.kickMember}`, {
         params: {
           id_user,
           id_family,
         },
       });
-      if (response.status === 200) {
-        return response.data;
+      if (response.status === 204) {
+        return 'Successful';
       } else {
         throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
       }
@@ -235,14 +234,14 @@ const FamilyServices = {
 
   leaveFamily: async (id_family?: number) => {
     try {
-      const response: AxiosResponse = await axios.delete(`${FamilyUrl.leaveFamily}`, {
+      const response: AxiosResponse = await instance.delete(`${FamilyUrl.leaveFamily}`, {
         params: {
           id_family,
         },
       });
 
-      if (response.status === 200) {
-        return response.data;
+      if (response.status === 204) {
+        return 'Successful';
       } else {
         throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
       }

@@ -36,16 +36,78 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
     navigation.navigate('Contact', { id_family });
   };
 
+
+  useEffect(()=> {
+    setPhone(formatPhoneNumber(phone));
+  },[phone])
+
+  const formatPhoneNumber = (phoneNumber?: string) => {
+    const cleaned = ('' + phoneNumber).replace(/\D/g, '');
+    
+    const match = cleaned.match(/^(\d{1})(\d{3})(\d{3})(\d{3})$/);
+    
+    if (match) {
+      return `+84${match[2]}${match[3]}${match[4]}`;
+    }
+    console.log(phoneNumber)
+
+    return phoneNumber;
+  };
+  
+
+
+  
+
   const handleAddMember = async () => {
     try {
+      if (!p_phone && !email) {
+        Alert.alert(
+          'Missing Information',
+          'Please enter either phone number or email.',
+          [
+            {
+              text: 'OK',
+              onPress: () => console.log('Missing Information Alert Closed'),
+              style: 'cancel',
+            },
+          ],
+          { cancelable: false }
+        );
+        return;
+      }
+  
+      if (p_phone && p_phone.replace(/\D/g, '').length !== 10) {
+        Alert.alert(
+          'Invalid Phone Number',
+          'Please enter a valid 10-digit phone number.',
+          [
+            {
+              text: 'OK',
+              onPress: () => console.log('Invalid Phone Number Alert Closed'),
+              style: 'cancel',
+            },
+          ],
+          { cancelable: false }
+        );
+        return;
+      }
+  
+      let formattedPhone = p_phone;
+      if (formattedPhone && !formattedPhone.startsWith('+84')) {
+        formattedPhone = `+84${formattedPhone.replace(/\D/g, '')}`;
+      }
+  
       const result = await FamilyServices.addMember({
         id_family: id_family,
-        gmail: email,
-        phone: p_phone,
+        gmail: email || "",
+        phone: formattedPhone || "",
         role: 'Member',
       });
-
-      if (result.data === "Invalid user provided") {
+  
+      if  (result.data === "Successfully added a member to the family") {
+        Alert.alert(
+          'Inform', result.data );
+      } else {
         Alert.alert(
           'Inform',
           result.data,
@@ -67,6 +129,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
       console.log('FamilyServices.addMember result:', error);
     }
   };
+  
 
   return (
     <SafeAreaView style={styles.container}>
