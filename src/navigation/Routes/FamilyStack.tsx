@@ -19,6 +19,7 @@ import {
   HouseHoldCategoryDetailScreenProps,
   HouseHoldCategoryScreenProps,
   HouseHoldScreenProps,
+  MemberDetailsScreenProps,
   NewsScreenProps,
   SharedGuildLineScreenProps,
   SubjectDetailScreenProps,
@@ -38,6 +39,7 @@ import NewsScreen from 'src/screens/NewsScreen/NewsScreen';
 import SharedGuildLineDetailScreen from 'src/screens/GuildLineScreen/SharedGuildLineScreen';
 import ChecklistDetailScreen from 'src/screens/CheckListScreen/CheckListDetailScreen';
 import UpcomingEvents from 'src/screens/FamilyScreen/UpcomingEvents';
+import MemberDetailsScreen from 'src/screens/AllMember/MemberDetails';
 const Stack = createNativeStackNavigator();
 
 const FamilyStack = () => {
@@ -126,6 +128,9 @@ const FamilyStack = () => {
       </Stack.Screen>
       <Stack.Screen name="UpcomingEvents">
         {props => <UpcomingEvents {...(props as UpcomingEventsScreenProps)} />}
+      </Stack.Screen>
+      <Stack.Screen name="MemberDetails">
+        {props => <MemberDetailsScreen {...(props as MemberDetailsScreenProps)} />}
       </Stack.Screen>
     </Stack.Navigator>
   );

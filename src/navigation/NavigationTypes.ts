@@ -1,6 +1,7 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
+import { Member } from 'src/interface/member/member';
 
 export type RootParamList = {
   AuthStack: NavigatorScreenParams<AuthStackParamList>;
@@ -264,6 +265,9 @@ export type FamilyStackParamList = {
   };
   News: undefined;
   UpcomingEvents: undefined;
+  MemberDetails: {
+    member: Member;
+  }
 };
 
 export type PackStackParamList = {
@@ -534,6 +538,17 @@ type CheckListDetailNavigationProp = NativeStackNavigationProp<
 export interface CheckListDetailScreenProps {
   navigation: CheckListDetailNavigationProp;
   route: RouteProp<FamilyStackParamList, 'CheckListDetail'>;
+}
+
+
+type MemberDetailsNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'MemberDetails'
+>;
+
+export interface MemberDetailsScreenProps {
+  navigation: MemberDetailsNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'MemberDetails'>;
 }
 
 export interface CheckListScreenProps {

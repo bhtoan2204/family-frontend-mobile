@@ -64,6 +64,10 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
     return unsubscribe;
   }, [navigation]);
 
+  const handlePressMember = (member: Member)=>{
+      navigation.navigate('MemberDetails', { member: member});
+  }
+
   return (
     <ImageBackground
       source={require('../../assets/images//view-all-member.png')}
@@ -149,7 +153,7 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
                 data={filteredMembers}
                 renderItem={({item: member}) => (
                   <View style={{padding: 11, paddingHorizontal: 0}}>
-                    <TouchableOpacity style={styles.card}>
+                    <TouchableOpacity onPress={()=> handlePressMember(member)} style={styles.card}>
                       <View style={styles.iconContainer}>
                         <View
                           style={{
