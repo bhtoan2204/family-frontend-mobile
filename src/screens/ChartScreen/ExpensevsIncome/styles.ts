@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
 
   expenseDate: {
     fontSize: 14,
-    color: '#666666', 
+    color: 'gray', 
     marginTop: 5,
   },
   modalContainer: {
@@ -147,23 +147,24 @@ const styles = StyleSheet.create({
   },
   expenseCategory: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.Rhino,
   },
   expenseDescription: {
     fontSize: 14,
-    color: '#555',
+    color: 'gray',
     marginTop: 5,
   },
   expenseAmount: {
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight:'bold',
     color: 'red',
   },  
   amount: {
     fontSize: 14,
   },  
   incomeAmount: {
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: 'bold',
     color: 'green',
   },
   expenseName: {
@@ -198,6 +199,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
+  },
+  rowInfo: {
+    marginTop: 5,
+    textAlign: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   paginationContainer: {
     flexDirection: 'row',

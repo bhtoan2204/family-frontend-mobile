@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking, Modal, FlatList, Button, Dimensions, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Linking, Modal, FlatList, Button, Dimensions, ActivityIndicator, Alert } from 'react-native';
 import { Avatar, Header, Icon } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
 import { COLORS } from 'src/constants';
 import { Member, Role } from 'src/interface/member/member';
 import { MemberDetailsScreenProps } from 'src/navigation/NavigationTypes';
 import { setUserMessage } from 'src/redux/slices/MessageUser';
+import { FamilyServices } from 'src/services/apiclient';
 import RoleService from 'src/services/apiclient/RoleServices';
 const screenHeight = Dimensions.get('screen').height;
 
@@ -64,7 +65,21 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
     await dispatch(setUserMessage(member.user));
     navigation.navigate('ChatStack', {screen: 'ChatUser', params: { receiverId: member.user.id_user}});
   }
-  
+  const handleRemoveMember = async() => {
+    setIsLoading(true);
+    try{
+       await FamilyServices.kickMember(member.id_user, member.id_family);
+       Alert.alert('Success', 'Member removed successfully');
+        
+    } catch(error){
+        console.log(error)
+        Alert.alert('Inform', 'Only owner can remove member');
+        
+    } finally {
+        setIsLoading(false);
+      }
+    };
+
   return (
     <View style={styles.container}>
     <Header
@@ -105,7 +120,7 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
         <TouchableOpacity style={[styles.button,{ backgroundColor: COLORS.DenimBlue, }]} onPress={handlePressMessage}>
           <Text style={styles.buttonText}>Message</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, { backgroundColor: '#ff6347' }]}>
+        <TouchableOpacity style={[styles.button, { backgroundColor: '#ff6347' }]} onPress={handleRemoveMember}>
           <Text style={styles.buttonText}>Remove</Text>
         </TouchableOpacity>
       </View>
@@ -218,7 +233,7 @@ const styles = StyleSheet.create({
   },
   roleContainer: {
     flexDirection: 'row',
-
+    paddingTop: 10,
   },
   name: {
     fontSize: 28,

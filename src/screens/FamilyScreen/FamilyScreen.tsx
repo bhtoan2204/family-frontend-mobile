@@ -111,6 +111,11 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
       ? {uri: family.avatar}
       : require('../../assets/images/default_ava.png');
 
+  useEffect(()=>{
+    if (family){
+    dispatch(setForFamily(family));
+    }
+  },[family])
   const fetchFamiliesAndMembers = async () => {
     try {
       const allFamilies = await FamilyServices.getAllFamily();

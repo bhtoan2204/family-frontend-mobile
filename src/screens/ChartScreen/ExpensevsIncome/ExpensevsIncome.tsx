@@ -42,6 +42,7 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
   const fetchDataExpense = async (page: number, reset: boolean = false) => {
     setIsLoading(true);
     try {
+      console.log(page, itemsPerPage, selectedFilter, family.id_family)
       const response = await ExpenseServices.getExpenseByDateRange(page, itemsPerPage, selectedFilter, family.id_family);
       setTotalPageExpense(response.total_pages);
       setExpenses(prevExpenses => reset ? response.expenses : [...prevExpenses, ...response.expenses]);
@@ -123,22 +124,25 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
           <View>
             <Text style={styles.expenseCategory}>{item.expense_category}</Text>
             <View style={styles.row}>
-              <Text style={styles.amount}>Amount: </Text>
-              <Text style={styles.expenseAmount}>-{formatCurrency(item.expense_amount)}</Text>
-              </View>
-            <Text style={styles.expenseDescription}>{item.description}</Text>
-          </View>
-          <View style={{ justifyContent: 'center', }}>
-            <View style={styles.row}>
-              <Text>By: </Text>
+              
+              <Text style={{color: 'gray', }}>By: </Text>
               <Text style={styles.expenseName}>{item.name}</Text>
-              <Icon name="chevron-forward" size={20} style={styles.forwardIcon} />
 
             </View>
-            <Text style={styles.expenseDate}>{formatDate(item.expenditure_date)}</Text>
-         
+            <Text style={styles.expenseDescription}>{item.description}</Text>
           </View>
-         
+          <View style={{ justifyContent: 'center', flexDirection: 'row'}}>
+
+            <View style={styles.rowInfo}>
+
+              <Text style={styles.expenseAmount}>-{formatCurrency(item.expense_amount)}</Text>
+              <Text style={styles.expenseDate}>{formatDate(item.expenditure_date)}</Text>
+
+            </View>
+          <View style={{ justifyContent: 'center', }}>
+            <Icon name="chevron-forward" size={20} style={styles.forwardIcon} />
+           </View>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -155,19 +159,24 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
           <View>
             <Text style={styles.expenseCategory}>{item.income_category}</Text>
             <View style={styles.row}>
-              <Text>Amount: </Text>
-            <Text style={styles.incomeAmount}>+{formatCurrency(item.income_amount)}</Text>
+              
+              <Text style={{color: 'gray', }}>By: </Text>
+              <Text style={styles.expenseName}>{item.name}</Text>
+
             </View>
             <Text style={styles.expenseDescription}>{item.description}</Text>
           </View>
-          <View style={{ justifyContent: 'center' }}>
-            <View style={styles.row}>
-              <Text>By: </Text>
-              <Text style={styles.expenseName}>{item.name}</Text>
-              <Icon name="chevron-forward" size={20} style={styles.forwardIcon} />
+          <View style={{ justifyContent: 'center', flexDirection: 'row'}}>
+
+            <View style={styles.rowInfo}>
+
+              <Text style={styles.incomeAmount}>-{formatCurrency(item.income_amount)}</Text>
+              <Text style={styles.expenseDate}>{formatDate(item.income_date)}</Text>
 
             </View>
-            <Text style={styles.expenseDate}>{formatDate(item.income_date)}</Text>
+          <View style={{ justifyContent: 'center', }}>
+            <Icon name="chevron-forward" size={20} style={styles.forwardIcon} />
+           </View>
           </View>
         </View>
       </View>

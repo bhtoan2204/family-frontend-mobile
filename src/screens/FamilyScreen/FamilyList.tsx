@@ -10,10 +10,11 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useDispatch } from 'react-redux';
 import {COLORS} from 'src/constants';
 import {Family} from 'src/interface/family/family';
 import {Member} from 'src/interface/member/member';
-import {FamilyServices} from 'src/services/apiclient';
+
 
 const FamilyListModal = ({
   visible,
@@ -30,6 +31,7 @@ const FamilyListModal = ({
 
   const handleSelectFamily = (family: Family) => {
     setFamilySelect(family);
+    
     onClose(family);
   };
 
