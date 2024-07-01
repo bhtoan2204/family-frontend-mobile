@@ -24,15 +24,7 @@ import {COLORS, TEXTS} from 'src/constants';
 import styles from './styles';
 import BottomSheet from './BottomSheet';
 import {Family} from 'src/interface/family/family';
-import GuildLineImage from 'src/assets/icons/guideline-items.png';
-import CalenderImage from 'src/assets/icons/calendar-scheduling.png';
-import EducationImage from 'src/assets/icons/manage-eduction.png';
-import ChatImage from 'src/assets/icons/chat-with-members.png';
-import MemberImage from 'src/assets/icons/family-member.png';
-import DeleteImage from 'src/assets/images/remove.png';
-import HouseHoldImage from 'src/assets/icons/household-appliances.png';
-import CheckListImage from 'src/assets/icons/checklist.png';
-import NewsImage from 'src/assets/images/news.png';
+
 import {useDispatch, useSelector} from 'react-redux';
 import {selectProfile} from 'src/redux/slices/ProfileSclice';
 import {selectfamily, setForFamily} from 'src/redux/slices/FamilySlice';
@@ -42,6 +34,8 @@ import {updateFamily} from 'src/redux/slices/FamilySlice';
 import FamilyListModal from './FamilyList';
 import {Member} from 'src/interface/member/member';
 import {MaterialIcons} from '@expo/vector-icons';
+import Feather from 'react-native-vector-icons/Feather';
+import OptionsModal from './OptionModal';
 
 const cards = [
   {
@@ -95,8 +89,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const allMemberRef = useRef<RBSheet>(null);
   const screenHeight = Dimensions.get('screen').height;
   let profile = useSelector(selectProfile);
-  const [isUploadingImage, setIsUploadingImage] =
-    React.useState<boolean>(false);
+  const [isUploadingImage, setIsUploadingImage] = React.useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [families, setFamilies] = useState<Family[]>([]);
@@ -105,7 +98,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const shakeAnimationX = new Animated.Value(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const rotateAnimation = useRef(new Animated.Value(0)).current;
-
+  const [isOptionsModalVisible,setIsOptionsModalVisible] = useState(false);
   const source =
     family?.avatar && family.avatar !== '[NULL]'
       ? {uri: family.avatar}
@@ -116,6 +109,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     dispatch(setForFamily(family));
     }
   },[family])
+  
   const fetchFamiliesAndMembers = async () => {
     try {
       const allFamilies = await FamilyServices.getAllFamily();
@@ -186,32 +180,32 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     return () => animation.stop();
   }, []);
 
-  const handleDeleteFamily = async (id_family: number) => {
-    try {
-      Alert.alert(
-        'Confirm Delete',
-        'Are you sure you want to delete this family?',
-        [
-          {
-            text: 'Cancel',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel',
-          },
-          {
-            text: 'OK',
-            onPress: async () => {
-              const result = await FamilyServices.deleteFamily({id_family});
-              Alert.alert('Success', 'Successfully deleted family');
-            },
-          },
-        ],
-        {cancelable: false},
-      );
-    } catch (error: any) {
-      Alert.alert('Fail', 'Failed deleted family');
-      console.log('Error deleting family:', error);
-    }
-  };
+  // const handleDeleteFamily = async (id_family: number) => {
+  //   try {
+  //     Alert.alert(
+  //       'Confirm Delete',
+  //       'Are you sure you want to delete this family?',
+  //       [
+  //         {
+  //           text: 'Cancel',
+  //           onPress: () => console.log('Cancel Pressed'),
+  //           style: 'cancel',
+  //         },
+  //         {
+  //           text: 'OK',
+  //           onPress: async () => {
+  //             const result = await FamilyServices.deleteFamily({id_family});
+  //             Alert.alert('Success', 'Successfully deleted family');
+  //           },
+  //         },
+  //       ],
+  //       {cancelable: false},
+  //     );
+  //   } catch (error: any) {
+  //     Alert.alert('Fail', 'Failed deleted family');
+  //     console.log('Error deleting family:', error);
+  //   }
+  // };
 
   const handleOpenBottomSheet = () => {
     bottomSheetRef.current?.open();
@@ -335,6 +329,41 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
       </View>
     );
   }
+    const closeOptionsModal = () => {
+    setIsOptionsModalVisible(false);
+  };
+    const handleEditFamily = () => {
+    setIsOptionsModalVisible(false);
+    handleOpenBottomSheet();
+  };
+  const leaveFamily = async () => {
+    try {
+      await FamilyServices.leaveFamily(family?.id_family);
+      navigation.navigate('HomeTab', {screen: 'HomeScreen'});
+    } catch (error: any) {
+      console.error('Leave family failed:', error);
+    }
+  };
+  
+  const handleLeaveFamily = () => {
+    setIsOptionsModalVisible(false);
+    Alert.alert(
+      'Leave Family',
+      'Are you sure you want to leave this family?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Leave',
+          onPress: leaveFamily,
+        },
+      ],
+      { cancelable: true },
+    );
+  };
+  
   return (
     <View style={{position: 'relative', backgroundColor: '#fdfdfd'}}>
       <Image
@@ -348,7 +377,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           top: 0,
           left: 0,
           right: 0,
-          height: 220, // Match the height of the Image or adjust as needed
+          height: 220, 
           paddingTop: 60,
           padding: 10,
         }}>
@@ -379,8 +408,9 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
             </TouchableOpacity>
           )}
           <View style={styles.headerIcon}>
-            <TouchableOpacity onPress={handleOpenBottomSheet}>
-              <Material name="pencil" size={24} color="white" />
+          <TouchableOpacity onPress={() => setIsOptionsModalVisible(true)}>
+          <Feather name="more-vertical" color={COLORS.white} size={25} />
+
             </TouchableOpacity>
           </View>
         </View>
@@ -393,7 +423,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         />
         <View>
           <Image
-            //source={require('../../assets/images/family-avatar.jpg')}
+            
             source={source}
             resizeMode="cover"
             style={{
@@ -470,6 +500,12 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         </View>
         <View style={{height: 480}}></View>
       </ScrollView>
+      <OptionsModal
+            visible={isOptionsModalVisible}
+            onClose={closeOptionsModal}
+            onEditFamily={handleEditFamily}
+            onLeaveFamily={handleLeaveFamily}
+          />
       <RBSheet
         ref={bottomSheetRef}
         closeOnDragDown={true}
@@ -486,6 +522,8 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           description={family?.description}
         />
       </RBSheet>
+
+      
     </View>
   );
 };

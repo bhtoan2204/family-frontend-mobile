@@ -232,7 +232,24 @@ const FamilyServices = {
       throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
     }
   },
-  
+
+  leaveFamily: async (id_family?: number) => {
+    try {
+      const response: AxiosResponse = await axios.delete(`${FamilyUrl.leaveFamily}`, {
+        params: {
+          id_family,
+        },
+      });
+
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
+      }
+    } catch (error) {
+      throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
+    }
+  },
   inviteMember: async (familyId?: number) => {
     try {
       const response: AxiosResponse = await axios.get(
