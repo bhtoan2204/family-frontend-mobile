@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -12,22 +12,18 @@ import {COLORS} from 'src/constants';
 import {NewsScreenProps} from 'src/navigation/NavigationTypes';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {news_category, categoryColors} from './data';
-import {NewsCategoryInterface, NewsInterface} from 'src/interface/news/news';
 import ImageComponent from 'src/components/Image/Image';
 import NewsImage from 'src/assets/images/news.png';
 import NewsService from 'src/services/apiclient/NewsService';
 import { Linking } from 'react-native';
+import { Article, ArticleCategory } from 'src/interface/news/news';
 
 
 const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
-  const [newsCategory, setNewsCategory] =
-    React.useState<NewsCategoryInterface[]>(news_category);
-  const [newsItem, setNewsItem] = React.useState<NewsInterface[] | null>(null);
-  const [choosenCategoryIndex, setChoosenCategoryIndex] =
-    React.useState<number>(0);
-  const [choosenNewsCategory, setChoosenNewsCategory] = React.useState<number>(
-    news_category[0].id,
-  );
+  const [newsCategory, setNewsCategory] = React.useState<ArticleCategory[]>([]);
+  const [newsItem, setNewsItem] = React.useState<Article[] | null>(null);
+  const [choosenCategoryIndex, setChoosenCategoryIndex] =React.useState<number>(0);
+  const [choosenNewsCategory, setChoosenNewsCategory] = React.useState<number>(news_category[0].id,);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [refreshing, setRefreshing] = React.useState<boolean>(false);
   const categoryRefScroll = useRef<any>(null);
@@ -35,16 +31,35 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
   const ITEMS_PER_PAGE = 10;
   const [totalItems, setTotalItems] = React.useState<number>(0);
 
+  useEffect(()=>{
+    const fetchCategoryNews = async () => {
+      try {
+       
+        const data = await NewsService.categories();
+        setRefreshing(false);
+        setNewsCategory(data);
+      } catch (error) {
+        console.error('Error fetching news:', error);
+      }
+    };
+    fetchCategoryNews();
+
+  },[])
+
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
+    
+
     const fetchNews = async () => {
-      const type = news_category[choosenCategoryIndex].category_name;
+      const type = news_category[choosenCategoryIndex].id;
       try {
-        // setLoading(true)
+         setLoading(true)
         setNewsItem(null);
         const data = await NewsService.getNewsByCategory(type, currentPage, ITEMS_PER_PAGE);
         setRefreshing(false);
-        setNewsItem(data);
+        setNewsItem(data.data);
+        setTotalItems(data.count); 
+
       } catch (error) {
         console.error('Error fetching news:', error);
       }
@@ -90,19 +105,24 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
 
   React.useEffect(() => {
     const fetchNews = async () => {
-      const type = news_category[choosenCategoryIndex].category_name;
+      const type = news_category[choosenCategoryIndex].id;
+
       try {
+        setLoading(true);
         setNewsItem(null);
-        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
         const data = await NewsService.getNewsByCategory(type, currentPage, ITEMS_PER_PAGE);
-        setNewsItem(data.items);
-        setTotalItems(data.totalItems); 
+        setNewsItem(data.data);
+        setTotalItems(data.count); 
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching news:', error);
+        setLoading(false);
       }
     };
+  
     fetchNews();
-  }, [choosenCategoryIndex, currentPage]);
+  }, [choosenCategoryIndex, currentPage, newsCategory]);
+  
   
   const handleNextPage = () => {
     setCurrentPage(prevPage => prevPage + 1);
@@ -113,25 +133,27 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
   };
   
   const showCategoryItems = () => {
-    const categoryItems = newsItem;
-  if (categoryItems === null)
-    return (
-      <View className="flex-1 flex-col mt-1/2 justify-center items-center">
-        <ActivityIndicator size="small" />
-      </View>
-    );
-  else {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
-    const itemsToShow = categoryItems.slice(startIndex, endIndex);
-
-    itemsToShow.forEach((item, index) => {
-      item.category = {
-        id: choosenNewsCategory,
-        category_name: news_category[choosenCategoryIndex].category_name,
-        title: news_category[choosenCategoryIndex].title,
-      };
-    });
+    const categoryItems = newsItem || []; 
+    
+    if (categoryItems.length === 0) {
+      return (
+        <View className="flex-1 flex-col mt-1/2 justify-center items-center">
+          <ActivityIndicator size="small" />
+        </View>
+      );
+    } else {
+      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+      const endIndex = startIndex + ITEMS_PER_PAGE;
+      // const itemsToShow = categoryItems.slice(startIndex, endIndex);
+  
+      // itemsToShow.forEach((item, index) => {
+      //   item.category = {
+      //     id: choosenNewsCategory,
+      //     category_name: news_category[choosenCategoryIndex].category_name,
+      //     title: news_category[choosenCategoryIndex].title,
+      //   };
+      // });
+  
     return (
       <View className="mt-2">
         {categoryItems.map((item, index) => (
@@ -168,8 +190,8 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
                       style={{
                         color: categoryColors[choosenCategoryIndex].textColor,
                       }}>
-                      {item.category && item.category.title && (
-                        <Text>{item.category.title}</Text>
+                      {item.category && item.category.name && (
+                        <Text>{item.category.name}</Text>
                       )}
 
                     </Text>
@@ -184,7 +206,6 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
   };
   };
   const renderPagination = () => {
-    console.log(totalItems)
     const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
     return (
       <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 10 }}>
@@ -230,46 +251,45 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
           </View>
         </View>
         <View>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            ref={categoryRefScroll}
-            className="">
-            {newsCategory.map((category, index) => (
-              <TouchableOpacity
-                key={category.id}
-                onPress={() => {
-                  setChoosenCategoryIndex(index);
-                  setChoosenNewsCategory(category.id);
-                  if (categoryRefScroll.current) {
-                    categoryRefScroll.current.scrollTo({
-                      x: index * 70,
-                      animated: true,
-                    });
-                  }
-                  setCurrentPage(1);
-                }}
-                style={{
-                  paddingHorizontal: 20,
-                  paddingVertical: 10,
-                  borderBottomColor: COLORS.primary,
-                }}
-                className={`${choosenCategoryIndex === index ? 'border-b-2 border-[#56409e]' : ''}`}>
-                <Text
-                  style={
-                    choosenCategoryIndex == index
-                      ? {fontSize: 16, fontWeight: '600', color: COLORS.primary}
-                      : {
-                          fontSize: 16,
-                          fontWeight: '600',
-                          color: COLORS.gray,
-                        }
-                  }>
-                  {category.title}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+        {newsCategory.length > 0 && (
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    ref={categoryRefScroll}
+    className="">
+    {newsCategory.map((category, index) => (
+      <TouchableOpacity
+        key={category.id_article_category}
+        onPress={() => {
+          setChoosenCategoryIndex(index);
+          setChoosenNewsCategory(category.id_article_category);
+          if (categoryRefScroll.current) {
+            categoryRefScroll.current.scrollTo({
+              x: index * 70,
+              animated: true,
+            });
+          }
+          setCurrentPage(1);
+        }}
+        style={{
+          paddingHorizontal: 20,
+          paddingVertical: 10,
+          borderBottomColor: COLORS.primary,
+        }}
+        className={`${choosenCategoryIndex === index ? 'border-b-2 border-[#56409e]' : ''}`}>
+        <Text
+          style={
+            choosenCategoryIndex == index
+              ? {fontSize: 16, fontWeight: '600', color: COLORS.primary}
+              : {fontSize: 16, fontWeight: '600', color: COLORS.gray}
+          }>
+          {category.name}
+        </Text>
+      </TouchableOpacity>
+    ))}
+  </ScrollView>
+)}
+
         </View>
         <ScrollView
           refreshControl={
