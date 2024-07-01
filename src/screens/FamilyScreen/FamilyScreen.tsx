@@ -231,7 +231,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   };
 
   const handleOpenAllMemberModal = (id_family: number) => {
-    navigation.navigate('AllMember', {id_family: id_family});
+    navigation.navigate('FamilyStack', {screen: 'AllMember',params: {id_family: family!.id_family}});
   };
 
   const handleNavigateGuildLine = () => {

@@ -10,7 +10,8 @@ const FamilyUrl = {
   getMember: `${baseUrl}/api/v1/family/getMember`,
   addMember: `${baseUrl}/api/v1/family/addMember`,
   deleteMember: `${baseUrl}/api/v1/family/deleteMember`,
-  changeAvatar: `${baseUrl}/api/v1/family/changeAvatar`
+  changeAvatar: `${baseUrl}/api/v1/family/changeAvatar`,
+  inviteMember: `${baseUrl}/api/v1/invitation/generateInvitation`,
 
 };
 

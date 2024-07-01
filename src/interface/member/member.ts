@@ -22,4 +22,10 @@ export interface Member {
   created_at: string;
   updated_at: string;
   user: User;
+  familyRoles: Role;
+}
+export interface Role{
+  id_family_role: number;
+  role_name_vn: string;
+  role_name_en: string;
 }

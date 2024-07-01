@@ -20,26 +20,15 @@ import styles from './styles';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {MaterialCommunityIcons, MaterialIcons} from '@expo/vector-icons';
+import { Member } from 'src/interface/member/member';
 
-interface FormValues {
-  id_family: number;
-}
-
-type Member = {
-  lastname: string;
-  firstname: string;
-  email: string;
-  phone: string;
-  avatar: string;
-  role: string;
-};
 
 const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
   const {id_family} = route.params || {};
   const [members, setMembers] = useState<Member[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isAddMemberModalVisible, setAddMemberModalVisible] =
-    useState<boolean>(false); // State to control modal visibility
+    useState<boolean>(false); 
   const screenHeight = Dimensions.get('screen').height;
   const bottomSheetRef = useRef<RBSheet>(null);
 
@@ -62,10 +51,10 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
   };
   const filteredMembers = members.filter(
     member =>
-      member.lastname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      member.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      member.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      member.phone.includes(searchQuery),
+      member.user.lastname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      member.user.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      member.user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      member.user.phone.includes(searchQuery),
   );
 
   useEffect(() => {
@@ -170,7 +159,7 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
                             marginHorizontal: 5,
                           }}>
                           <Image
-                            source={{uri: member.avatar}}
+                            source={{uri: member.user.avatar}}
                             style={styles.avatar}
                           />
                         </View>
@@ -192,7 +181,7 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
                               }}
                             />
                             <Text style={styles.nameText}>
-                              {member.firstname} {member.lastname}
+                              {member.user.firstname} {member.user.lastname}
                             </Text>
                           </View>
                           <View
@@ -214,7 +203,7 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
                               style={styles.cardText}
                               numberOfLines={1}
                               ellipsizeMode="tail">
-                              {member.email}
+                              {member.user.email}
                             </Text>
                           </View>
                           <View
@@ -236,7 +225,7 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
                               style={styles.cardText}
                               numberOfLines={1}
                               ellipsizeMode="tail">
-                              {member.phone}
+                              {member.user.phone}
                             </Text>
                           </View>
                         </View>

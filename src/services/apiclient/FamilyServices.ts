@@ -206,7 +206,7 @@ const FamilyServices = {
         role,
       });
       if (response.status === 201) {
-        //console.log('Response status is 200, returning data:', response.data);
+        
         return response.data;
       } 
     } catch (error) {
@@ -215,7 +215,7 @@ const FamilyServices = {
     }
   },
 
-  deleteMember: async (familyId?: string, memberId?: string) => {
+  deleteMember: async (familyId?: number, memberId?: string) => {
     try {
       const response: AxiosResponse = await axios.delete(
         `${FamilyUrl.deleteMember}/${familyId}/${memberId}`,
@@ -229,6 +229,26 @@ const FamilyServices = {
       throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
     }
   },
+  inviteMember: async (familyId?: number) => {
+    try {
+      const response: AxiosResponse =await instance.get(
+        `${FamilyUrl.inviteMember}`,
+        {
+          params: {
+            familyId,
+          }
+        }
+      );
+      if (response.status === 201) {
+        return response.data.data;
+      } else {
+        throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
+      }
+    } catch (error) {
+      throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
+    }
+  },
+
   changeAvatar: async ( id_family: number | undefined, uri: string) => {
     try {
       const createFormData = (uri: string): FormData => {
