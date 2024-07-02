@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Text,
   View,
@@ -14,12 +14,12 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import {FamilyServices} from 'src/services/apiclient';
-import {ViewFamilyScreenProps} from 'src/navigation/NavigationTypes';
-import {COLORS, TEXTS} from 'src/constants';
+import { FamilyServices } from 'src/services/apiclient';
+import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
+import { COLORS, TEXTS } from 'src/constants';
 import styles from './styles';
 import BottomSheet from './BottomSheet';
-import {Family} from 'src/interface/family/family';
+import { Family } from 'src/interface/family/family';
 import GuildLineImage from 'src/assets/icons/guideline-items.png';
 import CalenderImage from 'src/assets/icons/calendar-scheduling.png';
 import EducationImage from 'src/assets/icons/manage-eduction.png';
@@ -36,7 +36,7 @@ import { AppDispatch } from 'src/redux/store';
 import * as ImagePicker from 'expo-image-picker';
 import { updateFamily } from 'src/redux/slices/FamilySlice';
 
-const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
+const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const { id_family } = route.params || {};
   const [family, setFamily] = useState<Family>();
   const bottomSheetRef = useRef<RBSheet>(null);
@@ -48,7 +48,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
 
   const handleGetFamily = async () => {
     try {
-      const familyInfo = await FamilyServices.getFamily({id_family});
+      const familyInfo = await FamilyServices.getFamily({ id_family });
       console.log('familyInfo', familyInfo);
       setFamily(familyInfo[0]);
     } catch (error: any) {
@@ -70,12 +70,12 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           {
             text: 'OK',
             onPress: async () => {
-              const result = await FamilyServices.deleteFamily({id_family});
+              const result = await FamilyServices.deleteFamily({ id_family });
               Alert.alert('Success', 'Successfully deleted family');
             },
           },
         ],
-        {cancelable: false},
+        { cancelable: false },
       );
     } catch (error: any) {
       Alert.alert('Fail', 'Failed deleted family');
@@ -95,30 +95,38 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   };
 
   const handleEducationPress = () => {
-    navigation.navigate('Education', {id_family: id_family});
+    navigation.navigate('Education', { id_family: id_family });
   };
 
   const handleCalendarPress = () => {
     navigation.navigate('CalendarStack', {
       screen: 'CalendarScreen',
-      params: {id_family: id_family},
+      params: { id_family: id_family },
     });
   };
 
+
   const handleOpenAllMemberModal = (id_family: number) => {
-    navigation.navigate('AllMember', {id_family: id_family});
+    navigation.navigate('AllMember', { id_family: id_family });
   };
 
   const handleNavigateGuildLine = () => {
-    navigation.navigate('GuildLine', {id_family: id_family});
+    navigation.navigate('GuildLine', { id_family: id_family });
   };
 
   const handleNavigateHouseHold = () => {
-    navigation.navigate('HouseHold', {id_family: id_family});
+    navigation.navigate('HouseHold', { id_family: id_family });
   };
 
+  const handleNavigateHouseHoldStack = () => {
+    navigation.navigate('HouseHoldStack', {
+      screen: 'HouseHoldScreen',
+      params: { id_family: id_family },
+    });
+  }
+
   const handleNavigateChecklist = () => {
-    navigation.navigate('CheckList', {id_family: id_family});
+    navigation.navigate('CheckList', { id_family: id_family });
   };
 
   const handleNavigateNews = () => {
@@ -134,25 +142,25 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
 
   const handleChangeAvatar = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [3, 3],
-        quality: 1,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [3, 3],
+      quality: 1,
     });
     console.log('image')
     console.log(result);
 
     if (!result.canceled) {
-        const a = result.assets[0]!
-        const uri = a.uri
-        setIsUploadingImage(true)
-        const fileUrl = await FamilyServices.changeAvatar(id_family, uri)
-        dispatch(updateFamily({ ...family, avatar: fileUrl }))
-        setIsUploadingImage(false)
-        console.log("fileUrl", fileUrl)
-        // setImage(result.assets[0].uri);
+      const a = result.assets[0]!
+      const uri = a.uri
+      setIsUploadingImage(true)
+      const fileUrl = await FamilyServices.changeAvatar(id_family, uri)
+      dispatch(updateFamily({ ...family, avatar: fileUrl }))
+      setIsUploadingImage(false)
+      console.log("fileUrl", fileUrl)
+      // setImage(result.assets[0].uri);
     }
-}
+  }
 
   return (
     <ImageBackground
@@ -174,16 +182,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           </View>
         </View>
         <View className="flex-col justify-center items-center pt-4 ">
-        <TouchableOpacity style={styles.avatarButton} onPress={handleChangeAvatar}>
+          <TouchableOpacity style={styles.avatarButton} onPress={handleChangeAvatar}>
 
-          <Image
-            source={require('../../assets/images/family-1.jpg')}
-            resizeMode="stretch"
-            style={styles.imageContainer}
-          />
-           <View style={styles.editContainer}>
-            <Icon name="add" size={30}  style={styles.editIcon} />
-          </View>
+            <Image
+              source={require('../../assets/images/family-1.jpg')}
+              resizeMode="stretch"
+              style={styles.imageContainer}
+            />
+            <View style={styles.editContainer}>
+              <Icon name="add" size={30} style={styles.editIcon} />
+            </View>
           </TouchableOpacity>
 
         </View>
@@ -312,12 +320,12 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                       Provide guidelines for family activities
                     </Text>
                   </View>
-                  
+
                 </ImageBackground>
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={handleNavigateHouseHold}
+                onPress={handleNavigateHouseHoldStack}
                 style={styles.touchableOpacity}>
                 <ImageBackground
                   source={require('../../assets/images/family-item-bg-1.png')}
@@ -348,7 +356,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                   source={require('../../assets/images/family-item-bg-4.png')}
                   resizeMode="stretch"
                   style={styles.imageBackground}>
-                     
+
 
                   <View style={{ flex: 2 }}>
                     <Image
@@ -365,7 +373,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                     </Text>
                   </View>
 
-                  
+
                 </ImageBackground>
               </TouchableOpacity>
 
@@ -393,21 +401,21 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         )}
       </SafeAreaView>
       <RBSheet
-          ref={bottomSheetRef}
-          closeOnDragDown={true}
-          height={screenHeight * 0.5}
-          customStyles={{
-            container: {
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-            },
-          }}>
-            <BottomSheet
-            id_family={id_family}
-            name={family?.name}
-            description={family?.description}
-            />
-          
+        ref={bottomSheetRef}
+        closeOnDragDown={true}
+        height={screenHeight * 0.5}
+        customStyles={{
+          container: {
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+          },
+        }}>
+        <BottomSheet
+          id_family={id_family}
+          name={family?.name}
+          description={family?.description}
+        />
+
       </RBSheet>
 
     </ImageBackground>

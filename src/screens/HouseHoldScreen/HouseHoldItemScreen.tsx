@@ -252,7 +252,7 @@
 // export default HouseHoldScreen
 import React, { useEffect, useRef } from 'react'
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, ActivityIndicator, Image } from 'react-native'
-import { HouseHoldScreenProps } from 'src/navigation/NavigationTypes'
+import { HouseHoldItemScreenProps, HouseHoldScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants';
 import ImageComponent from 'src/components/Image/Image';
@@ -275,157 +275,152 @@ import SearchBar from 'src/components/user/household/search-bar';
 import { HouseHoldCategoryInterface } from 'src/interface/household/household_category';
 import HouseHoldService from 'src/services/apiclient/HouseHoldService';
 // import AccordionItem from 'src/components/AccordionItem/accordion-item';
-
+import QuantityIcon from 'src/assets/images/household_assets/quantity.png';
 import HouseHoldTab from 'src/components/user/household/household-tab';
 import RoomComponent from 'src/components/user/household/room/room-component';
 import { RoomInterface } from 'src/interface/household/room';
+import { HouseHoldItemDetailInterface } from 'src/interface/household/household_item_detail';
+import HouseHoldItemInfoBox from 'src/components/user/household/household-detail/household-item-info-box';
+import ConsumableInfo from 'src/components/user/household/household-detail/consumable-info';
+import { Skeleton } from '@rneui/themed';
+import { LinearGradient } from 'expo-linear-gradient';
+import ConsumableSkeleton from 'src/components/user/household/household-detail/consumable-skeleton';
+import DescriptionInfo from 'src/components/user/household/household-detail/description-info';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
+import AddRoomSheet from 'src/components/user/household/sheet/add-room-sheet';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 
-const rooms_data = {
-  data: [
-    {
-      id_room: 1,
-      room_name: 'Living room',
-      image_url: null,
-    },
-    {
-      id_room: 2,
-      room_name: 'Kitchen',
-      image_url: null,
-    },
-    {
-      id_room: 3,
-      room_name: 'Bedroom',
-      image_url: null,
-    },
-    {
-      id_room: 4,
-      room_name: 'Bathroom',
-      image_url: null,
-    },
-    {
-      id_room: 5,
-      room_name: 'Balcony',
-      image_url: null,
-    },
-  ]
-}
+const HouseHoldItemScreen: React.FC<HouseHoldItemScreenProps> = ({ navigation, route }) => {
+    const { id_family } = route.params
+    const refRBSheet = React.useRef<any>(null);
+    const householdItems = useSelector((state: RootState) => state.householdItemDetail)
+    // const [choosenCategoryId, setChoosenCategoryId] = React.useState<number>(householdCategory[0].id_household_item_category)
 
-const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route, addRoomRef }) => {
-  const { id_family } = route.params
-  const refRBSheet = React.useRef<any>(null);
-  // const [householdCategory, setHouseholdCategory] = React.useState<HouseHoldCategoryInterface[]>(household_category_dat)
-  // const [householdItems, setHouseholdItems] = React.useState<HouseHoldItemInterface[]>(household_items)
-  // const householdItems = useSelector((state: RootState) => state.householdItems)
-  const roomItems = useSelector((state: RootState) => state.room)
-  const [choosenCategoryIndex, setChoosenCategoryIndex] = React.useState<number>(0)
-  // const [choosenCategoryId, setChoosenCategoryId] = React.useState<number>(householdCategory[0].id_household_item_category)
-  const [searchText, setSearchText] = React.useState<string>('')
-  const [choosenTab, setChoosenTab] = React.useState<number>(0)
-  const dispatch = useDispatch<AppDispatch>()
+    const dispatch = useDispatch<AppDispatch>()
 
-  // useEffect(() => {
-  //   const fetchHouseholdData = async () => {
-  //     const data = await HouseHoldService.getHouseHoldItems(
-  //       id_family!,
-  //       1, 100
-  //     )
-  //     const newHouseholdItems: HouseHoldItemInterface[] = data.map((item, index) => {
-  //       const gradient = gradients_list[Math.floor(index % gradients_list.length)]
-  //       return {
-  //         ...item,
-  //         item_image: gradient,
-  //       }
-  //     })
-  //     console.log(newHouseholdItems)
-  //     dispatch(setHouseholdItems(newHouseholdItems))
-  //   }
-  //   fetchHouseholdData()
-  //   return () => {
-  //     console.log("HouseHoldScreen unmounting")
-  //     dispatch(clearHouseholdItems())
-  //   }
-  // }, [])
-
-
-
-  // useEffect(() => {
-  //   console.log(searchText)
-  // }, [searchText])
-
-
-
-  if (!roomItems) {
-    return <ActivityIndicator size="large" color={COLORS.AuroMetalSaurus} />
-  }
-
-  return (
-    // <SafeAreaView className="flex-1 bg-[#F7F7F7]">
-    //   <View className="flex-1 bg-[#F7F7F7]">
-    //     <View style={{ width: screenWidth, height: screenHeight * 0.25 }}>
-    //       <View className='w-full absolute z-10 flex-row justify-between items-center py-3'>
-    //         <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
-    //           <Material name="chevron-left" size={30} style={{ color: "white", fontWeight: "bold" }} />
-    //           {/* <Text className='text-lg font-semibold text-gray-600' style={{ color: COLORS.AliceBlue }}>Back</Text> */}
-    //         </TouchableOpacity>
-
-    //         <View >
-    //           <Text className='text-lg font-semibold text-white' >HouseHold</Text>
-    //         </View>
-    //         <View className='mr-1'>
-    //           <TouchableOpacity onPress={() => {
-    //             // refRBSheet.current?.open()
-    //             // navigation.navigate('AddHouseHoldItem', {
-    //             //   id_family
-    //             // })
-
-    //           }} >
-    //             <Material name="plus" size={24} style={{ color: 'white', fontWeight: "bold" }} />
-    //             {/* <Text className='text-lg font-semibold text-white' >Add</Text> */}
-    //           </TouchableOpacity>
-    //         </View>
-    //       </View>
-    //       <Image
-    //         source={gradients_list[0]}
-    //         style={{ width: screenWidth, height: screenHeight * 0.25 }}
-    //         resizeMethod='resize'
-    //         resizeMode='cover'
-    //       />
-    //     </View>
-
-    //     <View className='flex-1 bg-[#f7f7f7] mt-[-3%]  rounded-tl-xl rounded-tr-xl over-flow-hidden'>
-    //       <View className='mt-[-3%] bg-transparent '>
-    //         <HouseHoldTab choosenTab={choosenTab} setChoosenTab={(num) => {
-    //           setChoosenTab(num)
-    //         }} />
-    //       </View>
-
-    //       {
-    //         choosenTab == 0 ? <RoomComponent /> : null
+    // useEffect(() => {
+    //   const fetchHouseholdData = async () => {
+    //     const data = await HouseHoldService.getHouseHoldItems(
+    //       id_family!,
+    //       1, 100
+    //     )
+    //     const newHouseholdItems: HouseHoldItemInterface[] = data.map((item, index) => {
+    //       const gradient = gradients_list[Math.floor(index % gradients_list.length)]
+    //       return {
+    //         ...item,
+    //         item_image: gradient,
     //       }
+    //     })
+    //     console.log(newHouseholdItems)
+    //     dispatch(setHouseholdItems(newHouseholdItems))
+    //   }
+    //   fetchHouseholdData()
+    //   return () => {
+    //     console.log("HouseHoldScreen unmounting")
+    //     dispatch(clearHouseholdItems())
+    //   }
+    // }, [])
 
 
+
+    // useEffect(() => {
+    //   console.log(searchText)
+    // }, [searchText])
+
+
+
+    // if (householdItems.id_household_item == -1) {
+    //     return <View className='flex-1 items-center justify-center'>
+    //         <Skeleton
+    //             LinearGradientComponent={LinearGradient}
+    //             animation="wave" width={80} height={40} />
     //     </View>
+    // }
 
-    //   </View>
+    return (
+        <View className='flex-1 pt-5 rounded-tl-lg rounded-tr-lg bg-[#f7f7f7]'>
+            <ScrollView className='flex-1'>
+                <View className='items-center'>
 
+                    <HouseHoldItemInfoBox id={householdItems.id_household_item} title="Consumable Item" onPress={() => {
+                        navigation.navigate('AddConsumableItem', {
+                            id_family: id_family,
+                            id_item: householdItems.id_household_item,
+                            id_category: householdItems.id_category
+                        })
+                    }}>
+                        <ConsumableInfo data={householdItems} />
+                    </HouseHoldItemInfoBox>
+                    <View className='my-2'></View>
+                    <HouseHoldItemInfoBox id={householdItems.id_household_item} title="Description" onPress={() => {
+                        navigation.navigate('EditDescription', {
+                            id_family: id_family,
+                            id_item: householdItems.id_household_item,
+                            id_category: householdItems.id_category,
+                            description: householdItems.description || ""
+                        })
 
-    // </SafeAreaView>
-    <RoomComponent
-      data={
-        roomItems
-      }
-      handleNavigateRoomDetail={(id_room: number) => {
-        navigation.navigate('RoomDetail', {
-          id_room: id_room,
-          id_family: id_family
-        })
-      }}
-      addRoomSheetRef={addRoomRef!}
-    />
-  )
+                    }}>
+                        <DescriptionInfo data={householdItems} />
+                    </HouseHoldItemInfoBox>
+                </View>
+            </ScrollView>
+            <View className=''>
+            </View>
+
+        </View>
+
+        // <RoomComponent
+        //   data={
+        //     roomItems
+        //   }
+        //   handleNavigateRoomDetail={(id_room: number) => {
+        //     navigation.navigate('RoomDetail', {
+        //       id_room: id_room,
+        //       id_family: id_family
+        //     })
+        //   }}
+        // />
+    )
 }
 
+// interface DescriptionInfoProps {
+//     data: HouseHoldItemDetailInterface
+// }
 
-export default HouseHoldScreen
+// const DescriptionInfo = ({ data }: DescriptionInfoProps) => {
+//     return (
+//         data.description != null && data.description != ''
+
+//             ? <View className='py-3 px-3 '>
+//                 <Text className=' text-base font-semibold '
+//                     style={{
+//                         color: COLORS.Rhino,
+
+//                     }}>Description</Text>
+//                 <Text className=' text-base font-semibold '
+//                     style={{
+//                         color: COLORS.Rhino,
+//                     }}>{data.description}</Text>
+//             </View> : <>
+//                 <View className='py-3 px-3 disabled' >
+//                     <View className='justify-center'>
+//                         <View className=' items-center'>
+//                             {/* <Image source={QuantityIcon} style={{ width: 24, height: 24 }} /> */}
+//                             <Material name='plus' size={24} color={iOSGrayColors.systemGray.accessibleDark} />
+//                         </View>
+//                         <Text className=' text-center text-base py-5'
+//                             style={{
+//                                 color: COLORS.Rhino,
+
+//                             }}
+//                         >Add description for this item</Text>
+//                     </View>
+//                 </View>
+
+//             </>
+//     )
+// }
+
+export default HouseHoldItemScreen

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Animated,
   View,
@@ -9,16 +9,16 @@ import {
   Modal,
   ImageBackground,
 } from 'react-native';
-import {FamilyServices} from 'src/services/apiclient';
-import {Feather as FeatherIcon, MaterialIcons} from '@expo/vector-icons';
-import {ViewAllFamilyScreenProps} from 'src/navigation/NavigationTypes';
+import { FamilyServices } from 'src/services/apiclient';
+import { Feather as FeatherIcon, MaterialIcons } from '@expo/vector-icons';
+import { ViewAllFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import styles from './styles';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import {LinearGradient} from 'expo-linear-gradient';
-import {selectProfile} from 'src/redux/slices/ProfileSclice';
-import {useDispatch, useSelector} from 'react-redux';
-import {Family} from 'src/interface/family/family';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
+import { useDispatch, useSelector } from 'react-redux';
+import { Family } from 'src/interface/family/family';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Member } from 'src/interface/member/member';
 
 type ButtonProps = {
@@ -39,10 +39,10 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
   const [selectedButton, setSelectedButton] = useState('');
   const [isUp, setIsUp] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const [buttonPosition, setButtonPosition] = useState({x: 0, y: 0});
-  const [membersMap, setMembersMap] = useState<{ [key: number]: Member[] }>({}); 
+  const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
+  const [membersMap, setMembersMap] = useState<{ [key: number]: Member[] }>({});
 
-  const Button = ({title, buttonStyle}: ButtonProps) => (
+  const Button = ({ title, buttonStyle }: ButtonProps) => (
     <TouchableOpacity
       onPress={() => {
         if (selectedButton === title) {
@@ -62,14 +62,14 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
             isUp ? ['#537895', '#09203F'] : ['#CCEAFB', '#CCEAFB', '#CCEAFB']
           }
           style={[styles.button1, buttonStyle]}
-          start={{x: 0, y: 0}}
-          end={{x: 0, y: 1}}>
-          <View style={[styles.row, {alignItems: 'center'}]}>
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}>
+          <View style={[styles.row, { alignItems: 'center' }]}>
             <Text
               style={[
                 styles.buttonTextChoosen,
-                {color: isUp ? '#fff' : '#2a475e'},
-                {fontSize: 16},
+                { color: isUp ? '#fff' : '#2a475e' },
+                { fontSize: 16 },
               ]}>
               {title}
             </Text>
@@ -83,10 +83,10 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
         </LinearGradient>
       ) : (
         <View
-          style={[styles.button1, buttonStyle, {backgroundColor: '#CCEAFB'}]}>
-          <View style={[styles.row, {alignItems: 'center'}]}>
+          style={[styles.button1, buttonStyle, { backgroundColor: '#CCEAFB' }]}>
+          <View style={[styles.row, { alignItems: 'center' }]}>
             <Text
-              style={[styles.buttonText, {color: '#2a475e'}, {fontSize: 16}]}>
+              style={[styles.buttonText, { color: '#2a475e' }, { fontSize: 16 }]}>
               {title}
             </Text>
             <MaterialIcons
@@ -106,18 +106,20 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
       family.name?.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
-    setFilteredFamilies(result); 
+    setFilteredFamilies(result);
   };
 
   useEffect(() => {
     const handleGetAllFamily = async () => {
       try {
         const allFamilies = await FamilyServices.getAllFamily();
+        console.log(allFamilies)
         const membersObject: { [key: number]: Member[] } = {};
-    
+
         for (const family of allFamilies) {
           const members = await FamilyServices.getAllMembers({ id_family: family.id_family });
           membersObject[family.id_family] = members;
+          console.log("member object ", membersObject)
         }
         setFamilies(allFamilies);
         setMembersMap(membersObject);
@@ -126,16 +128,16 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
       }
     };
     handleGetAllFamily();
-   
+
   }, []);
 
   return (
     <ImageBackground
       source={require('../../assets/images/view-all-family-2.png')}
-      style={{flex: 1}}
+      style={{ flex: 1 }}
       resizeMode="stretch">
-      <SafeAreaView style={{flex: 1,}}>
-        <View style={[{flex: 1, }]}>
+      <SafeAreaView style={{ flex: 1, }}>
+        <View style={[{ flex: 1, }]}>
           <View style={styles.circleContainer}>
             <TouchableOpacity style={styles.circle}>
               <MaterialIcons
@@ -156,7 +158,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
             </TouchableOpacity>
           </View>
 
-          <View style={[styles.inputWrapper, {left: 20, marginBottom: 15}]}>
+          <View style={[styles.inputWrapper, { left: 20, marginBottom: 15 }]}>
             <TextInput
               placeholder="Search Families"
               placeholderTextColor="#9C9AAF"
@@ -188,7 +190,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
           <Animated.ScrollView
             contentContainerStyle={styles.content}
             onScroll={Animated.event(
-              [{nativeEvent: {contentOffset: {y: scrollY}}}],
+              [{ nativeEvent: { contentOffset: { y: scrollY } } }],
               {
                 useNativeDriver: true,
               },
@@ -207,25 +209,25 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                     <View style={styles.cardContainer2}>
                       <Text style={styles.cardTitle}>{family.name}</Text>
 
-                       <View style={styles.avatarsContainer}>
-            {membersMap[family.id_family] && Array.isArray(membersMap[family.id_family]) && (
-              membersMap[family.id_family].slice(0, 4).map((member, index) => (
-                <View key={index} style={styles.avatarContainer}>
-                  <Image
-                    source={{ uri: member.avatar }}
-                    style={styles.avatar}
-                  />
-                </View>
-              ))
-            )}
-            {membersMap[family.id_family] && Array.isArray(membersMap[family.id_family]) && membersMap[family.id_family].length > 4 && (
-              <View style={styles.moreAvatarContainer}>
-                <Text style={styles.moreAvatarText}>+{membersMap[family.id_family].length - 4}</Text>
-              </View>
-            )}
-          </View>
+                      <View style={styles.avatarsContainer}>
+                        {membersMap[family.id_family] && Array.isArray(membersMap[family.id_family]) && (
+                          membersMap[family.id_family].slice(0, 4).map((member, index) => (
+                            <View key={index} style={styles.avatarContainer}>
+                              <Image
+                                source={{ uri: member.avatar }}
+                                style={styles.avatar}
+                              />
+                            </View>
+                          ))
+                        )}
+                        {membersMap[family.id_family] && Array.isArray(membersMap[family.id_family]) && membersMap[family.id_family].length > 4 && (
+                          <View style={styles.moreAvatarContainer}>
+                            <Text style={styles.moreAvatarText}>+{membersMap[family.id_family].length - 4}</Text>
+                          </View>
+                        )}
+                      </View>
 
-                      
+
                       {/* <View style={styles.ColorAndDescription}>
                         <TouchableOpacity style={styles.color}>
                           <Material
@@ -246,12 +248,12 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                         <LinearGradient
                           colors={['#09203F', '#537895']}
                           style={[styles.button, styles.detailButton]}
-                          start={{x: 0, y: 1}}
-                          end={{x: 0, y: 0}}>
+                          start={{ x: 0, y: 1 }}
+                          end={{ x: 0, y: 0 }}>
                           <TouchableOpacity
                             style={{
                               shadowColor: '#000',
-                              shadowOffset: {width: 0, height: 6},
+                              shadowOffset: { width: 0, height: 6 },
                               shadowOpacity: 0.25,
                             }}
                             onPress={() =>
@@ -262,8 +264,8 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                             <Text
                               style={[
                                 styles.buttonText,
-                                {color: '#fff'},
-                                {fontWeight: '600'},
+                                { color: '#fff' },
+                                { fontWeight: '600' },
                               ]}>
                               View Detail
                             </Text>
@@ -273,7 +275,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                     </View>
 
                     <TouchableOpacity
-                      style={{right: 60}}
+                      style={{ right: 60 }}
                       onPressIn={event => {
                         const locationX = event.nativeEvent.pageX;
                         const locationY = event.nativeEvent.pageY;
@@ -298,9 +300,9 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                         setModalVisible(!modalVisible);
                       }}>
                       <View
-                        style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                        style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}>
                         <TouchableOpacity
-                          style={{flex: 1}}
+                          style={{ flex: 1 }}
                           activeOpacity={1}
                           onPressOut={() => setModalVisible(false)}>
                           <View
@@ -322,12 +324,12 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                                   alert('Da bam Edit');
                                 }}>
                                 <View
-                                  style={[styles.row, {alignItems: 'center'}]}>
+                                  style={[styles.row, { alignItems: 'center' }]}>
                                   <Text
                                     style={[
-                                      {color: '#2a475e'},
-                                      {fontWeight: '700'},
-                                      {fontSize: 16},
+                                      { color: '#2a475e' },
+                                      { fontWeight: '700' },
+                                      { fontSize: 16 },
                                     ]}>
                                     Edit
                                   </Text>
@@ -344,7 +346,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
                                   alert('Da bam Delete');
                                 }}>
                                 <View
-                                  style={[styles.row, {alignItems: 'center'}]}>
+                                  style={[styles.row, { alignItems: 'center' }]}>
                                   <Text
                                     // style={[
                                     //   {color: '#724DC9'},

@@ -115,10 +115,10 @@ const FamilyStack = () => {
 
 
 
-      <Stack.Screen name="HouseHold">
+      {/* <Stack.Screen name="HouseHold">
         {(props) => <HouseHoldScreen {...props as HouseHoldScreenProps} />}
-      </Stack.Screen>
-      <Stack.Screen name="HouseHoldItemDetail">
+      </Stack.Screen> */}
+      {/* <Stack.Screen name="HouseHoldItemDetail">
         {(props) => <HouseHoldItemDetailScreen {...props as HouseHoldItemDetailScreenProps} />}
       </Stack.Screen>
       <Stack.Screen name="AddHouseHoldItem" options={{
@@ -148,7 +148,7 @@ const FamilyStack = () => {
       </Stack.Screen>
       <Stack.Screen name="AddConsumableHouseHoldItem" >
         {(props) => <AddConsumableHouseHoldItemScreen {...props as AddConsumableHouseHoldItemScreenProps} />}
-      </Stack.Screen>
+      </Stack.Screen> */}
 
       {/* <Stack.Screen name="HouseHoldCategory">
         {(props) => <HouseHoldCategoryScreen {...props as HouseHoldCategoryScreenProps} />}

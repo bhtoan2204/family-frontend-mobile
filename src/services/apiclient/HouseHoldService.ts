@@ -5,6 +5,9 @@ import instance from '../httpInterceptor';
 import {HouseHoldItemDetailInterface} from 'src/interface/household/household_item_detail';
 import {HouseHoldItemInterface} from 'src/interface/household/household_item';
 import {HouseHoldCategoryInterface} from 'src/interface/household/household_category';
+import LocalStorage from 'src/store/localstorage';
+import {RoomInterface} from 'src/interface/household/room';
+import {gradients_list} from 'src/assets/images/gradients';
 
 const HouseHoldService = {
   getAllHouseHoldCategory: async () => {
@@ -16,7 +19,10 @@ const HouseHoldService = {
       } else {
         return [];
       }
-    } catch (error) {}
+    } catch (error: any) {
+      console.log(error.message);
+      return [];
+    }
   },
   getHouseHoldItems: async (
     id_family: number,
@@ -24,6 +30,8 @@ const HouseHoldService = {
     itemsPerPage: number,
   ) => {
     try {
+      const token = await LocalStorage.GetAccessToken();
+      console.log('token', token);
       const url =
         HouseHoldUrls.getHouseHoldItem +
         '/' +
@@ -32,8 +40,10 @@ const HouseHoldService = {
         page +
         '&itemsPerPage=' +
         itemsPerPage;
+      console.log(url);
       const response = await instance.get(url);
       if (response.status === 200) {
+        console.log(response.data);
         return response.data.data as HouseHoldItemInterface[];
       } else {
         return [];
@@ -127,6 +137,122 @@ const HouseHoldService = {
       }
     } catch (error) {
       console.log('Error updating consumable item:', error);
+    }
+  },
+  getAllRoom: async (id_family: number, page: number, itemsPerPage: number) => {
+    try {
+      const url =
+        HouseHoldUrls.getAllRoom +
+        '/' +
+        id_family +
+        '?page=' +
+        page +
+        '&itemsPerPage=' +
+        itemsPerPage;
+      const response = await instance.get(url);
+      if (response.status === 200) {
+        console.log('uwu', response.data.data);
+        return response.data.data as RoomInterface[];
+      } else {
+        return [];
+      }
+    } catch (error) {
+      throw new Error();
+    }
+  },
+  createRoom: async (
+    id_family: number,
+    room_name: string,
+    room_image: string,
+  ) => {
+    const url = HouseHoldUrls.createRoom;
+    const createFormData = (uri: string): FormData => {
+      let formData = new FormData();
+      if (uri != '') {
+        let filename = uri.split('/').pop()!;
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+        const file = {
+          uri,
+          name: filename,
+          type,
+        };
+        formData.append('image', file);
+      }
+      // else {
+      //   const rand = Math.floor(Math.random() * gradients_list.length);
+
+      //   const file = {
+      //     uri: gradients_list[rand],
+      //     type: 'image/png',
+      //     name: `${id_family}_${rand}.png`,
+      //   };
+      //   formData.append('image', file);
+      // }
+      formData.append('id_family', id_family.toString());
+      formData.append('room_name', room_name);
+      return formData;
+    };
+
+    try {
+      const res = await instance.post(url, createFormData(room_image), {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          accept: '*/*',
+        },
+      });
+      if (res.status === 201) {
+        const roomData = res.data;
+        roomData.id_family = parseInt(roomData.id_family);
+        console.log("created room data",roomData)
+        return roomData as RoomInterface;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.log('Error creating room:', error);
+      return null;
+    }
+  },
+  updateRoom: async (
+    id_family: number,
+    id_room: number,
+    room_name: string,
+    room_image: string | null,
+  ) => {
+    const url = baseUrl + HouseHoldUrls.updateRoom;
+    const createFormData = (uri: string): FormData => {
+      let formData = new FormData();
+      if (uri != null && uri != '') {
+        let filename = uri.split('/').pop()!;
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+        const file = {
+          uri,
+          name: filename,
+          type,
+        };
+        formData.append('image', file);
+      }
+      formData.append('id_family', id_family.toString());
+      formData.append('id_room', id_room.toString());
+      formData.append('room_name', room_name);
+      return formData;
+    };
+    try {
+      const res = await instance.put(url, createFormData(room_image || ''), {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          accept: '*/*',
+        },
+      });
+      if (res.status === 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log('Error updating room info:', error);
     }
   },
 };

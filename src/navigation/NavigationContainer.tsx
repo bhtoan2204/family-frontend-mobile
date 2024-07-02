@@ -1,5 +1,5 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthStack from './Routes/AuthStack';
 import HomeTab from './Routes/HomeTab';
 import FamilyStack from './Routes/FamilyStack';
@@ -9,6 +9,8 @@ import ChatStack from './Routes/ChatStack';
 import ExpenseStack from './Routes/ExpenseStack';
 import IncomeStack from './Routes/IncomeStack';
 import MessageTab from './Routes/MessageTab';
+import HouseHoldStack from './Routes/HouseHoldStack';
+import HouseHoldItemStack from './Routes/HouseHoldItemStack';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +30,8 @@ const Navigation = () => {
         <Stack.Screen name="ExpenseStack" component={ExpenseStack} />
         <Stack.Screen name="IncomeStack" component={IncomeStack} />
         <Stack.Screen name="MessageTab" component={MessageTab} />
+        <Stack.Screen name="HouseHoldStack" component={HouseHoldStack} />
+        <Stack.Screen name="HouseHoldItemStack" component={HouseHoldItemStack} />
 
       </Stack.Navigator>
     </NavigationContainer>

@@ -1,4 +1,4 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import {configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
 import profileReducer from './slices/ProfileSclice';
 import checkListReducer from './slices/CheckListSlice';
 import financeReducer from './slices/FinanceSlice';
@@ -14,7 +14,8 @@ import memberSlice from './slices/MemberSlice';
 import shoppingListSlice from './slices/ShoppingListSlice';
 import forgorPasswordReducer from './slices/ForgotPassword';
 import familyReducer from './slices/FamilySlice';
-
+import categorySlice from './slices/CategorySlice';
+import HouseHoldRefSlice from './slices/HouseHoldRefSlice';
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
@@ -25,17 +26,21 @@ export const store = configureStore({
     expenseAnalysis: expenseAnalysisReducer,
     calendar: calendarReducer,
     incomeAnalysis: incomeAnalysisReducer,
-    room: roomReducer,
     guidelines: guidelineReducer,
+    //household
+    room: roomReducer,
     householdItems: householdItemSlice,
     householdItemDetail: HouseHoldDetailSlice,
+    category: categorySlice,
+    householdRef: HouseHoldRefSlice,
+    //education
     educations: educationSlice,
     members: memberSlice,
     forgorPassword: forgorPasswordReducer,
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
-      serializableCheck: false, 
+      serializableCheck: false,
     }),
 });
 

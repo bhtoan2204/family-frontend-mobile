@@ -3,6 +3,7 @@ import {RootState} from '../store';
 import {HouseHoldItemInterface} from 'src/interface/household/household_item';
 import {gradients_list} from 'src/assets/images/gradients';
 import {HouseHoldItemDetailInterface} from 'src/interface/household/household_item_detail';
+import {ImageSourcePropType} from 'react-native';
 
 const blankState: HouseHoldItemDetailInterface = {
   id_household_item: -1,
@@ -82,6 +83,9 @@ const householdItemDetailSlice = createSlice({
     updateImage(state, action: PayloadAction<string>) {
       state.item_imageurl = action.payload;
     },
+    updateImageProp(state, action: PayloadAction<ImageSourcePropType>) {
+      state.item_image = action.payload;
+    },
     updateComsumableItem(
       state,
       action: PayloadAction<HouseHoldItemDetailInterface['consumableItem']>,
@@ -111,6 +115,7 @@ export const {
   updateTitle,
   updateDescription,
   updateImage,
+  updateImageProp,
 } = householdItemDetailSlice.actions;
 
 export default householdItemDetailSlice.reducer;

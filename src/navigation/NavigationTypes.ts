@@ -1,6 +1,7 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 export type RootParamList = {
   AuthStack: NavigatorScreenParams<AuthStackParamList>;
@@ -12,7 +13,9 @@ export type RootParamList = {
   ExpenseStack: NavigatorScreenParams<ExpenseStackParamList>;
   IncomeStack: NavigatorScreenParams<IncomeStackParamList>;
   MessageTab: NavigatorScreenParams<MessageTabParamList>;
-
+  HouseHoldTab: NavigatorScreenParams<HouseHoldTabParamList>;
+  HouseHoldStack: NavigatorScreenParams<HouseHoldStackParamList>;
+  HouseHoldItemStack: NavigatorScreenParams<HouseHoldItemStackParamList>;
 };
 
 export type ExpenseStackParamList = {
@@ -103,7 +106,7 @@ export interface ChatScreenProps {
 }
 
 type ChatListNavigationProp = NativeStackNavigationProp<
-MessageTabParamList,
+  MessageTabParamList,
   'ChatList'
 >;
 
@@ -155,7 +158,7 @@ export type CalendarStackParamList = {
   };
   UpdateEvent: {
     id_family: number | undefined;
-  }
+  };
 };
 
 export type FamilyStackParamList = {
@@ -289,21 +292,25 @@ export type FamilyStackParamList = {
     id_family: number | undefined;
     id_checklist: number;
   };
-<<<<<<< HEAD
   AddShoppingList: {
     id_family: number | undefined;
   };
   AddCheckList: {
     id_family: number | undefined;
   };
-
+  HouseHoldTab: undefined;
   //
-  News: {
-    id_family: number | undefined;
-  };
-=======
+  // News: {
+  //   id_family: number | undefined;
+  // };
   News: undefined;
->>>>>>> dev
+};
+
+export type HouseHoldTabParamList = {
+  HouseHold: undefined;
+  Room: undefined;
+  Item: undefined;
+  Category: undefined;
 };
 
 export type PackStackParamList = {
@@ -328,6 +335,216 @@ export type PackStackParamList = {
   ZaloPayScreen: undefined;
 };
 
+type HouseHoldStackParamList = {
+  HouseHoldScreen: {
+    id_family: number | undefined;
+  }; //household screen default is room
+  ItemScreen: {
+    id_family: number | undefined;
+  };
+  CategoryScreen: {
+    id_family: number | undefined;
+  };
+  RoomDetail: {
+    id_room: number | undefined;
+    id_family: number | undefined;
+  };
+  ItemDetail: {
+    id_item: number | undefined;
+    id_family: number | undefined;
+  };
+  CategoryDetail: {
+    id_category: number | undefined;
+    id_family: number | undefined;
+  };
+};
+
+type HouseHoldStackNavigationProp = NativeStackNavigationProp<
+  RootParamList,
+  'HouseHoldStack'
+>;
+
+export interface HouseHoldStackProps {
+  navigation: HouseHoldStackNavigationProp;
+  route: RouteProp<RootParamList, 'HouseHoldStack'>;
+}
+
+type HouseHoldItemStackParamList = {
+  HouseHoldItem: {
+    id_item: number | undefined;
+    id_family: number | undefined;
+  };
+  ReceiptInfo: {
+    id_item: number | undefined;
+    id_family: number | undefined;
+  };
+  AddConsumableItem: {
+    id_item: number | undefined;
+    id_family: number | undefined;
+    id_category: number | undefined;
+  };
+  AddDescription: {
+    id_item: number | undefined;
+    id_family: number | undefined;
+  };
+  EditConsumbleItem: {
+    id_item: number | undefined;
+    id_family: number | undefined;
+  };
+  EditDescription: {
+    id_item: number | undefined;
+    id_family: number | undefined;
+    id_category: number | undefined;
+    description: string | undefined;
+  };
+};
+
+type HouseHoldItemStackNavigationProp = NativeStackNavigationProp<
+  RootParamList,
+  'HouseHoldItemStack'
+>;
+export interface HouseHoldItemStackProps {
+  navigation: HouseHoldItemStackNavigationProp;
+  route: RouteProp<RootParamList, 'HouseHoldItemStack'>;
+}
+
+type HouseHoldItemNavigationProp = NativeStackNavigationProp<
+  HouseHoldItemStackParamList,
+  'HouseHoldItem'
+>;
+
+export interface HouseHoldItemScreenProps {
+  navigation: HouseHoldItemNavigationProp;
+  route: RouteProp<HouseHoldItemStackParamList, 'HouseHoldItem'>;
+  addRoomRef: React.RefObject<BottomSheet> | undefined;
+
+}
+
+type ReceiptInfoNavigationProp = NativeStackNavigationProp<
+  HouseHoldItemStackParamList,
+  'ReceiptInfo'
+>;
+
+export interface ReceiptInfoScreenProps {
+  navigation: ReceiptInfoNavigationProp;
+  route: RouteProp<HouseHoldItemStackParamList, 'ReceiptInfo'>;
+}
+
+type AddConsumableItemNavigationProp = NativeStackNavigationProp<
+  HouseHoldItemStackParamList,
+  'AddConsumableItem'
+>;
+
+export interface AddConsumableItemScreenProps {
+  navigation: AddConsumableItemNavigationProp;
+  route: RouteProp<HouseHoldItemStackParamList, 'AddConsumableItem'>;
+}
+
+type AddDescriptionNavigationProp = NativeStackNavigationProp<
+  HouseHoldItemStackParamList,
+  'AddDescription'
+>;
+
+export interface AddDescriptionScreenProps {
+  navigation: AddDescriptionNavigationProp;
+  route: RouteProp<HouseHoldItemStackParamList, 'AddDescription'>;
+}
+
+type EditConsumbleItemNavigationProp = NativeStackNavigationProp<
+  HouseHoldItemStackParamList,
+  'EditConsumbleItem'
+>;
+
+export interface EditConsumbleItemScreenProps {
+  navigation: EditConsumbleItemNavigationProp;
+  route: RouteProp<HouseHoldItemStackParamList, 'EditConsumbleItem'>;
+}
+
+type EditDescriptionNavigationProp = NativeStackNavigationProp<
+  HouseHoldItemStackParamList,
+  'EditDescription'
+>;
+
+export interface EditDescriptionScreenProps {
+  navigation: EditDescriptionNavigationProp;
+  route: RouteProp<HouseHoldItemStackParamList, 'EditDescription'>;
+}
+
+type HouseHoldScreenNavigationProp = NativeStackNavigationProp<
+  HouseHoldStackParamList,
+  'HouseHoldScreen'
+>;
+
+export interface HouseHoldScreenProps {
+  navigation: HouseHoldScreenNavigationProp;
+  route: RouteProp<HouseHoldStackParamList, 'HouseHoldScreen'>;
+  addRoomRef: React.RefObject<BottomSheet> | undefined;
+  addItemRef: React.RefObject<BottomSheet> | undefined;
+
+}
+
+type HouseHoldScreen = NativeStackNavigationProp<
+  HouseHoldStackParamList,
+  'HouseHoldScreen'
+>;
+
+export interface HouseHoldScreenProps {
+  navigation: HouseHoldScreen;
+  route: RouteProp<HouseHoldStackParamList, 'HouseHoldScreen'>;
+}
+
+type RoomDetailNavigationProp = NativeStackNavigationProp<
+  HouseHoldStackParamList,
+  'RoomDetail'
+>;
+
+export interface RoomDetailScreenProps {
+  navigation: RoomDetailNavigationProp;
+  route: RouteProp<HouseHoldStackParamList, 'RoomDetail'>;
+}
+
+type ItemScreenNavigationProp = NativeStackNavigationProp<
+  HouseHoldStackParamList,
+  'ItemScreen'
+>;
+
+export interface ItemScreenProps {
+  navigation: ItemScreenNavigationProp;
+  route: RouteProp<HouseHoldStackParamList, 'ItemScreen'>;
+  addItemRef: React.RefObject<BottomSheet> | undefined;
+  addRoomRef: React.RefObject<BottomSheet> | undefined;
+}
+
+type ItemDetailNavigationProp = NativeStackNavigationProp<
+  HouseHoldStackParamList,
+  'ItemDetail'
+>;
+
+export interface ItemDetailScreenProps {
+  navigation: ItemDetailNavigationProp;
+  route: RouteProp<HouseHoldStackParamList, 'ItemDetail'>;
+}
+
+type CategoryScreenNavigationProp = NativeStackNavigationProp<
+  HouseHoldStackParamList,
+  'CategoryScreen'
+>;
+
+export interface CategoryScreenProps {
+  navigation: CategoryScreenNavigationProp;
+  route: RouteProp<HouseHoldStackParamList, 'CategoryScreen'>;
+  addCategoryRef: React.RefObject<BottomSheet> | undefined;
+}
+
+type CategoryDetailNavigationProp = NativeStackNavigationProp<
+  HouseHoldStackParamList,
+  'CategoryDetail'
+>;
+
+export interface CategoryDetailScreenProps {
+  navigation: CategoryDetailNavigationProp;
+  route: RouteProp<HouseHoldStackParamList, 'CategoryDetail'>;
+}
 /////
 type CalendarStackNavigationProp = NativeStackNavigationProp<
   RootParamList,
@@ -728,12 +945,12 @@ export interface NewsScreenProps {
   route: RouteProp<FamilyStackParamList, 'News'>;
 }
 
-export interface HouseHoldScreenProps {
-  navigation: HouseHoldNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'HouseHold'>;
-}
+// export interface HouseHoldScreenProps {
+//   navigation: HouseHoldNavigationProp;
+//   route: RouteProp<FamilyStackParamList, 'HouseHold'>;
+// }
 
-export interface HouseHoldItemScreenProps {
+export interface HouseHoldItemScreenProps2 {
   navigation: HouseHoldCategoryNavigationProp;
   route: RouteProp<FamilyStackParamList, 'HouseHoldCategory'>;
 }
@@ -903,12 +1120,10 @@ export type HomeTabParamList = {
   MoreScreen: undefined;
   Expenditure: undefined;
   CategoryExpense: undefined;
-
 };
 
 export type MessageTabParamList = {
   ChatList: undefined;
- 
 };
 type CategoryExpenseNavigationProp = NativeStackNavigationProp<
   HomeTabParamList,
@@ -934,7 +1149,6 @@ type ProfileScreenNavigationProp = NativeStackNavigationProp<
   HomeTabParamList,
   'ProfileScreen'
 >;
-
 
 export interface ProfileScreenProps {
   navigation: ProfileScreenNavigationProp;
@@ -997,7 +1211,6 @@ export type ModelScreenParamsList = {
   };
   UpdateEvent: {
     id_calendar?: number;
-    
   };
   AddEditFamilyMember: {
     id_family: number | undefined;
