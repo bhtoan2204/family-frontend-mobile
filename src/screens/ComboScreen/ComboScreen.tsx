@@ -84,7 +84,11 @@ const ComboScreen = () => {
           />
 
           <View
-            style={{backgroundColor: 'white', height: 2000, zIndex: -1}}></View>
+            style={{
+              backgroundColor: 'white',
+              height: 2000,
+              zIndex: -1,
+            }}></View>
 
           <View style={stylesChat.chat}>
             <Image
@@ -357,6 +361,7 @@ const ComboScreen = () => {
             style={stylesHousehold.upSideDown}
           />
         </View>
+        <View style={{backgroundColor: '#fff', height: 180}}></View>
       </View>
     </ScrollView>
   );
