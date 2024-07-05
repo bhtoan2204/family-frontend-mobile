@@ -91,7 +91,7 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
       resizeMode="stretch">
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.container}>
-          <View style={styles.headerContainer}>
+        <View style={styles.headerContainer}>
             <TouchableOpacity
               onPress={() =>
                 //navigation.navigate('HomeTab', {screen: 'Expense'})

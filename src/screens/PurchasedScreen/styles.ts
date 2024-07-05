@@ -2,24 +2,22 @@ import { StyleSheet } from 'react-native';
 import { ScreenHeight } from 'react-native-elements/dist/helpers';
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    padding: 16,
+    
   },
   backButton: {
-    color: '#333',
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    marginRight: 16,
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 20,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -88,6 +86,14 @@ const styles = StyleSheet.create({
   actionText: {
     color: '#fff',
     textAlign: 'center',
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  container: {
+    padding: 16,
   },
 });
 

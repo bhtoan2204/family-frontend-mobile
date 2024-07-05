@@ -27,7 +27,6 @@ type PaymentMethod = {
 const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
   const [code, setCodeMethod] = useState('vnpay');
   const currentDate = new Date().toLocaleDateString();
-  const { id_family } = route.params;
   const [value, setValue] = useState(0);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([
     { id: 1, name: 'VNPay', code: 'vnpay', url_image: 'https://example.com/vnpay-logo.png' },

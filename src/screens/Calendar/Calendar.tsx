@@ -241,6 +241,11 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
     setSelectDate(date.dateString);
     dispatch(setDate(date.dateString));
   };
+  function formatDate(dateStr: string | number | Date) {
+    const date = new Date(dateStr);
+    const options = { year: 'numeric', month: 'short' };
+    return date.toLocaleDateString('en-US', options);
+  }
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
@@ -262,8 +267,8 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
             alignItems: 'center',
           }}>
           <View style={{flexDirection: 'column'}}>
-            <Text style={{fontSize: 40, fontWeight: '300', marginBottom: 5}}>
-              Today
+            <Text style={{fontSize: 40, fontWeight: '400', marginBottom: 5, color: 'gray'}}>
+              {formatDate(selectDate)}
             </Text>
             <Text style={{fontSize: 14, fontWeight: '300'}}>
               Welcome, {profile.firstname } {profile.lastname }

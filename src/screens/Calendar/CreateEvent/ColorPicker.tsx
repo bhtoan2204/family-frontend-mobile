@@ -19,7 +19,9 @@ const ColorPicker = ({ navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log(id_family);
         const result = await CalendarServices.getAllCategoryEvent(id_family);
+        console.log(result);
         setAvailableColors(result);
       } catch (error) {
         console.log('Error fetching colors:', error);

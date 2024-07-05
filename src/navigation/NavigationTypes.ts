@@ -272,9 +272,9 @@ export type FamilyStackParamList = {
 
 export type PackStackParamList = {
   ViewAllPurchased: undefined;
-  ViewAllPackage: {
-    id_family: number | undefined;
-  };
+  ViewAllPackage: undefined;
+  ViewAllService: undefined;
+  
   BankInfoScreen: {
     id_family: number | undefined;
     id_package: number | undefined;
@@ -283,9 +283,7 @@ export type PackStackParamList = {
     language: 'vn' | undefined;
     method: string | undefined;
   };
-  OrderDetailScreen: {
-    id_family: number | undefined;
-  };
+  OrderDetailScreen: undefined;
   ZaloPayScreen: undefined;
   ComboScreen: undefined;
 };
@@ -459,6 +457,14 @@ type PurchasedNavigationProp = NativeStackNavigationProp<
 export interface PurchasedScreenProps {
   navigation: ViewAllFamilyNavigationProp & FamilyStackNavigationProp;
   route: RouteProp<PackStackParamList, 'ViewAllPurchased'>;
+}
+type ViewAllServiceNavigationProp = NativeStackNavigationProp<
+  PackStackParamList,
+  'ViewAllService'
+>;
+export interface ViewAllServiceProps {
+  navigation: ViewAllServiceNavigationProp ;
+  route: RouteProp<PackStackParamList, 'ViewAllService'>;
 }
 
 type ViewAllFamilyNavigationProp = NativeStackNavigationProp<

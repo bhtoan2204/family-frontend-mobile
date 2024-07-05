@@ -11,9 +11,11 @@ interface CalendarState {
     color: string,
     freq: string;
     isOnly: boolean;
+    event_time_start: Date;
+    event_time_end: Date;
 }
 const initialState: CalendarState = {
-  event:{
+  event: {
     id_calendar: 0,
     title: '',
     time_start: new Date(),
@@ -28,7 +30,7 @@ const initialState: CalendarState = {
     recurrence_rule: '',
     start_timezone: '',
     end_timezone: '',
-    name_category: '',
+    
   },
   id_family: 0,
   selectDate: (new Date()).toString(),
@@ -36,7 +38,8 @@ const initialState: CalendarState = {
   color: '',
   freq: '',
   isOnly: false,
-
+  event_time_start: new Date(),
+  event_time_end: new Date(),
 };
 
 
@@ -71,11 +74,18 @@ const calendarSlice = createSlice({
     {
       state.isOnly = action.payload;
     },
-
+    setTimeStart(state, action:PayloadAction<Date>)
+    {
+      state.event_time_end = action.payload;
+    },
+    setTimeEnd(state, action:PayloadAction<Date>)
+    {
+      state.event_time_end = action.payload;
+    },
   },
 });
 
-export const { setFamily, setDate, setEvent,setColor,setIdcate, setOnly} = calendarSlice.actions;
+export const { setFamily, setDate, setEvent,setColor,setIdcate, setOnly, setTimeStart, setTimeEnd } = calendarSlice.actions;
 
 export const getFamily= (state: RootState) => state.calendar.id_family;
 export const getDate= (state: RootState) => state.calendar.selectDate;
@@ -84,5 +94,7 @@ export const getColor= (state: RootState) => state.calendar.color;
 export const getIDcate= (state: RootState) => state.calendar.id_category_event;
 export const getFreq= (state: RootState) => state.calendar.freq;
 export const getOnly= (state: RootState) => state.calendar.isOnly;
+export const getTimeStart= (state: RootState) => state.calendar.event_time_start;
+export const getTimeEnd= (state: RootState) => state.calendar.event_time_end;
 
 export default calendarSlice.reducer;

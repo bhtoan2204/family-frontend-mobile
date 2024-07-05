@@ -6,24 +6,22 @@ import styles from './styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { TEXTS } from 'src/constants';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Member } from 'src/interface/member/member';
+import { useSelector } from 'react-redux';
+import { selectfamily } from 'src/redux/slices/FamilySlice';
 
-type Member = {
-  id_user: string;
-  email: string;
-  phone: string;
-  firstname: string;
-  lastname: string;
-};
+
 
 const ViewMemberScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }) => {
-  const { id_family } = route.params || {};
+ 
   const [member, setMember] = useState<Member[]>([]);
-
+  let family=useSelector(selectfamily);
 
   const handleMember =async() => {
     try {
-      const familyInfo = await FamilyServices.getAllMembers({ id_family: id_family });
+      const familyInfo = await FamilyServices.getAllMembers({ id_family: family.id_family });
       setMember(familyInfo);
+
     } catch (error: any) {
       console.log('FamilyServices.getFamily error:', error);
     }

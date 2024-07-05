@@ -1,10 +1,8 @@
-import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 //import {VietQR} from 'vietqr';
 import {Text, Image, View} from 'react-native';
 import {FlatList, GestureHandlerRootView} from 'react-native-gesture-handler';
 
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS, TEXTS} from 'src/constants';
 
 import {PackageServices} from 'src/services/apiclient';

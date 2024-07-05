@@ -31,6 +31,7 @@ import {IncomeServices} from 'src/services/apiclient';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS} from 'src/constants';
 import { Swipeable } from 'react-native-gesture-handler';
+import { selectfamily } from 'src/redux/slices/FamilySlice';
 
 interface ExpenseType {
   id_expense_type: number;
@@ -55,13 +56,13 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
   const addUrl =
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBWw-U6s-Q1k-tt_xXKV02dPlypckiNOJMxJo3KxWW-g&s';
   let state = useSelector(getType);
-  let id_family = useSelector(getFamily);
+  let family = useSelector(selectfamily);
 
   const [selectedFamily, setSelectedFamily] = useState<number | null>(null);
 
   useEffect(() => {
-    fetchExpenseType(id_family);
-    fetchIncomeType(id_family);
+    fetchExpenseType(family.id_family);
+    fetchIncomeType(family.id_family);
     setSelectedCategoryType(state);
   }, [state]);
 
@@ -92,8 +93,8 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
   const createCategory = async () => {
     if (selectedCategoryType === 'Expense'){
     try {
-      await ExpenseServices.createExpenseType(id_family, newCategoryName);
-      fetchExpenseType(id_family);
+      await ExpenseServices.createExpenseType(family.id_family, newCategoryName);
+      fetchExpenseType(family.id_family);
       toggleModal();
       setNewCategoryName('');
     } catch (error: any) {
@@ -103,8 +104,8 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
    else if (selectedCategoryType === 'Income'){
 
       try {
-        await IncomeServices.createIncomeType(id_family, newCategoryName);
-        fetchExpenseType(id_family);
+        await IncomeServices.createIncomeType(family.id_family, newCategoryName);
+        fetchExpenseType(family.id_family);
         toggleModal();
         setNewCategoryName('');
       } catch (error: any) {
@@ -146,9 +147,9 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
                 text: 'Delete',
                 onPress: async () => {
                     try {
-                        await IncomeServices.deleteIncomeSource(id_family,event.id_income_source );
+                        await IncomeServices.deleteIncomeSource(family.id_family,event.id_income_source );
                         Alert.alert('Success', 'The category has been deleted successfully.');
-                        fetchIncomeType(id_family);
+                        fetchIncomeType(family.id_family);
                       } catch (error) {
                         console.error('Error deleting event:', error);
                         Alert.alert('Error', 'An error occurred while deleting the category.');
@@ -172,9 +173,9 @@ const onDeleteExpense = async (event: any) => {
               text: 'Delete',
               onPress: async () => {
                   try {
-                      await ExpenseServices.deleteExpenseType(id_family, event.id_expense_type);
+                      await ExpenseServices.deleteExpenseType(family.id_family, event.id_expense_type);
                       Alert.alert('Success', 'The category has been deleted successfully.');
-                      fetchExpenseType(id_family);
+                      fetchExpenseType(family.id_family);
                   } catch (error) {
                       console.error('Error deleting event:', error);
                       Alert.alert('Error', 'An error occurred while deleting the category.');
