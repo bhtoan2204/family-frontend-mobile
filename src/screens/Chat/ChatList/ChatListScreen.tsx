@@ -305,13 +305,13 @@ const ChatListScreen = ({
       </TouchableOpacity>
     </Swipeable>
   );
-  const handlePressChatFamily = (message: FamilyLastMessage) => {
-    dispatch(setFamilyLastMessage(message));
+  const handlePressChatFamily = async (message: FamilyLastMessage) => {
+    await dispatch(setFamilyLastMessage(message));
     navigation.navigate('ChatStack', {
-      screen: 'ChatFamily',
-      params: { id_family: message.familyId },
+      screen: 'ChatFamilyLast'
     });  
   }
+
   const renderChatFamilyItem = ({ item }: { item: FamilyLastMessage }) => (
     <Swipeable renderRightActions={() => renderRightActions(item)}>
       <TouchableOpacity onPress={() => handlePressChatFamily(item)}>

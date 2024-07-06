@@ -7,7 +7,7 @@ import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
 import ImageView from 'react-native-image-viewing';
 import { FamilyServices, ChatServices } from 'src/services/apiclient';
-import { ChatFamilyScreenProps } from 'src/navigation/NavigationTypes';
+import { ChatFamilyLastScreenProps, ChatFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import styles from './styles';
 import { Keyboard } from 'react-native';
 import { getSocket } from '../../../services/apiclient/Socket';
@@ -24,7 +24,7 @@ import { selectfamily } from 'src/redux/slices/FamilySlice';
 
 
 
-const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
+const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) => {
   const profile = useSelector(selectProfile);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -43,8 +43,8 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
     null,
   );
-  // let LastMessageFamily = useSelector(selectFamilyLastMessage);
-  let family = useSelector(selectfamily);
+  let LastMessageFamily = useSelector(selectFamilyLastMessage);
+ 
 
 
   useEffect(() => {
@@ -86,7 +86,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
 
   const fetchMember = async () => {
     try {
-      const response = await FamilyServices.getAllMembers({ id_family: family.id_family });
+      const response = await FamilyServices.getAllMembers({ id_family: LastMessageFamily.familyId });
       if (Array.isArray(response)) {
         setMembers(response);
       }
@@ -97,7 +97,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
 
   const fetchMessages = useCallback(async () => {
     try {
-      const response = await ChatServices.GetFamilyMessages({ id_family:  family.id_family, index: currentIndex });
+      const response = await ChatServices.GetFamilyMessages({ id_family: LastMessageFamily.familyId, index: currentIndex });
       if (response) {
         const newMessages = response.map((message: any) => {
           if (message.type === 'photo') {
@@ -126,7 +126,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
     try {
       const response = await ChatServices.sendFamilyImage({
         uri: uri,
-        familyId:  family.id_family,
+        familyId: LastMessageFamily.familyId,
       });
       fetchNewMessages(response);
     } catch (error) {
@@ -139,7 +139,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
     try {
       const response = await ChatServices.sendFamilyMessage({
         message: message,
-        familyId:  family.id_family,
+        familyId: LastMessageFamily.familyId,
       });
       fetchNewMessages(response);
     } catch (error) {
@@ -163,7 +163,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   const sendVideoMessage = async (uri: any) => {
     try {
       
-      const response = await ChatServices.sendFamilyVideo( family.id_family, uri)
+      const response = await ChatServices.sendFamilyVideo(LastMessageFamily.familyId, uri)
       const data = await response.json();
       if (response) {
 
@@ -346,17 +346,17 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
                 style={styles.backButton}
               />
             </TouchableOpacity>
-            {family && (
+            {LastMessageFamily && (
               <>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Image
-                    source={{uri: family.avatar}}
+                    source={{uri: LastMessageFamily.avatar}}
                     style={styles.avatar}
                   />
                   <View style={[styles.activeDot, {top: 15, right: 10}]} />
                   <Text style={styles.avatarText}>
                     {' '}
-                    {family.name}
+                    {LastMessageFamily.name}
                   </Text>
                 </View>
               </>
@@ -366,7 +366,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
 
         <TouchableOpacity
-              onPress={() => handleVideoCall(family.id_family)}
+              onPress={() => handleVideoCall(LastMessageFamily.familyId)}
               style={{
                 marginTop: 10,
                 marginRight: 10,
@@ -448,7 +448,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
           }}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.introContainer}>
-              {family && (
+              {LastMessageFamily && (
                 <>
                   <View
                     style={{
@@ -456,7 +456,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
                       alignItems: 'center',
                     }}>
                     <Image
-                      source={{uri: family.avatar}}
+                      source={{uri: LastMessageFamily.avatar}}
                       style={styles.avatarFirst}
                     />
                     <View
@@ -464,13 +464,13 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
                     />
                     <Text style={styles.avatarTextFirst}>
                       {' '}
-                      {family.name}
+                      {LastMessageFamily.name}
                     </Text>
                   </View>
                 </>
               )}
               <Text style={styles.introText}>
-                You haven't received any message from  {family?.name} yet.
+                You haven't received any message from  {LastMessageFamily?.name} yet.
               </Text>
               <Text style={styles.introText}>
                 Start the conversation by sending a message.
@@ -516,4 +516,4 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   );
 };
 
-export default ChatFamilyScreen;
+export default ChatFamilyLastScreen;

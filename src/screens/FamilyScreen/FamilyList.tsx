@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Modal,
   Text,
@@ -10,11 +10,9 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useDispatch } from 'react-redux';
-import {COLORS} from 'src/constants';
-import {Family} from 'src/interface/family/family';
-import {Member} from 'src/interface/member/member';
-
+import { COLORS } from 'src/constants';
+import { Family } from 'src/interface/family/family';
+import { Member } from 'src/interface/member/member';
 
 const FamilyListModal = ({
   visible,
@@ -31,11 +29,13 @@ const FamilyListModal = ({
 
   const handleSelectFamily = (family: Family) => {
     setFamilySelect(family);
-    
-    onClose(family);
   };
 
   const handleBackdropPress = () => {
+    onClose(familySelect);
+  };
+
+  const handleConfirmSelection = () => {
     onClose(familySelect);
   };
 
@@ -44,11 +44,18 @@ const FamilyListModal = ({
       animationType="fade"
       transparent={true}
       visible={visible}
-      onRequestClose={handleBackdropPress}>
+      onRequestClose={handleBackdropPress}
+    >
       <TouchableWithoutFeedback onPress={handleBackdropPress}>
         <View style={modalStyles.modalOverlay}>
           <TouchableWithoutFeedback>
             <View style={modalStyles.modalContent}>
+              <View style={modalStyles.header}>
+                <Text style={modalStyles.headerText}>Select Family</Text>
+                <TouchableOpacity onPress={handleBackdropPress} style={modalStyles.closeButton}>
+                  <Icon name="close" size={24} color="black" />
+                </TouchableOpacity>
+              </View>
               <ScrollView>
                 {families.map((family: Family, index: number) => (
                   <TouchableOpacity
@@ -62,13 +69,14 @@ const FamilyListModal = ({
                             index === 0 ? modalStyles.firstItemSelected : {},
                           ]
                         : {},
-                    ]}>
+                    ]}
+                  >
                     <View style={modalStyles.familyItemContainer}>
                       <View style={modalStyles.familyInfo}>
                         <Image
                           source={
                             family.avatar
-                              ? {uri: family.avatar}
+                              ? { uri: family.avatar }
                               : require('../../assets/images/big-family_4441180.png')
                           }
                           style={modalStyles.avatarFamily}
@@ -77,22 +85,36 @@ const FamilyListModal = ({
                           {family.name}
                         </Text>
                       </View>
-                    </View>
-                    <View style={modalStyles.membersList}>
-                      {membersMap[family.id_family]?.map((member: Member) => (
-                        <View
-                          key={member.id_user}
-                          style={modalStyles.memberItemContainer}>
-                          <Image
-                            source={{uri: member.avatar}}
-                            style={modalStyles.avatar}
-                          />
-                        </View>
-                      ))}
+                      <View style={modalStyles.membersList}>
+                        {membersMap[family.id_family]?.slice(0, 3).map((member: Member) => (
+                          <View
+                            key={member.id_user}
+                            style={modalStyles.memberItemContainer}
+                          >
+                            <Image
+                              source={{ uri: member.user.avatar }}
+                              style={modalStyles.avatar}
+                            />
+                          </View>
+                        ))}
+                        {membersMap[family.id_family]?.length > 3 && (
+                          <View style={modalStyles.extraMembers}>
+                            <Text style={modalStyles.extraMembersText}>
+                              +{membersMap[family.id_family].length - 3}
+                            </Text>
+                          </View>
+                        )}
+                      </View>
                     </View>
                   </TouchableOpacity>
                 ))}
               </ScrollView>
+              <TouchableOpacity
+                style={modalStyles.confirmButton}
+                onPress={handleConfirmSelection}
+              >
+                <Text style={modalStyles.confirmButtonText}>Select Family</Text>
+              </TouchableOpacity>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -114,7 +136,9 @@ const modalStyles = StyleSheet.create({
     maxHeight: '80%',
   },
   header: {
-    backgroundColor: '#f2f2f2',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderBottomWidth: 1,
@@ -123,17 +147,18 @@ const modalStyles = StyleSheet.create({
   headerText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'black',
+    color: '#ccc',
+  },
+  closeButton: {
+    padding: 5,
   },
   familyItem: {
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },
   familyItemContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
+    flexDirection: 'column',
+    paddingVertical: 5,
     paddingHorizontal: 20,
   },
   familyInfo: {
@@ -142,34 +167,28 @@ const modalStyles = StyleSheet.create({
   },
   familyItemText: {
     fontSize: 18,
-    color: COLORS.Rhino,
-    marginLeft: 10,
+    color: 'gray',
     fontWeight: 'bold',
-  },
-  checkIcon: {
-    marginLeft: 10,
   },
   membersList: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'flex-end',
-    paddingHorizontal: 20,
-    paddingBottom: 10,
+    alignItems: 'center',
   },
   memberItemContainer: {
     alignItems: 'center',
-    marginBottom: 5,
     marginRight: 5,
   },
   avatar: {
     width: 30,
     height: 30,
-    borderRadius: 20,
+    borderRadius: 15,
   },
   avatarFamily: {
     width: 60,
     height: 60,
-    borderRadius: 30,
+    borderRadius: 10,
     marginRight: 10,
   },
   selectedFamilyItem: {
@@ -179,6 +198,33 @@ const modalStyles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
+  confirmButton: {
+    backgroundColor: COLORS.Primary,
+    padding: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  confirmButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  extraMembers: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: COLORS.BlueLight,
+    marginLeft: 5,
+  },
+  extraMembersText: {
+    color: COLORS.Rhino,
+    fontWeight: 'bold',
+  },
+  
 });
 
 export default FamilyListModal;

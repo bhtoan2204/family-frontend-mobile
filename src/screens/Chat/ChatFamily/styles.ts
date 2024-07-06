@@ -2,6 +2,40 @@ import {StyleSheet} from 'react-native';
 import {COLORS} from 'src/constants';
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginVertical: 10,
+  },
+  avatarContainer: {
+    marginRight: 10,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  messageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  receiverMessageContainer: {
+    alignSelf: 'flex-start',
+    padding: 10,
+    borderRadius: 10,
+    width: 'auto',
+    backgroundColor: '#f0f0f0',
+  },
+  messageContentContainer: {
+    alignItems: 'center',
+  },
+  imageMessage: {
+    width: 200,
+    height: 200,
+    borderRadius: 10,
+  },
+  senderMessageContent: {
+    color: '#000',
+  },
   messagesContainer: {
     flex: 1,
     backgroundColor: 'white',
@@ -9,13 +43,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
   },
-  messageContainer: {
-    maxWidth: '80%',
-    marginVertical: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 10,
-  },
+
   senderMessageContainer: {
     alignSelf: 'flex-end',
     backgroundColor: COLORS.DenimBlue,
@@ -24,17 +52,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: 'auto',
   },
-  receiverMessageContainer: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#EDEDED',
-    padding: 10,
-    margin: 10,
-    borderRadius: 10,
-    width: 'auto',
-  },
-  senderMessageContent: {
-    fontWeight: '500'
-  },
+
+
   receiverMessageSenderName: {
     fontWeight: 'bold',
     marginBottom: 4,
@@ -86,31 +105,17 @@ const styles = StyleSheet.create({
     marginTop: 25,
     flexDirection: 'row',
   },
-  messageContentContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
+ 
   backButton: {
     color: COLORS.DenimBlue,
   },
-  imageMessage: {
-    width: 200,
-    height: 200,
-    borderRadius: 10,
-  },
+ 
   receiverName: {
     fontWeight: '600',
     fontSize: 16,
     color: COLORS.black,
   },
-  avatarContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 10,
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-  },
+  
   avatarText: {
     fontSize: 18,
     fontWeight: 'bold',

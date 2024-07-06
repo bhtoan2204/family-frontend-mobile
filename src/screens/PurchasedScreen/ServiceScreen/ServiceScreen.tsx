@@ -13,6 +13,7 @@ import { Family } from 'src/interface/family/family';
 import { Avatar } from 'react-native-elements';
 import { Service } from 'src/interface/package/mainPackage';
 import { TEXTS } from 'src/constants';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 const ServiceScreen = ({ navigation, route }: ViewAllServiceProps) => {
   const [selectedService, setSelectedService] = useState<null | Service>(null);
@@ -31,6 +32,7 @@ const ServiceScreen = ({ navigation, route }: ViewAllServiceProps) => {
         setLoading(true); 
 
       const result = await PackageServices.getExtraPackage();
+      console.log(result)
       setService(result);
     } catch (error: any) {
       console.log('Services.getPackage error:', error);
@@ -189,6 +191,7 @@ const ServiceScreen = ({ navigation, route }: ViewAllServiceProps) => {
                     style={styles.purchaseButton}
                     onPress={() => setSelectedService(pkg)}>
                     <Text style={styles.purchaseButtonText}>Buy Now</Text>
+                    <FeatherIcon color="white" name="shopping-cart" size={17}  />
                   </TouchableOpacity>
                 )}
               </View>

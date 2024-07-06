@@ -104,9 +104,10 @@ export interface FamilySpecProps {
 }
 
 export type ChatStackParamList = {
-  ChatFamily: {
-    id_family: number | undefined;
-  };
+  ChatFamily:  undefined;
+  
+  ChatFamilyLast: undefined;
+  
   ChatUser: {
     receiverId: string | undefined;
   };
@@ -126,7 +127,15 @@ export interface ChatFamilyScreenProps {
   navigation: ChatFamilyScreenNavigationProp;
   route: RouteProp<ChatStackParamList, 'ChatFamily'>;
 }
+type ChatFamilyLastScreenNavigationProp = NativeStackNavigationProp<
+  ChatStackParamList,
+  'ChatFamilyLast'
+>;
 
+export interface ChatFamilyLastScreenProps {
+  navigation: ChatFamilyLastScreenNavigationProp;
+  route: RouteProp<ChatStackParamList, 'ChatFamilyLast'>;
+}
 type ChatScreenNavigationProp = NativeStackNavigationProp<
   ChatStackParamList,
   'ChatUser'

@@ -9,6 +9,10 @@ import ViewFamilyScreen from 'src/screens/FamilyScreen';
 import ReportScreen from 'src/screens/Report';
 import FamilyScreen from 'src/screens/ExpenseScreen/FamilyScreen';
 import CategoryExpenseScreen from 'src/screens/ExpenseScreen/CategoryScreen/CategoryExpense';
+import ChatFamilyScreen from 'src/screens/Chat/ChatFamily';
+import HomeScreen from 'src/screens/HomeScreen';
+import { useNavigation } from '@react-navigation/native';
+
 const Tab = createBottomTabNavigator();
   const FamilyList = [
     {
@@ -17,6 +21,14 @@ const Tab = createBottomTabNavigator();
       component: ViewFamilyScreen,
       screen: 'Family',
       icon: 'home',
+      visible: true,
+    },
+    {
+      id: 'ChatFamily',
+      title: 'Chat',
+      component: ChatFamilyScreen,
+      screen: 'ChatFamily',
+      icon: 'chat',
       visible: true,
     },
     {
@@ -52,10 +64,22 @@ const Tab = createBottomTabNavigator();
   ];
   
   const TabBarButton = (props: BottomTabBarButtonProps, tab: any) => {
+
+    const navigation = useNavigation();
+    
+    const handlePress = () => {
+      if (tab.id === 'ChatFamily') {
+        navigation.navigate('ChatStack', {screen: 'ChatFamilyScreen'});
+      } else {
+        props.onPress();
+      }
+    };
+
+
     return (
       <TabButton
         accessibilityState={props.accessibilityState}
-        onPress={props.onPress}
+        onPress={handlePress}
         item={tab}
       />
     );

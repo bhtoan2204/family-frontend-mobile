@@ -131,14 +131,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   purchaseButton: {
-    backgroundColor: '#007bff', 
+    backgroundColor: COLORS.DarkCharcoal, 
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
+    flexDirection: 'row',
   },
   purchaseButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+    marginRight: 10,
   },
   loadingContainer: {
     flex: 1,
