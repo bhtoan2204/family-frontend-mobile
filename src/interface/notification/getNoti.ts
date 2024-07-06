@@ -23,3 +23,17 @@ export interface Member {
     name: string;
     avatar: string;
   }
+
+  export interface Notification {
+    _id: string;
+    title: string;
+    content: string;
+    type: string;
+    id_family: number;
+    id_target: number;
+    isRead: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    timestamp: Date;
+  }
+  

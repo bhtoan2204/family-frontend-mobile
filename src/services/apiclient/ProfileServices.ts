@@ -20,6 +20,32 @@ const ProfileServices = {
       throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
+  getNotification: async (index: number) => {
+    try {
+      const response: AxiosResponse = await instance.get(ProfileUrl.getNotification + `/${index}`);
+
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+      }
+    } catch (error) {
+      throw new Error(ERROR_TEXTS.API_ERROR);
+    }
+  },
+  markRead: async (index: string) => {
+    try {
+      const response: AxiosResponse = await instance.get(ProfileUrl.markRead + `/${index}`);
+
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+      }
+    } catch (error) {
+      throw new Error(ERROR_TEXTS.API_ERROR);
+    }
+  },
   createFeedback: async (rating: number, comment: string) => {
     try {
       const response: AxiosResponse = await instance.post(`${baseUrl}/api/v1/feedback`, {

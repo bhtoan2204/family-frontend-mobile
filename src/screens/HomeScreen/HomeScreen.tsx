@@ -224,13 +224,7 @@ const HomeScreen = ({
         console.log('Guideline pressed');
       },
     },
-    {
-      icon: 'chat',
-      label: 'Chat',
-      onPress: () => {
-        handleChat();
-      },
-    },
+   
     {
       icon: 'language',
       label: 'Language',

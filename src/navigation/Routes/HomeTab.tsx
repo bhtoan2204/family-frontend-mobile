@@ -19,6 +19,7 @@ import EditProfileScreen from 'src/screens/ProfileScreen/EditProfileScreen/EditP
 import ChatListScreen from 'src/screens/Chat/ChatList/ChatListScreen';
 import MessageTab from './MessageTab';
 import { useNavigation } from '@react-navigation/native';
+import NotificationScreen from 'src/screens/Notifications/NotificationScreen';
 
 const Tab = createBottomTabNavigator();
 const TabList = [
@@ -44,7 +45,7 @@ const TabList = [
   {
     id: 'Notification',
     title: 'Notification',
-    component: ChatListScreen,
+    component: NotificationScreen,
     screen: 'Notification',
     icon: 'bell',
     visible: true,

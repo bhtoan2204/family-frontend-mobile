@@ -44,12 +44,7 @@ const cards = [
     detail: 'Manage family members.',
     icon: require('../../assets/icons/family-member.png'),
   },
-  {
-    id: 2,
-    title: 'Chats',
-    detail: 'Communicate with family members.',
-    icon: require('../../assets/icons/chat-with-members.png'),
-  },
+
   {
     id: 3,
     title: 'Education',

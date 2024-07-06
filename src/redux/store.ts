@@ -10,7 +10,7 @@ import familyReducer from './slices/FamilySlice';
 import packagedReducer from './slices/PackageSlice';
 import messageFamilyReducer from './slices/MessageFamily';
 import MessageUserReducer from './slices/MessageUser';
-
+import notificationsReducer from './slices/NotificationSlice';
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
@@ -24,6 +24,7 @@ export const store = configureStore({
     package: packagedReducer,
     messageFamily: messageFamilyReducer,
     message: MessageUserReducer,
+    notifications: notificationsReducer,
 
   },
   middleware: (getDefaultMiddleware) =>
