@@ -11,12 +11,12 @@ const stylesChat = StyleSheet.create({
         zIndex: 1,
     },
     character: {
-        height: 419,
-        width: 350,
+        height: 348,
+        width: 394,
         position: 'absolute',
-        bottom: 950,
-        left: 50,
+        bottom: 980,
         zIndex: 2,
+        alignSelf: 'center',
     },
     imageLeftSide: {
         height: 143,
@@ -50,16 +50,16 @@ const stylesChat = StyleSheet.create({
     },
     upSideDown: { 
         width: 487,
-        height: 209,
+        height: 112,
         position: 'absolute',
-        bottom: 400,
+        bottom: 510,
         zIndex: 12,
     },
     rec38: {
         height: 103,
         width: '100%',
         position: 'absolute',
-        bottom: 600,
+        bottom: 610,
     },
 });
 
