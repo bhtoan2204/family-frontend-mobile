@@ -245,6 +245,7 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+    
       <View style={styles.calendar}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>

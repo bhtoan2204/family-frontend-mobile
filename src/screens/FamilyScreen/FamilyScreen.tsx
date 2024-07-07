@@ -126,7 +126,11 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   }
 
   const handleNavigateChecklist = () => {
-    navigation.navigate('CheckList', { id_family: id_family });
+    // navigation.navigate('CheckList', { id_family: id_family });
+    navigation.navigate('ShoppingListStack', {
+      screen: 'ShoppingList',
+      params: { id_family: id_family },
+    });
   };
 
   const handleNavigateNews = () => {

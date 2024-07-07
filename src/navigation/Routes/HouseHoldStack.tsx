@@ -22,8 +22,8 @@ import HouseHoldTab from 'src/components/user/household/household-tab';
 import ItemScreen from 'src/screens/HouseHoldScreen/ItemScreen';
 import CategoryScreen from 'src/screens/HouseHoldScreen/CategoryScreen';
 import LocalStorage from 'src/store/localstorage';
-import { AppDispatch } from 'src/redux/store';
-import { useDispatch } from 'react-redux';
+import { AppDispatch, RootState } from 'src/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearHouseholdItems, setHouseholdItems } from 'src/redux/slices/HouseHoldSlice';
 import HouseHoldService from 'src/services/apiclient/HouseHoldService';
 import { clearRoom, setRoom } from 'src/redux/slices/RoomSlice';
@@ -52,6 +52,8 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
     const currScreen = route.params?.screen
     const id_family = route.params?.params?.id_family
     const dispatch = useDispatch<AppDispatch>()
+    const familyInfo = useSelector((state: RootState) => state.family).family
+
     useEffect(() => {
         const fetchRoom = async () => {
             const data = await HouseHoldService.getAllRoom(id_family!, 1, 100)
@@ -122,13 +124,13 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
                                 // })
 
                             }} >
-                                <Material name="plus" size={24} style={{ color: 'white', fontWeight: "bold" }} />
+                                <Material name="dots-horizontal" size={24} style={{ color: 'white', fontWeight: "bold" }} />
                                 {/* <Text className='text-lg font-semibold text-white' >Add</Text> */}
                             </TouchableOpacity>
                         </View>
                     </View>
                     <Image
-                        source={gradients_list[0]}
+                        source={familyInfo.avatar ? { uri: familyInfo.avatar } : gradients_list[familyInfo.id_family % gradients_list.length]}
                         style={{ width: screenWidth, height: screenHeight * 0.25 }}
                         resizeMethod='resize'
                         resizeMode='cover'

@@ -11,6 +11,8 @@ import IncomeStack from './Routes/IncomeStack';
 import MessageTab from './Routes/MessageTab';
 import HouseHoldStack from './Routes/HouseHoldStack';
 import HouseHoldItemStack from './Routes/HouseHoldItemStack';
+import ShoppingListStack from './Routes/ShoppingListStack';
+import ShoppingListCategoryStack from './Routes/ShoppingListCategoryStack';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +34,8 @@ const Navigation = () => {
         <Stack.Screen name="MessageTab" component={MessageTab} />
         <Stack.Screen name="HouseHoldStack" component={HouseHoldStack} />
         <Stack.Screen name="HouseHoldItemStack" component={HouseHoldItemStack} />
+        <Stack.Screen name="ShoppingListStack" component={ShoppingListStack}/>
+        {/* <Stack.Screen name="ShoppingListCategoryStack" component={ShoppingListCategoryStack}/> */}
 
       </Stack.Navigator>
     </NavigationContainer>

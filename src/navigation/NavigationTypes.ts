@@ -16,6 +16,8 @@ export type RootParamList = {
   HouseHoldTab: NavigatorScreenParams<HouseHoldTabParamList>;
   HouseHoldStack: NavigatorScreenParams<HouseHoldStackParamList>;
   HouseHoldItemStack: NavigatorScreenParams<HouseHoldItemStackParamList>;
+  ShoppingListStack: NavigatorScreenParams<ShoppingListStackParamList>;
+  // ShoppingListCategoryStack: NavigatorScreenParams<ShoppingListCategoryStackParamList>;
 };
 
 export type ExpenseStackParamList = {
@@ -335,6 +337,7 @@ export type PackStackParamList = {
   ZaloPayScreen: undefined;
 };
 
+//household stack
 type HouseHoldStackParamList = {
   HouseHoldScreen: {
     id_family: number | undefined;
@@ -369,6 +372,7 @@ export interface HouseHoldStackProps {
   route: RouteProp<RootParamList, 'HouseHoldStack'>;
 }
 
+//household item stack
 type HouseHoldItemStackParamList = {
   HouseHoldItem: {
     id_item: number | undefined;
@@ -417,7 +421,6 @@ export interface HouseHoldItemScreenProps {
   navigation: HouseHoldItemNavigationProp;
   route: RouteProp<HouseHoldItemStackParamList, 'HouseHoldItem'>;
   addRoomRef: React.RefObject<BottomSheet> | undefined;
-
 }
 
 type ReceiptInfoNavigationProp = NativeStackNavigationProp<
@@ -480,7 +483,6 @@ export interface HouseHoldScreenProps {
   route: RouteProp<HouseHoldStackParamList, 'HouseHoldScreen'>;
   addRoomRef: React.RefObject<BottomSheet> | undefined;
   addItemRef: React.RefObject<BottomSheet> | undefined;
-
 }
 
 type HouseHoldScreen = NativeStackNavigationProp<
@@ -545,6 +547,110 @@ export interface CategoryDetailScreenProps {
   navigation: CategoryDetailNavigationProp;
   route: RouteProp<HouseHoldStackParamList, 'CategoryDetail'>;
 }
+//// shopping stacks
+type ShoppingListStackParamList = {
+  ShoppingList: {
+    id_family: number | undefined;
+  };
+  ShoppingListCategory: {
+    id_family: number | undefined;
+    id_category: number;
+  };
+  ShoppingListDetail: {
+    id_family: number | undefined;
+    id_shopping_list: number;
+    id_category: number;
+    id_item: number;
+  };
+};
+
+type ShoppingListStackNavigationProp = NativeStackNavigationProp<
+  RootParamList,
+  'ShoppingListStack'
+>;
+
+export interface ShoppingListStackProps {
+  navigation: ShoppingListStackNavigationProp;
+  route: RouteProp<RootParamList, 'ShoppingListStack'>;
+}
+
+type ShoppingListNavigationProp = NativeStackNavigationProp<
+  ShoppingListStackParamList,
+  'ShoppingList'
+>;
+
+export interface ShoppingListScreenProps {
+  navigation: ShoppingListNavigationProp;
+  route: RouteProp<ShoppingListStackParamList, 'ShoppingList'>;
+  handleNavigateShoppingListCategory: (id_category: number) => void;
+}
+
+type ShoppingListCategoryNavigationProp = NativeStackNavigationProp<
+  ShoppingListStackParamList,
+  'ShoppingListCategory'
+>;
+
+export interface ShoppingListCategoryScreenProps {
+  navigation: ShoppingListCategoryNavigationProp;
+  route: RouteProp<ShoppingListStackParamList, 'ShoppingListCategory'>;
+}
+
+type ShoppingListDetailNavigationProp = NativeStackNavigationProp<
+  ShoppingListStackParamList,
+  'ShoppingListDetail'
+>;
+
+export interface ShoppingListDetailScreenProps {
+  navigation: ShoppingListDetailNavigationProp;
+  route: RouteProp<ShoppingListStackParamList, 'ShoppingListDetail'>;
+}
+//Shopping Category Stack
+// type ShoppingListCategoryStackParamList = {
+//   ShoppingListCategory: {
+//     id_family: number | undefined;
+//     id_category: number;
+//   };
+//   ShoppingListCategoryDetail: {
+//     id_family: number | undefined;
+//     id_category: number;
+//     id_item: number;
+//     id_list: number;
+//   };
+// };
+
+// type ShoppingListCategoryStackNavigationProp = NativeStackNavigationProp<
+//   RootParamList,
+//   'ShoppingListCategoryStack'
+// >;
+
+// export interface ShoppingListCategoryStackProps {
+//   navigation: ShoppingListCategoryStackNavigationProp;
+//   route: RouteProp<RootParamList, 'ShoppingListCategoryStack'>;
+// }
+
+// type ShoppingCategoryNavigationProp = NativeStackNavigationProp<
+//   ShoppingListCategoryStackParamList,
+//   'ShoppingListCategory'
+// >;
+
+// export interface ShoppingListCategoryScreenProps {
+//   navigation: ShoppingCategoryNavigationProp;
+//   route: RouteProp<ShoppingListCategoryStackParamList, 'ShoppingListCategory'>;
+// }
+
+// type ShoppingCategoryDetailNavigationProp = NativeStackNavigationProp<
+//   ShoppingListCategoryStackParamList,
+//   'ShoppingListCategoryDetail'
+// >;
+
+// export interface ShoppingCategoryDetailScreenProps {
+//   navigation: ShoppingCategoryDetailNavigationProp;
+//   route: RouteProp<
+//     ShoppingListCategoryStackParamList,
+//     'ShoppingListCategoryDetail'
+//   >;
+// }
+
 /////
 type CalendarStackNavigationProp = NativeStackNavigationProp<
   RootParamList,

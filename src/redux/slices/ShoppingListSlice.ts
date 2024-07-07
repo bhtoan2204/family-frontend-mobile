@@ -1,228 +1,135 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../store';
-import {
-  ShoppingListCategoryInterface,
-  ShoppingListCategoryTypeInterface,
-  ShoppingListItemInterface,
-} from 'src/interface/checklist/checklist';
 
-const initialState: ShoppingListCategoryInterface[] = [];
+import {
+  ShoppingListItem,
+  ShoppingList,
+  ShoppingListItemType,
+  ShoppingListType,
+} from 'src/interface/shopping/shopping_list';
+
+interface ShoppingListSliceState {
+  shoppingList: ShoppingList[];
+  shoppingListType: ShoppingListType[];
+  shoppingListItemType: ShoppingListItemType[];
+}
+
+const initialState: ShoppingListSliceState = {
+  shoppingList: [],
+  shoppingListType: [],
+  shoppingListItemType: [],
+};
 
 const shoppingListSlice = createSlice({
   name: 'shoppinglist',
   initialState,
   reducers: {
-    setInitialShoppingList(
-      state,
-      action: PayloadAction<ShoppingListCategoryInterface[]>,
-    ) {
-      return action.payload;
+    setShoppingList: (state, action: PayloadAction<ShoppingList[]>) => {
+      state.shoppingList = action.payload;
     },
-    setShoppingListItemsForShoppingList(
+    setShoppingListType: (state, action: PayloadAction<ShoppingListType[]>) => {
+      state.shoppingListType = action.payload;
+    },
+    setShoppingListItemType: (
       state,
-      action: PayloadAction<{id: number; items: ShoppingListItemInterface[]}>,
-    ) {
-      const checkListIndex = state.findIndex(
-        checklist => checklist.id_list === action.payload.id,
+      action: PayloadAction<ShoppingListItemType[]>,
+    ) => {
+      state.shoppingListItemType = action.payload;
+    },
+    addShoppingList: (state, action: PayloadAction<ShoppingList>) => {
+      state.shoppingList.push(action.payload);
+    },
+    addShoppingListItem: (state, action: PayloadAction<ShoppingListItem>) => {
+      const {id_list} = action.payload;
+      const itemIndex = state.shoppingList.findIndex(
+        list => list.id_list === id_list,
       );
-      if (checkListIndex !== -1) {
-        state[checkListIndex].checklistItems = action.payload.items;
+      if (itemIndex !== -1) {
+        state.shoppingList[itemIndex].items?.push(action.payload);
       }
     },
-
-    addNewShoppingList(
+    addShoppingListItemType: (
       state,
-      action: PayloadAction<ShoppingListCategoryInterface>,
-    ) {
-      state.push(action.payload);
+      action: PayloadAction<ShoppingListItemType>,
+    ) => {
+      state.shoppingListItemType.push(action.payload);
     },
-    increaseNewShoppingListItemToCheckList(
-      state,
-      action: PayloadAction<{id: number}>,
-    ) {
-      const checkListIndex = state.findIndex(
-        checklist => checklist.id_list === action.payload.id,
-      );
-      state[checkListIndex].total += 1;
+    addShoppingListType: (state, action: PayloadAction<ShoppingListType>) => {
+      state.shoppingListType.push(action.payload);
     },
-    decreaseCompletedShoppingListItem(
+    updatePurchasedItem: (
       state,
-      action: PayloadAction<{id: number}>,
-    ) {
-      const checkListIndex = state.findIndex(
-        checklist => checklist.id_list === action.payload.id,
+      action: PayloadAction<{id_item: number; id_list: number}>,
+    ) => {
+      const {id_item, id_list} = action.payload;
+      const itemIndex = state.shoppingList.findIndex(
+        list => list.id_list === id_list,
       );
-      state[checkListIndex].completed += 1;
-    },
-    updateUnCompletedShoppingListItem(
-      state,
-      action: PayloadAction<{id: number}>,
-    ) {
-      const checkListIndex = state.findIndex(
-        checklist => checklist.id_list === action.payload.id,
-      );
-      state[checkListIndex].completed -= 1;
-    },
-    addNewShoppingListToCheckList(
-      state,
-      action: PayloadAction<{id: number; item: ShoppingListItemInterface}>,
-    ) {
-      const checkListIndex = state.findIndex(
-        checklist => checklist.id_list === action.payload.id,
-      );
-      if (checkListIndex !== -1 && state[checkListIndex].checklistItems) {
-        const newItem: ShoppingListItemInterface = action.payload.item;
-        newItem.id_item = `${state[checkListIndex].checklistItems.length + 1}`;
-        state[checkListIndex].checklistItems.push(newItem);
-        state[checkListIndex].total += 1;
+      if (itemIndex !== -1) {
+        const item = state.shoppingList[itemIndex].items?.find(
+          item => item.id_item === id_item,
+        );
+        if (item) {
+          item.is_purchased = !item.is_purchased;
+        }
       }
     },
-    updateShoppingItemTitleAndDescription(
+    updatePriceItem: (
+      state,
+      action: PayloadAction<{id_item: number; id_list: number; price: string}>,
+    ) => {
+      const {id_item, id_list, price} = action.payload;
+      const itemIndex = state.shoppingList.findIndex(
+        list => list.id_list === id_list,
+      );
+      if (itemIndex !== -1) {
+        const item = state.shoppingList[itemIndex].items?.find(
+          item => item.id_item === id_item,
+        );
+        if (item) {
+          item.price = price;
+        }
+      }
+    },
+    updateDescriptionItem: (
       state,
       action: PayloadAction<{
-        id: number;
-        id_checklist: string;
-        title: string;
+        id_item: number;
+        id_list: number;
         description: string;
       }>,
-    ) {
-      const checkListIndex = state.findIndex(
-        checklist => checklist.id_list === action.payload.id,
+    ) => {
+      const {id_item, id_list, description} = action.payload;
+      const itemIndex = state.shoppingList.findIndex(
+        list => list.id_list === id_list,
       );
-      if (checkListIndex !== -1 && state[checkListIndex].checklistItems) {
-        const checkListItemIndex = state[
-          checkListIndex
-        ].checklistItems.findIndex(
-          item => item.id_item === action.payload.id_checklist,
+      if (itemIndex !== -1) {
+        const item = state.shoppingList[itemIndex].items?.find(
+          item => item.id_item === id_item,
         );
-        if (checkListItemIndex !== -1) {
-          state[checkListIndex].checklistItems[checkListItemIndex].item_name =
-            action.payload.title;
-          state[checkListIndex].checklistItems[checkListItemIndex].description =
-            action.payload.description;
+        if (item) {
+          item.description = description;
         }
       }
     },
-    updateShoppingListItemPriority(
+    updateReminderDateItem: (
       state,
       action: PayloadAction<{
-        id: number;
-        id_checklist: string;
-        priority: number;
+        id_item: number;
+        id_list: number;
+        reminder_date: string;
       }>,
-    ) {
-      const checkListIndex = state.findIndex(
-        checklist => checklist.id_list === action.payload.id,
+    ) => {
+      const {id_item, id_list, reminder_date} = action.payload;
+      const itemIndex = state.shoppingList.findIndex(
+        list => list.id_list === id_list,
       );
-      if (checkListIndex !== -1) {
-        const checkListItemIndex = state[
-          checkListIndex
-        ].checklistItems?.findIndex(
-          item => item.id_item === action.payload.id_checklist,
+      if (itemIndex !== -1) {
+        const item = state.shoppingList[itemIndex].items?.find(
+          item => item.id_item === id_item,
         );
-        if (checkListItemIndex !== undefined && checkListItemIndex !== -1) {
-          state[checkListIndex].checklistItems[
-            checkListItemIndex
-          ].priority_level = action.payload.priority;
-        }
-      }
-    },
-    updateShoppingListItemDueDate(
-      state,
-      action: PayloadAction<{
-        id: number;
-        id_checklist: string;
-        dueDate: string;
-      }>,
-    ) {
-      const checkListIndex = state.findIndex(
-        checklist => checklist.id_list === action.payload.id,
-      );
-      if (checkListIndex !== -1 && state[checkListIndex].checklistItems) {
-        const checkListItemIndex = state[
-          checkListIndex
-        ].checklistItems.findIndex(
-          item => item.id_item === action.payload.id_checklist,
-        );
-        if (checkListItemIndex !== -1) {
-          state[checkListIndex].checklistItems[
-            checkListItemIndex
-          ].reminder_date = action.payload.dueDate;
-        }
-      }
-    },
-    updateShoppingListItemCompleted(
-      state,
-      action: PayloadAction<{
-        id: number;
-        id_checklist: string;
-        isCompleted: boolean;
-      }>,
-    ) {
-      const checkListIndex = state.findIndex(
-        checklist => checklist.id_list === action.payload.id,
-      );
-      if (checkListIndex !== -1 && state[checkListIndex].checklistItems) {
-        const checkListItemIndex = state[
-          checkListIndex
-        ].checklistItems.findIndex(
-          item => item.id_item === action.payload.id_checklist,
-        );
-        if (checkListItemIndex !== -1) {
-          state[checkListIndex].checklistItems[
-            checkListItemIndex
-          ].is_purchased = action.payload.isCompleted;
-          if (action.payload.isCompleted) {
-            state[checkListIndex].completed += 1;
-          } else {
-            state[checkListIndex].completed -= 1;
-          }
-        }
-      }
-    },
-    updateShoppingListItemQuantity(
-      state,
-      action: PayloadAction<{
-        id: number;
-        id_checklist: string;
-        quantity: number;
-      }>,
-    ) {
-      const checkListIndex = state.findIndex(
-        checklist => checklist.id_list === action.payload.id,
-      );
-      if (checkListIndex !== -1) {
-        const checkListItemIndex = state[
-          checkListIndex
-        ].checklistItems?.findIndex(
-          item => item.id_item === action.payload.id_checklist,
-        );
-        if (checkListItemIndex !== undefined && checkListItemIndex !== -1) {
-          state[checkListIndex].checklistItems[checkListItemIndex].quantity =
-            action.payload.quantity;
-        }
-      }
-    },
-    updateShoppingListItemPrice(
-      state,
-      action: PayloadAction<{
-        id: number;
-        id_checklist: string;
-        price: string;
-      }>,
-    ) {
-      const checkListIndex = state.findIndex(
-        checklist => checklist.id_list === action.payload.id,
-      );
-      if (checkListIndex !== -1) {
-        const checkListItemIndex = state[
-          checkListIndex
-        ].checklistItems?.findIndex(
-          item => item.id_item === action.payload.id_checklist,
-        );
-        if (checkListItemIndex !== undefined && checkListItemIndex !== -1) {
-          state[checkListIndex].checklistItems[checkListItemIndex].price =
-            action.payload.price;
+        if (item) {
+          item.reminder_date = reminder_date;
         }
       }
     },
@@ -230,19 +137,17 @@ const shoppingListSlice = createSlice({
 });
 
 export const {
-  setInitialShoppingList,
-  setShoppingListItemsForShoppingList,
-  addNewShoppingList,
-  increaseNewShoppingListItemToCheckList,
-  decreaseCompletedShoppingListItem,
-  updateUnCompletedShoppingListItem,
-  addNewShoppingListToCheckList,
-  updateShoppingItemTitleAndDescription,
-  updateShoppingListItemPriority,
-  updateShoppingListItemDueDate,
-  updateShoppingListItemCompleted,
-  updateShoppingListItemQuantity,
-  updateShoppingListItemPrice,
+  setShoppingList,
+  setShoppingListItemType,
+  setShoppingListType,
+  addShoppingList,
+  addShoppingListItemType,
+  addShoppingListType,
+  updatePurchasedItem,
+  addShoppingListItem,
+  updateDescriptionItem,
+  updatePriceItem,
+  updateReminderDateItem
 } = shoppingListSlice.actions;
 
 export const selectProfile = (state: RootState) => state.profile;
