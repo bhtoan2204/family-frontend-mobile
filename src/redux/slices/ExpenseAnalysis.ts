@@ -15,10 +15,14 @@ export interface Expenditure {
 
 interface ExpenseSliceState {
   expense: Expenditure | null; 
+  selectedOption: 'Day' | 'Month' | 'Year';
+  selectedDate: string;
 }
 
 const initialState: ExpenseSliceState = {
   expense: null,
+  selectedOption: 'Day',
+  selectedDate: new Date().toISOString().split('T')[0],
 };
 
 const expenseSlice = createSlice({
@@ -33,11 +37,19 @@ const expenseSlice = createSlice({
       state.expense = {...state.expense, ...action.payload};
 
     },
+    setSelectedOption(state, action: PayloadAction<'Day' | 'Month' | 'Year'>) {
+      state.selectedOption = action.payload;
+    },
+    setSelectedDate(state, action: PayloadAction<string>) {
+      state.selectedDate = action.payload;
+    },
   },
 });
 
-export const { setExpense, updateExpense} = expenseSlice.actions;
+export const { setExpense, updateExpense,  setSelectedOption, setSelectedDate} = expenseSlice.actions;
 
 export const selectExpense = (state: RootState) => state.expense.expense;
+export const getOption= (state: RootState) => state.expense.selectedOption;
+export const getDate= (state: RootState) => state.expense.selectedDate;
 
 export default expenseSlice.reducer;

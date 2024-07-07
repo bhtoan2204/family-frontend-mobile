@@ -11,6 +11,8 @@ import packagedReducer from './slices/PackageSlice';
 import messageFamilyReducer from './slices/MessageFamily';
 import MessageUserReducer from './slices/MessageUser';
 import notificationsReducer from './slices/NotificationSlice';
+import assetReducer from './slices/AssetSlice';
+
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
@@ -25,6 +27,7 @@ export const store = configureStore({
     messageFamily: messageFamilyReducer,
     message: MessageUserReducer,
     notifications: notificationsReducer,
+    asset: assetReducer,
 
   },
   middleware: (getDefaultMiddleware) =>

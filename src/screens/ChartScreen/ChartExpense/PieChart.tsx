@@ -31,11 +31,18 @@ interface LegendProps {
   style?: React.CSSProperties;
 }
 
-interface ExpenseData {
-  date: string;
-  total: number;
-  categories: {name: string; amount: number}[];
+interface Category {
+  name: string;
+  amount: number;
+  id_expense_type: number;
 }
+
+interface ExpenseData {
+  categories: Category[];
+  day: number;
+  total: number;
+}
+
 
 type SliceType = {
   pieCentroid: number[];
@@ -67,20 +74,16 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
 
   const fetchData = async (month: number, year: number, id_family: number) => {
     try {
-      const response = await ExpenseServices.getExpenseByMonth(
-        month,
-        year,
-        id_family,
-      );
-      if (Array.isArray(response)) {
+      const response = await ExpenseServices.getExpenseByMonth(month, year, id_family);
+      console.log(response);
+      if (response) {
         setDailyData(response);
-      } else {
-        console.error('Invalid response format:', response);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
+
 
   const categoryColors: {[key: number]: string} = {
     1: `rgba(255, 0, 0, 1)`,
@@ -224,7 +227,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
     );
   };
 
-  const handlePressDate = (date: string) => {
+  const handlePressDate = (date: number) => {
     const formattedDate = moment(date, 'YYYY-MM-DD').format('YYYY-MM-DD');
     dispatch(setSelectedOption('Day'));
     dispatch(setSelectedDate(formattedDate));
@@ -279,15 +282,15 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
               <TouchableOpacity
                 key={index}
                 style={styles.expenseItem}
-                onPress={() => handlePressDate(detail.date)}>
+                onPress={() => handlePressDate(detail.day)}>
                 <View style={styles.expenseDetails}>
                   <Image
                     source={{
-                      uri: `https://via.placeholder.com/40?text=${detail.date.split('-')[2]}`,
+                      uri: `https://via.placeholder.com/40?text=${detail.day}`,
                     }}
                     style={styles.avatar}
                   />
-                  <Text style={styles.expenseText}>{detail.date}</Text>
+                  <Text style={styles.expenseText}>{detail.day}</Text>
                 </View>
                 <View style={styles.expenseDetails}>
                   <Text style={styles.expenseAmount}>- {detail.total} đ</Text>

@@ -14,6 +14,7 @@ import {
   CreateFamilyScreenProps,
   EducationDetailScreenProps,
   EducationScreenProps,
+  GuidelinePublicScreenProps,
   GuildLineDetailScreenProps,
   GuildLineScreenProps,
   HouseHoldCategoryDetailScreenProps,
@@ -40,6 +41,7 @@ import SharedGuildLineDetailScreen from 'src/screens/GuildLineScreen/SharedGuild
 import ChecklistDetailScreen from 'src/screens/CheckListScreen/CheckListDetailScreen';
 import UpcomingEvents from 'src/screens/FamilyScreen/UpcomingEvents';
 import MemberDetailsScreen from 'src/screens/AllMember/MemberDetails';
+import GuidelinePublicScreen from 'src/screens/GuidelinePublic/GuidelinePublic';
 const Stack = createNativeStackNavigator();
 
 const FamilyStack = () => {
@@ -131,6 +133,9 @@ const FamilyStack = () => {
       </Stack.Screen>
       <Stack.Screen name="MemberDetails">
         {props => <MemberDetailsScreen {...(props as MemberDetailsScreenProps)} />}
+      </Stack.Screen>
+      <Stack.Screen name="GuidelinePublic">
+        {props => <GuidelinePublicScreen {...(props as GuidelinePublicScreenProps)} />}
       </Stack.Screen>
     </Stack.Navigator>
   );

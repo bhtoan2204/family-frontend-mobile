@@ -26,6 +26,10 @@ export type ExpenseStackParamList = {
   ChartExpense: undefined;
   IncomeExpenseScreen: undefined;
   ExpenseDetailScreen: undefined;
+  AssetScreen: undefined;
+  AssetDetailScreen: undefined;
+  AddAssetScreen: undefined;
+
 };
 
 export type IncomeStackParamList = {
@@ -73,7 +77,35 @@ export interface ExpenseDetailScreenProps {
   navigation: ExpenseDetailScreenNavigationProp;
   route: RouteProp<ExpenseStackParamList, 'ExpenseDetailScreen'>;
 }
+type AssetScreenNavigationProp = NativeStackNavigationProp<
+  ExpenseStackParamList,
+  'AssetScreen'
+>;
 
+export interface AssetScreenProps {
+  navigation: AssetScreenNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'AssetScreen'>;
+}
+
+
+type AssetDetailScreenNavigationProp = NativeStackNavigationProp<
+  ExpenseStackParamList,
+  'AssetDetailScreen'
+>;
+
+export interface AssetDetailScreenProps {
+  navigation: AssetDetailScreenNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'AssetDetailScreen'>;
+}
+type AddAssetScreenNavigationProp = NativeStackNavigationProp<
+  ExpenseStackParamList,
+  'AddAssetScreen'
+>;
+
+export interface AddAssetScreenProps {
+  navigation: AddAssetScreenNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'AddAssetScreen'>;
+}
 type IncomeDetailScreenNavigationProp = NativeStackNavigationProp<
 IncomeStackParamList,
   'IncomeDetailScreen'
@@ -107,7 +139,7 @@ export type ChatStackParamList = {
   ChatFamily:  undefined;
   
   ChatFamilyLast: undefined;
-  
+
   ChatUser: {
     receiverId: string | undefined;
   };
@@ -276,7 +308,9 @@ export type FamilyStackParamList = {
   UpcomingEvents: undefined;
   MemberDetails: {
     member: Member;
-  }
+  };
+  GuidelinePublic: undefined
+
 };
 
 export type PackStackParamList = {
@@ -565,6 +599,15 @@ export interface MemberDetailsScreenProps {
   navigation: MemberDetailsNavigationProp;
   route: RouteProp<FamilyStackParamList, 'MemberDetails'>;
 }
+type GuidelinePublicNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'GuidelinePublic'
+>;
+
+export interface GuidelinePublicScreenProps {
+  navigation: GuidelinePublicNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'GuidelinePublic'>;
+}
 
 export interface CheckListScreenProps {
   navigation: CheckListNavigationProp;
@@ -769,7 +812,6 @@ export type HomeTabParamList = {
   MoreScreen: undefined;
   Expenditure: undefined;
   CategoryExpense: undefined;
-
 };
 
 export type MessageTabParamList = {

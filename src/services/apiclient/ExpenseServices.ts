@@ -20,6 +20,130 @@ const ExpenseServices = {
       console.error('Error in getExpenseType:', error.message);
     }
   },
+  getAsset: async (id_family: number) => {
+    try {
+      const response: AxiosResponse = await instance.get(
+        `${baseUrl}/api/v1/finance/asset/getAssets/${id_family}`,
+      );
+
+      if (response.status === 200) {
+
+        return response.data.data;
+      } else {
+        console.error('Error in getAsset');
+      }
+    } catch (error: any) {
+      console.error('Error in getAsset:', error.message);
+    }
+  },
+
+  createAsset: async (id_family: number, name: string, description: string, value : number, purchase_date : string, image: string) => {
+    try {
+      const createFormData = (image: string): FormData => {
+        let formData = new FormData();
+        if (image != null){
+          let filename = image.split('/').pop()!;
+          let match = /\.(\w+)$/.exec(filename);
+          let type = match ? `image/${match[1]}` : `image`;
+          const file = {
+            image,
+            name: filename,
+            type,
+          };
+          formData.append('image', file);
+      }
+        formData.append('id_family', id_family.toString());
+        formData.append('name', name.toString());
+        formData.append('description', description.toString());
+        formData.append('value', value.toString());
+        formData.append('purchase_date', purchase_date.toString());
+
+        return formData;
+      };
+
+      const response: AxiosResponse = await instance.post(
+        `${baseUrl}/api/v1/finance/asset/createAsset`, createFormData(image), {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            accept: '*/*',
+          },
+        }
+      );
+
+      if (response.status === 200) {
+
+        return response.data.data;
+      } 
+    } catch (error: any) {
+      console.error('Error in createAsset:', error.message);
+    }
+  },
+  updateAsset: async (
+    id_asset?: number,
+    id_family?: number,
+    name?: string,
+    description?: string,
+    value?: number,
+    purchase_date?: string,
+    image?: string
+  ) => {
+    try {
+      const formData = new FormData();
+  
+      if (image) {
+        let filename = image.split('/').pop()!;
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+  
+        formData.append('image', {
+          uri: image,
+          name: filename,
+          type: type,
+        });
+      }
+  
+      formData.append('id_asset', id_asset?.toString() || '');
+      formData.append('id_family', id_family?.toString() || '');
+      formData.append('name', name || '');
+      formData.append('description', description || '');
+      formData.append('value', value?.toString() || '');
+      formData.append('purchase_date', purchase_date || '');
+  
+      const response: AxiosResponse = await instance.put(
+        `${baseUrl}/api/v1/finance/asset/updateAsset`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Accept: '*/*',
+          },
+        }
+      );
+  
+      if (response.status === 200) {
+        return response.data.data;
+      }
+    } catch (error: any) {
+      console.error('Error in updateAsset:', error.message);
+      throw error; 
+    }
+  },
+  deleteAsset: async (id_family?: number, id_asset?: number) => {
+    try {
+      
+      const response: AxiosResponse = await instance.delete(
+        `${baseUrl}/api/v1/finance/asset/deleteAsset/${id_family}/${id_asset}`,
+      );
+
+      if (response.status === 204) {
+
+        return;
+      } 
+    } catch (error: any) {
+      console.error('Error in deleteAsset:', error.message);
+    }
+  },
+
   createExpenseType: async (id_family: number | null, name: string) => {
     try {
       const response: AxiosResponse = await instance.post(

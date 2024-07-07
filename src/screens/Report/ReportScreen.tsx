@@ -199,7 +199,8 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
 
   // Hàm render cho Expense vs Income Screen
   const renderExVsInScreen = () => (
-    navigation.navigate('ExpenseStack', {screen: 'IncomeExpenseScreen'})
+    navigation.navigate('ExpenseStack', {screen: 'AssetScreen'})
+
     // <TouchableOpacity> 
 
     // <View style={{flex: 1}}>

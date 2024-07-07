@@ -221,7 +221,7 @@ const HomeScreen = ({
       icon: 'guideline',
       label: 'Guideline',
       onPress: () => {
-        console.log('Guideline pressed');
+        navigation.navigate('FamilyStack', {screen: 'GuidelinePublic'});
       },
     },
    
