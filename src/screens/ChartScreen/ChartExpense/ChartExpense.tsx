@@ -28,6 +28,7 @@ import BarChartScreen from './BarChart';
 import {useDispatch, useSelector} from 'react-redux';
 import {getOption, setSelectedOption} from 'src/redux/slices/ExpenseAnalysis';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
 
 const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
   const [selectedCategoryType, setSelectedCategoryType] = useState<string>('');
@@ -48,7 +49,7 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
     'https://t3.ftcdn.net/jpg/06/75/38/14/360_F_675381468_yjYEK9SvCRYpRUyKNRWsnArIalbMeBU4.jpg';
 
   const [isFamilyDataLoaded, setIsFamilyDataLoaded] = useState(false);
-
+  const profile = useSelector(selectProfile);
   useEffect(() => {
     const fetchData = async () => {
       await fetchAllFamily();
@@ -123,7 +124,7 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
                 marginBottom: 5,
                 color: 'white',
               }}>
-              Hello, Jennie
+              Hello, {profile.firstname} {profile.lastname}
             </Text>
             <Text style={{fontSize: 16, color: 'white'}}>
               Here you can view brief overview of your budget.

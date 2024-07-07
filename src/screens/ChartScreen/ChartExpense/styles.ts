@@ -211,9 +211,9 @@ const styles = StyleSheet.create({
   },
   legendContainer: {
     flexDirection: 'column',
-    //justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'flex-start',
-    //flexGrow: 1,
+    height: 80,
   },
   legendItem: {
     flexDirection: 'row',
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: '#ccc',
     // borderRadius: 20,
-    flexGrow: 1,
+    marginBottom: 50,
   },
   expenseItem: {
     flexDirection: 'row',
