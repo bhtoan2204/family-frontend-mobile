@@ -222,8 +222,8 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
 
   const handleExpenseTypePress = (item: ExpenseType) => {
     selectExpenseCategory(item);
-    dispatch(setExpenseCategory_id(item.id_expense_type));
-    dispatch(setExpenseCategory_name(item.category));
+    dispatch(setExpenseCategory_id(item.id_expenditure_type));
+    dispatch(setExpenseCategory_name(item.expense_type_name));
   };
 
   const handleIncomeTypePress = (item: IncomeType) => {
@@ -296,8 +296,8 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
 
   const itemsPerPage = 6;
   const pages = [];
-  if (!expenseType.some(item => item.id_expense_type === -1)) {
-    expenseType.push({id_expense_type: -1, category: 'Edit'});
+  if (!expenseType.some(item => item.id_expenditure_type === -1)) {
+    expenseType.push({id_expenditure_type: -1, category: 'Edit'});
   }
 
   for (let i = 0; i < expenseType.length; i += itemsPerPage) {
@@ -471,7 +471,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                       {fontSize: 18},
                       {color: '#1b2838'},
                     ]}>
-                    {expenseCategory?.category || 'Select category'}
+                    {expenseCategory?.expense_type_name || 'Select category'}
                   </Text>
 
                   <TouchableOpacity
@@ -545,7 +545,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                           key={pageIndex}
                           data={page}
                           numColumns={3}
-                          keyExtractor={item => item.id_expense_type.toString()}
+                          keyExtractor={item => item.id_expenditure_type.toString()}
                           contentContainerStyle={{marginLeft: 10}}
                           scrollEnabled={false}
                           renderItem={({item}) => (
@@ -564,7 +564,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                                   style={styles.expenseItem}
                                   numberOfLines={1}
                                   ellipsizeMode="tail">
-                                  {item.category}
+                                  {item.expense_type_name}
                                 </Text>
                               </View>
                             </TouchableOpacity>

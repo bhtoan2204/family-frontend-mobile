@@ -190,7 +190,7 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
     </View>
   );
 
-  const renderExVsInScreen = () => navigation.navigate('IncomeStack', { screen: 'IncomeScreen' });
+  const renderExVsInScreen = () => navigation.navigate('ExpenseStack', { screen: 'ExpenseScreen' });
 
   const renderAsset = () => navigation.navigate('ExpenseStack', { screen: 'AssetScreen' });
 

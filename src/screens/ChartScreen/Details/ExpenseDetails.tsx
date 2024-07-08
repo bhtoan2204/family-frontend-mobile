@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, SafeAreaView, TouchableOpacity, TextInput, Alert, Platform, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ExpenseDetailScreenProps } from 'src/navigation/NavigationTypes';
-import { Expenditure, selectExpense } from 'src/redux/slices/ExpenseAnalysis';
+import { deleteExpense, selectSelectedExpense, updateExpense } from 'src/redux/slices/ExpenseAnalysis';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ExpenseServices } from 'src/services/apiclient';
 import { ExpenseType } from 'src/interface/expense/ExpenseType';
@@ -15,37 +15,47 @@ import { COLORS } from 'src/constants';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Feather } from '@expo/vector-icons';
 import moment from 'moment';
+import { DailyExpense } from 'src/interface/expense/DailyExpense';
 
 const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
   const dispatch = useDispatch();
-  const expense: Expenditure | null = useSelector(selectExpense);
+  const expense: DailyExpense | null = useSelector(selectSelectedExpense);
   const [isEditing, setIsEditing] = useState(false);
   const [expenseType, setExpenseType] = useState<ExpenseType[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(expense?.expense_category);
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(expense?.financeExpenditureType.expense_type_name);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [chosenDate, setChosenDate] = useState(new Date());
   const [editedDescription, setEditedDescription] = useState(expense?.description || '');
-  const [editedAmount, setEditedAmount] = useState(expense?.expense_amount.toString() || '');
-  const [categoryTimeout, setCategoryTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [editedAmount, setEditedAmount] = useState(expense?.amount.toString() || '');
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const [isEditingImage, setIsEditingImage] = useState(false);
   const [currentImageUri, setCurrentImageUri] = useState<string | undefined>(expense?.image_url);
   const [uriImage, setUriImage] = useState<string | null>(null);
-  let family = useSelector(selectSelectedFamily);
+  const family = useSelector(selectSelectedFamily);
   const [loading, setLoading] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
-
+  const [page, setPage]= useState(1);
+  
+  
   useEffect(() => {
     fetchExpenseType(family.id_family);
   }, []);
+  const itemsPerPage = 10;
 
-  const fetchExpenseType = async (id_family: any) => {
+  const fetchExpenseType = async (id_family: number) => {
     try {
-      // const response = await ExpenseServices.getExpenseType(id_family);
-      // setExpenseType(response);
+      const response = await ExpenseServices.getExpenseType(id_family, page, itemsPerPage );
+      if(response){
+        setExpenseType(prev => [...prev, ...response]);
+        setPage(page+1);
+      }
     } catch (error: any) {
       console.error('Error in getExpenseType:', error.message);
     }
+  };
+  const handleCancel = () => {
+    setIsEditing(false);
+    setCurrentImageUri('');
   };
 
   const handleEdit = () => {
@@ -68,10 +78,17 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: () => {
+          onPress: async () => {
             if (expense?.id_expenditure) {
-              // dispatch(deleteExpense(expense.id));
-              navigation.goBack();
+              try{
+                await ExpenseServices.deleteExpense(expense.id_family, expense.id_expenditure)
+                dispatch(deleteExpense(expense.id_expenditure))
+                navigation.goBack();
+              } catch(error){
+                  console.error(error);
+                  Alert.alert('Failed to delete expense', 'Please try again later.');
+
+              }
             }
           },
         },
@@ -106,7 +123,8 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
         setLoading(true);
 
         if (family?.id_family && expense?.id_expenditure) {
-          await ExpenseServices.uploadImageExpense(family.id_family, expense.id_expenditure, result.assets[0].uri);
+          const respone = await ExpenseServices.updateExpense(expense.id_expenditure, expense.id_family, expense.id_created_by, expense.id_expenditure_type, expense.amount, expense.expenditure_date, expense.description, result.assets[0].uri );
+          dispatch(updateExpense({ ...expense, image_url: result.assets[0].uri }));
         }
         setCurrentImageUri(result.assets[0].uri);
         setLoading(false);
@@ -116,7 +134,25 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
       setLoading(false);
     }
   };
+  const handleSelectImageEdit = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        aspect: [4, 3],
+        quality: 1,
+      });
 
+      if (!result.canceled) {
+        setLoading(true);
+
+        setCurrentImageUri(result.assets[0].uri);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('Error opening image library:', error);
+      setLoading(false);
+    }
+  };
   const handleCloseModal = () => {
     setSelectedImageIndex(null);
   };
@@ -162,7 +198,7 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
         </View>
           <View style={styles.amountContainer}>
             {!isEditing ? (
-              <Text style={styles.valueAmount}>{formatCurrency(expense?.expense_amount.toString() || '0')}</Text>
+              <Text style={styles.valueAmount}>{formatCurrency(expense?.amount.toString() || '0')}</Text>
             ) : (
               <View style={{flexDirection:'row'}}> 
               <TextInput
@@ -182,7 +218,7 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
             <Text style={styles.label}>Category:</Text>
             <View style={styles.valueContainer}>
               {!isEditing ? (
-                <Text style={styles.value}>{expense?.expense_category}</Text>
+                <Text style={styles.value}>{expense?.financeExpenditureType.expense_type_name}</Text>
               ) : (
                 <TouchableOpacity onPress={() => setShowCategoryPicker(!showCategoryPicker)}>
                   <Text style={styles.value}>{selectedCategory}</Text>
@@ -196,9 +232,9 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
                 >
                   {expenseType.map((item) => (
                     <Picker.Item
-                      key={item.id_expense_type}
-                      label={item.category}
-                      value={item.category}
+                      key={item.id_expenditure_type}
+                      label={item.expense_type_name}
+                      value={item.expense_type_name}
                     />
                   ))}
                 </Picker>
@@ -219,7 +255,7 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
           </View>
           <View style={styles.detailRow}>
             <Text style={styles.label}>Created By:</Text>
-            <Text style={styles.ValueName}>{expense?.name}</Text>
+            <Text style={styles.ValueName}>{expense?.users.firstname} {expense?.users.lastname}</Text>
           </View>
           <View style={styles.detailRow}>
             <Text style={styles.label}>Date:</Text>
@@ -243,25 +279,31 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
         <View style={styles.card}> 
           <View style={styles.imageContainer}>
             <Text style={styles.label}>Receipt:</Text>
-          {currentImageUri ? (
-          
-              <View> 
-                <TouchableOpacity style={styles.imageWrapper} onPress={handleImagePress}>
-                  <Image source={{ uri: currentImageUri }} style={styles.image} resizeMode="contain" />
-                </TouchableOpacity>
-                {isEditing && (
-                  <TouchableOpacity style={styles.changeImageButton} onPress={handleSelectImage}>
-                    <Text style={styles.changeImageText}>Change receipt</Text>
-                  </TouchableOpacity>
-                )}
-                 </View>
-                ): (
-                  <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={{color: COLORS.Azure, fontSize: 16}}> Add receipt</Text>
-                    <Icon name="add-circle-sharp" size={36} style={{ color: COLORS.Azure}} />
-                  </TouchableOpacity>
-                
-                )}
+            {currentImageUri ? (
+  <View>
+    <TouchableOpacity style={styles.imageWrapper} onPress={handleImagePress}>
+      <Image source={{ uri: isEditing ? currentImageUri : expense?.image_url}} style={styles.image} resizeMode="contain" />
+    </TouchableOpacity>
+    {isEditing && (
+      
+      <TouchableOpacity style={styles.changeImageButton} onPress={handleSelectImageEdit}>
+        <Text style={styles.changeImageText}>Change receipt</Text>
+      </TouchableOpacity>
+    )}
+  </View>
+) : (
+  isEditing ? (
+    <TouchableOpacity onPress={handleSelectImageEdit} style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={{ color: COLORS.Azure, fontSize: 16 }}>Add receipt</Text>
+      <Icon name="add-circle-sharp" size={36} style={{ color: COLORS.Azure }} />
+    </TouchableOpacity>
+  ) : (
+    <TouchableOpacity onPress={handleSelectImage} style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={{ color: COLORS.Azure, fontSize: 16 }}>Add receipt</Text>
+      <Icon name="add-circle-sharp" size={36} style={{ color: COLORS.Azure }} />
+    </TouchableOpacity>
+  )
+)}
 
                   </View>
 
@@ -276,12 +318,12 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
      
         {isEditing && (
           <View style={{flexDirection: 'row'}}> 
-            <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSave}>
+            <TouchableOpacity style={[styles.button, ]} onPress={handleCancel}>
               <Text style={styles.buttonText}>Cancel</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSave}>
-              <Text style={styles.buttonText}>Save</Text>
+              <Text style={[styles.buttonText,{ color: 'white'}]}>Save</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -468,7 +510,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 15,
-    paddingHorizontal: 150, 
+    paddingHorizontal: 80, 
     borderRadius: 10,
     marginTop: 10,
     alignSelf: 'center', 
@@ -477,6 +519,7 @@ const styles = StyleSheet.create({
 
   saveButton: {
     backgroundColor: '#4CAF50',
+
   },
 
 

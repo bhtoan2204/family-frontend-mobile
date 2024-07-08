@@ -85,7 +85,7 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
          
           {selectedCategoryType === 'Day' && (
             <View>
-              <BarChartScreen id_family={family.id_family} />
+              <BarChartScreen id_family={family.id_family} navigation={navigation} />
             </View>
           )}
           {selectedCategoryType === 'Month' && (

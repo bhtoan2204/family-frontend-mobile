@@ -12,7 +12,7 @@ import { ExpenseScreenProps } from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS } from 'src/constants';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { setExpense } from 'src/redux/slices/ExpenseAnalysis';
+import { setExpense, setSelectedExpense } from 'src/redux/slices/ExpenseAnalysis';
 import { setIncomeDetails } from 'src/redux/slices/IncomeAnalysis';
 const screenWidth = Dimensions.get('window').width;
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -86,8 +86,8 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
   const formatCurrency = (amount: any) => {
     return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   };
-  const handlePressExpenseItem = async (item: Expenditure)=> {
-    await dispatch(setExpense(item));
+  const handlePressExpenseItem = async (item: DailyExpense)=> {
+    await dispatch(setSelectedExpense(item));
     navigation.navigate('ExpenseDetailScreen');
   }
   const renderExpenseItem = ({ item }: { item: DailyExpense }) => (

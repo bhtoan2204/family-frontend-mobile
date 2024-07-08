@@ -6,7 +6,7 @@ import { AuthUrl } from '../urls';
 
 const instance = axios.create({
   baseURL: baseUrl,
-  timeout: 10000,
+  timeout: 1000000,
   headers: {
     'Content-Type': 'application/json',
   },

@@ -1,26 +1,17 @@
-
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-
-export interface Expenditure {
-  id_expenditure: number;
-  id_expense_type: number;
-  expense_amount: string;
-  expenditure_date: string;
-  description: string;
-  name: string;
-  expense_category: string;
-  image_url: string;
-}
+import { DailyExpense } from 'src/interface/expense/DailyExpense';
 
 interface ExpenseSliceState {
-  expense: Expenditure | null; 
+  expenses: DailyExpense[];
+  selectedExpense: DailyExpense | null;
   selectedOption: 'Day' | 'Month' | 'Year';
   selectedDate: string;
 }
 
 const initialState: ExpenseSliceState = {
-  expense: null,
+  expenses: [],
+  selectedExpense: null,
   selectedOption: 'Day',
   selectedDate: new Date().toISOString().split('T')[0],
 };
@@ -29,13 +20,25 @@ const expenseSlice = createSlice({
   name: 'expense',
   initialState,
   reducers: {
-    setExpense: (state, action: PayloadAction<Expenditure>) => {
-      state.expense = action.payload;
+    setExpenses: (state, action: PayloadAction<DailyExpense[]>) => {
+      state.expenses = action.payload;
     },
-    updateExpense :  (state, action: PayloadAction<Expenditure>) => {
-
-      state.expense = {...state.expense, ...action.payload};
-
+    addExpense: (state, action: PayloadAction<DailyExpense>) => {
+      state.expenses.push(action.payload);
+    },
+    updateExpense: (state, action: PayloadAction<DailyExpense>) => {
+      const index = state.expenses.findIndex(expense => expense.id_expenditure === action.payload.id_expenditure);
+      if (index !== -1) {
+        state.expenses[index] = action.payload;
+      }
+    },
+    deleteExpense: (state, action: PayloadAction<number>) => {
+      state.expenses = state.expenses.filter(expense => expense.id_expenditure !== action.payload);
+      state.selectedExpense = null; 
+    },
+    
+    setSelectedExpense: (state, action: PayloadAction<DailyExpense | null>) => {
+      state.selectedExpense = action.payload;
     },
     setSelectedOption(state, action: PayloadAction<'Day' | 'Month' | 'Year'>) {
       state.selectedOption = action.payload;
@@ -46,10 +49,19 @@ const expenseSlice = createSlice({
   },
 });
 
-export const { setExpense, updateExpense,  setSelectedOption, setSelectedDate} = expenseSlice.actions;
+export const {
+  setExpenses,
+  addExpense,
+  updateExpense,
+  deleteExpense,
+  setSelectedExpense,
+  setSelectedOption,
+  setSelectedDate,
+} = expenseSlice.actions;
 
-export const selectExpense = (state: RootState) => state.expense.expense;
-export const getOption= (state: RootState) => state.expense.selectedOption;
-export const getDate= (state: RootState) => state.expense.selectedDate;
+export const selectExpenses = (state: RootState) => state.expense.expenses;
+export const selectSelectedExpense = (state: RootState) => state.expense.selectedExpense;
+export const getOption = (state: RootState) => state.expense.selectedOption;
+export const getDate = (state: RootState) => state.expense.selectedDate;
 
 export default expenseSlice.reducer;

@@ -1,25 +1,26 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, Button, ScrollView, TouchableOpacity} from 'react-native';
-import styles from './styles';
-import Icon from 'react-native-vector-icons/Ionicons';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, Dimensions } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {useSelector} from 'react-redux';
-import {getDate} from 'src/redux/slices/ExpenseAnalysis';
-import {ExpenseServices} from 'src/services/apiclient';
+import { useDispatch, useSelector } from 'react-redux';
+import {  getDate, selectExpenses, setExpenses, setSelectedExpense } from 'src/redux/slices/ExpenseAnalysis';
+import { ExpenseServices } from 'src/services/apiclient';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import {Image} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import moment from 'moment';
+import { COLORS } from 'src/constants';
 import { DailyExpense } from 'src/interface/expense/DailyExpense';
+const screenHeight = Dimensions.get('screen').height;
 
 interface BarChartScreenProps {
   id_family: number;
+  navigation: any;
 }
 
-const BarChartScreen: React.FC<BarChartScreenProps> = ({id_family}) => {
-  const [showDetails, setShowDetails] = useState<boolean[]>([]);
+const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }) => {
   const date = useSelector(getDate);
-
   const [selectedDate, setSelectedDate] = useState<string>(date);
-  const [barChartData, setBarChartData] = useState<DailyExpense[]>([]);
+  const barChartData = useSelector(selectExpenses);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetchData(selectedDate, id_family);
@@ -28,14 +29,8 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({id_family}) => {
   const fetchData = async (date: string, id_family: number) => {
     try {
       const response = await ExpenseServices.getExpenseByDate(date, id_family);
-      console.log(response);
-
-      console.log(response)
-      if (Array.isArray(response)) {
-        setBarChartData(response);
-        setShowDetails(new Array(response.length).fill(false));
-      } else {
-        console.error('Invalid response format:', response);
+      if (response) {
+        dispatch(setExpenses(response));
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -50,18 +45,49 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({id_family}) => {
     fetchData(currentDate, id_family);
   };
 
-  const toggleDetails = (index: number) => {
-    const updatedShowDetails = [...showDetails];
-    updatedShowDetails[index] = !updatedShowDetails[index];
-    setShowDetails(updatedShowDetails);
+ 
+
+  const handlePressExpenseItem = async (item: DailyExpense) => {
+    await dispatch(setSelectedExpense(item));
+    navigation.navigate('ExpenseDetailScreen');
   };
 
+  const formatCurrency = (amount: any) => {
+    return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  };
+
+  const formatDate = (isoDateTime: string) => {
+    return moment(isoDateTime).format('DD/MM/YYYY HH:mm');
+  };
+
+  const renderItem = ({ item, index }: { item: DailyExpense; index: number }) => (
+    <TouchableOpacity onPress={() => handlePressExpenseItem(item)} style={styles.expenseItem}>
+      <View style={styles.itemContainer}>
+        <View style={styles.expenseContent}>
+          <View>
+            <Text style={styles.expenseCategory}>{item.financeExpenditureType.expense_type_name}</Text>
+            <View style={styles.row}>
+              <Text style={{ color: 'gray' }}>By: </Text>
+              <Text style={styles.expenseName}>{item.users.firstname} {item.users.lastname}</Text>
+            </View>
+            <Text style={styles.expenseDescription}>{item.description}</Text>
+          </View>
+          <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
+            <View style={styles.rowInfo}>
+              <Text style={styles.expenseAmount}>-{formatCurrency(item.amount)}</Text>
+              <Text style={styles.expenseDate}>{formatDate(item.expenditure_date)}</Text>
+            </View>
+            <View style={{ justifyContent: 'center' }}>
+              <Icon name="chevron-forward" size={20} style={styles.forwardIcon} />
+            </View>
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
   return (
-    <ScrollView>
-      {/* <View style={styles.itemContainer}>
-          <Icon name="calendar" size={25} color="black" style={styles.icon} />
-          <Text style={styles.text}>Select Date</Text>
-        </View> */}
+    <View style={{ flex: 1 }}>
       <View style={styles.datePickerContainer}>
         <DateTimePicker
           value={new Date(selectedDate)}
@@ -70,133 +96,146 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({id_family}) => {
           onChange={handleDateChange}
         />
       </View>
-
-      {/* <View style={[styles.chartBarContainer, {marginTop: 20}]}>
-        {barChartData.map((expense, index) => (
-          <View key={index}>
-            <View style={styles.expenseDateItem}>
-              <View style={styles.expenseDetails}>
-                <Text style={styles.expenseText}>
-                  {expense.expense_category}
-                </Text>
-                <Text style={styles.expenseAmount}>
-                  - {expense.expense_amount} đ
-                </Text>
-              </View>
-
-              <TouchableOpacity onPress={() => toggleDetails(index)}>
-                <View style={{flexDirection: 'row'}}>
-                  <Text>View details</Text>
-                  <EvilIcons name={'chevron-right'} size={30} color="#ccc" />
-                </View>
-              </TouchableOpacity>
-
-              {showDetails[index] && (
-                <View style={styles.detailsContainer}>
-                  <Text style={styles.containerTextName}> {expense.name}</Text>
-                  <Text style={styles.expenseText}>
-                    Description: {expense.description}
-                  </Text>
-                </View>
-              )}
-            </View>
-            <View
-              style={{
-                borderBottomColor: '#F3F1EE',
-                borderBottomWidth: 1,
-                width: '90%',
-                alignSelf: 'center',
-                // borderStyle: 'dashed',
-                // borderRadius: 1,
-              }}
-            />
-          </View>
-        ))}
-      </View>
-      <View
-        style={{
-          backgroundColor: 'white',
-          width: '100%',
-          height: 700,
-          marginTop: -30,
-        }}
-      /> */}
-
       {barChartData.length > 0 ? (
-        <View style={[styles.chartBarContainer, {marginTop: 20}]}>
-          {barChartData.map((expense, index) => (
-            <View key={index}>
-              <View style={styles.expenseDateItem}>
-                <View style={styles.expenseDetails}>
-                  <Text style={styles.expenseText}>
-                    {expense.financeExpenditureType.expense_type_name}
-                  </Text>
-                  <Text style={styles.expenseAmount}>
-                    - {expense.amount} đ
-                  </Text>
-                </View>
-
-                <TouchableOpacity onPress={() => toggleDetails(index)}>
-                  <View style={{flexDirection: 'row'}}>
-                    <Text>View details</Text>
-                    <EvilIcons name={'chevron-right'} size={30} color="#ccc" />
-                  </View>
-                </TouchableOpacity>
-
-                {showDetails[index] && (
-                  <View style={styles.detailsContainer}>
-                    <Text style={styles.containerTextName}>
-                      {' '}
-                      {expense.users.firstname}
-                    </Text>
-                    <Text style={styles.expenseText}>
-                      Description: {expense.description}
-                    </Text>
-                  </View>
-                )}
-              </View>
-              <View
-                style={{
-                  borderBottomColor: '#F3F1EE',
-                  borderBottomWidth: 1,
-                  width: '90%',
-                  alignSelf: 'center',
-                }}
-              />
-            </View>
-          ))}
-          <View
-            style={{
-              backgroundColor: 'white',
-              width: '100%',
-              height: 700,
-              marginTop: -30,
-            }}
-          />
+        <View style={styles.DataContainer}>
+        <FlatList
+          data={barChartData}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={{ paddingBottom: 700 }}
+        />
         </View>
       ) : (
-        <View
-          style={{
-            backgroundColor: 'white',
-            width: '100%',
-            height: 700,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 50,
-          }}>
+        <View style={styles.noDataContainer}>
           <Image
             source={require('src/assets/icons/search.png')}
             resizeMode="stretch"
-            style={{width: 100, height: 100, marginBottom: 10}}
+            style={styles.noDataImage}
           />
-          <Text style={{fontSize: 30, fontWeight: '500'}}>No data</Text>
-          <Text style={{color: '#90A4AD', fontSize: 16}}>
-            No data available
-          </Text>
+          <Text style={styles.noDataText}>No data</Text>
+          <Text style={styles.noDataDescription}>No data available</Text>
         </View>
       )}
-    </ScrollView>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  expenseContent: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  expenseCategory: {
+    fontSize: 16,
+    color: COLORS.Rhino,
+    fontWeight: '500',
+  },
+  expenseDescription: {
+    fontSize: 14,
+    color: 'gray',
+    marginTop: 5,
+  },
+  expenseAmount: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'red',
+  },
+  expenseName: {
+    fontSize: 14,
+    color: COLORS.DenimBlue,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  rowInfo: {
+    marginTop: 5,
+    textAlign: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  expenseDate: {
+    fontSize: 14,
+    color: 'gray',
+    marginTop: 5,
+  },
+  forwardIcon: {
+    marginLeft: 10,
+  },
+  datePickerContainer: {
+    top: 10,
+    paddingHorizontal: 0,
+    fontSize: 20,
+    alignSelf: 'center',
+    zIndex: 1,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    width: '30%',
+    height: 40,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+  },
+  expenseItem: {
+    padding: 10,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  noDataContainer: {
+    backgroundColor: 'white',
+    width: '100%',
+    height: 700,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 50,
+  },
+  noDataImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
+  },
+  noDataText: {
+    fontSize: 30,
+    fontWeight: '500',
+  },
+  noDataDescription: {
+    color: '#90A4AD',
+    fontSize: 16,
+  },
+  DataContainer: {
+    bottom: 10,
+    backgroundColor: 'white',
+    padding: 10,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    width: '100%',
+    alignSelf: 'center',
+    flexDirection: 'column',
+    height: screenHeight*0.8,
+    paddingTop: 40,
+  }
+});
 
 export default BarChartScreen;
