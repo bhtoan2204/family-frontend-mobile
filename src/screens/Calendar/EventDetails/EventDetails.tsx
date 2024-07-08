@@ -56,6 +56,7 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
       };
       
     const onDelete = async () => {
+      if (!event.recurrence_rule){
         Alert.alert(
             'Confirm Delete',
             'Are you sure you want to delete this event?',
@@ -80,7 +81,48 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
             ],
             { cancelable: true }
         );
-    };
+      }
+      else{
+        Alert.alert(
+          'Confirm Delete',
+          'What do you want to do with this event?',
+          [
+              {
+                  text: 'Cancel',
+                  style: 'cancel',
+              },
+              {
+                  text: 'Delete This Event Only',
+                  onPress: async () => {
+                      try {
+                          // await CalendarServices.UpdateEvent()
+                          Alert.alert('Success', 'Event has been deleted successfully.');
+                          navigation.goBack();
+                      } catch (error) {
+                          console.error('Error deleting event:', error);
+                          Alert.alert('Error', 'An error occurred while deleting the event.');
+                      }
+                  },
+              },
+              {
+                  text: 'Delete All Future Events',
+                  onPress: async () => {
+                      try {
+                         
+                            await CalendarServices.DeleteEvent(event.id_calendar);
+                            Alert.alert('Success', 'Event has been deleted successfully.');
+                          
+                          navigation.goBack();
+                      } catch (error) {
+                          console.error('Error deleting event:', error);
+                          Alert.alert('Error', 'An error occurred while deleting the event.');
+                      }
+                  },
+              },
+          ],
+          { cancelable: true }
+      );
+      };
 
   return (
     <View style={styles.container}>
@@ -146,6 +188,6 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
             </View>
   );
 };
-
+}
 export default EventDetailsScreen;
 

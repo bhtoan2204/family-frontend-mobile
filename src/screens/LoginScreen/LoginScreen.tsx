@@ -82,7 +82,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
       await LocalStorage.StoreRefreshToken(response.refreshToken);
 
       
-      navigation.navigate('LandingPage');
+      navigation.navigate('HomeTab', {screen: 'HomeScreen'});
       actions.setStatus({success: true});
     } catch (error: any) {
       actions.setStatus({
