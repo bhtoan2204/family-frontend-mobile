@@ -9,7 +9,6 @@ import { IncomeScreenProps } from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS } from 'src/constants';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { setIncomeDetails } from 'src/redux/slices/IncomeAnalysis';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { DailyIncome } from 'src/interface/income/IncomeDaily';
 

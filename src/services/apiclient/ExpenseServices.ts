@@ -263,20 +263,37 @@ const ExpenseServices = {
       }
       
     },
-    createExpense: async (id_family: number | null, amount: number | null, id_created_by: string, id_expense_type?: number, expenditure_date?: Date, description?: string) => {
+    createExpense: async (id_family: number | null, amount: number | null, id_created_by: string, id_expense_type?: number, expenditure_date?: Date, description?: string, uri: string) => {
       try {
+        const createFormData = (uri: string): FormData => {
+          let formData = new FormData();
+          let filename = uri.split('/').pop()!;
+          let match = /\.(\w+)$/.exec(filename);
+          let type = match ? `image/${match[1]}` : `image`;
+          const file = {
+            uri,
+            name: filename,
+            type,
+          };
+          formData.append('id_family', String(id_family));
+          formData.append('id_created_by', String(id_created_by));
+          formData.append('id_expense_type', id_expense_type.toString());
+          formData.append('amount', String(amount));
+          formData.append('expenditure_date', expenditure_date);
+          formData.append('description', description );
+          formData.append('expenseImg', file);
 
+          return formData;
+        };
+    
         const response: AxiosResponse = await instance.post(
           `${baseUrl}/api/v1/finance/expensediture/createExpense`,
+          createFormData(uri),
           {
-        
-              id_family,
-              id_created_by,
-              id_expense_type,
-              amount,
-              expenditure_date,
-              description
-            
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              accept: '*/*',
+            },
           }
         );
         if (response.status === 201) {

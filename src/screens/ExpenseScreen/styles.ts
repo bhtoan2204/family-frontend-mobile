@@ -17,6 +17,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  memberItem: {
+    padding: 10,
+    marginHorizontal: 5,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 8,
+  },
   dot: {
     width: 13,
     height: 2,

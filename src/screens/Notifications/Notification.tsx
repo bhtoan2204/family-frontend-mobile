@@ -26,9 +26,7 @@ type CombinedScreenProps = SignupScreenProps &
 const Notification = ({navigation}: CombinedScreenProps) => {
   const profile = useSelector(selectProfile);
   const [notificationQueue, setNotificationQueue] = useState<Message[]>([]);
-  const [notification, setNotification] = useState<Notification[]>([]);
 
-  const [index, setIndex] = useState(1);
 
   const socket = getSocket();
   const notificationListener = useRef<Notifications.Subscription | undefined>();

@@ -12,7 +12,8 @@ import messageFamilyReducer from './slices/MessageFamily';
 import MessageUserReducer from './slices/MessageUser';
 import notificationsReducer from './slices/NotificationSlice';
 import assetReducer from './slices/AssetSlice';
-
+import incomeTypeReducer from './slices/IncomeTypeSlice';
+import expenseTypeReducer from './slices/ExpenseTypeSlice';
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
@@ -28,6 +29,8 @@ export const store = configureStore({
     message: MessageUserReducer,
     notifications: notificationsReducer,
     asset: assetReducer,
+    incomeType: incomeTypeReducer,
+    expenseType: expenseTypeReducer,
 
   },
   middleware: (getDefaultMiddleware) =>
