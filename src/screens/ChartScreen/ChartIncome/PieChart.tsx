@@ -8,25 +8,38 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { ExpenseServices, IncomeServices } from 'src/services/apiclient';
-import { getDate, setSelectedDate, setSelectedOption } from 'src/redux/slices/IncomeAnalysis';
+import { getSelectedDate, setSelectedDate, setSelectedOptionIncome } from 'src/redux/slices/IncomeAnalysis';
+import { IncomeMonthly } from 'src/interface/income/IncomeMonthly';
 
 interface PieChartScreenProps {
   id_family: number;
 }
 
-interface ExpenseData {
-  date: string;
-  total: number;
-  categories: { name: string; amount: number }[];
+
+type DataType = {
+  svg: {
+    fill: string;
+  };
+  key: string;
+};
+interface LegendProps {
+  data: DataType[];
+  style?: React.CSSProperties;
 }
+type SliceType = {
+  pieCentroid: number[];
+  data: {
+    label: string;
+  };
+};
 
 const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [isMonthPickerVisible, setMonthPickerVisible] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const [dailyData, setDailyData] = useState<ExpenseData[]>([]);
+  const [dailyData, setDailyData] = useState<IncomeMonthly[]>([]);
   const dispatch = useDispatch();
-  const date = useSelector(getDate);
+  const date = useSelector(getSelectedDate);
 
   useEffect(() => {
     const parsedDate = new Date(date);
@@ -34,63 +47,97 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
     fetchData(parsedDate.getMonth() + 1, parsedDate.getFullYear(), id_family);
   }, [date, id_family]);
 
+
   const fetchData = async (month: number, year: number, id_family: number) => {
     try {
-      const response = await IncomeServices.getIncomeByMonth(month, year, id_family);
-      if (Array.isArray(response)) {
-        setDailyData(response);
+      let response;
+      if (month === new Date().getMonth() + 1 && year === new Date().getFullYear()) {
+        const currentDate = new Date().getDate();
+        response = await IncomeServices.getIncomeByMonth(month, year, id_family);
+
+        if (response) {
+          response = response.filter((item: { day: number; }) => item.day < currentDate);
+          console.log(response)
+        }
       } else {
-        console.error("Invalid response format:", response);
+        response = await IncomeServices.getIncomeByMonth(month, year, id_family);
+      }
+      
+      if (response) {
+        setDailyData(response);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
+  
 
-  const categoryColors: { [key: number]: string } = {
-    1: `rgba(255, 0, 0, 1)`, 
-    2: `rgba(0, 255, 0, 1)`, 
+
+  const categoryColors: {[key: number]: string} = {
+    1: `rgba(255, 0, 0, 1)`,
+    2: `rgba(0, 255, 0, 1)`,
     3: `rgba(0, 0, 255, 1)`,
-    4: `rgba(255, 255, 0, 1)`, 
+    4: `rgba(255, 255, 0, 1)`,
     5: `rgba(255, 0, 255, 1)`,
     6: `rgba(0, 255, 255, 1)`,
-    7: `rgba(128, 0, 0, 1)`, 
+    7: `rgba(128, 0, 0, 1)`,
     8: `rgba(0, 128, 0, 1)`,
-    9: `rgba(0, 0, 128, 1)`, 
+    9: `rgba(0, 0, 128, 1)`,
     10: `rgba(128, 128, 0, 1)`,
-    11: `rgba(128, 0, 128, 1)`, 
-    12: `rgba(255, 165, 0, 1)`, 
-    13: `rgba(255, 192, 203, 1)`, 
-    14: `rgba(0, 255, 127, 1)`, 
-    15: `rgba(255, 20, 147, 1)`, 
-    16: `rgba(255, 140, 0, 1)`, 
-    17: `rgba(0, 255, 255, 0.5)`, 
-    18: `rgba(255, 255, 255, 0.5)`, 
-    19: `rgba(255, 255, 0, 0.5)`, 
+    11: `rgba(128, 0, 128, 1)`,
+    12: `rgba(255, 165, 0, 1)`,
+    13: `rgba(255, 192, 203, 1)`,
+    14: `rgba(0, 255, 127, 1)`,
+    15: `rgba(255, 20, 147, 1)`,
+    16: `rgba(255, 140, 0, 1)`,
+    17: `rgba(0, 255, 255, 0.5)`,
+    18: `rgba(255, 255, 255, 0.5)`,
+    19: `rgba(255, 255, 0, 0.5)`,
     20: `rgba(128, 0, 128, 0.5)`,
   };
 
-  const totalExpense = dailyData.reduce((total, expense) => total + expense.total, 0);
+  const totalExpense = dailyData.reduce(
+    (total, expense) => total + expense.total,
+    0,
+  );
 
-  const categoryData = dailyData.reduce((acc, expense) => {
-    expense.categories.forEach(category => {
-      acc[category.name] = (acc[category.name] || 0) + category.amount;
-    });
-    return acc;
-  }, {});
+  const categoryData = dailyData.reduce<{[key: string]: number}>(
+    (acc, expense) => {
+      expense.categories.forEach(category => {
+        acc[category.name] = (acc[category.name] || 0) + category.amount;
+      });
+      return acc;
+    },
+    {},
+  );
 
-  const pieChartData = Object.entries(categoryData).map(([name, amount], index) => ({
-    key: name,
-    value: (amount / totalExpense) * 100,
-    svg: { fill: categoryColors[index + 1] },
-    arc: { outerRadius: '100%', innerRadius: '60%' },
-    label: `${((amount / totalExpense) * 100).toFixed(2)}%`,
-  }));
+  // const pieChartData = Object.entries(categoryData).map(
+  //   ([name, amount], index) => ({
+  //     key: name,
+  //     value: (amount / totalExpense) * 100,
+  //     svg: {fill: categoryColors[index + 1]},
+  //     arc: {outerRadius: '100%', innerRadius: '60%'},
+  //     label: `${((amount / totalExpense) * 100).toFixed(2)}%`,
+  //   }),
+  // );
+
+  const pieChartData = Object.entries(categoryData).map(
+    ([name, amount], index) => ({
+      pieCentroid: [0, 0],
+      data: {
+        label: name,
+      },
+      key: name,
+      value: (amount / totalExpense) * 100,
+      svg: {fill: categoryColors[index + 1]},
+      arc: {outerRadius: '100%', innerRadius: '60%'},
+      label: `${((amount / totalExpense) * 100).toFixed(2)}%`,
+    }),
+  );
 
   const formatMonthYear = (date: moment.MomentInput) => {
     return moment(date).format('MM/YYYY');
   };
-
 
   const handleMonthPickerConfirm = (newDate: Date) => {
     const year = moment(newDate).year();
@@ -99,15 +146,11 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
     setMonthPickerVisible(false);
     fetchData(month, year, id_family);
   };
-  
-  
-  
-  
 
 
-  const Labels = ({ slices }) => {
+  const Labels = ({slices}: {slices: SliceType[]}) => {
     return slices.map((slice, index) => {
-      const { pieCentroid, data } = slice;
+      const {pieCentroid, data} = slice;
       return (
         <G key={index} x={pieCentroid[0]} y={pieCentroid[1]}>
           <SVGText
@@ -116,8 +159,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
             alignmentBaseline="middle"
             fontSize={14}
             stroke="black"
-            strokeWidth={0.2}
-          >
+            strokeWidth={0.2}>
             {data.label}
           </SVGText>
         </G>
@@ -125,12 +167,14 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
     });
   };
 
-  const Legend = ({ data }) => {
+  const Legend: React.FC<LegendProps> = ({data, style}) => {
     return (
-      <ScrollView horizontal contentContainerStyle={styles.legendContainer}>
+      <ScrollView contentContainerStyle={styles.legendContainer}>
         {data.map((item, index) => (
           <View key={index} style={styles.legendItem}>
-            <View style={[styles.legendColorBox, { backgroundColor: item.svg.fill }]} />
+            <View
+              style={[styles.legendColorBox, {backgroundColor: item.svg.fill}]}
+            />
             <Text style={styles.legendText}>{item.key}</Text>
           </View>
         ))}
@@ -138,71 +182,93 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
     );
   };
 
-  const handlePressDate = (date: string) => {
-    const formattedDate = moment(date, 'YYYY-MM-DD').format('YYYY-MM-DD');
-    dispatch(setSelectedOption('Day'));
+  const handlePressDate = (day: number) => {
+    const formattedDate = moment(selectedMonth).set('date', day).format('YYYY-MM-DD');
+    dispatch(setSelectedOptionIncome('Day'));
     dispatch(setSelectedDate(formattedDate));
-  };
+};
 
+const formatCurrency = (amount: string | number | bigint) => {
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+};
   return (
-    <ScrollView style={{ height: '80%' }}>
-      <View style={styles.itemContainer}>
-        <Icon name="calendar" size={25} color="black" style={styles.icon} />
-        <Text style={styles.text}>Select Month</Text>
+    // <ScrollView style={{height: '80%'}}>
+
+    //   {/* <View style={styles.buttonContainer}>
+    //     <Button
+    //       title={showDetails ? 'Hide Details' : 'View Details'}
+    //       onPress={() => setShowDetails(!showDetails)}
+    //     />
+    //   </View> */}
+    // </ScrollView>
+    <View>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between', }}>
+        <PieChart
+          style={{height: 250, flex: 40}}
+          data={pieChartData}
+          outerRadius={'80%'}
+          innerRadius={'60%'}
+          labelRadius={120}>
+          <Labels slices={pieChartData} />
+        </PieChart>
+        <Legend data={pieChartData} style={{flex: 1}} />
       </View>
-      <TouchableOpacity style={styles.monthPickerContainer} onPress={() => setMonthPickerVisible(!isMonthPickerVisible)}>
-        <View style={styles.monthContainer}>
-          <Text style={styles.monthText}>{formatMonthYear(selectedMonth)}</Text>
-        </View>
-      </TouchableOpacity>
+      <View style={{flexDirection: 'row', top: 0, zIndex: 1}}>
+        <TouchableOpacity
+          style={styles.monthPickerContainer}
+          onPress={() => setMonthPickerVisible(!isMonthPickerVisible)}>
+          <View style={styles.monthContainer}>
+            <Text style={styles.monthText}>
+              {formatMonthYear(selectedMonth)}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
 
       {isMonthPickerVisible && (
-        <MonthPicker
-          selectedDate={selectedMonth}
-          onMonthChange={handleMonthPickerConfirm}
-       
-          />
-        )}
-      
-        <View style={styles.chartContainer}>
-          <PieChart
-            style={{ height: 250 }}
-            data={pieChartData}
-            outerRadius={'100%'}
-            innerRadius={'60%'}
-            labelRadius={120}
-          >
-            <Labels />
-          </PieChart>
-        </View>
-      
-        <Legend data={pieChartData} />
-      
-        <View style={styles.buttonContainer}>
-          <Button
-            title={showDetails ? "Hide Details" : "View Details"}
-            onPress={() => setShowDetails(!showDetails)}
+        <View style={{zIndex: 2, marginBottom: 50, padding: 10}}>
+          <MonthPicker
+            selectedDate={selectedMonth}
+            onMonthChange={handleMonthPickerConfirm}
           />
         </View>
-      
-        {showDetails && (
+      )}
+      <View style={styles.chartContainer}>
+        <ScrollView style={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
           <View style={styles.ContainerCategory}>
             {dailyData.map((detail, index) => (
-              <TouchableOpacity key={index} style={styles.incomeItem} onPress={() => handlePressDate(detail.date)}>
-                <View style={styles.incomeDetails}>
-                  <Image source={{ uri: `https://dummyimage.com/40x40/000/fff&text=${detail.date.split('-')[2]}` }} style={styles.avatar} />
-                  <Text style={styles.incomeText}>{detail.date}</Text>
+              <TouchableOpacity
+                key={index}
+                style={styles.expenseItem}
+                onPress={() => handlePressDate(detail.day)}>
+                <View style={styles.expenseDetails}>
+                  <Image
+                    source={{
+                      uri: `https://via.placeholder.com/40?text=${detail.day}`,
+                    }}
+                    style={styles.avatar}
+                  />
+                  <Text style={styles.expenseText}>{detail.day}</Text>
                 </View>
-                <View style={styles.incomeDetails}>
-                  <Text style={styles.incomeAmount}>+{detail.total} đ</Text>
-                  <Icon name="chevron-right" size={20} color="#ccc" />
+                <View style={styles.expenseDetails}>
+                  <Text style={styles.incomeAmount}>+{formatCurrency(detail.total)} đ</Text>
+                  {/* <Icon name="chevron-right" size={20} color="#ccc" /> */}
                 </View>
               </TouchableOpacity>
             ))}
           </View>
-        )}
-      </ScrollView>
-);
+        </ScrollView>
+      </View>
+      <View
+        style={{
+          backgroundColor: 'white',
+          width: '100%',
+          height: 600,
+          marginTop: -30,
+        }}
+      />
+    </View>
+  );
 };
 
 export default PieChartComponent;      

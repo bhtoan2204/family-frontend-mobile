@@ -7,23 +7,38 @@ import { COLORS } from 'src/constants';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch } from 'react-redux';
 import { setSelectedOption } from 'src/redux/slices/ExpenseAnalysis';
+import { setSelectedOptionIncome } from 'src/redux/slices/IncomeAnalysis';
 
 const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
   const dispatch = useDispatch();
 
-  const pressExVsIn = () => {
-    navigation.navigate('ExpenseStack', { screen: 'ChartExpense' });
-    dispatch(setSelectedOption('Day'));
-  };
 
-  const pressExpenseAnalysis = () => {
+  const pressExpenseDay = () => {
+    dispatch(setSelectedOption('Day'));
+    navigation.navigate('ExpenseStack', { screen: 'ChartExpense' });
+  };
+  const pressExpenseMonth = () => {
     dispatch(setSelectedOption('Month'));
     navigation.navigate('ExpenseStack', { screen: 'ChartExpense' });
   };
 
-  const pressIncomeAnalysis = () => {
+  const pressExpenseYear = () => {
     dispatch(setSelectedOption('Year'));
     navigation.navigate('ExpenseStack', { screen: 'ChartExpense' });
+  };
+
+  const pressIncomeDay = () => {
+    dispatch(setSelectedOptionIncome('Day'));
+    navigation.navigate('IncomeStack', { screen: 'ChartIncomeScreen' });
+  };
+  const pressIncomeMonth = () => {
+    dispatch(setSelectedOptionIncome('Month'));
+    navigation.navigate('IncomeStack', { screen: 'ChartIncomeScreen' });
+  };
+
+  const pressIncomeYear = () => {
+    dispatch(setSelectedOptionIncome('Year'));
+    navigation.navigate('IncomeStack', { screen: 'ChartIncomeScreen' });
   };
 
   const scaleAnim = new Animated.Value(1);
@@ -46,7 +61,7 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
         resizeMode="contain"
       />
       <TouchableOpacity
-        onPress={pressExVsIn}
+        onPress={pressExpenseDay}
         style={{
           position: 'absolute',
           right: 110,
@@ -68,7 +83,7 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={pressExpenseAnalysis}
+        onPress={pressExpenseMonth}
         style={{
           position: 'absolute',
           left: 190,
@@ -90,7 +105,7 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={pressIncomeAnalysis}
+        onPress={pressExpenseYear}
         style={{
           position: 'absolute',
           right: 180,
@@ -122,7 +137,7 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
         resizeMode="contain"
       />
       <TouchableOpacity
-        onPress={pressExVsIn}
+        onPress={pressIncomeDay}
         style={{
           position: 'absolute',
           right: 120,
@@ -144,7 +159,7 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={pressExpenseAnalysis}
+        onPress={pressIncomeMonth}
         style={{
           position: 'absolute',
           right: 180,
@@ -166,7 +181,7 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={pressIncomeAnalysis}
+        onPress={pressIncomeYear}
         style={{
           position: 'absolute',
           left: 130,
@@ -316,3 +331,5 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
 };
 
 export default ReportScreen;
+
+

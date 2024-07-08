@@ -44,7 +44,6 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
         <View style={styles.headerContainer}>
             <TouchableOpacity
               onPress={() =>
-                //navigation.navigate('HomeTab', {screen: 'Expense'})
                 navigation.goBack()
               }
               style={styles.headerButton}>
@@ -72,15 +71,21 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
               Hello, {profile.firstname} {profile.lastname}
             </Text>
             {selectedCategoryType === 'Year' && (
-            <Text style={{fontSize: 16, color: '#ccc'}}>
-              Here you can view a brief overview of your expenses for the year.
-            </Text>
-            )}
-            {selectedCategoryType === 'Month' && (
-              <Text style={{fontSize: 16, color: '#ccc'}}>
-               For each month, you can see a summary of your expenses.
-              </Text>
-            )}
+                <Text style={{fontSize: 16, color: '#ccc'}}>
+                  Here you can view a brief overview of your expenses for the year.
+                </Text>
+              )}
+              {selectedCategoryType === 'Month' && (
+                <Text style={{fontSize: 16, color: '#ccc'}}>
+                  For each month, you can see a summary of your expenses day.
+                </Text>
+              )}
+              {selectedCategoryType === 'Day' && (
+                <Text style={{fontSize: 16, color: '#ccc'}}>
+                  Here you can view detailed expenses for each day.
+                </Text>
+              )}
+
           </View>
          
           {selectedCategoryType === 'Day' && (

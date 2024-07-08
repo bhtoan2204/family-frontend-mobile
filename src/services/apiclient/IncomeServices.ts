@@ -58,7 +58,7 @@ const IncomeServices = {
         `${baseUrl}/api/v1/finance/income/getIncomeByYear/${id_family}`,
         {
           params: {
-            year
+            id_family, year
           }
         }
       );

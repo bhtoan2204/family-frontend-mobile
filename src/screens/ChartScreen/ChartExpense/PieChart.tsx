@@ -74,8 +74,19 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
 
   const fetchData = async (month: number, year: number, id_family: number) => {
     try {
-      const response = await ExpenseServices.getExpenseByMonth(month, year, id_family);
-      console.log(response);
+      let response;
+      if (month === new Date().getMonth() + 1 && year === new Date().getFullYear()) {
+        const currentDate = new Date().getDate();
+        response = await ExpenseServices.getExpenseByMonth(month, year, id_family);
+
+        if (response) {
+          response = response.filter((item: { day: number; }) => item.day < currentDate);
+          console.log(response)
+        }
+      } else {
+        response = await ExpenseServices.getExpenseByMonth(month, year, id_family);
+      }
+      
       if (response) {
         setDailyData(response);
       }

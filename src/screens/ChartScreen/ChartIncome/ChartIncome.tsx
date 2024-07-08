@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Button, Modal, FlatList, Image } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Button, Modal, FlatList, Image, SafeAreaView, ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from '../ChartExpense/styles';
 import { IncomeServices, FamilyServices } from 'src/services/apiclient';
@@ -8,140 +8,105 @@ import { Income } from "src/interface/income/getIncome";
 import MonthPicker from 'react-native-month-picker';
 import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
-import { getOption, setSelectedOption } from 'src/redux/slices/IncomeAnalysis';
+import { getSelectedOption } from 'src/redux/slices/IncomeAnalysis';
 import { ChartIncomeScreenProps } from 'src/navigation/NavigationTypes';
 import BarChartScreen from './BarChart';
 import PieChartComponent from './PieChart';
 import LineChartScreen from './LineChart';
+import { DailyIncome } from 'src/interface/income/IncomeDaily';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 
 const ChartIncomeScreen = ({ navigation }: ChartIncomeScreenProps) => {
   const [selectedCategoryType, setSelectedCategoryType] = useState<string>('');
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [isModalVisible, setModalVisible] = useState<boolean>(false);
-  const [date, setDate] = useState<Date>(new Date());
-  const [currentIndex, setCurrentIndex] = useState(1);
-  const [families, setFamilies] = useState<Family[]>([]);
-  const [selectedFamily, setSelectedFamily] = useState<number | undefined>(undefined);
-  const [incomes, setIncomes] = useState<Income[]>([]);
-  const moment = require('moment');
-  let option = useSelector(getOption);
-  const dispatch = useDispatch();
-  const [isFamilyModalOpen, setIsFamilyModalOpen] = useState(false);
-  const familyUri = 'https://t3.ftcdn.net/jpg/06/75/38/14/360_F_675381468_yjYEK9SvCRYpRUyKNRWsnArIalbMeBU4.jpg';
-
-  const [isFamilyDataLoaded, setIsFamilyDataLoaded] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchAllFamily();
-      setIsFamilyDataLoaded(true);
-    };
-  
-    fetchData();
-  }, []);
+  let option = useSelector(getSelectedOption);
+  const profile = useSelector(selectProfile);
+  let family =useSelector(selectSelectedFamily);
   
   useEffect(() => {
-    if (isFamilyDataLoaded) {
       setSelectedCategoryType(option);
-    }
-  }, [isFamilyDataLoaded, option]);
+    
+  }, [ option]);
 
-  const fetchAllFamily = async () => {
-    try {
-      const result = await FamilyServices.getAllFamily();
-      setFamilies(result);
-      setSelectedFamily(result[0]?.id_family || null); 
-    } catch (error: any) {
-      console.log('FamilyServices.getAllFamily error:', error);
-    }
-  };
 
-  const selectOption = (option: 'Day' | 'Month' | 'Year') => {
-    setSelectedCategoryType(option);
-    dispatch(setSelectedOption(option));
-  };
 
-  const handleFamilySelection = (selectedFamily: Family) => {
-    setIsFamilyModalOpen(false);
-    setSelectedFamily(selectedFamily.id_family);
-  };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('HomeTab', { screen: 'Income' })} style={styles.headerButton}>
-          <Icon name="arrow-back" size={30} style={styles.backButton} />
-        </TouchableOpacity>
-        <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerText}>Income Analysis</Text>
-        </View>
-        <TouchableOpacity style={styles.headerButton} onPress={() => setIsFamilyModalOpen(!isFamilyModalOpen)}>
-          <Icon name="filter" size={30} style={styles.filterButton} />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.containerTab}>
-        <TouchableOpacity
-          onPress={() => selectOption('Day')}
-          style={[styles.tabButton, selectedCategoryType === 'Day' && styles.selectedTabButton]}
-        >
-          <Text style={styles.tabButtonText}>Day</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => selectOption('Month')}
-          style={[styles.tabButton, selectedCategoryType === 'Month' && styles.selectedTabButton]}
-        >
-          <Text style={styles.tabButtonText}>Month</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => selectOption('Year')}
-          style={[styles.tabButton, selectedCategoryType === 'Year' && styles.selectedTabButton]}
-        >
-          <Text style={styles.tabButtonText}>Year</Text>
-        </TouchableOpacity>
-      </View>
+    <ImageBackground
+      source={require('../../../assets/images/background-expense-chart1.png')}
+      style={{flex: 1}}
+      resizeMode="stretch">
+      <SafeAreaView style={{flex: 1}}>
+        <View style={styles.container}>
+        <View style={styles.headerContainer}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.goBack()
+              }
+              style={styles.headerButton}>
+              <Icon name="arrow-back" size={30} style={styles.backButton} />
+            </TouchableOpacity>
+            <View style={styles.headerTitleContainer}>
+              <Text style={styles.headerText}>Income Analysis</Text>
+            </View>
+
+          </View>
+          <View
+            style={{
+              flexDirection: 'column',
+              marginHorizontal: 20,
+              bottom: 5,
+              marginBottom: 20,
+            }}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: '600',
+                marginBottom: 5,
+                color: 'white',
+              }}>
+              Hello, {profile.firstname} {profile.lastname}
+            </Text>
+            {selectedCategoryType === 'Year' && (
+            <Text style={{fontSize: 16, color: '#ccc'}}>
+              Here you can view a brief overview of your income for the year.
+            </Text>
+            )}
+            {selectedCategoryType === 'Month' && (
+              <Text style={{fontSize: 16, color: '#ccc'}}>
+               For each month, you can see a summary of your income.
+              </Text>
+            )}
+            {selectedCategoryType === 'Day' && (
+                <Text style={{fontSize: 16, color: '#ccc'}}>
+                  Here you can view detailed incomes for each day.
+                </Text>
+              )}
+          </View>
+
+
+
       {selectedCategoryType === 'Day' && (
         <View>
-          <BarChartScreen id_family={selectedFamily} />
+          <BarChartScreen id_family={family?.id_family} navigation={navigation}/>
         </View>
       )}
       {selectedCategoryType === 'Month' && (
         <View>
-          <PieChartComponent id_family={selectedFamily} />
+          <PieChartComponent id_family={family?.id_family} />
         </View>
       )}
       {selectedCategoryType === 'Year' && (
         <View>
-          <LineChartScreen id_family={selectedFamily} />
+          <LineChartScreen id_family={family?.id_family}  />
         </View>
       )}
-      <Modal
-        visible={isFamilyModalOpen}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setIsFamilyModalOpen(false)}
-      >
-        <TouchableOpacity
-          style={styles.modalContainer}
-          activeOpacity={1}
-          onPress={() => setIsFamilyModalOpen(!isFamilyModalOpen)}
-        >
-          <View style={styles.modalBackground}>
-            <View style={styles.dropdownMenu}>
-              <FlatList
-                data={families}
-                renderItem={({ item }) => (
-                  <TouchableOpacity style={styles.filterItem} onPress={() => handleFamilySelection(item)}>
-                    <Image source={{ uri: familyUri }} style={styles.avatar} />
-                    <Text style={styles.text}>{item.name}</Text>
-                  </TouchableOpacity>
-                )}
-                keyExtractor={(item, index) => index.toString()}
-              />
-            </View>
-          </View>
-        </TouchableOpacity>
-      </Modal>
-    </View>
+
+
+      
+        </View>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 

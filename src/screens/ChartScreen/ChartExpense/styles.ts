@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
     flexDirection: 'column',
-    height: '50%',
+    height: '34%',
   },
   chartBarContainer: {
     bottom: 30,

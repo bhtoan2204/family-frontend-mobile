@@ -44,11 +44,10 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
     try {
         const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
         const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
-      const response = await ExpenseServices.getExpenseByDateRange(page, itemsPerPage, family.id_family, formattedDateFrom, formattedDateTo )
-      console.log(response.data)
-      setTotalPageExpense(Math.ceil(response.total / itemsPerPage));
-      setExpenses(prevExpenses => reset ? response.data : [...prevExpenses, ...response.data]);
-     
+        const response = await ExpenseServices.getExpenseByDateRange(page, itemsPerPage, family.id_family, formattedDateFrom, formattedDateTo )
+        setExpenses(prevExpenses => reset ? response.data : [...prevExpenses, ...response.data]);
+        setTotalPageExpense(Math.ceil(response.total / itemsPerPage));
+      
     } catch (error) {
       console.log(error);
     } finally {
@@ -190,8 +189,7 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
               Hello, {profile.firstname} {profile.lastname}
             </Text>
             <Text style={{fontSize: 15, color: '#ccc'}}>
-            Manage your finances efficiently with a clear view of your income and expenses.
-
+            Here is a list of expenses your family has incurred for the day.
             </Text>
 
           </View>

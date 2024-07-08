@@ -1,38 +1,61 @@
-
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import moment from 'moment';
 import { RootState } from '../store';
-
-interface Income {
-  id_income: number;
-  id_income_source: number;
-  income_amount: string;
-  income_date: string;
-  description: string;
-  income_category: string;
-  name: string;
-}
+import { DailyIncome } from 'src/interface/income/IncomeDaily';
+import moment from 'moment';
 
 interface IncomeSliceState {
-  income: Income | null; 
+  incomeList: DailyIncome[];
+  selectedIncome: DailyIncome | null;
+  selectedOptionIncome: 'Day' | 'Month' | 'Year';
+  selectedDateIncome: string;
 }
 
 const initialState: IncomeSliceState = {
-  income: null,
+  incomeList: [],
+  selectedIncome: null,
+  selectedOptionIncome: 'Day',
+  selectedDateIncome: new Date().toISOString().split('T')[0],
 };
 
 const incomeSlice = createSlice({
   name: 'income',
   initialState,
   reducers: {
-    setIncomeDetails: (state, action: PayloadAction<Income>) => {
-      state.income = action.payload;
+    setIncomeList: (state, action: PayloadAction<DailyIncome[]>) => {
+      state.incomeList = action.payload;
+    },
+    setSelectedIncome: (state, action: PayloadAction<DailyIncome | null>) => {
+      state.selectedIncome = action.payload;
+    },
+    setSelectedOptionIncome: (state, action: PayloadAction<'Day' | 'Month' | 'Year'>) => {
+      state.selectedOptionIncome = action.payload;
+    },
+    setSelectedDate: (state, action: PayloadAction<string>) => {
+      state.selectedDateIncome = action.payload;
+    },
+    deleteIncome: (state, action: PayloadAction<number>) => {
+      state.incomeList = state.incomeList.filter(income => income.id_income !== action.payload);
+      if (state.selectedIncome && state.selectedIncome.id_income === action.payload) {
+        state.selectedIncome = null;
+      }
+    },
+    updateIncome: (state, action: PayloadAction<DailyIncome>) => {
+      const index = state.incomeList.findIndex(income => income.id_income === action.payload.id_income);
+      if (index !== -1) {
+        state.incomeList[index] = action.payload;
+      }
+      if (state.selectedIncome && state.selectedIncome.id_income === action.payload.id_income) {
+        state.selectedIncome = action.payload;
+      }
     },
   },
 });
 
-export const { setIncomeDetails } = incomeSlice.actions;
+export const { setIncomeList, setSelectedIncome, setSelectedOptionIncome, setSelectedDate, deleteIncome, updateIncome } = incomeSlice.actions;
 
-export const getIncome= (state: RootState) => state.income.income;
+export const getIncomeList = (state: RootState) => state.income.incomeList;
+export const getSelectedIncome = (state: RootState) => state.income.selectedIncome;
+export const getSelectedOption = (state: RootState) => state.income.selectedOptionIncome;
+export const getSelectedDate = (state: RootState) => state.income.selectedDateIncome;
 
 export default incomeSlice.reducer;
