@@ -6,15 +6,15 @@ import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { addAsset } from 'src/redux/slices/AssetSlice';
-import { selectfamily } from 'src/redux/slices/FamilySlice';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import { AddAssetScreenProps } from 'src/navigation/NavigationTypes';
 import moment from 'moment';
-import DateTimePicker from '@react-native-community/datetimepicker'; // Import DateTimePicker
+import DateTimePicker from '@react-native-community/datetimepicker'; 
 import { ExpenseServices } from 'src/services/apiclient';
 
 const AddAssetScreen = ({ navigation }: AddAssetScreenProps) => {
   const dispatch = useDispatch();
-  const family = useSelector(selectfamily);
+  const family = useSelector(selectSelectedFamily);
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');

@@ -1,48 +1,56 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../store';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../store'; 
+import { Member, Role, User } from 'src/interface/member/member';
 import { Family } from 'src/interface/family/family';
 
+
+
 interface FamilyState {
-    family: Family;
-  };
+  families: Family[];
+  selectedFamily: Family | null;
+  familyMembers: Member[];
+}
 
-  const initialState: FamilyState = {
-    family: {
-        id_family: 0,
-        quantity: 0,
-        description: "",
-        created_at: "",
-        updated_at: "",
-        name: "",
-        owner_id: "",
-        expired_at: "",
-        code_invite: "",
-        avatar: "",
+const initialState: FamilyState = {
+  families: [],
+  selectedFamily: null,
+  familyMembers: [],
+};
+
+const familySlice = createSlice({
+  name: 'family',
+  initialState,
+  reducers: {
+    setFamilies(state, action: PayloadAction<Family[]>) {
+      state.families = action.payload;
     },
-  };
-
-  const familySlice = createSlice({
-    name: 'family',
-    initialState,
-    reducers: {
-  
-      setForFamily(state, action: PayloadAction<Family>) {
-        state.family = action.payload;
-  
-      },
-
-      updateFamily: (state, action: PayloadAction<Family>) => {
-        state.family = {...state.family, ...action.payload};
-      },
-      // updateAvatar(state, action: PayloadAction<string>) {
-      //   state.family.avatar = action.payload;
-      // },
+    setSelectedFamily(state, action: PayloadAction<Family | null>) {
+      state.selectedFamily = action.payload;
     },
-  });
-  
-  export const { setForFamily, updateFamily } = familySlice.actions;
-  
-  export const selectfamily = (state: RootState) => state.family.family;
-  
-  export default familySlice.reducer;
-  
+    setFamilyMembers(state, action: PayloadAction<{ [key: number]: Member[] }>) {
+      Object.values(action.payload).forEach((members) => {
+        state.familyMembers.push(...members);
+      });
+    }
+  },
+});
+
+export const { setFamilies, setSelectedFamily, setFamilyMembers } = familySlice.actions;
+
+export const selectFamilies = (state: RootState) => state.family.families;
+export const selectSelectedFamily = (state: RootState) => state.family.selectedFamily;
+export const selectFamilyMembers = createSelector(
+  (state: RootState) => state.family.familyMembers,
+  (state: RootState) => state.family.selectedFamily?.id_family,
+  (familyMembers, selectedFamilyId) => {
+    if (!selectedFamilyId) {
+      return familyMembers; 
+    }
+
+    return familyMembers.filter(member => member.id_family === selectedFamilyId);
+  }
+);
+
+
+
+export default familySlice.reducer;

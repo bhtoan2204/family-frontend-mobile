@@ -24,6 +24,7 @@ const FamilyListModal = ({
   const [familySelect, setFamilySelect] = useState<any>(selectedFamily);
 
   useEffect(() => {
+    console.log(membersMap[0])
     setFamilySelect(selectedFamily);
   }, [selectedFamily]);
 

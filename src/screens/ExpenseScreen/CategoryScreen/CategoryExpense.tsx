@@ -31,7 +31,7 @@ import {IncomeServices} from 'src/services/apiclient';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS} from 'src/constants';
 import { Swipeable } from 'react-native-gesture-handler';
-import { selectfamily } from 'src/redux/slices/FamilySlice';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 
 interface ExpenseType {
   id_expense_type: number;
@@ -56,7 +56,7 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
   const addUrl =
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBWw-U6s-Q1k-tt_xXKV02dPlypckiNOJMxJo3KxWW-g&s';
   let state = useSelector(getType);
-  let family = useSelector(selectfamily);
+  let family = useSelector(selectSelectedFamily);
 
   const [selectedFamily, setSelectedFamily] = useState<number | null>(null);
 

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, SafeAreaView, TouchableOpacity, TextInpu
 import { useDispatch, useSelector } from 'react-redux';
 import { IncomeDetailScreenProps } from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { selectfamily } from 'src/redux/slices/FamilySlice';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import { Income } from 'src/interface/income/getIncome';
@@ -28,12 +28,12 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
   const [categoryTimeout, setCategoryTimeout] = useState<NodeJS.Timeout | null>(null);
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const [isEditingImage, setIsEditingImage] = useState(false);
-  let family = useSelector(selectfamily);
+  let family = useSelector(selectSelectedFamily);
   const [loading, setLoading] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    fetchincomeType(family.id_family);
+    fetchincomeType(family?.id_family);
   }, []);
 
   const fetchincomeType = async (id_family: any) => {

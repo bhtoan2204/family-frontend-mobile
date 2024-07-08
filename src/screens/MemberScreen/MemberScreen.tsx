@@ -8,27 +8,16 @@ import { TEXTS } from 'src/constants';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Member } from 'src/interface/member/member';
 import { useSelector } from 'react-redux';
-import { selectfamily } from 'src/redux/slices/FamilySlice';
+import { selectFamilyMembers, selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 
 
 
 const ViewMemberScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }) => {
  
-  const [member, setMember] = useState<Member[]>([]);
-  let family=useSelector(selectfamily);
+  const member = useSelector(selectFamilyMembers);
 
-  const handleMember =async() => {
-    try {
-      const familyInfo = await FamilyServices.getAllMembers({ id_family: family.id_family });
-      setMember(familyInfo);
 
-    } catch (error: any) {
-      console.log('FamilyServices.getFamily error:', error);
-    }
-  }
-  useEffect(() => {
-    handleMember();
-  }, []);
+
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -42,15 +31,15 @@ const ViewMemberScreen: React.FC<ViewFamilyScreenProps> = ({ navigation, route }
 
           {member.map((item) => (
             <View key={item.id_user} style={styles.familyContainer}>
-              <Text style={styles.text}>Name: {item.lastname}</Text>
-              <Text style={styles.text}>Email: {item.email}</Text>
-              <Text style={styles.text}>Phone: {item.phone}</Text>
+              <Text style={styles.text}>Name: {item.user.firstname} {item.user.lastname}</Text>
+              <Text style={styles.text}>Email: {item.user.email}</Text>
+              <Text style={styles.text}>Phone: {item.user.phone}</Text>
 
             </View>
           ))}
         </View>
         <TouchableOpacity
-          onPress={handleMember}
+          
           style={styles.iconDetail}>
           
           <Material name="heart" size={50} color="blue" /> 

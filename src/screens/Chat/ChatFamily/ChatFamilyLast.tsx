@@ -20,7 +20,7 @@ import { Video } from 'expo-av';
 import { selectFamilyLastMessage } from 'src/redux/slices/MessageFamily';
 import { Message } from 'src/interface/chat/family';
 import { Member } from 'src/interface/member/member';
-import { selectfamily } from 'src/redux/slices/FamilySlice';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 
 
 

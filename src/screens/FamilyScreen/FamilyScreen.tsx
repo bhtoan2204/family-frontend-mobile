@@ -1,41 +1,32 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Text,
   View,
   TouchableOpacity,
-  Alert,
-  SafeAreaView,
-  Dimensions,
-  FlatList,
+  ActivityIndicator,
   Image,
   ScrollView,
-  ImageBackground,
-  ActivityIndicator,
-  TouchableOpacityBase,
   Animated,
   Easing,
+  Alert,
+  Dimensions,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import {FamilyServices} from 'src/services/apiclient';
-import {ViewFamilyScreenProps} from 'src/navigation/NavigationTypes';
-import {COLORS, TEXTS} from 'src/constants';
-import styles from './styles';
-import BottomSheet from './BottomSheet';
-import {Family} from 'src/interface/family/family';
-
-import {useDispatch, useSelector} from 'react-redux';
-import {selectProfile} from 'src/redux/slices/ProfileSclice';
-import {selectfamily, setForFamily} from 'src/redux/slices/FamilySlice';
-import {AppDispatch} from 'src/redux/store';
-import * as ImagePicker from 'expo-image-picker';
-import {updateFamily} from 'src/redux/slices/FamilySlice';
-import FamilyListModal from './FamilyList';
-import {Member} from 'src/interface/member/member';
-import {MaterialIcons} from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import Feather from 'react-native-vector-icons/Feather';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectSelectedFamily, selectFamilies, selectFamilyMembers, setSelectedFamily, setFamilies, setFamilyMembers, updateFamily } from 'src/redux/slices/FamilySlice';
+import { AppDispatch } from 'src/redux/store';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import BottomSheet from './BottomSheet';
+import FamilyListModal from './FamilyList';
 import OptionsModal from './OptionModal';
+import { FamilyServices } from 'src/services/apiclient';
+import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
+import { COLORS } from 'src/constants';
+import styles from './styles';
+import { Family } from 'src/interface/family/family';
+import { Member } from 'src/interface/member/member';
+import * as ImagePicker from 'expo-image-picker';
 
 const cards = [
   {
@@ -44,7 +35,6 @@ const cards = [
     detail: 'Manage family members.',
     icon: require('../../assets/icons/family-member.png'),
   },
-
   {
     id: 3,
     title: 'Education',
@@ -77,65 +67,62 @@ const cards = [
   },
 ];
 
-const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
-  const [family, setFamily] = useState<Family>();
+const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const bottomSheetRef = useRef<RBSheet>(null);
   const allMemberRef = useRef<RBSheet>(null);
-  const screenHeight = Dimensions.get('screen').height;
-  let profile = useSelector(selectProfile);
   const dispatch = useDispatch<AppDispatch>();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-  const [families, setFamilies] = useState<Family[]>([]);
-  const [membersMap, setMembersMap] = useState<{[key: number]: Member[]}>({});
-  const shakeAnimation = useRef(new Animated.Value(0)).current;
-  const shakeAnimationX = new Animated.Value(0);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const families = useSelector(selectFamilies);
+  const selectedFamily = useSelector(selectSelectedFamily);
+  const [membersMap, setMembersMap] = useState<{[key: number]: Member[]}>({});  const shakeAnimation = useRef(new Animated.Value(0)).current;
   const rotateAnimation = useRef(new Animated.Value(0)).current;
-  const [isOptionsModalVisible,setIsOptionsModalVisible] = useState(false);
+  const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
+  const screenHeight = Dimensions.get('screen').height;
 
   const source =
-    family?.avatar && family.avatar !== '[NULL]'
-      ? {uri: family.avatar}
+    selectedFamily?.avatar && selectedFamily.avatar !== '[NULL]'
+      ? { uri: selectedFamily.avatar }
       : require('../../assets/images/default_ava.png');
 
-  useEffect(()=>{
-    if (family){
-    dispatch(setForFamily(family));
-    }
-  },[family])
-  
+  useEffect(() => {
+    fetchFamiliesAndMembers();
+  }, []);
   const fetchFamiliesAndMembers = async () => {
     setIsLoading(true);
     try {
       const allFamilies = await FamilyServices.getAllFamily();
-      setFamily(allFamilies[0]);
-      setFamilies(allFamilies);
-
-      dispatch(setForFamily(allFamilies[0]));
-
-      const membersObject: {[key: number]: Member[]} = {};
-
-      for (const family of allFamilies) {
+  
+      dispatch(setFamilies(allFamilies));
+  
+      if (allFamilies.length > 0) {
+        const initialFamily = allFamilies[0];
+        dispatch(setSelectedFamily(initialFamily));
+      }
+  
+      const membersObject = {};
+  
+      for (let i = 0; i < allFamilies.length; i++) {
+        const family = allFamilies[i];
         const members = await FamilyServices.getAllMembers({
           id_family: family.id_family,
         });
         membersObject[family.id_family] = members;
         setMembersMap(membersObject);
+
       }
-    
-      
+  
+  
+      dispatch(setFamilyMembers(membersObject));
     } catch (error) {
       console.error('Error fetching families or members:', error);
     } finally {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    
-    fetchFamiliesAndMembers();
-  },[]);
+  
+  
+  
 
   useEffect(() => {
     const animation = Animated.loop(
@@ -152,99 +139,20 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           useNativeDriver: true,
           easing: Easing.linear,
         }),
-        Animated.timing(shakeAnimationX, {
-          toValue: 10,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-        Animated.timing(shakeAnimationX, {
-          toValue: -10,
-          duration: 100,
-          useNativeDriver: true,
-        }),
-        Animated.timing(shakeAnimationX, {
+        Animated.timing(shakeAnimation, {
           toValue: 0,
-          duration: 1000,
+          duration: 400,
           useNativeDriver: true,
         }),
       ]),
       {
         iterations: -1,
-      },
+      }
     );
 
     animation.start();
     return () => animation.stop();
   }, []);
-
-  // const handleDeleteFamily = async (id_family: number) => {
-  //   try {
-  //     Alert.alert(
-  //       'Confirm Delete',
-  //       'Are you sure you want to delete this family?',
-  //       [
-  //         {
-  //           text: 'Cancel',
-  //           onPress: () => console.log('Cancel Pressed'),
-  //           style: 'cancel',
-  //         },
-  //         {
-  //           text: 'OK',
-  //           onPress: async () => {
-  //             const result = await FamilyServices.deleteFamily({id_family});
-  //             Alert.alert('Success', 'Successfully deleted family');
-  //           },
-  //         },
-  //       ],
-  //       {cancelable: false},
-  //     );
-  //   } catch (error: any) {
-  //     Alert.alert('Fail', 'Failed deleted family');
-  //     console.log('Error deleting family:', error);
-  //   }
-  // };
-
-  const handleOpenBottomSheet = () => {
-    bottomSheetRef.current?.open();
-  };
-
-  const handleChatPress = () => {
-    navigation.navigate('ChatStack', {
-      screen: 'ChatFamily',
-      params: {id_family: family!.id_family},
-    });
-  };
-
-  const handleEducationPress = () => {
-    navigation.navigate('FamilyStack', {screen: 'Education',params: {id_family: family!.id_family}});
-  };
-
-  const handleCalendarPress = () => {
-    navigation.navigate('CalendarStack', {
-      screen: 'CalendarScreen',
-      params: {id_family: family!.id_family},
-    });
-  };
-
-  const handleOpenAllMemberModal = () => {
-    navigation.navigate('FamilyStack', {screen: 'AllMember',params: {id_family: family.id_family}});
-  };
-
-  const handleNavigateGuildLine = () => {
-    navigation.navigate('FamilyStack', {screen: 'GuildLine',params: {id_family: family.id_family}});
-  };
-
-  const handleNavigateHouseHold = () => {
-    navigation.navigate('FamilyStack', {screen: 'HouseHold', params: {id_family: family!.id_family}});
-  };
-
-  const handleNavigateChecklist = () => {
-    navigation.navigate('FamilyStack', {screen: 'CheckList',params: {id_family: family!.id_family}});
-  };
-
-  const handleSelectFamily = (id_family: number) => {
-    //navigation.navigate('ViewFamilyScreen', { id_family });
-  };
 
   const handleChangeAvatar = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -255,14 +163,12 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     });
 
     if (!result.canceled) {
-      const a = result.assets[0]!;
-      const uri = a.uri;
+      const uri = result.assets[0].uri;
       if (uri) {
         try {
           setIsLoading(true);
-          const fileUrl = await FamilyServices.changeAvatar(family!.id_family, uri);
-          dispatch(updateFamily({ ...family!, avatar: fileUrl }));
-          setFamily({...family!, avatar: fileUrl });
+          const fileUrl = await FamilyServices.changeAvatar(selectedFamily!.id_family, uri);
+          dispatch(updateFamily({ ...selectedFamily!, avatar: fileUrl }));
         } catch (error) {
           console.error('Error updating avatar:', error);
         } finally {
@@ -274,49 +180,45 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
 
   const toggleDropdown = () => {
     setIsDropdownVisible(!isDropdownVisible);
-    setIsDropdownOpen(!isDropdownOpen);
     Animated.timing(rotateAnimation, {
-      toValue: isDropdownOpen ? 0 : 1,
+      toValue: isDropdownVisible ? 0 : 1,
       duration: 300,
       useNativeDriver: true,
     }).start();
   };
 
   const handleCloseModal = (family: Family) => {
-    setFamily(family);
+    dispatch(setSelectedFamily(family));
     setIsDropdownVisible(false);
-    if (isDropdownOpen) {
-      setIsDropdownOpen(false);
-      Animated.timing(rotateAnimation, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }
+    Animated.timing(rotateAnimation, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
   };
 
   const handlePress = (cardId: number) => {
     switch (cardId) {
       case 1:
-        handleOpenAllMemberModal();
+        navigation.navigate('FamilyStack', { screen: 'AllMember', params: { id_family: selectedFamily!.id_family } });
         break;
       case 2:
-        handleChatPress();
+        navigation.navigate('ChatStack', { screen: 'ChatFamily', params: { id_family: selectedFamily!.id_family } });
         break;
       case 3:
-        handleEducationPress();
+        navigation.navigate('FamilyStack', { screen: 'Education', params: { id_family: selectedFamily!.id_family } });
         break;
       case 4:
-        handleCalendarPress();
+        navigation.navigate('CalendarStack', { screen: 'CalendarScreen', params: { id_family: selectedFamily!.id_family } });
         break;
       case 5:
-        handleNavigateGuildLine();
+        navigation.navigate('FamilyStack', { screen: 'GuildLine', params: { id_family: selectedFamily!.id_family } });
         break;
       case 6:
-        handleNavigateHouseHold();
+        navigation.navigate('FamilyStack', { screen: 'HouseHold', params: { id_family: selectedFamily!.id_family } });
         break;
       case 7:
-        handleNavigateChecklist();
+        navigation.navigate('FamilyStack', { screen: 'CheckList', params: { id_family: selectedFamily!.id_family } });
         break;
     }
   };
@@ -326,29 +228,32 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     outputRange: ['0deg', '180deg'],
   });
 
-  if (isLoading || family === null) {
+  if (isLoading || !selectedFamily) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     );
   }
-    const closeOptionsModal = () => {
+
+  const closeOptionsModal = () => {
     setIsOptionsModalVisible(false);
   };
-    const handleEditFamily = () => {
+
+  const handleEditFamily = () => {
     setIsOptionsModalVisible(false);
-    handleOpenBottomSheet();
+    bottomSheetRef.current?.open();
   };
+
   const leaveFamily = async () => {
     try {
-      await FamilyServices.leaveFamily(family?.id_family);
-      navigation.navigate('HomeTab', {screen: 'HomeScreen'});
+      await FamilyServices.leaveFamily(selectedFamily!.id_family);
+      navigation.navigate('HomeTab', { screen: 'HomeScreen' });
     } catch (error: any) {
       console.error('Leave family failed:', error);
     }
   };
-  
+
   const handleLeaveFamily = () => {
     setIsOptionsModalVisible(false);
     Alert.alert(
@@ -367,7 +272,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
       { cancelable: true },
     );
   };
-  
+
   return (
     <View style={{position: 'relative', backgroundColor: '#fdfdfd'}}>
       <Image
@@ -393,7 +298,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
               style={styles.backButton}
             />
           </TouchableOpacity>
-          {family != null && (
+          {selectedFamily != null && (
             <TouchableOpacity
               onPress={toggleDropdown}
               style={{
@@ -401,7 +306,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                 marginLeft: 15,
                 alignItems: 'center',
               }}>
-              <Text style={styles.headerText}>{family.name}</Text>
+              <Text style={styles.headerText}>{selectedFamily.name}</Text>
               <Animated.View style={{transform: [{rotate}]}}>
                 <MaterialIcons
                   name="arrow-drop-down"
@@ -423,7 +328,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           onClose={handleCloseModal}
           families={families}
           membersMap={membersMap}
-          selectedFamily={family}
+          selectedFamily={selectedFamily}
         />
         <View>
           <Image
@@ -521,9 +426,9 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           },
         }}>
         <BottomSheet
-          id_family={family!.id_family}
-          name={family?.name}
-          description={family?.description}
+          id_family={selectedFamily!.id_family}
+          name={selectedFamily?.name}
+          description={selectedFamily?.description}
         />
       </RBSheet>
 

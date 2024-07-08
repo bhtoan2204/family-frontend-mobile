@@ -20,7 +20,7 @@ import { Video } from 'expo-av';
 import { selectFamilyLastMessage } from 'src/redux/slices/MessageFamily';
 import { Message } from 'src/interface/chat/family';
 import { Member } from 'src/interface/member/member';
-import { selectfamily } from 'src/redux/slices/FamilySlice';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 
 
 
@@ -43,8 +43,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
     null,
   );
-  // let LastMessageFamily = useSelector(selectFamilyLastMessage);
-  let family = useSelector(selectfamily);
+  let family = useSelector(selectSelectedFamily);
 
 
   useEffect(() => {

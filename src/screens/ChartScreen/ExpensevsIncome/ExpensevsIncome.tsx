@@ -5,7 +5,7 @@ import { Expenditure } from 'src/interface/expense/getExpense';
 import { Income } from 'src/interface/income/getIncome';
 import { Family } from 'src/interface/family/family';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectfamily } from 'src/redux/slices/FamilySlice';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import { ExpenseServices, IncomeServices } from 'src/services/apiclient';
 import styles from './styles';
 import { IncomeExpenseScreenProps } from 'src/navigation/NavigationTypes';
@@ -34,7 +34,7 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
   const [isFamilyModalOpen, setIsFamilyModalOpen] = useState(false);
   const filterUri = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL0i6wYs08kFWJKDu9843LWdW43Xom8IW89cIZREgBKg&s';
   const familyUri = 'https://t3.ftcdn.net/jpg/06/75/38/14/360_F_675381468_yjYEK9SvCRYpRUyKNRWsnArIalbMeBU4.jpg';
-  const family = useSelector(selectfamily);
+  const family = useSelector(selectSelectedFamily);
   const itemsPerPage = 10;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   let profile = useSelector(selectProfile);

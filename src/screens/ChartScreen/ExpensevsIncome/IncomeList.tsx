@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Dimensions, StyleSheet, FlatList, TouchableOpacity, Modal, Image, ImageBackground, SafeAreaView, ActivityIndicator } from 'react-native';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectfamily } from 'src/redux/slices/FamilySlice';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import {  IncomeServices } from 'src/services/apiclient';
 import styles from './styles';
 import { IncomeScreenProps } from 'src/navigation/NavigationTypes';
@@ -21,7 +21,7 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
   const [selectedFilter, setSelectedFilter] = useState<number>(30);
   const [selectedCategoryType, setSelectedCategoryType] = useState<string>('Income');
   const [sumIncome, setSumIncome] = useState<number>(0);
-  const family = useSelector(selectfamily);
+  const family = useSelector(selectSelectedFamily);
   const itemsPerPage = 10;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   let profile = useSelector(selectProfile);

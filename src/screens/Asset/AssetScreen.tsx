@@ -5,14 +5,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AssetScreenProps } from 'src/navigation/NavigationTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { ExpenseServices } from 'src/services/apiclient';
-import { selectfamily } from 'src/redux/slices/FamilySlice';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import { Asset } from 'src/interface/asset/asset';
 import { addAsset, selectAsset } from 'src/redux/slices/AssetSlice';
 import Feather from 'react-native-vector-icons/Feather';
 
 const AssetScreen = ({ navigation }: AssetScreenProps) => {
   const dispatch = useDispatch();
-  const family = useSelector(selectfamily);
+  const family = useSelector(selectSelectedFamily);
   const [assets, setAssets] = useState<Asset[]>([]);
 
   useEffect(() => {

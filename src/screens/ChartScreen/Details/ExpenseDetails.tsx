@@ -6,7 +6,7 @@ import { Expenditure, selectExpense } from 'src/redux/slices/ExpenseAnalysis';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ExpenseServices } from 'src/services/apiclient';
 import { ExpenseType } from 'src/interface/expense/ExpenseType';
-import { selectfamily } from 'src/redux/slices/FamilySlice';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
@@ -31,7 +31,7 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
   const [isEditingImage, setIsEditingImage] = useState(false);
   const [currentImageUri, setCurrentImageUri] = useState<string | undefined>(expense?.image_url);
   const [uriImage, setUriImage] = useState<string | null>(null);
-  let family = useSelector(selectfamily);
+  let family = useSelector(selectSelectedFamily);
   const [loading, setLoading] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 

@@ -16,7 +16,7 @@ import {useSelector} from 'react-redux';
 import {getOption} from 'src/redux/slices/ExpenseAnalysis';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { selectfamily } from 'src/redux/slices/FamilySlice';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 
 const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
   const [selectedCategoryType, setSelectedCategoryType] = useState<string>('');
@@ -24,7 +24,7 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
   let option = useSelector(getOption);
 
   const profile = useSelector(selectProfile);
-  let family =useSelector(selectfamily);
+  let family =useSelector(selectSelectedFamily);
 
   useEffect(() => {
       setSelectedCategoryType(option);
