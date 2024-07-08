@@ -199,7 +199,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
 
   // Hàm render cho Expense vs Income Screen
   const renderExVsInScreen = () => (
-    navigation.navigate('ExpenseStack', {screen: 'ExpenseScreen'})
+    navigation.navigate('IncomeStack', {screen: 'IncomeScreen'})
 
 
   );
