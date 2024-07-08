@@ -239,14 +239,14 @@ const ExpenseServices = {
       }
       
     },
-    getExpenseByDateRange: async (page: number, itemsPerPage: number, option: number,  id_family?: number) => {
+    getExpenseByDateRange: async (page: number, itemsPerPage: number, id_family?: number, fromDate: string, toDate: string) => {
 
       try {
         const response: AxiosResponse = await instance.get(
           `${baseUrl}/api/v1/finance/expensediture/getExpenseByDateRange/${id_family}`,
           {
             params: {
-              page, itemsPerPage, option
+              id_family, page, itemsPerPage, fromDate, toDate
             }
           }
         );

@@ -29,6 +29,7 @@ export type ExpenseStackParamList = {
   AssetScreen: undefined;
   AssetDetailScreen: undefined;
   AddAssetScreen: undefined;
+  ExpenseScreen: undefined;
 
 };
 
@@ -105,6 +106,16 @@ type AddAssetScreenNavigationProp = NativeStackNavigationProp<
 export interface AddAssetScreenProps {
   navigation: AddAssetScreenNavigationProp;
   route: RouteProp<ExpenseStackParamList, 'AddAssetScreen'>;
+}
+
+type ExpenseScreenNavigationProp = NativeStackNavigationProp<
+  ExpenseStackParamList,
+  'ExpenseScreen'
+>;
+
+export interface ExpenseScreenProps {
+  navigation: ExpenseScreenNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'ExpenseScreen'>;
 }
 type IncomeDetailScreenNavigationProp = NativeStackNavigationProp<
 IncomeStackParamList,

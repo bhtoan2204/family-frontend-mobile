@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginLeft: 15,
+    marginRight: 25,
   },
   headerButton: {
     paddingHorizontal: 0,
@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
   expenseCategory: {
     fontSize: 16,
     color: COLORS.Rhino,
+    fontWeight: '500',
   },
   expenseDescription: {
     fontSize: 14,

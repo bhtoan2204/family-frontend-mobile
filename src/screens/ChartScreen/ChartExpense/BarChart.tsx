@@ -8,14 +8,8 @@ import {getDate} from 'src/redux/slices/ExpenseAnalysis';
 import {ExpenseServices} from 'src/services/apiclient';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {Image} from 'react-native';
+import { DailyExpense } from 'src/interface/expense/DailyExpense';
 
-interface DailyData {
-  id_expense_type: number;
-  expense_category: string;
-  expense_amount: number;
-  description: string;
-  name: string;
-}
 interface BarChartScreenProps {
   id_family: number;
 }
@@ -25,7 +19,7 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({id_family}) => {
   const date = useSelector(getDate);
 
   const [selectedDate, setSelectedDate] = useState<string>(date);
-  const [barChartData, setBarChartData] = useState<DailyData[]>([]);
+  const [barChartData, setBarChartData] = useState<DailyExpense[]>([]);
 
   useEffect(() => {
     fetchData(selectedDate, id_family);
@@ -34,6 +28,9 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({id_family}) => {
   const fetchData = async (date: string, id_family: number) => {
     try {
       const response = await ExpenseServices.getExpenseByDate(date, id_family);
+      console.log(response);
+
+      console.log(response)
       if (Array.isArray(response)) {
         setBarChartData(response);
         setShowDetails(new Array(response.length).fill(false));
@@ -132,10 +129,10 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({id_family}) => {
               <View style={styles.expenseDateItem}>
                 <View style={styles.expenseDetails}>
                   <Text style={styles.expenseText}>
-                    {expense.expense_category}
+                    {expense.financeExpenditureType.expense_type_name}
                   </Text>
                   <Text style={styles.expenseAmount}>
-                    - {expense.expense_amount} đ
+                    - {expense.amount} đ
                   </Text>
                 </View>
 
@@ -150,7 +147,7 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({id_family}) => {
                   <View style={styles.detailsContainer}>
                     <Text style={styles.containerTextName}>
                       {' '}
-                      {expense.name}
+                      {expense.users.firstname}
                     </Text>
                     <Text style={styles.expenseText}>
                       Description: {expense.description}

@@ -34,7 +34,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
   const [currentScreen, setCurrentScreen] = useState('expenseAnalysis');
 
   const handleButtonPress = (
-    buttonName: 'expenseAnalysis' | 'incomeAnalysis' | 'expenseIncome',
+    buttonName: 'expenseAnalysis' | 'incomeAnalysis' | 'expenseIncome' | 'asset',
   ) => {
     setSelectedButton(buttonName);
     setCurrentScreen(buttonName);
@@ -199,22 +199,13 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
 
   // Hàm render cho Expense vs Income Screen
   const renderExVsInScreen = () => (
-    navigation.navigate('ExpenseStack', {screen: 'AssetScreen'})
+    navigation.navigate('ExpenseStack', {screen: 'ExpenseScreen'})
 
-    // <TouchableOpacity> 
-
-    // <View style={{flex: 1}}>
-    //   <Image
-    //     source={require('../../assets/images/expense_income.png')}
-    //     style={{flex: 1, width: '100%', height: '100%'}}
-    //     resizeMode="contain"
-    //   />
-    // </View>
-    // </TouchableOpacity>
 
   );
-
-  // Hàm chính để quyết định màn hình nào được hiển thị
+  const renderAsset = () => {
+    navigation.navigate('ExpenseStack', {screen: 'AssetScreen'})
+  }
   const renderScreen = () => {
     switch (currentScreen) {
       case 'expenseAnalysis':
@@ -223,6 +214,8 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         return renderIncomeAnalysisScreen();
       case 'expenseIncome':
         return renderExVsInScreen();
+      case 'asset':
+        return renderAsset();
     }
   };
 
@@ -246,42 +239,6 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.container}>
-        {/* <TouchableOpacity style={styles.expenseContainer} onPress={pressExVsIn}>
-          <Icon
-            name="compare-arrows"
-            size={35}
-            color={COLORS.black}
-            style={styles.icon}
-          />
-          <Text style={styles.heading}>Expense vs Income</Text>
-        </TouchableOpacity>
-
-        <View style={styles.analysisContainer}>
-          <TouchableOpacity
-            style={styles.expenseAnalysis}
-            onPress={pressExpenseAnalysis}>
-            <Icon
-              name="show-chart"
-              size={35}
-              color={COLORS.black}
-              style={styles.icon}
-            />
-            <Text style={styles.heading}>Expense Analysis</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.incomeAnalysis}
-            onPress={pressIncomeAnalysis}>
-            <Icon
-              name="bar-chart"
-              size={35}
-              color={COLORS.black}
-              style={styles.icon}
-            />
-            <Text style={styles.heading}>Income Analysis</Text>
-          </TouchableOpacity>
-        </View> */}
-
         <View
           style={{
             flexDirection: 'column',
@@ -350,6 +307,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
               </Text>
             </TouchableOpacity>
           </View>
+          <View>
 
           <TouchableOpacity
             onPress={() => handleButtonPress('expenseIncome')}
@@ -374,9 +332,34 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
               Expense & Income
             </Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => handleButtonPress('asset')}
+            style={{
+              alignItems: 'center',
+              backgroundColor:
+                selectedButton === 'expenseIncome' ? '#80C694' : '#FFFFFF',
+              padding: 18,
+              borderRadius: 30,
+              shadowColor:
+                selectedButton === 'expenseIncome' ? '#80C694' : 'transparent',
+              shadowOffset: {width: 0, height: 4},
+              shadowOpacity: 0.35,
+              shadowRadius: 3.84,
+            }}>
+            <Text
+              style={{
+                color: selectedButton === 'expenseIncome' ? '#FFFFFF' : '#ccc',
+                fontWeight: '700',
+                fontSize: 14,
+              }}>
+              Asset
+            </Text>
+          </TouchableOpacity>
         </View>
         {renderScreen()}
-      </View>
+        </View>
+        </View>
     </SafeAreaView>
   );
 };

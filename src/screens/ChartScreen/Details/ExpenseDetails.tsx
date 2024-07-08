@@ -41,8 +41,8 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
 
   const fetchExpenseType = async (id_family: any) => {
     try {
-      const response = await ExpenseServices.getExpenseType(id_family);
-      setExpenseType(response);
+      // const response = await ExpenseServices.getExpenseType(id_family);
+      // setExpenseType(response);
     } catch (error: any) {
       console.error('Error in getExpenseType:', error.message);
     }
@@ -54,7 +54,6 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
 
   const handleSave = () => {
     try {
-      //await ExpenseServices.updateExpense(expense?.id_expenditure, expense.)
     } catch (error) {
 
     }

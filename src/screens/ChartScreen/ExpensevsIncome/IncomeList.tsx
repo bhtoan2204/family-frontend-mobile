@@ -39,7 +39,7 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   let profile = useSelector(selectProfile);
   const dispatch = useDispatch();
-  const [selectDate, setSelectDate] =  useState(new Date());
+
   const fetchDataExpense = async (page: number, reset: boolean = false) => {
     // setIsLoading(true);
     // try {
@@ -281,7 +281,7 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
             </Text>
           </View>
         <View style={{backgroundColor: '#f0f0f0', flex: 1,}}>
-          {/* <View style={styles.containerTab}>
+          <View style={styles.containerTab}>
             <TouchableOpacity
               onPress={() => selectOption('Income')}
               style={[
@@ -306,16 +306,7 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
                 { left: selectedCategoryType === 'Income' ? 0 : '50%', borderRadius: 20 }
               ]}
             />
-          </View> */}
-        <DateTimePicker
-          value={selectDate}
-          mode="date"
-          display="default"
-          onChange={() => {
-     
-          }}
-        />
-
+          </View>
 
 
           {selectedCategoryType === 'Expense' && (
