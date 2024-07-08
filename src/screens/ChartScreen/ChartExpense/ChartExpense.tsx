@@ -104,11 +104,11 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
             <View style={styles.headerTitleContainer}>
               <Text style={styles.headerText}>Expense Analysis</Text>
             </View>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.headerButton}
               onPress={() => setIsFamilyModalOpen(!isFamilyModalOpen)}>
               <Icon name="filter" size={30} style={styles.filterButton} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <View
             style={{
@@ -126,9 +126,11 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
               }}>
               Hello, {profile.firstname} {profile.lastname}
             </Text>
-            <Text style={{fontSize: 16, color: 'white'}}>
-              Here you can view brief overview of your budget.
+            {selectedCategoryType === 'Year' && (
+            <Text style={{fontSize: 16, color: '#ccc'}}>
+              Here you can view a brief overview of your expenses for the year.
             </Text>
+            )}
           </View>
           {/* <View style={styles.containerTab}>
             <TouchableOpacity
@@ -192,7 +194,7 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
               <LineChartScreen id_family={selectedFamily} />
             </View>
           )}
-          <Modal
+          {/* <Modal
             visible={isFamilyModalOpen}
             animationType="slide"
             transparent={true}
@@ -221,7 +223,7 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
                 </View>
               </View>
             </TouchableOpacity>
-          </Modal>
+          </Modal> */}
         </View>
       </SafeAreaView>
     </ImageBackground>

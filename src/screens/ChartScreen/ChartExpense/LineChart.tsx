@@ -35,7 +35,6 @@ interface MonthlyData {
 interface LineChartScreenProps {
   id_family: number;
 }
-const minValue = 80;
 
 
 
@@ -47,34 +46,13 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
   const [years, setYears] = useState<number[]>([]);
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const dispatch = useDispatch();
-
   const labels = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
   ];
   const fullLabels = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
   ];
   
   useEffect(() => {
@@ -96,14 +74,13 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
     try {
       const response = await ExpenseServices.getExpenseByYear(year, id_family);
       const currentYear = moment().year();
-      const currentMonth = moment().month() + 1; 
-  
+      const currentMonth = moment().month() + 1;
+      
       const transformedData = response
-        .filter((monthData: MonthlyData) => {
-          return (
-            year < currentYear || (year === currentYear && monthData.month <= currentMonth)
-          );
-        })
+      .filter((monthData: MonthlyData) => {
+        const include = year < currentYear || ( monthData.month <= currentMonth);
+        return include;
+      })
         .map((monthData: MonthlyData) => ({
           month: monthData.month,
           total: monthData.total / 1000,
@@ -123,6 +100,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
       console.error('Error fetching data:', error);
     }
   };
+  
 
   const toggleLegend = (category: string) => {
     setSelectedLegends(prevLegends =>
@@ -230,7 +208,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
             style={styles.dropdownYear}
             onValueChange={itemValue => handleYearChange(itemValue)}>
             {years.map((year: number) => (
-              <Picker.Item key={year} label={year.toString()} value={year} />
+              <Picker.Item key={year.toString()} label={year.toString()} value={year} />
             ))}
           </Picker>
         </View>
@@ -360,7 +338,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
                       <Text>{`${category.name}: ${category.amount}`}</Text>
                     </View>
                   ))}
-                <Text style={styles.expenseAmount}>{formatCurrency(monthData.total * 1000)}</Text>
+                <Text style={styles.expenseAmount}>-{formatCurrency(monthData.total * 1000)}</Text>
 
                 <Icon name="chevron-right" size={20} color="#ccc" />
               </View>

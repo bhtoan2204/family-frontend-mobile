@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginLeft: 15,
+    marginRight: 25,
   },
   headerButton: {
     paddingHorizontal: 0,
@@ -330,9 +330,8 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   yearPickerContainer: {
-    backgroundColor: '#ffffff',
     alignItems: 'center',
-    marginBottom: 70,
+    marginBottom: 150,
   },
 
   dropdownYear: {
