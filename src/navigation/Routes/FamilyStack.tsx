@@ -1,4 +1,4 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CreateFamilyScreen from 'src/screens/CreateFamilyScreen';
 import InviteNewMemberScreen from 'src/screens/InviteNewMemberScreen';
 import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
@@ -18,7 +18,6 @@ import {
   GuildLineDetailScreenProps,
   GuildLineScreenProps,
   HouseHoldCategoryDetailScreenProps,
-  HouseHoldCategoryScreenProps,
   HouseHoldScreenProps,
   MemberDetailsScreenProps,
   NewsScreenProps,
@@ -111,12 +110,6 @@ const FamilyStack = () => {
       <Stack.Screen name="HouseHold">
         {props => <HouseHoldScreen {...(props as HouseHoldScreenProps)} />}
       </Stack.Screen>
-      {/* <Stack.Screen name="HouseHoldCategory">
-        {(props) => <HouseHoldCategoryScreen {...props as HouseHoldCategoryScreenProps} />}
-      </Stack.Screen>
-      <Stack.Screen name="HouseHoldCategoryDetail">
-        {(props) => <HouseHoldCategoryDetailScreen {...props as HouseHoldCategoryDetailScreenProps} />}
-      </Stack.Screen> */}
       <Stack.Screen name="CheckList">
         {props => <ChecklistScreen {...(props as CheckListScreenProps)} />}
       </Stack.Screen>

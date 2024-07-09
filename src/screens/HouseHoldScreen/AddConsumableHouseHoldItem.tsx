@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react'
 import { View, Text, Image, TouchableOpacity, ImageSourcePropType, SafeAreaView, KeyboardAvoidingView, ScrollView, Dimensions, StyleSheet, TextInput, InputAccessoryView, Keyboard, TouchableWithoutFeedback, Touchable, Platform, Button } from 'react-native'
-import { AddConsumableHouseHoldItemScreenProps, EditConsumableHouseHoldItemScreenProps, EditExpenseHouseHoldItemScreenProps } from 'src/navigation/NavigationTypes'
+import { AddConsumableHouseHoldItemScreenProps, AddConsumableItemScreenProps, EditConsumableHouseHoldItemScreenProps, EditExpenseHouseHoldItemScreenProps } from 'src/navigation/NavigationTypes'
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import { TimePickerSheet } from '../CheckListScreen/AddItemCheckListSheet'
@@ -17,13 +17,14 @@ import NumberPickerSheet from 'src/components/user/sheet/number-picker'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/redux/store'
 import { updateComsumableItem } from 'src/redux/slices/HouseHoldDetailSlice'
+import { COLORS } from 'src/constants'
 
 
 
 const screenWidth = Dimensions.get('screen').width
 const screenHeight = Dimensions.get('screen').height
 
-const AddConsumableHouseHoldItemScreen = ({ navigation, route }: AddConsumableHouseHoldItemScreenProps) => {
+const AddConsumableHouseHoldItemScreen = ({ navigation, route }: AddConsumableItemScreenProps) => {
     const { id_family, id_item, id_category } = route.params
     const timePickerSheetRef = React.useRef<any>(null)
     const amountPickerSheetRef = React.useRef<BottomSheet>(null)
@@ -54,7 +55,7 @@ const AddConsumableHouseHoldItemScreen = ({ navigation, route }: AddConsumableHo
     const handleSave = () => {
         dispatch(
             updateComsumableItem({
-                id_household_item: id_item,
+                id_household_item: id_item!,
                 expired_date: expiredDateInput.toDateString(),
                 quantity: quantityInput,
                 threshold: threshholdInput
@@ -69,17 +70,16 @@ const AddConsumableHouseHoldItemScreen = ({ navigation, route }: AddConsumableHo
     }, [expiredDateInput])
 
     return (
-        <SafeAreaView className='flex-1 bg-[#FBF8F1]'>
+        <SafeAreaView className='flex-1 bg-[#f7f7f7]'>
             <KeyboardAvoidingView className='flex-1'
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
-                <View>
+                {/* <View>
                     <View className='w-full  flex-row justify-between items-center py-3 '>
                         <>
                             <TouchableOpacity onPress={() => {
                                 handleCancel()
                             }} className=' flex-row items-center'>
-                                {/* <Material name="chevron-left" size={30} style={{ color: iOSGrayColors.systemGray2.defaultDark, fontWeight: "bold" }} /> */}
                                 <Text className='text-base font-semibold text-gray-600 pl-3' style={{ color: iOSColors.systemRed.defaultLight }}>Cancel</Text>
                             </TouchableOpacity>
                             <Text className='text-base font-medium  '>Add consumable item</Text>
@@ -91,60 +91,30 @@ const AddConsumableHouseHoldItemScreen = ({ navigation, route }: AddConsumableHo
                                 </TouchableOpacity>
                             </View></>
                     </View>
-                </View>
+                </View> */}
+                <TouchableOpacity className='mx-4 mt-4' onPress={() => {
+                    navigation.goBack()
+                }}>
+                    <Material name='close' size={24} color={iOSGrayColors.systemGray.accessibleDark} />
+                </TouchableOpacity>
+
+                <TouchableOpacity className='p-4 absolute bottom-6 z-10 right-6 rounded-lg' onPress={async () => {
+                    // navigation.goBack()
+                    await handleSave()
+                }}
+                    style={{
+                        backgroundColor: COLORS.DenimBlue
+                    }}
+                >
+                    <Material name='arrow-left' size={24} color={'white'} />
+                </TouchableOpacity>
+
                 <ScrollView className='flex-1 ' showsVerticalScrollIndicator={false}>
 
                     <View className='mt-10'>
 
                     </View>
-                    {/* <View className=' bg-white  mt-3 mx-4 justify-center rounded-lg ' style={styles.item}>
-                        <TouchableOpacity className='flex-row justify-between items-center' activeOpacity={0.6} onPress={() => {
-                            setIsEditingVendor(true)
-                        }}>
-
-                            <View className='flex-row px-4 items-center '>
-                                <Image source={VendorIcon} style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} />
-                                <Text className='pl-4 text-base'>Quantity</Text>
-                            </View>
-                            {
-                                isEditingVendor ?
-                                    <TextInput
-                                        className=' text-base pl-4 mr-5 flex-1 content-end'
-                                        style={{
-                                            color: iOSGrayColors.systemGray6.defaultDark,
-                                            fontWeight: 500
-                                        }}
-                                        maxLength={130}
-                                        autoFocus
-                                        returnKeyType='done'
-                                        placeholder='Enter vendor'
-                                        onChangeText={text => setInputVendor(text)}
-                                        value={inputVendor}
-                                        onFocus={() => {
-                                            setIsEditingVendor(true)
-                                        }}
-                                        onBlur={() => {
-
-                                            setIsEditingVendor(false)
-                                        }}
-                                        numberOfLines={1}
-                                    />
-                                    : <View className='mr-4'>
-                                        <Text style={{
-                                            color: iOSGrayColors.systemGray3.defaultLight,
-                                            fontSize: 15,
-                                            fontWeight: 500
-
-                                        }}>{
-                                                inputVendor === '' ? 'Enter' : inputVendor
-
-                                            }</Text>
-                                    </View>
-                            }
-
-                        </TouchableOpacity>
-                    </View> */}
-                    <TouchableOpacity className=' bg-white  mt-3 mx-4 justify-center rounded-lg ' style={styles.item} onPress={() => {
+                    <TouchableOpacity className=' bg-[#F5F5F5]  mt-3 mx-8 justify-center rounded-lg ' style={styles.item} onPress={() => {
                         // amountPickerSheetRef.current?.expand()
                         quantityPickerSheetRef.current?.open()
                     }}>
@@ -166,7 +136,7 @@ const AddConsumableHouseHoldItemScreen = ({ navigation, route }: AddConsumableHo
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity className=' bg-white  mt-3 mx-4 justify-center rounded-lg ' style={styles.item} onPress={() => {
+                    <TouchableOpacity className='   mt-5 mx-8 justify-center rounded-lg ' style={styles.item} onPress={() => {
                         threshholdPickerSheetRef.current?.open()
                     }}>
                         <View className='flex-row justify-between items-center'>
@@ -187,7 +157,7 @@ const AddConsumableHouseHoldItemScreen = ({ navigation, route }: AddConsumableHo
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity className=' bg-white  mt-3 mx-4 justify-center rounded-lg ' style={styles.item} onPress={() => {
+                    <TouchableOpacity className='  mt-5 mx-8 justify-center rounded-lg ' style={styles.item} onPress={() => {
                         timePickerSheetRef.current?.open()
                     }}>
                         <View className='flex-row justify-between items-center'>
@@ -237,7 +207,10 @@ const styles = StyleSheet.create({
         height: screenHeight * 0.12
     },
     item: {
-        height: screenHeight * 0.1
+        height: screenHeight * 0.1,
+        borderWidth: 1,
+        borderColor: iOSGrayColors.systemGray5.defaultLight,
+        backgroundColor: '#f5f5f5'
     }
 })
 export default AddConsumableHouseHoldItemScreen

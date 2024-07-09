@@ -1,5 +1,5 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthStack from './Routes/AuthStack';
 import HomeTab from './Routes/HomeTab';
 import FamilyStack from './Routes/FamilyStack';
@@ -10,6 +10,11 @@ import ExpenseStack from './Routes/ExpenseStack';
 import IncomeStack from './Routes/IncomeStack';
 import MessageTab from './Routes/MessageTab';
 import FamilyTab from './Routes/FamilyTab';
+import HouseHoldStack from './Routes/HouseHoldStack';
+import HouseHoldItemStack from './Routes/HouseHoldItemStack';
+import ShoppingListStack from './Routes/ShoppingListStack';
+import ShoppingListCategoryStack from './Routes/ShoppingListCategoryStack';
+import TodoListStack from './Routes/TodoListStack';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +35,12 @@ const Navigation = () => {
         <Stack.Screen name="IncomeStack" component={IncomeStack} />
         <Stack.Screen name="MessageTab" component={MessageTab} />
         <Stack.Screen name="FamilyTab" component={FamilyTab} />
+        <Stack.Screen name="HouseHoldStack" component={HouseHoldStack} />
+        <Stack.Screen name="HouseHoldItemStack" component={HouseHoldItemStack} />
+        <Stack.Screen name="ShoppingListStack" component={ShoppingListStack} />
+        <Stack.Screen name="TodoListStack" component={TodoListStack} />
+
+        {/* <Stack.Screen name="ShoppingListCategoryStack" component={ShoppingListCategoryStack}/> */}
 
       </Stack.Navigator>
     </NavigationContainer>

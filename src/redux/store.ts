@@ -24,20 +24,28 @@ import expenseTypeReducer from './slices/ExpenseTypeSlice';
 import expenseReducer from './slices/ExpenseAnalysis';
 import incomeReducer from './slices/IncomeAnalysis';
 
+import categorySlice from './slices/CategorySlice';
+import HouseHoldRefSlice from './slices/HouseHoldRefSlice';
+import TodoListSlice from './slices/TodoListSlice';
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
     family: familyReducer,
-    checklist: checkListReducer,
+    // checklist: checkListReducer,
     shoppinglist: shoppingListSlice,
+    todoList: TodoListSlice,
     finance: financeReducer,
     expenseAnalysis: expenseAnalysisReducer,
     calendar: calendarReducer,
     incomeAnalysis: incomeAnalysisReducer,
-    room: roomReducer,
     guidelines: guidelineReducer,
+    //household
+    room: roomReducer,
     householdItems: householdItemSlice,
     householdItemDetail: HouseHoldDetailSlice,
+    category: categorySlice,
+    householdRef: HouseHoldRefSlice,
+    //education
     educations: educationSlice,
     members: memberSlice,
     forgorPassword: forgorPasswordReducer,
@@ -52,9 +60,9 @@ export const store = configureStore({
     income: incomeReducer,
 
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
-      serializableCheck: false, 
+      serializableCheck: false,
     }),
 });
 

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, Image, Button, Pressable, TextInput, KeyboardAvoidingView, Platform, Keyboard, StyleSheet } from 'react-native'
-import { AddEducationScreenProps, AddHouseHoldItemScreenProps, AddSubjectScreenProps, EditDescriptionHouseHoldItemScreenProps } from 'src/navigation/NavigationTypes'
+import { AddEducationScreenProps, AddHouseHoldItemScreenProps, AddSubjectScreenProps, EditDescriptionHouseHoldItemScreenProps, EditDescriptionScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 // import AddHouseHoldItemSheet from './AddHouseHoldItemSheet/AddHouseHoldItemSheet';
 // import HouseHoldItem from './HouseHoldItem/HouseHoldItem';
@@ -15,12 +15,13 @@ import { AppDispatch, RootState } from 'src/redux/store';
 import CourseIcon from 'src/assets/images/education_assets/course.png';
 import { updateDescription } from 'src/redux/slices/HouseHoldDetailSlice';
 import EditImage from 'src/assets/images/household_assets/edit.png';
+import { COLORS } from 'src/constants';
 
 
 const screenWidth = Dimensions.get('screen').width
 const screenHeight = Dimensions.get('screen').height
 
-const EditHouseHoldDescriptionScreen: React.FC<EditDescriptionHouseHoldItemScreenProps> = ({ navigation, route }) => {
+const EditHouseHoldDescriptionScreen: React.FC<EditDescriptionScreenProps> = ({ navigation, route }) => {
     const { id_family, description, id_category, id_item } = route.params
     // const [rooms, setRooms] = React.useState(roomsData)
     // const ItemData = household_items.find(item => item.id_household_item === id_item)
@@ -77,17 +78,15 @@ const EditHouseHoldDescriptionScreen: React.FC<EditDescriptionHouseHoldItemScree
 
     return (
         <SafeAreaView className="flex-1 bg-[#FBF8F1]">
-            <View className='bg-[#F9F6F2] pt-8 rounded-tl-xl rounded-tr-xl flex-1' >
-                <ScrollView className='flex-1 ' automaticallyAdjustKeyboardInsets keyboardShouldPersistTaps="handled">
+            <View className='bg-[#F9F6F2] rounded-tl-xl rounded-tr-xl flex-1' >
+                <ScrollView className='flex-1 '
+                    automaticallyAdjustKeyboardInsets
+                    keyboardShouldPersistTaps="handled"
+                >
                     <View className='flex-1 '>
                         <View className='w-full items-center mt-5 flex-row justify-between '>
-                            <View style={{
-                                width: 35,
-                                height: 35
-                            }}></View>
-                            <Image source={EditImage} style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} />
-                            {/* <Material name="package-variant" size={35} style={{ color: iOSGrayColors.systemGray6.accessibleDark, fontWeight: "bold" }} /> */}
-                            <TouchableOpacity className=' rounded-full border-[1px] z-10 mr-2' style={{
+
+                            <TouchableOpacity className=' rounded-full border-[1px] z-10 ml-2' style={{
                                 borderColor: iOSGrayColors.systemGray.accessibleDark,
                                 backgroundColor: iOSGrayColors.systemGray.accessibleLight
                             }} onPress={() => {
@@ -95,6 +94,12 @@ const EditHouseHoldDescriptionScreen: React.FC<EditDescriptionHouseHoldItemScree
                             }} >
                                 <Material name="close" size={23} color={'white'} />
                             </TouchableOpacity>
+                            <Image source={EditImage} style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} />
+                            {/* <Material name="package-variant" size={35} style={{ color: iOSGrayColors.systemGray6.accessibleDark, fontWeight: "bold" }} /> */}
+                            <View style={{
+                                width: 35,
+                                height: 35
+                            }}></View>
                         </View>
                         <View className='content-center my-6'>
                             <Text className='text-center' style={{
@@ -105,13 +110,13 @@ const EditHouseHoldDescriptionScreen: React.FC<EditDescriptionHouseHoldItemScree
                             }}>
                                 Edit Description
                             </Text>
-                            <Text className='text-center mx-4 mt-6' style={{
+                            {/* <Text className='text-center mx-4 mt-6' style={{
                                 color: iOSGrayColors.systemGray6.accessibleDark,
                                 fontSize: 16,
                             }}>
                                 Type in the new description for your item
 
-                            </Text>
+                            </Text> */}
                         </View>
                     </View>
                     <View className='flex-1 h-full flex-row items-center justify-center w-full '>
@@ -161,11 +166,12 @@ const EditHouseHoldDescriptionScreen: React.FC<EditDescriptionHouseHoldItemScree
                             className=' bg-blue-200 items-center justify-center' style={{
                                 width: screenHeight * 0.08,
                                 height: screenHeight * 0.08,
-                                backgroundColor: text != "" && text != description ? iOSColors.systemBlue.defaultLight : iOSGrayColors.systemGray.defaultLight,
+                                backgroundColor: text != "" && text != description ? COLORS.DenimBlue : iOSGrayColors.systemGray.defaultLight,
                                 borderRadius: 10,
                                 marginRight: 10,
                                 padding: 10,
-                                paddingLeft: 16,
+                                
+                                // paddingLeft: 16,
 
                             }}>
                             <Material name="arrow-left" size={25} color={"white"} />

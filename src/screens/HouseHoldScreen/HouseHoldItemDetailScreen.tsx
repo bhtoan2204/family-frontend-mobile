@@ -208,7 +208,7 @@ const HouseHoldItemDetailScreen: React.FC<HouseHoldItemDetailScreenProps> = ({ n
     if (houseHoldItemData.id_household_item === -1 || houseHoldItemData.id_family === -1) {
         return (
             <View className='flex-1 items-center justify-center'>
-                <ActivityIndicator size='large' color={COLORS.AuroMetalSaurus} />
+                <ActivityIndicator size='small' color={COLORS.AuroMetalSaurus} />
             </View>
         )
     }
