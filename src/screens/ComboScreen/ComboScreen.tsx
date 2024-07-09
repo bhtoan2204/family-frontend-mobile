@@ -19,7 +19,7 @@ const ComboScreen = () => {
       <View style={stylesAnalysis.container}>
         <View style={stylesAnalysis.analysis}>
           <View style={{bottom: 10}}>
-            <Image
+            {/* <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/background-top.png')}
               resizeMode="stretch"
               style={stylesAnalysis.imageTop}
@@ -49,21 +49,21 @@ const ComboScreen = () => {
               resizeMode="stretch"
               style={stylesAnalysis.imagePieChart}
             />
-            <Image
+            {/* <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/barchart.png')}
               resizeMode="stretch"
               style={stylesAnalysis.imageBarChart}
-            />
-            <Image
+            /> */}
+            {/* <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/back.png')}
               resizeMode="stretch"
               style={stylesAnalysis.imageBack}
-            />
-            <Image
+            /> */}
+            {/* <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/front.png')}
               resizeMode="stretch"
               style={stylesAnalysis.imageFront}
-            />
+            /> */} */
           </View>
           <View style={stylesAnalysis.bottomField}>
             <Image
@@ -212,7 +212,7 @@ const ComboScreen = () => {
               height: 640,
               bottom: 2150,
             }}></View>
-          <Image
+          {/* <Image
             source={require('../../assets/images/combo-package/Lists/background.png')}
             resizeMode="stretch"
             style={stylesList.background}
@@ -251,7 +251,7 @@ const ComboScreen = () => {
             source={require('../../assets/images/combo-package/Lists/bottom-front.png')}
             resizeMode="stretch"
             style={stylesList.bottomFront}
-          />
+          /> */}
           <View style={{bottom: 2450}}>
             <Text style={stylesList.title}>Check list & Shopping list</Text>
             <Text style={stylesList.detail}>
@@ -303,7 +303,7 @@ const ComboScreen = () => {
               deadlines for academic success.
             </Text>
           </View>
-          <Image
+          {/* <Image
             source={require('../../assets/images/combo-package/Chat/connect.png')}
             resizeMode="stretch"
             style={stylesEducation.imageConnect}
@@ -322,7 +322,7 @@ const ComboScreen = () => {
             source={require('../../assets/images/combo-package/Household/Character.png')}
             resizeMode="stretch"
             style={stylesHousehold.character}
-          />
+          /> */}
           <View style={{bottom: 720}}>
             <Text style={stylesEducation.title}>Household</Text>
             <Text style={stylesEducation.detail}>
