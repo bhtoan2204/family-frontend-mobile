@@ -31,11 +31,18 @@ interface LegendProps {
   style?: React.CSSProperties;
 }
 
-interface ExpenseData {
-  date: string;
-  total: number;
-  categories: {name: string; amount: number}[];
+interface Category {
+  name: string;
+  amount: number;
+  id_expense_type: number;
 }
+
+interface ExpenseData {
+  categories: Category[];
+  day: number;
+  total: number;
+}
+
 
 type SliceType = {
   pieCentroid: number[];
@@ -67,20 +74,27 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
 
   const fetchData = async (month: number, year: number, id_family: number) => {
     try {
-      const response = await ExpenseServices.getExpenseByMonth(
-        month,
-        year,
-        id_family,
-      );
-      if (Array.isArray(response)) {
-        setDailyData(response);
+      let response;
+      if (month === new Date().getMonth() + 1 && year === new Date().getFullYear()) {
+        const currentDate = new Date().getDate();
+        response = await ExpenseServices.getExpenseByMonth(month, year, id_family);
+
+        if (response) {
+          response = response.filter((item: { day: number; }) => item.day < currentDate);
+          console.log(response)
+        }
       } else {
-        console.error('Invalid response format:', response);
+        response = await ExpenseServices.getExpenseByMonth(month, year, id_family);
+      }
+      
+      if (response) {
+        setDailyData(response);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
+
 
   const categoryColors: {[key: number]: string} = {
     1: `rgba(255, 0, 0, 1)`,
@@ -132,9 +146,9 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
 
   const pieChartData = Object.entries(categoryData).map(
     ([name, amount], index) => ({
-      pieCentroid: [0, 0], // add the correct value here
+      pieCentroid: [0, 0],
       data: {
-        label: name, // add the correct value here
+        label: name,
       },
       key: name,
       value: (amount / totalExpense) * 100,
@@ -156,39 +170,6 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
     fetchData(month, year, id_family);
   };
 
-  // const Labels = ({slices}) => {
-  //   return slices.map((slice, index) => {
-  //     const {pieCentroid, data} = slice;
-  //     return (
-  //       <G key={index} x={pieCentroid[0]} y={pieCentroid[1]}>
-  //         <SVGText
-  //           fill="black"
-  //           textAnchor="middle"
-  //           alignmentBaseline="middle"
-  //           fontSize={14}
-  //           stroke="black"
-  //           strokeWidth={0.2}>
-  //           {data.label}
-  //         </SVGText>
-  //       </G>
-  //     );
-  //   });
-  // };
-
-  // const Legend = ({data}) => {
-  //   return (
-  //     <ScrollView horizontal contentContainerStyle={styles.legendContainer}>
-  //       {data.map((item, index) => (
-  //         <View key={index} style={styles.legendItem}>
-  //           <View
-  //             style={[styles.legendColorBox, {backgroundColor: item.svg.fill}]}
-  //           />
-  //           <Text style={styles.legendText}>{item.key}</Text>
-  //         </View>
-  //       ))}
-  //     </ScrollView>
-  //   );
-  // };
 
   const Labels = ({slices}: {slices: SliceType[]}) => {
     return slices.map((slice, index) => {
@@ -224,11 +205,12 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
     );
   };
 
-  const handlePressDate = (date: string) => {
-    const formattedDate = moment(date, 'YYYY-MM-DD').format('YYYY-MM-DD');
+  const handlePressDate = (day: number) => {
+    const formattedDate = moment(selectedMonth).set('date', day).format('YYYY-MM-DD');
+    console.log(date)
     dispatch(setSelectedOption('Day'));
     dispatch(setSelectedDate(formattedDate));
-  };
+};
 
   return (
     // <ScrollView style={{height: '80%'}}>
@@ -279,15 +261,15 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
               <TouchableOpacity
                 key={index}
                 style={styles.expenseItem}
-                onPress={() => handlePressDate(detail.date)}>
+                onPress={() => handlePressDate(detail.day)}>
                 <View style={styles.expenseDetails}>
                   <Image
                     source={{
-                      uri: `https://via.placeholder.com/40?text=${detail.date.split('-')[2]}`,
+                      uri: `https://via.placeholder.com/40?text=${detail.day}`,
                     }}
                     style={styles.avatar}
                   />
-                  <Text style={styles.expenseText}>{detail.date}</Text>
+                  <Text style={styles.expenseText}>{detail.day}</Text>
                 </View>
                 <View style={styles.expenseDetails}>
                   <Text style={styles.expenseAmount}>- {detail.total} đ</Text>

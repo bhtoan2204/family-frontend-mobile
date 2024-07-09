@@ -1,23 +1,26 @@
-
-
-export interface NewsInterface {
+export interface Article {
+  id_article: number;
+  id_article_category: number;
+  id_enclosure: number;
   title: string;
   link: string;
-  pubDate: string;
-  enclosure?: {
-    type: string;
-    length: string;
-    url: string;
-  };
   content: string;
   contentSnippet: string;
   guid: string;
   isoDate: string;
-  category?: NewsCategoryInterface;
+  pubDate: string;
+  category: ArticleCategory;
+  enclosure: Enclosure;
 }
 
-export interface NewsCategoryInterface {
-  id: number;
-  title: string;
-  category_name: string;
+export interface ArticleCategory {
+  id_article_category: number;
+  name: string;
+}
+
+export interface Enclosure {
+  id_enclosure: number;
+  type: string;
+  length: string;
+  url: string;
 }

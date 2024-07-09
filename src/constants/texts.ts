@@ -80,6 +80,7 @@ const TEXTS = {
   CHOOSE_COLOR: 'Choose Color',
   CREATE: 'Create',
   PACKAGE_TITLE: 'Choose the package',
+  SERVICE_TITLE: 'Choose the service',
   PURCHASED_TITLE: 'Purchased',
   PACKAGE_REGISTER: 'Register',
   NAME_REQUIRED: 'Name is required',

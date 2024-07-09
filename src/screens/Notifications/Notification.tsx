@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {View } from 'react-native';
+import {Alert, View } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { getSocket } from "src/services/apiclient/Socket";
 import { AxiosResponse } from 'axios';
-import { FamilyServices } from 'src/services/apiclient';
+import { ChatServices, FamilyServices, ProfileServices } from 'src/services/apiclient';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import { HomeTabProps, LandingPageScreenProps, SignupScreenProps } from 'src/navigation/NavigationTypes';
@@ -26,8 +26,22 @@ type CombinedScreenProps = SignupScreenProps &
 const Notification = ({navigation}: CombinedScreenProps) => {
   const profile = useSelector(selectProfile);
   const [notificationQueue, setNotificationQueue] = useState<Message[]>([]);
+
+
   const socket = getSocket();
   const notificationListener = useRef<Notifications.Subscription | undefined>();
+
+  const fetchNotification = async (receiverId?: string) => {
+    try {
+      const response = await ProfileServices.getNotification(index);
+      if (response && response.data.length > 0) {
+        setNotification(response);
+      }
+    } catch (error) {
+      console.error('Error fetchNotification:', error);
+    }
+  };
+
 
   const fetchMember = async (receiverId?: string) => {
     try {
@@ -74,8 +88,7 @@ const Notification = ({navigation}: CombinedScreenProps) => {
   };
 
   const handleNewMessage = async (message: Message) => {
-    //console.log(message);
-    //if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
+
       const sender: Member | undefined = await fetchMember(message.senderId);
       if (sender) {
         await Notifications.scheduleNotificationAsync({
@@ -148,6 +161,7 @@ const Notification = ({navigation}: CombinedScreenProps) => {
     }
     return true;
 };
+
 useEffect(() => {
     checkNotificationPermission();
       if (socket) {

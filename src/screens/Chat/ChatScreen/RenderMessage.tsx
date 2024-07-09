@@ -21,14 +21,10 @@ const MessageItem: React.FC<Props> = ({
 }) => {
   return (
     <View
-      style={[
-        styles.messageWrapper,
-        item.senderId === profileId ? styles.messageRight : styles.messageLeft,
-      ]}>
+      >
       <TouchableOpacity
-        onPress={() => onMessagePress(item._id)}
+        onPress={() => onMessagePress(item)}
         style={[
-          styles.messageContainer,
           item.senderId === profileId
             ? styles.senderMessageContainer
             : styles.receiverMessageContainer,

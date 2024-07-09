@@ -1,5 +1,3 @@
-// ios 79354209613-utvqpvit5utmdalov9jdjotulc1m5fq9.apps.googleusercontent.com
-// android
 
 import {
   Ionicons,
@@ -10,6 +8,7 @@ import Checkbox from 'expo-checkbox';
 import {Formik, FormikHelpers} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   Image,
   ImageBackground,
   KeyboardAvoidingView,
@@ -32,7 +31,7 @@ import {
   SignupScreenProps,
   WelcomeScreenProps,
 } from 'src/navigation/NavigationTypes';
-import {AuthServices} from 'src/services/apiclient';
+import {AuthServices, ChatServices} from 'src/services/apiclient';
 import {AuthUrl} from 'src/services/urls';
 import LocalStorage from 'src/store/localstorage';
 import * as Yup from 'yup';
@@ -40,7 +39,7 @@ import styles from './styles';
 import {useDispatch} from 'react-redux';
 import * as WebBrowser from 'expo-web-browser';
 import {makeRedirectUri, useAuthRequest} from 'expo-auth-session';
-
+import * as Notifications from 'expo-notifications';
 interface FormValues {
   email: string;
   password: string;
@@ -63,6 +62,9 @@ const discovery = {
 const LoginScreen = ({navigation}: CombinedScreenProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const projectId = "f5584d17-960b-4d2e-9f4d-1a6681f0bbea"; 
+
+
 
   const handleLogin = async (
     values: FormValues,
@@ -77,10 +79,8 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
       await LocalStorage.StoreAccessToken(response.accessToken);
       await LocalStorage.StoreRefreshToken(response.refreshToken);
 
-      // console.log(response.accessToken);
-      // console.log(response.refreshToken);
-
-      navigation.navigate('LandingPage');
+      
+      navigation.navigate('HomeTab', {screen: 'HomeScreen'});
       actions.setStatus({success: true});
     } catch (error: any) {
       actions.setStatus({

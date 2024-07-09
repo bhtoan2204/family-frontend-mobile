@@ -58,7 +58,7 @@ const IncomeServices = {
         `${baseUrl}/api/v1/finance/income/getIncomeByYear/${id_family}`,
         {
           params: {
-            year
+            id_family, year
           }
         }
       );
@@ -109,6 +109,27 @@ const IncomeServices = {
         }
       } catch (error: any) {
         console.error('Error in getIncomeByDate:', error.message);
+      }
+      
+    },
+    getIncomeByDateRange: async (page: number, itemsPerPage: number, option: number,  id_family?: number, fromDate: string, toDate: string) => {
+
+      try {
+        const response: AxiosResponse = await instance.get(
+          `${baseUrl}/api/v1/finance/income/getIncomeByDateRange/${id_family}`,
+          {
+            params: {
+              id_family, page, itemsPerPage, fromDate, toDate
+            }
+          }
+        );
+        if (response.status === 200) {
+          return response.data;
+        } else {
+          console.error('Error in getIncomeByDateRange');
+        }
+      } catch (error: any) {
+        console.error('Error in getIncomeByDateRange:', error.message);
       }
       
     },

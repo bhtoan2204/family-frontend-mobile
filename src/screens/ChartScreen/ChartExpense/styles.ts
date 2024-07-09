@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginLeft: 15,
+    marginRight: 25,
   },
   headerButton: {
     paddingHorizontal: 0,
@@ -211,9 +211,9 @@ const styles = StyleSheet.create({
   },
   legendContainer: {
     flexDirection: 'column',
-    //justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'flex-start',
-    //flexGrow: 1,
+    height: 80,
   },
   legendItem: {
     flexDirection: 'row',
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
     flexDirection: 'column',
-    height: '50%',
+    height: '34%',
   },
   chartBarContainer: {
     bottom: 30,
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: '#ccc',
     // borderRadius: 20,
-    flexGrow: 1,
+    marginBottom: 50,
   },
   expenseItem: {
     flexDirection: 'row',
@@ -330,9 +330,8 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   yearPickerContainer: {
-    backgroundColor: '#ffffff',
     alignItems: 'center',
-    marginBottom: 70,
+    marginBottom: 150,
   },
 
   dropdownYear: {

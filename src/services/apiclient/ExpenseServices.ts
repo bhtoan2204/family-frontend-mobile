@@ -4,14 +4,17 @@ import instance from '../httpInterceptor';
 import baseUrl from '../urls/baseUrl';
 
 const ExpenseServices = {
-  getExpenseType: async (id_family: number) => {
+  getExpenseType: async (id_family: number, page: number, itemsPerPage : number) => {
     try {
       const response: AxiosResponse = await instance.get(
-        `${baseUrl}/api/v1/finance/expenseditureType/getExpenseType/${id_family}`,
+        `${baseUrl}/api/v1/finance/expenseditureType/getExpenseType/${id_family}`,{
+          params: {
+            id_family, page, itemsPerPage
+          }
+        }
       );
 
       if (response.status === 200) {
-        //return response.data.data[0].f_get_finance_expenditure_type;
         return response.data.data;
       } else {
         console.error('Error in getExpenseType');
@@ -20,6 +23,130 @@ const ExpenseServices = {
       console.error('Error in getExpenseType:', error.message);
     }
   },
+  getAsset: async (id_family: number) => {
+    try {
+      const response: AxiosResponse = await instance.get(
+        `${baseUrl}/api/v1/finance/asset/getAssets/${id_family}`,
+      );
+
+      if (response.status === 200) {
+
+        return response.data.data;
+      } else {
+        console.error('Error in getAsset');
+      }
+    } catch (error: any) {
+      console.error('Error in getAsset:', error.message);
+    }
+  },
+
+  createAsset: async (id_family: number, name: string, description: string, value : number, purchase_date : string, image: string) => {
+    try {
+      const createFormData = (image: string): FormData => {
+        let formData = new FormData();
+        if (image != null){
+          let filename = image.split('/').pop()!;
+          let match = /\.(\w+)$/.exec(filename);
+          let type = match ? `image/${match[1]}` : `image`;
+          const file = {
+            image,
+            name: filename,
+            type,
+          };
+          formData.append('image', file);
+      }
+        formData.append('id_family', id_family.toString());
+        formData.append('name', name.toString());
+        formData.append('description', description.toString());
+        formData.append('value', value.toString());
+        formData.append('purchase_date', purchase_date.toString());
+
+        return formData;
+      };
+
+      const response: AxiosResponse = await instance.post(
+        `${baseUrl}/api/v1/finance/asset/createAsset`, createFormData(image), {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            accept: '*/*',
+          },
+        }
+      );
+
+      if (response.status === 200) {
+
+        return response.data.data;
+      } 
+    } catch (error: any) {
+      console.error('Error in createAsset:', error.message);
+    }
+  },
+  updateAsset: async (
+    id_asset?: number,
+    id_family?: number,
+    name?: string,
+    description?: string,
+    value?: number,
+    purchase_date?: string,
+    image?: string
+  ) => {
+    try {
+      const formData = new FormData();
+  
+      if (image) {
+        let filename = image.split('/').pop()!;
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+  
+        formData.append('image', {
+          uri: image,
+          name: filename,
+          type: type,
+        });
+      }
+  
+      formData.append('id_asset', id_asset?.toString() || '');
+      formData.append('id_family', id_family?.toString() || '');
+      formData.append('name', name || '');
+      formData.append('description', description || '');
+      formData.append('value', value?.toString() || '');
+      formData.append('purchase_date', purchase_date || '');
+  
+      const response: AxiosResponse = await instance.put(
+        `${baseUrl}/api/v1/finance/asset/updateAsset`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Accept: '*/*',
+          },
+        }
+      );
+  
+      if (response.status === 200) {
+        return response.data.data;
+      }
+    } catch (error: any) {
+      console.error('Error in updateAsset:', error.message);
+      throw error; 
+    }
+  },
+  deleteAsset: async (id_family?: number, id_asset?: number) => {
+    try {
+      
+      const response: AxiosResponse = await instance.delete(
+        `${baseUrl}/api/v1/finance/asset/deleteAsset/${id_family}/${id_asset}`,
+      );
+
+      if (response.status === 204) {
+
+        return;
+      } 
+    } catch (error: any) {
+      console.error('Error in deleteAsset:', error.message);
+    }
+  },
+
   createExpenseType: async (id_family: number | null, name: string) => {
     try {
       const response: AxiosResponse = await instance.post(
@@ -115,20 +242,58 @@ const ExpenseServices = {
       }
       
     },
-    createExpense: async (id_family: number | null, amount: number | null, id_created_by: string, id_expense_type?: number, expenditure_date?: Date, description?: string) => {
-      try {
+    getExpenseByDateRange: async (page: number, itemsPerPage: number, id_family?: number, fromDate: string, toDate: string) => {
 
+      try {
+        const response: AxiosResponse = await instance.get(
+          `${baseUrl}/api/v1/finance/expensediture/getExpenseByDateRange/${id_family}`,
+          {
+            params: {
+              id_family, page, itemsPerPage, fromDate, toDate
+            }
+          }
+        );
+        if (response.status === 200) {
+          return response.data;
+        } else {
+          console.error('Error in getExpenseByDateRange');
+        }
+      } catch (error: any) {
+        console.error('Error in getExpenseByDateRange:', error.message);
+      }
+      
+    },
+    createExpense: async (id_family: number | null, amount: number | null, id_created_by: string, id_expense_type?: number, expenditure_date?: Date, description?: string, uri: string) => {
+      try {
+        const createFormData = (uri: string): FormData => {
+          let formData = new FormData();
+          let filename = uri.split('/').pop()!;
+          let match = /\.(\w+)$/.exec(filename);
+          let type = match ? `image/${match[1]}` : `image`;
+          const file = {
+            uri,
+            name: filename,
+            type,
+          };
+          formData.append('id_family', String(id_family));
+          formData.append('id_created_by', String(id_created_by));
+          formData.append('id_expense_type', id_expense_type.toString());
+          formData.append('amount', String(amount));
+          formData.append('expenditure_date', expenditure_date);
+          formData.append('description', description );
+          formData.append('expenseImg', file);
+
+          return formData;
+        };
+    
         const response: AxiosResponse = await instance.post(
           `${baseUrl}/api/v1/finance/expensediture/createExpense`,
+          createFormData(uri),
           {
-        
-              id_family,
-              id_created_by,
-              id_expense_type,
-              amount,
-              expenditure_date,
-              description
-            
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              accept: '*/*',
+            },
           }
         );
         if (response.status === 201) {
@@ -139,10 +304,29 @@ const ExpenseServices = {
       }
     },
 
+    deleteExpense: async (id_family: number, id_expenditure : number) => {
+      try {
 
-    uploadImageExpense: async (
-      id_family: number | null,
-      id_expenditure: number,
+        const response: AxiosResponse = await instance.delete(
+          `${baseUrl}/api/v1/finance/expensediture/deleteExpense/${id_family}/${id_expenditure}`,
+          
+        );
+        if (response.status === 201) {
+          return response.data;
+        } 
+      } catch (error: any) {
+        console.error('Error in deleteExpense:', error.message);
+      }
+    },
+
+    updateExpense: async (
+      id_expenditure: number ,
+      id_family: number,
+      id_created_by: string ,
+      id_expense_type: number,
+      amount: number,
+      expenditure_date: string,
+      description: string,
       uri: string
     ) => {
       try {
@@ -156,34 +340,77 @@ const ExpenseServices = {
             name: filename,
             type,
           };
+          formData.append('id_expenditure', String(id_expenditure));
+          formData.append('id_family', String(id_family));
+          formData.append('id_created_by', String(id_created_by));
+          formData.append('id_expense_type', id_expense_type.toString());
+          formData.append('amount', String(amount));
+          formData.append('expenditure_date', expenditure_date);
+          formData.append('description', description );
           formData.append('expenseImg', file);
-  
+
           return formData;
         };
     
-        const response: AxiosResponse = await instance.post(
-          `https://api.rancher.io.vn/api/v1/finance/expensediture/uploadImageExpense/${id_family}/${id_expenditure}`,
-          
+        const response: AxiosResponse = await instance.put(
+          `${baseUrl}/api/v1/finance/expensediture/updateExpense`,
           createFormData(uri),
           {
-            
             headers: {
               'Content-Type': 'multipart/form-data',
               accept: '*/*',
             },
-           
           }
-          
-          
         );
     
         if (response.status === 200) {
           return response.data.data;
-        }
+        } 
       } catch (error: any) {
-        console.error('Error in uploadImageExpense:', error.message);
+        console.error('Error in updateExpense:', error.message);
       }
     },
+    
+
+    //  uploadImageExpense: async (
+    //   id_family: number | null,
+    //   id_expenditure: number,
+    //   uri: string
+    // ) => {
+    //   try {
+    //     const createFormData = (uri: string): FormData => {
+    //       let formData = new FormData();
+    //       let filename = uri.split('/').pop()!;
+    //       let match = /\.(\w+)$/.exec(filename);
+    //       let type = match ? `image/${match[1]}` : `image`;
+    //       const file = {
+    //         uri,
+    //         name: filename,
+    //         type,
+    //       };
+    //       formData.append('expenseImg', file);
+    //       return formData;
+    //     };
+    
+    //     const response: AxiosResponse = await instance.post(
+    //       `${baseUrl}/api/v1/finance/expensediture/uploadImageExpense/${id_family}/${id_expenditure}`,
+    //       createFormData(uri),
+    //       {
+    //         headers: {
+    //           'Content-Type': 'multipart/form-data',
+    //           accept: '*/*',
+    //         },
+    //       }
+    //     );
+    
+    //     if (response.status === 200) {
+    //       return response.data.data;
+    //     }
+    //   } catch (error: any) {
+    //     console.error('Error in uploadImageExpense:', error.message);
+    //   }
+    // },
+    
     
     
 

@@ -1,49 +1,63 @@
 import { StyleSheet } from 'react-native';
+import { COLORS } from 'src/constants';
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: '#f5f5f5',
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 10,
-    },
-    subtitle: {
-        fontSize: 18,
-        textAlign: 'center',
-        marginBottom: 20,
-        color: '#666',
-    },
-    ratingContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginBottom: 20,
-    },
-    feedbackInput: {
-        height: 150,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 10,
-        padding: 10,
-        textAlignVertical: 'top',
-        backgroundColor: '#fff',
-        marginBottom: 20,
-    },
-    submitButton: {
-        backgroundColor: '#007BFF',
-        padding: 15,
-        borderRadius: 10,
-        alignItems: 'center',
-        marginTop: 20,
-    },
-    submitButtonText: {
-        color: '#fff',
-        fontSize: 18,
-    },
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f8f8',
+  },
+  scrollViewContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    textAlign: 'center',
+    marginTop: 16, 
+  },
+  subtitle: {
+    fontSize: 18,
+    color: '#555',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    marginBottom: 16,
+  },
+  feedbackInput: {
+    width: '100%',
+    minHeight: 100,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 16,
+    textAlignVertical: 'top',
+    backgroundColor: '#fff',
+  },
+  submitButton: {
+    backgroundColor: COLORS.BlueLight,
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 8,
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 40,
+    left: 16,
+    zIndex: 1,
+  },
 });
 
 export default styles;

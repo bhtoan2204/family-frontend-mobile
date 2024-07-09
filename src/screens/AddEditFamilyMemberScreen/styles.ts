@@ -5,6 +5,7 @@ const screenHeight = Dimensions.get('screen').height;
 const styles = StyleSheet.create({
   keyboardView: {
     flex: 1,
+    padding: 15,
   },
   container: {
     flex: 1,

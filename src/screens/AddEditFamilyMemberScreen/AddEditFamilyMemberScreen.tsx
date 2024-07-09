@@ -1,12 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   Image,
   Keyboard,
   KeyboardAvoidingView,
-  Linking,
-  PermissionsAndroid,
-  Platform,
   SafeAreaView,
   ScrollView,
   Text,
@@ -16,85 +13,129 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {COLORS, TEXTS} from 'src/constants';
+import { COLORS, TEXTS } from 'src/constants';
 import styles from './styles';
-import {FamilyServices} from 'src/services/apiclient';
-import RoleService from 'src/services/apiclient/RoleServices';
-import DropDownPicker from 'react-native-dropdown-picker';
-import {AddEditFamilyMemberScreenProps} from 'src/navigation/NavigationTypes';
-import {
-  Ionicons,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from '@expo/vector-icons';
+import { FamilyServices } from 'src/services/apiclient';
+import { AddEditFamilyMemberScreenProps } from 'src/navigation/NavigationTypes';
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import CustomButton from 'src/components/Button';
-
-interface Role {
-  label: string;
-  value: string;
-}
+import { useSelector } from 'react-redux';
+import Invite from './Invite';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
 
 const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
   navigation,
   route,
 }) => {
-  const sheet = useRef(null);
-  const {id_family, phone} = route.params || {};
-  const [roles, setRoles] = useState<Role[]>([]);
-  const [selectedRole, setSelectedRole] = useState('');
-  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const { id_family, phone } = route.params || {};
   const [email, setEmail] = useState('');
-  const [p_phone, setPhone] = useState('');
+  const [p_phone, setPhone] = useState(phone);
+  const profile = useSelector(selectProfile);
 
-  // useEffect(() => {
-  //   getRole();
-  // }, []);
-
-  // const getRole = async () => {
-  //   try {
-  //     const result = await RoleService.getAllRole();
-  //     if (result && Array.isArray(result)) {
-  //       const roles = result.map((role: any) => ({
-  //         label: role.name,
-  //         value: role.role,
-  //       }));
-  //       setRoles(roles);
-  //       console.log('Role data found in response:', result);
-  //     } else {
-  //       console.log('Role data not found or invalid in response:', result);
-  //     }
-  //   } catch (error: any) {
-  //     console.log('Failed to get roles', error);
-  //   }
-  // };
-
-  const openContacts = async () => {
-    navigation.navigate('Contact', {id_family});
+  const openContacts = () => {
+    navigation.navigate('Contact', { id_family });
   };
+
+
+  useEffect(()=> {
+    setPhone(formatPhoneNumber(phone));
+  },[phone])
+
+  const formatPhoneNumber = (phoneNumber?: string) => {
+    const cleaned = ('' + phoneNumber).replace(/\D/g, '');
+    
+    const match = cleaned.match(/^(\d{1})(\d{3})(\d{3})(\d{3})$/);
+    
+    if (match) {
+      return `+84${match[2]}${match[3]}${match[4]}`;
+    }
+    console.log(phoneNumber)
+
+    return phoneNumber;
+  };
+  
+
+
+  
 
   const handleAddMember = async () => {
     try {
-      //console.log(email, phone, selectedRole);
-
+      if (!p_phone && !email) {
+        Alert.alert(
+          'Missing Information',
+          'Please enter either phone number or email.',
+          [
+            {
+              text: 'OK',
+              onPress: () => console.log('Missing Information Alert Closed'),
+              style: 'cancel',
+            },
+          ],
+          { cancelable: false }
+        );
+        return;
+      }
+  
+      if (p_phone && p_phone.replace(/\D/g, '').length !== 10) {
+        Alert.alert(
+          'Invalid Phone Number',
+          'Please enter a valid 10-digit phone number.',
+          [
+            {
+              text: 'OK',
+              onPress: () => console.log('Invalid Phone Number Alert Closed'),
+              style: 'cancel',
+            },
+          ],
+          { cancelable: false }
+        );
+        return;
+      }
+  
+      let formattedPhone = p_phone;
+      if (formattedPhone && !formattedPhone.startsWith('+84')) {
+        formattedPhone = `+84${formattedPhone.replace(/\D/g, '')}`;
+      }
+  
       const result = await FamilyServices.addMember({
         id_family: id_family,
-        gmail: email,
-        phone: phone,
+        gmail: email || "",
+        phone: formattedPhone || "",
         role: 'Member',
       });
-      //console.log(result);
-      Alert.alert('Inform', result.data);
-      console.log('FamilyServices.addMember result:', result);
+  
+      if  (result.data === "Successfully added a member to the family") {
+        Alert.alert(
+          'Inform', result.data );
+      } else {
+        Alert.alert(
+          'Inform',
+          result.data,
+          [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {
+              text: 'Invite',
+              onPress: () => Invite(id_family, email, profile),
+            },
+          ],
+          { cancelable: false },
+        );
+      }
     } catch (error: any) {
       console.log('FamilyServices.addMember result:', error);
     }
   };
+  
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.scrollViewContent}>
+      <ScrollView>
         <KeyboardAvoidingView style={styles.keyboardView} behavior="padding">
-          <View style={styles.headerfile}>
+          <View style={styles.header}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons
                 name="chevron-back-outline"
@@ -102,8 +143,6 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                 style={styles.backButton}
               />
             </TouchableOpacity>
-          </View>
-          <View style={styles.header}>
             <Text style={styles.title}>{TEXTS.ADD_FAMILY_MEMBER_TITLE}</Text>
           </View>
           <Image
@@ -117,108 +156,77 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
             }}
           />
           <View style={styles.form}>
-            <View>
-              <View style={styles.input}>
-                <View style={styles.inputContainer}>
-                  <MaterialIcons
-                    name="phone-iphone"
-                    size={26}
-                    style={{
-                      position: 'absolute',
-                      zIndex: 1,
-                      marginLeft: 10,
-                      color: COLORS.Rhino,
-                    }}
-                  />
-                  <TextInput
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    keyboardType="phone-pad"
-                    placeholder={phone || 'Enter phone number'}
-                    placeholderTextColor="#A6A6A6"
-                    style={styles.inputPhone}
-                    onChangeText={setPhone}
-                  />
-                  <TouchableOpacity
-                    onPress={openContacts}
-                    style={{zIndex: 1, right: 15, position: 'absolute'}}>
-                    <Icon
-                      name="person-add"
-                      size={24}
-                      style={styles.contactIcon}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View style={styles.input}>
-                <MaterialCommunityIcons
-                  name="email-outline"
+            <View style={styles.input}>
+              <View style={styles.inputContainer}>
+                <MaterialIcons
+                  name="phone-iphone"
                   size={26}
                   style={{
                     position: 'absolute',
                     zIndex: 1,
-                    marginLeft: 20,
-                    top: 10,
+                    marginLeft: 10,
                     color: COLORS.Rhino,
                   }}
                 />
                 <TextInput
                   autoCapitalize="none"
                   autoCorrect={false}
-                  keyboardType="email-address"
-                  placeholder={TEXTS.FAMILY_MEMBER_EMAIL_PLACEHOLDER}
-                  placeholderTextColor="#A6A6A6"
-                  style={styles.inputControl}
-                  onChangeText={setEmail}
+                  keyboardType="phone-pad"
+                  placeholder={p_phone ? p_phone : 'Enter phone number'}
+                  placeholderTextColor={p_phone ? 'black' : '#A6A6A6'}
+                  style={[
+                    styles.inputPhone,
+                    { color: p_phone ? 'black' : '#A6A6A6' },
+                  ]}
+                  value={p_phone}
+                  onChangeText={setPhone}
                 />
+                <TouchableOpacity
+                  onPress={openContacts}
+                  style={{ zIndex: 1, right: 15, position: 'absolute' }}>
+                  <Icon name="person-add" size={24} style={styles.contactIcon} />
+                </TouchableOpacity>
               </View>
-              <View
+            </View>
+            <View style={styles.input}>
+              <MaterialCommunityIcons
+                name="email-outline"
+                size={26}
+                style={{
+                  position: 'absolute',
+                  zIndex: 1,
+                  marginLeft: 20,
+                  top: 10,
+                  color: COLORS.Rhino,
+                }}
+              />
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="email-address"
+                placeholder={TEXTS.FAMILY_MEMBER_EMAIL_PLACEHOLDER}
+                placeholderTextColor="#A6A6A6"
                 style={[
-                  styles.input,
-                  {flexDirection: 'row', position: 'relative'},
-                ]}>
-                {/* <DropDownPicker
-                  open={isPickerOpen}
-                  setOpen={setIsPickerOpen}
-                  value={selectedRole}
-                  items={roles}
-                  setValue={setSelectedRole}
-                  placeholder="Select relationship"
-                  placeholderStyle={{
-                    color: '#A6A6A6',
-                  }}
-                  containerStyle={{height: 100, zIndex: 1}}
-                  style={[styles.inputControl, {zIndex: 1, paddingLeft: 45}]} // Adjust paddingLeft to make room for the icon
-                /> */}
-                {/* <MaterialCommunityIcons
-                  name="hand-heart-outline"
-                  size={26}
-                  style={{
-                    position: 'absolute',
-                    left: 20,
-                    top: 10,
-                    color: COLORS.Rhino,
-                    zIndex: 2, // Ensure zIndex is higher than DropDownPicker
-                  }}
-                /> */}
-              </View>
+                  styles.inputControl,
+                  { color: email ? 'black' : '#A6A6A6' },
+                ]}
+                onChangeText={setEmail}
+              />
             </View>
           </View>
         </KeyboardAvoidingView>
-      </View>
-      <KeyboardAvoidingView
-        behavior="padding"
-        style={styles.addButtonContainer}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      </ScrollView>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.addButtonContainer}>
           <CustomButton
             style={styles.btn}
-            title={TEXTS.LOGIN}
+            title="Add"
             filled
             onPress={handleAddMember}
-            backgroundImage={require('../../assets/images/button.png')}
+            backgroundImage={require('src/assets/images/button.png')}
           />
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+        </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };

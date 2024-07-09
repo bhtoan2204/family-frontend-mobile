@@ -72,7 +72,10 @@ const HomeScreen = ({
   const dispatch = useDispatch();
   const [isLightMode, setIsLightMode] = useState(true);
   const profile = useSelector((state: RootState) => state.profile.profile);
-
+  const source =
+    profile.avatar && profile.avatar !== '[NULL]'
+      ? {uri: profile.avatar}
+      : require('../../assets/images/default_ava.png');
   const handlePress = () => {
     setIsLightMode(!isLightMode);
   };
@@ -97,8 +100,9 @@ const HomeScreen = ({
     });
   };
   const handleFamily = () => {
-    navigation.navigate('FamilyStack', {
-      screen: 'ViewAllFamily',
+    navigation.navigate('FamilyTab', {
+      screen: 'Family',
+      params: {id_family: 0},
     });
   };
   const handleChat = () => {
@@ -217,16 +221,10 @@ const HomeScreen = ({
       icon: 'guideline',
       label: 'Guideline',
       onPress: () => {
-        console.log('Guideline pressed');
+        navigation.navigate('FamilyStack', {screen: 'GuidelinePublic'});
       },
     },
-    {
-      icon: 'chat',
-      label: 'Chat',
-      onPress: () => {
-        handleChat();
-      },
-    },
+   
     {
       icon: 'language',
       label: 'Language',
@@ -237,8 +235,11 @@ const HomeScreen = ({
     {
       icon: 'theme',
       label: 'Theme',
+      // onPress: () => {
+      //   console.log('Theme pressed');
+      // },
       onPress: () => {
-        console.log('Theme pressed');
+        navigation.navigate('PackStack', {screen: 'ComboScreen'});
       },
     },
   ];
@@ -289,11 +290,7 @@ const HomeScreen = ({
             </View>
             <View style={{flexDirection: 'row', right: 20}}>
               <Image
-                source={
-                  profile.avatar !== '[NULL]'
-                    ? {uri: profile.avatar}
-                    : require('../../assets/images/avatar_default.jpg')
-                }
+                source={source}
                 resizeMode="contain"
                 style={{
                   width: 80,

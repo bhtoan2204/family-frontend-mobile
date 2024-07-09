@@ -1,6 +1,7 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
+import { Member } from 'src/interface/member/member';
 
 export type RootParamList = {
   AuthStack: NavigatorScreenParams<AuthStackParamList>;
@@ -12,6 +13,7 @@ export type RootParamList = {
   ExpenseStack: NavigatorScreenParams<ExpenseStackParamList>;
   IncomeStack: NavigatorScreenParams<IncomeStackParamList>;
   MessageTab: NavigatorScreenParams<MessageTabParamList>;
+  FamilyTab: NavigatorScreenParams<FamilyTabParamList>;
 
 };
 
@@ -22,10 +24,20 @@ export type ExpenseStackParamList = {
     id_family: number | undefined;
   };
   ChartExpense: undefined;
+  IncomeExpenseScreen: undefined;
+  ExpenseDetailScreen: undefined;
+  AssetScreen: undefined;
+  AssetDetailScreen: undefined;
+  AddAssetScreen: undefined;
+  ExpenseScreen: undefined;
+
 };
 
 export type IncomeStackParamList = {
   ChartIncomeScreen: undefined;
+  IncomeDetailScreen: undefined;
+  IncomeScreen: undefined;
+
 };
 
 type ChartIncomeScreenNavigationProp = NativeStackNavigationProp<
@@ -46,6 +58,86 @@ type ChartExpenseNavigationProp = NativeStackNavigationProp<
 export interface ChartExpenseProps {
   navigation: ChartExpenseNavigationProp;
   route: RouteProp<ExpenseStackParamList, 'ChartExpense'>;
+}
+
+type IncomeExpenseScreenNavigationProp = NativeStackNavigationProp<
+  ExpenseStackParamList,
+  'IncomeExpenseScreen'
+>;
+
+export interface IncomeExpenseScreenProps {
+  navigation: IncomeExpenseScreenNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'IncomeExpenseScreen'>;
+}
+
+type ExpenseDetailScreenNavigationProp = NativeStackNavigationProp<
+  ExpenseStackParamList,
+  'ExpenseDetailScreen'
+>;
+
+export interface ExpenseDetailScreenProps {
+  navigation: ExpenseDetailScreenNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'ExpenseDetailScreen'>;
+}
+type AssetScreenNavigationProp = NativeStackNavigationProp<
+  ExpenseStackParamList,
+  'AssetScreen'
+>;
+
+export interface AssetScreenProps {
+  navigation: AssetScreenNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'AssetScreen'>;
+}
+
+
+type AssetDetailScreenNavigationProp = NativeStackNavigationProp<
+  ExpenseStackParamList,
+  'AssetDetailScreen'
+>;
+
+export interface AssetDetailScreenProps {
+  navigation: AssetDetailScreenNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'AssetDetailScreen'>;
+}
+type AddAssetScreenNavigationProp = NativeStackNavigationProp<
+  ExpenseStackParamList,
+  'AddAssetScreen'
+>;
+
+export interface AddAssetScreenProps {
+  navigation: AddAssetScreenNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'AddAssetScreen'>;
+}
+
+type ExpenseScreenNavigationProp = NativeStackNavigationProp<
+  ExpenseStackParamList,
+  'ExpenseScreen'
+>;
+
+export interface ExpenseScreenProps {
+  navigation: ExpenseScreenNavigationProp;
+  route: RouteProp<ExpenseStackParamList, 'ExpenseScreen'>;
+}
+
+
+type IncomeDetailScreenNavigationProp = NativeStackNavigationProp<
+IncomeStackParamList,
+  'IncomeDetailScreen'
+>;
+
+export interface IncomeDetailScreenProps {
+  navigation: IncomeDetailScreenNavigationProp;
+  route: RouteProp<IncomeStackParamList, 'IncomeDetailScreen'>;
+}
+
+type IncomeScreenNavigationProp = NativeStackNavigationProp<
+IncomeStackParamList,
+  'IncomeScreen'
+>;
+
+export interface IncomeScreenProps {
+  navigation: IncomeScreenNavigationProp;
+  route: RouteProp<IncomeStackParamList, 'IncomeScreen'>;
 }
 
 type CategoryExpenseScreenNavigationProp = NativeStackNavigationProp<
@@ -69,9 +161,10 @@ export interface FamilySpecProps {
 }
 
 export type ChatStackParamList = {
-  ChatFamily: {
-    id_family: number | undefined;
-  };
+  ChatFamily:  undefined;
+  
+  ChatFamilyLast: undefined;
+
   ChatUser: {
     receiverId: string | undefined;
   };
@@ -91,7 +184,15 @@ export interface ChatFamilyScreenProps {
   navigation: ChatFamilyScreenNavigationProp;
   route: RouteProp<ChatStackParamList, 'ChatFamily'>;
 }
+type ChatFamilyLastScreenNavigationProp = NativeStackNavigationProp<
+  ChatStackParamList,
+  'ChatFamilyLast'
+>;
 
+export interface ChatFamilyLastScreenProps {
+  navigation: ChatFamilyLastScreenNavigationProp;
+  route: RouteProp<ChatStackParamList, 'ChatFamilyLast'>;
+}
 type ChatScreenNavigationProp = NativeStackNavigationProp<
   ChatStackParamList,
   'ChatUser'
@@ -112,6 +213,16 @@ export interface ChatListProps {
   route: RouteProp<MessageTabParamList, 'ChatList'>;
 }
 
+type FamilyNavigationProp = NativeStackNavigationProp<
+FamilyTabParamList,
+  'Family'
+>;
+
+export interface FamilyProps {
+  navigation: FamilyNavigationProp;
+  route: RouteProp<FamilyTabParamList, 'Family'>;
+}
+
 type CallVideoNavigationProp = NativeStackNavigationProp<
   ChatStackParamList,
   'CallVideo'
@@ -126,6 +237,8 @@ export type AuthStackParamList = {
   SignupScreen: undefined;
   ForgotPasswordScreen: undefined;
   LandingPage: undefined;
+  LandingPage2: undefined;
+  LandingPage3: undefined;
   Notification: undefined;
   WelcomeScreen: undefined;
   EnterCodeScreen: undefined;
@@ -166,9 +279,7 @@ export type FamilyStackParamList = {
 
   InviteMembers: undefined;
 
-  ViewFamily: {
-    id_family: number | undefined;
-  };
+  ViewFamily: undefined;
 
   AllMember: {
     id_family: number | undefined;
@@ -176,46 +287,19 @@ export type FamilyStackParamList = {
   Contact: {
     id_family: number | undefined;
   };
-
-  //Guideline routes
   GuildLine: {
     id_family: number | undefined;
   };
-  AddGuildLine: {
-    id_family: number | undefined;
-  };
-  UpdateGuildLine: {
-    id_family: number | undefined;
-    id_item: number;
-    title: string | null;
-    description: string | null;
-  };
   GuildLineDetail: {
     id_family: number | undefined;
-    id_guide_item: number;
+    id_item: number;
   };
   SharedGuildLine: {
     id_family: number | undefined;
     id_item: number;
   };
-
-  //Education routes
   Education: {
     id_family: number | undefined;
-  };
-  AddEducation: {
-    id_family: number | undefined;
-  };
-  EditEducation: {
-    id_family: number | undefined;
-    id_education_progress: number;
-    title: string | null;
-    progress_notes: string | null;
-    school_info: string | null;
-  };
-  AddSubject: {
-    id_family: number | undefined;
-    id_education_progress: number;
   };
   EducationDetail: {
     id_family: number | undefined;
@@ -226,8 +310,6 @@ export type FamilyStackParamList = {
     id_education_progress: number;
     id_subject: number;
   };
-
-  //HouseHold routes
   HouseHold: {
     id_family: number | undefined;
   };
@@ -235,53 +317,11 @@ export type FamilyStackParamList = {
     id_family: number | undefined;
     id_category: number;
   };
-  HouseHoldItemDetail: {
+  HouseHoldCategoryDetail: {
     id_family: number | undefined;
     id_category: number;
     id_item: number;
   };
-  AddHouseHoldItem: {
-    id_family: number | undefined;
-  };
-  AddHouseHoldItemDetail: {
-    id_family: number | undefined;
-    id_category: number;
-    id_item: number;
-  };
-  EditExpenseHouseHoldItem: {
-    id_family: number | undefined;
-    id_category: number;
-    id_item: number;
-  };
-  EditBrandHouseHoldItem: {
-    id_family: number | undefined;
-    id_category: number;
-    id_item: number;
-  };
-  EditDescriptionHouseHoldItem: {
-    id_family: number | undefined;
-    id_category: number;
-    id_item: number;
-    description: string;
-  };
-  AddConsumableHouseHoldItem: {
-    id_family: number | undefined;
-    id_category: number;
-    id_item: number;
-  };
-  EditConsumableHouseHoldItem: {
-    id_family: number | undefined;
-    id_category: number;
-    id_item: number;
-    quantity: number;
-    threshhold: number;
-    expired_date: string;
-  };
-  AddHouseHoldRoom: {
-    id_family: number | undefined;
-  };
-
-  //CheckList routes
   CheckList: {
     id_family: number | undefined;
   };
@@ -289,28 +329,20 @@ export type FamilyStackParamList = {
     id_family: number | undefined;
     id_checklist: number;
   };
-<<<<<<< HEAD
-  AddShoppingList: {
-    id_family: number | undefined;
-  };
-  AddCheckList: {
-    id_family: number | undefined;
-  };
-
-  //
-  News: {
-    id_family: number | undefined;
-  };
-=======
   News: undefined;
->>>>>>> dev
+  UpcomingEvents: undefined;
+  MemberDetails: {
+    member: Member;
+  };
+  GuidelinePublic: undefined
+
 };
 
 export type PackStackParamList = {
   ViewAllPurchased: undefined;
-  ViewAllPackage: {
-    id_family: number | undefined;
-  };
+  ViewAllPackage: undefined;
+  ViewAllService: undefined;
+  
   BankInfoScreen: {
     id_family: number | undefined;
     id_package: number | undefined;
@@ -319,16 +351,14 @@ export type PackStackParamList = {
     language: 'vn' | undefined;
     method: string | undefined;
   };
-  OrderDetailScreen: {
-    id_family: number | undefined;
-    id_package: number | undefined;
-    amount: number | undefined;
-  };
-
+  OrderDetailScreen: undefined;
   ZaloPayScreen: undefined;
+  ComboScreen: undefined;
 };
 
 /////
+
+
 type CalendarStackNavigationProp = NativeStackNavigationProp<
   RootParamList,
   'CalendarStack'
@@ -352,7 +382,7 @@ type EventListScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export interface EventListScreenProps {
-  navigation: EventListScreenNavigationProp;
+  navigation: EventListScreenNavigationProp ;
   route: RouteProp<CalendarStackParamList, 'EventListScreen'>;
 }
 type ScheduleScreenNavigationProp = NativeStackNavigationProp<
@@ -395,7 +425,7 @@ type ChatStackNavigationProp = NativeStackNavigationProp<
   RootParamList,
   'ChatStack'
 >;
-export interface ChattackProps {
+export interface ChatStackProps {
   navigation: ChatStackNavigationProp;
 }
 //
@@ -404,6 +434,9 @@ type ZaloPayScreenNavigationProp = NativeStackNavigationProp<
   'ZaloPayScreen'
 >;
 export type ZaloPayScreenProps = {navigation: ZaloPayScreenNavigationProp};
+
+type ComboScreenNavigationProp = NativeStackNavigationProp<PackStackParamList, 'ComboScreen'>;
+export type ComboScreenProps = { navigation: ComboScreenNavigationProp };
 
 type OrderDetailScreenNavigationProp = NativeStackNavigationProp<
   PackStackParamList,
@@ -493,6 +526,14 @@ export interface PurchasedScreenProps {
   navigation: ViewAllFamilyNavigationProp & FamilyStackNavigationProp;
   route: RouteProp<PackStackParamList, 'ViewAllPurchased'>;
 }
+type ViewAllServiceNavigationProp = NativeStackNavigationProp<
+  PackStackParamList,
+  'ViewAllService'
+>;
+export interface ViewAllServiceProps {
+  navigation: ViewAllServiceNavigationProp ;
+  route: RouteProp<PackStackParamList, 'ViewAllService'>;
+}
 
 type ViewAllFamilyNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
@@ -529,60 +570,10 @@ type SharedGuildLineNavigationProp = NativeStackNavigationProp<
   'SharedGuildLine'
 >;
 
-type AddGuildLineNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'AddGuildLine'
->;
-
-export interface AddGuildLineScreenProps {
-  navigation: AddGuildLineNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'AddGuildLine'>;
-}
-
-type UpdateGuildLineNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'UpdateGuildLine'
->;
-
-export interface UpdateGuildLineScreenProps {
-  navigation: UpdateGuildLineNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'UpdateGuildLine'>;
-}
-
 type EducationNavigationprop = NativeStackNavigationProp<
   FamilyStackParamList,
   'Education'
 >;
-
-type AddEducationNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'AddEducation'
->;
-
-export interface AddEducationScreenProps {
-  navigation: AddEducationNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'AddEducation'>;
-}
-
-type EditEducationNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'EditEducation'
->;
-
-export interface EditEducationScreenProps {
-  navigation: EditEducationNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'EditEducation'>;
-}
-
-type AddSubjectNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'AddSubject'
->;
-
-export interface AddSubjectScreenProps {
-  navigation: AddSubjectNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'AddSubject'>;
-}
 
 type SubjectDetailNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
@@ -599,85 +590,10 @@ type HouseHoldCategoryNavigationProp = NativeStackNavigationProp<
   'HouseHoldCategory'
 >;
 
-type HouseHoldItemDetailNavigationProp = NativeStackNavigationProp<
+type HouseHoldCategoryDetailNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
-  'HouseHoldItemDetail'
+  'HouseHoldCategoryDetail'
 >;
-
-type AddHouseHoldItemDetailNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'AddHouseHoldItemDetail'
->;
-
-type AddHouseHoldItemNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'AddHouseHoldItem'
->;
-
-export interface AddHouseHoldItemScreenProps {
-  navigation: AddHouseHoldItemNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'AddHouseHoldItem'>;
-}
-
-type EditExpenseHouseHoldItemNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'EditExpenseHouseHoldItem'
->;
-
-export interface EditExpenseHouseHoldItemScreenProps {
-  navigation: EditExpenseHouseHoldItemNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'EditExpenseHouseHoldItem'>;
-}
-
-type EditBrandHouseHoldItemNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'EditBrandHouseHoldItem'
->;
-
-export interface EditBrandHouseHoldItemScreenProps {
-  navigation: EditBrandHouseHoldItemNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'EditBrandHouseHoldItem'>;
-}
-
-type AddHouseHoldRoomNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'AddHouseHoldRoom'
->;
-
-export interface AddHouseHoldRoomScreenProps {
-  navigation: AddHouseHoldRoomNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'AddHouseHoldRoom'>;
-}
-
-type EditDescriptionHouseHoldItemNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'EditDescriptionHouseHoldItem'
->;
-
-export interface EditDescriptionHouseHoldItemScreenProps {
-  navigation: EditDescriptionHouseHoldItemNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'EditDescriptionHouseHoldItem'>;
-}
-
-type EditConsumableHouseHoldItemNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'EditConsumableHouseHoldItem'
->;
-
-export interface EditConsumableHouseHoldItemScreenProps {
-  navigation: EditConsumableHouseHoldItemNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'EditConsumableHouseHoldItem'>;
-}
-
-type AddConsumableHouseHoldItemNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'AddConsumableHouseHoldItem'
->;
-
-export interface AddConsumableHouseHoldItemScreenProps {
-  navigation: AddConsumableHouseHoldItemNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'AddConsumableHouseHoldItem'>;
-}
 
 type CheckListNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
@@ -693,29 +609,29 @@ type CheckListDetailNavigationProp = NativeStackNavigationProp<
   'CheckListDetail'
 >;
 
-type AddShoppingListNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'AddShoppingList'
->;
-
-export interface AddShoppingListScreenProps {
-  navigation: AddShoppingListNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'AddShoppingList'>;
-}
-
-type AddCheckListNavigationProp = NativeStackNavigationProp<
-  FamilyStackParamList,
-  'AddCheckList'
->;
-
-export interface AddCheckListScreenProps {
-  navigation: AddCheckListNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'AddCheckList'>;
-}
-
 export interface CheckListDetailScreenProps {
   navigation: CheckListDetailNavigationProp;
   route: RouteProp<FamilyStackParamList, 'CheckListDetail'>;
+}
+
+
+type MemberDetailsNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'MemberDetails'
+>;
+
+export interface MemberDetailsScreenProps {
+  navigation: MemberDetailsNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'MemberDetails'>;
+}
+type GuidelinePublicNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'GuidelinePublic'
+>;
+
+export interface GuidelinePublicScreenProps {
+  navigation: GuidelinePublicNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'GuidelinePublic'>;
 }
 
 export interface CheckListScreenProps {
@@ -733,19 +649,14 @@ export interface HouseHoldScreenProps {
   route: RouteProp<FamilyStackParamList, 'HouseHold'>;
 }
 
-export interface HouseHoldItemScreenProps {
+export interface HouseHoldCategoryScreenProps {
   navigation: HouseHoldCategoryNavigationProp;
   route: RouteProp<FamilyStackParamList, 'HouseHoldCategory'>;
 }
 
-export interface HouseHoldItemDetailScreenProps {
-  navigation: HouseHoldItemDetailNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'HouseHoldItemDetail'>;
-}
-
-export interface AddHouseHoldItemDetailScreenProps {
-  navigation: AddHouseHoldItemDetailNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'AddHouseHoldItemDetail'>;
+export interface HouseHoldCategoryDetailScreenProps {
+  navigation: HouseHoldCategoryDetailNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'HouseHoldCategoryDetail'>;
 }
 
 export interface SubjectDetailScreenProps {
@@ -867,11 +778,19 @@ export interface AddEditFamilyMemberScreenProps {
 type InviteMembersNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'InviteMembers'
->;
+  >;
 
 export interface InviteMembersScreenProps {
   navigation: InviteMembersNavigationProp;
 }
+
+type UpcomingEventsNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'UpcomingEvents'
+  >;
+
+export interface UpcomingEventsScreenProps { navigation: UpcomingEventsNavigationProp; }
+
 type ForgotPasswordScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
   'ForgotPasswordScreen'
@@ -887,6 +806,21 @@ type LandingPageNavigationProp = NativeStackNavigationProp<
 export interface LandingPageScreenProps {
   navigation: LandingPageNavigationProp;
 }
+
+type LandingPage2NavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'LandingPage2'
+>;
+
+export interface LandingPage2ScreenProps { navigation: LandingPage2NavigationProp; }
+
+type LandingPage3NavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'LandingPage3'
+>;
+
+export interface LandingPage3ScreenProps {navigation: LandingPage3NavigationProp;}  
+
 type ViewAllPackageNavigationProp = NativeStackNavigationProp<
   PackStackParamList,
   'ViewAllPackage'
@@ -903,11 +837,14 @@ export type HomeTabParamList = {
   MoreScreen: undefined;
   Expenditure: undefined;
   CategoryExpense: undefined;
-
 };
 
 export type MessageTabParamList = {
   ChatList: undefined;
+ 
+};
+export type FamilyTabParamList = {
+  Family: undefined;
  
 };
 type CategoryExpenseNavigationProp = NativeStackNavigationProp<

@@ -15,7 +15,7 @@ const CalendarServices = {
         }
       });
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.error('Error in getAllCategoryEvent');
       }
@@ -171,11 +171,11 @@ const CalendarServices = {
        return 'Failed to create event'
     }
   },
-  UpdateEvent: async (id_calendar: number, title: string, description: string, time_start: Date, time_end: Date, color: string, is_all_day: boolean, category: number, location: string, recurrence_exception: string, recurrence_id: number, recurrence_rule: string, start_timezone:string, end_timezone: string) => {
+  UpdateEvent: async (id_calendar: number, id_family?: number, title: string, description: string, time_start: Date, time_end: Date, color: string, is_all_day: boolean, category: number, location: string, recurrence_exception: string, recurrence_id: number, recurrence_rule: string, start_timezone:string, end_timezone: string) => {
     try {
       const response: AxiosResponse = await instance.put(CalendarUrls.updateCalender, {
 
-        id_calendar, title, description, time_start, time_end, color, is_all_day, category, location, recurrence_exception,recurrence_id, recurrence_rule,start_timezone, end_timezone,       
+        id_calendar, id_family, title, description, time_start, time_end, color, is_all_day, category, location, recurrence_exception,recurrence_id, recurrence_rule,start_timezone, end_timezone,       
       }
       );
       

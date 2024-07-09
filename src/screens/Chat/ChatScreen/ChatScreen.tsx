@@ -28,23 +28,16 @@ import {Keyboard} from 'react-native';
 import {getSocket} from 'src/services/apiclient/Socket';
 import {useSelector} from 'react-redux';
 import {selectProfile} from 'src/redux/slices/ProfileSclice';
-import {Message} from 'src/interface/chat/chat';
+import {Message, User} from 'src/interface/chat/chat';
 import {Ionicons} from '@expo/vector-icons';
 import {COLORS} from 'src/constants';
 import EmojiPicker from '../EmojiPicker';
 import * as MediaLibrary from 'expo-media-library';
 import { Video } from 'expo-av';
 import MessageItem from './RenderMessage';
+import { selectLastMessage, selectReceiver } from 'src/redux/slices/MessageUser';
 
-interface Member {
-  id_user: string;
-  email: string;
-  phone: string;
-  language: string | null;
-  firstname: string;
-  lastname: string;
-  avatar: string;
-}
+
 
 const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   const profile = useSelector(selectProfile);
@@ -52,7 +45,8 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [receiver, setReceiver] = useState<Member>();
+  const [receiver, setReceiver] = useState<User>();
+
   const {receiverId} = route.params || {};
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
     null,
@@ -66,46 +60,38 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   );
   const [hasReceivedMessage, setHasReceivedMessage] = useState(false); 
   const [selectedEmoji, setSelectedEmoji] = useState('');
-
+  const user = useSelector(selectReceiver);
   let socket = getSocket();
-
+  
   const markSeenMessage = async (receiverId?: string) => {
     try {
       await ChatServices.markSeenMessage({receiver_id: receiverId});
+
     } catch (error) {
       console.error('Error markSeenMessage:', error);
     }
   };
 
-  const fetchMember = async (receiverId?: string, id_user?: string) => {
-    try {
-      const response: AxiosResponse<Member[]> = await FamilyServices.getMember({
-        id_user: receiverId,
-      });
-      if (response && response.data.length > 0) {
-        setReceiver(response.data[0]);
-      }
-    } catch (error) {
-      console.error('Error fetching member:', error);
-    }
-  };
+
 
   const fetchMessages = useCallback(async () => {
+    setReceiver(user);
+
     try {
       const response = await ChatServices.GetMessages({
         id_user: receiverId,
         index: currentIndex,
       });
-      if (response) {
-        const newMessages = response.map((message) => {
+      if (response.length > 0) {
+        const newMessages = response.map((message: Message) => {
           if (message.type === 'photo') {
             setImages(prevImages => [...prevImages, message.content]);
           }
           return { ...message, timestamp: new Date(message.timestamp) };
         });
-        setMessages(newMessages);
+        setMessages((prevMessages) => [...prevMessages, ...newMessages]);
         setHasReceivedMessage(true); 
-        setCurrentIndex(currentIndex+1)
+        setCurrentIndex(currentIndex+1);
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -114,7 +100,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
 
   useEffect(() => {
     fetchMessages();
-  }, [fetchMessages]);
+  }, [currentIndex]);
 
   
   const sendMessage = async () => {
@@ -150,12 +136,10 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
     try {
       
       const response = await ChatServices.sendVideoMessage(receiverId, uri)
-      const data = await response.json();
+      const data: Message = response;
       if (response) {
-
-      } else {
-        throw new Error('Failed to send video');
-      }
+        fetchNewMessages(data);
+      } 
     } catch (error) {
       throw new Error('API request failed');
     }
@@ -194,7 +178,6 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         quality: 1,
       });
   
-      console.log('ImagePicker result:', result);
   
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const asset = result.assets[0];
@@ -227,62 +210,56 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
           }
         } else if (asset.type === 'video') {
           const savedAsset = await MediaLibrary.createAssetAsync(uri);
-          console.log('Created Asset info:', savedAsset);
   
           if (!savedAsset) {
-            console.error('No asset information returned from MediaLibrary');
-            Alert.alert('Error', 'Failed to save video to media library.');
             return;
           }
   
           const assetInfo = await MediaLibrary.getAssetInfoAsync(savedAsset.id);
-          console.log('Asset Info:', assetInfo);
   
           if (assetInfo && assetInfo.localUri) {
             const fileInfo = await FileSystem.getInfoAsync(assetInfo.localUri);
             console.log('File info:', fileInfo);
   
             if (fileInfo.exists && fileInfo.size && fileInfo.size < MAX_FILE_SIZE) {
-              await sendVideoMessage(assetInfo.localUri);
+              await sendVideoMessage(uri);
             } else {
               Alert.alert('Selected file size exceeds the limit or could not determine file size');
             }
           } else {
-            console.error('Could not retrieve local URI for the video');
             Alert.alert('Error', 'Failed to retrieve local URI for the video.');
           }
         } else {
           Alert.alert('Unsupported file type');
         }
       } else {
-        console.error('No valid assets returned from ImagePicker');
         Alert.alert('Error', 'No valid assets returned from ImagePicker');
       }
     } catch (error) {
-      console.error('Error opening image library:', error);
       Alert.alert('Error opening image library. Please try again.');
     }
   };
 
-  const handleImagePress = (item: Message) => {
-    const itemIndex = messages.findIndex(
-      message =>
-        message.senderId === item.senderId && message.content === item.content,
-    );
-    setSelectedImageIndex(itemIndex - 1);
-  };
+
 
   const handleCloseModal = () => {
     setSelectedImageIndex(null);
   };
 
-  const handlePressMessage = (messageId: string) => {
-    setSelectedMessageId(prevId => (prevId === messageId ? null : messageId));
+  const handlePressMessage = (item: Message) => {
+    if( item.type === 'photo'){
+
+    const itemIndex = messages.findIndex(
+      message =>
+        message.senderId === item.senderId && message.content === item.content,
+    );
+  
+    setSelectedImageIndex(itemIndex );
+  }
+    setSelectedMessageId(prevId => (prevId === item._id ? null : item._id));
   };
 
-  useEffect(() => {
-    fetchMember(receiverId, profile.id_user);
-  },[])
+
 
   useEffect(() => {
     

@@ -4,7 +4,9 @@ import ForgotPassword from 'src/screens/ForgotPassword';
 import LoginScreen from 'src/screens/LoginScreen';
 import SignupScreen from 'src/screens/SignupScreen';
 import {AuthStackParamList} from '../NavigationTypes';
-import LandingPage from 'src/screens/LandingPage/LandingPage';
+import LandingPage from 'src/screens/LandingPage/LandingPage1/LandingPage';
+import LandingPage2 from 'src/screens/LandingPage/LandingPage2/LandingPage2';
+import LandingPage3 from 'src/screens/LandingPage/LandingPage3/LandingPage3';
 import Notification from 'src/screens/Notifications';
 import WelcomeScreen from 'src/screens/WelcomeScreen';
 import EnterCodeScreen from 'src/screens/ForgotPassword/EnterCode';
@@ -24,6 +26,8 @@ const AuthStack = () => {
       <Stack.Screen name="SignupScreen" component={SignupScreen} />
       <Stack.Screen name="ForgotPasswordScreen" component={ForgotPassword} />
       <Stack.Screen name="LandingPage" component={LandingPage} />
+      <Stack.Screen name="LandingPage2" component={LandingPage2} />
+      <Stack.Screen name="LandingPage3" component={LandingPage3} />
       <Stack.Screen name="EnterCodeScreen" component={EnterCodeScreen} />
       <Stack.Screen name="ResetPasswordScreen" component={ResetPassword} />
       <Stack.Screen name="Feedback" component={FeedbackScreen} />

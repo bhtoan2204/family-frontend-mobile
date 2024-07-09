@@ -1,331 +1,201 @@
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  ActivityIndicator,
-  TouchableOpacity,
-  Image,
-  Modal,
-  TextInput,
-  Button,
-  ScrollView,
-  Alert,
-} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList,TouchableOpacity, Image,Modal,TextInput,Alert,} from 'react-native';
 import ExpenseServices from 'src/services/apiclient/ExpenseServices';
-import {CategoryExpenseScreenProps} from 'src/navigation/NavigationTypes';
+import { CategoryExpenseScreenProps } from 'src/navigation/NavigationTypes';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {
-  getFamily,
-  getType,
-  setExpenseCategory_id,
-  setExpenseCategory_name,
-  setIncomeCategory_id,
-  setIncomeCategory_name,
-  setType,
-} from 'src/redux/slices/FinanceSlice';
-import {useDispatch, useSelector} from 'react-redux';
-import {IncomeServices} from 'src/services/apiclient';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {COLORS} from 'src/constants';
-import { Swipeable } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { selectExpenseTypes, setSelectedExpenseType } from 'src/redux/slices/ExpenseTypeSlice';
+import { selectIncomeTypes, setSelectedIncomeType } from 'src/redux/slices/IncomeTypeSlice';
+import { IncomeServices } from 'src/services/apiclient';
+import { setType } from 'src/redux/slices/FinanceSlice';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-interface ExpenseType {
-  id_expense_type: number;
-  category: string;
-}
-interface IncomeType {
-  id_income_source: number;
-  category: string;
-}
+const CategoryExpenseScreen = ({ navigation }: CategoryExpenseScreenProps) => {
+  const expenseType = useSelector(selectExpenseTypes);
+  const incomeCategories = useSelector(selectIncomeTypes);
+  const family = useSelector(selectSelectedFamily);
+  const dispatch = useDispatch();
 
-const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
-  const [expenseType, setExpenseType] = useState<ExpenseType[]>([]);
-  const [incomeCategories, setIncomeCategories] = useState<IncomeType[]>([]);
-
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const [newCategoryName, setNewCategoryName] = useState<string>('');
-  const dispatch = useDispatch();
-  const [selectedCategoryType, setSelectedCategoryType] = useState<string>('');
+  const [selectedCategoryType, setSelectedCategoryType] = useState<string>('Expense');
   const urlFood =
     'https://img.freepik.com/premium-vector/icon-food-drink-illustration-vector_643279-134.jpg';
-  const addUrl =
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBWw-U6s-Q1k-tt_xXKV02dPlypckiNOJMxJo3KxWW-g&s';
-  let state = useSelector(getType);
-  let id_family = useSelector(getFamily);
-
-  const [selectedFamily, setSelectedFamily] = useState<number | null>(null);
-
-  useEffect(() => {
-    fetchExpenseType(id_family);
-    fetchIncomeType(id_family);
-    setSelectedCategoryType(state);
-  }, [state]);
-
-  const fetchExpenseType = async (id_family: any) => {
-    try {
-      const response = await ExpenseServices.getExpenseType(id_family);
-      setExpenseType(response);
-      setLoading(false);
-    } catch (error: any) {
-      console.error('Error in getExpenseType:', error.message);
-    }
-  };
-  const fetchIncomeType = async (id_family: any) => {
-    try {
-      const response = await IncomeServices.getIncomeType(id_family);
-      //console.log(response);
-      setIncomeCategories(response);
-      setLoading(false);
-    } catch (error: any) {
-      console.error('Error in getExpenseType:', error.message);
-    }
-  };
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
   const createCategory = async () => {
-    if (selectedCategoryType === 'Expense'){
     try {
-      await ExpenseServices.createExpenseType(id_family, newCategoryName);
-      fetchExpenseType(id_family);
+      if (selectedCategoryType === 'Expense') {
+        await ExpenseServices.createExpenseType(family.id_family, newCategoryName);
+      } else if (selectedCategoryType === 'Income') {
+        await IncomeServices.createIncomeType(family.id_family, newCategoryName);
+      }
       toggleModal();
       setNewCategoryName('');
     } catch (error: any) {
       console.error('Error creating category:', error.message);
+      Alert.alert('Error', 'An error occurred while creating the category.');
     }
-  }
-   else if (selectedCategoryType === 'Income'){
-
-      try {
-        await IncomeServices.createIncomeType(id_family, newCategoryName);
-        fetchExpenseType(id_family);
-        toggleModal();
-        setNewCategoryName('');
-      } catch (error: any) {
-        console.error('Error creating createIncome:', error.message);
-      }
-   }
   };
 
-  if (loading) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size="large" color="blue" />
-      </View>
-    );
-  }
-  const selectCategory = async (item: any) => {
-    console.log(item)
+  const selectCategory = (item: any) => {
     dispatch(setType(selectedCategoryType));
     if (selectedCategoryType === 'Expense') {
-      dispatch(setExpenseCategory_id(item.id_expense_type));
-      dispatch(setExpenseCategory_name(item.category));
+      dispatch(setSelectedExpenseType(item));
     } else if (selectedCategoryType === 'Income') {
-      dispatch(setIncomeCategory_id(item.id_income_source));
-      dispatch(setIncomeCategory_name(item.category));
+      dispatch(setSelectedIncomeType(item));
     }
-    navigation.navigate('HomeTab', {screen: 'Expense'});
+    navigation.navigate('ExpenseStack', { screen: 'Expenditure' });
   };
 
-  const onDeleteIncome = async (event: any) => {
+  const onDeleteIncome = async (item: any) => {
     Alert.alert(
-        'Confirm Delete',
-        'Are you sure you want to delete this category?',
-        [
-            {
-                text: 'Cancel',
-                style: 'cancel',
-            },
-            {
-                text: 'Delete',
-                onPress: async () => {
-                    try {
-                        await IncomeServices.deleteIncomeSource(id_family,event.id_income_source );
-                        Alert.alert('Success', 'The category has been deleted successfully.');
-                        fetchIncomeType(id_family);
-                      } catch (error) {
-                        console.error('Error deleting event:', error);
-                        Alert.alert('Error', 'An error occurred while deleting the category.');
-                      }
-                },
-            },
-        ],
-        { cancelable: true }
-    );
-};
-const onDeleteExpense = async (event: any) => {
-  Alert.alert(
       'Confirm Delete',
       'Are you sure you want to delete this category?',
       [
-          {
-              text: 'Cancel',
-              style: 'cancel',
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: async () => {
+            try {
+              await IncomeServices.deleteIncomeSource(family.id_family, item.id_income_source);
+              Alert.alert('Success', 'The category has been deleted successfully.');
+            } catch (error) {
+              console.error('Error deleting income category:', error);
+              Alert.alert('Error', 'An error occurred while deleting the category.');
+            }
           },
-          {
-              text: 'Delete',
-              onPress: async () => {
-                  try {
-                      await ExpenseServices.deleteExpenseType(id_family, event.id_expense_type);
-                      Alert.alert('Success', 'The category has been deleted successfully.');
-                      fetchExpenseType(id_family);
-                  } catch (error) {
-                      console.error('Error deleting event:', error);
-                      Alert.alert('Error', 'An error occurred while deleting the category.');
-                  }
-              },
-          },
+        },
       ],
       { cancelable: true }
-  );
-};
-  const selectOption = async (option: string) => {
+    );
+  };
+
+  const onDeleteExpense = async (item: any) => {
+    Alert.alert(
+      'Confirm Delete',
+      'Are you sure you want to delete this category?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: async () => {
+            try {
+              await ExpenseServices.deleteExpenseType(family.id_family, item.id_expenditure_type);
+              Alert.alert('Success', 'The category has been deleted successfully.');
+            } catch (error) {
+              console.error('Error deleting expense category:', error);
+              Alert.alert('Error', 'An error occurred while deleting the category.');
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const selectOption = (option: string) => {
     setSelectedCategoryType(option);
   };
-  const renderRightActionsExpense = (item: any) => (
-    <View style={styles.rightAction}>
-        <Icon name="trash-outline" size={35} color="red" onPress={() => onDeleteExpense(item)} />
-    </View>
-);
-const renderRightActionsIncome = (item: any) => (
-  <View style={styles.rightAction}>
-      <Icon name="trash-outline" size={35} color="red" onPress={() => onDeleteIncome(item)} />
-  </View>
-);
+
+  const renderCategoryItem = ({ item }: { item: any }) => (
+    <TouchableOpacity style={styles.categoryItemContainer} onPress={() => selectCategory(item)}>
+      <Image source={{ uri: urlFood }} style={styles.categoryImage} />
+      <Text style={styles.categoryName}>
+        {selectedCategoryType === 'Expense' ? item.expense_type_name : item.income_source_name}
+      </Text>
+      <TouchableOpacity
+        onPress={() =>
+          selectedCategoryType === 'Expense' ? onDeleteExpense(item) : onDeleteIncome(item)
+        }
+        style={styles.deleteButton}>
+        <Icon name="trash-outline" size={20} color="red" />
+      </TouchableOpacity>
+    </TouchableOpacity>
+  );
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('HomeTab', {screen: 'Expense'})}
-            style={styles.headerButton}>
-            <Icon name="arrow-back" size={25} style={styles.backButton} />
-          </TouchableOpacity>
-          <View style={styles.headerTitleContainer}>
-            <Text style={styles.headerText}>Categories</Text>
-          </View>
-
-          <TouchableOpacity onPress={toggleModal} style={styles.headerButton}>
-            <Icon name="add" size={30} style={styles.addImage} />
-          </TouchableOpacity>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.headerContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerButton}>
+          <Icon name="arrow-back" size={25} style={styles.backButton} />
+        </TouchableOpacity>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerText}>Categories</Text>
         </View>
-        <View style={styles.containerTab}>
-          <TouchableOpacity
-            onPress={() => selectOption('Income')}
-            style={[
-              styles.tabButton,
-              selectedCategoryType === 'Income' && styles.selectedTabButton,
-            ]}>
-            <View style={{flexDirection: 'row'}}>
-              <Text
-                style={[
-                  styles.tabButtonText,
-                  selectedCategoryType === 'Income' && styles.selectedTabText,
-                ]}>
-                Income
-              </Text>
-              <Image
-                source={require('src/assets/icons/category-income.png')}
-                resizeMode="stretch"
-                style={{width: 24, height: 24, marginLeft: 10, bottom: 5}}
-              />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => selectOption('Expense')}
-            style={[
-              styles.tabButton,
-              selectedCategoryType === 'Expense' && styles.selectedTabButton,
-            ]}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignContent: 'center',
-              }}>
-              <Text
-                style={[
-                  styles.tabButtonText,
-                  selectedCategoryType === 'Expense' && styles.selectedTabText,
-                ]}>
-                Expense
-              </Text>
-              <Image
-                source={require('src/assets/icons/category-expense.png')}
-                resizeMode="stretch"
-                style={{width: 28, height: 28, marginLeft: 10, bottom: 5}}
-              />
-            </View>
-          </TouchableOpacity>
-          <View
-            style={[
-              styles.bottomLine,
-              {left: selectedCategoryType === 'Income' ? 0 : '50%'},
-            ]}
-          />
-        </View>
-
-        <ScrollView style={styles.scrollView}>
-          {selectedCategoryType === 'Expense' &&
-            expenseType.map((item, index) => (
-              <Swipeable renderRightActions={() => renderRightActionsExpense(item)}>
-
-                <TouchableOpacity
-                  key={index.toString()}
-                  onPress={() => selectCategory(item)}
-                  style={styles.categoryItemContainer}>
-                  <Image source={{uri: urlFood}} style={styles.categoryImage} />
-                  <Text style={styles.categoryName}>{item.category}</Text>
-                </TouchableOpacity>
-              </Swipeable>
-
-            ))}
-
-          {selectedCategoryType === 'Income' &&
-            incomeCategories.map((item, index) => (
-              <Swipeable renderRightActions={() => renderRightActionsIncome(item)}>
-
-              <TouchableOpacity
-                key={index.toString()}
-                onPress={() => selectCategory(item)}
-                style={styles.categoryItemContainer}>
-                <Image source={{uri: urlFood}} style={styles.categoryImage} />
-                <Text style={styles.categoryName}>{item.category}</Text>
-              </TouchableOpacity>
-              </Swipeable>
-
-            ))}
-        </ScrollView>
-
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isModalVisible}
-          onRequestClose={toggleModal}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Add New Category</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter category name"
-                value={newCategoryName}
-                onChangeText={setNewCategoryName}
-              />
-              <View style={styles.modalButtons}>
-                <Button title="Cancel" onPress={toggleModal} color="gray" />
-                <Button title="Create" onPress={createCategory} />
-              </View>
-            </View>
-          </View>
-        </Modal>
+        <TouchableOpacity onPress={toggleModal} style={styles.headerButton}>
+          <Icon name="add" size={30} style={styles.addImage} />
+        </TouchableOpacity>
       </View>
+      <View style={styles.containerTab}>
+            <TouchableOpacity
+              onPress={() => selectOption('Income')}
+              style={[
+                styles.tabButton,
+                selectedCategoryType === 'Income' && styles.selectedTabButton,
+                { borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }
+              ]}>
+              <Text style={[styles.tabButtonText, selectedCategoryType === 'Income' && styles.selectedTabText]}>Income</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => selectOption('Expense')}
+              style={[
+                styles.tabButton,
+                selectedCategoryType === 'Expense' && styles.selectedTabButton,
+                { borderTopRightRadius: 20, borderBottomRightRadius: 20 }
+              ]}>
+              <Text style={[styles.tabButtonText, selectedCategoryType === 'Expense' && styles.selectedTabText]}>Expense</Text>
+            </TouchableOpacity>
+            <View
+              style={[
+                styles.bottomLine,
+                { left: selectedCategoryType === 'Income' ? 0 : '50%', borderRadius: 20 }
+              ]}
+            />
+          </View>
+
+      <FlatList
+        data={selectedCategoryType === 'Expense' ? Object.values(expenseType) : Object.values(incomeCategories)}
+        renderItem={renderCategoryItem}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      />
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={toggleModal}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Add New Category</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter category name"
+              value={newCategoryName}
+              onChangeText={setNewCategoryName}
+            />
+            <TouchableOpacity style={styles.button} onPress={createCategory}>
+              <Text style={styles.buttonText}>Create</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={toggleModal}>
+              <Text style={styles.buttonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

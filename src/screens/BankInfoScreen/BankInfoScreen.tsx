@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {VietQR} from 'vietqr';
 import {Text, Image, View, EmitterSubscription} from 'react-native';
 import {FlatList, GestureHandlerRootView} from 'react-native-gesture-handler';
 
@@ -42,31 +41,18 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
 
   const handleBankInfo = async () => {
     try {
-      console.log('handleBankInfo called');
       const result = await PackageServices.getBankInfo();
-      console.log('PackageServices.getBankInfo result:', result);
       setBanks(result.data);
     } catch (error: any) {
       console.log('PackageServices.getBankInfo error:', error);
     }
   };
 
-  const handleSelectBank = async (
-    id_package: number,
-    id_family: number,
-    bankCode: string,
-    amount: number,
-    language: 'vn',
-    method: string,
-  ) => {
+  const handleSelectBank = async (id_package?: number, bankCode?: string) => {
     try {
       const paymentURL = await handleCreatePaymentURL(
         id_package,
-        id_family,
         bankCode,
-        amount,
-        language,
-        method,
       );
       console.log('Payment URL:', paymentURL);
       if (paymentURL) {
@@ -80,25 +66,19 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
   };
 
   const handleCreatePaymentURL = async (
-    id_package: number,
-    id_family: number,
-    bankCode: string,
-    amount: number,
-    language: 'vn',
-    method: string,
+    id_main_package?: number,
+    bankCode?: string,
+
   ) => {
     try {
-      const response = await PackageServices.createPaymentURL({
-        id_package,
-        id_family,
+      const response = await PackageServices.createPaymentURL(
+        id_main_package,
         bankCode,
-        amount,
-        language,
-        method,
-      });
-      if (response.isSuccess === true) {
+
+      );
+      if (response) {
         console.log('Payment processed successfully');
-        return response.paymentUrl;
+        return response;
       } else {
         console.log('Failed to process payment');
       }
@@ -195,12 +175,10 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
           <TouchableOpacity
             onPress={() =>
               handleSelectBank(
-                id_package,
-                id_family,
+                id_package,          
                 bank.code,
-                amount,
-                'vn',
-                'vnpay',
+             
+            
               )
             }
             style={styles.touchable}>
