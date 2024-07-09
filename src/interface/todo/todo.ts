@@ -50,16 +50,15 @@ export interface TodoList {
   is_notified_on_due_date: boolean;
   created_at: string;
   updated_at: string;
-  family: {
-    id_family: number;
-    quantity: number;
-    name: string;
-    description: string;
-    owner_id: string;
-    expired_at: string;
-    avatar: string;
-    created_at: string;
-    updated_at: string;
-  };
   checklistType: TodoListType;
+}
+
+export interface TodoListItem {
+  id_checklist?: number;
+  id_item?: number;
+  item_name?: string;
+  is_completed?: boolean;
+  reminder_date?: string;
+  created_at?: string;
+  updated_at?: string;
 }

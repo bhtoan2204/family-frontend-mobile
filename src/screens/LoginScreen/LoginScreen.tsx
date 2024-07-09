@@ -7,8 +7,8 @@ import {
   MaterialIcons,
 } from '@expo/vector-icons';
 import Checkbox from 'expo-checkbox';
-import {Formik, FormikHelpers} from 'formik';
-import React, {useEffect, useState} from 'react';
+import { Formik, FormikHelpers } from 'formik';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   ImageBackground,
@@ -21,25 +21,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import FacebookImage from 'src/assets/images/facebook.png';
 import GoogleImage from 'src/assets/images/google.png';
 import CustomButton from 'src/components/Button';
-import {COLORS, TEXTS} from 'src/constants';
+import { COLORS, TEXTS } from 'src/constants';
 import {
   HomeTabProps,
   LandingPageScreenProps,
   SignupScreenProps,
   WelcomeScreenProps,
 } from 'src/navigation/NavigationTypes';
-import {AuthServices} from 'src/services/apiclient';
-import {AuthUrl} from 'src/services/urls';
+import { AuthServices } from 'src/services/apiclient';
+import { AuthUrl } from 'src/services/urls';
 import LocalStorage from 'src/store/localstorage';
 import * as Yup from 'yup';
 import styles from './styles';
-import {useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as WebBrowser from 'expo-web-browser';
-import {makeRedirectUri, useAuthRequest} from 'expo-auth-session';
+import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
 
 interface FormValues {
   email: string;
@@ -60,7 +60,7 @@ const discovery = {
   revocationEndpoint: 'https://oauth2.googleapis.com/revoke',
 };
 
-const LoginScreen = ({navigation}: CombinedScreenProps) => {
+const LoginScreen = ({ navigation }: CombinedScreenProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
@@ -81,12 +81,16 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
       // console.log(response.refreshToken);
 
       navigation.navigate('LandingPage');
-      actions.setStatus({success: true});
+      actions.setStatus({ success: true });
     } catch (error: any) {
+      navigation.navigate('TodoListStack', {
+        screen: 'TodoList',
+        params: { id_family: 96 },
+      });
       actions.setStatus({
         success: false,
       });
-      actions.setErrors({submit: error.message});
+      actions.setErrors({ submit: error.message });
     }
   };
 
@@ -94,13 +98,13 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
     try {
       Linking.openURL(AuthUrl.facebookLogin);
 
-      const handleOpenUrl = async (event: {url: string}) => {
+      const handleOpenUrl = async (event: { url: string }) => {
         console.log(event.url);
       };
 
       Linking.addEventListener('url', handleOpenUrl);
 
-      navigation.navigate('HomeTab', {screen: 'HomeScreen'});
+      navigation.navigate('HomeTab', { screen: 'HomeScreen' });
 
       return () => {
         Linking.removeAllListeners('url');
@@ -124,14 +128,14 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
 
   useEffect(() => {
     if (response?.type === 'success') {
-      const {code} = response.params;
+      const { code } = response.params;
     }
   }, [response]);
 
   return (
     <ImageBackground
       source={require('../../assets/images/login-wall-light.png')}
-      style={{flex: 1}}
+      style={{ flex: 1 }}
       resizeMode="stretch">
       <KeyboardAvoidingView behavior="padding">
         {/* <ScrollView keyboardShouldPersistTaps="handled"></ScrollView> */}
@@ -148,17 +152,17 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                 />
               </TouchableOpacity>
             </View>
-            <View className="mx-7" style={{bottom: 95}}>
+            <View className="mx-7" style={{ bottom: 95 }}>
               <Image
                 source={require('../../assets/images/logo-app-1.png')}
                 resizeMode="stretch"
                 style={styles.logo}
               />
-              <View className="my-5" style={{marginTop: 100}}>
+              <View className="my-5" style={{ marginTop: 100 }}>
                 {/* <Text style={styles.loginText}>Log in</Text> */}
               </View>
               <Formik
-                initialValues={{email: '', password: '', submit: null}}
+                initialValues={{ email: '', password: '', submit: null }}
                 onSubmit={handleLogin}
                 validationSchema={Yup.object().shape({
                   email: Yup.string()
@@ -178,7 +182,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   touched,
                   values,
                 }) => (
-                  <View style={{marginTop: 15}}>
+                  <View style={{ marginTop: 15 }}>
                     <View className="mb-2">
                       {/* <Text className="text-base font-normal my-2">
                         {TEXTS.EMAIL}
@@ -187,7 +191,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                         style={[
                           styles.row,
                           styles.TextInput,
-                          {borderColor: errors.email ? 'red' : '#2A475E'},
+                          { borderColor: errors.email ? 'red' : '#2A475E' },
                         ]}>
                         <MaterialCommunityIcons
                           name="email-outline"
@@ -222,13 +226,13 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                         </View>
                       )}
                     </View>
-                    <View className="mb-2" style={{marginTop: 20}}>
+                    <View className="mb-2" style={{ marginTop: 20 }}>
                       <View
                         style={[
                           styles.row,
-                          {alignItems: 'center'},
+                          { alignItems: 'center' },
                           styles.TextInput,
-                          {borderColor: errors.email ? 'red' : '#2A475E'},
+                          { borderColor: errors.email ? 'red' : '#2A475E' },
                         ]}>
                         <MaterialCommunityIcons
                           name="lock-outline"
@@ -244,7 +248,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                           onBlur={handleBlur('password')}
                           onChangeText={handleChange('password')}
                           value={values.password}
-                          style={[{marginLeft: 10, color: '#2A475E'}]}
+                          style={[{ marginLeft: 10, color: '#2A475E' }]}
                         />
                         <TouchableOpacity
                           className="absolute right-3"
@@ -312,16 +316,16 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                 }}>
                 <Text
                   style={[
-                    {fontSize: 17},
-                    {marginBottom: -20},
-                    {color: '#2A475E'},
+                    { fontSize: 17 },
+                    { marginBottom: -20 },
+                    { color: '#2A475E' },
                   ]}>
                   {TEXTS.LOGIN_OR}
                 </Text>
               </View>
-              <View style={[styles.container, {bottom: 20}]}>
+              <View style={[styles.container, { bottom: 20 }]}>
                 <TouchableOpacity
-                  style={[styles.button, {right: 20}]}
+                  style={[styles.button, { right: 20 }]}
                   onPress={() => {
                     promptAsync();
                   }}>
@@ -332,7 +336,7 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.button, {left: 20}]}
+                  style={[styles.button, { left: 20 }]}
                   onPress={handleFacebookLogin}>
                   <Image
                     style={styles.image}
@@ -343,21 +347,21 @@ const LoginScreen = ({navigation}: CombinedScreenProps) => {
               </View>
               <View
                 className="flex-row justify-center my-5"
-                style={{bottom: 40}}>
-                <Text className="text-base mr-1" style={{color: '#2A475E'}}>
+                style={{ bottom: 40 }}>
+                <Text className="text-base mr-1" style={{ color: '#2A475E' }}>
                   {TEXTS.DONT_HAVE_ACCOUNT}
                 </Text>
 
                 <TouchableOpacity
-                  style={{top: 2}}
+                  style={{ top: 2 }}
                   onPress={() => {
                     navigation.navigate('SignupScreen');
                   }}>
                   <Text
                     style={[
-                      {color: '#66C0F4'},
-                      {fontSize: 16},
-                      {fontWeight: 'bold'},
+                      { color: '#66C0F4' },
+                      { fontSize: 16 },
+                      { fontWeight: 'bold' },
                     ]}>
                     {TEXTS.SIGNUP}
                   </Text>

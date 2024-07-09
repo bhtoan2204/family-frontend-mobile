@@ -163,13 +163,22 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
                     <ShoppingListCategoryItem id_category={4} category_name='Furniture' total_items={10} handleNavigateCategory={handleNavigateCategory} />
                     <ShoppingListCategoryItem id_category={5} category_name='Pharmacy' total_items={10} handleNavigateCategory={handleNavigateCategory} />
                     <ShoppingListCategoryItem id_category={6} category_name='Other' total_items={10} handleNavigateCategory={handleNavigateCategory} /> */}
+                    <TodoListCategoryItem id_category={1} category_name={"Daily Task"} total_items={10}
+                        handleNavigateCategory={() => {
+                            // console.log('navigate')
+                            navigation.navigate('TodoListCategory', {
+                                id_family: id_family,
+                                id_category: 1
+                            })
+                        }}
+                    />
                     {
                         todoListTypes.length > 0 && todoListTypes.length > 0 && todoListTypes.map((item, index) => {
                             // const total_items = todoListTypes.filter((shoppingItem) => shoppingItem.id_shopping_list_type === item.id_shopping_list_type).length
                             return <TodoListCategoryItem key={index} id_category={item.id_checklist_type} category_name={item.name_en} total_items={10}
                                 handleNavigateCategory={() => {
                                     // console.log('navigate')
-                                    navigation.navigate('TodoListCategory',{
+                                    navigation.navigate('TodoListCategory', {
                                         id_family: id_family,
                                         id_category: item.id_checklist_type
                                     })

@@ -1,6 +1,6 @@
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns'
 import React, { useCallback, useEffect, useState } from 'react'
-import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView } from 'react-native'
+import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView, Appearance } from 'react-native'
 import { Agenda, AgendaSchedule, Calendar, CalendarList } from 'react-native-calendars'
 import { useSelector } from 'react-redux'
 import { ShoppingListCategoryScreenProps, TodoListCategoryScreenProps } from 'src/navigation/NavigationTypes'
@@ -36,7 +36,8 @@ import AddItemSheet from 'src/components/user/shopping/sheet/add-item-sheet'
 import AddCategorySheet from 'src/components/user/shopping/sheet/add-category-sheet'
 import ShoppingListPickCategorySheet from 'src/components/user/shopping/sheet/add-category-sheet'
 import { categoriesImage } from '../const/image'
-
+import { TodoListItem } from 'src/interface/todo/todo'
+import { styled, useColorScheme } from "nativewind";
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -54,12 +55,13 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
     // const shoppingListInfo = useSelector((state: RootState) => state.shoppinglist).shoppingList.filter((item) => item.id_shopping_list_type === id_category)
     const todoCategories = useSelector((state: RootState) => state.todoList).todoListType
 
-
-
     const addItemBottomSheetRef = React.useRef<BottomSheet>(null)
     const addCategoryBottomSheetRef = React.useRef<BottomSheet>(null)
+    const { colorScheme, toggleColorScheme } = useColorScheme();
 
-
+    // React.useEffect(() => {
+    //     console.log(colorScheme)
+    // }, [colorScheme])
     // const items: ShoppingListItem[] = []
 
 
@@ -67,43 +69,14 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
 
 
     const getImage = (id_category: number) => {
-        // if (id_category === 1) {
-        //     return GroceryBgImage
-        // }
-        // if (id_category === 2) {
-        //     return ElectronicsBgImage
-        // }
-        // if (id_category === 3) {
-        //     return ClothingBgImage
-        // }
-        // if (id_category === 4) {
-        //     return FurnitureBgImage
-        // }
-        // if (id_category === 5) {
-        //     return PharmacyBgImage
-        // }
-        // return OtherBgImage
+
         return categoriesImage[id_category - 1]
     }
 
     const getCategoryName = (id_category: number) => {
-        // if (id_category === 1) {
-        //     return 'Grocery'
-        // }
-        // if (id_category === 2) {
-        //     return 'Electronics'
-        // }
-        // if (id_category === 3) {
-        //     return 'Clothing'
-        // }
-        // if (id_category === 4) {
-        //     return 'Furniture'
-        // }
-        // if (id_category === 5) {
-        //     return 'Pharmacy'
-        // }
-        // return 'Other'
-        return todoCategories.find((item) => item.id_checklist_type === id_category)!.name_en
+
+        const name = todoCategories.find((item) => item.id_checklist_type === id_category)
+        return name ? name.name_en : "No name found"
     }
 
     const handleNavigateItemDetail = (id_list: number, id_item: number) => {
@@ -135,9 +108,11 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
 
     const buildItems = () => {
         return (
-            <>
-                <Text>hi</Text>
-            </>
+            <View className='mx-8 my-4 '>
+                <View className='my-2'></View>
+                <TodoListCategoryItem item={{}} handleNavigateItemDetail={handleNavigateItemDetail} />
+                <TodoListCategoryItem item={{}} handleNavigateItemDetail={handleNavigateItemDetail} />
+            </View>
         )
     }
 
@@ -180,7 +155,7 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
                 </View>
             </View>
 
-            <View className='flex-1 mt-[-5%] rounded-tl-xl rounded-tr-xl r bg-white overflow-hidden z-100'>
+            <View className='flex-1 mt-[-5%] rounded-tl-2xl rounded-tr-2xl r bg-white dark:bg-black overflow-hidden z-100'>
                 <TouchableOpacity activeOpacity={0.65} className='absolute rounded-full bottom-10 right-3 z-10  items-center justify-center' style={{
                     height: screenHeight * 0.08,
                     width: screenHeight * 0.08,
@@ -192,7 +167,7 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
                 >
                     <Material name='plus' size={35} color={'white'} />
                 </TouchableOpacity>
-                <View className='bg-white flex-1 '>
+                <View className='bg-white dark:bg-[#1B2838] flex-1 '>
                     {
                         1 == 1 ?
                             <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
@@ -228,6 +203,29 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
     )
 }
 
+const TodoListCategoryItem = ({ item, handleNavigateItemDetail }: { item: TodoListItem, handleNavigateItemDetail: (id_list: number, id_item: number) => void }) => {
+    return <TouchableOpacity className='flex-row justify-between items-center  w-full  py-4 '
+        onPress={() => {
+            // console.log(item.id_item, item.id_list)
+            handleNavigateItemDetail(item.id_checklist || 1, item.id_item || 1)
+        }}
+    >
+        <View className=' flex-row mr-2 items-center'>
 
+            <View className='border-2 p-3 rounded-full mr-2' style={{
+                borderColor: '#CBCBCB'
+            }}>
+            </View>
+            <Text className='text-base text-[#2F2F34] dark:text-white'
+                numberOfLines={1}
+
+            >{item.item_name || "name"}</Text>
+        </View>
+        <View className='justify-end '>
+            {/* <Text className='text-sm text-[#B2B2B4]'>{item.price} VND</Text> */}
+        </View>
+    </TouchableOpacity>
+
+}
 
 export default TodoListCategoryScreen
