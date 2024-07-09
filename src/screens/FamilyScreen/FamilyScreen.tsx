@@ -21,6 +21,7 @@ import {
   setSelectedFamily,
   setFamilies,
   setFamilyMembers,
+  updateFamily,
   
 } from 'src/redux/slices/FamilySlice';
 import { AppDispatch } from 'src/redux/store';
@@ -82,14 +83,14 @@ const cards = [
 ];
 
 const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const bottomSheetRef = useRef<RBSheet>(null);
   const allMemberRef = useRef<RBSheet>(null);
   const dispatch = useDispatch<AppDispatch>();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const families = useSelector(selectFamilies);
   const selectedFamily = useSelector(selectSelectedFamily);
-  const [membersMap, setMembersMap] = useState<{ [key: number]: Member[] }>({});
+  const membersMap = useSelector(selectFamilyMembers);
   const shakeAnimation = useRef(new Animated.Value(0)).current;
   const rotateAnimation = useRef(new Animated.Value(0)).current;
   const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
@@ -100,39 +101,10 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
       ? { uri: selectedFamily.avatar }
       : require('../../assets/images/default_ava.png');
 
-  useEffect(() => {
-    fetchFamiliesAndMembers();
-  }, []);
-  const fetchFamiliesAndMembers = async () => {
-    setIsLoading(true);
-    try {
-      const allFamilies = await FamilyServices.getAllFamily();
 
-      dispatch(setFamilies(allFamilies));
-
-      if (allFamilies.length > 0) {
-        const initialFamily = allFamilies[0];
-        dispatch(setSelectedFamily(initialFamily));
-      }
-
-      const membersObject = {};
-
-      for (let i = 0; i < allFamilies.length; i++) {
-        const family = allFamilies[i];
-        const members = await FamilyServices.getAllMembers({
-          id_family: family.id_family,
-        });
-        membersObject[family.id_family] = members;
-        setMembersMap(membersObject);
-      }
-
-      dispatch(setFamilyMembers(membersObject));
-    } catch (error) {
-      console.error('Error fetching families or members:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      useEffect(() => {
+        console.log(selectedFamily)
+      },[])
 
   useEffect(() => {
     const animation = Animated.loop(

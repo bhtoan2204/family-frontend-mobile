@@ -133,11 +133,11 @@ const ComboScreen = () => {
               resizeMode="stretch"
               style={stylesChat.imageBottomFront}
             />
-            <Image
+            {/* <Image
               source={require('../../assets/images/combo-package/Chat/header.png')}
               resizeMode="stretch"
               style={stylesChat.header}
-            />
+            /> */}
             <Image
               source={require('../../assets/images/combo-package/Chat/oval.png')}
               resizeMode="stretch"

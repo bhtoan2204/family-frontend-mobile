@@ -7,8 +7,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { markAsRead, selectNotifications, setNotificationSlice } from 'src/redux/slices/NotificationSlice';
 import { ProfileServices } from 'src/services/apiclient';
 import { Notification } from 'src/interface/notification/getNoti';
+import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
+import { setSelectedFamilyById } from 'src/redux/slices/FamilySlice';
 
-const NotificationScreen = () => {
+const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
   let notifications = useSelector(selectNotifications);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -74,13 +76,33 @@ const NotificationScreen = () => {
   };
   
   const handlePressNoti = async (item: Notification) => {
-    try {
-      await ProfileServices.markRead(item._id);
-      dispatch(markAsRead(item._id));
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
+    switch (item.type) {
+      case 'CHECKLIST':
+        switch (item.title) {
+          case 'New Checklist created':
+            navigation.navigate('CheckList');
+            break;
+          case 'Checklist due today':
+            console.log(`Checklist due today for task "${item.content}"`);
+            break;
+          default:
+            console.log(`Unhandled checklist type: ${item.title}`);
+            break;
+        }
+        break;
+        
+      case 'EXPENSE':
+        dispatch(setSelectedFamilyById(item.id_family));
+        navigation.navigate('ExpenseStack', { screen: 'ExpenseScreen' });
+        break;
+      case 'INCOME':
+          navigation.navigate('IncomeStack', { screen: 'IncomeScreen' });
+          break;      
+      default:
+        console.log(`Unhandled notification type: ${item.type}`);
     }
   };
+  
 
   const renderItem = ({ item }: { item: Notification }) => (
     <TouchableOpacity onPress={() => handlePressNoti(item)} style={[item.isRead ? {backgroundColor: '#fff'} : {backgroundColor: COLORS.AliceBlue}]}>
@@ -102,6 +124,7 @@ const NotificationScreen = () => {
   const renderFooter = () => {
     return loading ? <ActivityIndicator size="large" color="#0000ff" /> : null;
   };
+  
 
   return (
     <SafeAreaView style={styles.safeArea}>

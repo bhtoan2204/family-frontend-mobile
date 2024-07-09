@@ -29,13 +29,28 @@ const familySlice = createSlice({
     },
     setFamilyMembers(state, action: PayloadAction<{ [key: number]: Member[] }>) {
       Object.values(action.payload).forEach((members) => {
-        state.familyMembers.push(...members);
+        state.familyMembers = members;
       });
-    }
+    },
+    setSelectedFamilyById(state, action: PayloadAction<number>) {
+      const selectedFamily = state.families.find(family => family.id_family === action.payload);
+      if (selectedFamily) {
+        state.selectedFamily = selectedFamily;
+      }
+    },
+    updateFamily(state, action: PayloadAction<Family>) {
+      const index = state.families.findIndex(family => family.id_family === action.payload.id_family);
+      if (index !== -1) {
+        state.families[index] = action.payload;
+        if (state.selectedFamily?.id_family === action.payload.id_family) {
+          state.selectedFamily = action.payload;
+        }
+      }
+    },
   },
 });
 
-export const { setFamilies, setSelectedFamily, setFamilyMembers } = familySlice.actions;
+export const { setSelectedFamilyById, setFamilies, setSelectedFamily, setFamilyMembers, updateFamily } = familySlice.actions;
 
 export const selectFamilies = (state: RootState) => state.family.families;
 export const selectSelectedFamily = (state: RootState) => state.family.selectedFamily;

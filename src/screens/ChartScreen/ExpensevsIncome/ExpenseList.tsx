@@ -12,8 +12,7 @@ import { ExpenseScreenProps } from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS } from 'src/constants';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { setExpense, setSelectedExpense } from 'src/redux/slices/ExpenseAnalysis';
-import { setIncomeDetails } from 'src/redux/slices/IncomeAnalysis';
+import {  setSelectedExpense } from 'src/redux/slices/ExpenseAnalysis';
 const screenWidth = Dimensions.get('window').width;
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { DailyExpense } from 'src/interface/expense/DailyExpense';
@@ -42,12 +41,18 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
   const fetchDataExpense = async (page: number, reset: boolean = false) => {
     setIsLoading(true);
     try {
+      
         const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
         const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
+        console.log(page, itemsPerPage, family.id_family, formattedDateFrom, formattedDateTo)
         const response = await ExpenseServices.getExpenseByDateRange(page, itemsPerPage, family.id_family, formattedDateFrom, formattedDateTo )
-        setExpenses(prevExpenses => reset ? response.data : [...prevExpenses, ...response.data]);
-        setTotalPageExpense(Math.ceil(response.total / itemsPerPage));
-      
+        console.log(response);
+        if(response){
+          setExpenses(prevExpenses => reset ? response.data : [...prevExpenses, ...response.data]);
+          setTotalPageExpense(Math.ceil(response.total / itemsPerPage));
+          // setSumExpense(response.sum)
+        }
+
     } catch (error) {
       console.log(error);
     } finally {
@@ -94,12 +99,17 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
       <View style={styles.itemContainer}>
         <View style={styles.expenseContent}>
           <View>
-            <Text style={styles.expenseCategory}>{item.financeExpenditureType.expense_type_name}</Text>
+          {item.financeExpenditureType ? 
+              <Text style={styles.expenseCategory}>{item.financeExpenditureType.expense_type_name}</Text> : 
+              <Text style={styles.expenseCategory}>Other</Text>
+            }
+
             <View style={styles.row}>
               
               <Text style={{color: 'gray', }}>By: </Text>
+              {item.users && (
               <Text style={styles.expenseName}>{item.users.firstname} {item.users.lastname}</Text>
-
+              )}
             </View>
             <Text style={styles.expenseDescription}>{item.description}</Text>
           </View>

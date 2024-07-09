@@ -10,7 +10,7 @@ import {
   FlatList,
 } from 'react-native';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import {PackageServices} from 'src/services/apiclient';
+import {FamilyServices, PackageServices} from 'src/services/apiclient';
 import styles from './styles';
 import {
   PurchasedScreenProps,
@@ -32,6 +32,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {UserProfile} from 'src/interface/user/userProfile';
 import {RootState} from 'src/redux/store';
+import { setFamilies, setFamilyMembers, setSelectedFamily } from 'src/redux/slices/FamilySlice';
 
 const icons = {
   bundle,
@@ -102,9 +103,40 @@ const HomeScreen = ({
   const handleFamily = () => {
     navigation.navigate('FamilyTab', {
       screen: 'Family',
-      params: {id_family: 0},
     });
   };
+  useEffect(() => {
+    fetchFamiliesAndMembers();
+  }, []);
+
+  const fetchFamiliesAndMembers = async () => {
+    try {
+      const allFamilies = await FamilyServices.getAllFamily();
+
+      dispatch(setFamilies(allFamilies));
+
+      if (allFamilies.length > 0) {
+        const initialFamily = allFamilies[0];
+        dispatch(setSelectedFamily(initialFamily));
+      }
+
+      const membersObject = {};
+
+      for (let i = 0; i < allFamilies.length; i++) {
+        const family = allFamilies[i];
+        const members = await FamilyServices.getAllMembers({
+          id_family: family.id_family,
+        });
+        membersObject[family.id_family] = members;
+
+      }
+
+      dispatch(setFamilyMembers(membersObject));
+    } catch (error) {
+      console.error('Error fetching families or members:', error);
+    }
+  };
+
   const handleChat = () => {
     navigation.navigate('MessageTab', {screen: 'ChatList'});
   };

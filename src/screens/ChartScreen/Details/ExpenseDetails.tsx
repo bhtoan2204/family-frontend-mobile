@@ -22,7 +22,9 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
   const expense: DailyExpense | null = useSelector(selectSelectedExpense);
   const [isEditing, setIsEditing] = useState(false);
   const [expenseType, setExpenseType] = useState<ExpenseType[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(expense?.financeExpenditureType.expense_type_name);
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
+    expense?.financeExpenditureType?.expense_type_name ?? undefined
+  );
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [chosenDate, setChosenDate] = useState(new Date());
   const [editedDescription, setEditedDescription] = useState(expense?.description || '');
@@ -217,13 +219,16 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
           <View style={styles.detailRow}>
             <Text style={styles.label}>Category:</Text>
             <View style={styles.valueContainer}>
-              {!isEditing ? (
-                <Text style={styles.value}>{expense?.financeExpenditureType.expense_type_name}</Text>
+            {!isEditing ? (
+                expense?.financeExpenditureType ? 
+                  <Text style={styles.value}>{expense.financeExpenditureType.expense_type_name}</Text> : 
+                  <Text style={styles.value}>Other</Text>
               ) : (
                 <TouchableOpacity onPress={() => setShowCategoryPicker(!showCategoryPicker)}>
                   <Text style={styles.value}>{selectedCategory}</Text>
                 </TouchableOpacity>
               )}
+
               {showCategoryPicker && (
                 <Picker
                   selectedValue={selectedCategory}
