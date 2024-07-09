@@ -229,7 +229,7 @@ const ExpenseServices = {
           `${baseUrl}/api/v1/finance/expensediture/getExpenseByDate/${id_family}`,
           {
             params: {
-              date
+              id_family, date
             }
           }
         );

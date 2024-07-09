@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { DailyExpense } from 'src/interface/expense/DailyExpense';
+import moment from 'moment';
 
 interface ExpenseSliceState {
   expenses: DailyExpense[];
@@ -13,7 +14,7 @@ const initialState: ExpenseSliceState = {
   expenses: [],
   selectedExpense: null,
   selectedOption: 'Day',
-  selectedDate: new Date().toISOString().split('T')[0],
+  selectedDate: moment(new Date()).format('YYYY-MM-DD'),
 };
 
 const expenseSlice = createSlice({
