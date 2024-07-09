@@ -4,6 +4,7 @@ import instance from '../httpInterceptor';
 import baseUrl from '../urls/baseUrl';
 
 const ExpenseServices = {
+  
   getExpenseType: async (id_family: number, page: number, itemsPerPage : number) => {
     try {
       const response: AxiosResponse = await instance.get(
@@ -267,21 +268,24 @@ const ExpenseServices = {
       try {
         const createFormData = (uri: string): FormData => {
           let formData = new FormData();
-          let filename = uri.split('/').pop()!;
-          let match = /\.(\w+)$/.exec(filename);
-          let type = match ? `image/${match[1]}` : `image`;
-          const file = {
-            uri,
-            name: filename,
-            type,
-          };
           formData.append('id_family', String(id_family));
           formData.append('id_created_by', String(id_created_by));
           formData.append('id_expense_type', id_expense_type.toString());
           formData.append('amount', String(amount));
-          formData.append('expenditure_date', expenditure_date);
+          formData.append('expenditure_date', expenditure_date?.toISOString());
           formData.append('description', description );
-          formData.append('expenseImg', file);
+
+          if (uri) {
+            let filename = uri.split('/').pop()!;
+            let match = /\.(\w+)$/.exec(filename);
+            let type = match ? `image/${match[1]}` : `image`;
+            const file = {
+              uri,
+              name: filename,
+              type,
+            };
+            formData.append('expenseImg', file);
+          }
 
           return formData;
         };
@@ -330,7 +334,7 @@ const ExpenseServices = {
       uri: string
     ) => {
       try {
-        const createFormData = (uri: string): FormData => {
+        const createFormData = (): FormData => {
           let formData = new FormData();
           let filename = uri.split('/').pop()!;
           let match = /\.(\w+)$/.exec(filename);
@@ -354,7 +358,7 @@ const ExpenseServices = {
     
         const response: AxiosResponse = await instance.put(
           `${baseUrl}/api/v1/finance/expensediture/updateExpense`,
-          createFormData(uri),
+          createFormData(),
           {
             headers: {
               'Content-Type': 'multipart/form-data',

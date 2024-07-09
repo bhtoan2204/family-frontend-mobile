@@ -18,3 +18,8 @@ export interface ExpenseType {
     id_income_source: number;
     income_source_name: string;
   }
+  export interface UtilitiesType {
+    id_utilities_type: number;
+    name_en: string;
+    name_vn: string;
+  }

@@ -8,7 +8,7 @@ import {TEXTS} from 'src/constants';
 import HomeScreen from 'src/screens/HomeScreen';
 import ReportScreen from 'src/screens/Report';
 import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
-import ExpenditureScreen from 'src/screens/ExpenseScreen';
+import ExpenditureScreen from 'src/screens/ExpenseScreen/CreateExpense';
 import BottomSheetChild from 'src/screens/HomeScreen/BottomSheetContent';
 import CategoryExpenseScreen from 'src/screens/ExpenseScreen/CategoryScreen';
 import WalletScreen from 'src/screens/ExpenseScreen/WalletScreen';
