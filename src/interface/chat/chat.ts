@@ -16,6 +16,7 @@ export interface Message {
 }
 
 export interface User {
+  id_user: string,
   firstname: string;
   lastname: string;
   avatar: string | null;

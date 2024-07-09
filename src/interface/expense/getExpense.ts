@@ -1,9 +1,10 @@
 export interface Expenditure {
     id_expenditure: number;
-    id_family: number;
-    id_created_by: string;
     id_expense_type: number;
-    amount: string;
+    expense_amount: string;
     expenditure_date: string;
     description: string;
+    name: string;
+    expense_category: string;
+    image_url: string;
 }

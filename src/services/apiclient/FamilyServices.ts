@@ -158,7 +158,7 @@ const FamilyServices = {
         },
       );
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         throw new Error(ERROR_TEXTS.MEMBER_NOT_FOUND);
       }
@@ -206,7 +206,6 @@ const FamilyServices = {
         role,
       });
       if (response.status === 201) {
-        //console.log('Response status is 200, returning data:', response.data);
         return response.data;
       } 
     } catch (error) {
@@ -215,13 +214,48 @@ const FamilyServices = {
     }
   },
 
-  deleteMember: async (familyId?: string, memberId?: string) => {
+  kickMember: async (id_user: string, id_family: number) => {
     try {
-      const response: AxiosResponse = await axios.delete(
-        `${FamilyUrl.deleteMember}/${familyId}/${memberId}`,
+      const response: AxiosResponse = await instance.delete(`${FamilyUrl.kickMember}`, {
+        params: {
+          id_user,
+          id_family,
+        },
+      });
+      if (response.status === 204) {
+        return 'Successful';
+      } else {
+        throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
+      }
+    } catch (error) {
+      throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
+    }
+  },
+
+  leaveFamily: async (id_family?: number) => {
+    try {
+      const response: AxiosResponse = await instance.delete(`${FamilyUrl.leaveFamily}`, {
+        params: {
+          id_family,
+        },
+      });
+
+      if (response.status === 204) {
+        return 'Successful';
+      } else {
+        throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
+      }
+    } catch (error) {
+      throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
+    }
+  },
+  inviteMember: async (familyId?: number) => {
+    try {
+      const response: AxiosResponse = await axios.get(
+        `${FamilyUrl.inviteMember}/${familyId}`,
       );
-      if (response.status === 200) {
-        return response.data;
+      if (response.status === 201) {
+        return response.data.data;
       } else {
         throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
       }
@@ -259,7 +293,7 @@ const FamilyServices = {
       );
       console.log(response);
       if (response.status === 200) {
-        return response.data.data.fileUrl;
+        return response.data.data;
       } else {
         throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
       }

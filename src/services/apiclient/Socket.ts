@@ -1,7 +1,8 @@
 import { Socket, io } from 'socket.io-client';
 import * as BackgroundFetch from 'expo-background-fetch';
 import LocalStorage from 'src/store/localstorage';
-import * as TaskManager from 'expo-task-manager'; 
+import * as TaskManager from 'expo-task-manager';
+import baseUrl from '../urls/baseUrl';
 
 let socket: Socket | null = null;
 let reconnectAttempts = 0;
@@ -11,20 +12,26 @@ const getSocket = () => socket;
 
 const connectSocket = async () => {
     try {
-        if (socket) return socket;
+        if (socket && socket.connected) return socket;
 
         const accessToken = await LocalStorage.GetAccessToken();
-        socket = io('https://api.rancher.io.vn/chat', {
-            extraHeaders: { Authorization: `Bearer ${accessToken}` },
+        if (!accessToken) {
+            throw new Error('Access token is missing.');
+        }
+        socket = io(`${baseUrl}/chat`, {
+            autoConnect: false,
+            upgrade: true,
+            transports: ['websocket'],
+            auth: {
+                authorization: `Bearer ${accessToken}`
+            },
         });
 
         socket.on('connect', () => {
-            console.log('Socket connected');
             reconnectAttempts = 0;
         });
 
         socket.on('disconnect', () => {
-            console.log('Socket disconnected');
             if (reconnectAttempts < maxReconnectAttempts) {
                 console.log('Attempting to reconnect...');
                 reconnectAttempts++;
@@ -33,6 +40,12 @@ const connectSocket = async () => {
                 console.log('Exceeded maximum reconnect attempts.');
             }
         });
+
+        socket.on('connect_error', (error) => {
+            console.error('Connection error:', error);
+        });
+
+        socket.connect();
     } catch (error) {
         console.error('Socket connection error:', error);
     }
@@ -48,7 +61,7 @@ const closeSocketConnection = () => {
 const BACKGROUND_FETCH_TASK_NAME = 'socketTask';
 
 const backgroundFetchHandler = async (taskId: any) => {
-    console.log("[BackgroundFetch] Task", taskId, "executed.");
+    console.log('[BackgroundFetch] Task', taskId, 'executed.');
 
     try {
         await connectSocket();
@@ -62,14 +75,15 @@ const backgroundFetchHandler = async (taskId: any) => {
 TaskManager.defineTask(BACKGROUND_FETCH_TASK_NAME, backgroundFetchHandler);
 
 BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK_NAME, {
-    minimumInterval: 15 * 60, 
+    minimumInterval: 15 * 60,
     stopOnTerminate: false,
-    startOnBoot: true, 
-}).then(() => {
+    startOnBoot: true,
+})
+.then(() => {
     console.log('Background fetch task registered successfully.');
-}).catch((error) => {
+})
+.catch((error) => {
     console.error('Background fetch registration error:', error);
 });
-
 
 export { connectSocket, closeSocketConnection, getSocket };

@@ -13,61 +13,46 @@ import {
   Dimensions,
   ImageBackground,
   Alert,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import ExpenseServices from 'src/services/apiclient/ExpenseServices';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import * as ImagePicker from 'expo-image-picker';
-import * as ImageManipulator from 'expo-image-manipulator';
 import {ExpenditureScreenProps} from 'src/navigation/NavigationTypes';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-  getExpenseId,
-  getExpenseName,
-  getIncomeId,
-  getIncomeName,
   getType,
   setExpenseCategory_id,
   setExpenseCategory_name,
-  setFamily,
   setIncomeCategory_id,
   setIncomeCategory_name,
   setType,
 } from 'src/redux/slices/FinanceSlice';
-import {FamilyServices, IncomeServices} from 'src/services/apiclient';
-import {Family} from 'src/interface/family/family';
-import TesseractOcr, {
-  LANG_ENGLISH,
-  LEVEL_WORD,
-} from 'react-native-tesseract-ocr';
+
 import {
   launchCameraAsync,
-  MediaTypeOptions,
   CameraPermissionResponse,
   requestCameraPermissionsAsync,
 } from 'expo-image-picker';
-import {RNTesseractOcr} from 'react-native-tesseract-ocr';
-import HomeTab from 'src/navigation/Routes/HomeTab';
 import {ExpenseType} from 'src/interface/expense/ExpenseType';
-import {IncomeType} from 'src/interface/income/IncomeType';
 import {FlatList} from 'react-native-gesture-handler';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {COLORS} from 'src/constants';
-import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {LinearGradient} from 'expo-linear-gradient';
+import { selectIncomeTypes, selectSelectedIncomeType, setIncomeTypes, setSelectedIncomeType } from 'src/redux/slices/IncomeTypeSlice';
+import { ExpenseServices, IncomeServices } from 'src/services/apiclient';
+import { selectExpenseTypes, selectSelectedExpenseType, setExpenseTypes, setSelectedExpenseType } from 'src/redux/slices/ExpenseTypeSlice';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
+import { selectFamilyMembers, selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { IncomeType } from 'src/interface/income/getIncome';
 
 const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
-  const [expenseType, setExpenseType] = useState<ExpenseType[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedExpenseType, setSelectedExpenseType] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date());
-  const [wallet, setWallet] = useState<string>('');
   const [image, setImage] = useState<string>('');
 
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -75,68 +60,50 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const [selectedMenu, setSelectedMenu] = useState<string>('');
   const dispatch = useDispatch();
   let state = useSelector(getType);
-  const [expenseCategory, selectExpenseCategory] = useState<ExpenseType>();
-  const [incomeCategory, selectIncomeCategory] = useState<IncomeType>();
+  const expenseCategory = useSelector(selectSelectedExpenseType);
+  const incomeCategory = useSelector(selectSelectedIncomeType);
   const url =
     'https://png.pngtree.com/element_our/20190530/ourmid/pngtree-correct-icon-image_1267804.jpg';
   const urlCatetory = 'https://static.thenounproject.com/png/2351449-200.png';
-  const urlMoney =
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMpESFH3-fByKNSoaMNWOHuOp-blpyaDhabTnEbtjMmA&s';
-  const [families, setFamilies] = useState<Family[]>([]);
-  const [selectedFamily, setSelectedFamily] = useState<number | null>(null);
+ 
   const [amount, setAmount] = useState<number | null>(null);
-  const [incomeType, setIncomeType] = useState<IncomeType[]>([]);
-
-  const ExpenseId = useSelector(getExpenseId);
-  const ExpenseName = useSelector(getExpenseName);
-  const IncomeId = useSelector(getIncomeId);
-  const IncomeName = useSelector(getIncomeName);
   const [uriImage, setUriImage] = useState<string | null>(null);
   const [showLargeImage, setShowLargeImage] = useState(false);
+  const [page, setPage] = useState(1);
   const profile = useSelector(selectProfile);
+  const family = useSelector(selectSelectedFamily);
+  const expenseType = useSelector(selectExpenseTypes);
+  const incomeType=useSelector(selectIncomeTypes);
+  const scrollX = useRef(new Animated.Value(0)).current;
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const widthOfYourPage = Dimensions.get('window').width;
+
+  const [isScrollViewVisible, setScrollViewVisible] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const dataExpenseTypeToShow = Object.values(expenseType).slice(0, 6);
+  const dataIncomeTypeToShow = Object.values(incomeType).slice(0, 6);
+  const members = useSelector(selectFamilyMembers);
 
   useEffect(() => {
-    fetchAllFamily();
+    fetchExpenseType();
+    fetchIncomeType();
   }, []);
 
-  useEffect(() => {
-    if (selectedFamily != undefined) {
-      fetchExpenseType(selectedFamily);
-      fetchIncomeType(selectedFamily);
-
-      
-    }
-  }, [ selectedFamily]);
 
   useEffect(() => {
     setSelectedMenu(state);
 
   }, [state]);
-  useEffect(() => {
-      selectExpenseCategory({
-        ...expenseCategory,
-        id_expense_type: ExpenseId,
-        category: ExpenseName,
-      });
-
-      selectIncomeCategory({
-        ...incomeCategory,
-        id_income_source: IncomeId,
-        category: IncomeName,
-      })
-    
-  }, [ ExpenseId, IncomeId ])
 
 
-  useEffect(() => {
-    dispatch(setFamily(selectedFamily));
-  }, [selectedFamily]);
 
-  const fetchExpenseType = async (id_family: any) => {
+  const fetchExpenseType = async () => {
     try {
-      const response = await ExpenseServices.getExpenseType(id_family);
+      const response = await ExpenseServices.getExpenseType(family?.id_family, page, 50);
       if (response) {
-        setExpenseType(response);
+        const clonedResponse = { ...response }; 
+        await dispatch(setExpenseTypes(clonedResponse));
       } else {
         console.error('Error in getExpenseType: response is undefined');
       }
@@ -145,43 +112,35 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
       console.error('Error in getExpenseType:', error.message);
     }
   };
-
-  const fetchIncomeType = async (id_family: any) => {
+  
+  const fetchIncomeType = async () => {
     try {
-      const response = await IncomeServices.getIncomeType(id_family);
-      setIncomeType(response);
+      const response = await IncomeServices.getIncomeType(family?.id_family);
+      if (response) {
+        const clonedResponse = { ...response }; 
+        await dispatch(setIncomeTypes(clonedResponse));
+      }
       setLoading(false);
     } catch (error: any) {
       console.error('Error in fetchIncomeType:', error.message);
     }
   };
 
-  const fetchAllFamily = async () => {
-    try {
-      const result = await FamilyServices.getAllFamily();
-      setFamilies(result);
-      setSelectedFamily(result[0]?.id_family || null);
-    } catch (error: any) {
-      console.log('FamilyServices.getAllFamily error:', error);
-    }
-  };
+ 
 
   const handleSubmit = async () => {
     if (selectedMenu === 'Expense') {
-    if (!selectedFamily || !amount || !profile.id_user || !expenseCategory || !expenseCategory.id_expense_type || !date) {
+    if ( !amount || !profile.id_user || !expenseCategory || !expenseCategory.id_expenditure_type || !date) {
       Alert.alert('Error', 'Please fill in all required fields');
       return;
     }
   
     try {
-      const response = await ExpenseServices.createExpense(selectedFamily, amount, profile.id_user, expenseCategory.id_expense_type, date, description);
+      const response = await ExpenseServices.createExpense(family?.id_family, amount, profile.id_user, expenseCategory.id_expenditure_type, date, description, uriImage);
       
-      if (uriImage) {
-        await ExpenseServices.uploadImageExpense(selectedFamily, response[0].id_expenditure, uriImage);
+      if (response) {
         Alert.alert('Success', 'Expense created successfully');
-      } else {
-        Alert.alert('Success', 'Expense created successfully without an image');
-      }
+      } 
   
       setAmount(null);
       setDescription('');
@@ -192,13 +151,13 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
     }
   }
   else if (selectedMenu === 'Income') {
-    if (!selectedFamily || !amount || !profile.id_user || !incomeCategory || !incomeCategory?.id_income_source || !date) {
+    if (!amount || !profile.id_user || !incomeCategory || !incomeCategory?.id_income_source || !date) {
       Alert.alert('Error', 'Please fill in all required fields');
       return;
     }
   
     try {
-     await IncomeServices.createIncome(selectedFamily, amount, profile.id_user, incomeCategory?.id_income_source, date, description);
+     await IncomeServices.createIncome(family?.id_family, amount, profile.id_user, incomeCategory?.id_income_source, date, description);
       
       
       Alert.alert('Success', 'Expense created successfully');
@@ -221,15 +180,12 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   };
 
   const handleExpenseTypePress = (item: ExpenseType) => {
-    selectExpenseCategory(item);
-    dispatch(setExpenseCategory_id(item.id_expense_type));
-    dispatch(setExpenseCategory_name(item.category));
+    dispatch(setSelectedExpenseType(item));
   };
 
   const handleIncomeTypePress = (item: IncomeType) => {
-    selectIncomeCategory(item);
-    dispatch(setIncomeCategory_id(item.id_income_source));
-    dispatch(setIncomeCategory_name(item.category));
+    dispatch(setSelectedIncomeType(item));
+
   };
 
   const handleOptionPress = (option: string) => {
@@ -263,16 +219,10 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
     }
   };
   const pressSelectCategory = () => {
-    navigation.navigate('HomeTab', {screen: 'CategoryExpense'});
+    navigation.navigate('ExpenseStack', {screen: 'CategoryExpense'});
   };
 
-  const handleFamilyPress = (family: any) => {
-    if (selectedFamily == family) {
-      setSelectedFamily(null);
-    } else {
-      setSelectedFamily(family);
-    }
-  };
+
 
   const handleTakePhoto = async () => {
     const cameraPermission: CameraPermissionResponse =
@@ -295,29 +245,16 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
 
 
   const itemsPerPage = 6;
-  const pages = [];
-  if (!expenseType.some(item => item.id_expense_type === -1)) {
-    expenseType.push({id_expense_type: -1, category: 'Edit'});
-  }
+  const pages: any[] = [];
 
-  for (let i = 0; i < expenseType.length; i += itemsPerPage) {
-    pages.push(expenseType.slice(i, i + itemsPerPage));
-  }
   const pagesIncome: any[] = [];
-  if (!incomeType.some(item => item.id_income_source === -1)) {
-    incomeType.push({id_income_source: -1, category: 'Edit'});
-  }
+  // if (!incomeType.some(item => item.id_income_source === -1)) {
+  //   incomeType.push({id_income_source: -1, income_source_name: 'Edit'});
+  // }
 
-  for (let i = 0; i < incomeType.length; i += itemsPerPage) {
-    pagesIncome.push(incomeType.slice(i, i + itemsPerPage)); 
-  }
-  const scrollX = useRef(new Animated.Value(0)).current;
-
-  const [currentPage, setCurrentPage] = useState(0);
-  const widthOfYourPage = Dimensions.get('window').width;
-
-  const [isScrollViewVisible, setScrollViewVisible] = useState(false);
-  const scrollViewRef = useRef<ScrollView>(null);
+  // for (let i = 0; i < incomeType.length; i += itemsPerPage) {
+  //   pagesIncome.push(incomeType.slice(i, i + itemsPerPage)); 
+  // }
 
   const handleMostUsedPress = () => {
     setScrollViewVisible(!isScrollViewVisible);
@@ -382,85 +319,22 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                 style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}}
               />
             </View>
-            <View
-              style={[
-                {
-                  flexDirection: 'column',
-                  backgroundColor: 'white',
-                  marginBottom: 10,
-                },
-              ]}>
-              <Text style={styles.text}>Select Family</Text>
-
+            <View style={{ flexDirection: 'column', backgroundColor: 'white', marginBottom: 10 }}>
+              <Text style={styles.text}>Select Member</Text>
               <FlatList
-                horizontal
-                data={families}
+                data={members}
                 keyExtractor={(item, index) => index.toString()}
-                renderItem={({item: family}) =>
-                  selectedFamily === family.id_family ? (
-                    <LinearGradient
-                      colors={['#09203F', '#537895']} 
-                      style={[
-                        styles.family,
-                        styles.selectedFamily,
-                        {
-                          marginBottom: 10,
-                          margin: 5,
-                          shadowColor: '#000',
-                          shadowOffset: {width: 0, height: 2},
-                          shadowOpacity: 0.1,
-                          shadowRadius: 3.84,
-                          elevation: 5,
-                        },
-                      ]}>
-                      <TouchableOpacity
-                        onPress={() => handleFamilyPress(family.id_family)}>
-                        <View
-                          style={{flexDirection: 'row', alignItems: 'center'}}>
-                          <Ionicons
-                            name="people"
-                            size={22}
-                            color={COLORS.white}
-                            style={{marginRight: 10}}
-                          />
-                          <Text
-                            style={[styles.familyText, {color: COLORS.white}]}>
-                            {family.name}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </LinearGradient>
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() => handleFamilyPress(family.id_family)}
-                      style={[
-                        styles.family,
-                        {
-                          marginBottom: 10,
-                          margin: 5,
-                          shadowColor: '#000',
-                          shadowOffset: {width: 0, height: 2},
-                          shadowOpacity: 0.1,
-                          shadowRadius: 3.84,
-                          elevation: 5,
-                        },
-                      ]}>
-                      <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Ionicons
-                          name="people"
-                          size={22}
-                          color={COLORS.darkgray}
-                          style={{marginRight: 10}}
-                        />
-                        <Text style={styles.familyText}>{family.name}</Text>
-                      </View>
-                    </TouchableOpacity>
-                  )
-                }
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => ( 
+                  <TouchableOpacity style={styles.memberItem}>
+                    <Text>{item.user.firstname} {item.user.lastname}</Text>
+                  </TouchableOpacity>
+                )}
               />
+
             </View>
-            {selectedFamily != null && selectedMenu == 'Expense' && (
+            {selectedMenu == 'Expense' && (
               <View style={styles.ContainerCategory}>
                 <View style={styles.selectedItemContainer}>
                   <Image source={{uri: urlCatetory}} style={styles.avatar} />
@@ -471,7 +345,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                       {fontSize: 18},
                       {color: '#1b2838'},
                     ]}>
-                    {expenseCategory?.category || 'Select category'}
+                    {expenseCategory?.expense_type_name || 'Select category'}
                   </Text>
 
                   <TouchableOpacity
@@ -540,58 +414,51 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                           },
                         },
                       )}>
-                      {pages.map((page, pageIndex) => (
-                        <FlatList
-                          key={pageIndex}
-                          data={page}
-                          numColumns={3}
-                          keyExtractor={item => item.id_expense_type.toString()}
-                          contentContainerStyle={{marginLeft: 10}}
-                          scrollEnabled={false}
-                          renderItem={({item}) => (
-                            <TouchableOpacity
-                              onPress={() => handleExpenseTypePress(item)}>
-                              <View
-                                style={[
-                                  styles.categoryContainer,
-                                  {width: 125, height: 80},
-                                ]}>
-                                <Image
-                                  source={{uri: url}}
-                                  style={styles.avatar}
-                                />
-                                <Text
-                                  style={styles.expenseItem}
-                                  numberOfLines={1}
-                                  ellipsizeMode="tail">
-                                  {item.category}
-                                </Text>
-                              </View>
-                            </TouchableOpacity>
-                          )}
-                        />
-                      ))}
+                  {expenseType && (
+                    <FlatList
+                      data={ Object.values(dataExpenseTypeToShow) }
+                      keyExtractor={(item) => item.id_expenditure_type.toString()}
+                      numColumns={3}
+                      contentContainerStyle={{ marginLeft: 10 }}
+                      scrollEnabled={false}
+                      renderItem={({ item }) => (
+                        <TouchableOpacity onPress={() => handleExpenseTypePress(item)}>
+                          <View style={[styles.categoryContainer, { width: 125, height: 80 }]}>
+                            <Text style={styles.expenseItem} numberOfLines={1} ellipsizeMode="tail">
+                              {item.expense_type_name}
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      )}
+                    />
+                  )}
+
                     </Animated.ScrollView>
-                    <View style={styles.pagination}>
-                      {pages.map((_, pageIndex) => (
-                        <View
-                          key={pageIndex}
-                          style={[
-                            styles.dot,
-                            {
-                              backgroundColor:
-                                pageIndex === currentPage ? 'gray' : '#ccc',
-                            },
-                          ]}
-                        />
-                      ))}
-                    </View>
+                    {/* <View style={styles.pagination}>
+                      <FlatList
+                        data={ Object.values(dataExpenseTypeToShow) }
+                        keyExtractor={(item, index) => index.toString()}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ index }) => (
+                          <View
+                            style={[
+                              styles.dot,
+                              {
+                                backgroundColor: index === currentPage ? 'gray' : '#ccc',
+                              },
+                            ]}
+                          />
+                        )}
+                      />
+                    </View> */}
+
                   </>
                 )}
               </View>
             )}
 
-            {selectedFamily != null && selectedMenu == 'Income' && (
+            { selectedMenu == 'Income' && (
               <View style={styles.ContainerCategory}>
                 <View style={styles.selectedItemContainer}>
                   <Image source={{uri: urlCatetory}} style={styles.avatar} />
@@ -602,7 +469,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                       {fontSize: 18},
                       {color: '#1b2838'},
                     ]}>
-                    {incomeCategory?.category || 'Select category'}
+                    {incomeCategory?.income_source_name || 'Select category'}
                   </Text>
 
                   <TouchableOpacity
@@ -671,10 +538,9 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                           },
                         },
                       )}>
-                      {pagesIncome.map((page, pageIndex) => (
+                      {incomeType && (
                         <FlatList
-                          key={pageIndex}
-                          data={page}
+                          data={Object.values(dataIncomeTypeToShow) }
                           numColumns={3}
                           keyExtractor={item =>
                             item.id_income_source.toString()
@@ -697,34 +563,38 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                                   style={styles.expenseItem}
                                   numberOfLines={1}
                                   ellipsizeMode="tail">
-                                  {item.category}
+                                  {item.income_source_name}
                                 </Text>
                               </View>
                             </TouchableOpacity>
                           )}
                         />
-                      ))}
+                      )}
                     </Animated.ScrollView>
-                    <View style={styles.pagination}>
-                      {pages.map((_, pageIndex) => (
-                        <View
-                          key={pageIndex}
-                          style={[
-                            styles.dot,
-                            {
-                              backgroundColor:
-                                pageIndex === currentPage ? 'gray' : '#ccc',
-                            },
-                          ]}
-                        />
-                      ))}
-                    </View>
+                    {/* <View style={styles.pagination}>
+                      <FlatList
+                        data={ Object.values(dataIncomeTypeToShow) }
+                        keyExtractor={(item, index) => index.toString()}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ index }) => (
+                          <View
+                            style={[
+                              styles.dot,
+                              {
+                                backgroundColor: index === currentPage ? 'gray' : '#ccc',
+                              },
+                            ]}
+                          />
+                        )}
+                      />
+                    </View> */}
                   </>
                 )}
               </View>
             )}
 
-            {selectedMenu === 'Utilities' && <CreateInvoiceComponent />}
+            {/* {selectedMenu === 'Utilities' && <CreateInvoiceComponent />} */}
 
             <View style={styles.container}>
               <View style={styles.datePickerContainer}>
@@ -798,7 +668,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
             </View>
           </ScrollView>
 
-          <Modal visible={showLargeImage} transparent={true}>
+          {/* <Modal visible={showLargeImage} transparent={true}>
             <View style={styles.modalImageContainer}>
               <Image source={{uri: uriImage}} style={styles.largeImage} />
               <TouchableOpacity
@@ -807,7 +677,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                 <Icon name="close" size={24} color="white" />
               </TouchableOpacity>
             </View>
-          </Modal>
+          </Modal> */}
 
           <Modal
             animationType="fade"

@@ -155,6 +155,9 @@ const styles = StyleSheet.create({
     bottom: 20,
     left: 25,
   },
+  boldText: {
+    fontWeight: 'bold',
+  },
 });
 
 export default styles;

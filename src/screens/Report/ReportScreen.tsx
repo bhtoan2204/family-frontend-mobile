@@ -1,124 +1,127 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {View, Text, TouchableOpacity, Image, Animated} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, Image, Animated } from 'react-native';
 import styles from './styles';
-import {ExpenditureScreenProps} from 'src/navigation/NavigationTypes';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {COLORS} from 'src/constants';
+import { ExpenditureScreenProps } from 'src/navigation/NavigationTypes';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { COLORS } from 'src/constants';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch } from 'react-redux';
 import { setSelectedOption } from 'src/redux/slices/ExpenseAnalysis';
+import { setSelectedOptionIncome } from 'src/redux/slices/IncomeAnalysis';
 
-const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
+const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
   const dispatch = useDispatch();
 
-  const pressExVsIn = () => {
 
-    navigation.navigate('ExpenseStack', {screen: 'ChartExpense'});
+  const pressExpenseDay = () => {
     dispatch(setSelectedOption('Day'));
-
+    navigation.navigate('ExpenseStack', { screen: 'ChartExpense' });
   };
-  const pressExpenseAnalysis = () => {
+  const pressExpenseMonth = () => {
     dispatch(setSelectedOption('Month'));
-
-    navigation.navigate('ExpenseStack', {screen: 'ChartExpense'});
-
+    navigation.navigate('ExpenseStack', { screen: 'ChartExpense' });
   };
-  const pressIncomeAnalysis = () => {
+
+  const pressExpenseYear = () => {
     dispatch(setSelectedOption('Year'));
-
-    navigation.navigate('ExpenseStack', {screen: 'ChartExpense'});
+    navigation.navigate('ExpenseStack', { screen: 'ChartExpense' });
   };
 
-  const scaleAnim = new Animated.Value(1); // Phóng to/thu nhỏ
+  const pressIncomeDay = () => {
+    dispatch(setSelectedOptionIncome('Day'));
+    navigation.navigate('IncomeStack', { screen: 'ChartIncomeScreen' });
+  };
+  const pressIncomeMonth = () => {
+    dispatch(setSelectedOptionIncome('Month'));
+    navigation.navigate('IncomeStack', { screen: 'ChartIncomeScreen' });
+  };
+
+  const pressIncomeYear = () => {
+    dispatch(setSelectedOptionIncome('Year'));
+    navigation.navigate('IncomeStack', { screen: 'ChartIncomeScreen' });
+  };
+
+  const scaleAnim = new Animated.Value(1);
+
   const [selectedButton, setSelectedButton] = useState('expenseAnalysis');
   const [currentScreen, setCurrentScreen] = useState('expenseAnalysis');
 
   const handleButtonPress = (
-    buttonName: 'expenseAnalysis' | 'incomeAnalysis' | 'expenseIncome',
+    buttonName: 'expenseAnalysis' | 'incomeAnalysis' | 'expenseIncome' | 'asset',
   ) => {
     setSelectedButton(buttonName);
     setCurrentScreen(buttonName);
-    switch (buttonName) {
-      case 'expenseAnalysis':
-        renderExpenseAnalysisScreen();
-        break;
-      case 'incomeAnalysis':
-        renderIncomeAnalysisScreen();
-        break;
-      case 'expenseIncome':
-        renderExVsInScreen();
-        break;
-      default:
-        console.log('Invalid button name');
-    }
   };
 
-  // Hàm render cho Expense Analysis Screen
   const renderExpenseAnalysisScreen = () => (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <Image
         source={require('../../assets/images/expense-bg.png')}
-        style={{flex: 1, width: '100%', height: '100%'}}
+        style={{ flex: 1, width: '100%', height: '100%' }}
         resizeMode="contain"
       />
       <TouchableOpacity
-        onPress={pressExVsIn}
+        onPress={pressExpenseDay}
         style={{
-          flex: 1,
           position: 'absolute',
           right: 110,
+          bottom: 170,
           width: 150,
           height: 150,
-          bottom: 170,
-        }}>
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <Animated.Image
           source={require('../../assets/images/bar-chart.png')}
           style={{
             width: '100%',
             height: '100%',
-            transform: [{scale: scaleAnim}],
+            transform: [{ scale: scaleAnim }],
           }}
           resizeMode="contain"
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={pressExpenseAnalysis}
+        onPress={pressExpenseMonth}
         style={{
-          flex: 1,
           position: 'absolute',
           left: 190,
+          bottom: 350,
           width: 210,
           height: 210,
-          bottom: 350,
-          zIndex: 2,
-        }}>
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <Animated.Image
           source={require('../../assets/images/pie-chart.png')}
           style={{
             width: '100%',
             height: '100%',
-            transform: [{scale: scaleAnim}],
+            transform: [{ scale: scaleAnim }],
           }}
           resizeMode="contain"
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={pressIncomeAnalysis}
+        onPress={pressExpenseYear}
         style={{
-          flex: 1,
           position: 'absolute',
           right: 180,
+          top: 35,
           width: 250,
           height: 150,
-          top: 35,
-          zIndex: 2,
-        }}>
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <Animated.Image
           source={require('../../assets/images/line-chart.png')}
           style={{
             width: '100%',
             height: '100%',
-            transform: [{scale: scaleAnim}],
+            transform: [{ scale: scaleAnim }],
           }}
           resizeMode="contain"
         />
@@ -126,72 +129,75 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     </View>
   );
 
-  // Hàm render cho Income Analysis Screen
   const renderIncomeAnalysisScreen = () => (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <Image
         source={require('../../assets/images/income-bg.png')}
-        style={{flex: 1, width: '100%', height: '100%'}}
+        style={{ flex: 1, width: '100%', height: '100%' }}
         resizeMode="contain"
       />
       <TouchableOpacity
-        onPress={pressExVsIn}
+        onPress={pressIncomeDay}
         style={{
-          flex: 1,
           position: 'absolute',
           right: 120,
+          bottom: 180,
           width: 145,
           height: 145,
-          bottom: 180,
-        }}>
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <Animated.Image
           source={require('../../assets/images/income-bar-chart.png')}
           style={{
             width: '100%',
             height: '100%',
-            transform: [{scale: scaleAnim}],
+            transform: [{ scale: scaleAnim }],
           }}
           resizeMode="contain"
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={pressExpenseAnalysis}
+        onPress={pressIncomeMonth}
         style={{
-          flex: 1,
           position: 'absolute',
           right: 180,
+          bottom: 350,
           width: 210,
           height: 210,
-          bottom: 350,
-          zIndex: 2,
-        }}>
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <Animated.Image
           source={require('../../assets/images/income-month-chart.png')}
           style={{
             width: '100%',
             height: '100%',
-            transform: [{scale: scaleAnim}],
+            transform: [{ scale: scaleAnim }],
           }}
           resizeMode="contain"
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={pressIncomeAnalysis}
+        onPress={pressIncomeYear}
         style={{
-          flex: 1,
           position: 'absolute',
           left: 130,
+          top: 15,
           width: 250,
           height: 150,
-          top: 15,
-          zIndex: 2,
-        }}>
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <Animated.Image
           source={require('../../assets/images/income-line-chart.png')}
           style={{
             width: '100%',
             height: '100%',
-            transform: [{scale: scaleAnim}],
+            transform: [{ scale: scaleAnim }],
           }}
           resizeMode="contain"
         />
@@ -199,18 +205,10 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     </View>
   );
 
-  // Hàm render cho Expense vs Income Screen
-  const renderExVsInScreen = () => (
-    <View style={{flex: 1}}>
-      <Image
-        source={require('../../assets/images/expense_income.png')}
-        style={{flex: 1, width: '100%', height: '100%'}}
-        resizeMode="contain"
-      />
-    </View>
-  );
+  const renderExVsInScreen = () => navigation.navigate('ExpenseStack', { screen: 'ExpenseScreen' });
 
-  // Hàm chính để quyết định màn hình nào được hiển thị
+  const renderAsset = () => navigation.navigate('ExpenseStack', { screen: 'AssetScreen' });
+
   const renderScreen = () => {
     switch (currentScreen) {
       case 'expenseAnalysis':
@@ -219,11 +217,12 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         return renderIncomeAnalysisScreen();
       case 'expenseIncome':
         return renderExVsInScreen();
+      case 'asset':
+        return renderAsset();
     }
   };
 
   useEffect(() => {
-    // Tạo animation phóng to/thu nhỏ liên tục
     Animated.loop(
       Animated.sequence([
         Animated.timing(scaleAnim, {
@@ -239,138 +238,92 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
       ]),
     ).start();
   }, [scaleAnim]);
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={styles.container}>
-        {/* <TouchableOpacity style={styles.expenseContainer} onPress={pressExVsIn}>
-          <Icon
-            name="compare-arrows"
-            size={35}
-            color={COLORS.black}
-            style={styles.icon}
-          />
-          <Text style={styles.heading}>Expense vs Income</Text>
-        </TouchableOpacity>
-
-        <View style={styles.analysisContainer}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 20 }}>
           <TouchableOpacity
-            style={styles.expenseAnalysis}
-            onPress={pressExpenseAnalysis}>
-            <Icon
-              name="show-chart"
-              size={35}
-              color={COLORS.black}
-              style={styles.icon}
-            />
-            <Text style={styles.heading}>Expense Analysis</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.incomeAnalysis}
-            onPress={pressIncomeAnalysis}>
-            <Icon
-              name="bar-chart"
-              size={35}
-              color={COLORS.black}
-              style={styles.icon}
-            />
-            <Text style={styles.heading}>Income Analysis</Text>
-          </TouchableOpacity>
-        </View> */}
-
-        <View
-          style={{
-            flexDirection: 'column',
-            justifyContent: 'space-around',
-            marginVertical: 20,
-          }}>
-          <View
+            onPress={() => handleButtonPress('expenseAnalysis')}
             style={{
-              flexDirection: 'row',
-              marginBottom: 20,
-              justifyContent: 'space-between',
-            }}>
-            <TouchableOpacity
-              onPress={() => handleButtonPress('expenseAnalysis')}
-              style={{
-                alignItems: 'center',
-                backgroundColor:
-                  selectedButton === 'expenseAnalysis' ? '#4480A2' : '#FFFFFF',
-                padding: 18,
-                borderRadius: 30,
-                paddingHorizontal: 30,
-                shadowColor:
-                  selectedButton === 'expenseAnalysis'
-                    ? '#4480A2'
-                    : 'transparent',
-                shadowOffset: {width: 0, height: 4},
-                shadowOpacity: 0.35,
-                shadowRadius: 3.84,
-              }}>
-              <Text
-                style={{
-                  color:
-                    selectedButton === 'expenseAnalysis' ? '#FFFFFF' : '#ccc',
-                  fontWeight: '700',
-                  fontSize: 14,
-                }}>
-                Expense Analysis
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => handleButtonPress('incomeAnalysis')}
-              style={{
-                alignItems: 'center',
-                backgroundColor:
-                  selectedButton === 'incomeAnalysis' ? '#E77F27' : '#FFFFFF',
-                padding: 18,
-                borderRadius: 30,
-                paddingHorizontal: 30,
-                shadowColor:
-                  selectedButton === 'incomeAnalysis'
-                    ? '#E77F27'
-                    : 'transparent',
-                shadowOffset: {width: 0, height: 4},
-                shadowOpacity: 0.35,
-                shadowRadius: 3.84,
-              }}>
-              <Text
-                style={{
-                  color:
-                    selectedButton === 'incomeAnalysis' ? '#FFFFFF' : '#ccc',
-                  fontWeight: '700',
-                  fontSize: 14,
-                }}>
-                Income Analysis
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity
-            onPress={() => handleButtonPress('expenseIncome')}
-            style={{
+              flex: 1,
               alignItems: 'center',
-              backgroundColor:
-                selectedButton === 'expenseIncome' ? '#80C694' : '#FFFFFF',
+              backgroundColor: selectedButton === 'expenseAnalysis' ? '#4480A2' : '#FFFFFF',
               padding: 18,
               borderRadius: 30,
-              shadowColor:
-                selectedButton === 'expenseIncome' ? '#80C694' : 'transparent',
-              shadowOffset: {width: 0, height: 4},
+              paddingHorizontal: 30,
+              shadowColor: selectedButton === 'expenseAnalysis' ? '#4480A2' : 'transparent',
+              shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 0.35,
               shadowRadius: 3.84,
-            }}>
-            <Text
-              style={{
-                color: selectedButton === 'expenseIncome' ? '#FFFFFF' : '#ccc',
-                fontWeight: '700',
-                fontSize: 14,
-              }}>
-              Expense & Income
+            }}
+          >
+            <Text style={{ color: selectedButton === 'expenseAnalysis' ? '#FFFFFF' : '#ccc', fontWeight: '700', fontSize: 14 }}>
+              Expense Analysis
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => handleButtonPress('incomeAnalysis')}
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              backgroundColor: selectedButton === 'incomeAnalysis' ? '#E77F27' : '#FFFFFF',
+              padding: 18,
+              borderRadius: 30,
+              paddingHorizontal: 30,
+              shadowColor: selectedButton === 'incomeAnalysis' ? '#E77F27' : 'transparent',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.35,
+              shadowRadius: 3.84,
+            }}
+          >
+            <Text style={{ color: selectedButton === 'incomeAnalysis' ? '#FFFFFF' : '#ccc', fontWeight: '700', fontSize: 14 }}>
+              Income Analysis
             </Text>
           </TouchableOpacity>
         </View>
+
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 20 }}>
+          <TouchableOpacity
+            onPress={() => handleButtonPress('expenseIncome')}
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              backgroundColor: selectedButton === 'expenseIncome' ? '#80C694' : '#FFFFFF',
+              padding: 18,
+              borderRadius: 30,
+              shadowColor: selectedButton === 'expenseIncome' ? '#80C694' : 'transparent',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.35,
+              shadowRadius: 3.84,
+            }}
+          >
+            <Text style={{ color: selectedButton === 'expenseIncome' ? '#FFFFFF' : '#ccc', fontWeight: '700', fontSize: 14 }}>
+              Expense & Income
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => handleButtonPress('asset')}
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              backgroundColor: selectedButton === 'asset' ? '#80C694' : '#FFFFFF',
+              padding: 18,
+              borderRadius: 30,
+              shadowColor: selectedButton === 'asset' ? '#80C694' : 'transparent',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.35,
+              shadowRadius: 3.84,
+            }}
+          >
+            <Text style={{ color: selectedButton === 'asset' ? '#FFFFFF' : '#ccc', fontWeight: '700', fontSize: 14 }}>
+              Asset
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         {renderScreen()}
       </View>
     </SafeAreaView>
@@ -378,3 +331,5 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
 };
 
 export default ReportScreen;
+
+

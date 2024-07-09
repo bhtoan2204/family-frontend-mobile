@@ -11,9 +11,6 @@ const styles = StyleSheet.create({
   },
   messageContainer: {
     maxWidth: '80%',
-    marginVertical: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
     borderRadius: 10,
   },
   senderMessageContainer: {

@@ -25,29 +25,27 @@ import {getSocket} from 'src/services/apiclient/Socket';
 import {LastMessage} from 'src/interface/chat/chat';
 import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 import { UserProfile } from 'src/interface/user/userProfile';
+import { FamilyLastMessage } from 'src/interface/chat/family';
+import { useDispatch } from 'react-redux';
+import { setLastMessage, setUserMessage } from 'src/redux/slices/MessageUser';
+import { setFamilyLastMessage } from 'src/redux/slices/MessageFamily';
 const ChatListScreen = ({
   navigation,
 }: PurchasedScreenProps & ViewAllFamilyScreenProps) => {
+  const [chatsFamily, setChatsFamily] = useState<FamilyLastMessage[]>([]);
+
   const [chats, setChats] = useState<LastMessage[]>([]);
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [receiverId, setReceiverId] = useState('');
   const [selectedButton, setSelectedButton] = useState<'Home' | 'Channels'>(
     'Home',
   );
   let socket = getSocket();
+  const dispatch = useDispatch();
 
-  // const fetchUser = async () => {
-  //   try {
-  //     const response = await ChatServices.GetAllUser({index: 0});
-  //     setUsers(response);
-  //   } catch (error) {
-  //     console.error('Error fetching user data:', error);
-  //   }
-  // };
 
   const formatDateTime = (dateTime: Date) => {
     if (!dateTime) {
@@ -83,12 +81,22 @@ const ChatListScreen = ({
         .padStart(2, '0')}`;
     }
   };
+  const fetchMessageFamily = async() => {
+    try{
+      const response = await ChatServices.getFamilyChats();
+      console.log(response)
+      setChatsFamily(response);
+
+    } catch (error){
+      console.error('Error in getFamilyChats:', error.message);
+
+    }
+  };
 
   const fetchData = async () => {
     try {
       setLoading(true);
       const response = await ChatServices.GetUserChat({ index: currentPage });
-      console.log(response);
   
       if (Array.isArray(response)) {
         if (response.length > 0) {
@@ -100,9 +108,9 @@ const ChatListScreen = ({
             },
           }));
           setChats((prevChats) => [...prevChats, ...formattedResponse]);
-          setTotalPages(currentPage + 1);
+          setCurrentPage(currentPage + 1);
         } else {
-          setTotalPages(currentPage);
+          setCurrentPage(currentPage);
         }
       } else if (typeof response === 'object' && response.latestMessage) {
         const formattedResponse = {
@@ -113,9 +121,8 @@ const ChatListScreen = ({
           },
         };
         setChats((prevChats) => [...prevChats, formattedResponse]);
-        setTotalPages(currentPage + 1);
+        setCurrentPage(currentPage + 1);
       } else {
-        // Handle unexpected response format
         console.error('Unexpected response format:', response);
         Alert.alert('Error', 'Unexpected response format. Please try again.');
       }
@@ -137,18 +144,20 @@ const ChatListScreen = ({
 
   useEffect(() => {
     fetchData();
+  }, [currentPage]);
+
+  useEffect(() => {
+    fetchMessageFamily();
   }, []);
 
-  // useEffect(() => {
-  //   fetchUser();
-  // }, []);
-
-  const handlePressChat = (receiverId?: string) => {
+  const handlePressChat = (message: LastMessage) => {
+    dispatch(setUserMessage(message.latestMessage.receiver));
     navigation.navigate('ChatStack', {
       screen: 'ChatUser',
-      params: {receiverId: receiverId},
+      params: {receiverId: message.receiverId},
     });
   };
+
 
   const handlePressHome = () => {
     setSelectedButton('Home');
@@ -158,40 +167,40 @@ const ChatListScreen = ({
     setSelectedButton('Channels');
   };
 
-  const renderAllUser = () => (
-    <View style={styles.userHeaderContainer}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {users.map((user, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => handlePressChat(user.id_user)}>
-            <View
-              style={[
-                styles.userContainer,
-                !user.avatar && styles.userContainerWithoutAvatar,
-              ]}>
-              {user.avatar ? (
-                <Image source={{uri: user.avatar}} style={styles.avatar} />
-              ) : (
-                <View style={styles.avatarPlaceholder}>
-                  <Text
-                    style={
-                      styles.avatarText
-                    }>{`${user.firstname.charAt(0)}${user.lastname.charAt(0)}`}</Text>
-                </View>
-              )}
-              {/* {user.isActive && <View style={styles.activeDot} />}  Chỉ hiển thị khi user.isActive là true */}
-              <View style={styles.activeDot} />
-              <Text
-                style={
-                  styles.userName
-                }>{`${user.firstname} ${user.lastname}`}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-    </View>
-  );
+  // const renderAllUser = () => (
+  //   <View style={styles.userHeaderContainer}>
+  //     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+  //       {users.map((user, index) => (
+  //         <TouchableOpacity
+  //           key={index}
+  //           onPress={() => handlePressChat(user.id_user)}>
+  //           <View
+  //             style={[
+  //               styles.userContainer,
+  //               !user.avatar && styles.userContainerWithoutAvatar,
+  //             ]}>
+  //             {user.avatar ? (
+  //               <Image source={{uri: user.avatar}} style={styles.avatar} />
+  //             ) : (
+  //               <View style={styles.avatarPlaceholder}>
+  //                 <Text
+  //                   style={
+  //                     styles.avatarText
+  //                   }>{`${user.firstname.charAt(0)}${user.lastname.charAt(0)}`}</Text>
+  //               </View>
+  //             )}
+  //             {/* {user.isActive && <View style={styles.activeDot} />}  Chỉ hiển thị khi user.isActive là true */}
+  //             <View style={styles.activeDot} />
+  //             <Text
+  //               style={
+  //                 styles.userName
+  //               }>{`${user.firstname} ${user.lastname}`}</Text>
+  //           </View>
+  //         </TouchableOpacity>
+  //       ))}
+  //     </ScrollView>
+  //   </View>
+  // );
   const onDelete = async (event: any) => {
     Alert.alert(
       'Confirm Delete',
@@ -236,7 +245,7 @@ const ChatListScreen = ({
     };
   }, [socket]);
 
-  const renderRightActions = (event: LastMessage) => (
+  const renderRightActions = (event: any) => (
     <View style={styles.rightAction}>
       <Ionicons
         name="trash-sharp"
@@ -251,7 +260,7 @@ const ChatListScreen = ({
   );
   const renderChatItem = ({item}: {item: LastMessage}) => (
     <Swipeable renderRightActions={() => renderRightActions(item)}>
-      <TouchableOpacity onPress={() => handlePressChat(item.receiverId)}>
+      <TouchableOpacity onPress={() => handlePressChat(item)}>
         <View style={styles.chatItem}>
           <View style={styles.avatarContainer}>
             {item.latestMessage.receiver.avatar ? (
@@ -278,12 +287,14 @@ const ChatListScreen = ({
                 styles.username
               }>{`${item.latestMessage.receiver.firstname} ${item.latestMessage.receiver.lastname}`}</Text>
             {item.latestMessage.type === 'photo' ? (
-              <Text style={styles.messageText}>Sent image</Text>
-            ) : (
-              <Text style={styles.messageText}>
-                {item.latestMessage.content}
-              </Text>
-            )}
+            <Text style={styles.messageText}>Sent image</Text>
+          ) : item.latestMessage.type === 'video' ? (
+            <Text style={styles.messageText}>Sent video</Text>
+          ) : (
+            <Text style={[styles.messageText, !item.latestMessage.isRead && styles.boldText]}>
+              {item.latestMessage.content}
+            </Text>
+          )}
           </View>
           <Text style={styles.messageTimestamp}>
             {item.latestMessage.timestamp
@@ -294,6 +305,54 @@ const ChatListScreen = ({
       </TouchableOpacity>
     </Swipeable>
   );
+  const handlePressChatFamily = async (message: FamilyLastMessage) => {
+    await dispatch(setFamilyLastMessage(message));
+    navigation.navigate('ChatStack', {
+      screen: 'ChatFamilyLast'
+    });  
+  }
+
+  const renderChatFamilyItem = ({ item }: { item: FamilyLastMessage }) => (
+    <Swipeable renderRightActions={() => renderRightActions(item)}>
+      <TouchableOpacity onPress={() => handlePressChatFamily(item)}>
+        <View style={styles.chatItem}>
+          <View style={styles.avatarContainer}>
+            {item.avatar ? (
+              <>
+                <Image
+                  source={{ uri: item.avatar }}
+                  style={[styles.avatar, { top: 5 }]}
+                />
+                <View style={[styles.activeDot, { bottom: 15 }]} />
+              </>
+            ) : (
+              <>
+                <Text style={styles.avatarText}>{item.name.charAt(0)}</Text>
+                <View style={[styles.activeDot, { bottom: 15 }]} />
+              </>
+            )}
+          </View>
+  
+          <View style={styles.messageContainer}>
+          <Text style={styles.username}>{item.name}</Text>
+          {item.lastMessage.type === 'photo' ? (
+            <Text style={styles.messageText}>Sent image</Text>
+          ) : item.lastMessage.type === 'video' ? (
+            <Text style={styles.messageText}>Sent video</Text>
+          ) : (
+            <Text style={[styles.messageText, !item.lastMessage.isRead && styles.boldText]}>
+              {item.lastMessage.content}
+            </Text>
+          )}
+        </View>
+          <Text style={styles.messageTimestamp}>
+            {item.lastMessage.timestamp ? formatDateTime(new Date(item.lastMessage.timestamp)) : ''}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </Swipeable>
+  );
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -360,6 +419,7 @@ const ChatListScreen = ({
           </Text>
         </TouchableOpacity>
       </View>
+    {selectedButton === 'Home' && (
       <FlatList
         data={chats}
         keyExtractor={item => item._id}
@@ -368,6 +428,18 @@ const ChatListScreen = ({
         onEndReachedThreshold={0.1}
         ListFooterComponent={loading ? <ActivityIndicator /> : null}
       />
+    )}
+    {selectedButton === 'Channels' && (
+      <FlatList
+        data={chatsFamily}
+        keyExtractor={item => item._id}
+        renderItem={renderChatFamilyItem}
+        onEndReached={loadMoreMessages}
+        onEndReachedThreshold={0.1}
+        ListFooterComponent={loading ? <ActivityIndicator /> : null}
+      />
+    )}
+
     </SafeAreaView>
   );
 };

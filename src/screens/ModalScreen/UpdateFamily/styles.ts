@@ -27,9 +27,8 @@ const styles = StyleSheet.create({
         marginBottom: 10,
       },
       button: { 
-        color: COLORS.AliceBlue,
-        width: '100%', 
-        borderRadius: 20 
+        width: '100%',
+        marginTop: 20,
       },
       buttonText: {
         color: 'white',

@@ -11,6 +11,17 @@ const styles = StyleSheet.create({
     scrollContainer: {
       paddingBottom: 20,
     },
+    card: {
+      backgroundColor: '#fff',
+      borderRadius: 10,
+      padding: 20,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 5,
+      marginBottom: 20,
+    },
     title: {
       fontSize: 24,
       fontWeight: 'bold',
@@ -19,14 +30,19 @@ const styles = StyleSheet.create({
     description: {
       fontSize: 16,
       marginBottom: 10,
+      color: 'gray',
     },
     time: {
       fontSize: 16,
       marginBottom: 10,
     },
+    locationContainer: {
+      flexDirection:'row',
+    },
     location: {
       fontSize: 16,
       marginBottom: 10,
+      color: 'gray',
     },
     editButton: {
       backgroundColor: 'blue',
@@ -41,17 +57,16 @@ const styles = StyleSheet.create({
         fontSize: 17,
     },
     headerText: {
-        marginLeft: 10,
         fontSize: 18,
         fontWeight: 'bold',
-    
+        marginLeft: 10,
     },
     headerp: {
         flexDirection: 'row',
         marginTop: 40,
         justifyContent: 'space-between',
         alignItems: 'center',
-
+        alignContent: 'center',
     },
     header: {
         flexDirection: 'row',

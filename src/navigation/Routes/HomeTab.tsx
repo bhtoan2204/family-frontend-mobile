@@ -13,11 +13,13 @@ import BottomSheetChild from 'src/screens/HomeScreen/BottomSheetContent';
 import CategoryExpenseScreen from 'src/screens/ExpenseScreen/CategoryScreen';
 import WalletScreen from 'src/screens/ExpenseScreen/WalletScreen';
 import FamilyScreen from 'src/screens/ExpenseScreen/FamilyScreen';
-import CreateInvoiceScreen from 'src/screens/Invoice/CreateInvoice/CreateInvoice';
 import ProfileScreen from 'src/screens/ProfileScreen';
 import ChangePassword from 'src/screens/ProfileScreen/ChangePassword/ChangePassword';
-import EditProfile from 'src/screens/ProfileScreen/EditProfile/EditProfile';
 import EditProfileScreen from 'src/screens/ProfileScreen/EditProfileScreen/EditProfileScreen';
+import ChatListScreen from 'src/screens/Chat/ChatList/ChatListScreen';
+import MessageTab from './MessageTab';
+import { useNavigation } from '@react-navigation/native';
+import NotificationScreen from 'src/screens/Notifications/NotificationScreen';
 
 const Tab = createBottomTabNavigator();
 const TabList = [
@@ -29,57 +31,26 @@ const TabList = [
     icon: 'home',
     visible: true,
   },
-  {
-    id: TEXTS.FAMILY_TAB,
-    title: TEXTS.FAMILY_TAB,
-    component: ViewAllFamilyScreen,
-    screen: 'ViewAllFamilyScreen',
-    icon: 'account-group',
-    visible: true,
-  },
-  {
-    id: 'Expense',
-    title: 'Expense',
-    component: ExpenditureScreen,
-    screen: 'Expense',
-    icon: 'plus',
-    visible: true,
-  },
-  {
-    id: 'Invoice',
-    title: 'Invoice',
-    component: CreateInvoiceScreen,
-    screen: 'Invoice',
-    icon: 'plus',
-    visible: false,
-  },
-  {
-    id: 'CategoryExpense',
-    component: CategoryExpenseScreen,
-    screen: 'CategoryExpense',
-    visible: false,
-  },
-  {
-    id: 'Wallet',
-    component: WalletScreen,
-    screen: 'Wallet',
-    visible: false,
-  },
-  {
-    id: 'FamilyFinace',
-    component: FamilyScreen,
-    screen: 'FamilyFinace',
-    visible: false,
-  },
 
   {
-    id: TEXTS.REPORT_TAB,
-    title: TEXTS.REPORT_TAB,
-    component: ReportScreen,
-    screen: 'ReportScreen',
-    icon: 'notebook',
+    id: 'ChatList',
+    title: 'Chat',
+    component: HomeScreen, 
+    screen: 'ChatList', 
+    icon: 'chat',
     visible: true,
   },
+
+
+  {
+    id: 'Notification',
+    title: 'Notification',
+    component: NotificationScreen,
+    screen: 'Notification',
+    icon: 'bell',
+    visible: true,
+  },
+
   {
     id: TEXTS.MORE_TAB,
     title: TEXTS.MORE_TAB,
@@ -104,10 +75,20 @@ const TabList = [
 ];
 
 const TabBarButton = (props: BottomTabBarButtonProps, tab: any) => {
+  const navigation = useNavigation();
+
+  const handlePress = () => {
+    if (tab.id === 'ChatList') {
+      navigation.navigate('MessageTab', {screen: 'MessageTab'});
+    } else {
+      props.onPress();
+    }
+  };
+
   return (
     <TabButton
       accessibilityState={props.accessibilityState}
-      onPress={props.onPress}
+      onPress={handlePress}
       item={tab}
     />
   );

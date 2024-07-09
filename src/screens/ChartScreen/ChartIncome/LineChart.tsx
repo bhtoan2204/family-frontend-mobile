@@ -5,13 +5,14 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
 import { useDispatch } from "react-redux";
-import { getOption, setSelectedDate, setSelectedOption } from 'src/redux/slices/IncomeAnalysis';
+import { setSelectedDate, setSelectedOptionIncome } from 'src/redux/slices/IncomeAnalysis';
 import moment from 'moment';
 import { ExpenseServices, IncomeServices } from "src/services/apiclient";
 
 interface Category {
     name: string;
     amount: number;
+    id_income_source: number;
 }
 
 interface MonthlyData {
@@ -25,242 +26,324 @@ interface LineChartScreenProps {
 }
 
 const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
-    const [showDetails, setShowDetails] = useState<boolean>(false);
-    const [selectedLegend, setSelectedLegend] = useState<string | null>(null);
-    const [isYearPickerVisible, setYearPickerVisible] = useState<boolean>(false);
-    const [selectedYear, setSelectedYear] = useState(moment().year());
-    const [years, setYears] = useState<number[]>([]);
-    const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        const recentYears = generateRecentYears();
-        setYears(recentYears);
-        fetchData(selectedYear, id_family);
-    }, [selectedYear, id_family]);
-
-    const generateRecentYears = () => {
-        const currentYear = moment().year();
-        const recentYears = [];
-        for (let i = currentYear - 2; i <= currentYear; i++) {
-            recentYears.push(i);
-        }
-        return recentYears;
-    };
-
-    const fetchData = async (year: number, id_family: number) => {
-        try {
-            const response = await IncomeServices.getIncomeByYear(year, id_family);
-            const transformedData = response.map((monthData: MonthlyData) => ({
-                month: monthData.month,
-                total: monthData.total,
-                categories: monthData.categories ? monthData.categories.reduce((acc: { [key: string]: number }, category: Category) => {
-                    acc[category.name] = category.amount;
-                    return acc;
-                }, {}) : {} 
-            }));
-            
-            setMonthlyData(transformedData);
-
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    };
+  const [showDetails, setShowDetails] = useState<boolean>(false);
+  const [selectedLegends, setSelectedLegends] = useState<string[]>(['Total']);
+  const [isYearPickerVisible, setYearPickerVisible] = useState<boolean>(false);
+  const [selectedYear, setSelectedYear] = useState(moment().year());
+  const [years, setYears] = useState<number[]>([]);
+  const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
+  const dispatch = useDispatch();
+  const labels = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+  const fullLabels = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
   
-    const toggleLegend = (category: string) => {
-        setSelectedLegend(selectedLegend === category ? null : category);
-    };
+  useEffect(() => {
+    const recentYears = generateRecentYears();
+    setYears(recentYears);
+    fetchData(selectedYear, id_family);
+  }, [selectedYear, id_family]);
 
-    const legendItemStyle = (category: string) => [
-        styles.legendItem,
-        selectedLegend === category && styles.selectedLegendItem
-    ];
+  const generateRecentYears = () => {
+    const currentYear = moment().year();
+    const recentYears = [];
+    for (let i = currentYear - 2; i <= currentYear; i++) {
+      recentYears.push(i);
+    }
+    return recentYears;
+  };
 
-    const calculateMonthlyTotals = () => {
-        return monthlyData.map(month => month.total);
-    };
+  const fetchData = async (year: number, id_family: number) => {
+    try {
+      const response = await IncomeServices.getIncomeByYear(year, id_family);
+      console.log(response)
+      const currentYear = moment().year();
+      const currentMonth = moment().month() + 1;
+      
+      const transformedData = response
+      .filter((monthData: MonthlyData) => {
+        const include = year < currentYear || ( monthData.month <= currentMonth);
+        return include;
+      })
+        .map((monthData: MonthlyData) => ({
+          month: monthData.month,
+          total: monthData.total / 1000,
+          categories: monthData.categories
+            ? monthData.categories.reduce(
+                (acc: { [key: string]: number }, category: Category) => {
+                  acc[category.name] = category.amount / 1000;
+                  return acc;
+                },
+                {}
+              )
+            : {},
+        }));
+  
+      setMonthlyData(transformedData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  
 
-    const handleYearChange = (year: number) => {
-        setSelectedYear(year);
-    };
+  const toggleLegend = (category: string) => {
+    setSelectedLegends(prevLegends =>
+      prevLegends.includes(category)
+        ? prevLegends.filter(legend => legend !== category)
+        : [...prevLegends, category],
+    );
+  };
 
-    const monthlyTotals = calculateMonthlyTotals();
+  const calculateMonthlyTotals = () => {
+    return monthlyData.map(month => month.total);
+  };
 
-    const avatarUrlTemplate = 'https://dummyimage.com/40x40/000/fff&text='; 
+  const handleYearChange = (year: number) => {
+    setSelectedYear(year);
+  };
 
-    const handlePressMonth = (month: string) => {
-        const date = `${selectedYear}-${month}-01`;
-        dispatch(setSelectedOption('Month'));
-        dispatch(setSelectedDate(date));
-    };
+  const monthlyTotals = calculateMonthlyTotals();
 
-    const categories = monthlyData.reduce((acc: string[], month) => {
-        if (Array.isArray(month.categories)) {
-            month.categories.forEach(category => {
-                if (!acc.includes(category.name)) {
-                    acc.push(category.name);
-                }
-            });
-        }
-        return acc;
-    }, []);
-    
-    const categoryColors: { [key: number]: string } = {
-        1: `rgba(255, 0, 0, 1)`, 
-        2: `rgba(0, 255, 0, 1)`, 
-        3: `rgba(0, 0, 255, 1)`,
-        4: `rgba(255, 255, 0, 1)`, 
-        5: `rgba(255, 0, 255, 1)`,
-        6: `rgba(0, 255, 255, 1)`,
-        7: `rgba(128, 0, 0, 1)`, 
-        8: `rgba(0, 128, 0, 1)`,
-        9: `rgba(0, 0, 128, 1)`, 
-        10: `rgba(128, 128, 0, 1)`,
-        11: `rgba(128, 0, 128, 1)`, 
-        12: `rgba(255, 165, 0, 1)`, 
-        13: `rgba(255, 192, 203, 1)`, 
-        14: `rgba(0, 255, 127, 1)`, 
-        15: `rgba(255, 20, 147, 1)`, 
-        16: `rgba(255, 140, 0, 1)`, 
-        17: `rgba(0, 255, 255, 0.5)`, 
-        18: `rgba(255, 255, 255, 0.5)`, 
-        19: `rgba(255, 255, 0, 0.5)`, 
-        20: `rgba(128, 0, 128, 0.5)`,
-    };
-    
-    let categoryDatasets: any[] = [];
-if (monthlyData.length > 0) {
-    categoryDatasets = Object.keys(monthlyData[0].categories).map((category, index) => {
+  const avatarUrlTemplate = 'https://via.placeholder.com/40?text=';
+
+  const handlePressMonth = (month: string) => {
+    const date = `${selectedYear}-${month}-01`;
+    dispatch(setSelectedOptionIncome('Month'));
+    dispatch(setSelectedDate(date));
+  };
+
+  const categoryColors: {[key: string]: string} = {
+    1: `rgba(255, 0, 0, 1)`,
+    2: `rgba(0, 255, 0, 1)`,
+    3: `rgba(0, 0, 255, 1)`,
+    4: `rgba(255, 255, 0, 1)`,
+    5: `rgba(255, 0, 255, 1)`,
+    6: `rgba(0, 255, 255, 1)`,
+    7: `rgba(128, 0, 0, 1)`,
+    8: `rgba(0, 128, 0, 1)`,
+    9: `rgba(0, 0, 128, 1)`,
+    10: `rgba(128, 128, 0, 1)`,
+    11: `rgba(128, 0, 128, 1)`,
+    12: `rgba(255, 165, 0, 1)`,
+    13: `rgba(255, 192, 203, 1)`,
+    14: `rgba(0, 255, 127, 1)`,
+    15: `rgba(255, 20, 147, 1)`,
+    16: `rgba(255, 140, 0, 1)`,
+    17: `rgba(0, 255, 255, 0.5)`,
+    18: `rgba(255, 255, 255, 0.5)`,
+    19: `rgba(255, 255, 0, 0.5)`,
+    20: `rgba(128, 0, 128, 0.5)`,
+  };
+
+  let categoryDatasets: any[] = [];
+  if (monthlyData.length > 0) {
+    categoryDatasets = Object.keys(monthlyData[0].categories).map(
+      (category, index) => {
         return {
-            name: category,
-            data: monthlyData.map(month => {
-                const categoryData = month.categories[category];
-                return categoryData ? categoryData : 0;
-            }),
-            color: () => categoryColors[index+2], 
+          name: category,
+          data: monthlyData.map(month => {
+            const categoryData = month.categories[category as any];
+            return categoryData ? categoryData : 0;
+          }),
+          color: () => categoryColors[(index + 2).toString()],
         };
-    });
+      },
+    );
 
     categoryDatasets.push({
-        name: "Total",
-        data: monthlyTotals,
-        color: () => categoryColors[1], 
+      name: 'Total',
+      data: monthlyTotals,
+      color: () => categoryColors[1],
     });
-}
+  }
 
-
-    const displayedDatasets = selectedLegend
-        ? categoryDatasets.filter(dataset => dataset.name === selectedLegend)
-        : [
-            ...categoryDatasets,
-            {
-                data: monthlyTotals,
-                color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-            },
+  const displayedDatasets =
+    selectedLegends.length > 0
+      ? categoryDatasets.filter(dataset =>
+          selectedLegends.includes(dataset.name),
+        )
+      : [
+          ...categoryDatasets,
+          {
+            data: monthlyTotals,
+            color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
+          },
         ];
+  const formatCurrency = (amount: string | number | bigint) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+  };
+  const formatCurrency1 = (amount: number) => {
+    return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' đ';
+  };
+    
+  return (
+    <View style={{height: '70%', paddingBottom: 100,}}>
+      <TouchableOpacity
+        style={[styles.monthPickerContainer, {zIndex: 1}]}
+        onPress={() => setYearPickerVisible(!isYearPickerVisible)}>
+        <View style={styles.monthContainer}>
+          <Text style={styles.monthText}>{selectedYear}</Text>
+        </View>
+      </TouchableOpacity>
+      {isYearPickerVisible && (
+        <View style={styles.yearPickerContainer}>
+          <Picker
+            selectedValue={selectedYear}
+            style={styles.dropdownYear}
+            onValueChange={itemValue => handleYearChange(itemValue)}>
+            {years.map((year: number) => (
+              <Picker.Item key={year.toString()} label={year.toString()} value={year} />
+            ))}
+          </Picker>
+        </View>
+      )}
+      <View style={styles.chartLineContainer}>
+        <Text>(Unit: kVNĐ)</Text>
+        {displayedDatasets.length > 0 && (
+          <LineChart
+          data={{
+            labels: monthlyData.map(month => labels[month.month - 1]),
+            datasets: displayedDatasets,
+          }}
+          width={400}
+          height={220}
+          yAxisSuffix="k"
+          chartConfig={{
+            backgroundGradientFrom: '#FFFFFF',
+            backgroundGradientTo: '#FFFFFF',
+            decimalPlaces: 0,
+            color: (opacity = 1) => `#ccc`,
+            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            propsForDots: {
+              r: '2',
+              strokeWidth: '2',
+              stroke: '#ffa726',
+            },
+            propsForBackgroundLines: {
+              strokeWidth: 0.1,
+            },
+     
+          }}
+        
+            // bezier
+            style={styles.linechart}
+            renderDotContent={({x, y, index}) => {
+              const month = monthlyData[index];
+              let categoryAmount = 0;
 
-    return (
-        <ScrollView style={{height: '80%'}}>
-            <View style={styles.itemContainer}>
-                <Icon name="calendar" size={25} color="black" style={styles.icon} />
-                <Text style={styles.text}>Select Year</Text>
-            </View>
-            <TouchableOpacity style={styles.monthPickerContainer} onPress={() => setYearPickerVisible(!isYearPickerVisible)}>
-                <View style={styles.monthContainer}>
-                    <Text style={styles.monthText}>{selectedYear}</Text>
-                </View>
-            </TouchableOpacity>
-            {isYearPickerVisible && (
-                <View style={styles.yearPickerContainer}>
-                    <Picker
-                        selectedValue={selectedYear}
-                        style={styles.dropdownYear}
-                        onValueChange={(itemValue) => handleYearChange(itemValue)}>
-                        {years.map((year: number) => (
-                            <Picker.Item key={year} label={year.toString()} value={year} />
-                        ))}
-                    </Picker>
-                </View>
-            )}
-            <View style={styles.chartContainer}>
-                <Text>(Unit: Million VNĐ)</Text>
-                {displayedDatasets.length > 0 && (
-                    <LineChart
-                        data={{
-                            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                            datasets: displayedDatasets,
-                        }}
-                        width={400}
-                        height={220}
-                        chartConfig={{
-                            backgroundGradientFrom: "#FFFFFF",
-                            backgroundGradientTo: "#FFFFFF",
-                            decimalPlaces: 2,
-                            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                            propsForDots: {
-                                r: "3",
-                                strokeWidth: "2",
-                                stroke: "#ffa726",
-                            },
-                        }}
-                        bezier
-                        style={styles.linechart}
-                    />
-                )}
-            </View>
-            <ScrollView horizontal contentContainerStyle={styles.legendContainer}>
-                {categoryDatasets.map((dataset, index) => (
-                    <TouchableOpacity
-                        key={index}
-                        style={legendItemStyle(dataset.name)}
-                        onPress={() => toggleLegend(dataset.name)}
-                    >
-                        <View
-                            style={[
-                                styles.legendColor,
-                                { backgroundColor: dataset.color() },
-                            ]}
-                        />
-                        <Text style={styles.legendText}>{dataset.name}</Text>
-                    </TouchableOpacity>
-                ))}
-            </ScrollView>
+              if (selectedLegends.length === 1) {
+                if (selectedLegends[0] === 'Total') {
+                  categoryAmount = month.total;
+                } else if (month.categories[selectedLegends[0]]) {
+                  categoryAmount = month.categories[selectedLegends[0]];
+                } else categoryAmount = 0;
+                return (
+                  <View>
+                    <Text
+                      key={index}
+                      style={{
+                        position: 'absolute',
+                        left: x,
+                        top: y - 20,
+                        fontSize: 10,
+                        color: 'gray',
+                      }}>
+                    {categoryAmount.toFixed(0)!='0' ? `${categoryAmount.toFixed(0)}k VNĐ` : ''}
+                    </Text>
+                  </View>
+                );
+              }
+            }}
+          />
+        )}
 
-            <View style={styles.buttonContainer}>
-                <Button
-                    title={showDetails ? "Hide Details" : "View Details"}
-                    onPress={() => setShowDetails(!showDetails)}
+<ScrollView
+  horizontal
+  showsHorizontalScrollIndicator={false}
+  contentContainerStyle={{
+    ...styles.legendContainer,
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    alignItems: 'center',
+  }}
+>
+  {categoryDatasets.map((dataset, index) => (
+    <TouchableOpacity
+      key={index}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginRight: 10,
+      }}
+      onPress={() => toggleLegend(dataset.name)}
+    >
+      <View
+        style={[
+          styles.legendItem,
+          selectedLegends.includes(dataset.name) && styles.selectedLegendItem,
+        ]}
+      >
+        <View
+          style={[
+            styles.legendColor,
+            { backgroundColor: dataset.color() },
+          ]}
+        />
+        <Text style={styles.legendLineText}>{dataset.name}</Text>
+      </View>
+    </TouchableOpacity>
+  ))}
+</ScrollView>
+
+
+        <View style={{height: 1, backgroundColor: '#F3F1EE', marginTop: 10}} />
+        <Text style={{fontWeight: '500', marginVertical: 10, paddingTop: 10}}>
+          Details
+        </Text>
+        <ScrollView style={styles.ContainerCategory}>
+          {monthlyData.map(monthData => (
+            <TouchableOpacity
+              key={monthData.month}
+              style={styles.incomeItem}
+              onPress={() => handlePressMonth(`${monthData.month}`)}>
+              <View style={styles.incomeDetails}>
+                <Image
+                  source={{uri: `${avatarUrlTemplate}${monthData.month}`}}
+                  style={styles.avatar}
                 />
-            </View>
+                <Text
+                  style={styles.incomeText}>{fullLabels[monthData.month-1]}</Text>
+              </View>
+              <View style={styles.incomeDetails}>
+                {monthData.categories &&
+                  Array.isArray(monthData.categories) &&
+                  monthData.categories.map(category => (
+                    <View key={category.name}>
+                      <Text>{`${category.name}: ${category.amount}`}</Text>
+                    </View>
+                  ))}
+                <Text style={styles.incomeAmount}>+{formatCurrency(monthData.total * 1000)}</Text>
 
-            {showDetails && (
-                <View style={styles.ContainerCategory}>
-                    {monthlyData.map((monthData) => (
-                        <TouchableOpacity
-                            key={monthData.month}
-                            style={styles.incomeItem}
-                            onPress={() => handlePressMonth(`${monthData.month}`)}
-                        >
-                            <View style={styles.incomeDetails}>
-                                <Image source={{ uri: `${avatarUrlTemplate}${monthData.month}` }} style={styles.avatar} />
-                                <Text style={styles.incomeText}>{`Month ${monthData.month}`}</Text>
-                            </View>
-                            <View style={styles.incomeDetails}>
-                                {monthData.categories && Array.isArray(monthData.categories) && monthData.categories.map((category) => (
-                                    <View key={category.name}>
-                                        <Text>{`${category.name}: ${category.amount}`}</Text>
-                                    </View>
-                                ))}
-                                <Text style={styles.incomeAmount}>{`+${monthData.total} đ`}</Text>
-                                <Icon name="chevron-right" size={20} color="#ccc" />
-                            </View>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            )}
+                <Icon name="chevron-right" size={20} color="#ccc" />
+              </View>
+            </TouchableOpacity>
+          ))}
         </ScrollView>
-    );
+      </View>
+      <View
+        style={{
+          backgroundColor: 'white',
+          width: '100%',
+          height: 400,
+          marginTop: -30,
+        }}
+      />
+    </View>
+  );
 };
 
 export default LineChartScreen;

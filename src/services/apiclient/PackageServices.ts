@@ -6,28 +6,7 @@ import {ERROR_TEXTS} from 'src/constants';
 import baseUrl from '../urls/baseUrl';
 
 const PackageServices = {
-  //da xong
-  getPackage: async ({id_package}: {id_package: number}) => {
-    try {
-      console.log('getPackage called with id:', id_package);
-      const response: AxiosResponse = await instance.get(
-        PackageUrl.getPackage,
-        {
-          params: {
-            id_package,
-          },
-        },
-      );
-      if (response.status === 200) {
-        return response.data;
-      } else {
-        throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
-      }
-    } catch (error: any) {
-      console.error('Error in getPackage:', error.message);
-      throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
-    }
-  },
+  
 
   //da xong
   getProfile: async () => {
@@ -94,19 +73,14 @@ const PackageServices = {
     }
   },
 
-  //da xong
   getAllPackage: async () => {
     try {
-      console.log('getAllPackage called');
       const response: AxiosResponse = await instance.get(
         PackageUrl.getAllPackage,
-        {
-          
-        },
+       
       );
       if (response.status === 200) {
-        console.log('getAllPackage:', response.data);
-        return response.data;
+        return response.data.data;
       } else {
         throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
       }
@@ -116,41 +90,67 @@ const PackageServices = {
     }
   },
 
-  //da xong
-  createPaymentURL: async ({
-    id_package,
-    id_family,
-    bankCode,
-    amount,
-    language,
-    method,
-  }: {
-    id_package: number;
-    id_family: number;
-    bankCode: string;
-    amount: number;
-    language: string;
-    method: string;
-  }) => {
+  getExtraPackage: async () => {
     try {
+      const response: AxiosResponse = await instance.get(
+        PackageUrl.getExtraPackage,
+      );
+      if (response.status === 200) {
+        return response.data.data;
+      } else {
+        throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+      }
+    } catch (error: any) {
+      console.error('Error in getAllPackages:', error.message);
+      throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+    }
+  },
+
+  getComboPackage: async () => {
+    try {
+      const response: AxiosResponse = await instance.get(
+        PackageUrl.getComboPackage,
+      );
+      if (response.status === 200) {
+        return response.data.data;
+      } else {
+        throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+      }
+    } catch (error: any) {
+      console.error('Error in getAllPackages:', error.message);
+      throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+    }
+  },
+  getAvailableFunction: async (id_family?: number) => {
+    try {
+      const response: AxiosResponse = await instance.get(
+        PackageUrl.getAvailableFunction + `/${id_family}`,
+      );
+      if (response.status === 200) {
+        return response.data.data.extra_packages;
+      } else {
+        throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+      }
+    } catch (error: any) {
+      console.error('Error in getAllPackages:', error.message);
+      throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+    }
+  },
+
+  createPaymentURL: async (id_main_package?: number, bankCode?: string , ) => {
+    try {
+      console.log( id_main_package, bankCode)
       const response: AxiosResponse = await instance.post(
         PackageUrl.createPaymentURL,
         {
-          id_package,
-          id_family,
-          bankCode,
-          amount,
-          language,
-          method,
+          id_main_package,
+          bankCode
         },
       );
-      const isSuccess = response.data.isSuccess;
-      const paymentUrl = response.data.paymentUrl;
 
-      console.log('Success:', isSuccess);
-      console.log('Payment URL:', paymentUrl);
 
-      if (response.data.isSuccess === true) {
+
+      if (response.status === 200) {
         return response.data;
       } else {
         throw new Error(ERROR_TEXTS.CREATE_ORDER_ERROR);
@@ -181,19 +181,18 @@ const PackageServices = {
       }
     }
   },
-  getOrderSucessful: async () => {
+  paymentHistory: async (itemsPerPage: number, page: number ) => {
     try {
-      console.log('getPurchased called');
       const response: AxiosResponse = await instance.get(
-        PackageUrl.getOrderSucessful,
+        PackageUrl.paymentHistory,
         {
-          headers: {
-            Authorization: `Bearer ${await LocalStorage.GetAccessToken()}`,
-          },
+          params: {
+            itemsPerPage, page
+          }
         },
       );
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
       }

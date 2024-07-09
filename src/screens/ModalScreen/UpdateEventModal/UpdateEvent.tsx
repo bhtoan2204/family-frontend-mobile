@@ -8,8 +8,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ColorPicker from './ColorPicker';
-import { useSelector } from 'react-redux';
-import { getColor, getEvent, getIDcate, getOnly } from 'src/redux/slices/CalendarSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getColor, getEvent, getIDcate, getOnly, getTimeEnd, getTimeStart } from 'src/redux/slices/CalendarSlice';
 import Custom from './Custom';
 import { RRule, RRuleStrOptions } from 'rrule';
 import { differenceInDays, differenceInWeeks, differenceInMonths, differenceInYears } from 'date-fns';
@@ -19,13 +19,13 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
   const { id_family } = route.params || {};
   const [chosenDate, setChosenDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [event , setEvent ] = useState<Event>(useSelector(getEvent));
-
-  const [title, setTitle] = useState(event.title);
-  const [description, setDescription] = useState(event.description);
-  const [location, setLocation] = useState(event.location);
-  const [chosenDateStart, setChosenDateStart] = useState(new Date(event.time_start));
-  const [chosenDateEnd, setChosenDateEnd] = useState(new Date(event.time_end));
+  const event = useSelector(getEvent);
+  
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [location, setLocation] = useState('');
+  const [chosenDateStart, setChosenDateStart] = useState(new Date());
+  const [chosenDateEnd, setChosenDateEnd] = useState(new Date());
   const [isPickerRepeatOpen, setIsPickerRepeatOpen] = useState(false);
   const [isPickerEndRepeatOpen, setIsPickerEndRepeatOpen] = useState(false);
   const [selectedOptionRepeat, setSelectedOptionRepeat] = useState('none');
@@ -35,12 +35,26 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
   const [selectedMonths, setSelectedMonths] = useState<string>('');
   const [selectedYears, setSelectedYears] = useState<string>('');
   const [number, setNumber] = useState<number>(1);
-  const [isAllDay, setIsAllDay] = useState(event.is_all_day);
+  const [isAllDay, setIsAllDay] = useState(false);
   const [repeatEndDate, setRepeatEndDate] = useState(new Date());
-  let color = useSelector(getColor);
-  let category = useSelector(getIDcate);
+  const color = useSelector(getColor);
+  const category = useSelector(getIDcate);
   const [count, setCount] = useState(1);
-  let isOnly = useSelector(getOnly);
+  const isOnly = useSelector(getOnly);
+  
+  const time_start = useSelector(getTimeStart);
+  const time_end = useSelector(getTimeEnd);
+
+  useEffect(() => {
+    if (event) {
+      setTitle(event.title);
+      setDescription(event.description);
+      setLocation(event.location);
+      setChosenDateStart(new Date(event.time_start));
+      setChosenDateEnd(new Date(event.time_end));
+      setIsAllDay(event.is_all_day);
+    }
+  }, [event]);
 
   const handleDecrease = () => {
     setCount(prevCount => Math.max(1, prevCount - 1));
@@ -78,10 +92,110 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
       setChosenDateEnd(selectedDate);
     }
   };
-  const handleEditOnlyEvent = async () => {
-
-  };
   
+  const handleEditOnlyEvent = async () => {
+    const updatedRecurrenceException = event.recurrence_exception 
+        ? `${event.recurrence_exception},${event.time_start}`
+        : event.time_start;
+
+
+    const formatDateToString = (date: Date | string) => {
+        return date instanceof Date ? date.toISOString() : date;
+    };
+    
+    const eventDetails2 = {
+        id_calendar: event.id_calendar,
+        title: event.title,
+        time_start: event.time_start,
+        time_end: event.time_end,
+        description: event.description,
+        color: event.color,
+        is_all_day: event.is_all_day,
+        category: event.category,
+        location: event.location,
+        recurrence_exception: formatDateToString(updatedRecurrenceException),
+        recurrence_id: event.recurrence_id,
+        recurrence_rule: event.recurrence_rule,
+        start_timezone: event.start_timezone,
+        end_timezone: event.end_timezone,
+        id_family: id_family,
+    };
+
+    const eventDetails1 = {
+        title: title,
+        time_start: chosenDateStart,
+        time_end: chosenDateEnd,
+        description: description,
+        color: color,
+        is_all_day: isAllDay,
+        category: category,
+        location: location,
+        recurrence_exception: "",
+        recurrence_id: event.id_calendar,
+        recurrence_rule: "",
+        start_timezone: "",
+        end_timezone: "",
+        id_family: id_family,
+    };
+
+    try {
+        const message1 = await CalendarServices.CreateEvent(
+            eventDetails1.title,
+            eventDetails1.description,
+            eventDetails1.time_start,
+            eventDetails1.time_end,
+            eventDetails1.color,
+            eventDetails1.is_all_day,
+            eventDetails1.category,
+            eventDetails1.location,
+            eventDetails1.recurrence_exception,
+            eventDetails1.recurrence_id,
+            eventDetails1.recurrence_rule,
+            eventDetails1.start_timezone,
+            eventDetails1.end_timezone,
+            eventDetails1.id_family,
+        );
+       
+        const message2 = await CalendarServices.UpdateEvent(
+            eventDetails2.id_calendar,
+            eventDetails2.id_family,
+            eventDetails2.title,
+            eventDetails2.description,
+            eventDetails2.time_start,
+            eventDetails2.time_end,
+            eventDetails2.color,
+            eventDetails2.is_all_day,
+            eventDetails2.category,
+            eventDetails2.location,
+            eventDetails2.recurrence_exception,
+            eventDetails2.recurrence_id,
+            eventDetails2.recurrence_rule,
+            eventDetails2.start_timezone,
+            eventDetails2.end_timezone,
+        );
+
+        Alert.alert('Inform', 'Successfully', [
+            {
+                text: 'OK',
+                onPress: () => {
+                    navigation.goBack();
+                },
+            },
+        ]);
+    } catch (error) {
+        try {
+            await CalendarServices.DeleteEvent(eventDetails2.id_calendar);
+        } catch (rollbackError: any) {
+            console.error('Rollback failed:', rollbackError.message);
+        }
+
+        Alert.alert('Error', 'An error occurred. The transaction has been rolled back.', [
+            {
+                text: 'OK',
+            },
+        ]);
+    }
+};
   const handleEditAllFutureEvents = async () => {
     const timeStart = chosenDateStart;
     const timeEnd = chosenDateEnd;
@@ -159,7 +273,6 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
       recurrenceRule= recurrenceRule+';';
     }
     
-    console.log(recurrenceRule);
     const eventDetails = {
       id_calendar: event.id_calendar,
       title: title,
@@ -176,7 +289,6 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
       start_timezone: "",
       end_timezone: ""
     };
-    console.log(eventDetails)
     try {
       const message = await CalendarServices.UpdateEvent(
         eventDetails.id_calendar,
@@ -209,15 +321,14 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
     }
   };
 
-  const handleSubmit = async () => {
-  if (isOnly==false){
-      handleEditAllFutureEvents();
-  }
-  else {
-    handleEditOnlyEvent();
-  }
-    
+   const handleSubmit = async () => {
+    if (!isOnly) {
+      await handleEditAllFutureEvents();
+    } else {
+      await handleEditOnlyEvent();
+    }
   };
+
   
 
   const handleRepeatEndDateChange = (event: any, selectedDate: Date | undefined) => {
@@ -473,5 +584,3 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
 };
 
 export default UpdateEventScreen;
-
-

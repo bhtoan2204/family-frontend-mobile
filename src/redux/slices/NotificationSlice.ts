@@ -1,25 +1,46 @@
-import { createSlice } from "@reduxjs/toolkit";
 
-interface MessageState {
-    senderId: string;
-    type: string;
-    content: string;
-    receiverId: string;
-    _id: string;
-    isRead: boolean;
-  };
-  const initialState: MessageState = {
-    senderId: '',
-    type: '',
-    content: '',
-    receiverId: '',
-    _id: '',
-    isRead: false,
-  };
-const NotificationSlice = createSlice({
-    name: 'notification',
-    initialState,
-    reducers : {
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../store'; 
 
-    }
-})
+interface Notification {
+  _id: string;
+  title: string;
+  content: string;
+  timestamp: Date;
+  isRead: boolean;
+}
+
+interface NotificationState {
+  notifications: Notification[];
+}
+
+const initialState: NotificationState = {
+  notifications: [],
+};
+
+const notificationSlice = createSlice({
+  name: 'notifications',
+  initialState,
+  reducers: {
+    
+    setNotificationSlice(state, action: PayloadAction<Notification[]>) {
+      state.notifications = action.payload;
+    },
+
+    addNotification(state, action: PayloadAction<Notification>) {
+      state.notifications.push(action.payload);
+    },
+    markAsRead(state, action: PayloadAction<string>) {
+      const notification = state.notifications.find((n) => n._id === action.payload);
+      if (notification) {
+        notification.isRead = true;
+      }
+    },
+  },
+});
+
+export const { addNotification, markAsRead ,setNotificationSlice} = notificationSlice.actions;
+
+export const selectNotifications = (state: RootState) => state.notifications.notifications;
+
+export default notificationSlice.reducer;

@@ -1,4 +1,4 @@
 export interface ExpenseType {
-    id_expense_type: number;
-    category: string;
+    id_expenditure_type: number;
+    expense_type_name: string;
 }

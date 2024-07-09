@@ -9,13 +9,18 @@ import {
   SafeAreaView,
   StyleSheet,
 } from 'react-native';
-import {Profile} from 'src/interface/user/userProfile';
 import ChatServices from 'src/services/apiclient/ChatServices';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { User } from 'src/interface/chat/chat';
+import { ChatScreenProps } from 'src/navigation/NavigationTypes';
+import { useDispatch } from 'react-redux';
+import { setUserMessage } from 'src/redux/slices/MessageUser';
 
-const PeopleScreen = () => {
-  const [users, setUsers] = useState<Profile[]>([]);
+const PeopleScreen = ( {navigation}: ChatScreenProps) => {
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState<string>('');
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetchUser();
@@ -24,18 +29,25 @@ const PeopleScreen = () => {
   const fetchUser = async () => {
     try {
       setLoading(true);
-      const response = await ChatServices.GetAllUser({index: 0});
+      const response = await ChatServices.GetAllUser({search});
       setUsers(response);
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      
     } finally {
       setLoading(false);
     }
   };
+  const pressChat = (user: User) => {
+    dispatch(setUserMessage(user));
+    navigation.navigate('ChatStack', {
+      screen: 'ChatUser',
+      params: {receiverId: user.id_user},
+    });
+  };
 
-  const renderUserItem = ({item}: {item: Profile}) => (
+  const renderUserItem = ({item}: {item: User}) => (
     <View>
-      <TouchableOpacity style={styles.userItem}>
+      <TouchableOpacity onPress={()=> pressChat(item)} style={styles.userItem}>
         <View style={styles.avatarContainer}>
           {item.avatar ? (
             <>

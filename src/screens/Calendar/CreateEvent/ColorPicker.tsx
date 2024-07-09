@@ -6,6 +6,7 @@ import { getFamily, setColor, setIdcate } from 'src/redux/slices/CalendarSlice';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import Navigation from 'src/navigation/NavigationContainer';
 import { CategoryEvent } from 'src/interface/calendar/CategoryEvent';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 const screenHeight = Dimensions.get('screen').height;
@@ -19,7 +20,9 @@ const ColorPicker = ({ navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log(id_family);
         const result = await CalendarServices.getAllCategoryEvent(id_family);
+        console.log(result);
         setAvailableColors(result);
       } catch (error) {
         console.log('Error fetching colors:', error);
@@ -66,12 +69,13 @@ const ColorPicker = ({ navigation }) => {
         horizontal
         renderItem={renderColorCircle}
         contentContainerStyle={styles.colorList}
+        showsHorizontalScrollIndicator={false}
         ListFooterComponent={(
           <TouchableOpacity
             style={styles.colorCircle}
             onPress={() => handleCreateCategory()}
           >
-            <Text style={styles.plusSign}>{}</Text>
+            <Material name="plus" size={22} style={styles.plusSign} />
           </TouchableOpacity>
         )}
       />
