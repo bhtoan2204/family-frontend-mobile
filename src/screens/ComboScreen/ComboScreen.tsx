@@ -106,11 +106,11 @@ const ComboScreen = () => {
               resizeMode="stretch"
               style={stylesChat.imageThumbUp}
             />
-            <Image
+            {/* <Image
               source={require('../../assets/images/combo-package/Chat/left-side.png')}
               resizeMode="stretch"
               style={stylesChat.imageLeftSide}
-            />
+            /> */}
             <Image
               source={require('../../assets/images/combo-package/Chat/oval.png')}
               resizeMode="stretch"
@@ -161,11 +161,11 @@ const ComboScreen = () => {
             resizeMode="stretch"
             style={stylesCalendar.imageTablet}
           />
-          <Image
+          {/* <Image
             source={require('../../assets/images/combo-package/Calendar/right-side.png')}
             resizeMode="stretch"
             style={stylesCalendar.imageRightSide}
-          />
+          /> */}
           <Image
             source={require('../../assets/images/combo-package/Calendar/character.png')}
             resizeMode="stretch"
@@ -194,11 +194,11 @@ const ComboScreen = () => {
               never miss a birthday or special event.
             </Text>
           </View>
-          <Image
+          {/* <Image
             source={require('../../assets/images/combo-package/Calendar/left-side.png')}
             resizeMode="stretch"
             style={stylesCalendar.imageLeftSide}
-          />
+          /> */}
           <Image
             source={require('../../assets/images/combo-package/Calendar/wave.png')}
             resizeMode="stretch"
@@ -330,11 +330,11 @@ const ComboScreen = () => {
               efficiency and convenience.
             </Text>
           </View>
-          <Image
+          {/* <Image
             source={require('../../assets/images/combo-package/Chat/left-side.png')}
             resizeMode="stretch"
             style={stylesHousehold.imageLeftSide}
-          />
+          /> */}
           <Image
             source={require('../../assets/images/combo-package/Household/bottom-back.png')}
             resizeMode="stretch"
