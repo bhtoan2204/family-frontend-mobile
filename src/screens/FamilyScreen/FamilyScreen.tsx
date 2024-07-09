@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   Text,
   View,
@@ -11,21 +11,29 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import {MaterialIcons} from '@expo/vector-icons';
 import Feather from 'react-native-vector-icons/Feather';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectSelectedFamily, selectFamilies, selectFamilyMembers, setSelectedFamily, setFamilies, setFamilyMembers, updateFamily } from 'src/redux/slices/FamilySlice';
-import { AppDispatch } from 'src/redux/store';
+import {useSelector, useDispatch} from 'react-redux';
+import {
+  selectSelectedFamily,
+  selectFamilies,
+  selectFamilyMembers,
+  setSelectedFamily,
+  setFamilies,
+  setFamilyMembers,
+  updateFamily,
+} from 'src/redux/slices/FamilySlice';
+import {AppDispatch} from 'src/redux/store';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import BottomSheet from './BottomSheet';
 import FamilyListModal from './FamilyList';
 import OptionsModal from './OptionModal';
-import { FamilyServices } from 'src/services/apiclient';
-import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
-import { COLORS } from 'src/constants';
+import {FamilyServices} from 'src/services/apiclient';
+import {ViewFamilyScreenProps} from 'src/navigation/NavigationTypes';
+import {COLORS} from 'src/constants';
 import styles from './styles';
-import { Family } from 'src/interface/family/family';
-import { Member } from 'src/interface/member/member';
+import {Family} from 'src/interface/family/family';
+import {Member} from 'src/interface/member/member';
 import * as ImagePicker from 'expo-image-picker';
 
 const cards = [
@@ -65,9 +73,15 @@ const cards = [
     detail: 'Manage family task lists.',
     icon: require('../../assets/icons/checklist.png'),
   },
+  {
+    id: 8,
+    title: 'Shopping List',
+    detail: 'Organize and track groceries.',
+    icon: require('../../assets/icons/shopping-list.png'),
+  },
 ];
 
-const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
+const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const bottomSheetRef = useRef<RBSheet>(null);
   const allMemberRef = useRef<RBSheet>(null);
@@ -75,14 +89,15 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const families = useSelector(selectFamilies);
   const selectedFamily = useSelector(selectSelectedFamily);
-  const [membersMap, setMembersMap] = useState<{[key: number]: Member[]}>({});  const shakeAnimation = useRef(new Animated.Value(0)).current;
+  const [membersMap, setMembersMap] = useState<{[key: number]: Member[]}>({});
+  const shakeAnimation = useRef(new Animated.Value(0)).current;
   const rotateAnimation = useRef(new Animated.Value(0)).current;
   const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
   const screenHeight = Dimensions.get('screen').height;
 
   const source =
     selectedFamily?.avatar && selectedFamily.avatar !== '[NULL]'
-      ? { uri: selectedFamily.avatar }
+      ? {uri: selectedFamily.avatar}
       : require('../../assets/images/default_ava.png');
 
   useEffect(() => {
@@ -92,16 +107,16 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
     setIsLoading(true);
     try {
       const allFamilies = await FamilyServices.getAllFamily();
-  
+
       dispatch(setFamilies(allFamilies));
-  
+
       if (allFamilies.length > 0) {
         const initialFamily = allFamilies[0];
         dispatch(setSelectedFamily(initialFamily));
       }
-  
+
       const membersObject = {};
-  
+
       for (let i = 0; i < allFamilies.length; i++) {
         const family = allFamilies[i];
         const members = await FamilyServices.getAllMembers({
@@ -109,10 +124,8 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
         });
         membersObject[family.id_family] = members;
         setMembersMap(membersObject);
-
       }
-  
-  
+
       dispatch(setFamilyMembers(membersObject));
     } catch (error) {
       console.error('Error fetching families or members:', error);
@@ -120,9 +133,6 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
       setIsLoading(false);
     }
   };
-  
-  
-  
 
   useEffect(() => {
     const animation = Animated.loop(
@@ -147,7 +157,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
       ]),
       {
         iterations: -1,
-      }
+      },
     );
 
     animation.start();
@@ -167,8 +177,11 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
       if (uri) {
         try {
           setIsLoading(true);
-          const fileUrl = await FamilyServices.changeAvatar(selectedFamily!.id_family, uri);
-          dispatch(updateFamily({ ...selectedFamily!, avatar: fileUrl }));
+          const fileUrl = await FamilyServices.changeAvatar(
+            selectedFamily!.id_family,
+            uri,
+          );
+          dispatch(updateFamily({...selectedFamily!, avatar: fileUrl}));
         } catch (error) {
           console.error('Error updating avatar:', error);
         } finally {
@@ -200,25 +213,52 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const handlePress = (cardId: number) => {
     switch (cardId) {
       case 1:
-        navigation.navigate('FamilyStack', { screen: 'AllMember', params: { id_family: selectedFamily!.id_family } });
+        navigation.navigate('FamilyStack', {
+          screen: 'AllMember',
+          params: {id_family: selectedFamily!.id_family},
+        });
         break;
       case 2:
-        navigation.navigate('ChatStack', { screen: 'ChatFamily', params: { id_family: selectedFamily!.id_family } });
+        navigation.navigate('ChatStack', {
+          screen: 'ChatFamily',
+          params: {id_family: selectedFamily!.id_family},
+        });
         break;
       case 3:
-        navigation.navigate('FamilyStack', { screen: 'Education', params: { id_family: selectedFamily!.id_family } });
+        navigation.navigate('FamilyStack', {
+          screen: 'Education',
+          params: {id_family: selectedFamily!.id_family},
+        });
         break;
       case 4:
-        navigation.navigate('CalendarStack', { screen: 'CalendarScreen', params: { id_family: selectedFamily!.id_family } });
+        navigation.navigate('CalendarStack', {
+          screen: 'CalendarScreen',
+          params: {id_family: selectedFamily!.id_family},
+        });
         break;
       case 5:
-        navigation.navigate('FamilyStack', { screen: 'GuildLine', params: { id_family: selectedFamily!.id_family } });
+        navigation.navigate('FamilyStack', {
+          screen: 'GuildLine',
+          params: {id_family: selectedFamily!.id_family},
+        });
         break;
       case 6:
-        navigation.navigate('FamilyStack', { screen: 'HouseHold', params: { id_family: selectedFamily!.id_family } });
+        navigation.navigate('FamilyStack', {
+          screen: 'HouseHold',
+          params: {id_family: selectedFamily!.id_family},
+        });
         break;
       case 7:
-        navigation.navigate('FamilyStack', { screen: 'CheckList', params: { id_family: selectedFamily!.id_family } });
+        navigation.navigate('FamilyStack', {
+          screen: 'CheckList',
+          params: {id_family: selectedFamily!.id_family},
+        });
+        break;
+      case 8:
+        navigation.navigate('FamilyStack', {
+          screen: 'CheckList',
+          params: {id_family: selectedFamily!.id_family},
+        });
         break;
     }
   };
@@ -248,7 +288,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const leaveFamily = async () => {
     try {
       await FamilyServices.leaveFamily(selectedFamily!.id_family);
-      navigation.navigate('HomeTab', { screen: 'HomeScreen' });
+      navigation.navigate('HomeTab', {screen: 'HomeScreen'});
     } catch (error: any) {
       console.error('Leave family failed:', error);
     }
@@ -269,7 +309,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
           onPress: leaveFamily,
         },
       ],
-      { cancelable: true },
+      {cancelable: true},
     );
   };
 
@@ -286,7 +326,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
           top: 0,
           left: 0,
           right: 0,
-          height: 220, 
+          height: 220,
           paddingTop: 60,
           padding: 10,
         }}>
@@ -317,9 +357,8 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
             </TouchableOpacity>
           )}
           <View style={styles.headerIcon}>
-          <TouchableOpacity onPress={() => setIsOptionsModalVisible(true)}>
-          <Feather name="more-vertical" color={COLORS.white} size={25} />
-
+            <TouchableOpacity onPress={() => setIsOptionsModalVisible(true)}>
+              <Feather name="more-vertical" color={COLORS.white} size={25} />
             </TouchableOpacity>
           </View>
         </View>
@@ -332,7 +371,6 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
         />
         <View>
           <Image
-            
             source={source}
             resizeMode="cover"
             style={{
@@ -367,8 +405,9 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
           top: 90,
           paddingVertical: 20,
         }}>
-        A group of sailors on the Red Sea
+        {selectedFamily.description}
       </Text>
+
       <ScrollView showsVerticalScrollIndicator={false} style={{top: 120}}>
         {/* <Image
           source={require('../../assets/images/family-today-event.png')}
@@ -410,11 +449,11 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
         <View style={{height: 480}}></View>
       </ScrollView>
       <OptionsModal
-            visible={isOptionsModalVisible}
-            onClose={closeOptionsModal}
-            onEditFamily={handleEditFamily}
-            onLeaveFamily={handleLeaveFamily}
-          />
+        visible={isOptionsModalVisible}
+        onClose={closeOptionsModal}
+        onEditFamily={handleEditFamily}
+        onLeaveFamily={handleLeaveFamily}
+      />
       <RBSheet
         ref={bottomSheetRef}
         closeOnDragDown={true}
@@ -431,8 +470,6 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
           description={selectedFamily?.description}
         />
       </RBSheet>
-
-      
     </View>
   );
 };
