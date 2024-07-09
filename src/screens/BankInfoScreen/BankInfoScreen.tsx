@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {VietQR} from 'vietqr';
 import {Text, Image, View, EmitterSubscription} from 'react-native';
 import {FlatList, GestureHandlerRootView} from 'react-native-gesture-handler';
 
