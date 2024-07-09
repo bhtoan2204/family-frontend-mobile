@@ -16,6 +16,7 @@ import {  setSelectedExpense } from 'src/redux/slices/ExpenseAnalysis';
 const screenWidth = Dimensions.get('window').width;
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { DailyExpense } from 'src/interface/expense/DailyExpense';
+import { setDate } from 'date-fns';
 
 const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
   const [expenses, setExpenses] = useState<DailyExpense[]>([]);
@@ -34,8 +35,13 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   let profile = useSelector(selectProfile);
   const dispatch = useDispatch();
-  const [dateFrom, setDateFrom] = useState(new Date());
   const [dateTo, setDateTo] = useState(new Date());
+  const [dateFrom, setDateFrom] = useState(() => {
+    const date = new Date(dateTo);
+    date.setDate(date.getDate() - 30);
+    return date;
+  });
+
 
 
   const fetchDataExpense = async (page: number, reset: boolean = false) => {
@@ -44,9 +50,7 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
       
         const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
         const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
-        console.log(page, itemsPerPage, family.id_family, formattedDateFrom, formattedDateTo)
         const response = await ExpenseServices.getExpenseByDateRange(page, itemsPerPage, family.id_family, formattedDateFrom, formattedDateTo )
-        console.log(response);
         if(response){
           setExpenses(prevExpenses => reset ? response.data : [...prevExpenses, ...response.data]);
           setTotalPageExpense(Math.ceil(response.total / itemsPerPage));

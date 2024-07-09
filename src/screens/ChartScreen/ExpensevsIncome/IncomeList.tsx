@@ -25,9 +25,12 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   let profile = useSelector(selectProfile);
   const dispatch = useDispatch();
-  const [dateFrom, setDateFrom] = useState(new Date());
   const [dateTo, setDateTo] = useState(new Date());
-
+  const [dateFrom, setDateFrom] = useState(() => {
+    const date = new Date(dateTo);
+    date.setDate(date.getDate() - 30);
+    return date;
+  });
  
 
   const fetchDataIncome = async (page: number, reset: boolean = false) => {

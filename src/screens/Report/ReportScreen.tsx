@@ -212,7 +212,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         resizeMode="contain"
       />
       <TouchableOpacity
-        onPress={pressIncomeDay}
+        onPress={() => navigation.navigate('ExpenseStack', {screen: 'ExpenseScreen' })}
         style={{
           position: 'absolute',
           right: 160,
@@ -231,30 +231,53 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           }}
           resizeMode="contain"
         />
+         <Animated.Text
+          style={{
+            position: 'absolute',
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: 'red',
+            paddingHorizontal: 10, 
+            transform: [{ scale: scaleAnim }],
+          }}>
+           - 30.000.000đ
+        </Animated.Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={pressIncomeMonth}
+        onPress={() => navigation.navigate('IncomeStack', { screen: 'IncomeScreen' })}
         style={{
           position: 'absolute',
           right: 140,
           bottom: 380,
           width: 210,
           height: 210,
-          alignItems: 'center',
           justifyContent: 'center',
+          alignItems: 'center',
         }}>
         <Animated.Image
           source={require('../../assets/images/income.png')}
           style={{
             width: '100%',
             height: '100%',
-            transform: [{scale: scaleAnim}],
+            transform: [{ scale: scaleAnim }],
           }}
           resizeMode="contain"
         />
+        <Animated.Text
+          style={{
+            position: 'absolute',
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: 'green',
+            paddingHorizontal: 10, 
+            transform: [{ scale: scaleAnim }],
+          }}>
+          + 30.000.000đ
+        </Animated.Text>
       </TouchableOpacity>
-    </View>
-  );
+
+          </View>
+        );
 
   const renderAsset = () => (
     // navigation.navigate('ExpenseStack', {screen: 'AssetScreen'});
