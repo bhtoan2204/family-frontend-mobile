@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, TouchableOpacity, Image, Animated} from 'react-native';
 import styles from './styles';
 import {ExpenditureScreenProps} from 'src/navigation/NavigationTypes';
@@ -41,6 +41,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
   };
 
   const scaleAnim = new Animated.Value(1);
+  const scaleAnimation = useRef(new Animated.ValueXY({x: 1, y: 1})).current;
 
   const [selectedButton, setSelectedButton] = useState('expenseAnalysis');
   const [currentScreen, setCurrentScreen] = useState('expenseAnalysis');
@@ -255,9 +256,49 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     </View>
   );
 
-  const renderAsset = () =>
-    navigation.navigate('ExpenseStack', {screen: 'AssetScreen'});
-
+  const renderAsset = () => (
+    // navigation.navigate('ExpenseStack', {screen: 'AssetScreen'});
+    <View style={{flex: 1}}>
+      <View style={{marginTop: 35, marginLeft: 15}}>
+        <Text
+          style={{
+            color: '#BD9BCD',
+            fontWeight: 'bold',
+            fontSize: 40,
+            width: '80%',
+            marginBottom: 15,
+          }}>
+          Keep track of your assets
+        </Text>
+        <Text style={{color: '#CCCCCC'}}>
+          Economize your personal assets easily and safely.
+        </Text>
+      </View>
+      <Image
+        source={require('../../assets/images/asset-bg.png')}
+        style={{
+          position: 'absolute',
+          width: 350,
+          height: 500,
+          left: 20,
+          top: 65,
+        }}
+        resizeMode="contain"
+      />
+      <Animated.Image
+        source={require('../../assets/images/asset-car.png')}
+        style={{
+          position: 'absolute',
+          top: 60,
+          width: '100%',
+          height: '100%',
+          right: 30,
+          transform: [{scale: scaleAnim}],
+        }}
+        resizeMode="contain"
+      />
+    </View>
+  );
   const renderScreen = () => {
     switch (currentScreen) {
       case 'expenseAnalysis':
@@ -271,8 +312,34 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     }
   };
 
+  // useEffect(() => {
+  //   Animated.loop(
+  //     Animated.sequence([
+  //       Animated.timing(scaleAnim, {
+  //         toValue: 1.1,
+  //         duration: 1000,
+  //         useNativeDriver: true,
+  //       }),
+  //       Animated.timing(scaleAnim, {
+  //         toValue: 1,
+  //         duration: 1000,
+  //         useNativeDriver: true,
+  //       }),
+  //     ]),
+  //   ).start();
+  // }, [scaleAnim]);
+
+  // useEffect(() => {
+  //   Animated.timing(scaleAnimation, {
+  //     toValue: {x: -100, y: 100},
+  //     duration: 1000,
+  //     useNativeDriver: true,
+  //   }).start();
+  // }, [scaleAnimation]);
+
   useEffect(() => {
-    Animated.loop(
+    // Animation for scaleAnim remains the same
+    const loopAnimation = Animated.loop(
       Animated.sequence([
         Animated.timing(scaleAnim, {
           toValue: 1.1,
@@ -285,9 +352,28 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           useNativeDriver: true,
         }),
       ]),
-    ).start();
-  }, [scaleAnim]);
+    );
 
+    // Adjusted Animation for scaleAnimation
+    const movingAnimationX = Animated.timing(scaleAnimation.x, {
+      toValue: -100,
+      duration: 1000,
+      useNativeDriver: true,
+    });
+
+    const movingAnimationY = Animated.timing(scaleAnimation.y, {
+      toValue: 100,
+      duration: 1000,
+      useNativeDriver: true,
+    });
+
+    // Run both animations for X and Y together, along with the loop animation
+    Animated.parallel([
+      loopAnimation,
+      movingAnimationX,
+      movingAnimationY,
+    ]).start();
+  }, [scaleAnim, scaleAnimation]);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.container}>
