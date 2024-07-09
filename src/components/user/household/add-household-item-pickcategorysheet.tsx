@@ -5,15 +5,11 @@ import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTex
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useCallback, useMemo, useRef } from 'react';
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
-import BulbIcon from 'src/assets/images/household_assets/bulb.png'
-import RoomIcon from 'src/assets/images/household_assets/category.png'
 import AddRoomSheet from './add-room-sheet';
-import { household_category_dat } from './const/data';
 import { COLORS } from 'src/constants';
 import { gradients_list } from 'src/assets/images/gradients';
 import { HouseHoldCategoryInterface } from 'src/interface/household/household_category';
 import { FlatGrid } from 'react-native-super-grid';
-import { useSelector } from 'react-redux';
 
 
 const screenWidth = Dimensions.get('screen').width
@@ -32,19 +28,19 @@ interface AddHouseHoldItemPickCategorySheetProps {
     onNavigateCreateCategory?: () => void,
     category: number,
     categories: HouseHoldCategoryInterface[],
-    onSetCategory: (category: number) => void
+    onSetCategory: (category: number) => void,
+    addCategorySheetRef?: React.RefObject<BottomSheet>
 }
 const AddHouseHoldItemPickCategorySheet = ({
-    refRBSheet, onNavigateCreateCategory, category, onSetCategory, categories
+    refRBSheet, onNavigateCreateCategory, category, onSetCategory, categories, addCategorySheetRef
 }: AddHouseHoldItemPickCategorySheetProps) => {
-    const snapPoints = useMemo(() => ['100%'], []);
+    const snapPoints = useMemo(() => ['95%'], []);
     console.log(categories)
     const renderBackdrop = useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />,
         []
     );
-    // const [rooms, setRooms] = React.useState(roomsData || [])
-    // const categories = useSelector((state: any) => state.household_category)
+
     const [pickCategory, setPickCategory] = React.useState<number>(category)
     const addRoomSheetRef = useRef<BottomSheet>(null)
     return (
@@ -57,6 +53,7 @@ const AddHouseHoldItemPickCategorySheet = ({
             enablePanDownToClose={true}
             handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
             backdropComponent={renderBackdrop}
+
             onClose={() => {
                 Keyboard.dismiss()
             }}
@@ -70,9 +67,8 @@ const AddHouseHoldItemPickCategorySheet = ({
                 }
             }}
         >
-            <View className='flex-1 items-center bg-[#FBF8F1]'>
+            <View className='flex-1 items-center bg-[#f7f7f7]'>
                 <View className='py-4'>
-                    {/* <Image source={RoomIcon} style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} /> */}
                 </View>
                 <View className='flex-row justify-between  w-full'>
                     <View style={{
@@ -95,18 +91,11 @@ const AddHouseHoldItemPickCategorySheet = ({
                 </View>
                 <BottomSheetScrollView snapToInterval={Dimensions.get('screen').width} showsHorizontalScrollIndicator={false} contentContainerStyle={{ minHeight: '100%' }}>
                     <View className='mt-5'>
-                        <ItemItems data={categories} addRoomSheetRef={addRoomSheetRef} onNavigateCreateRoom={onNavigateCreateCategory} pickRoom={pickCategory} setPickCategory={setPickCategory} onSetCategory={onSetCategory} />
+                        <ItemItems data={categories} addRoomSheetRef={addCategorySheetRef} onNavigateCreateRoom={onNavigateCreateCategory} pickRoom={pickCategory} setPickCategory={setPickCategory} onSetCategory={onSetCategory} />
 
                     </View>
                 </BottomSheetScrollView >
-                {/* <TouchableOpacity className='w-[60%] h-14 rounded-lg my-3 justify-center items-center' style={{
-                    backgroundColor: iOSColors.systemBlue.defaultLight,
-                }} onPress={() => {
-                    onSetCategory(pickCategory)
-                    refRBSheet.current?.close()
-                }}>
-                    <Text className='font-bold text-white'>OK</Text>
-                </TouchableOpacity> */}
+                
 
             </View>
             <AddRoomSheet refRBSheet={addRoomSheetRef} />
@@ -141,7 +130,10 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                     marginBottom: 20,
                     borderColor: iOSGrayColors.systemGray5.defaultLight,
                 }}>
-                    <TouchableOpacity onPress={onNavigateCreateRoom}>
+                    <TouchableOpacity onPress={()=>{
+                        addRoomSheetRef?.current?.expand()
+                    
+                    }}>
                         <View className='items-center justify-center' style={{
                             // width: screenWidth * 0.3,
                             backgroundColor: '#e1e1e1',

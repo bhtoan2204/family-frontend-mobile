@@ -3,11 +3,8 @@ import { View, Text, Image, TouchableOpacity, Dimensions, TextInput, ScrollView,
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, } from 'react';
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
-import BulbIcon from 'src/assets/images/household_assets/bulb.png'
-import RoomIcon from 'src/assets/images/household_assets/room.png'
-import AddRoomSheet from './add-room-sheet';
 import { gradients_list } from 'src/assets/images/gradients';
 import { FlatGrid } from 'react-native-super-grid';
 import { COLORS } from 'src/constants';
@@ -22,20 +19,19 @@ interface AddHouseHoldItemPickRoomSheetProps {
     roomsData?: RoomInterface[];
     onNavigateCreateRoom?: () => void
     room: number
-    onSetRoom: (room: number) => void
+    onSetRoom: (room: number) => void;
+    addRoomSheetRef: React.RefObject<BottomSheet>
 
 }
 const AddHouseHoldItemPickRoomSheet = ({
-    refRBSheet, roomsData, onNavigateCreateRoom, room, onSetRoom
+    refRBSheet, roomsData, onNavigateCreateRoom, room, onSetRoom, addRoomSheetRef
 }: AddHouseHoldItemPickRoomSheetProps) => {
-    const snapPoints = useMemo(() => ['100%'], []);
+    const snapPoints = useMemo(() => ['95%'], []);
     const renderBackdrop = useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />,
         []
     );
-    // const [rooms, setRooms] = React.useState(roomsData || [])
     const [pickRoom, setPickRoom] = React.useState<number>(room)
-    // const addRoomSheetRef = useRef<BottomSheet>(null)
     return (
         <BottomSheet
             ref={refRBSheet}
@@ -59,7 +55,7 @@ const AddHouseHoldItemPickRoomSheet = ({
             }}
 
         >
-            <View className='flex-1 items-center bg-[#FBF8F1]'>
+            <View className='flex-1 items-center bg-[#F7F7F7]'>
                 <View className='py-4'>
                     {/* <Image source={RoomIcon} style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} /> */}
                 </View>
@@ -86,21 +82,13 @@ const AddHouseHoldItemPickRoomSheet = ({
                 <BottomSheetScrollView snapToInterval={Dimensions.get('screen').width} showsHorizontalScrollIndicator={false} contentContainerStyle={{ minHeight: '100%' }}>
                     <View className='mt-5'>
 
-                        <ItemItems data={roomsData || []} addRoomSheetRef={refRBSheet} onNavigateCreateRoom={onNavigateCreateRoom} pickRoom={pickRoom} setPickRoom={setPickRoom} onSetRoom={onSetRoom} />
+                        <ItemItems data={roomsData || []} addRoomSheetRef={addRoomSheetRef} onNavigateCreateRoom={onNavigateCreateRoom} pickRoom={pickRoom} setPickRoom={setPickRoom} onSetRoom={onSetRoom} />
 
                     </View>
                 </BottomSheetScrollView >
-                {/* <TouchableOpacity className='w-[60%] h-14 rounded-lg my-3 justify-center items-center' style={{
-                    backgroundColor: iOSColors.systemBlue.defaultLight,
-                }} onPress={() => {
-                    onSetRoom(pickRoom)
-                    refRBSheet.current?.close()
-                }}>
-                    <Text className='font-bold text-white'>OK</Text>
-                </TouchableOpacity> */}
+
 
             </View>
-            {/* <AddRoomSheet refRBSheet={addRoomSheetRef} /> */}
 
         </BottomSheet>
     )
@@ -136,7 +124,10 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                     marginBottom: 20,
                     borderColor: iOSGrayColors.systemGray5.defaultLight,
                 }}>
-                    <TouchableOpacity onPress={onNavigateCreateRoom}>
+                    <TouchableOpacity onPress={() => {
+                        console.log('navigate')
+                        addRoomSheetRef?.current?.expand()
+                    }}>
                         <View className='items-center justify-center' style={{
                             // width: screenWidth * 0.3,
                             backgroundColor: '#e1e1e1',

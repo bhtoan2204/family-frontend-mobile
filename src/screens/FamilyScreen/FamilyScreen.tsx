@@ -132,6 +132,13 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
       params: { id_family: id_family },
     });
   };
+  // const handleNavigateChecklist = () => {
+  //   // navigation.navigate('CheckList', { id_family: id_family });
+  //   navigation.navigate('TodoListStack', {
+  //     screen: 'TodoList',
+  //     params: { id_family: id_family },
+  //   });
+  // };
 
   const handleNavigateNews = () => {
     navigation.navigate('News');

@@ -1,18 +1,8 @@
-import { Dimensions, SafeAreaView, Text, TouchableOpacity, View, Image } from 'react-native';
+import { Dimensions, SafeAreaView, Text, TouchableOpacity, View, Image, ActivityIndicator } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import CreateFamilyScreen from 'src/screens/CreateFamilyScreen';
-import InviteNewMemberScreen from 'src/screens/InviteNewMemberScreen';
-import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
-import ViewFamilyScreen from 'src/screens/FamilyScreen';
-import ViewAllMemberScreen from 'src/screens/AllMember';
-import AddMemberScreen from 'src/screens/AddEditFamilyMemberScreen';
-import { AddConsumableHouseHoldItemScreenProps, AddEditFamilyMemberScreenProps, AddEducationScreenProps, AddGuildLineScreenProps, AddHouseHoldItemDetailScreenProps, AddHouseHoldItemScreenProps, AddHouseHoldRoomScreenProps, AddShoppingListScreenProps, AddSubjectScreenProps, AllMemberScreenProps, CategoryDetailScreenProps, CategoryScreenProps, CheckListDetailScreenProps, CheckListScreenProps, ContactScreenProps, CreateFamilyScreenProps, EditConsumableHouseHoldItemScreenProps, EditDescriptionHouseHoldItemScreenProps, EditEducationScreenProps, EditExpenseHouseHoldItemScreenProps, EducationDetailScreenProps, EducationScreenProps, GuildLineDetailScreenProps, GuildLineScreenProps, HouseHoldItemDetailScreenProps, HouseHoldItemScreenProps, HouseHoldScreenProps, HouseHoldStackProps, ItemScreenProps, NewsScreenProps, RoomDetailScreenProps, SharedGuildLineScreenProps, SubjectDetailScreenProps, UpdateGuildLineScreenProps, ViewAllFamilyScreenProps, ViewFamilyScreenProps } from '../NavigationTypes';
-import ContactListScreen from 'src/screens/ContactList/ContactList';
-import GuildLineScreen from 'src/screens/GuildLineScreen/GuildLineScreen';
-import GuildLineDetailScreen from 'src/screens/GuildLineScreen/GuildLineDetailScreen';
-import EducationScreen from 'src/screens/EducationScreen/EducationScreen';
-import EducationDetailScreen from 'src/screens/EducationScreen/EducationDetailScreen';
-import SubjectDetailScreen from 'src/screens/EducationScreen/SubjectDetailScreen';
+
+import { CategoryDetailScreenProps, CategoryScreenProps, HouseHoldScreenProps, HouseHoldStackProps, ItemScreenProps, RoomDetailScreenProps, } from '../NavigationTypes';
+
 import HouseHoldScreen from 'src/screens/HouseHoldScreen/HouseHoldScreen';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { gradients_list } from 'src/assets/images/gradients';
@@ -21,7 +11,6 @@ import HouseHoldTab from 'src/components/user/household/household-tab';
 
 import ItemScreen from 'src/screens/HouseHoldScreen/ItemScreen';
 import CategoryScreen from 'src/screens/HouseHoldScreen/CategoryScreen';
-import LocalStorage from 'src/store/localstorage';
 import { AppDispatch, RootState } from 'src/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearHouseholdItems, setHouseholdItems } from 'src/redux/slices/HouseHoldSlice';
@@ -35,6 +24,9 @@ import AddRoomSheet from 'src/components/user/household/sheet/add-room-sheet';
 import AddItemSheet from 'src/components/user/household/sheet/add-item-sheet';
 import CategoryDetailScreen from 'src/screens/HouseHoldScreen/CategoryDetailScreen';
 import AddCategorySheet from 'src/components/user/household/sheet/add-category-sheet';
+import AddHouseHoldItemPickRoomSheet from 'src/components/user/household/add-household-item-pickroomsheet';
+import AddHouseHoldItemPickCategorySheet from 'src/components/user/household/add-household-item-pickcategorysheet';
+import { COLORS } from 'src/constants';
 const Stack = createNativeStackNavigator();
 
 const screenWidth = Dimensions.get('window').width;
@@ -44,45 +36,53 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
     const [choosenTab, setChoosenTab] = React.useState<number>(0)
     // console.log(route.params?.params?.id_family)
 
+    const pickCategorySheetRef = React.useRef<BottomSheet>(null)
+    const pickRoomSheetRef = React.useRef<BottomSheet>(null)
+    const addCategorySheetRef = React.useRef<BottomSheet>(null)
     const addRoomSheetRef = React.useRef<BottomSheet>(null)
     const addItemSheetRef = React.useRef<BottomSheet>(null)
-    const addCategorySheetRef = React.useRef<BottomSheet>(null)
 
-    console.log("curr ", route)
+
+
+    // console.log("curr ", route)
     const currScreen = route.params?.screen
     const id_family = route.params?.params?.id_family
     const dispatch = useDispatch<AppDispatch>()
     const familyInfo = useSelector((state: RootState) => state.family).family
 
+    const rooms = useSelector((state: RootState) => state.room)
+    const categories = useSelector((state: RootState) => state.category)
+    const [pickedRoom, setPickedRoom] = React.useState<number>(-1)
+    const [pickedCategory, setPickedCategory] = React.useState<number>(-1)
+    const [loading, setLoading] = React.useState<boolean>(true)
+    const [addItemType, setAddItemType] = React.useState<number>(0) // 0 for room + category, 1 category, 2 room
     useEffect(() => {
-        const fetchRoom = async () => {
-            const data = await HouseHoldService.getAllRoom(id_family!, 1, 100)
-            dispatch(setRoom(data))
-        }
-        const fetchHouseholdData = async () => {
-            const data = await HouseHoldService.getHouseHoldItems(
+        const fetchAllHouseholdData = async () => {
+            setLoading(true)
+            const roomData = await HouseHoldService.getAllRoom(id_family!, 1, 100)
+            dispatch(setRoom(roomData))
+            const householdItemData = await HouseHoldService.getHouseHoldItems(
                 id_family!,
                 1, 100
             )
-            const newHouseholdItems: HouseHoldItemInterface[] = data.map((item, index) => {
+            const newHouseholdItems: HouseHoldItemInterface[] = householdItemData.map((item, index) => {
                 const gradient = gradients_list[Math.floor(index % gradients_list.length)]
                 return {
                     ...item,
                     item_image: gradient,
                 }
             })
-            console.log(newHouseholdItems)
             dispatch(setHouseholdItems(newHouseholdItems))
-        }
-        const fetchCategory = async () => {
             const data = await HouseHoldService.getAllHouseHoldCategory()
             dispatch(setCategories(data))
-            console.log(data)
+            setLoading(false)
         }
-        fetchRoom()
-        fetchHouseholdData()
-        fetchCategory()
-
+        console.log('fetching data...')
+        fetchAllHouseholdData()
+        // fetchRoom()
+        // fetchHouseholdData()
+        // fetchCategory()
+        console.log('done fetching data...')
         return () => {
             console.log("HouseHoldScreen unmounting clearing store...")
             dispatch(clearHouseholdItems())
@@ -101,7 +101,11 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
         }
     }, [currScreen])
 
-
+    if (loading) {
+        return <View className='justify-center items-center flex-1'>
+            <ActivityIndicator size="small" color={COLORS.AuroMetalSaurus} />
+        </View>
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-[#F7F7F7]">
@@ -171,14 +175,25 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
                             headerShown: false,
                         }}>
 
-                        <Stack.Screen name="HouseHoldScreen">{(props) => <HouseHoldScreen {...props as HouseHoldScreenProps} addRoomRef={addRoomSheetRef} />}</Stack.Screen>
-                        <Stack.Screen name="ItemScreen"
+                        <Stack.Screen name="HouseHoldScreen"
+                            options={{
+                                animationTypeForReplace: 'pop',
+                                gestureEnabled: false,
 
+                            }}
+                        >{(props) => <HouseHoldScreen {...props as HouseHoldScreenProps} addRoomRef={addRoomSheetRef}
+                        />}</Stack.Screen>
+                        <Stack.Screen name="ItemScreen"
+                            options={{
+                                animationTypeForReplace: 'pop',
+                                gestureEnabled: false,
+
+                            }}
                         >{(props) => <ItemScreen {...props as ItemScreenProps} addItemRef={addItemSheetRef} addRoomRef={addRoomSheetRef} />}</Stack.Screen>
                         <Stack.Screen name="CategoryScreen"
                             options={{
-                                animation: 'slide_from_right',
                                 animationTypeForReplace: 'pop',
+                                gestureEnabled: false,
                             }}
 
                         >{(props) => <CategoryScreen {...props as CategoryScreenProps}
@@ -187,11 +202,34 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
 
 
                         <Stack.Screen name="RoomDetail"
-
-                        >{(props) => <RoomDetailScreen {...props as RoomDetailScreenProps} />}</Stack.Screen>
+                            options={{
+                                gestureEnabled: false,
+                                animationTypeForReplace: 'pop',
+                            }}
+                        >{(props) => <RoomDetailScreen {...props as RoomDetailScreenProps}
+                            setAddItemType={(type: number) => {
+                                setAddItemType(type)
+                            }}
+                            setPickedRoom={(room: number) => {
+                                setPickedRoom(room)
+                            }}
+                            addItemSheetRef={addItemSheetRef}
+                        />}</Stack.Screen>
                         <Stack.Screen name="CategoryDetail"
+                            options={{
+                                gestureEnabled: false,
+                                animationTypeForReplace: 'pop',
+                            }}
+                        >{(props) => <CategoryDetailScreen {...props as CategoryDetailScreenProps}
+                            setAddItemType={(type: number) => {
+                                setAddItemType(type)
+                            }}
+                            setPickedCategory={(category: number) => {
+                                setPickedCategory(category)
+                            }}
+                            addItemSheetRef={addItemSheetRef}
 
-                        >{(props) => <CategoryDetailScreen {...props as CategoryDetailScreenProps} />}</Stack.Screen>
+                        />}</Stack.Screen>
 
 
 
@@ -200,8 +238,35 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
 
                 </View>
             </View>
-            <AddItemSheet bottomSheetRef={addItemSheetRef} id_family={id_family!} addRoomSheetRef={addRoomSheetRef} />
+
+
+
+            <AddItemSheet
+                bottomSheetRef={addItemSheetRef} id_family={id_family!}
+                pickRoomSheetRef={pickRoomSheetRef}
+                pickCategorySheetRef={pickCategorySheetRef}
+                addItemType={addItemType}
+                pickedRoom={pickedRoom}
+                pickedCategory={pickedCategory}
+                rooms={rooms}
+                categories={categories}
+
+            />
+            <AddHouseHoldItemPickRoomSheet
+                refRBSheet={pickRoomSheetRef}
+                roomsData={rooms} room={pickedRoom} onSetRoom={(room: number) => {
+                    setPickedRoom(room)
+                }}
+                addRoomSheetRef={addRoomSheetRef}
+            />
             <AddRoomSheet bottomSheetRef={addRoomSheetRef} id_family={id_family!} />
+            <AddHouseHoldItemPickCategorySheet
+                refRBSheet={pickCategorySheetRef} category={pickedCategory} onSetCategory={(id: number) => {
+                    setPickedCategory(id)
+                }}
+                categories={categories}
+                addCategorySheetRef={addCategorySheetRef}
+            />
             <AddCategorySheet bottomSheetRef={addCategorySheetRef} id_family={id_family!} />
 
         </SafeAreaView>

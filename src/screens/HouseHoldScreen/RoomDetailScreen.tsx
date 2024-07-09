@@ -10,11 +10,12 @@ import { COLORS } from 'src/constants'
 import { updateImageProp } from 'src/redux/slices/HouseHoldDetailSlice'
 
 
-const RoomDetailScreen = ({ navigation, route }: RoomDetailScreenProps) => {
+const RoomDetailScreen = ({ navigation, route, setAddItemType, setPickedRoom, addItemSheetRef }: RoomDetailScreenProps) => {
     const { id_room, id_family } = route.params
     const householdItems = useSelector((state: RootState) => state.householdItems).filter(item => item.id_room == id_room)
     const roomInfo = useSelector((state: RootState) => state.room).find(room => room.id_room == id_room)
     const [refreshing, setRefreshing] = React.useState(false);
+
     const dispatch = useDispatch<AppDispatch>()
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -23,6 +24,14 @@ const RoomDetailScreen = ({ navigation, route }: RoomDetailScreenProps) => {
         }, 2000);
     }, []);
 
+    React.useEffect(() => {
+        setAddItemType(2)
+        setPickedRoom(id_room!)
+        return () => {
+            setAddItemType(0)
+            setPickedRoom(-1)
+        }
+    })
 
 
 
@@ -73,7 +82,8 @@ const RoomDetailScreen = ({ navigation, route }: RoomDetailScreenProps) => {
                             color: COLORS.Azure,
                         }}
                         onPress={() => {
-                            console.log('add item')
+                            // console.log('add item')
+                            addItemSheetRef!.current?.expand()
                         }}
                     >Add item</Text>
 

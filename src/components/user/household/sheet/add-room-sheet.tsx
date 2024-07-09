@@ -1,21 +1,18 @@
 import React, { useEffect } from 'react'
-import { View, Text, ScrollView, RefreshControl, Keyboard, Dimensions, Image, TouchableOpacity, TextInput, ActivityIndicator, ImageBackground } from 'react-native'
+import { View, Text, Keyboard, Dimensions, Image, TouchableOpacity,  ActivityIndicator, ImageBackground } from 'react-native'
 import { COLORS } from 'src/constants'
-import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput, } from '@gorhom/bottom-sheet';
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
-import RoomIcon from 'src/assets/images/household_assets/room.png';
-import ImageIcon from 'src/assets/images/household_assets/image.png';
+
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
 import PickImageSheet from '../household-item-stack/pick-image-sheet';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import HouseHoldService from 'src/services/apiclient/HouseHoldService';
 import { AppDispatch } from 'src/redux/store';
 import { useDispatch } from 'react-redux';
 import { addRoom } from 'src/redux/slices/RoomSlice';
 
 import NewRoomImageSheet from 'src/assets/images/household_assets/new_room_image_sheet.png'
-import OpenedFolder from 'src/assets/images/household_assets/OpenedFolder.png'
 import Camera from 'src/assets/images/household_assets/Camera.png'
 import Room2 from 'src/assets/images/household_assets/Room_2.png'
 
@@ -189,6 +186,9 @@ const AddRoomSheet = ({
             </>
             <BottomSheetScrollView className='flex-1' automaticallyAdjustKeyboardInsets
                 keyboardShouldPersistTaps='handled'
+                style={{
+                    backgroundColor: '#f7f7f7',
+                }}
             >
 
                 <View className='flex-1'>

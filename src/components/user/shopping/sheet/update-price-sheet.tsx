@@ -22,7 +22,7 @@ import Ingredients from 'src/assets/images/household_assets/Ingredients.png'
 import AddInfoImageSheet from 'src/assets/images/shoppinglist_assets/add_info_image_sheet.png'
 import { BlurView } from 'expo-blur';
 import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interface/shopping/shopping_list';
-import { addShoppingList, addShoppingListItem } from 'src/redux/slices/ShoppingListSlice';
+import { addShoppingList, addShoppingListItem, updatePriceItem } from 'src/redux/slices/ShoppingListSlice';
 import { to_vietnamese } from 'src/utils/currency-str';
 
 
@@ -56,8 +56,7 @@ const UpdatePriceSheet = ({
     const [showError, setShowError] = React.useState(false)
 
 
-    const [inputPrice, setInputPrice] = React.useState<number>(price*1000)
-    const [inputDescription, setInputDescription] = React.useState('')
+    const [inputPrice, setInputPrice] = React.useState<number>(price * 1000)
 
 
     const shoppingList = useSelector((state: RootState) => state.shoppinglist).shoppingList.filter(list => list.id_shopping_list_type == id_shopping_list_type)
@@ -142,8 +141,13 @@ const UpdatePriceSheet = ({
         </View>
     }
 
-    const buildText2 = () => {
-
+    const handleSubmit = async () => {
+        dispatch(updatePriceItem({
+            id_list: id_list,
+            id_item: id_item,
+            price: (inputPrice).toString(),
+        }))
+        bottomSheetRef.current?.close()
     }
 
     return (
@@ -191,7 +195,7 @@ const UpdatePriceSheet = ({
 
                             }}>Enter price and description for your item</Text>
                         </View>
-                        
+
                         {
                             buildInputPrice()
                         }
@@ -211,6 +215,7 @@ const UpdatePriceSheet = ({
                                     // await handleSubmit()
                                     // setSelectDate(new Date)
                                     // bottomSheetRef.current?.snapTo(0)
+                                    handleSubmit()
                                 }}
                             >
                                 <Text className='text-white text-base font-semibold'>Save</Text>

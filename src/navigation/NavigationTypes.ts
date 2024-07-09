@@ -17,6 +17,7 @@ export type RootParamList = {
   HouseHoldStack: NavigatorScreenParams<HouseHoldStackParamList>;
   HouseHoldItemStack: NavigatorScreenParams<HouseHoldItemStackParamList>;
   ShoppingListStack: NavigatorScreenParams<ShoppingListStackParamList>;
+  TodoListStack: NavigatorScreenParams<TodoListStackParamList>;
   // ShoppingListCategoryStack: NavigatorScreenParams<ShoppingListCategoryStackParamList>;
 };
 
@@ -503,6 +504,9 @@ type RoomDetailNavigationProp = NativeStackNavigationProp<
 export interface RoomDetailScreenProps {
   navigation: RoomDetailNavigationProp;
   route: RouteProp<HouseHoldStackParamList, 'RoomDetail'>;
+  setAddItemType: (type: number) => void;
+  setPickedRoom: (room: number) => void;
+  addItemSheetRef: React.RefObject<BottomSheet> | undefined;
 }
 
 type ItemScreenNavigationProp = NativeStackNavigationProp<
@@ -546,6 +550,9 @@ type CategoryDetailNavigationProp = NativeStackNavigationProp<
 export interface CategoryDetailScreenProps {
   navigation: CategoryDetailNavigationProp;
   route: RouteProp<HouseHoldStackParamList, 'CategoryDetail'>;
+  setAddItemType: (type: number) => void;
+  setPickedCategory: (category: number) => void;
+  addItemSheetRef: React.RefObject<BottomSheet> | undefined;
 }
 //// shopping stacks
 type ShoppingListStackParamList = {
@@ -650,6 +657,63 @@ export interface ShoppingListDetailScreenProps {
 //     'ShoppingListCategoryDetail'
 //   >;
 // }
+
+type TodoListStackParamList = {
+  TodoList: {
+    id_family: number | undefined;
+  };
+  TodoListCategory: {
+    id_family: number | undefined;
+    id_category: number;
+  };
+  TodoListItemDetail: {
+    id_family: number | undefined;
+    id_list: number;
+    id_category: number;
+    id_item: number;
+  };
+};
+
+type TodoStackNavigationProp = NativeStackNavigationProp<
+  RootParamList,
+  'TodoListStack'
+>;
+
+export interface TodoListStackProps {
+  navigation: TodoStackNavigationProp;
+  route: RouteProp<RootParamList, 'TodoListStack'>;
+}
+
+type TodoListNavigationProp = NativeStackNavigationProp<
+  TodoListStackParamList,
+  'TodoList'
+>;
+
+export interface TodoListScreenProps {
+  navigation: TodoListNavigationProp;
+  route: RouteProp<TodoListStackParamList, 'TodoList'>;
+}
+
+type TodoListCategoryNavigationProp = NativeStackNavigationProp<
+  TodoListStackParamList,
+  'TodoListCategory'
+>;
+
+export interface TodoListCategoryScreenProps {
+  navigation: TodoListCategoryNavigationProp;
+  route: RouteProp<TodoListStackParamList, 'TodoListCategory'>;
+}
+
+type TodoListItemDetailNavigationProp = NativeStackNavigationProp<
+  TodoListStackParamList,
+  'TodoListItemDetail'
+>;
+
+export interface TodoListItemDetailScreenProps {
+  navigation: TodoListItemDetailNavigationProp;
+  route: RouteProp<TodoListStackParamList, 'TodoListItemDetail'>;
+}
+
 
 /////
 type CalendarStackNavigationProp = NativeStackNavigationProp<

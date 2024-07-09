@@ -64,6 +64,7 @@ const ShoppingListPickCategorySheet = ({
             keyboardBehavior="extend"
             keyboardBlurBehavior="restore"
             onChange={(index) => {
+                console.log(categories)
                 if (index == -1) {
                     if (pickCategory === -1) {
                         setPickCategory(-1)
@@ -191,7 +192,7 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                             }}
                         >
                             <Image
-                                source={gradients_list[index % gradients_list.length]}
+                                source={item.icon_url ? { uri: item.icon_url } : gradients_list[index % gradients_list.length]}
                                 style={{
                                     // width: screenWidth * 0.3,
                                     width: '80%',

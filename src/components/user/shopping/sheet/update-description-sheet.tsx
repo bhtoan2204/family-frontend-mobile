@@ -22,7 +22,7 @@ import Ingredients from 'src/assets/images/household_assets/Ingredients.png'
 import AddInfoImageSheet from 'src/assets/images/shoppinglist_assets/add_info_image_sheet.png'
 import { BlurView } from 'expo-blur';
 import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interface/shopping/shopping_list';
-import { addShoppingList, addShoppingListItem } from 'src/redux/slices/ShoppingListSlice';
+import { addShoppingList, addShoppingListItem, updateDescriptionItem } from 'src/redux/slices/ShoppingListSlice';
 import { to_vietnamese } from 'src/utils/currency-str';
 
 
@@ -74,7 +74,14 @@ const UpdateDescriptionSheet = ({
 
     }, [showError])
 
-
+    const handleSubmit = async () => {
+        dispatch(updateDescriptionItem({
+            id_list: id_list,
+            id_item: id_item,
+            description: inputDescription
+        }))
+        bottomSheetRef.current?.close()
+    }
 
     const renderBackdrop = React.useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} pressBehavior={
@@ -88,7 +95,7 @@ const UpdateDescriptionSheet = ({
 
             <BottomSheetTextInput
                 placeholder='Give your item a description'
-                value={description}
+                value={inputDescription}
                 onChangeText={(text) => {
                     setInputDescription(text)
                 }}
@@ -183,6 +190,7 @@ const UpdateDescriptionSheet = ({
                                     // await handleSubmit()
                                     // setSelectDate(new Date)
                                     // bottomSheetRef.current?.snapTo(0)
+                                    handleSubmit()
                                 }}
                             >
                                 <Text className='text-white text-base font-semibold'>Save</Text>

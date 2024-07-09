@@ -10,7 +10,7 @@ import { COLORS } from 'src/constants'
 import { updateImageProp } from 'src/redux/slices/HouseHoldDetailSlice'
 
 
-const CategoryDetailScreen = ({ navigation, route }: CategoryDetailScreenProps) => {
+const CategoryDetailScreen = ({ navigation, route,setAddItemType,setPickedCategory,addItemSheetRef }: CategoryDetailScreenProps) => {
     const { id_family, id_category } = route.params
     console.log("huhu",id_category)
     const householdItems = useSelector((state: RootState) => state.householdItems).filter(item => item.id_category == id_category)
@@ -24,7 +24,14 @@ const CategoryDetailScreen = ({ navigation, route }: CategoryDetailScreenProps) 
             setRefreshing(false);
         }, 2000);
     }, []);
-
+    React.useEffect(() => {
+        setAddItemType(1)
+        setPickedCategory(id_category!)
+        return () => {
+            setAddItemType(0)
+            setPickedCategory(-1)
+        }
+    })
 
 
 
@@ -75,7 +82,7 @@ const CategoryDetailScreen = ({ navigation, route }: CategoryDetailScreenProps) 
                             color: COLORS.Azure,
                         }}
                         onPress={() => {
-                            console.log('add item')
+                            addItemSheetRef!.current?.expand()
                         }}
                     >Add item</Text>
 

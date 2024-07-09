@@ -174,6 +174,8 @@ const AddItemSheet = ({
                     setHouseholdRoom(-1)
                 }
             }}
+            // keyboardBehavior="extend"
+            // keyboardBlurBehavior="restore"
 
         >
             <View className='flex-1 bg-[#F7F7F7] '>

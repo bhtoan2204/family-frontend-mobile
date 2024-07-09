@@ -16,12 +16,14 @@ import forgorPasswordReducer from './slices/ForgotPassword';
 import familyReducer from './slices/FamilySlice';
 import categorySlice from './slices/CategorySlice';
 import HouseHoldRefSlice from './slices/HouseHoldRefSlice';
+import TodoListSlice from './slices/TodoListSlice';
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
     family: familyReducer,
-    checklist: checkListReducer,
+    // checklist: checkListReducer,
     shoppinglist: shoppingListSlice,
+    todoList: TodoListSlice,
     finance: financeReducer,
     expenseAnalysis: expenseAnalysisReducer,
     calendar: calendarReducer,

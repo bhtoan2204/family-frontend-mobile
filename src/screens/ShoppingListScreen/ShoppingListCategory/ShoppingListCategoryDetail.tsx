@@ -196,7 +196,7 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                 </View>
 
                 <Text className='text-base text-[#2F2F34]'>{
-                    itemDetail?.price != '' || itemDetail?.price != null ? itemDetail?.price : 'Add price'
+                    itemDetail?.price != '' && itemDetail?.price != null ? convertToNumber(itemDetail?.price)  : 'Add price'
                 }</Text>
             </View>
         </TouchableOpacity>

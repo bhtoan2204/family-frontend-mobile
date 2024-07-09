@@ -3,11 +3,10 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { Agenda, AgendaSchedule, Calendar, CalendarList } from 'react-native-calendars'
 import { useSelector } from 'react-redux'
-import { ShoppingListScreenProps } from 'src/navigation/NavigationTypes'
+import { ShoppingListScreenProps, TodoListScreenProps } from 'src/navigation/NavigationTypes'
 import { RootState } from 'src/redux/store'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import { COLORS } from 'src/constants'
-import { colors } from '../const/color'
 
 import GroceryImage from 'src/assets/images/shoppinglist_assets/grocery.png'
 import ElectronicsImage from 'src/assets/images/shoppinglist_assets/Electronics.png'
@@ -15,16 +14,15 @@ import ClothingImage from 'src/assets/images/shoppinglist_assets/Clothing.png'
 import FurnitureImage from 'src/assets/images/shoppinglist_assets/Furniture.png'
 import PharmacyImage from 'src/assets/images/shoppinglist_assets/Pharmacy.png'
 import OtherImage from 'src/assets/images/shoppinglist_assets/Other.png'
+import { colors } from '../const/color'
 const screenHeight = Dimensions.get('screen').height;
 
 
-const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCategory }: ShoppingListScreenProps) => {
+const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
     const { id_family } = route.params
     const familyInfo = useSelector((state: RootState) => state.family).family
     const [selectDate, setSelectDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
-    const shoppingList = useSelector((state: RootState) => state.shoppinglist).shoppingList
-    const shoppingListType = useSelector((state: RootState) => state.shoppinglist).shoppingListType
-    const shoppingListFiltered = shoppingList.filter((item) => item.id_family === id_family)
+    const todoListTypes = useSelector((state: RootState) => state.todoList).todoListType
     // const handleFilterData = () => {
     //     const returnArray = []
     //     for (let i = 0; i < data.length; i++) {
@@ -53,13 +51,13 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
             setSelectDate(date.dateString);
         }
     };
-    const handleNavigateCategory = (id_category: number) => {
-        navigation.navigate('ShoppingListCategory', {
-            id_family: id_family,
-            id_category: id_category
-        })
+    // const handleNavigateCategory = (id_category: number) => {
+    //     navigation.navigate('ShoppingListCategory', {
+    //         id_family: id_family,
+    //         id_category: id_category
+    //     })
 
-    }
+    // }
 
     const buildDate = (dateString: string) => {
         const date: Date = new Date(dateString);
@@ -119,7 +117,7 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
                     </TouchableOpacity>
                     <Text className='flex-1 text-center text-lg'
                         style={{ color: COLORS.Rhino, fontWeight: 'bold' }}
-                    >Shopping List</Text>
+                    >CheckList</Text>
                     <View className='flex-1 items-end'>
                         <Material name='refresh' size={25} />
                     </View>
@@ -156,7 +154,7 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
                 }} className=' py-4'>
                     <Text className='ml-6 my-4 text-base font-semibold' style={{
                         color: COLORS.Rhino,
-                    }}>My shopping list</Text>
+                    }}>My checklist</Text>
                     {/* <ShoppingListCategoryItem id_category={1} category_name='Grocery' total_items={10}
                         handleNavigateCategory={handleNavigateCategory}
                     />
@@ -166,10 +164,16 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
                     <ShoppingListCategoryItem id_category={5} category_name='Pharmacy' total_items={10} handleNavigateCategory={handleNavigateCategory} />
                     <ShoppingListCategoryItem id_category={6} category_name='Other' total_items={10} handleNavigateCategory={handleNavigateCategory} /> */}
                     {
-                        shoppingListType.length > 0 && shoppingList.length > 0 && shoppingListType.map((item, index) => {
-                            const total_items = shoppingList.filter((shoppingItem) => shoppingItem.id_shopping_list_type === item.id_shopping_list_type)[0]?.items?.length || 0
-                            return <ShoppingListCategoryItem key={index} id_category={item.id_shopping_list_type} category_name={item.type_name_en} total_items={total_items}
-                                handleNavigateCategory={handleNavigateCategory}
+                        todoListTypes.length > 0 && todoListTypes.length > 0 && todoListTypes.map((item, index) => {
+                            // const total_items = todoListTypes.filter((shoppingItem) => shoppingItem.id_shopping_list_type === item.id_shopping_list_type).length
+                            return <TodoListCategoryItem key={index} id_category={item.id_checklist_type} category_name={item.name_en} total_items={10}
+                                handleNavigateCategory={() => {
+                                    // console.log('navigate')
+                                    navigation.navigate('TodoListCategory',{
+                                        id_family: id_family,
+                                        id_category: item.id_checklist_type
+                                    })
+                                }}
                             />
                         })
                     }
@@ -180,16 +184,14 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
     )
 }
 
-interface ShoppingListCategoryItemProps {
+interface TodoListCategoryItemProps {
     id_category: number;
     category_name: string;
     total_items: number;
     handleNavigateCategory: (id_category: number) => void;
 }
 
-const ShoppingListCategoryItem = ({ id_category, category_name, total_items, handleNavigateCategory }: ShoppingListCategoryItemProps) => {
-
-
+const TodoListCategoryItem = ({ id_category, category_name, total_items, handleNavigateCategory }: TodoListCategoryItemProps) => {
     const getImage = (id_category: number) => {
         if (id_category === 1) {
             return GroceryImage
@@ -247,4 +249,4 @@ const ShoppingListCategoryItem = ({ id_category, category_name, total_items, han
     </TouchableOpacity>
 }
 
-export default ShoppingListScreen
+export default TodoListScreen
