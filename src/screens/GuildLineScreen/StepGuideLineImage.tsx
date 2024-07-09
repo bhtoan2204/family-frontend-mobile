@@ -4,11 +4,9 @@ import { GuildLineDetail, Step } from 'src/interface/guideline/guideline';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import Img from 'src/assets/images/guildline.png';
 import * as Animatable from 'react-native-animatable';
-import Animated, { Easing } from 'react-native-reanimated';
 import ImageComponent from 'src/components/Image/Image';
 import useImageValid from 'src/hooks/useImageValid';
 import { Keyboard } from 'react-native';
-import { useKeyboardVisible } from 'src/hooks/useKeyboardVisible';
 
 // if (
 //     Platform.OS === 'android' &&

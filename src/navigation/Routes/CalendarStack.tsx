@@ -1,5 +1,5 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import CalendarScreen from 'src/screens/Calendar';
+import CalendarScreen from 'src/screens/Calendar/Calendar';
 import { CalendarScreenProps, CreateCategoryEventScreenProps, CreateEventScreenProps, EventDetailsScreenProps, EventListScreenProps, ScheduleScreenProps, UpdateEventScreenProps } from '../NavigationTypes';
 import CreateEventModal from 'src/screens/Calendar/CreateEvent';
 import CreateEventScreen from 'src/screens/Calendar/CreateEvent/CreateEvent';
