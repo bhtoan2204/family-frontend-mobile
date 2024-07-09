@@ -18,7 +18,6 @@ import { setPackage } from 'src/redux/slices/PackageSlice';
 
 const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
   const [value, setValue] = React.useState(0);
-  const {id_family} = route.params || {};
   const [selectedPackage, setSelectedPackage] = useState<null | Package>(null);
   const [selectedMount, setSelectedMount] = useState<number>(0);
   const [packages, setPackages] = useState<Package[]>([]);
@@ -27,7 +26,7 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
   
   const handleSelectPackage = (pkg: Package) => {
     dispatch(setPackage(pkg));
-    navigation.navigate('OrderDetailScreen', {id_family});
+    navigation.navigate('OrderDetailScreen');
   };
 
   const handleGetPackages = async () => {

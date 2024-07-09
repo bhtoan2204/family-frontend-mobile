@@ -32,9 +32,7 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
     navigation.navigate('MemberDetails', { member: member });
   };
 
-  useEffect(()=>{
-    console.log(members)
-  },[])
+
   // const filteredMembers = members
   //   ? members.filter(
   //       (member) =>

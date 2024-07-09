@@ -1,5 +1,3 @@
-// ios 79354209613-utvqpvit5utmdalov9jdjotulc1m5fq9.apps.googleusercontent.com
-// android
 
 import {
   Ionicons,
