@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList, Text, View, TouchableOpacity, Image} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList, Text, View, TouchableOpacity, Image, ActivityIndicator, SafeAreaView } from 'react-native';
 import * as Contacts from 'expo-contacts';
-import {ContactScreenProps} from 'src/navigation/NavigationTypes';
+import { ContactScreenProps } from 'src/navigation/NavigationTypes';
 import styles from './styles';
 import { User } from 'src/interface/member/member';
 import { ProfileServices } from 'src/services/apiclient';
@@ -11,7 +11,7 @@ interface Contact {
   id?: string;
   name: string;
   phoneNumbers?: Contacts.PhoneNumber[] | undefined;
-  user?: User; 
+  user?: User;
 }
 
 const ContactListScreen: React.FC<ContactScreenProps> = ({
@@ -19,7 +19,8 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
   route,
 }) => {
   const [contacts, setContacts] = useState<Contact[]>([]);
-  const {id_family} = route.params;
+  const [isLoading, setIsLoading] = useState(true);
+  const { id_family } = route.params;
 
   const convertPhoneNumber = (phoneNumber: string) => {
     if (phoneNumber.startsWith('0')) {
@@ -31,9 +32,9 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
   useEffect(() => {
     (async () => {
       try {
-        const {status} = await Contacts.requestPermissionsAsync();
+        const { status } = await Contacts.requestPermissionsAsync();
         if (status === 'granted') {
-          const {data} = await Contacts.getContactsAsync({
+          const { data } = await Contacts.getContactsAsync({
             fields: [Contacts.Fields.Name, Contacts.Fields.PhoneNumbers],
           });
 
@@ -50,7 +51,7 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
                   setContacts(prevContacts => {
                     return prevContacts.map(prevContact =>
                       prevContact.id === contact.id
-                        ? {...prevContact, user}
+                        ? { ...prevContact, user }
                         : prevContact
                     );
                   });
@@ -65,6 +66,8 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
         }
       } catch (error) {
         console.error('Error fetching contacts:', error);
+      } finally {
+        setIsLoading(false);
       }
     })();
   }, []);
@@ -82,43 +85,41 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
       }
     }
   };
+
   const UserContact: React.FC<{ item: Contact }> = ({ item }) => (
     <View
-    style={[
-      {
-        padding: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-        flexDirection: 'row',
-        alignItems: 'center',
-      },
-      styles.userContact,
-    ]}>
-    <View style={styles.imgCon}>
-      <View style={styles.placeholder}>
-        <Text style={styles.txt}>{item.name[0]}</Text>
-        </View>
-    </View>
-    <View style={styles.contactDat}>
-      <Text style={styles.name}>{`${item.name}`}</Text>
-      <Text style={styles.phoneNumber}>
-        {item.phoneNumbers && item.phoneNumbers.length > 0 ? item.phoneNumbers[0].number : ''}
-      </Text>
-      <View style={styles.appIndicatorContainer}>
-        <Text style={styles.appIndicator}>Already on FamFund as</Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{color: COLORS.DenimBlue}}> {item.user[0].firstname} {item.user[0].lastname} </Text>
-          <Image source={{ uri: item.user[0].avatar }} style={styles.avatar} />
+      style={[
+        {
+          padding: 16,
+          borderBottomWidth: 1,
+          borderBottomColor: '#ccc',
+          flexDirection: 'row',
+          alignItems: 'center',
+        },
+        styles.userContact,
+      ]}>
+      <View style={styles.imgCon}>
+        <View style={styles.placeholder}>
+          <Text style={styles.txt}>{item.name[0]}</Text>
         </View>
       </View>
-
-
-  </View>
-  </View>
-
+      <View style={styles.contactDat}>
+        <Text style={styles.name}>{`${item.name}`}</Text>
+        <Text style={styles.phoneNumber}>
+          {item.phoneNumbers && item.phoneNumbers.length > 0 ? item.phoneNumbers[0].number : ''}
+        </Text>
+        <View style={styles.appIndicatorContainer}>
+          <Text style={styles.appIndicator}>Already on FamFund as</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ color: COLORS.DenimBlue }}> {item.user[0].firstname} {item.user[0].lastname} </Text>
+            <Image source={{ uri: item.user[0].avatar }} style={styles.avatar} />
+          </View>
+        </View>
+      </View>
+    </View>
   );
 
-  const NormalContact: React.FC<{item: Contact}> = ({item}) => (
+  const NormalContact: React.FC<{ item: Contact }> = ({ item }) => (
     <View
       style={[
         {
@@ -132,11 +133,11 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
       ]}>
       <View style={styles.imgCon}>
         <View style={styles.placeholder}>
-        <Text style={styles.txt}>{item.name[0]}</Text>
+          <Text style={styles.txt}>{item.name[0]}</Text>
         </View>
       </View>
-        <View style={styles.contactDat}>
-      <Text style={styles.txt}>{item.name}</Text>
+      <View style={styles.contactDat}>
+        <Text style={styles.txt}>{item.name}</Text>
         <Text style={styles.phoneNumber}>
           {item.phoneNumbers && item.phoneNumbers.length > 0 ? item.phoneNumbers[0].number : ''}
         </Text>
@@ -144,7 +145,7 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
     </View>
   );
 
-  const renderContactItem = ({item}: {item: Contact}) => {
+  const renderContactItem = ({ item }: { item: Contact }) => {
     return (
       <TouchableOpacity onPress={() => handleContactPress(item.phoneNumbers)}>
         {item.user ? <UserContact item={item} /> : <NormalContact item={item} />}
@@ -153,14 +154,23 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
   };
 
   return (
-    <View style={{flex: 1, paddingTop: 20}}>
-      <FlatList
-        data={contacts}
-        renderItem={renderContactItem}
-        keyExtractor={item => item.id || ''}
-        ListEmptyComponent={() => <Text>No contacts found</Text>}
-      />
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerTitle}>Contact List</Text>
+      </View>
+      {isLoading ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color={COLORS.Primary} />
+        </View>
+      ) : (
+        <FlatList
+          data={contacts}
+          renderItem={renderContactItem}
+          keyExtractor={item => item.id || ''}
+          ListEmptyComponent={() => <Text>No contacts found</Text>}
+        />
+      )}
+    </SafeAreaView>
   );
 };
 
