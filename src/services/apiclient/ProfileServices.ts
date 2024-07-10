@@ -33,6 +33,40 @@ const ProfileServices = {
       throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
+  getUserInfoByPhone: async (phone: string) => {
+    try {
+      const response: AxiosResponse = await instance.get(ProfileUrl.getUserInfoByPhone, {
+        params: {
+          phone
+        }
+      } );
+
+      if (response.status === 200) {
+        return response.data.data;
+      } 
+      
+    } catch (error) {
+      
+    }
+  },
+  getUserInfoByEmail: async (email: string) => {
+    try {
+      const response: AxiosResponse = await instance.get(ProfileUrl.getUserInfoByEmail, {
+        params: {
+          email
+        }
+      } );
+
+      if (response.status === 200) {
+        return response.data;
+      } 
+      else{
+        return null;
+      }
+    } catch (error) {
+      throw new Error(ERROR_TEXTS.API_ERROR);
+    }
+  },
   markRead: async (index: string) => {
     try {
       const response: AxiosResponse = await instance.get(ProfileUrl.markRead + `/${index}`);

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Modal } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { StyleSheet } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { RRule } from 'rrule';
 import { useDispatch } from 'react-redux';
-import styles from './StyleCustom';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import styles from './StyleCustom';
 
 const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
   const [number, setNumber] = useState<number>(1);
@@ -57,12 +56,12 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
               onPress={() => handleDayClick(option)}
               style={styles.weeklyDay}
             >
-              <View style={styles.checkContainer}> 
-              <Text style={styles.weeklyDayText}>{option}</Text>
-              {selectedDays.includes(option) && (
-                <Icon name="check" size={20} color="green" style={styles.checkIcon} />
-              )}
-            </View>
+              <View style={styles.checkContainer}>
+                <Text style={styles.weeklyDayText}>{option}</Text>
+                {selectedDays.includes(option) && (
+                  <Icon name="check" size={20} color="green" style={styles.checkIcon} />
+                )}
+              </View>
             </TouchableOpacity>
           ))}
         </View>
@@ -112,7 +111,7 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
                 ]}
               >
                 <Text style={styles.yearlyMonthText}>{option}</Text>
-                </TouchableOpacity>
+              </TouchableOpacity>
             ))}
           </View>
           <View style={styles.yearlyRow}>
@@ -126,7 +125,7 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
                 ]}
               >
                 <Text style={styles.yearlyMonthText}>{option}</Text>
-                </TouchableOpacity>
+              </TouchableOpacity>
             ))}
           </View>
         </View>
@@ -202,48 +201,51 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
         <View style={styles.customModalContainer}>
           <Text style={styles.modalTitle}>Custom Repeat</Text>
 
-        <View style={styles.container1}> 
+          <View style={styles.container1}>
 
-        <View style={[styles.row, { zIndex: 3000, borderBottomWidth: 1, borderColor: '#ccc' }]}>
-         <Text style={styles.label}>Frequency</Text>
-            <DropDownPicker
-              open={isPickerRepeatOpen}
-              setOpen={setIsPickerRepeatOpen}
-              value={unit}
-              items={optionRepeat}
-              setValue={setUnit}
-              placeholder="Daily"
-              containerStyle={styles.dropDownContainer}
-              style={styles.dropDown}
-              dropDownContainerStyle={styles.dropDownPicker}
-              zIndex={1000}
-              zIndexInverse={1000}
-            />
+            <View style={[styles.row, { zIndex: 3000, borderBottomWidth: 1, borderColor: '#ccc' }]}>
+              <Text style={styles.label}>Frequency</Text>
+              <DropDownPicker
+                open={isPickerRepeatOpen}
+                setOpen={setIsPickerRepeatOpen}
+                value={unit}
+                items={optionRepeat}
+                setValue={setUnit}
+                placeholder="Daily"
+                containerStyle={styles.dropDownContainer}
+                style={styles.dropDown}
+                dropDownContainerStyle={styles.dropDownPicker}
+                zIndex={3000}
+                zIndexInverse={3000}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={[styles.row, { zIndex: 0 }]}
+              onPress={() => setIsNumberPickerVisible(!isNumberPickerVisible)}
+            >
+              <Text style={styles.label}>Every</Text>
+              <Text style={styles.label}>{number} {getUnitLabel()}</Text>
+            </TouchableOpacity>
+
+            {isNumberPickerVisible && (
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={number}
+                  style={styles.picker}
+                  onValueChange={(itemValue) => setNumber(itemValue)}
+                >
+                  {numbers.map((num) => (
+                    <Picker.Item key={num} label={num.toString()} value={num} />
+                  ))}
+                </Picker>
+                <Text style={styles.unitLabel}>{getUnitLabel()}</Text>
+              </View>
+            )}
           </View>
 
-          <TouchableOpacity  style={[styles.row, { zIndex: 1000 }]} onPress={() => setIsNumberPickerVisible(!isNumberPickerVisible)}>
-            <Text style={styles.label}>Every</Text>
-            <Text style={styles.label}>{number} {getUnitLabel()}</Text>
-          </TouchableOpacity>
-
-
-          {isNumberPickerVisible && (
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={number}
-                style={styles.picker}
-                onValueChange={(itemValue) => setNumber(itemValue)}
-              >
-                {numbers.map((num) => (
-                  <Picker.Item key={num} label={num.toString()} value={num} />
-                ))}
-              </Picker>
-              <Text style={styles.unitLabel }>{getUnitLabel()}</Text>
-
-            </View>
-          )}
-            </View>
           {renderCustomOptions()}
+
           <View style={styles.modalButtonContainer}>
             <TouchableOpacity onPress={onClose}>
               <Text style={styles.modalCancelButton}>Cancel</Text>
@@ -257,6 +259,5 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
     </Modal>
   );
 };
-
 
 export default CustomRepeatScreen;

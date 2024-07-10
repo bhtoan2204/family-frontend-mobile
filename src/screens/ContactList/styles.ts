@@ -1,57 +1,67 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 20,
-  },
   contactCon: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
   },
   imgCon: {
-    marginRight: 20,
+    marginRight: 10,
   },
   placeholder: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: '#ccc',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  txt: {
-    fontSize: 18,
-    color: '#fff',
+  avatar: {
+    width: 20,
+    height: 20,
+    borderRadius: 20,
   },
   contactDat: {
     flex: 1,
-    justifyContent: 'center',
   },
   name: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   phoneNumber: {
-    fontSize: 16,
     color: '#888',
   },
-  button: {
-    backgroundColor: '#007BFF',
-    padding: 10,
-    borderRadius: 5,
-    margin: 20,
+  userContact: {
+    backgroundColor: '#f0f8ff',
   },
-  buttonText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 16,
+  normalContact: {
+    backgroundColor: '#ffffff',
+  },
+  txt: {
+
+  },
+  appIndicator: {
+    fontSize: 14,
+    color: 'gray',
+    marginTop: 4,
+  },
+  avatarSmall: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+  },
+  contactContainer: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  appIndicatorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
   },
 });
-
 export default styles;

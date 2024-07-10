@@ -1,5 +1,5 @@
 import {Dimensions, StyleSheet} from 'react-native';
-import {COLORS} from 'src/constants';
+import {COLORS, TEXTS} from 'src/constants';
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
 
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     marginLeft:screenWidth*0.025,
   },
   input1: {
-    height: 30,
+    height: TEXTS.SCEEN_HEIGHT*0.05,
     backgroundColor: '#fff',
     paddingHorizontal: 16,
     borderRadius: 12,
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     right: 10,
   },
   input2: {
-    height: 20,
+    height: TEXTS.SCEEN_HEIGHT*0.02,
     backgroundColor: '#fff',
     paddingHorizontal: 16,
     borderRadius: 12,
@@ -130,8 +130,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderWidth: 1,
-    // backgroundColor: '#007bff',
-    // borderColor: '#007bff',
     backgroundColor: '#66c0f4',
     borderColor: '#66c0f4',
   },

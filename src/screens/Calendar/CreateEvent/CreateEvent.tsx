@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, Alert, Switch } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Alert, Switch, ScrollView  } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import { CreateEventScreenProps } from 'src/navigation/NavigationTypes';
@@ -14,6 +14,7 @@ import { RRule, RRuleStrOptions } from 'rrule';
 import { differenceInDays, differenceInWeeks, differenceInMonths, differenceInYears } from 'date-fns';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import { CategoryEvent } from 'src/interface/calendar/CategoryEvent';
+import { TEXTS } from 'src/constants';
 
 const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   navigation,
@@ -246,7 +247,8 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
 
   return (
     <View style={styles.modalContainer}>
-      <View style={{ backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
+    <ScrollView style={{ marginBottom: 30 }}  showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+    <View style={{ backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
         <View style={styles.row}>
           <Text style={styles.headerTitle}>Add New Event</Text>
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -356,9 +358,9 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
           items={optionRepeat}
           setValue={setSelectedOptionRepeat}
           placeholder="None"
-          containerStyle={{ height: 40, width: 100 }}
-          style={{ borderColor: 'white', borderWidth: 1 }}
-          dropDownContainerStyle={{ borderColor: '#ccc', borderWidth: 1, zIndex: 1000, width: 100 }}
+          containerStyle={{ height: TEXTS.SCEEN_HEIGHT*0.05, width: TEXTS.SCREEN_WIDTH*0.35 ,borderBottomWidth: 1}}
+          style={{ borderColor: 'white', borderWidth: 1, width: TEXTS.SCREEN_WIDTH*0.35 }}
+          dropDownContainerStyle={{width: TEXTS.SCREEN_WIDTH*0.35, borderColor: '#ccc', borderWidth: 1, zIndex: 1000, }}
           zIndex={1000}
           zIndexInverse={1000}
         />
@@ -380,9 +382,9 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
             items={optionEndRepeat}
             setValue={setSelectedOptionEndRepeat}
             placeholder="Never"
-            containerStyle={{ height: 40, width: 100 }}
+            containerStyle={{ height: TEXTS.SCEEN_HEIGHT*0.05,  width: TEXTS.SCREEN_WIDTH*0.35 }}
             style={{ borderColor: 'white', borderWidth: 1 }}
-            dropDownContainerStyle={{ borderColor: '#ccc', borderWidth: 1, zIndex: 1000, width: 100 }}
+            dropDownContainerStyle={{ borderColor: '#ccc', borderWidth: 1, zIndex: 1000, width: TEXTS.SCREEN_WIDTH*0.35 }}
             zIndex={1000}
             zIndexInverse={1000}
           />
@@ -453,6 +455,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
           onSave={handleCustomModalSubmit}
         />
       )}
+       </ScrollView>
     </View>
   );
 };
