@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   Text,
   View,
@@ -11,9 +11,9 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import {MaterialIcons} from '@expo/vector-icons';
 import Feather from 'react-native-vector-icons/Feather';
-import { useSelector, useDispatch } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {
   selectSelectedFamily,
   selectFamilies,
@@ -22,19 +22,18 @@ import {
   setFamilies,
   setFamilyMembers,
   updateFamily,
-  
 } from 'src/redux/slices/FamilySlice';
-import { AppDispatch } from 'src/redux/store';
+import {AppDispatch} from 'src/redux/store';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import BottomSheet from './BottomSheet';
 import FamilyListModal from './FamilyList';
 import OptionsModal from './OptionModal';
-import { FamilyServices } from 'src/services/apiclient';
-import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
-import { COLORS } from 'src/constants';
+import {FamilyServices} from 'src/services/apiclient';
+import {ViewFamilyScreenProps} from 'src/navigation/NavigationTypes';
+import {COLORS} from 'src/constants';
 import styles from './styles';
-import { Family } from 'src/interface/family/family';
-import { Member } from 'src/interface/member/member';
+import {Family} from 'src/interface/family/family';
+import {Member} from 'src/interface/member/member';
 import * as ImagePicker from 'expo-image-picker';
 
 const cards = [
@@ -82,7 +81,7 @@ const cards = [
   },
 ];
 
-const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
+const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const bottomSheetRef = useRef<RBSheet>(null);
   const allMemberRef = useRef<RBSheet>(null);
@@ -95,16 +94,20 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const rotateAnimation = useRef(new Animated.Value(0)).current;
   const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
   const screenHeight = Dimensions.get('screen').height;
+  const secondBottomSheetRef = useRef(null);
 
   const source =
     selectedFamily?.avatar && selectedFamily.avatar !== '[NULL]'
-      ? { uri: selectedFamily.avatar }
+      ? {uri: selectedFamily.avatar}
       : require('../../assets/images/default_ava.png');
 
+  useEffect(() => {
+    console.log(selectedFamily);
+  }, []);
 
-      useEffect(() => {
-        console.log(selectedFamily)
-      },[])
+  useEffect(() => {
+    secondBottomSheetRef.current!.open();
+  }, []);
 
   useEffect(() => {
     const animation = Animated.loop(
@@ -153,7 +156,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
             selectedFamily!.id_family,
             uri,
           );
-          dispatch(updateFamily({ ...selectedFamily!, avatar: fileUrl }));
+          dispatch(updateFamily({...selectedFamily!, avatar: fileUrl}));
         } catch (error) {
           console.error('Error updating avatar:', error);
         } finally {
@@ -187,50 +190,50 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
       case 1:
         navigation.navigate('FamilyStack', {
           screen: 'AllMember',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
       case 2:
         navigation.navigate('ChatStack', {
           screen: 'ChatFamily',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
       case 3:
         navigation.navigate('FamilyStack', {
           screen: 'Education',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
       case 4:
         navigation.navigate('CalendarStack', {
           screen: 'CalendarScreen',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
       case 5:
         navigation.navigate('FamilyStack', {
           screen: 'GuildLine',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
       case 6:
         navigation.navigate('HouseHoldStack', {
           screen: 'HouseHoldScreen',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
       case 7:
         navigation.navigate('ShoppingListStack', {
           screen: 'ShoppingList',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
       case 8:
-        console.log(selectedFamily!.id_family)
+        console.log(selectedFamily!.id_family);
         navigation.navigate('ShoppingListStack', {
           screen: 'ShoppingList',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
     }
@@ -261,7 +264,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const leaveFamily = async () => {
     try {
       await FamilyServices.leaveFamily(selectedFamily!.id_family);
-      navigation.navigate('HomeTab', { screen: 'HomeScreen' });
+      navigation.navigate('HomeTab', {screen: 'HomeScreen'});
     } catch (error: any) {
       console.error('Leave family failed:', error);
     }
@@ -282,16 +285,16 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
           onPress: leaveFamily,
         },
       ],
-      { cancelable: true },
+      {cancelable: true},
     );
   };
 
   return (
-    <View style={{ position: 'relative', backgroundColor: '#fdfdfd' }}>
+    <View style={{position: 'relative', backgroundColor: '#fdfdfd'}}>
       <Image
         source={require('../../assets/images/header-family.png')}
         resizeMode="stretch"
-        style={{ width: '100%', height: 220, alignSelf: 'center' }}
+        style={{width: '100%', height: 220, alignSelf: 'center'}}
       />
       <View
         style={{
@@ -320,7 +323,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
                 alignItems: 'center',
               }}>
               <Text style={styles.headerText}>{selectedFamily.name}</Text>
-              <Animated.View style={{ transform: [{ rotate }] }}>
+              <Animated.View style={{transform: [{rotate}]}}>
                 <MaterialIcons
                   name="arrow-drop-down"
                   size={30}
@@ -381,7 +384,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
         {selectedFamily.description}
       </Text>
 
-      <ScrollView showsVerticalScrollIndicator={false} style={{ top: 120 }}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{top: 120}}>
         {/* <Image
           source={require('../../assets/images/family-today-event.png')}
           resizeMode="cover"
@@ -419,7 +422,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
             </TouchableOpacity>
           ))}
         </View>
-        <View style={{ height: 480 }}></View>
+        <View style={{height: 480}}></View>
       </ScrollView>
       <OptionsModal
         visible={isOptionsModalVisible}
@@ -442,6 +445,45 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
           name={selectedFamily?.name}
           description={selectedFamily?.description}
         />
+      </RBSheet>
+
+      {/* RBSheet thứ hai với secondBottomSheetRef */}
+      <RBSheet
+        ref={secondBottomSheetRef}
+        closeOnDragDown={true}
+        height={screenHeight} // Full screen height
+        customStyles={{
+          wrapper: {
+            backgroundColor: 'rgba(0,0,0,0.7)', // Dimmed background
+          },
+          container: {
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            height: screenHeight,
+            backgroundColor: 'transparent',
+          },
+        }}>
+        <TouchableOpacity
+          style={styles.cancel}
+          onPress={() => secondBottomSheetRef.current.close()}>
+          <Image
+            source={require('../../assets/images/Cancel.png')}
+            resizeMode="stretch" // Replace with your image source
+            style={styles.cancelImage}
+          />
+        </TouchableOpacity>
+        <Image
+          source={require('../../assets/images/poster.png')}
+          resizeMode="stretch" // Replace with your image source
+          style={styles.fullScreenImage}
+        />
+        <TouchableOpacity style={styles.explore}>
+          <Image
+            source={require('../../assets/images/explore.png')}
+            resizeMode="stretch" // Replace with your image source
+            style={styles.exploreImage}
+          />
+        </TouchableOpacity>
       </RBSheet>
     </View>
   );

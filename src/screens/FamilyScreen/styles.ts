@@ -137,6 +137,30 @@ const styles = StyleSheet.create({
     left: 15,
     right: 15,
   },
+  fullScreenImage: {
+    height: 461,
+    width: 357,
+    alignSelf: 'center',
+    top: Dimensions.get('window').height / 2 - 250,
+  },
+  cancelImage: {
+    height: 40,
+    width: 40,
+  },
+  cancel: {
+    position: 'absolute',
+    top: 200,
+    right: 20,
+  },
+  explore: {
+    position: 'absolute',
+    bottom: 160,
+    alignSelf: 'center',
+  },
+  exploreImage: {
+    width: 161,
+    height: 36,
+  },
 });
 
 export default styles;
