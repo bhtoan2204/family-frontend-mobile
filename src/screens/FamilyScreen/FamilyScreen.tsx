@@ -106,7 +106,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   }, []);
 
   useEffect(() => {
-    secondBottomSheetRef.current!.open();
+    secondBottomSheetRef.current?.open();
   }, []);
 
   useEffect(() => {
@@ -342,7 +342,6 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           visible={isDropdownVisible}
           onClose={handleCloseModal}
           families={families}
-          membersMap={membersMap}
           selectedFamily={selectedFamily}
         />
         <View>
@@ -447,44 +446,53 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         />
       </RBSheet>
 
-      {/* RBSheet thứ hai với secondBottomSheetRef */}
-      <RBSheet
-        ref={secondBottomSheetRef}
-        closeOnDragDown={true}
-        height={screenHeight} // Full screen height
-        customStyles={{
-          wrapper: {
-            backgroundColor: 'rgba(0,0,0,0.7)', // Dimmed background
-          },
-          container: {
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            height: screenHeight,
-            backgroundColor: 'transparent',
-          },
-        }}>
-        <TouchableOpacity
-          style={styles.cancel}
-          onPress={() => secondBottomSheetRef.current.close()}>
+      <TouchableOpacity
+      onPress={() => secondBottomSheetRef.current?.close()}
+        style={styles.overlay}
+        activeOpacity={1}
+        
+      >
+        <RBSheet
+          ref={secondBottomSheetRef}
+          closeOnDragDown={true}
+          height={screenHeight} 
+          customStyles={{
+            wrapper: {
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              flex: 1,
+            },
+            container: {
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+              backgroundColor: 'transparent',
+            },
+          }}
+        >
+          <TouchableOpacity
+          onPress={() => secondBottomSheetRef.current?.close()}
+            style={styles.cancel}
+         
+          >
+            <Image
+              source={require('../../assets/images/Cancel.png')}
+              resizeMode="stretch" 
+              style={styles.cancelImage}
+            />
+          </TouchableOpacity>
           <Image
-            source={require('../../assets/images/Cancel.png')}
-            resizeMode="stretch" // Replace with your image source
-            style={styles.cancelImage}
+            source={require('../../assets/images/poster.png')}
+            resizeMode="stretch"
+            style={styles.fullScreenImage}
           />
-        </TouchableOpacity>
-        <Image
-          source={require('../../assets/images/poster.png')}
-          resizeMode="stretch" // Replace with your image source
-          style={styles.fullScreenImage}
-        />
-        <TouchableOpacity style={styles.explore}>
-          <Image
-            source={require('../../assets/images/explore.png')}
-            resizeMode="stretch" // Replace with your image source
-            style={styles.exploreImage}
-          />
-        </TouchableOpacity>
-      </RBSheet>
+          <TouchableOpacity onPress={() => secondBottomSheetRef.current?.close()} style={styles.explore}>
+            <Image
+              source={require('../../assets/images/explore.png')}
+              resizeMode="stretch"
+              style={styles.exploreImage}
+            />
+          </TouchableOpacity>
+        </RBSheet>
+      </TouchableOpacity>
     </View>
   );
 };

@@ -11,6 +11,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 26,
   },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   backButton: {
     color: 'white',
   },

@@ -10,21 +10,22 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useSelector } from 'react-redux';
 import { COLORS } from 'src/constants';
 import { Family } from 'src/interface/family/family';
 import { Member } from 'src/interface/member/member';
+import { selectAllFamilyMembers } from 'src/redux/slices/FamilySlice';
 
 const FamilyListModal = ({
   visible,
   onClose,
   families,
-  membersMap,
   selectedFamily,
 }) => {
   const [familySelect, setFamilySelect] = useState<any>(selectedFamily);
+  const members = useSelector(selectAllFamilyMembers);
 
   useEffect(() => {
-    console.log(membersMap[0])
     setFamilySelect(selectedFamily);
   }, [selectedFamily]);
 
@@ -87,24 +88,31 @@ const FamilyListModal = ({
                         </Text>
                       </View>
                       <View style={modalStyles.membersList}>
-                        {membersMap[family.id_family]?.slice(0, 3).map((member: Member) => (
-                          <View
-                            key={member.id_user}
-                            style={modalStyles.memberItemContainer}
-                          >
-                            <Image
-                              source={{ uri: member.user.avatar }}
-                              style={modalStyles.avatar}
-                            />
-                          </View>
-                        ))}
-                        {membersMap[family.id_family]?.length > 3 && (
-                          <View style={modalStyles.extraMembers}>
-                            <Text style={modalStyles.extraMembersText}>
-                              +{membersMap[family.id_family].length - 3}
-                            </Text>
-                          </View>
-                        )}
+                      {members[family.id_family] ? (
+  <>
+    <View style={modalStyles.membersList}>
+      {members[family.id_family].slice(0, 3).map((member: any) => (
+        <View key={member.id_user} style={modalStyles.memberItemContainer}>
+          <Image
+            source={{ uri: member.user.avatar }}
+            style={modalStyles.avatar}
+          />
+        </View>
+      ))}
+    </View>
+    {members[family.id_family].length > 3 && (
+      <View style={modalStyles.extraMembers}>
+        <Text style={modalStyles.extraMembersText}>
+          +{members[family.id_family].length - 3}
+        </Text>
+      </View>
+    )}
+  </>
+) : (
+  <Text>No members found</Text>
+)}
+
+
                       </View>
                     </View>
                   </TouchableOpacity>
@@ -225,7 +233,6 @@ const modalStyles = StyleSheet.create({
     color: COLORS.Rhino,
     fontWeight: 'bold',
   },
-  
 });
 
 export default FamilyListModal;
