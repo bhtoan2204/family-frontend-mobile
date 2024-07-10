@@ -109,7 +109,7 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
     }
 
     return (
-        <SafeAreaView className="flex-1 bg-[#F7F7F7]">
+        <>
             <View className="flex-1 bg-[#F7F7F7]">
                 {/* <View style={{ width: screenWidth, height: screenHeight * 0.25 }}>
                     <View className='w-full absolute z-10 flex-row justify-between items-center py-3'>
@@ -263,7 +263,7 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
                 }}
                 addRoomSheetRef={addRoomSheetRef}
             />
-            <AddRoomSheet bottomSheetRef={addRoomSheetRef} id_family={id_family!} />
+
             <AddHouseHoldItemPickCategorySheet
                 refRBSheet={pickCategorySheetRef} category={pickedCategory} onSetCategory={(id: number) => {
                     setPickedCategory(id)
@@ -272,8 +272,8 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
                 addCategorySheetRef={addCategorySheetRef}
             />
             <AddCategorySheet bottomSheetRef={addCategorySheetRef} id_family={id_family!} />
-
-        </SafeAreaView>
+            <AddRoomSheet bottomSheetRef={addRoomSheetRef} id_family={id_family!} />
+        </>
 
     );
 };

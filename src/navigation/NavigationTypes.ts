@@ -446,7 +446,8 @@ type HouseHoldItemNavigationProp = NativeStackNavigationProp<
 export interface HouseHoldItemScreenProps {
   navigation: HouseHoldItemNavigationProp;
   route: RouteProp<HouseHoldItemStackParamList, 'HouseHoldItem'>;
-  addRoomRef: React.RefObject<BottomSheet> | undefined;
+  addEditConsumableItemSheetRef: React.RefObject<BottomSheet> | undefined;
+  addEditDescriptionSheetRef: React.RefObject<BottomSheet> | undefined;
 }
 
 type ReceiptInfoNavigationProp = NativeStackNavigationProp<

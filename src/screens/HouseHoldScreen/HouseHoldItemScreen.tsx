@@ -8,38 +8,48 @@ import { AppDispatch, RootState } from 'src/redux/store';
 import HouseHoldItemInfoBox from 'src/components/user/household/household-detail/household-item-info-box';
 import ConsumableInfo from 'src/components/user/household/household-detail/consumable-info';
 import DescriptionInfo from 'src/components/user/household/household-detail/description-info';
-
+import DescriptionIcon from 'src/assets/images/household_assets/description_iccon.png';
+import ConsumableIcon from 'src/assets/images/household_assets/consumable_icon.png';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 
-const HouseHoldItemScreen: React.FC<HouseHoldItemScreenProps> = ({ navigation, route }) => {
+const HouseHoldItemScreen: React.FC<HouseHoldItemScreenProps> = ({ navigation, route, addEditConsumableItemSheetRef, addEditDescriptionSheetRef }) => {
     const { id_family } = route.params
     const householdItems = useSelector((state: RootState) => state.householdItemDetail)
-    
+
 
     return (
         <View className='flex-1 pt-5 rounded-tl-lg rounded-tr-lg bg-[#f7f7f7]'>
             <ScrollView className='flex-1'>
                 <View className='items-center'>
 
-                    <HouseHoldItemInfoBox id={householdItems.id_household_item} title="Consumable Item" onPress={() => {
-                        navigation.navigate('AddConsumableItem', {
-                            id_family: id_family,
-                            id_item: householdItems.id_household_item,
-                            id_category: householdItems.id_category
-                        })
-                    }}>
+                    <HouseHoldItemInfoBox id={householdItems.id_household_item} title="Consumable Item"
+                        onPress={() => {
+                            // navigation.navigate('AddConsumableItem', {
+                            //     id_family: id_family,
+                            //     id_item: householdItems.id_household_item,
+                            //     id_category: householdItems.id_category
+                            // })
+                            addEditConsumableItemSheetRef && addEditConsumableItemSheetRef.current?.expand()
+                        }}
+                        iconImage={ConsumableIcon}
+
+                    >
                         <ConsumableInfo data={householdItems} />
                     </HouseHoldItemInfoBox>
                     <View className='my-2'></View>
-                    <HouseHoldItemInfoBox id={householdItems.id_household_item} title="Description" onPress={() => {
-                        navigation.navigate('EditDescription', {
-                            id_family: id_family,
-                            id_item: householdItems.id_household_item,
-                            id_category: householdItems.id_category,
-                            description: householdItems.description || ""
-                        })
+                    <HouseHoldItemInfoBox id={householdItems.id_household_item} title="Description"
+                        onPress={() => {
+                            // navigation.navigate('EditDescription', {
+                            //     id_family: id_family,
+                            //     id_item: householdItems.id_household_item,
+                            //     id_category: householdItems.id_category,
+                            //     description: householdItems.description || ""
+                            // })
+                            addEditDescriptionSheetRef && addEditDescriptionSheetRef.current?.expand()
 
-                    }}>
+                        }}
+                        iconImage={DescriptionIcon}
+                    >
                         <DescriptionInfo data={householdItems} />
                     </HouseHoldItemInfoBox>
                 </View>

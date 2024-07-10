@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { Agenda, AgendaSchedule, Calendar, CalendarList } from 'react-native-calendars'
 import { useDispatch, useSelector } from 'react-redux'
-import { ShoppingListCategoryScreenProps, ShoppingListDetailScreenProps } from 'src/navigation/NavigationTypes'
+import { ShoppingListCategoryScreenProps, ShoppingListDetailScreenProps, TodoListItemDetailScreenProps } from 'src/navigation/NavigationTypes'
 import { AppDispatch, RootState } from 'src/redux/store'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import { COLORS } from 'src/constants'
@@ -39,12 +39,11 @@ import { convertToNumber } from 'src/utils/currency/convertPriceFromDB'
 const screenHeight = Dimensions.get('screen').height;
 
 
-const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDetailScreenProps) => {
+const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailScreenProps) => {
     const { id_family, id_category, id_item, id_shopping_list } = route.params
-    console.log(route.params)
     // console.log('id_family', id_family, 'id_category', id_category)
     const dispatch = useDispatch<AppDispatch>()
-    const familyInfo = useSelector((state: RootState) => state.family).family
+    const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
     const itemDetail = useSelector((state: RootState) => state.shoppinglist).shoppingList.find(item => item.id_shopping_list_type === id_category)!.items!.find(item => item.id_item === id_item)
     const item = useSelector((state: RootState) => state.shoppinglist).shoppingList.find(item => item.id_shopping_list_type === id_category)!.items
 
@@ -196,7 +195,7 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                 </View>
 
                 <Text className='text-base text-[#2F2F34]'>{
-                    itemDetail?.price != '' && itemDetail?.price != null ? convertToNumber(itemDetail?.price)  : 'Add price'
+                    itemDetail?.price != '' && itemDetail?.price != null ? convertToNumber(itemDetail?.price) : 'Add price'
                 }</Text>
             </View>
         </TouchableOpacity>
@@ -286,4 +285,4 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
     )
 }
 
-export default ShoppingListCategoryDetailScreen
+export default TodoListCategoryDetailScreen

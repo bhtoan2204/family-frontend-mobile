@@ -38,10 +38,10 @@ const TodoListStack = ({ navigation, route }: TodoListStackProps) => {
 
         >
             <Stack.Screen name="TodoList" >
-                {(props) => <TodoListScreen {...props as TodoListScreenProps} />}
+                {(props: TodoListScreenProps) => <TodoListScreen {...props as TodoListScreenProps} />}
             </Stack.Screen>
             <Stack.Screen name="TodoListCategory" >
-                {(props) => <TodoListCategoryScreen {...props as TodoListCategoryScreenProps} />}
+                {(props: TodoListCategoryScreenProps) => <TodoListCategoryScreen {...props as TodoListCategoryScreenProps} />}
             </Stack.Screen>
 
 

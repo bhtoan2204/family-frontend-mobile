@@ -20,7 +20,7 @@ const screenHeight = Dimensions.get('screen').height;
 
 const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
     const { id_family } = route.params
-    const familyInfo = useSelector((state: RootState) => state.family).family
+    const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
     const [selectDate, setSelectDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
     const todoListTypes = useSelector((state: RootState) => state.todoList).todoListType
     // const handleFilterData = () => {
@@ -163,15 +163,7 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
                     <ShoppingListCategoryItem id_category={4} category_name='Furniture' total_items={10} handleNavigateCategory={handleNavigateCategory} />
                     <ShoppingListCategoryItem id_category={5} category_name='Pharmacy' total_items={10} handleNavigateCategory={handleNavigateCategory} />
                     <ShoppingListCategoryItem id_category={6} category_name='Other' total_items={10} handleNavigateCategory={handleNavigateCategory} /> */}
-                    <TodoListCategoryItem id_category={1} category_name={"Daily Task"} total_items={10}
-                        handleNavigateCategory={() => {
-                            // console.log('navigate')
-                            navigation.navigate('TodoListCategory', {
-                                id_family: id_family,
-                                id_category: 1
-                            })
-                        }}
-                    />
+
                     {
                         todoListTypes.length > 0 && todoListTypes.length > 0 && todoListTypes.map((item, index) => {
                             // const total_items = todoListTypes.filter((shoppingItem) => shoppingItem.id_shopping_list_type === item.id_shopping_list_type).length
@@ -183,6 +175,7 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
                                         id_category: item.id_checklist_type
                                     })
                                 }}
+                                iconUrl={item.icon_url}
                             />
                         })
                     }
@@ -198,9 +191,10 @@ interface TodoListCategoryItemProps {
     category_name: string;
     total_items: number;
     handleNavigateCategory: (id_category: number) => void;
+    iconUrl: string;
 }
 
-const TodoListCategoryItem = ({ id_category, category_name, total_items, handleNavigateCategory }: TodoListCategoryItemProps) => {
+const TodoListCategoryItem = ({ id_category, category_name, total_items, handleNavigateCategory, iconUrl }: TodoListCategoryItemProps) => {
     const getImage = (id_category: number) => {
         if (id_category === 1) {
             return GroceryImage
@@ -237,7 +231,7 @@ const TodoListCategoryItem = ({ id_category, category_name, total_items, handleN
                 <View className='p-3 mr-3  rounded-full items-center justify-center' style={{
                     backgroundColor: colors[id_category - 1],
                 }}>
-                    <Image source={getImage(id_category)} style={{
+                    <Image source={{ uri: iconUrl }} style={{
                         width: screenHeight * 0.04,
                         height: screenHeight * 0.04,
                     }} />

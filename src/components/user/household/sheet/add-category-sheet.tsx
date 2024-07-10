@@ -14,6 +14,8 @@ import { addRoom } from 'src/redux/slices/RoomSlice';
 import NewCategoryImageSheet from 'src/assets/images/household_assets/new_category_image_sheet.png'
 import OpenedFolder from 'src/assets/images/household_assets/OpenedFolder.png'
 import Camera from 'src/assets/images/household_assets/Camera.png'
+import { HouseHoldCategoryInterface } from 'src/interface/household/household_category';
+import { addCategories } from 'src/redux/slices/CategorySlice';
 
 interface AddRoomSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -29,7 +31,6 @@ const AddCategorySheet = ({
     const snapPoints = React.useMemo(() => ['95%'], []);
     const [text, setText] = React.useState('')
     const [imageUri, setImageUri] = React.useState('')
-    const [step, setStep] = React.useState(0)
     const [loading, setLoading] = React.useState(false)
     const dispatch = useDispatch<AppDispatch>()
 
@@ -48,13 +49,7 @@ const AddCategorySheet = ({
 
     }, [showError])
 
-    useEffect(() => {
-        return () => {
-            setText('')
-            setImageUri('')
-            setStep(0)
-        }
-    }, [])
+
 
     const renderBackdrop = React.useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} pressBehavior={
@@ -69,10 +64,15 @@ const AddCategorySheet = ({
         try {
             setLoading(true)
             console.log({ id_family, text, imageUri })
-            const newRoomDat = await HouseHoldService.createRoom(id_family, text, imageUri)
-            if (newRoomDat) {
-                console.log(newRoomDat)
-                dispatch(addRoom(newRoomDat))
+            // const newRoomDat = await HouseHoldService.createRoom(id_family, text, imageUri)
+            const newCategoryDat: HouseHoldCategoryInterface = {
+                category_image: imageUri,
+                category_name: text,
+                id_household_item_category: Math.floor(Math.random() * 1000),
+            }
+            if (newCategoryDat) {
+                console.log(newCategoryDat)
+                dispatch(addCategories(newCategoryDat))
                 setLoading(false)
                 bottomSheetRef.current?.close()
             } else {
@@ -164,12 +164,11 @@ const AddCategorySheet = ({
                 if (index == -1) {
                     setText('')
                     setImageUri('')
-                    setStep(0)
                 }
             }}
 
         >
-            <>
+            {/* <>
                 {
                     loading && <View className='flex-1 absolute w-full h-full bg-white opacity-50 z-10 items-center justify-center'>
                         <View className='items-center justify-center bg-black  rounded-lg'
@@ -182,13 +181,12 @@ const AddCategorySheet = ({
                         </View>
                     </View>
                 }
-            </>
-            <BottomSheetScrollView className='flex-1' automaticallyAdjustKeyboardInsets>
-                <View className='flex-1 absolute w-full h-full  z-10'>
-                    <View className='items-center justify-center'>
-                        <ActivityIndicator size='large' color={COLORS.DenimBlue} animating={loading} />
-                    </View>
-                </View>
+            </> */}
+            <BottomSheetScrollView className='flex-1' automaticallyAdjustKeyboardInsets keyboardShouldPersistTaps='handled'
+                style={{
+                    backgroundColor: '#f7f7f7',
+                }}>
+
                 <View className='flex-1'>
                     <ImageBackground source={
                         imageUri != '' ? { uri: imageUri } : NewCategoryImageSheet
@@ -226,7 +224,7 @@ const AddCategorySheet = ({
                         }}>Type in the new category for your categories list</Text>
                     </View>
                     <BottomSheetTextInput
-                        placeholder='Give your new room a name'
+                        placeholder='Give your new category a name'
                         value={text}
                         onChangeText={(text) => {
                             setText(text)
@@ -251,14 +249,20 @@ const AddCategorySheet = ({
                             showError ? <Text className='text-center text-base text-red-500 py-3'>{errorText}</Text> : <></>
                         }
                     </View>
+
                     <View className='flex-1  items-end pr-6 my-3 mt-12 '>
                         <TouchableOpacity className='items-center rounded-lg justify-center' style={{
                             width: screenWidth * 0.1,
                             height: screenWidth * 0.1,
-                            backgroundColor: text != '' ? COLORS.DenimBlue : iOSGrayColors.systemGray6.defaultLight,
-                        }} >
+                            backgroundColor: text != '' && imageUri != "" ? COLORS.DenimBlue : iOSGrayColors.systemGray6.defaultLight,
+                        }}
+                            onPress={async () => {
+                                await handleSubmit()
+                            }}
+                            disabled={text == '' || imageUri == ''}
+                        >
                             <Material name='arrow-right' size={24} color={
-                                text != '' ? 'white' : iOSGrayColors.systemGray.defaultDark
+                                text != '' && imageUri != "" ? 'white' : iOSGrayColors.systemGray.defaultDark
                             }
                             />
                         </TouchableOpacity>
