@@ -9,10 +9,11 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ColorPicker from './ColorPicker';
 import { useSelector } from 'react-redux';
-import { getColor, getIDcate } from 'src/redux/slices/CalendarSlice';
 import Custom from './Custom';
 import { RRule, RRuleStrOptions } from 'rrule';
 import { differenceInDays, differenceInWeeks, differenceInMonths, differenceInYears } from 'date-fns';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { CategoryEvent } from 'src/interface/calendar/CategoryEvent';
 
 const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   navigation,
@@ -23,7 +24,6 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   const [location, setLocation] = useState('');
   const [chosenDateStart, setChosenDateStart] = useState(new Date());
   const [chosenDateEnd, setChosenDateEnd] = useState(new Date());
-  const { id_family } = route.params;
   const [isPickerRepeatOpen, setIsPickerRepeatOpen] = useState(false);
   const [isPickerEndRepeatOpen, setIsPickerEndRepeatOpen] = useState(false);
   const [selectedOptionRepeat, setSelectedOptionRepeat] = useState('none');
@@ -35,10 +35,11 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   const [number, setNumber] = useState<number>(1);
   const [isAllDay, setIsAllDay] = useState(false);
   const [repeatEndDate, setRepeatEndDate] = useState(new Date());
-  let color = useSelector(getColor);
-  let category = useSelector(getIDcate);
+  const family= useSelector(selectSelectedFamily);
   const [count, setCount] = useState(1);
-
+  const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(null);
+  const [eventCategory, setEventCategory] = useState<CategoryEvent | null> (null)
+  
   const handleDecrease = () => {
     setCount(prevCount => Math.max(1, prevCount - 1));
   };
@@ -154,14 +155,14 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
     
     console.log(recurrenceRule);
     const eventDetails = {
-      id_family: id_family,
+      id_family: family?.id_family,
       title: title,
       time_start: chosenDateStart,
       time_end: chosenDateEnd,
       description: description,
-      color: color,
+      color: eventCategory?.color,
       is_all_day: isAllDay,
-      category: category,
+      category: eventCategory?.id_category_event,
       location: location,
       recurrence_exception: "",
       recurrence_id: 0,
@@ -430,7 +431,14 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       )}
 
 
-      <ColorPicker navigation={navigation} />
+      <ColorPicker 
+      navigation={navigation} 
+      id_Family = {family?.id_Family}
+      selectedColorIndex={selectedColorIndex}
+      setSelectedColorIndex={setSelectedColorIndex}
+      setEventCategory={setEventCategory}
+      />
+
       <View style={[styles.formAction, { paddingVertical: 10 }]}>
         <TouchableOpacity onPress={handleSubmit}>
           <View style={styles.btn}>

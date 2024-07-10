@@ -150,7 +150,8 @@ const calendarSlice = createSlice({
     },
     setSelectedDate(state, action: PayloadAction<string>) {
       state.selectedDate = action.payload;
-
+      
+      if(state.events){
       const start = startOfMonth(subMonths(action.payload, 1));
       const end = endOfMonth(addMonths(action.payload, 1));
 
@@ -194,6 +195,7 @@ const calendarSlice = createSlice({
           }
         }
       });
+    }
     },
   },
 });

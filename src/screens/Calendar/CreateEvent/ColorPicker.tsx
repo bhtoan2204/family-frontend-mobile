@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, FlatList, Dimensions } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFamily, setColor, setIdcate } from 'src/redux/slices/CalendarSlice';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import Navigation from 'src/navigation/NavigationContainer';
 import { CategoryEvent } from 'src/interface/calendar/CategoryEvent';
@@ -12,17 +11,15 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('window').width;
 
-const ColorPicker = ({ navigation }) => {
-  const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(null);
+const ColorPicker = ({ navigation, id_Family, setSelectedColorIndex, selectedColorIndex, setEventCategory }) => {
   const [availableColors, setAvailableColors] = useState<CategoryEvent[]>([]);
-  const id_family = useSelector(getFamily);
   const dispatch = useDispatch();
+  
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(id_family);
-        const result = await CalendarServices.getAllCategoryEvent(id_family);
-        console.log(result);
+        const result = await CalendarServices.getAllCategoryEvent(id_Family);
         setAvailableColors(result);
       } catch (error) {
         console.log('Error fetching colors:', error);
@@ -30,11 +27,10 @@ const ColorPicker = ({ navigation }) => {
     };
 
     fetchData();
-  }, [id_family]);
+  }, [id_Family]);
 
   const handleColorSelect = (index: number, item: CategoryEvent) => {
-    dispatch(setColor(item.color))
-    dispatch(setIdcate(item.id_category_event))
+    setEventCategory(item);
     setSelectedColorIndex(selectedColorIndex === index ? null : index);
   };
 

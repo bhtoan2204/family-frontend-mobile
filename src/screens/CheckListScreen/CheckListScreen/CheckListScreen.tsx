@@ -15,7 +15,6 @@ import AddCheckListCategoryItem from '../AddCheckListCategoryItem/AddCheckListCa
 import { AppDispatch, RootState } from 'src/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setInitialCheckList } from 'src/redux/slices/CheckListSlice';
-import { setInitialShoppingList } from 'src/redux/slices/ShoppingListSlice';
 import CheckListServices from 'src/services/apiclient/CheckListService';
 
 const today = new Date();

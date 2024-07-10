@@ -33,6 +33,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {UserProfile} from 'src/interface/user/userProfile';
 import {RootState} from 'src/redux/store';
 import { setFamilies, setFamilyMembers, setSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { Family } from 'src/interface/family/family';
 
 const icons = {
   bundle,
@@ -112,18 +113,26 @@ const HomeScreen = ({
   const fetchFamiliesAndMembers = async () => {
     try {
       const allFamilies = await FamilyServices.getAllFamily();
+      const currentDate = new Date();
 
-      dispatch(setFamilies(allFamilies));
+      const validFamilies = allFamilies.filter((family: { expired_at: string | number | Date; }) => {
+        if (!family.expired_at) return false; 
+        const expiredAtDate = new Date(family.expired_at);
+        return expiredAtDate > currentDate;
+      });
+  
 
-      if (allFamilies.length > 0) {
-        const initialFamily = allFamilies[0];
+      dispatch(setFamilies(validFamilies));
+
+      if (validFamilies.length > 0) {
+        const initialFamily = validFamilies[0];
         dispatch(setSelectedFamily(initialFamily));
       }
 
       const membersObject = {};
 
-      for (let i = 0; i < allFamilies.length; i++) {
-        const family = allFamilies[i];
+      for (let i = 0; i < validFamilies.length; i++) {
+        const family = validFamilies[i];
         const members = await FamilyServices.getAllMembers({
           id_family: family.id_family,
         });

@@ -18,6 +18,7 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import type { Event } from 'src/interface/calendar/Event';
 import moment from 'moment';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 
 const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   const { id_family } = route.params || {};
@@ -31,7 +32,7 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   const date = useSelector(selectSelectedDate);
   const events = useSelector(selectAllEvent);
   const [currentEvents, setCurrentEvents] = useState<Event[]>([]);
-
+  const family = useSelector(selectSelectedFamily);
   useEffect(() => {
     fetchEvent();
     
@@ -48,7 +49,8 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
 
   const fetchEvent = async () => {
     try {
-      const response = await CalendarServices.getCalendar({ id_family });
+      const response = await CalendarServices.getCalendar({ id_family: family.id_family });
+
       if (Array.isArray(response)) {
         const formattedEvents: Event[] = response.map(item => ({
           ...item,

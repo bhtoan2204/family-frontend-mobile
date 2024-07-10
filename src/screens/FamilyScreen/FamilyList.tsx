@@ -30,6 +30,7 @@ const FamilyListModal = ({
   }, [selectedFamily]);
 
   const handleSelectFamily = (family: Family) => {
+    onClose(family);
     setFamilySelect(family);
   };
 
@@ -89,28 +90,28 @@ const FamilyListModal = ({
                       </View>
                       <View style={modalStyles.membersList}>
                       {members[family.id_family] ? (
-  <>
-    <View style={modalStyles.membersList}>
-      {members[family.id_family].slice(0, 3).map((member: any) => (
-        <View key={member.id_user} style={modalStyles.memberItemContainer}>
-          <Image
-            source={{ uri: member.user.avatar }}
-            style={modalStyles.avatar}
-          />
-        </View>
-      ))}
-    </View>
-    {members[family.id_family].length > 3 && (
-      <View style={modalStyles.extraMembers}>
-        <Text style={modalStyles.extraMembersText}>
-          +{members[family.id_family].length - 3}
-        </Text>
-      </View>
-    )}
-  </>
-) : (
-  <Text>No members found</Text>
-)}
+                          <>
+                            <View style={modalStyles.membersList}>
+                              {members[family.id_family].slice(0, 3).map((member: any) => (
+                                <View key={member.id_user} style={modalStyles.memberItemContainer}>
+                                  <Image
+                                    source={{ uri: member.user.avatar }}
+                                    style={modalStyles.avatar}
+                                  />
+                                </View>
+                              ))}
+                            </View>
+                            {members[family.id_family].length > 3 && (
+                              <View style={modalStyles.extraMembers}>
+                                <Text style={modalStyles.extraMembersText}>
+                                  +{members[family.id_family].length - 3}
+                                </Text>
+                              </View>
+                            )}
+                          </>
+                        ) : (
+                          <Text>No members found</Text>
+                        )}
 
 
                       </View>

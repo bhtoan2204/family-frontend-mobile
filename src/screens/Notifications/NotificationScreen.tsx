@@ -9,6 +9,7 @@ import { ProfileServices } from 'src/services/apiclient';
 import { Notification } from 'src/interface/notification/getNoti';
 import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import { setSelectedFamilyById } from 'src/redux/slices/FamilySlice';
+import { setSelectedDate } from 'src/redux/slices/ExpenseAnalysis';
 
 const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
   let notifications = useSelector(selectNotifications);
@@ -74,23 +75,21 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
       return `${diffYears} ${diffYears > 1 ? 'years' : 'year'} ago`;
     }
   };
+  const formatDate = (timestamp: string | number | Date) => {
+    const date = new Date(timestamp);
+    return date.toISOString().split('T')[0];
+  };
   
   const handlePressNoti = async (item: Notification) => {
     switch (item.type) {
       case 'CHECKLIST':
-        switch (item.title) {
-          case 'New Checklist created':
-            navigation.navigate('CheckList');
-            break;
-          case 'Checklist due today':
-            console.log(`Checklist due today for task "${item.content}"`);
-            break;
-          default:
-            console.log(`Unhandled checklist type: ${item.title}`);
-            break;
-        }
-        break;
+        navigation.navigate('FamilyStack', {
+          screen: 'CheckList',
+          params: { id_family: item.id_family }
+        });
         
+        break;
+
       case 'EXPENSE':
         dispatch(setSelectedFamilyById(item.id_family));
         navigation.navigate('ExpenseStack', { screen: 'ExpenseScreen' });
@@ -109,8 +108,8 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
         navigation.navigate('ShoppingListStack', { screen: 'ShoppingList', params: item.id_family });
         break; 
       case 'CALENDAR':
+        dispatch(setSelectedDate(formatDate(item.timestamp)));
         dispatch(setSelectedFamilyById(item.id_family));
-        console.log(item.id_family)
         navigation.navigate('CalendarStack', { screen: 'CalendarScreen', params: item.id_family });
         break;      
       default:
