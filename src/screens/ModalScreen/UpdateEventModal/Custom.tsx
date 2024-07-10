@@ -7,8 +7,8 @@ import { RRule } from 'rrule';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './StyleCustom';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { getEvent } from 'src/redux/slices/CalendarSlice';
 import { Event } from 'src/interface/calendar/Event';
+import { selectSelectedEvent } from 'src/redux/slices/CalendarSlice';
 
 const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
   const [number, setNumber] = useState<number>(1);
@@ -20,7 +20,7 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
   const [selectedYears, setSelectedYears] = useState<string[]>([]);
   const dispatch = useDispatch();
   const [isNumberPickerVisible, setIsNumberPickerVisible] = useState(false);
-  const [event , setEvent ] = useState<Event>(useSelector(getEvent));
+  const event = useSelector(selectSelectedEvent);
 
   const numbers = Array.from({ length: 999 }, (_, i) => i + 1);
 

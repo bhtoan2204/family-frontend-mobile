@@ -86,9 +86,7 @@ const CalendarServices = {
       if (id_family !== undefined) {
         params = { id_family };
       }
-      const response: AxiosResponse = await instance.get(`${baseUrl}/api/v1/calendar/getAllCalendar/${id_family}`, { 
-
-      });
+      const response: AxiosResponse = await instance.get(`${baseUrl}/api/v1/calendar/getAllCalendar/${id_family}`, );
       if (response.status === 200) {
         return response.data.data;
       } else {

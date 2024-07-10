@@ -10,7 +10,7 @@ import _ from 'lodash';
 import { Event } from 'src/interface/calendar/Event';
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { getDate, setDate } from 'src/redux/slices/CalendarSlice';
+import { selectSelectedDate, setSelectedDate } from 'src/redux/slices/CalendarSlice';
 
 const EVENT_COLOR = 'white';
 
@@ -18,11 +18,12 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
   const { id_family } = route.params || {};
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState<AgendaSchedule>({});
-  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString());
+  const selectedDate = useSelector(selectSelectedDate);
   const [showTimeline, setShowTimeline] = useState(true);
   const INITIAL_TIME = { hour: 9, minutes: 0 };
   const [eventTL, setEventTL] = useState<Event[]>([]);
-  let date = useSelector(getDate);
+  let date = useSelector(selectSelectedDate);
+
   const dispatch = useDispatch();
   const [allEvent, setAllEvent] = useState<Event[] | null>(null);
 
@@ -193,7 +194,8 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
   const onDayPress = async (day: any) => {
     const { year, month } = day;
     const selectedMonth = new Date(year, month);
-    dispatch(setDate(day.dateString));
+
+    dispatch(setSelectedDate(day.dateString));
     setSelectedDate(day.dateString);
     await handleGetCalendarForDay(selectedMonth);
 
@@ -238,7 +240,7 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
     const { year, month } = date;
     const selectedMonth = new Date(year, month);
     setSelectedDate(date.toISOString());
-    dispatch(setDate(date.toISOString()));
+    dispatch(setSelectedDate(date.toISOString()));
     await handleGetCalendarForDay(selectedMonth);
 
   };
@@ -271,7 +273,7 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
           date={selectedDate}
           onDateChanged={(date) => {
             setSelectedDate(date);
-            dispatch(setDate(date));
+            dispatch(setSelectedDate(date));
           }}
           showTodayButton
           todayBottomMargin={38}

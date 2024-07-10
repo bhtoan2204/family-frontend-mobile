@@ -308,6 +308,17 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         }}
         resizeMode="contain"
       />
+      <TouchableOpacity
+        onPress={() => navigation.navigate('ExpenseStack', {screen: 'AssetScreen' })}
+        style={{
+          position: 'absolute',
+          right: 160,
+          bottom: 130,
+          width: 210,
+          height: 210,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
       <Animated.Image
         source={require('../../assets/images/asset-car.png')}
         style={{
@@ -320,7 +331,9 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         }}
         resizeMode="contain"
       />
+      </TouchableOpacity>
     </View>
+
   );
   const renderScreen = () => {
     switch (currentScreen) {

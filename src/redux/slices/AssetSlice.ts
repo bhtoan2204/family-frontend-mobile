@@ -39,6 +39,9 @@ const assetSlice = createSlice({
   name: 'asset',
   initialState,
   reducers: {
+    setAsset: (state, action: PayloadAction<Asset[]>) => {
+      state.assets = action.payload;
+    },
     addAsset: (state, action: PayloadAction<Asset>) => {
       state.assets.push(action.payload);
     },
@@ -63,7 +66,7 @@ const assetSlice = createSlice({
   },
 });
 
-export const { addAsset, selectAsset, clearSelectedAsset, updateAsset, deleteAsset } = assetSlice.actions;
+export const {setAsset, addAsset, selectAsset, clearSelectedAsset, updateAsset, deleteAsset } = assetSlice.actions;
 export const selectAssets = (state: RootState) => state.asset.assets;
 export const selectSelectedAsset = (state: RootState) => state.asset.selectedAsset;
 export default assetSlice.reducer;

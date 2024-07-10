@@ -6,7 +6,7 @@ import CalendarServices from 'src/services/apiclient/CalendarService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { format, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFamily, setDate, getDate, setEvent } from 'src/redux/slices/CalendarSlice';
+import {  selectAllEvent, selectEvents, selectSelectedDate, setEvents, setSelectedDate, setSelectedEvent } from 'src/redux/slices/CalendarSlice';
 import styles from './style';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import BottomSheet from './BottomSheet';
@@ -17,6 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import type { Event } from 'src/interface/calendar/Event';
+import moment from 'moment';
 
 const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   const { id_family } = route.params || {};
@@ -27,19 +28,18 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   const [allEvent, setAllEvent] = useState<Event[] | null>(null);
   const [selectDate, setSelectDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
   const profile = useSelector(selectProfile);
-  const date = useSelector(getDate);
-  dispatch(setFamily(id_family));
-  const [events, setEvents] = useState<AgendaSchedule>({});
+  const date = useSelector(selectSelectedDate);
+  const events = useSelector(selectAllEvent);
   const [currentEvents, setCurrentEvents] = useState<Event[]>([]);
 
   useEffect(() => {
     fetchEvent();
-    handleGetCalendarForMonth(new Date(selectDate));
+    
   }, []);
 
   useEffect(() => {
     setSelectDate(format(new Date(date), 'yyyy-MM-dd'));
-    handleGetCalendarForMonth(new Date(selectDate));
+    
   }, [selectDate, allEvent]);
 
   const cleanRecurrenceRule = (rule: string) => {
@@ -55,72 +55,14 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
           time_start: new Date(item.time_start),
           time_end: new Date(item.time_end),
         }));
-        setAllEvent(formattedEvents);
+        dispatch(setEvents(formattedEvents));
       }
     } catch (error) {
       console.error('Error fetching calendar data:', error);
     }
   };
 
-  const handleGetCalendarForMonth = useCallback(
-    async (date: Date) => {
-      const start = startOfMonth(subMonths(date, 1));
-      const end = endOfMonth(addMonths(date, 3));
-
-      try {
-        if (allEvent) {
-          const groupedEvents = {};
-
-          allEvent.forEach(event => {
-            const dateKey = format(event.time_start, 'yyyy-MM-dd');
-            if (!groupedEvents[dateKey]) {
-              groupedEvents[dateKey] = [];
-            }
-            groupedEvents[dateKey].push({
-              ...event,
-              name: event.title,
-              height: 50,
-              day: dateKey,
-            });
-
-            if (event.recurrence_rule) {
-              const cleanedRecurrenceRule = cleanRecurrenceRule(event.recurrence_rule);
-              try {
-                const rule = rrulestr(cleanedRecurrenceRule);
-                const dates = rule.between(start, end);
-                dates.forEach(date => {
-                  if (!isNaN(date.getTime())) {
-                    const recurrenceDateKey = format(date, 'yyyy-MM-dd');
-                    if (!groupedEvents[recurrenceDateKey]) {
-                      groupedEvents[recurrenceDateKey] = [];
-                    }
-                    groupedEvents[recurrenceDateKey].push({
-                      ...event,
-                      time_start: date,
-                      time_end: new Date(date.getTime() + (event.time_end.getTime() - event.time_start.getTime())),
-                      name: event.title,
-                      height: 50,
-                      day: recurrenceDateKey,
-                    });
-                  } else {
-                    console.error('Invalid date:', date);
-                  }
-                });
-              } catch (recurrenceError) {
-                console.error('Error parsing cleaned recurrence rule:', recurrenceError, cleanedRecurrenceRule);
-              }
-            }
-          });
-
-          setEvents(prevEvents => ({ ...prevEvents, ...groupedEvents }));
-        }
-      } catch (error) {
-        console.error('Error getting calendar for month:', error);
-      }
-    },
-    [allEvent, selectDate],
-  );
-
+  
   const onDelete = async (event: Event) => {
     Alert.alert(
       'Confirm Delete',
@@ -136,7 +78,7 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
             try {
               await CalendarServices.DeleteEvent(event.id_calendar);
               Alert.alert('Success', 'Event has been deleted successfully.');
-              await handleGetCalendarForMonth(new Date());
+              //await handleGetCalendarForMonth(new Date());
             } catch (error) {
               console.error('Error deleting event:', error);
               Alert.alert('Error', 'An error occurred while deleting the event.');
@@ -163,11 +105,12 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
 
   const loadItemsForMonth = async (data: any) => {
     const selectedMonth = new Date(data.year, data.month - 1);
-    await handleGetCalendarForMonth(selectedMonth);
+    dispatch(setSelectedDate(selectedMonth))
+
   };
 
-  const handlePressEvent = async (event: any) => {
-    await dispatch(setEvent(event));
+  const handlePressEvent = async (event: Event) => {
+    dispatch(setSelectedEvent(event));
     navigation.navigate('EventDetailsScreen', {
       id_family: id_family,
       id_calendar: event.id_calendar,
@@ -208,10 +151,10 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
 
   const handleDayPress = (date: any) => {
     setSelectDate(date.dateString);
-    dispatch(setDate(date.dateString));
+    dispatch(setSelectedDate(moment(new Date(date.dateString)).format('YYYY-MM-DD')));
 
-    const eventsForSelectedDay = events[date.dateString] || [];
-    setCurrentEvents(eventsForSelectedDay);
+    // const eventsForSelectedDay = events[date.dateString] || [];
+    // setCurrentEvents(eventsForSelectedDay);
   };
 
   function formatDate(dateStr: string | number | Date) {

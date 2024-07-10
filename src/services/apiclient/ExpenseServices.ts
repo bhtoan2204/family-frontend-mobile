@@ -98,12 +98,13 @@ const ExpenseServices = {
         let filename = image.split('/').pop()!;
         let match = /\.(\w+)$/.exec(filename);
         let type = match ? `image/${match[1]}` : `image`;
-  
-        formData.append('image', {
-          uri: image,
+        const file = {
+          image,
           name: filename,
-          type: type,
-        });
+          type,
+        };
+
+        formData.append(file);
       }
   
       formData.append('id_asset', id_asset?.toString() || '');

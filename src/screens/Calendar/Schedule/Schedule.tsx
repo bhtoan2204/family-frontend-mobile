@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { Calendar, ICalendarEventBase } from 'react-native-big-calendar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useDispatch } from 'react-redux';
-import { setFamily } from 'src/redux/slices/CalendarSlice';
 import styles from '../style';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import BottomSheet from '../BottomSheet';
@@ -22,7 +21,6 @@ const ScheduleScreen = ({ route, navigation }: ScheduleScreenProps) => {
     const [eventDetails, setEventDetails] = useState<Event | null>(null);
 
     useEffect(() => {
-        dispatch(setFamily(id_family));
         handleGetCalendarForMonth(new Date());
     }, [id_family, dispatch]);
 

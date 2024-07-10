@@ -96,8 +96,23 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
         navigation.navigate('ExpenseStack', { screen: 'ExpenseScreen' });
         break;
       case 'INCOME':
-          navigation.navigate('IncomeStack', { screen: 'IncomeScreen' });
-          break;      
+        
+        dispatch(setSelectedFamilyById(item.id_family));
+        navigation.navigate('IncomeStack', { screen: 'IncomeScreen' });
+        break;  
+      case 'ASSET':
+        dispatch(setSelectedFamilyById(item.id_family));
+        navigation.navigate('ExpenseStack', { screen: 'AssetScreen' });
+        break;    
+      case 'SHOPPING_LIST':
+        dispatch(setSelectedFamilyById(item.id_family));
+        navigation.navigate('ShoppingListStack', { screen: 'ShoppingList', params: item.id_family });
+        break; 
+      case 'CALENDAR':
+        dispatch(setSelectedFamilyById(item.id_family));
+        console.log(item.id_family)
+        navigation.navigate('CalendarStack', { screen: 'CalendarScreen', params: item.id_family });
+        break;      
       default:
         console.log(`Unhandled notification type: ${item.type}`);
     }
