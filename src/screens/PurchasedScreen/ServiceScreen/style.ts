@@ -4,15 +4,13 @@ import { COLORS } from 'src/constants';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f7f7f7',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
   },
   backButton: {
     color: 'gray',
@@ -147,6 +145,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  searchContainer: {
+    width: '90%',
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 10,
+    flexDirection: 'row',
+  },
+  headerSearchInput: {
+    flex: 1, 
+  },
+  
 });
 
 export default styles;
