@@ -28,12 +28,12 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 10,
     backgroundColor: 'white',
-    elevation: 3, 
     shadowColor: '#000', 
     shadowOffset: { width: 0, height: 2 }, 
     shadowOpacity: 0.2, 
     shadowRadius: 2,
-    width: 160,
+    width: 151,
+    height: 151,
   },
   addfamilyCard: {
     alignItems: 'center',
@@ -45,13 +45,12 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 10,
     backgroundColor: 'white',
-    elevation: 3, 
     shadowColor: '#000', 
     shadowOffset: { width: 0, height: 2 }, 
     shadowOpacity: 0.2, 
     shadowRadius: 2,
-    height: 170,
-    width: 120,
+    height: 150,
+    width: 150,
     marginVertical: 10,
     paddingHorizontal: 10,
   },
@@ -59,8 +58,8 @@ const styles = StyleSheet.create({
     borderColor: '#007bff', 
   },
   avatar: {
-    width: 100,
-    height: 100,
+    width: 150,
+    height: 150,
     borderRadius: 10,
   },
   familyName: {
@@ -152,11 +151,27 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     flexDirection: 'row',
+    marginBottom: 10,
   },
   headerSearchInput: {
     flex: 1, 
   },
-  
+  yourFamily: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 10,
+    marginLeft: 20,
+    color: COLORS.Rhino,
+  },
+  familyContainer: {
+    alignItems: 'center', // Đảm bảo các thành phần được căn giữa theo chiều dọc
+    marginRight: 10, // Khoảng cách giữa các card
+  },
+  familyNameOutside: {
+    marginTop: 10, // Khoảng cách từ hình ảnh đến tên
+    fontWeight: 'bold',
+    color: '#5E5D5D',
+  },
 });
 
 export default styles;

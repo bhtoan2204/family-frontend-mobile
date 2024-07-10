@@ -131,48 +131,52 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
           <TextInput style={styles.headerSearchInput} placeholder="Search..." />
         </View>
 
+        <Text style={styles.yourFamily}>Your families</Text>
         <View style={{flexDirection: 'row'}}>
-          <Text>Your families</Text>
-          <TouchableOpacity
-            style={[styles.addfamilyCard]}
-            onPress={() => {
-              navigation.navigate('ViewAllPackage');
-            }}>
-            <Icon
-              name="add-circle-outline"
-              size={50}
-              color="#007AFF"
-              style={{marginRight: 5}}
-            />
-
-            <Text>Add Family</Text>
-          </TouchableOpacity>
+          <View style={{alignItems: 'center'}}>
+            <TouchableOpacity
+              style={[styles.addfamilyCard]}
+              onPress={() => {
+                navigation.navigate('ViewAllPackage');
+              }}>
+              <Icon
+                name="add-circle-outline"
+                size={50}
+                color="#007AFF"
+                style={{marginRight: 5}}
+              />
+            </TouchableOpacity>
+            <Text style={{fontWeight: 'bold', color: '#5E5D5D'}}>
+              Add Family
+            </Text>
+          </View>
 
           <FlatList
             horizontal
             data={family}
             renderItem={({item}) => (
-              <TouchableOpacity
-                style={[
-                  styles.familyCard,
-                  familySelected?.id_family === item.id_family &&
-                    styles.familyCardSelected,
-                ]}
-                onPress={() => selectFamily(item)}>
-                <Image
-                  source={
-                    item.avatar
-                      ? {uri: item.avatar}
-                      : require('../../../assets/images/avatar.png')
-                  }
-                  style={styles.avatar}
-                />
-                <Text style={styles.familyName}>{item.name}</Text>
-                <Text style={styles.familyDetails}>{item.description}</Text>
-                {familySelected?.id_family === item.id_family && (
-                  <View style={styles.selectedIndicator} />
-                )}
-              </TouchableOpacity>
+              <View style={styles.familyContainer}>
+                <TouchableOpacity
+                  style={[
+                    styles.familyCard,
+                    familySelected?.id_family === item.id_family &&
+                      styles.familyCardSelected,
+                  ]}
+                  onPress={() => selectFamily(item)}>
+                  <Image
+                    source={
+                      item.avatar
+                        ? {uri: item.avatar}
+                        : require('../../../assets/images/avatar.png')
+                    }
+                    style={styles.avatar}
+                  />
+                  {familySelected?.id_family === item.id_family && (
+                    <View style={styles.selectedIndicator} />
+                  )}
+                </TouchableOpacity>
+                <Text style={styles.familyNameOutside}>{item.name}</Text>
+              </View>
             )}
             keyExtractor={item => item.id_family.toString()}
             showsHorizontalScrollIndicator={false}
