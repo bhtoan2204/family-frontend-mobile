@@ -76,5 +76,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  headerText: {
+    
+  }
 });
 export default styles;

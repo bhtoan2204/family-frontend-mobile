@@ -108,3 +108,5 @@ const TEXTS = {
 };
 
 export default TEXTS;
+TEXTS.SCEEN_HEIGHT
+TEXTS.SCREEN_WIDTH

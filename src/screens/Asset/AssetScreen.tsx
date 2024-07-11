@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,13 +7,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ExpenseServices } from 'src/services/apiclient';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import { Asset } from 'src/interface/asset/asset';
-import { addAsset, selectAsset, selectAssets, setAsset } from 'src/redux/slices/AssetSlice';
+import { setAsset } from 'src/redux/slices/AssetSlice';
 import Feather from 'react-native-vector-icons/Feather';
+import { RootState } from 'src/redux/store';
 
 const AssetScreen = ({ navigation }: AssetScreenProps) => {
   const dispatch = useDispatch();
   const family = useSelector(selectSelectedFamily);
-  const assets = useSelector(selectAssets);
+  const assets = useSelector((state: RootState) => state.asset.assets);
 
   useEffect(() => {
     fetchData();
@@ -29,11 +30,10 @@ const AssetScreen = ({ navigation }: AssetScreenProps) => {
   };
 
   const handlePressDetail = (item: Asset) => {
-    dispatch(selectAsset(item));
-    navigation.navigate('AssetDetailScreen');
+    navigation.navigate('AssetDetailScreen', { asset: item });
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: Asset }) => (
     <TouchableOpacity onPress={() => handlePressDetail(item)} style={styles.assetContainer}>
       <Image source={{ uri: item.image_url }} style={styles.assetImage} />
       <View style={styles.assetInfo}>
@@ -69,12 +69,13 @@ const AssetScreen = ({ navigation }: AssetScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    backgroundColor: '#fff',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,
@@ -82,26 +83,27 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   list: {
+    paddingHorizontal: 16,
     paddingBottom: 16,
   },
   assetContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#f0f0f0',
     borderRadius: 8,
-    marginBottom: 16,
+    marginBottom: 12,
+    padding: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 8,
+    shadowRadius: 4,
     elevation: 2,
   },
   assetImage: {
     width: 80,
     height: 80,
+    borderRadius: 16,
     marginRight: 16,
-    borderRadius: 20,
   },
   assetInfo: {
     flex: 1,
@@ -109,20 +111,21 @@ const styles = StyleSheet.create({
   assetName: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 4,
   },
   assetDescription: {
     fontSize: 14,
     color: '#666',
+    marginBottom: 4,
   },
   assetValue: {
     fontSize: 16,
     color: '#333',
-    marginTop: 4,
+    marginBottom: 4,
   },
   assetDate: {
     fontSize: 14,
     color: '#999',
-    marginTop: 2,
   },
   addButton: {
     position: 'absolute',
@@ -130,7 +133,6 @@ const styles = StyleSheet.create({
     right: 20,
     marginBottom: 30,
   },
-  
 });
 
 export default AssetScreen;

@@ -97,7 +97,6 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         
         setHasReceivedMessage(true);
         setCurrentIndex(currentIndex + 1);
-        console.log(currentIndex)
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
