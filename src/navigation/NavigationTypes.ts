@@ -260,9 +260,8 @@ export type CalendarStackParamList = {
   ScheduleScreen: {
     id_family: number | undefined;
   };
-  CreateEvent: {
-    id_family: number | undefined;
-  };
+  CreateEvent: undefined;
+  
   CreateCategoryEvent: {
     id_family: number | undefined;
   };
@@ -338,9 +337,7 @@ export type FamilyStackParamList = {
   };
   News: undefined;
   UpcomingEvents: undefined;
-  MemberDetails: {
-    member: Member;
-  };
+  MemberDetails: undefined;
   GuidelinePublic: undefined
 
 };

@@ -6,25 +6,25 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
-import { Income } from 'src/interface/income/getIncome';
-import { getIncome } from 'src/redux/slices/IncomeAnalysis';
-import { IncomeType } from 'src/interface/income/IncomeType';
+import {  IncomeType } from 'src/interface/income/getIncome';
 import { IncomeServices } from 'src/services/apiclient';
 import { COLORS } from 'src/constants';
 import { Feather } from '@expo/vector-icons';
 import moment from 'moment';
+import { getSelectedIncome } from 'src/redux/slices/IncomeAnalysis';
+import { RootState } from 'src/redux/store';
 
 const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
   const dispatch = useDispatch();
-  const income: Income | null = useSelector(getIncome);
+  const income= useSelector(getSelectedIncome);
 
   const [isEditing, setIsEditing] = useState(false);
   const [incomeType, setincomeType] = useState<IncomeType[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(income?.income_category);
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(income?.financeIncomeSource.income_source_name);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [chosenDate, setChosenDate] = useState(new Date());
   const [editedDescription, setEditedDescription] = useState(income?.description || '');
-  const [editedAmount, setEditedAmount] = useState(income?.income_amount.toString() || '');
+  const [editedAmount, setEditedAmount] = useState(income?.amount.toString() || '');
   const [categoryTimeout, setCategoryTimeout] = useState<NodeJS.Timeout | null>(null);
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const [isEditingImage, setIsEditingImage] = useState(false);
@@ -56,7 +56,9 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
 
     }
   };
-
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
   const handleDelete = () => {
     Alert.alert(
       'Delete income',
@@ -94,9 +96,6 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
 
 
 
-  const handleCloseModal = () => {
-    setSelectedImageIndex(null);
-  };
 
 
 
@@ -135,7 +134,7 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
         <View style={styles.card}>
           <View style={styles.amountContainer}>
             {!isEditing ? (
-              <Text style={styles.valueAmount}>+{formatCurrency(income?.income_amount.toString() || '0')}</Text>
+              <Text style={styles.valueAmount}>+{formatCurrency(income?.amount.toString() || '0')}</Text>
             ) : (
               <TextInput
                 style={styles.valueAmount}
@@ -149,7 +148,7 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
             <Text style={styles.label}>Category:</Text>
             <View style={styles.valueContainer}>
               {!isEditing ? (
-                <Text style={styles.value}>{income?.income_category}</Text>
+                <Text style={styles.value}>{income?.financeIncomeSource.income_source_name}</Text>
               ) : (
                 <TouchableOpacity onPress={() => setShowCategoryPicker(!showCategoryPicker)}>
                   <Text style={styles.value}>{selectedCategory}</Text>
@@ -164,8 +163,8 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
                   {incomeType.map((item) => (
                     <Picker.Item
                       key={item.id_income_source}
-                      label={item.category}
-                      value={item.category}
+                      label={item.income_source_name}
+                      value={item.income_source_name}
                     />
                   ))}
                 </Picker>
@@ -184,10 +183,12 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
               />
             )}
           </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.label}>Created By:</Text>
-            <Text style={styles.ValueName}>{income?.name}</Text>
-          </View>
+            <View style={styles.detailRow}>
+              <Text style={styles.label}>Created By:</Text>
+              <TouchableOpacity > 
+                <Text style={styles.ValueName}>{income?.users.firstname} {income?.users.lastname}</Text>
+              </TouchableOpacity>
+            </View>
           <View style={styles.detailRow}>
             <Text style={styles.label}>Date:</Text>
             {!isEditing ? (
@@ -216,9 +217,17 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
      </View>
      
         {isEditing && (
-          <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSave}>
-            <Text style={styles.buttonText}>Save</Text>
-          </TouchableOpacity>
+          <View style={{flexDirection: 'row'}}> 
+
+            <TouchableOpacity style={[styles.button, ]} onPress={handleCancel}>
+              <Text style={styles.buttonText}>Cancel</Text>
+            </TouchableOpacity>
+
+              <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSave}>
+                <Text style={styles.buttonTextSave}>Save</Text>
+              </TouchableOpacity>
+          </View>
+
         )}
        
 
@@ -233,184 +242,191 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
-    editButtonContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: 'lightblue',
-      paddingVertical: 8,
-      paddingHorizontal: 12,
-      borderRadius: 20, 
-    },
-    
-    editIcon: {
-      color: 'gray',
-      marginRight: 5,
-    },
-    loadingContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    safeArea: {
-      flex: 1,
-      backgroundColor: '#f9f9f9',
-    },
-    container: {
-      flex: 1,
-      padding: 20,
-    },
-    headerContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 20,
-      justifyContent: 'space-between',
-    },
-    headerButton: {
-      flexDirection: 'row',
-      alignContent: 'center',
-      alignItems: 'center',
-    },
-    backButton: {
-      color: '#333',
-    },
-    headerTitleContainer: {
-      flex: 1,
-      alignItems: 'center',
-    },
-    headerText: {
-      fontSize: 16,
-      color: '#333',
-      fontWeight: 'bold',
-    },
-    editContainer: {
-      backgroundColor: 'lightblue',
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    deleteButton: {
-      backgroundColor: '#00adf5',
-      borderWidth: 1,
-      borderColor: '#f0f0f0',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: 50,
-    },
-    buttonText: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      color: 'gray',
-    },
-  
-    editButton: {
-      color: '#333',
-      marginRight: 5,
-    },
-    editText: {
-      color: 'gray',
-      fontSize: 18,
-    },
-    card: {
-      backgroundColor: '#fff',
-      borderRadius: 10,
-      padding: 20,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 5,
-      marginBottom: 20,
-    },
-    amountContainer: {
-      alignItems: 'center',
-      paddingBottom: 20,
-    },
-    valueAmount: {
-      color: 'green',
-      fontSize: 40,
-      fontWeight: 'bold',
-    },
-    detailRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginBottom: 15,
-    },
-    label: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: '#555',
-    },
-    valueContainer: {
-      flexDirection: 'column',
-    },
-    value: {
-      fontSize: 16,
-      color: '#333',
-    },
-    ValueName: {
-      fontSize: 16,
-      color: COLORS.DenimBlue,
-    },
-    input: {
-      fontSize: 16,
-      color: '#333',
-      borderBottomWidth: 1,
-      borderBottomColor: '#ccc',
-      paddingBottom: 2,
-    },
-    picker: {
-      color: '#333',
-      width: 200,
-      justifyContent: 'space-between',
-    },
-    imageContainer: {
-      flexDirection: 'column',
-      marginTop: 10,
-    },
-    imageWrapper: {
-      alignItems: 'center',
-    },
-    image: {
-      width: '90%',
-      height: 200,
-      borderRadius: 10,
-      marginBottom: 10,
-    },
-    changeImageButton: {
-      marginBottom: 5,
-    },
-    changeImageText: {
-      color: '#007BFF',
-      fontSize: 16,
-    },
-    deleteImageButton: {
-      marginBottom: 5,
-    },
-    deleteText: {
-      color: 'white',
-      fontSize: 17,
-      fontFamily: 'System', 
-    },
-    button: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingVertical: 15,
-      paddingHorizontal: 150, 
-      borderRadius: 10,
-      marginTop: 10,
-      alignSelf: 'center', 
-    },
-    
-  
-    saveButton: {
-      backgroundColor: '#4CAF50',
-    },
-  
-  
-  });
-  
+
+editButtonContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: 'lightblue',
+  paddingVertical: 8,
+  paddingHorizontal: 12,
+  borderRadius: 20, 
+},
+
+editIcon: {
+  color: 'gray',
+  marginRight: 5,
+},
+loadingContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+safeArea: {
+  flex: 1,
+  backgroundColor: '#f9f9f9',
+},
+container: {
+  flex: 1,
+  padding: 20,
+},
+headerContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 20,
+  justifyContent: 'space-between',
+},
+headerButton: {
+  flexDirection: 'row',
+  alignContent: 'center',
+  alignItems: 'center',
+},
+backButton: {
+  color: '#333',
+},
+headerTitleContainer: {
+  flex: 1,
+  alignItems: 'center',
+},
+headerText: {
+  fontSize: 16,
+  color: '#333',
+  fontWeight: 'bold',
+},
+editContainer: {
+  backgroundColor: 'lightblue',
+  flexDirection: 'row',
+  alignItems: 'center',
+},
+deleteButton: {
+  backgroundColor: '#00adf5',
+  borderWidth: 1,
+  borderColor: '#f0f0f0',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: 50,
+},
+buttonTextSave: {
+  fontSize: 18,
+  fontWeight: 'bold',
+  color: 'white',
+},
+buttonText: {
+  fontSize: 18,
+  fontWeight: 'bold',
+  color: 'gray',
+},
+editButton: {
+  color: '#333',
+  marginRight: 5,
+},
+editText: {
+  color: 'gray',
+  fontSize: 18,
+},
+card: {
+  backgroundColor: '#fff',
+  borderRadius: 10,
+  padding: 20,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 4,
+  elevation: 5,
+  marginBottom: 20,
+},
+amountContainer: {
+  alignItems: 'center',
+  paddingBottom: 20,
+},
+valueAmount: {
+  color: 'green',
+  fontSize: 40,
+  fontWeight: 'bold',
+},
+detailRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginBottom: 15,
+},
+label: {
+  fontSize: 16,
+  fontWeight: '600',
+  color: '#555',
+},
+valueContainer: {
+  flexDirection: 'column',
+},
+value: {
+  fontSize: 16,
+  color: '#333',
+},
+ValueName: {
+  fontSize: 16,
+  color: COLORS.DenimBlue,
+},
+input: {
+  fontSize: 16,
+  color: '#333',
+  borderBottomWidth: 1,
+  borderBottomColor: '#ccc',
+  paddingBottom: 2,
+},
+picker: {
+  color: '#333',
+  width: 200,
+  justifyContent: 'space-between',
+},
+imageContainer: {
+  flexDirection: 'column',
+  marginTop: 10,
+},
+imageWrapper: {
+  alignItems: 'center',
+},
+image: {
+  width: '90%',
+  height: 200,
+  borderRadius: 10,
+  marginBottom: 10,
+},
+changeImageButton: {
+  marginBottom: 5,
+},
+changeImageText: {
+  color: '#007BFF',
+  fontSize: 16,
+},
+deleteImageButton: {
+  marginBottom: 5,
+},
+deleteText: {
+  color: 'white',
+  fontSize: 17,
+  fontFamily: 'System', 
+},
+button: {
+  alignItems: 'center',
+  justifyContent: 'center',
+  paddingVertical: 15,
+  paddingHorizontal: 80, 
+  borderRadius: 10,
+  marginTop: 10,
+  alignSelf: 'center', 
+},
+
+
+saveButton: {
+  backgroundColor: '#4CAF50',
+
+},
+
+
+});
+
 
 export default IncomeDetailScreen;
+
+
 

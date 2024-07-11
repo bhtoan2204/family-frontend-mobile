@@ -12,20 +12,20 @@ import { ExpenseScreenProps } from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS } from 'src/constants';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import {  setSelectedExpense } from 'src/redux/slices/ExpenseAnalysis';
+import {  getSumExpense, selectExpenses, setExpenses, setSelectedExpense, setSumExpense } from 'src/redux/slices/ExpenseAnalysis';
 const screenWidth = Dimensions.get('window').width;
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { DailyExpense } from 'src/interface/expense/DailyExpense';
 import { setDate } from 'date-fns';
 
 const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
-  const [expenses, setExpenses] = useState<DailyExpense[]>([]);
+  const expenses = useSelector(selectExpenses);
   const [currentPageExpense, setCurrentPageExpense] = useState<number>(1);
 
   const [totalPageExpense, setTotalPageExpense] = useState<number>(1);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<number>(30);
-  const [sumExpense, setSumExpense] = useState<number>(0);
+  const sumExpense = useSelector(getSumExpense);
   const [selectedFamily, setSelectedFamily] = useState<number | undefined>(undefined);
   const [isFamilyModalOpen, setIsFamilyModalOpen] = useState(false);
   const filterUri = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL0i6wYs08kFWJKDu9843LWdW43Xom8IW89cIZREgBKg&s';
@@ -52,9 +52,9 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
         const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
         const response = await ExpenseServices.getExpenseByDateRange(page, itemsPerPage, family.id_family, formattedDateFrom, formattedDateTo )
         if(response){
-          setExpenses(prevExpenses => reset ? response.data : [...prevExpenses, ...response.data]);
+          dispatch(setExpenses(reset ? response.data : [...expenses, ...response.data]));
           setTotalPageExpense(Math.ceil(response.total / itemsPerPage));
-          // setSumExpense(response.sum)
+          dispatch(setSumExpense(response.sum));
         }
 
     } catch (error) {
@@ -80,12 +80,7 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
 
 
 
-  const filter = (option: number) => {
-    setFilterModalVisible(false);
-    setSelectedFilter(option);
-    setCurrentPageExpense(1);
 
-  };
 
   const formatDate = (isoDateTime: string) => {
     return moment(isoDateTime).format('DD/MM/YYYY HH:mm');
@@ -236,7 +231,7 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
 
             <View style={styles.sumContainer}>
               <Text style={styles.sumText}>Total Expense: </Text>
-              <Text style={[styles.sumText, { color: 'red' }]}>-{(sumExpense)} </Text>
+              <Text style={[styles.sumText, { color: 'red' }]}>-{formatCurrency(sumExpense)} </Text>
               </View>
           
        

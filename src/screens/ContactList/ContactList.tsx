@@ -154,7 +154,7 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView >
       <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>Contact List</Text>
       </View>

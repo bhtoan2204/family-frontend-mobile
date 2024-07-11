@@ -173,7 +173,7 @@ const IncomeServices = {
       }
       
     },
-    getIncomeByDateRange: async (page: number, itemsPerPage: number, option: number,  id_family?: number, fromDate: string, toDate: string) => {
+    getIncomeByDateRange: async (page: number, itemsPerPage: number, id_family?: number, fromDate: string, toDate: string) => {
 
       try {
         const response: AxiosResponse = await instance.get(

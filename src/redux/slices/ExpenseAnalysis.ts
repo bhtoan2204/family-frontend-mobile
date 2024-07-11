@@ -5,6 +5,7 @@ import moment from 'moment';
 
 interface ExpenseSliceState {
   expenses: DailyExpense[];
+  sumExpense: number;
   selectedExpense: DailyExpense | null;
   selectedOption: 'Day' | 'Month' | 'Year';
   selectedDate: string;
@@ -12,6 +13,7 @@ interface ExpenseSliceState {
 
 const initialState: ExpenseSliceState = {
   expenses: [],
+  sumExpense: 0,
   selectedExpense: null,
   selectedOption: 'Day',
   selectedDate: moment(new Date()).format('YYYY-MM-DD'),
@@ -47,6 +49,9 @@ const expenseSlice = createSlice({
     setSelectedDate(state, action: PayloadAction<string>) {
       state.selectedDate = action.payload;
     },
+    setSumExpense(state, action: PayloadAction<number>) {
+      state.sumExpense = action.payload;
+    },
   },
 });
 
@@ -58,11 +63,13 @@ export const {
   setSelectedExpense,
   setSelectedOption,
   setSelectedDate,
+  setSumExpense,
 } = expenseSlice.actions;
 
 export const selectExpenses = (state: RootState) => state.expense.expenses;
 export const selectSelectedExpense = (state: RootState) => state.expense.selectedExpense;
 export const getOption = (state: RootState) => state.expense.selectedOption;
 export const getDate = (state: RootState) => state.expense.selectedDate;
+export const getSumExpense = (state: RootState) => state.expense.sumExpense;
 
 export default expenseSlice.reducer;

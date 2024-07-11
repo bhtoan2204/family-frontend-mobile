@@ -1,34 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Linking, Modal, FlatList, Button, Dimensions, ActivityIndicator, Alert } from 'react-native';
 import { Avatar, Header, Icon } from 'react-native-elements';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { COLORS } from 'src/constants';
-import { Member, Role } from 'src/interface/member/member';
+import { Role } from 'src/interface/member/member';
 import { MemberDetailsScreenProps } from 'src/navigation/NavigationTypes';
+import { selectSelectedMember } from 'src/redux/slices/FamilySlice';
 import { setUserMessage } from 'src/redux/slices/MessageUser';
+import { RootState } from 'src/redux/store';
 import { FamilyServices } from 'src/services/apiclient';
 import RoleService from 'src/services/apiclient/RoleServices';
 const screenHeight = Dimensions.get('screen').height;
 
 const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) => {
-  const { member } = route.params; 
-  const [newRole, setNewRole] = useState(member.familyRoles.role_name_en);
+  
+  const  member =  useSelector((state: RootState) => state.family.selectedMember);
+  const [newRole, setNewRole] = useState(member?.familyRoles.role_name_en);
   const [role, setRole] = useState<Role[]>([]);
   const [modalVisible, setModalVisible] = useState(false); 
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
+  useEffect(()=>{
+    console.log(member);
+  },[])
   const handlePhonePress = () => {
-    Linking.openURL(`tel:${member.user.phone}`); 
+    Linking.openURL(`tel:${member?.user.phone}`); 
   };
 
-  const formattedCreatedAt = new Date(member.created_at).toLocaleDateString('en-US', {
+  const formattedCreatedAt = new Date(member?.user.created_at).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
   });
   const handleEmailPress = () => {
-    Linking.openURL(`mailto:${member.user.email}`); 
+    Linking.openURL(`mailto:${member?.user.phone}`); 
   };
   const handleChangeRole = async () => {
     setIsLoading(true);
@@ -47,7 +53,7 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
    const handleRoleSelect = async (roleName: Role) => {
     try {
         setIsLoading(true);
-        await RoleService.assignRole(member.id_user, member.id_family, roleName.id_family_role)
+        await RoleService.assignRole(member?.id_user, member.id_family, roleName.id_family_role)
         setNewRole(roleName.role_name_en); 
         setModalVisible(false);
     }catch (error){
@@ -62,13 +68,13 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
     </TouchableOpacity>
   );
   const handlePressMessage = async () => {
-    await dispatch(setUserMessage(member.user));
-    navigation.navigate('ChatStack', {screen: 'ChatUser', params: { receiverId: member.user.id_user}});
+    await dispatch(setUserMessage(member?.user));
+    navigation.navigate('ChatStack', {screen: 'ChatUser', params: { receiverId: member?.id_user}});
   }
   const handleRemoveMember = async() => {
     setIsLoading(true);
     try{
-       await FamilyServices.kickMember(member.id_user, member.id_family);
+       await FamilyServices.kickMember(member.id_user, member?.id_family);
        Alert.alert('Success', 'Member removed successfully');
         
     } catch(error){
@@ -101,7 +107,7 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
         <View >
             <Avatar
             rounded
-            source={member.user.avatar ? { uri: member.user.avatar } : require('../../assets/images/avatar.png')}
+            source={member?.user.avatar ? { uri: member?.user.avatar } : require('../../assets/images/avatar.png')}
             size={120}
             containerStyle={styles.avatar}
             />

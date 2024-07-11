@@ -1,16 +1,67 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, Text, TouchableOpacity, Image, Animated} from 'react-native';
+import {View, Text, TouchableOpacity, Image, Animated, ActivityIndicator} from 'react-native';
 import styles from './styles';
 import {ExpenditureScreenProps} from 'src/navigation/NavigationTypes';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS} from 'src/constants';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useDispatch} from 'react-redux';
-import {setSelectedOption} from 'src/redux/slices/ExpenseAnalysis';
-import {setSelectedOptionIncome} from 'src/redux/slices/IncomeAnalysis';
+import {useDispatch, useSelector} from 'react-redux';
+import {getSumExpense, setExpenses, setSelectedOption, setSumExpense} from 'src/redux/slices/ExpenseAnalysis';
+import {getSumIncome, setSelectedOptionIncome, setSumIncome} from 'src/redux/slices/IncomeAnalysis';
+import moment from 'moment';
+import { ExpenseServices, IncomeServices } from 'src/services/apiclient';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 
 const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
   const dispatch = useDispatch();
+  const family = useSelector(selectSelectedFamily);
+  const sumExpense = useSelector(getSumExpense);
+  const sumIncome = useSelector(getSumIncome);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [dateTo, setDateTo] = useState(new Date());
+  const [dateFrom, setDateFrom] = useState(() => {
+    const date = new Date(dateTo);
+    date.setDate(date.getDate() - 30);
+    return date;
+  });
+  useEffect(()=>{
+    fetchDataExpense();
+    fetchDataIncome();
+  },[])
+
+  const fetchDataExpense = async () => {
+    setIsLoading(true);
+    try {
+      
+        const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
+        const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
+        const response = await ExpenseServices.getExpenseByDateRange(1, 10, family.id_family, formattedDateFrom, formattedDateTo )
+        if(response){
+          dispatch(setSumExpense(response.sum));
+        }
+
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const fetchDataIncome = async () => {
+    setIsLoading(true);
+    try {
+        const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
+        const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
+      const response = await IncomeServices.getIncomeByDateRange(1, 10, family.id_family,formattedDateFrom, formattedDateTo );
+      if (response){
+        dispatch(setSumIncome(response.sum))
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const pressExpenseDay = () => {
     dispatch(setSelectedOption('Day'));
@@ -202,6 +253,22 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
       </TouchableOpacity>
     </View>
   );
+  const formatCurrency = (amount: any) => {
+    return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  };
+  useEffect(() => {
+    Animated.timing(scaleAnim, {
+      toValue: 1.2,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => {
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    });
+  }, [sumIncome, sumExpense]);
 
   const renderExVsInScreen = () => (
     //navigation.navigate('ExpenseStack', {screen: 'ExpenseScreen'});
@@ -231,17 +298,15 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           }}
           resizeMode="contain"
         />
-         <Animated.Text
-          style={{
-            position: 'absolute',
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: 'red',
-            paddingHorizontal: 10, 
-            transform: [{ scale: scaleAnim }],
-          }}>
-           - 30.000.000đ
-        </Animated.Text>
+          <Animated.Text
+        style={[
+        styles.animatedTextExpense,
+        {
+          transform: [{ scale: scaleAnim }],
+        },
+      ]}>
+      + {formatCurrency(sumExpense)}
+    </Animated.Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => navigation.navigate('IncomeStack', { screen: 'IncomeScreen' })}
@@ -263,17 +328,15 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           }}
           resizeMode="contain"
         />
-        <Animated.Text
-          style={{
-            position: 'absolute',
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: 'green',
-            paddingHorizontal: 10, 
-            transform: [{ scale: scaleAnim }],
-          }}>
-          + 30.000.000đ
-        </Animated.Text>
+         <Animated.Text
+        style={[
+        styles.animatedTextIncome,
+        {
+          transform: [{ scale: scaleAnim }],
+        },
+      ]}>
+      + {formatCurrency(sumIncome)}
+    </Animated.Text>
       </TouchableOpacity>
 
           </View>
@@ -532,7 +595,12 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           </TouchableOpacity>
         </View>
 
-        {renderScreen()}
+        {isLoading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color={COLORS.primary} />
+            </View>
+        ):
+         ( renderScreen() )}
       </View>
     </SafeAreaView>
   );

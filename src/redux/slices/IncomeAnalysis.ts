@@ -5,6 +5,7 @@ import moment from 'moment';
 
 interface IncomeSliceState {
   incomeList: DailyIncome[];
+  sumIncome: number;
   selectedIncome: DailyIncome | null;
   selectedOptionIncome: 'Day' | 'Month' | 'Year';
   selectedDateIncome: string;
@@ -12,6 +13,7 @@ interface IncomeSliceState {
 
 const initialState: IncomeSliceState = {
   incomeList: [],
+  sumIncome: 0,
   selectedIncome: null,
   selectedOptionIncome: 'Day',
   selectedDateIncome: new Date().toISOString().split('T')[0],
@@ -48,14 +50,18 @@ const incomeSlice = createSlice({
         state.selectedIncome = action.payload;
       }
     },
+    setSumIncome(state, action: PayloadAction<number>) {
+      state.sumIncome = action.payload;
+    },
   },
 });
 
-export const { setIncomeList, setSelectedIncome, setSelectedOptionIncome, setSelectedDate, deleteIncome, updateIncome } = incomeSlice.actions;
+export const { setSumIncome, setIncomeList, setSelectedIncome, setSelectedOptionIncome, setSelectedDate, deleteIncome, updateIncome } = incomeSlice.actions;
 
 export const getIncomeList = (state: RootState) => state.income.incomeList;
 export const getSelectedIncome = (state: RootState) => state.income.selectedIncome;
 export const getSelectedOption = (state: RootState) => state.income.selectedOptionIncome;
 export const getSelectedDate = (state: RootState) => state.income.selectedDateIncome;
+export const getSumIncome = (state: RootState) => state.income.sumIncome;
 
 export default incomeSlice.reducer;

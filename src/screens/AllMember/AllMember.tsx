@@ -9,10 +9,10 @@ import {
   FlatList,
   Image,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { AllMemberScreenProps } from 'src/navigation/NavigationTypes';
-import { selectFamilyMembers } from 'src/redux/slices/FamilySlice';
+import { selectFamilyMembers, setSelectedMemberById } from 'src/redux/slices/FamilySlice';
 import styles from './styles';
 import { Member } from 'src/interface/member/member';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -22,14 +22,16 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
   const { id_family } = route.params || {};
   const members = useSelector(selectFamilyMembers);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const dispatch = useDispatch();
 
   const handleAddMember = () => {
     const phone = undefined;
     navigation.navigate('AddEditFamilyMember', { id_family, phone });
   };
 
-  const handlePressMember = (member: Member) => {
-    navigation.navigate('MemberDetails', { member: member });
+  const handlePressMember = async (member: Member) => {
+    await dispatch(setSelectedMemberById(member.id_user, member.id_family));
+    navigation.navigate('MemberDetails');
   };
 
 
@@ -112,3 +114,5 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
 };
 
 export default ViewAllMemberScreen;
+
+

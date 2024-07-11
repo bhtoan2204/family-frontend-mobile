@@ -26,7 +26,7 @@ export interface DailyIncome {
     };
     users: {
       id_user: string;
-      email: string;
+      email: string; 
       phone: string;
       firstname: string;
       lastname: string;

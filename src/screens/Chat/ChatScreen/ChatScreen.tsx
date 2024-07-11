@@ -73,10 +73,9 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   };
 
 
-
   const fetchMessages = useCallback(async () => {
     setReceiver(user);
-
+  
     try {
       const response = await ChatServices.GetMessages({
         id_user: receiverId,
@@ -89,14 +88,22 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
           }
           return { ...message, timestamp: new Date(message.timestamp) };
         });
-        setMessages((prevMessages) => [...prevMessages, ...newMessages]);
-        setHasReceivedMessage(true); 
-        setCurrentIndex(currentIndex+1);
+        
+        if (currentIndex === 0) {
+          setMessages(newMessages);
+        } else {
+          setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+        }
+        
+        setHasReceivedMessage(true);
+        setCurrentIndex(currentIndex + 1);
+        console.log(currentIndex)
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
   }, [receiverId, currentIndex]);
+  
 
   useEffect(() => {
     fetchMessages();

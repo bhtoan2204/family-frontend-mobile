@@ -11,15 +11,16 @@ import { COLORS } from 'src/constants';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { DailyIncome } from 'src/interface/income/IncomeDaily';
+import { getIncomeList, getSumIncome, setIncomeList, setSelectedIncome, setSumIncome } from 'src/redux/slices/IncomeAnalysis';
 
 const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
-  const [income, setIncome] = useState<DailyIncome[]>([]);
+  const income = useSelector(getIncomeList);
+
   const [currentPageIncome, setCurrentPageIncome] = useState<number>(1);
 
   const [totalPageIncome, setTotalPageIncome] = useState<number>(1);
-  const [selectedFilter, setSelectedFilter] = useState<number>(30);
   const [selectedCategoryType, setSelectedCategoryType] = useState<string>('Income');
-  const [sumIncome, setSumIncome] = useState<number>(0);
+  const sumIncome = useSelector(getSumIncome);
   const family = useSelector(selectSelectedFamily);
   const itemsPerPage = 10;
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -38,9 +39,12 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
     try {
         const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
         const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
-      const response = await IncomeServices.getIncomeByDateRange(page, itemsPerPage, selectedFilter, family.id_family,formattedDateFrom, formattedDateTo );
-      setTotalPageIncome(Math.ceil(response.total / itemsPerPage));
-      setIncome(prevIncome => reset ? response.data : [...prevIncome, ...response.data]);
+      const response = await IncomeServices.getIncomeByDateRange(page, itemsPerPage, family.id_family,formattedDateFrom, formattedDateTo );
+      if (response){
+        setTotalPageIncome(Math.ceil(response.total / itemsPerPage));
+        dispatch(setIncomeList(reset ? response.data : [...income, ...response.data]));
+        dispatch(setSumIncome(response.sum))
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -74,7 +78,7 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
 
 
   const handlePressIncomeItem = async (item: DailyIncome)=> {
-    await dispatch(setIncomeDetails(item));
+    await dispatch(setSelectedIncome(item));
     navigation.navigate('IncomeStack', {screen: 'IncomeDetailScreen'});
   }
   
@@ -246,3 +250,5 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
 };
 
 export default IncomeScreen;
+
+
