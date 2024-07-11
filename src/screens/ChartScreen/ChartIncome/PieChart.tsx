@@ -251,7 +251,7 @@ const formatCurrency = (amount: string | number | bigint) => {
                   <Text style={styles.expenseText}>{detail.day}</Text>
                 </View>
                 <View style={styles.expenseDetails}>
-                  <Text style={styles.incomeAmount}>+{formatCurrency(detail.total)} đ</Text>
+                  <Text style={styles.incomeAmount}>+ {formatCurrency(detail.total)}</Text>
                   {/* <Icon name="chevron-right" size={20} color="#ccc" /> */}
                 </View>
               </TouchableOpacity>

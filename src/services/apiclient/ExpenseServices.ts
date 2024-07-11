@@ -189,7 +189,7 @@ const ExpenseServices = {
         `${baseUrl}/api/v1/finance/expensediture/getExpensebyYear/${id_family}`,
         {
           params: {
-            year
+            id_family , year
           }
         }
       );

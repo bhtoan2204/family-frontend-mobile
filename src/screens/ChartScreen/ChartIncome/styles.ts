@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
   },
   legendText: {
     fontSize: 16,
-    color:'#fff',
+    color:'black',
   },
   legendLineText: {
     fontSize: 16,

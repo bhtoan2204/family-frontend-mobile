@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
   },
   legendText: {
     fontSize: 16,
-    color:'#fff',
+    color:'black',
   },
   legendLineText: {
     fontSize: 16,
@@ -290,10 +290,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 15,
+    alignContent: 'center',
+
   },
   expenseDetails: {
     flexDirection: 'row',
     alignItems: 'center',
+    alignSelf: 'center',
+
   },
   expenseText: {
     fontSize: 16,

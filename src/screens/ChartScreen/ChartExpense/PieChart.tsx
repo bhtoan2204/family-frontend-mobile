@@ -210,7 +210,9 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
     dispatch(setSelectedOption('Day'));
     dispatch(setSelectedDate(formattedDate));
 };
-
+const formatCurrency = (amount: string | number | bigint) => {
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+};
   return (
     // <ScrollView style={{height: '80%'}}>
 
@@ -271,7 +273,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
                   <Text style={styles.expenseText}>{detail.day}</Text>
                 </View>
                 <View style={styles.expenseDetails}>
-                  <Text style={styles.expenseAmount}>- {detail.total} đ</Text>
+                  <Text style={styles.expenseAmount}>- {formatCurrency(detail.total)}</Text>
                   {/* <Icon name="chevron-right" size={20} color="#ccc" /> */}
                 </View>
               </TouchableOpacity>
