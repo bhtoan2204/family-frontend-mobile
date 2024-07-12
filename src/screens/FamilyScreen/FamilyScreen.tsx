@@ -225,8 +225,8 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
         });
         break;
       case 3:
-        navigation.navigate('FamilyStack', {
-          screen: 'Education',
+        navigation.navigate('EducationStack', {
+          screen: 'EducationScreen',
           params: { id_family: selectedFamily!.id_family },
         });
         break;

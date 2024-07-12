@@ -102,6 +102,8 @@ export interface Subject {
   // final_score?: number | null;
   bonus_score?: number | null;
   status: string;
+  score_calculated?: number;
+  progress_calculated?: number;
 }
 
 export interface ComponentScore {

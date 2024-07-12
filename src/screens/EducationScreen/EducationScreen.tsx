@@ -267,3 +267,423 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
 }
 
 export default EducationScreen
+
+// {
+//   "message": "Success",
+//   "data": [
+//     {
+//       "id_education_progress": 4,
+//       "id_family": 96,
+//       "id_user": "bd94ba3a-b046-4a05-a260-890913e09df9",
+//       "title": "Figma Update",
+//       "progress_notes": "75",
+//       "school_info": "Truong doi",
+//       "created_at": "2024-06-20T11:33:30.329Z",
+//       "updated_at": "2024-07-07T10:29:24.048Z",
+//       "subjects": [
+//         {
+//           "id_subject": 4,
+//           "id_education_progress": 4,
+//           "subject_name": "Math",
+//           "description": "Mathematics",
+//           "component_scores": null,
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         },
+//         {
+//           "id_subject": 5,
+//           "id_education_progress": 4,
+//           "subject_name": "Xác xuất thống kê 2",
+//           "description": "GVLT: Nguyễn Văn A, GVTH:  Phạm Thị B",
+//           "component_scores": null,
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         },
+//         {
+//           "id_subject": 6,
+//           "id_education_progress": 4,
+//           "subject_name": "Toán tổ hợp",
+//           "description": "GVLT: Nguyễn Văn A, GVTH:  Phạm Thị B",
+//           "component_scores": null,
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         },
+//         {
+//           "id_subject": 3,
+//           "id_education_progress": 4,
+//           "subject_name": "Đại số tuyến tính",
+//           "description": "GVLT: Nguyễn Văn A, GVTH:  Phạm Thị B",
+//           "component_scores": [
+//             {
+//               "component_name": "Gg",
+//               "score": 0
+//             },
+//             {
+//               "component_name": "Gg",
+//               "score": 0
+//             }
+//           ],
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         },
+//         {
+//           "id_subject": 50,
+//           "id_education_progress": 4,
+//           "subject_name": "Figma",
+//           "description": "",
+//           "component_scores": null,
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         },
+//         {
+//           "id_subject": 51,
+//           "id_education_progress": 4,
+//           "subject_name": "Ok",
+//           "description": "",
+//           "component_scores": [
+//             {
+//               "component_name": "Ok",
+//               "score": 0
+//             },
+//             {
+//               "component_name": "Ok",
+//               "score": 0
+//             }
+//           ],
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         }
+//       ],
+//       "user": {
+//         "firstname": "Toan",
+//         "lastname": "Banh",
+//         "avatar": "https://storage.googleapis.com/famfund-bucket/avatar/avatar_bd94ba3a-b046-4a05-a260-890913e09df9_1720550907750_8828FA52-8F39-4BEF-A8B9-E18C01880CC8.jpg",
+//         "genre": "male",
+//         "birthdate": "2002-06-20"
+//       }
+//     },
+//     {
+//       "id_education_progress": 6,
+//       "id_family": 96,
+//       "id_user": "28905675-858b-4a93-a283-205899779622",
+//       "title": "Đại học năm 3",
+//       "progress_notes": "Đại học năm 3 - HKII",
+//       "school_info": "Đại học Khoa học Tự Nhiên",
+//       "created_at": "2024-06-20T12:37:24.144Z",
+//       "updated_at": "2024-06-20T12:37:24.144Z",
+//       "subjects": [
+//         {
+//           "id_subject": 8,
+//           "id_education_progress": 6,
+//           "subject_name": "Xác xuất thống kê 2",
+//           "description": "GVLT: Nguyễn Văn A, GVTH:  Phạm Thị B",
+//           "component_scores": null,
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         },
+//         {
+//           "id_subject": 7,
+//           "id_education_progress": 6,
+//           "subject_name": "Toán tổ hợp",
+//           "description": "GVLT: Nguyễn Văn A, GVTH:  Phạm Thị B",
+//           "component_scores": [
+//             {
+//               "component_name": "Hâh",
+//               "score": 0
+//             },
+//             {
+//               "component_name": "Hâh",
+//               "score": 0
+//             }
+//           ],
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         }
+//       ],
+//       "user": {
+//         "firstname": "Hiền",
+//         "lastname": "Thu",
+//         "avatar": "https://storage.googleapis.com/famfund-bucket/avatar/avatar_28905675-858b-4a93-a283-205899779622_1717948664029_77E37648-6EDA-406D-920A-2B32C9E3F0F5.jpg",
+//         "genre": "male",
+//         "birthdate": "2006-10-21"
+//       }
+//     },
+//     {
+//       "id_education_progress": 1,
+//       "id_family": 96,
+//       "id_user": "bd94ba3a-b046-4a05-a260-890913e09df9",
+//       "title": "stringgg",
+//       "progress_notes": "testtttt",
+//       "school_info": "testtttt",
+//       "created_at": "2024-06-19T17:57:02.288Z",
+//       "updated_at": "2024-06-22T06:53:18.254Z",
+//       "subjects": [
+//         {
+//           "id_subject": 9,
+//           "id_education_progress": 1,
+//           "subject_name": "Math 1",
+//           "description": "Mathematics 2",
+//           "component_scores": null,
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         },
+//         {
+//           "id_subject": 10,
+//           "id_education_progress": 1,
+//           "subject_name": "Math 3",
+//           "description": "",
+//           "component_scores": null,
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         },
+//         {
+//           "id_subject": 1,
+//           "id_education_progress": 1,
+//           "subject_name": "Math 2",
+//           "description": "Mathematics",
+//           "component_scores": [
+//             {
+//               "component_name": "Homework 4",
+//               "score": 8.9
+//             },
+//             {
+//               "component_name": "Homework 1",
+//               "score": 8.9
+//             },
+//             {
+//               "component_name": "Homework 1",
+//               "score": 8.9
+//             },
+//             {
+//               "component_name": "Homework 1",
+//               "score": 8.9
+//             }
+//           ],
+//           "midterm_score": 10,
+//           "final_score": 10,
+//           "bonus_score": 10,
+//           "status": "done"
+//         }
+//       ],
+//       "user": {
+//         "firstname": "Toan",
+//         "lastname": "Banh",
+//         "avatar": "https://storage.googleapis.com/famfund-bucket/avatar/avatar_bd94ba3a-b046-4a05-a260-890913e09df9_1720550907750_8828FA52-8F39-4BEF-A8B9-E18C01880CC8.jpg",
+//         "genre": "male",
+//         "birthdate": "2002-06-20"
+//       }
+//     },
+//     {
+//       "id_education_progress": 10,
+//       "id_family": 96,
+//       "id_user": "db31bfb8-ec15-4cb1-9cbe-ebe3edaca323",
+//       "title": "Oki",
+//       "progress_notes": "Ko",
+//       "school_info": "Hcmus",
+//       "created_at": "2024-06-22T07:24:49.439Z",
+//       "updated_at": "2024-06-22T07:24:49.439Z",
+//       "subjects": [
+//         {
+//           "id_subject": 11,
+//           "id_education_progress": 10,
+//           "subject_name": "Ee",
+//           "description": "",
+//           "component_scores": null,
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         },
+//         {
+//           "id_subject": 12,
+//           "id_education_progress": 10,
+//           "subject_name": "Tesr",
+//           "description": "",
+//           "component_scores": null,
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         },
+//         {
+//           "id_subject": 13,
+//           "id_education_progress": 10,
+//           "subject_name": "Tt",
+//           "description": "",
+//           "component_scores": null,
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         },
+//         {
+//           "id_subject": 14,
+//           "id_education_progress": 10,
+//           "subject_name": "Pop",
+//           "description": "",
+//           "component_scores": null,
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         },
+//         {
+//           "id_subject": 15,
+//           "id_education_progress": 10,
+//           "subject_name": "Pipi",
+//           "description": "",
+//           "component_scores": null,
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         }
+//       ],
+//       "user": {
+//         "firstname": "Tang",
+//         "lastname": "Long",
+//         "avatar": "https://static.vecteezy.com/system/resources/previews/020/911/740/non_2x/user-profile-icon-profile-avatar-user-icon-male-icon-face-icon-profile-icon-free-png.png",
+//         "genre": "male",
+//         "birthdate": "2007-08-18"
+//       }
+//     },
+//     {
+//       "id_education_progress": 11,
+//       "id_family": 96,
+//       "id_user": "db31bfb8-ec15-4cb1-9cbe-ebe3edaca323",
+//       "title": "Math 10",
+//       "progress_notes": "K",
+//       "school_info": "Hcmus",
+//       "created_at": "2024-06-26T11:27:43.550Z",
+//       "updated_at": "2024-06-26T11:27:43.550Z",
+//       "subjects": [
+//         {
+//           "id_subject": 16,
+//           "id_education_progress": 11,
+//           "subject_name": "M1",
+//           "description": "",
+//           "component_scores": [
+//             {
+//               "component_name": "Quiz 1",
+//               "score": 0
+//             },
+//             {
+//               "component_name": "Quiz 1",
+//               "score": 0
+//             },
+//             {
+//               "component_name": "Quiz 1",
+//               "score": 0
+//             },
+//             {
+//               "component_name": "Quiz",
+//               "score": 0
+//             },
+//             {
+//               "component_name": "quiz",
+//               "score": 0
+//             }
+//           ],
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         }
+//       ],
+//       "user": {
+//         "firstname": "Tang",
+//         "lastname": "Long",
+//         "avatar": "https://static.vecteezy.com/system/resources/previews/020/911/740/non_2x/user-profile-icon-profile-avatar-user-icon-male-icon-face-icon-profile-icon-free-png.png",
+//         "genre": "male",
+//         "birthdate": "2007-08-18"
+//       }
+//     },
+//     {
+//       "id_education_progress": 47,
+//       "id_family": 96,
+//       "id_user": "bd94ba3a-b046-4a05-a260-890913e09df9",
+//       "title": "Giang Test Education",
+//       "progress_notes": "De lam UI",
+//       "school_info": "Truong Doi",
+//       "created_at": "2024-07-08T23:54:42.151Z",
+//       "updated_at": "2024-07-08T23:54:42.151Z",
+//       "subjects": [
+//         {
+//           "id_subject": 52,
+//           "id_education_progress": 47,
+//           "subject_name": "Figma",
+//           "description": "Giang hoc Figma",
+//           "component_scores": null,
+//           "midterm_score": null,
+//           "final_score": null,
+//           "bonus_score": null,
+//           "status": "in_progress"
+//         }
+//       ],
+//       "user": {
+//         "firstname": "Toan",
+//         "lastname": "Banh",
+//         "avatar": "https://storage.googleapis.com/famfund-bucket/avatar/avatar_bd94ba3a-b046-4a05-a260-890913e09df9_1720550907750_8828FA52-8F39-4BEF-A8B9-E18C01880CC8.jpg",
+//         "genre": "male",
+//         "birthdate": "2002-06-20"
+//       }
+//     },
+//     {
+//       "id_education_progress": 44,
+//       "id_family": 96,
+//       "id_user": "101627d7-019e-4a58-b8c0-b30806db3780",
+//       "title": "ádasdasd",
+//       "progress_notes": "ádasdasd",
+//       "school_info": "ádasdasd",
+//       "created_at": "2024-07-02T19:24:45.207Z",
+//       "updated_at": "2024-07-02T19:24:45.207Z",
+//       "subjects": [],
+//       "user": {
+//         "firstname": "Dương",
+//         "lastname": "Phạm",
+//         "avatar": "https://static.vecteezy.com/system/resources/previews/020/911/740/non_2x/user-profile-icon-profile-avatar-user-icon-male-icon-face-icon-profile-icon-free-png.png",
+//         "genre": "male",
+//         "birthdate": "2001-12-15"
+//       }
+//     },
+//     {
+//       "id_education_progress": 45,
+//       "id_family": 96,
+//       "id_user": "101627d7-019e-4a58-b8c0-b30806db3780",
+//       "title": "ádasdasd",
+//       "progress_notes": "ádasdasd",
+//       "school_info": "ádasdasd",
+//       "created_at": "2024-07-02T19:24:45.465Z",
+//       "updated_at": "2024-07-02T19:24:45.465Z",
+//       "subjects": [],
+//       "user": {
+//         "firstname": "Dương",
+//         "lastname": "Phạm",
+//         "avatar": "https://static.vecteezy.com/system/resources/previews/020/911/740/non_2x/user-profile-icon-profile-avatar-user-icon-male-icon-face-icon-profile-icon-free-png.png",
+//         "genre": "male",
+//         "birthdate": "2001-12-15"
+//       }
+//     }
+//   ],
+//   "total": 8
+// }

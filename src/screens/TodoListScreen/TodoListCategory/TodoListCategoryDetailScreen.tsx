@@ -34,18 +34,19 @@ import AddMoreInfoSheet from 'src/components/user/shopping/sheet/add-more-info-s
 import UpdateDescriptionSheet from 'src/components/user/shopping/sheet/update-description-sheet'
 import UpdatePriceSheet from 'src/components/user/shopping/sheet/update-price-sheet'
 import { convertToNumber } from 'src/utils/currency/convertPriceFromDB'
+import { updateDoneTodoList } from 'src/redux/slices/TodoListSlice'
 
 
 const screenHeight = Dimensions.get('screen').height;
 
 
 const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailScreenProps) => {
-    const { id_family, id_category, id_item, id_shopping_list } = route.params
+    const { id_family, id_category, id_item } = route.params
     // console.log('id_family', id_family, 'id_category', id_category)
     const dispatch = useDispatch<AppDispatch>()
     const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
-    const itemDetail = useSelector((state: RootState) => state.shoppinglist).shoppingList.find(item => item.id_shopping_list_type === id_category)!.items!.find(item => item.id_item === id_item)
-    const item = useSelector((state: RootState) => state.shoppinglist).shoppingList.find(item => item.id_shopping_list_type === id_category)!.items
+    const itemDetail = useSelector((state: RootState) => state.todoList).todoList.find(item => item.id_checklist == id_item)
+    const categoryDetail = useSelector((state: RootState) => state.todoList).todoListType.find(item => item.id_checklist_type == id_category)
 
     const updateDateBottomSheetRef = React.useRef<BottomSheet>(null)
     const addInformationBottomSheetRef = React.useRef<BottomSheet>(null)
@@ -56,8 +57,7 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
     const [description, setDescription] = useState<string>('')
 
     useEffect(() => {
-        console.log("items", item)
-        console.log("item detail", itemDetail)
+        console.log("item", itemDetail)
     }, [])
 
     const getImage = (id_category: number) => {
@@ -87,23 +87,22 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                     <TouchableOpacity className=' rounded-full mr-2  items-center justify-center' style={{
                         height: screenHeight * 0.04,
                         width: screenHeight * 0.04,
-                        borderWidth: itemDetail?.is_purchased ? 0 : 2,
-                        borderColor: itemDetail?.is_purchased ? 'transparent' : '#CBCBCB',
-                        backgroundColor: itemDetail?.is_purchased ? '#00AE00' : undefined,
+                        borderWidth: itemDetail?.is_completed ? 0 : 2,
+                        borderColor: itemDetail?.is_completed ? 'transparent' : '#CBCBCB',
+                        backgroundColor: itemDetail?.is_completed ? '#00AE00' : undefined,
                     }}
                         onPress={() => {
                             console.log('hello')
-                            dispatch(updatePurchasedItem(
-                                {
-                                    id_item: id_item,
-                                    id_list: id_shopping_list
-                                }
-                            ))
+                            dispatch(updateDoneTodoList({
+                                id_item: id_item,
+                            }))
                         }}
                     >
-                        <Material name='check' size={24} color={'white'} />
+                        {
+                            itemDetail?.is_completed && <Material name='check' size={24} color={'white'} />
+                        }
                     </TouchableOpacity>
-                    <Text className='text-base text-[#2F2F34]'>{itemDetail?.item_name}</Text>
+                    <Text className='text-base text-[#2F2F34]'>{itemDetail?.task_name}</Text>
                 </View>
 
             </View>
@@ -121,7 +120,7 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                 </View>
 
                 <Text className='text-base text-[#2F2F34]'>{
-                    itemDetail?.reminder_date ? format(new Date(itemDetail?.reminder_date), 'dd/MM/yyyy') : 'Set reminder date'
+                    itemDetail?.due_date ? format(new Date(itemDetail?.due_date), 'dd/MM/yyyy') : 'Set reminder date'
                 }</Text>
             </View>
         </TouchableOpacity>
@@ -176,30 +175,13 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                 </View>
 
                 <Text className='text-base text-[#2F2F34]'>{
-                    itemDetail?.price != '' ? itemDetail?.description : 'Add description'
+                    itemDetail?.description != '' ? itemDetail?.description : 'Add description'
                 }</Text>
             </View>
         </TouchableOpacity>
     }
 
-    const buildPriceBox = () => {
-        return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'
-            onPress={() => {
-                updatePriceBottomSheetRef.current?.expand()
-            }}
-        >
-            <View className='flex-row  items-center  w-full  py-2 '>
-                <View className='mr-2'>
 
-                    <Material name='currency-usd' size={30} color={'#5D5D5D'} />
-                </View>
-
-                <Text className='text-base text-[#2F2F34]'>{
-                    itemDetail?.price != '' && itemDetail?.price != null ? convertToNumber(itemDetail?.price) : 'Add price'
-                }</Text>
-            </View>
-        </TouchableOpacity>
-    }
 
     return (
         <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
@@ -233,7 +215,7 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                         color: textColors[id_category - 1],
                         fontWeight: '600',
                     }}>{
-                            itemDetail?.itemType.item_type_name_en
+                            categoryDetail?.name_en ? categoryDetail?.name_en : 'Other'
 
                         }</Text>
                 </View>
@@ -251,7 +233,6 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                                 {buildCalendarBox()}
                                 {buildRepeatBox()}
                                 {buildDescriptionBox()}
-                                {buildPriceBox()}
                                 {buildAddInfoBox()}
                             </View>
 
@@ -260,7 +241,7 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                     </ScrollView>
                 </View>
             </View>
-            <UpdateDateItemSheet bottomSheetRef={updateDateBottomSheetRef} id_family={id_family!} id_list={id_shopping_list} id_item={id_item} initialDate={
+            {/* <UpdateDateItemSheet bottomSheetRef={updateDateBottomSheetRef} id_family={id_family!} id_list={id_shopping_list} id_item={id_item} initialDate={
                 itemDetail?.reminder_date ? itemDetail?.reminder_date : new Date().toISOString()
             } />
             <AddMoreInfoSheet
@@ -268,7 +249,7 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                 description={description}
                 price={itemDetail?.price ? convertToNumber(itemDetail?.price) : 0}
                 id_item={id_item}
-                id_shopping_list_type={id_shopping_list}
+                id_shopping_list_type={id_list}
             />
             <UpdateDescriptionSheet bottomSheetRef={updateDescriptionBottomSheetRef} id_family={id_family!} id_list={id_shopping_list}
                 description={description}
@@ -279,7 +260,7 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                 price={itemDetail?.price ? convertToNumber(itemDetail?.price) : 0}
                 id_item={id_item}
                 id_shopping_list_type={id_shopping_list}
-            />
+            /> */}
         </View>
 
     )

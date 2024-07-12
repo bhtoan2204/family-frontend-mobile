@@ -15,6 +15,7 @@ import HouseHoldItemStack from './Routes/HouseHoldItemStack';
 import ShoppingListStack from './Routes/ShoppingListStack';
 import ShoppingListCategoryStack from './Routes/ShoppingListCategoryStack';
 import TodoListStack from './Routes/TodoListStack';
+import EducationStack from './Routes/EducationStack';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +40,7 @@ const Navigation = () => {
         <Stack.Screen name="HouseHoldItemStack" component={HouseHoldItemStack} />
         <Stack.Screen name="ShoppingListStack" component={ShoppingListStack} />
         <Stack.Screen name="TodoListStack" component={TodoListStack} />
+        <Stack.Screen name="EducationStack" component={EducationStack} />
 
         {/* <Stack.Screen name="ShoppingListCategoryStack" component={ShoppingListCategoryStack}/> */}
 

@@ -15,14 +15,45 @@ import FurnitureImage from 'src/assets/images/shoppinglist_assets/Furniture.png'
 import PharmacyImage from 'src/assets/images/shoppinglist_assets/Pharmacy.png'
 import OtherImage from 'src/assets/images/shoppinglist_assets/Other.png'
 import { colors } from '../const/color'
+import { TodoListItem, TodoListType } from 'src/interface/todo/todo'
 const screenHeight = Dimensions.get('screen').height;
 
+
+const mapTodoList = (todoList: TodoListItem[], todoListTypes: TodoListType[]): Map<string, TodoListItem[]> => {
+    const data: TodoListItem[] = JSON.parse(JSON.stringify(todoList))
+    const map: Map<string, TodoListItem[]> = new Map()
+    for (let i = 0; i < todoListTypes.length; i++) {
+        const type = todoListTypes[i]
+        if (!map.has(JSON.stringify(type))) {
+            map.set(JSON.stringify(type), [])
+        }
+    }
+
+
+    for (let i = 0; i < data.length; i++) {
+        const itemType = JSON.stringify(data[i].checklistType)
+        if (!map.has(JSON.stringify(data[i].checklistType))) {
+            const arr = [data[i]]
+            map.set(itemType, arr)
+        } else {
+            map.get(itemType)?.push(data[i])
+        }
+    }
+    return map
+}
 
 const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
     const { id_family } = route.params
     const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
     const [selectDate, setSelectDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
     const todoListTypes = useSelector((state: RootState) => state.todoList).todoListType
+    const todoList = useSelector((state: RootState) => state.todoList).todoList
+    const todosMap = mapTodoList(todoList, todoListTypes)
+
+    // useEffect(() => {
+    //     console.log(todosMap)
+    //     console.log(todoList)
+    // }, [todosMap])
     // const handleFilterData = () => {
     //     const returnArray = []
     //     for (let i = 0; i < data.length; i++) {
@@ -40,9 +71,7 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
             </View>
         );
     };
-    const rowHasChanged = (r1: any, r2: any) => {
-        return r1.id_calendar !== r2.id_calendar;
-    };
+
     const handleDayPress = (date: any) => {
         if (selectDate === date.dateString) {
             // setSelectDate(new Date); 
@@ -106,6 +135,23 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
         )
     }
 
+    const buildItems = () => {
+        // const a = Array.from(todosMap.entries())
+        return Array.from(todosMap.entries()).map(([item, index]) => {
+            const type = JSON.parse(item) as TodoListType
+            return todosMap.get(item) && <TodoListCategoryItem id_category={type.id_checklist_type} category_name={type.name_en} total_items={todosMap.get(item)!.length}
+                handleNavigateCategory={() => {
+                    // console.log('navigate')
+                    navigation.navigate('TodoListCategory', {
+                        id_family: id_family,
+                        id_category: type.id_checklist_type
+                    })
+                }}
+                iconUrl={type.icon_url}
+            />
+        })
+    }
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -155,29 +201,11 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
                     <Text className='ml-6 my-4 text-base font-semibold' style={{
                         color: COLORS.Rhino,
                     }}>My checklist</Text>
-                    {/* <ShoppingListCategoryItem id_category={1} category_name='Grocery' total_items={10}
-                        handleNavigateCategory={handleNavigateCategory}
-                    />
-                    <ShoppingListCategoryItem id_category={2} category_name='Electronics' total_items={10} handleNavigateCategory={handleNavigateCategory} />
-                    <ShoppingListCategoryItem id_category={3} category_name='Clothing' total_items={10} handleNavigateCategory={handleNavigateCategory} />
-                    <ShoppingListCategoryItem id_category={4} category_name='Furniture' total_items={10} handleNavigateCategory={handleNavigateCategory} />
-                    <ShoppingListCategoryItem id_category={5} category_name='Pharmacy' total_items={10} handleNavigateCategory={handleNavigateCategory} />
-                    <ShoppingListCategoryItem id_category={6} category_name='Other' total_items={10} handleNavigateCategory={handleNavigateCategory} /> */}
+
+
 
                     {
-                        todoListTypes.length > 0 && todoListTypes.length > 0 && todoListTypes.map((item, index) => {
-                            // const total_items = todoListTypes.filter((shoppingItem) => shoppingItem.id_shopping_list_type === item.id_shopping_list_type).length
-                            return <TodoListCategoryItem key={index} id_category={item.id_checklist_type} category_name={item.name_en} total_items={10}
-                                handleNavigateCategory={() => {
-                                    // console.log('navigate')
-                                    navigation.navigate('TodoListCategory', {
-                                        id_family: id_family,
-                                        id_category: item.id_checklist_type
-                                    })
-                                }}
-                                iconUrl={item.icon_url}
-                            />
-                        })
+                        buildItems()
                     }
                 </View>
 
