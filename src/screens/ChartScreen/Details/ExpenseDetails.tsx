@@ -57,6 +57,7 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
   };
   const handleCancel = () => {
     setIsEditing(false);
+    setCurrentImageUri(expense?.image_url);
   };
 
   const handleEdit = () => {
