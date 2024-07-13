@@ -11,8 +11,7 @@ import { IncomeServices } from 'src/services/apiclient';
 import { COLORS } from 'src/constants';
 import { Feather } from '@expo/vector-icons';
 import moment from 'moment';
-import { getSelectedIncome } from 'src/redux/slices/IncomeAnalysis';
-import { RootState } from 'src/redux/store';
+import { getSelectedIncome, updateIncome } from 'src/redux/slices/IncomeAnalysis';
 
 const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
   const dispatch = useDispatch();
@@ -21,6 +20,8 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [incomeType, setincomeType] = useState<IncomeType[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(income?.financeIncomeSource.income_source_name);
+
+
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [chosenDate, setChosenDate] = useState(new Date());
   const [editedDescription, setEditedDescription] = useState(income?.description || '');
@@ -49,13 +50,40 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
     setIsEditing(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     try {
-      //await incomeServices.updateincome(income?.id_expenditure, income.)
-    } catch (error) {
+      const amount = parseFloat(editedAmount);
+      const selectedCategoryId = incomeType.find(item => item.income_source_name === selectedCategory)?.id_income_source;
+      console.log(income?.id_income,
+        family?.id_family,
+        editedAmount,
+        income?.id_created_by,
+        selectedCategoryId,
+        chosenDate,
+        editedDescription)
 
+      if (selectedCategoryId !== undefined) {
+        const data = await IncomeServices.updateIncome(
+          income?.id_income,
+          family?.id_family,
+          amount,
+          income?.id_created_by,
+          selectedCategoryId,
+          chosenDate.toISOString(),
+          editedDescription
+        );
+
+        dispatch(updateIncome(data));
+        //navigation.goBack();
+      } else {
+        console.error('Selected category ID not found');
+      }
+    } catch (error) {
+      console.error('Error updating income:', error);
     }
   };
+  
+
   const handleCancel = () => {
     setIsEditing(false);
   };
@@ -90,7 +118,7 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
     setChosenDate(currentDate);
   };
 
-  const handleCategoryChange = (itemValue: string | undefined) => {
+  const handleCategoryChange = (itemValue: string) => {
     setSelectedCategory(itemValue);
   };
 
@@ -148,11 +176,15 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
             <Text style={styles.label}>Category:</Text>
             <View style={styles.valueContainer}>
               {!isEditing ? (
-                <Text style={styles.value}>{income?.financeIncomeSource.income_source_name}</Text>
+                <Text style={styles.value}> {income?.financeIncomeSource && income.financeIncomeSource.income_source_name
+                  ? income.financeIncomeSource.income_source_name
+                  : 'Other'}</Text>
               ) : (
                 <TouchableOpacity onPress={() => setShowCategoryPicker(!showCategoryPicker)}>
-                  <Text style={styles.value}>{selectedCategory}</Text>
-                </TouchableOpacity>
+                  <Text style={styles.value}>
+                    {selectedCategory}
+                  </Text>                
+              </TouchableOpacity>
               )}
               {showCategoryPicker && (
                 <Picker

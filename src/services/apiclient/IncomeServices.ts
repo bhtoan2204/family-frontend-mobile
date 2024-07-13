@@ -217,5 +217,36 @@ const IncomeServices = {
         console.error('Error in createIncome:', error.message);
       }
     },
+
+    updateIncome: async (id_income?:number, id_family: number | null, amount: number, id_created_by: string, id_income_source?: number, income_date?: string, description?: string) => {
+      try {
+        console.log(id_income,
+          id_family,
+          id_created_by,
+          id_income_source,
+          amount,
+          income_date,
+          description
+        )
+        const response: AxiosResponse = await instance.put(
+          `${baseUrl}/api/v1/finance/income/updateIncome`,
+          {
+            id_income,
+              id_family,
+              id_created_by,
+              id_income_source,
+              amount,
+              income_date,
+              description
+            
+          }
+        );
+        if (response.status === 200) {
+          return response.data.data;
+        } 
+      } catch (error: any) {
+        console.error('Error in updateIncome:', error.message);
+      }
+    },
 };
 export default IncomeServices;

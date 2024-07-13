@@ -57,17 +57,38 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
   };
   const handleCancel = () => {
     setIsEditing(false);
-    setCurrentImageUri('');
   };
 
   const handleEdit = () => {
     setIsEditing(true);
   };
-
-  const handleSave = () => {
+  const handleSave = async () => {
     try {
-    } catch (error) {
+      const response = await ExpenseServices.updateExpense(
+        expense?.id_expenditure,
+        expense?.id_family,
+        expense?.id_created_by,
+        expense?.id_expenditure_type,
+        expense?.amount,
+        expense?.expenditure_date,
+        expense?.description,
+        currentImageUri ? currentImageUri : expense?.image_url,
+      );
+      
 
+      if (response) {
+        Alert.alert('Success', 'Expense updated successfully');
+        
+        dispatch(updateExpense(response))
+        setCurrentImageUri(response.image_url);
+        navigation.goBack();
+
+      } else {
+        Alert.alert('Error', 'Failed to update expense');
+      }
+    } catch (error) {
+      console.error('Error updating expense:', error);
+      Alert.alert('Error', 'An error occurred while updating expense');
     }
   };
 
@@ -155,6 +176,8 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
       setLoading(false);
     }
   };
+
+
   const handleCloseModal = () => {
     setSelectedImageIndex(null);
   };

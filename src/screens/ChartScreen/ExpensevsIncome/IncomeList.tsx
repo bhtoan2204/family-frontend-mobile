@@ -87,11 +87,17 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
       <View style={styles.itemContainer}>
         <View style={styles.expenseContent}>
           <View>
-            <Text style={styles.expenseCategory}>{item.financeIncomeSource.income_source_name}</Text>
+          <Text style={styles.expenseCategory}>
+            {item.financeIncomeSource && item.financeIncomeSource.income_source_name
+              ? item.financeIncomeSource.income_source_name
+              : 'Other'}
+          </Text>
             <View style={styles.row}>
               
               <Text style={{color: 'gray', }}>By: </Text>
-              <Text style={styles.expenseName}>{item.users.firstname} {item.users.lastname}</Text>
+              <Text style={styles.expenseName}>    {item.users && item.users.firstname && item.users.lastname
+                ? `${item.users.firstname} ${item.users.lastname}`
+                : ''}</Text>
 
             </View>
             <Text style={styles.expenseDescription}>{item.description}</Text>
