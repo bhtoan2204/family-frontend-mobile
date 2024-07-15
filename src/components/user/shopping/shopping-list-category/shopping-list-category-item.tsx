@@ -1,7 +1,7 @@
 import { ScreenWidth } from "@rneui/base";
 import { ListItem } from "@rneui/themed";
 import { useState } from "react";
-import { View,Image,Text } from "react-native";
+import { View, Image, Text } from "react-native";
 import { ShoppingListItem, ShoppingListItemType } from "src/interface/shopping/shopping_list";
 import GamingIcon from 'src/assets/images/shoppinglist_assets/gaming_icon.png'
 import ShoppingListCategoryItemContent from "./shopping-list-category-item-content";
@@ -12,7 +12,7 @@ interface ShoppingListCategoryItemProps {
     handleNavigateItemDetail: (id_item: number, id_list: number) => void
 }
 
-const ShoppingListCategoryItem = ({ item_type,items, handleNavigateItemDetail }: ShoppingListCategoryItemProps) => {
+const ShoppingListCategoryItem = ({ item_type, items, handleNavigateItemDetail }: ShoppingListCategoryItemProps) => {
     // console.log(item.listType.icon_url)
     const [expanded, setExpanded] = useState(true);
 
@@ -28,7 +28,7 @@ const ShoppingListCategoryItem = ({ item_type,items, handleNavigateItemDetail }:
 
 
     return (
-        <ListItem.Accordion className='border-[1px] py-1  overflow-hidden mt-10' style={{
+        <ListItem.Accordion className='border-[1px] py-1  overflow-hidden mt-10 bg-white ' style={{
             // borderWidth: 1,
             borderColor: '#CFCFCF',
             marginHorizontal: ScreenWidth * 0.05,
@@ -50,7 +50,7 @@ const ShoppingListCategoryItem = ({ item_type,items, handleNavigateItemDetail }:
                                     backgroundColor: '#EAEAEA',
                                     borderRadius: 15,
                                 }}>
-                                    <Image source={GamingIcon} style={{
+                                    <Image source={item_type.icon_url != "" ? { uri: item_type.icon_url } : GamingIcon} style={{
                                         height: ScreenWidth * 0.1,
                                         width: ScreenWidth * 0.1,
                                     }} />
@@ -84,7 +84,7 @@ const ShoppingListCategoryItem = ({ item_type,items, handleNavigateItemDetail }:
                 <ShoppingListCategoryItemContent index={1} isLast={false} handleNavigateItemDetail={handleNavigateItemDetail} />
                 <ShoppingListCategoryItemContent index={2} isLast={true} handleNavigateItemDetail={handleNavigateItemDetail} /> */}
                 {
-                    items.map((item,index)=>{
+                    items.map((item, index) => {
                         return (
                             <ShoppingListCategoryItemContent item={item} index={index} isLast={index === items.length - 1} handleNavigateItemDetail={handleNavigateItemDetail} />
                         )

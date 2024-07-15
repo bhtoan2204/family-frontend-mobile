@@ -18,7 +18,7 @@ import { useKeyboardVisible } from 'src/hooks/useKeyboardVisible';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import AddProgressSheet from 'src/components/user/education/education-screen/sheet/add-progress-sheet';
 import AddProgressPickMemberSheet from 'src/components/user/education/education-screen/sheet/pick-member-sheet';
-
+import { useColorScheme } from 'nativewind';
 
 const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
@@ -33,7 +33,11 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
         return item.id_family == id_family
     })
     const [pickedIdUser, setPickedIdUser] = React.useState<string>("")
+    const { colorScheme, setColorScheme } = useColorScheme()
 
+    useEffect(()=>{
+        setColorScheme('dark')
+    },[])
 
     // console.log("members of family", id_family, members)
     const handleNavigateProgress = (id_progress: number) => {
@@ -49,7 +53,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     }
 
     const buildList = () => {
-        return <ScrollView className='flex-1 z-10 mt-5 bg-[#F7F7F7]'>
+        return <ScrollView className='flex-1 z-10 mt-5 bg-[#F7F7F7] '>
             {
                 educationData.map((item, index) => {
                     return <React.Fragment key={index}>
