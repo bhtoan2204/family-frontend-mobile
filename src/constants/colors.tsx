@@ -1,3 +1,8 @@
+import { useSelector } from "react-redux";
+import { selectDarkMode } from "src/redux/slices/ThemeSlice";
+
+const isDarkMode = useSelector(selectDarkMode);
+
 const COLORS = {
   Mirage: '#171A21',
   DenimBlue: '#66c0f4',
@@ -31,6 +36,9 @@ const COLORS = {
   Azure: '#0095FF',
   BlueLight: '#87CEEB',
   SpringWood: '#FEF5E9',
+  darkBackground: '#2a475e',
+  darkText: '#a8bfcc',
+  darkBorder: '#47525E',
 };
 
 export default COLORS;

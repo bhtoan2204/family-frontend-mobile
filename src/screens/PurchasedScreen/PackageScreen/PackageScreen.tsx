@@ -23,7 +23,6 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
   const [packages, setPackages] = useState<Package[]>([]);
   const profile = useSelector(selectProfile);
   const dispatch = useDispatch();
-  
   const handleSelectPackage = (pkg: Package) => {
     dispatch(setPackage(pkg));
     navigation.navigate('OrderDetailScreen');

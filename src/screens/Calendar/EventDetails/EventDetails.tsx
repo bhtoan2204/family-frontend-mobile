@@ -63,6 +63,7 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
                         text: 'Delete',
                         onPress: async () => {
                             try {
+                                await CalendarServices.DeleteEvent(event?.id_family, event?.id_calendar);
                                 await dispatch(deleteEvent(event?.id_calendar));
                                 Alert.alert('Success', 'Event has been deleted successfully.');
                                 navigation.goBack();
@@ -88,7 +89,7 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
                         text: 'Delete This Event Only',
                         onPress: async () => {
                             try {
-                                await CalendarServices.UpdateEvent(event.id_calendar,  id_family, event.title, event.description, event.time_start, event.time_end, event.color, event.is_all_day, event.category, event.location, event.time_start+',', event.recurrence_id, event.recurrence_rule, event.start_timezone, event.end_timezone);
+                                await CalendarServices.UpdateEvent(event.id_calendar,  id_family, event.title, event.description, event.time_start, event.time_end, event.color, event.is_all_day, event.category, event.location, moment(event.time_start).toISOString() +',', event.recurrence_id, event.recurrence_rule, event.start_timezone, event.end_timezone);
                                 dispatch(deleteEventOnly({ id_calendar: event.id_calendar, time_start: event.time_start }));
                                 Alert.alert('Success', 'Event has been deleted successfully.');
                                 navigation.goBack();
@@ -151,7 +152,7 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
                 <Text style={styles.description}>Description: {event.description}</Text>
                 <View style={styles.locationContainer}>
                     <Text style={styles.location}>Location:</Text>
-                    <Text style={{ color: COLORS.DenimBlue, fontSize: 16 }}> {event.location}</Text>
+                    <Text style={[styles.description, { fontSize: 16 }]}> {event.location}</Text>
                 </View>
                 <View style={styles.locationContainer}>
                     <Text style={styles.location}>Category:</Text>

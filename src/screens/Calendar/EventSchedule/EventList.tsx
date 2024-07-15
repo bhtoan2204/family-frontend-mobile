@@ -10,7 +10,7 @@ import _ from 'lodash';
 import { Event } from 'src/interface/calendar/Event';
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAllEvent, selectEvents, selectSelectedDate, setSelectedDate } from 'src/redux/slices/CalendarSlice';
+import { selectAllEvent, selectEvents, selectSelectedDate, setSelectedDate, setSelectedEventById } from 'src/redux/slices/CalendarSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PackedEvent } from 'react-native-calendars/src/timeline/EventBlock';
 import { Ionicons } from '@expo/vector-icons';
@@ -146,7 +146,7 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
           const groupedEvents: Event[] = [];
   
           allEvent.forEach(event => {
-            
+
             if (event.recurrence_rule) {
               const cleanedRecurrenceRule = cleanRecurrenceRule(event.recurrence_rule);
               const rule = rrulestr(cleanedRecurrenceRule);
@@ -307,6 +307,7 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
 
   };
   const handlePressEvent = (item: any) => {
+    dispatch(setSelectedEventById(item.id_calendar));
     navigation.navigate('EventDetailsScreen', {
       id_family: id_family,
       id_calendar: item.id_calendar,

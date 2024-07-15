@@ -23,6 +23,7 @@ import {
   NewsScreenProps,
   SharedGuildLineScreenProps,
   SubjectDetailScreenProps,
+  ThemeSwitcherProps,
   UpcomingEventsScreenProps,
   ViewAllFamilyScreenProps,
   ViewFamilyScreenProps,
@@ -41,6 +42,7 @@ import ChecklistDetailScreen from 'src/screens/CheckListScreen/CheckListDetailSc
 import UpcomingEvents from 'src/screens/FamilyScreen/UpcomingEvents';
 import MemberDetailsScreen from 'src/screens/AllMember/MemberDetails';
 import GuidelinePublicScreen from 'src/screens/GuidelinePublic/GuidelinePublic';
+import ThemeSwitcher from 'src/screens/ThemeScreen/ThemeSwitcher';
 const Stack = createNativeStackNavigator();
 
 const FamilyStack = () => {
@@ -72,10 +74,12 @@ const FamilyStack = () => {
       <Stack.Screen name="ViewFamily">
         {props => <ViewFamilyScreen {...(props as ViewFamilyScreenProps)} />}
       </Stack.Screen>
+ 
 
-      <Stack.Screen name="AllMember">
-        {props => <ViewAllMemberScreen {...(props as AllMemberScreenProps)} />}
+      <Stack.Screen name="ThemeSwitcher">
+        {props => <ThemeSwitcher {...(props as ThemeSwitcherProps)} />}
       </Stack.Screen>
+
       <Stack.Screen name="Contact">
         {props => <ContactListScreen {...(props as ContactScreenProps)} />}
       </Stack.Screen>

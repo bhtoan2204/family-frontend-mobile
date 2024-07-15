@@ -140,16 +140,18 @@ const CalendarServices = {
 
 
 
-  DeleteEvent: async (id_calendar?: number) => {
+  DeleteEvent: async (id_family: number, id_calendar?: number) => {
     try {
-      const response: AxiosResponse = await instance.delete(`${baseUrl}/api/v1/calendar/deleteCalendar/${id_calendar}`, {
-        params: {
+      const response: AxiosResponse = await instance.delete(`${baseUrl}/api/v1/calendar/deleteCalendar/${id_family}/${id_calendar}`, 
+        {
           id_calendar,
-        }
+          id_family,
+        
       }
       );
-      
-      return 'Successfully deleted event'
+      if (response.status === 204){
+      return 'Successfully deleted event';
+      }
     } catch (error: any) {
       return 'Failed to delete event'
     }

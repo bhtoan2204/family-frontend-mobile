@@ -5,16 +5,22 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
+  FlatList,
+  Image
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {FamilyServices, PackageServices} from 'src/services/apiclient';
 import {PurchasedScreenProps} from 'src/navigation/NavigationTypes';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {selectProfile} from 'src/redux/slices/ProfileSclice';
 import {Purchased} from 'src/interface/purchased/purchased';
 import styles from './styles';
 import {Family} from 'src/interface/family/family';
+import { selectFamilies, setSelectedFamily } from 'src/redux/slices/FamilySlice';
+import moment from 'moment';
+import { AppDispatch } from 'src/redux/store';
+import { COLORS } from 'src/constants';
 
 const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
   const profile = useSelector(selectProfile);
@@ -22,6 +28,8 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
   const [page, setPage] = useState<number>(1);
   const [family, setFamily] = useState<Family[]>([]);
   const itemsPerPage = 10;
+  const families = useSelector(selectFamilies);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleViewAllPackage = () => {
     const id_family = undefined;
@@ -50,14 +58,52 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
     fetchData();
   }, [page]);
 
+  const onRenewPress = (family: Family) => {
+    navigation.navigate('PackStack', {
+      screen: 'ViewAllPackage',
+      params: {id_family: family.id_family},
+    });
+  }
+  const NavigateFamily = (family: Family) => {
+    dispatch(setSelectedFamily(family));
+
+    navigation.navigate('FamilyStack', {screen: 'ViewFamily', params: {id_family: family.id_family} })
+  }
+
+  const renderFamilyCards = () => {
+    return families.map((family) => (
+      <TouchableOpacity key={family.id_family} onPress={ ()=> NavigateFamily(family)} style={styles.familyCard}>
+        {family.avatar ? (
+          <Image source={{ uri: family.avatar }} style={styles.familyAvatar} />
+        ) : (
+          <View style={styles.defaultAvatar} />
+        )}
+        <View style={styles.familyInfo}>
+          <Text style={styles.familyName}>{family.name}</Text>
+          <Text style={styles.familyDescription}>{family.description}</Text>
+          <Text style={styles.familyQuantity}>Members: {family.quantity}</Text>
+          <View style={{flexDirection: 'row'}}> 
+            <Text style={styles.familyQuantity}>Expired at: </Text>
+            <Text style={[styles.familyQuantity, {color: COLORS.DenimBlue}]}>
+              {moment(new Date(family.expired_at)).format('DD/MM/YYYY')}
+            </Text>
+          </View>
+        
+          <TouchableOpacity style={styles.renewButton} onPress={() => onRenewPress(family)}>
+            <Text style={styles.renewButtonText}>Renew</Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+    ));
+  };
+  
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <ScrollView>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" size={24} style={styles.backButton} />
+            <Icon name="arrow-back" size={30} style={styles.backButton} />
           </TouchableOpacity>
-          <Text style={styles.title}>Purchased</Text>
         </View>
 
         <View style={styles.container}>
@@ -65,17 +111,20 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
             <TouchableOpacity
               onPress={handleViewAllPackage}
               style={styles.button}>
-              <Text style={styles.buttonText}>Buy Package</Text>
+              <Image
+                  source={require('../../assets/images/image-purchase.png')}
+                  style={styles.buttonImage}
+                />
+              <Image
+                  source={require('../../assets/images/new-family-button.png')}
+                  style={styles.buttonAddFamily}
+                />
             </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={handleViewService}
-              style={[styles.button, styles.serviceButton]}>
-              <Text style={styles.buttonText}>Buy Service</Text>
-            </TouchableOpacity>
+           
           </View>
 
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          {/* <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={{flex: 1, marginRight: 8}}>
               <Text style={styles.sectionTitle}>Packages</Text>
               {purchasedItems
@@ -212,11 +261,16 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
                     </View>
                   </TouchableOpacity>
                 ))}
-            </View>
-          </View>
+            </View> */}
+          {/* </View> */}
+
+          <Text style={styles.familyListTitle}>Your Families</Text>
+          {renderFamilyCards()}
+
+          
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

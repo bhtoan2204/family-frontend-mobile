@@ -373,8 +373,12 @@ const styles = StyleSheet.create({
   },
   colorLayer: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#4c669f', // This is the color of each layer
+    backgroundColor: '#4c669f',
     opacity: 0.33,
+  },
+  imageCombo: {
+     width: screenWidth * 0.8, 
+     height: screenWidth * 0.5, 
   },
 });
 

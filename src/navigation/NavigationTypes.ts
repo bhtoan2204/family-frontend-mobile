@@ -284,6 +284,8 @@ export type FamilyStackParamList = {
   };
 
   InviteMembers: undefined;
+  
+  ThemeSwitcher: undefined;
 
   ViewFamily: undefined;
 
@@ -1163,6 +1165,16 @@ type InviteMembersNavigationProp = NativeStackNavigationProp<
 
 export interface InviteMembersScreenProps {
   navigation: InviteMembersNavigationProp;
+}
+
+
+type ThemeSwitcherNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'ThemeSwitcher'
+  >;
+
+export interface ThemeSwitcherProps {
+  navigation: ThemeSwitcherNavigationProp;
 }
 
 type UpcomingEventsNavigationProp = NativeStackNavigationProp<

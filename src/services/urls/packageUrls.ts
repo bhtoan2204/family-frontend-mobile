@@ -11,6 +11,7 @@ const PackageUrl = {
   createPaymentURL: `${baseUrl}/api/v1/payment/placeOrder`,
   checkOrder: `${baseUrl}/api/v1/payment/checkOrder`,
   paymentHistory: `${baseUrl}/api/v1/payment/paymentHistory`,
+
   banksInfo: 'https://api.vietqr.io/v2/banks',
 };
 

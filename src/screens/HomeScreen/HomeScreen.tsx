@@ -34,6 +34,8 @@ import {UserProfile} from 'src/interface/user/userProfile';
 import {RootState} from 'src/redux/store';
 import { setFamilies, setFamilyMembers, setSelectedFamily } from 'src/redux/slices/FamilySlice';
 import { Family } from 'src/interface/family/family';
+import { selectDarkMode } from 'src/redux/slices/ThemeSlice';
+import { setFamilyServices } from 'src/redux/slices/ServiceSlice';
 
 const icons = {
   bundle,
@@ -74,6 +76,9 @@ const HomeScreen = ({
   const dispatch = useDispatch();
   const [isLightMode, setIsLightMode] = useState(true);
   const profile = useSelector((state: RootState) => state.profile.profile);
+  const isDarkMode = useSelector(selectDarkMode);
+  const screenWidth = Dimensions.get('screen').width
+
   const source =
     profile.avatar && profile.avatar !== '[NULL]'
       ? {uri: profile.avatar}
@@ -136,6 +141,8 @@ const HomeScreen = ({
         const members = await FamilyServices.getAllMembers({
           id_family: family.id_family,
         });
+        const service =  await PackageServices.getAvailableFunction(family.id_family);
+        dispatch(setFamilyServices(service));
         membersObject[family.id_family] = members;
 
       }
@@ -146,6 +153,8 @@ const HomeScreen = ({
     }
   };
 
+
+ 
   const handleChat = () => {
     navigation.navigate('MessageTab', {screen: 'ChatList'});
   };
@@ -280,7 +289,7 @@ const HomeScreen = ({
       //   console.log('Theme pressed');
       // },
       onPress: () => {
-        navigation.navigate('PackStack', {screen: 'ComboScreen'});
+        navigation.navigate('FamilyStack', {screen: 'ThemeSwitcher'});
       },
     },
   ];
@@ -313,10 +322,10 @@ const HomeScreen = ({
               bottom: 25,
             }}>
             <View style={{flexDirection: 'column', paddingLeft: 20}}>
-              <Text style={{color: 'white', fontSize: 30}}>Welcome</Text>
+              <Text style={{color: COLORS.white, fontSize: 30}}>Welcome</Text>
               <Text
                 style={{
-                  color: 'white',
+                  color: COLORS.white,
                   fontSize: 38,
                   fontWeight: 'bold',
                   marginBottom: 8,
@@ -326,7 +335,7 @@ const HomeScreen = ({
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <MaterialIcons name="location-on" size={22} color="#fff" />
-                <Text style={{color: 'white', fontSize: 17, right: 30}}></Text>
+                <Text style={{color: COLORS.white, fontSize: 17, right: 30}}></Text>
               </View>
             </View>
             <View style={{flexDirection: 'row', right: 20}}>
@@ -371,7 +380,6 @@ const HomeScreen = ({
                 keyExtractor={(item, index) => index.toString()}
                 ListHeaderComponent={() => (
                   <>
-                    <Text style={styles.title}>Trending Search</Text>
                     <ScrollView
                       ref={scrollViewRef}
                       horizontal
@@ -379,7 +387,7 @@ const HomeScreen = ({
                       showsHorizontalScrollIndicator={false}
                       style={{flex: 1}}>
                       {viewsWithFake.map((view, index) => (
-                        <View key={index} style={{width}}>
+                        <View key={index} style={{width, height: 300,}}>
                           {view}
                         </View>
                       ))}
@@ -439,16 +447,16 @@ const HomeScreen = ({
                       }}>
                       <Image
                         source={icons[item.icon]}
-                        style={{width: '75%', height: '75%'}}
+                        style={{width: '75%', height: '50%'}}
                       />
                       {(item.icon === 'feedback' || item.icon === 'chat') && (
                         <Image
-                          source={require('src/assets/images/New Button.png')} // Đường dẫn đến hình "new"
+                          source={require('src/assets/images/New Button.png')} 
                           style={{
                             position: 'absolute',
                             top: -5,
                             right: -20,
-                            width: 40, // Kích thước của hình "new"
+                            width: 40, 
                             height: 18,
                           }}
                         />
@@ -465,6 +473,10 @@ const HomeScreen = ({
                   </View>
                 )}
               />
+            </View>
+
+            <View> 
+            <Image source={require('../../assets/images/special-combo-1.png')} style={styles.imageCombo} /> 
             </View>
           </ScrollView>
         </View>

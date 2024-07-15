@@ -23,14 +23,19 @@ import incomeTypeReducer from './slices/IncomeTypeSlice';
 import expenseTypeReducer from './slices/ExpenseTypeSlice';
 import expenseReducer from './slices/ExpenseAnalysis';
 import incomeReducer from './slices/IncomeAnalysis';
-
+import themeReducer from './slices/ThemeSlice';
 import categorySlice from './slices/CategorySlice';
 import HouseHoldRefSlice from './slices/HouseHoldRefSlice';
 import TodoListSlice from './slices/TodoListSlice';
+import familyServiceReducer from './slices/ServiceSlice';
+
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
     family: familyReducer,
+    theme: themeReducer,
+    familyService: familyServiceReducer,
+
     // checklist: checkListReducer,
     shoppinglist: shoppingListSlice,
     todoList: TodoListSlice,

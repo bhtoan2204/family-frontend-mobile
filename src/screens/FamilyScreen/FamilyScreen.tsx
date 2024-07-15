@@ -101,9 +101,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
       ? {uri: selectedFamily.avatar}
       : require('../../assets/images/default_ava.png');
 
-  useEffect(() => {
-    console.log(selectedFamily);
-  }, []);
+
 
   useEffect(() => {
     secondBottomSheetRef.current?.open();

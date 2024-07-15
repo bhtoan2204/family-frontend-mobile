@@ -1,38 +1,34 @@
 import { StyleSheet } from 'react-native';
 import { ScreenHeight } from 'react-native-elements/dist/helpers';
+import { COLORS } from 'src/constants';
 
 const styles = StyleSheet.create({
   safeArea: {
+    marginTop: 20,
     flex: 1,
-    
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
+    padding: 10,
     
   },
   backButton: {
-    marginRight: 16,
+    marginLeft: 10,
+    marginTop: 10,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
   },
   buttonContainer: {
-    flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20,
-    height: ScreenHeight*0.12,
     
   },
   button: {
     flex: 1,
-    backgroundColor: 'lightblue',
     borderRadius: 10,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    marginRight: 10,
+
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
@@ -66,11 +62,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   infoContainer: {
-    marginBottom: 10,
   },
   infoText: {
     fontSize: 16,
-    marginBottom: 5,
   },
   actions: {
     flexDirection: 'row',
@@ -96,6 +90,77 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
   },
+  familyCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    marginBottom: 12,
+    backgroundColor:'white'
+  },
+  familyAvatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 10,
+    marginRight: 16,
+  },
+  defaultAvatar: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    marginRight: 16,
+    backgroundColor: '#ccc',
+  },
+  familyInfo: {
+    flex: 1,
+  },
+  familyName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  familyDescription: {
+    fontSize: 16,
+    color: '#555',
+    marginBottom: 4,
+  },
+  familyQuantity: {
+    fontSize: 14,
+    color: '#777',
+  },
+  familyListTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 24,
+    marginBottom: 16,
+  },
+  familyList: {
+  },
+  renewButton: {
+    backgroundColor: '#3F51B5', 
+    paddingHorizontal: 16, 
+    paddingVertical: 8,
+    borderRadius: 10, 
+    marginTop: 10, 
+    alignSelf: 'flex-end', 
+  },
+  renewButtonText: {
+    color: 'white', 
+    fontWeight: 'bold',
+    fontSize: 14, 
+  },
+  buttonImage: {
+    height: 240, 
+    width: 370,
+  },
+  buttonAddFamily: {
+    height: 30, 
+    width: 150,
+    alignSelf: 'flex-end', 
+    marginTop: 10,
+  }
 });
 
 export default styles;
