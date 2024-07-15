@@ -142,6 +142,11 @@ const calendarSlice = createSlice({
     setSelectedEvent(state, action: PayloadAction<EventDetail>) {
       state.selectedEvent = action.payload;
     },
+    setSelectedEventById(state, action: PayloadAction<number>) {
+      const eventId = action.payload;
+      const selectedEvent = state.events.find(event => event.id_calendar === eventId) || null;
+      state.selectedEvent = selectedEvent;
+    },
     setOption(state, action: PayloadAction<string>) {
       state.option = action.payload;
     },
@@ -201,7 +206,7 @@ const calendarSlice = createSlice({
   },
 });
 
-export const {deleteEventOnly, setOption, setOnly, setEvents, addEvent, updateEvent, deleteEvent, setSelectedEvent, setSelectedDate } = calendarSlice.actions;
+export const {setSelectedEventById, deleteEventOnly, setOption, setOnly, setEvents, addEvent, updateEvent, deleteEvent, setSelectedEvent, setSelectedDate } = calendarSlice.actions;
 
 export const selectEvents = (state: RootState) => state.calendar.events;
 export const selectAllEvent = (state: RootState) => state.calendar.allEvents;

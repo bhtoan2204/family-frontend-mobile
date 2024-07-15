@@ -203,7 +203,7 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
             <Ionicons name="chevron-back" size={30} color="black" />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => pressSchedule()}>
-            <Icon name="list" size={20} color="black" />
+          <Ionicons name="list" size={30} color="black" />
           </TouchableOpacity>
         </View>
         <View

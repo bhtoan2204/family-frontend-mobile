@@ -10,15 +10,17 @@ import _ from 'lodash';
 import { Event } from 'src/interface/calendar/Event';
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectSelectedDate, setSelectedDate } from 'src/redux/slices/CalendarSlice';
+import { selectAllEvent, selectSelectedDate, setSelectedDate } from 'src/redux/slices/CalendarSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PackedEvent } from 'react-native-calendars/src/timeline/EventBlock';
+import { Ionicons } from '@expo/vector-icons';
+
 const EVENT_COLOR = 'white';
 
 const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
   const { id_family } = route.params || {};
   const [loading, setLoading] = useState(true);
-  const [events, setEvents] = useState<AgendaSchedule>({});
+  const events = useSelector(selectAllEvent);
   const selectedDate = useSelector(selectSelectedDate);
   const [showTimeline, setShowTimeline] = useState(true);
   const INITIAL_TIME = { hour: 9, minutes: 0 };
@@ -33,9 +35,10 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
   }, []);
 
   useEffect(() => {
-    dispatch(setSelectedDate(format(new Date(date), 'yyyy-MM-dd')));
+    setSelectedDate(format(new Date(date).toISOString(), 'yyyy-MM-dd'));
     handleGetCalendarForMonth(new Date(selectedDate));
     handleGetCalendarForDay(new Date(selectedDate));
+
   }, [allEvent]);
 
   const fetchEvent = async () => {
@@ -76,7 +79,6 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
             }
             groupedEvents[dateKey].push({
               ...event,
-              id_calendar: event.id_calendar,
               name: event.title,
               height: 50,
               day: dateKey,
@@ -95,7 +97,6 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
                     }
                     groupedEvents[recurrenceDateKey].push({
                       ...event,
-                      id_calendar: event.id_calendar,
                       time_start: date,
                       time_end: new Date(
                         date.getTime() +
@@ -115,7 +116,7 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
             }
           });
   
-          setEvents(prevEvents => ({ ...prevEvents, ...groupedEvents }));
+          // setEvents(prevEvents => ({ ...prevEvents, ...groupedEvents }));
         }
       } catch (error) {
         console.error('Error getting calendar for month:', error);
@@ -140,7 +141,6 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
             dates.forEach(date => {
               groupedEvents.push({
                 ...event,
-                id_calendar: event.id_calendar,
                 time_start: format(new Date(date), 'yyyy-MM-dd') + ' ' + format(new Date(event.time_start), 'HH:mm:ss'),
                 time_end: format(new Date(date.getTime() + (event.time_end.getTime() - event.time_start.getTime())), 'yyyy-MM-dd') + ' ' + format(new Date(event.time_end), 'HH:mm:ss'),
                 name: event.title,
@@ -168,7 +168,6 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
 
               multiDayEvents.push({
                 ...event,
-                id_calendar: event.id_calendar,
                 time_start: format(new Date(eventStart), 'yyyy-MM-dd HH:mm:ss'),
                 time_end: format(new Date(eventEnd), 'yyyy-MM-dd HH:mm:ss'),
                 name: event.title,
@@ -191,14 +190,21 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
   const loadItemsForMonth = async (data: any) => {
     const { year, month } = data[0];
     const selectedMonth = new Date(year, month);
-    await handleGetCalendarForMonth(selectedMonth);
+    dispatch(setSelectedDate(selectedMonth))
+
+    //await handleGetCalendarForMonth(selectedMonth);
   };
 
   const onDayPress = async (day: any) => {
-    const { dateString } = day;
-    dispatch(setSelectedDate(dateString));
-    await handleGetCalendarForDay(dateString);
+    const { year, month } = day;
+    const selectedMonth = new Date(year, month);
+
+    dispatch(setSelectedDate(day.dateString));
+    setSelectedDate(day.dateString);
+    await handleGetCalendarForDay(selectedMonth);
+
     setShowTimeline(true);
+
   };
 
   const formatMarkedDates = (events: { [x: string]: AgendaEntry[] }) => {
@@ -226,6 +232,9 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
   
     return eventsByDate;
   };
+  
+  
+  
 
   const pressList = () => {
     navigation.navigate('CalendarScreen', { id_family });
@@ -238,64 +247,104 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
   const handleTimelineScroll = async (date: any) => {
     const { year, month } = date;
     const selectedMonth = new Date(year, month);
-    await handleGetCalendarForMonth(selectedMonth);
+    setSelectedDate(date.toISOString());
+    dispatch(setSelectedDate(date.toISOString()));
+    await handleGetCalendarForDay(selectedMonth);
+
+  };
+  const handlePressEvent = (item: any) => {
+    navigation.navigate('EventDetailsScreen', {
+      id_family: id_family,
+      id_calendar: item.id_calendar,
+    });
   };
 
+  
+  
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={pressCalendar} style={styles.buttonContainer}>
-          <Icon name="calendar" size={20} color="#000" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={pressList} style={styles.buttonContainer}>
-          <Icon name="list" size={20} color="#000" />
-        </TouchableOpacity>
+    <View style={styles.calendar}>
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <View style={styles.headerp}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Ionicons name="chevron-back" size={30} color="black" />
+            </TouchableOpacity>
+            <Text style={styles.headerText}>Schedule</Text>
+          </View>
+
+          <View style={styles.headerp}>
+           
+
+            <TouchableOpacity style={[styles.icon , {marginRight: 15}]} onPress={() => pressCalendar()}>
+              <Icon name="calendar" size={25} color="black" />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.icon} onPress={() => pressList()}>
+              <Ionicons name="list" size={30} color="black" />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
-      <CalendarProvider
-        date={date}
-        onDateChanged={(date) => dispatch(setSelectedDate(date))}
-        onMonthChange={(date) => handleTimelineScroll(date)}
-        showTodayButton
-        disabledOpacity={0.6}
-      >
-        <ExpandableCalendar
-          firstDay={1}
-          disableAllTouchEventsForDisabledDays
-          hideKnob
-          theme={{
-            todayButtonTextColor: 'black',
-            todayBackgroundColor: 'yellow',
-            todayTextColor: 'black',
+
+      {showTimeline ? (
+        <CalendarProvider
+          date={selectedDate}
+          onDateChanged={(date) => {
+            setSelectedDate(date);
+            dispatch(setSelectedDate(date));
           }}
-          markedDates={formatMarkedDates(events)}
-          renderHeader={(date) => {
-            const header = format(new Date(date), 'yyyy/MM');
-            return <Text style={styles.header}>{header}</Text>;
-          }}
-        />
-        {showTimeline && (
-          <TimelineList
-            events={formatEvent(eventTL)}
-            timelineProps={{
-              format24h: true,
-              onEventPress: (event: Event) => 
-                navigation.navigate('CalendarStack',{screen: 'EventDetailScreen', params: { id_event: event.id_calendar }}),
-              renderEvent: (event: PackedEvent) => {
-                const start = format(new Date(event.start), 'HH:mm');
-                const end = format(new Date(event.end), 'HH:mm');
-                return (
-                  <View style={[styles.event]}>
-                    <Text style={{color:'white'}}>{`${start} - ${end}`}</Text>
-                    <Text style={{color:'white'}}>{event.title}</Text>
-                  </View>
-                );
-              },
-              initialTime: INITIAL_TIME,
-            }}
+          showTodayButton
+          todayBottomMargin={38}
+          disabledOpacity={0.6}
+        >
+          <ExpandableCalendar
+            firstDay={1}
+            markedDates={formatMarkedDates(events)}
+            onDayPress={(days) => onDayPress(days)}
+            hideArrows={true}
+            hideExtraDays={true}
+        
           />
-        )}
-      </CalendarProvider>
-    </SafeAreaView>
+          <TimelineList
+          events={formatEvent(eventTL)}
+          timelineProps={{
+            format24h: true,
+            start: 0,
+            end: 24,
+            overlapEventsSpacing: 10,
+            rightEdgeSpacing: 24,
+            layout: "stacked",
+            onEventPress: handlePressEvent,
+            renderEvent: (event: PackedEvent) => {
+              const start = format(new Date(event.start), 'HH:mm');
+              const end = format(new Date(event.end), 'HH:mm');
+              return (
+                <View style={[styles.event]}>
+                  <Text style={{color : 'white', fontWeight: '800'}}>{`${start} - ${end}`}</Text>
+                  <Text style={{color : 'white'}}>{event.title}</Text>
+
+                </View>
+              );
+            },
+          }}
+          scrollToNow
+          initialTime={INITIAL_TIME}
+          onChangeTime={(time: string | number | Date) => handleTimelineScroll(new Date(time))}
+          
+        />
+        </CalendarProvider>
+      ) : (
+        <CalendarList
+          pastScrollRange={50}
+          futureScrollRange={50}
+          scrollEnabled={true}
+          showScrollIndicator={true}
+          onDayPress={onDayPress}
+          markedDates={formatMarkedDates(events)}
+          onVisibleMonthsChange={(months) => loadItemsForMonth(months)}
+        />
+      )}
+    </View>
   );
 };
 

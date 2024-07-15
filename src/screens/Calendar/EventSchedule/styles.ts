@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginLeft: 10, 
+        textAlign: 'center',
       },
   calendar: {
     flex: 1,
@@ -38,10 +39,11 @@ const styles = StyleSheet.create({
     headerp: {
         flexDirection: 'row',
         marginTop: 40,
+        textAlign: 'center',
+        alignItems: 'center'
     },
 
     icon: {
-        marginRight: 20,
         alignContent: 'center',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -141,9 +143,8 @@ const styles = StyleSheet.create({
         color: 'gray',
       },
       event: {
-        borderRadius: 5,
-        padding: 10,
-        marginBottom: 10,
+        borderRadius: 50,
+        padding: 0,
       },
       headerContainer: {
         flexDirection: 'row',
