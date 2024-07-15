@@ -309,9 +309,7 @@ const HomeScreen = ({
                 style={styles.image}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.circle}>
-              <Material name="bell-badge-outline" size={30} color="#fff" />
-            </TouchableOpacity>
+            
           </View>
 
           <View
@@ -334,7 +332,6 @@ const HomeScreen = ({
               </Text>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <MaterialIcons name="location-on" size={22} color="#fff" />
                 <Text style={{color: COLORS.white, fontSize: 17, right: 30}}></Text>
               </View>
             </View>
