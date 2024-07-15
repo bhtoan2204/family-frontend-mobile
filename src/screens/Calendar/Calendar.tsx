@@ -4,7 +4,6 @@ import { Agenda, AgendaSchedule } from 'react-native-calendars';
 import { CalendarScreenProps } from 'src/navigation/NavigationTypes';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { format, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import {  selectAllEvent, selectEvents, selectSelectedDate, setEvents, setSelectedDate, setSelectedEvent } from 'src/redux/slices/CalendarSlice';
 import styles from './style';
@@ -16,9 +15,10 @@ import { RRule, rrulestr } from 'rrule';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import type { Event } from 'src/interface/calendar/Event';
+import type { Event, EventDetail } from 'src/interface/calendar/Event';
 import moment from 'moment';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { format, isSameDay as isSameDayFn, isSameMonth, isSameYear } from 'date-fns';
 
 const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   const { id_family } = route.params || {};
@@ -111,33 +111,63 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
 
   };
 
-  const handlePressEvent = async (event: Event) => {
+  const handlePressEvent = async (event: EventDetail) => {
     dispatch(setSelectedEvent(event));
     navigation.navigate('EventDetailsScreen', {
       id_family: id_family,
       id_calendar: event.id_calendar,
     });
   };
+  
+  const renderItem = (item: EventDetail) => {
+    const startDate =format(new Date(item.time_start), 'yyyy-MM-dd HH:mm:ss');
+    const endDate = format(new Date(item.time_end), 'yyyy-MM-dd HH:mm:ss');
+    const isAllDay = item.is_all_day;
+    
+    const isSameDay = isSameDayFn(startDate, endDate);
+    const isSameMonthYear = isSameMonth(startDate, endDate) && isSameYear(startDate, endDate);
 
-  const renderItem = (item: any) => (
-    <TouchableOpacity onPress={() => handlePressEvent(item)}>
-      <View style={[styles.agendaItem, { backgroundColor: item.color }]}>
-        <Text style={[styles.agendaItemText, { color: item.color !== 'white' ? 'white' : 'black' }]}>
-          {item.title}
-        </Text>
-        {!item.is_all_day && (
-          <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
-            {format(new Date(item.time_start), 'HH:mm')} - {format(new Date(item.time_end), 'HH:mm')}
+    return (
+      <TouchableOpacity onPress={() => handlePressEvent(item)}>
+        <View style={[styles.agendaItem, { backgroundColor: item.color }]}>
+          <Text style={[styles.agendaItemText, { color: item.color !== 'white' ? 'white' : 'black' }]}>
+            {item.title}
           </Text>
-        )}
-        {item.is_all_day && (
-          <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
-            {format(new Date(item.time_start), 'yyyy/MM/dd')} - {format(new Date(item.time_end), 'yyyy/MM/dd')}
+          {isAllDay ? (
+            isSameDay ? (
+              <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
+                All day
+              </Text>
+            ) : (
+              isSameMonthYear ? (
+                <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
+                All day {format(startDate, 'MM/dd')} - {format(endDate, 'MM/dd')}
+              </Text>
+              ) : (
+                <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
+                All day {format(startDate, 'yyyy/MM/dd')} - { format(endDate, 'yyyy/MM/dd')}
+              </Text>
+              )
+             
+            )
+          ) : (
+            isSameDay ? (
+              <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
+                {format(startDate, 'HH:mm')} - {format(endDate, 'HH:mm')}
+              </Text>
+            ) : (
+              <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
+                {format(startDate, 'yyyy/MM/dd HH:mm')} - {format(endDate, isSameMonthYear ? 'dd HH:mm' : 'yyyy/MM/dd HH:mm')}
+              </Text>
+            )
+          )}
+          <Text style={[styles.agendaItemText, { color: item.color !== 'white' ? 'white' : 'black' }]}>
+            {item.categoryEvent.title}
           </Text>
-        )}
-      </View>
-    </TouchableOpacity>
-  );
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   const renderEmptyDate = () => {
     return (

@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { Event } from 'src/interface/calendar/event';
+import { EventDetail } from 'src/interface/calendar/event';
 import moment from 'moment';
 import { rrulestr } from 'rrule';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { AgendaSchedule } from 'react-native-calendars';
 
 interface CalendarState {
-  events:  Event[] ;
+  events:  EventDetail[] ;
   allEvents: AgendaSchedule;
-  selectedEvent: Event | null;
+  selectedEvent: EventDetail | null;
   selectedDate: string;
   option: string | null;
   isOnly: boolean;
@@ -32,7 +32,7 @@ const calendarSlice = createSlice({
   name: 'calendar',
   initialState,
   reducers: {
-    setEvents(state, action: PayloadAction<Event[]>) {
+    setEvents(state, action: PayloadAction<EventDetail[]>) {
       state.events = action.payload;
 
       const groupedEvents: AgendaSchedule = {};
@@ -63,8 +63,8 @@ const calendarSlice = createSlice({
                 }
                 groupedEvents[recurrenceDateKey].push({
                   ...event,
-                  time_start: date,
-                  time_end: new Date(date.getTime() + (event.time_end.getTime() - event.time_start.getTime())),
+                  time_start: format(new Date(date), 'yyyy-MM-dd') + ' ' + format(new Date(event.time_start), 'HH:mm:ss'),
+                  time_end: format(new Date(date.getTime() + (event.time_end.getTime() - event.time_start.getTime())), 'yyyy-MM-dd') + ' ' + format(new Date(event.time_end), 'HH:mm:ss'),
                   name: event.title,
                   height: 50,
                   day: recurrenceDateKey,
@@ -81,7 +81,7 @@ const calendarSlice = createSlice({
 
       state.allEvents = { ...state.allEvents, ...groupedEvents };
     },
-    addEvent(state, action: PayloadAction<Event>) {
+    addEvent(state, action: PayloadAction<EventDetail>) {
       state.events.push(action.payload);
       const dateKey = format(action.payload.time_start, 'yyyy-MM-dd');
       if (!state.allEvents[dateKey]) {
@@ -95,7 +95,7 @@ const calendarSlice = createSlice({
       });
     },
 
-    updateEvent(state, action: PayloadAction<Event>) {
+    updateEvent(state, action: PayloadAction<EventDetail>) {
       const { id_calendar } = action.payload;
       const index = state.events.findIndex(event => event.id_calendar === id_calendar);
       if (index !== -1) {
@@ -139,7 +139,7 @@ const calendarSlice = createSlice({
   
 
 
-    setSelectedEvent(state, action: PayloadAction<Event>) {
+    setSelectedEvent(state, action: PayloadAction<EventDetail>) {
       state.selectedEvent = action.payload;
     },
     setOption(state, action: PayloadAction<string>) {
@@ -154,7 +154,8 @@ const calendarSlice = createSlice({
       if(state.events){
       const start = startOfMonth(subMonths(action.payload, 1));
       const end = endOfMonth(addMonths(action.payload, 1));
-
+      state.allEvents = {};
+      
       state.events.forEach(event => {
         if (!event.recurrence_rule) {
           const dateKey = format(event.time_start, 'yyyy-MM-dd');
@@ -180,8 +181,8 @@ const calendarSlice = createSlice({
                 }
                 state.allEvents[recurrenceDateKey].push({
                   ...event,
-                  time_start: date,
-                  time_end: new Date(date.getTime() + (event.time_end.getTime() - event.time_start.getTime())),
+                  time_start: format(new Date(date), 'yyyy-MM-dd') + ' ' + format(new Date(event.time_start), 'HH:mm:ss'),
+                  time_end: format(new Date(date.getTime() + (event.time_end.getTime() - event.time_start.getTime())), 'yyyy-MM-dd') + ' ' + format(new Date(event.time_end), 'HH:mm:ss'),
                   name: event.title,
                   height: 50,
                   day: recurrenceDateKey,

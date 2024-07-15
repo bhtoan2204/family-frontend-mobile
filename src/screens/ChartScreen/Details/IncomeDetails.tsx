@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, SafeAreaView, TouchableOpacity, TextInpu
 import { useDispatch, useSelector } from 'react-redux';
 import { IncomeDetailScreenProps } from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { selectSelectedFamily, setSelectedMemberById } from 'src/redux/slices/FamilySlice';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import {  IncomeType } from 'src/interface/income/getIncome';
@@ -12,6 +12,7 @@ import { COLORS } from 'src/constants';
 import { Feather } from '@expo/vector-icons';
 import moment from 'moment';
 import { getSelectedIncome, updateIncome } from 'src/redux/slices/IncomeAnalysis';
+import { Member } from 'src/interface/member/member';
 
 const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
   const dispatch = useDispatch();
@@ -123,7 +124,10 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
   };
 
 
-
+ const pressMember = (id_user?: string) => {
+    dispatch(setSelectedMemberById(id_user));
+    navigation.navigate('FamilyStack', {screen: 'MemberDetails'});
+ }
 
 
 
@@ -217,7 +221,7 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
           </View>
             <View style={styles.detailRow}>
               <Text style={styles.label}>Created By:</Text>
-              <TouchableOpacity > 
+              <TouchableOpacity onPress={()=> pressMember(income?.users.id_user)}> 
                 <Text style={styles.ValueName}>{income?.users.firstname} {income?.users.lastname}</Text>
               </TouchableOpacity>
             </View>

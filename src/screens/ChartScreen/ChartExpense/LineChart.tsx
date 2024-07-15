@@ -90,7 +90,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
       categories: monthData.categories.map(category => ({
         ...category,
         name: category.name ? category.name : 'Other',
-        amount: category.amount / 1000,
+        amount: category.amount / 1000000,
       })),
     }));
 
@@ -167,6 +167,7 @@ if (monthlyData.length > 0) {
     name: 'Total',
     data: monthlyTotals,
     color: () => categoryColors[0], 
+    key: 'Total', 
   });
 }
   allCategories.forEach((categoryId, index) => {
@@ -184,6 +185,7 @@ if (monthlyData.length > 0) {
         return categoryDataAmount;
       }),
       color: () => categoryColors[categoryId.length % 20],
+      key: categoryId, 
     };
     categoryDatasets.push(dataset);
   });
@@ -201,6 +203,7 @@ if (monthlyData.length > 0) {
         {
           data: monthlyTotals,
           color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
+          key: 'default', 
         },
       ];
      
@@ -289,7 +292,7 @@ if (monthlyData.length > 0) {
  
         )}
 
-        <ScrollView
+<ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainer
@@ -338,7 +341,7 @@ if (monthlyData.length > 0) {
             color="black"
           />
         </TouchableOpacity>
-
+        {showDetails &&
         <ScrollView style={styles.ContainerCategory}>
           {monthlyData.map(monthData => (
             <TouchableOpacity
@@ -355,13 +358,14 @@ if (monthlyData.length > 0) {
               </View>
               <View style={styles.expenseDetails}>
            
-                <Text style={styles.expenseAmount}>-{formatCurrency(monthData.total * 1000)}</Text>
+                <Text style={styles.expenseAmount}>+{formatCurrency(monthData.total * 1000)}</Text>
 
                 <Icon name="chevron-right" size={20} color="#ccc" />
               </View>
             </TouchableOpacity>
           ))}
         </ScrollView>
+}
       </View>
       <View
         style={{
@@ -374,5 +378,7 @@ if (monthlyData.length > 0) {
     </ScrollView>
   );
 };
+
+
 
 export default LineChartScreen;

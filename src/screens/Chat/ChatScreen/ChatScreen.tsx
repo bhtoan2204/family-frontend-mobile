@@ -82,11 +82,13 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         index: currentIndex,
       });
       if (response.length > 0) {
+        markSeenMessage(receiverId)
         const newMessages = response.map((message: Message) => {
           if (message.type === 'photo') {
             setImages(prevImages => [...prevImages, message.content]);
           }
           return { ...message, timestamp: new Date(message.timestamp) };
+         
         });
         
         if (currentIndex === 0) {
@@ -290,9 +292,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
     };
   }, [message]);
 
-  useEffect(() => {
-    markSeenMessage(receiverId);
-  }, [receiverId]);
+
 
   useEffect(() => {
     if (socket) {

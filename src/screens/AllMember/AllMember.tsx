@@ -12,7 +12,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { AllMemberScreenProps } from 'src/navigation/NavigationTypes';
-import { selectFamilyMembers, setSelectedMemberById } from 'src/redux/slices/FamilySlice';
+import { selectFamilyMembers, setSelectedFamilyById, setSelectedMemberById } from 'src/redux/slices/FamilySlice';
 import styles from './styles';
 import { Member } from 'src/interface/member/member';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -30,7 +30,7 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
   };
 
   const handlePressMember = async (member: Member) => {
-    await dispatch(setSelectedMemberById(member.id_user, member.id_family));
+    await dispatch(setSelectedMemberById(member.id_user));
     navigation.navigate('MemberDetails');
   };
 

@@ -6,7 +6,7 @@ import { deleteExpense, selectSelectedExpense, updateExpense } from 'src/redux/s
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ExpenseServices } from 'src/services/apiclient';
 import { ExpenseType } from 'src/interface/expense/ExpenseType';
-import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { selectSelectedFamily, setSelectedMemberById } from 'src/redux/slices/FamilySlice';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
@@ -178,7 +178,11 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
     }
   };
 
-
+  const pressMember = (id_user?: string) => {
+    dispatch(setSelectedMemberById(id_user));
+    navigation.navigate('FamilyStack', {screen: 'MemberDetails'});
+ }
+ 
   const handleCloseModal = () => {
     setSelectedImageIndex(null);
   };
@@ -284,7 +288,11 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
           </View>
           <View style={styles.detailRow}>
             <Text style={styles.label}>Created By:</Text>
-            <Text style={styles.ValueName}>{expense?.users.firstname} {expense?.users.lastname}</Text>
+            <TouchableOpacity onPress={()=> pressMember(expense?.users.id_user)}> 
+
+              <Text style={styles.ValueName}>{expense?.users.firstname} {expense?.users.lastname}</Text>
+            </TouchableOpacity>
+
           </View>
           <View style={styles.detailRow}>
             <Text style={styles.label}>Date:</Text>

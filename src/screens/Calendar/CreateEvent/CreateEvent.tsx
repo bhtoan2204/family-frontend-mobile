@@ -20,9 +20,9 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   navigation,
   route,
 }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [location, setLocation] = useState('');
+  const [title, setTitle] = useState<string | null>(null);
+  const [description, setDescription] = useState<string>('');
+  const [location, setLocation] = useState<string | null>(null);
   const [chosenDateStart, setChosenDateStart] = useState(new Date());
   const [chosenDateEnd, setChosenDateEnd] = useState(new Date());
   const [isPickerRepeatOpen, setIsPickerRepeatOpen] = useState(false);
@@ -30,9 +30,9 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   const [selectedOptionRepeat, setSelectedOptionRepeat] = useState('none');
   const [selectedOptionEndRepeat, setSelectedOptionEndRepeat] = useState('never');
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedDays, setSelectedDays] = useState<string>('');
-  const [selectedMonths, setSelectedMonths] = useState<string>('');
-  const [selectedYears, setSelectedYears] = useState<string>('');
+  const [selectedDays, setSelectedDays] = useState<string | null>(null);
+  const [selectedMonths, setSelectedMonths] = useState<string | null>(null);
+  const [selectedYears, setSelectedYears] = useState<string | null>(null);
   const [number, setNumber] = useState<number>(1);
   const [isAllDay, setIsAllDay] = useState(false);
   const [repeatEndDate, setRepeatEndDate] = useState(new Date());
@@ -154,7 +154,6 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       recurrenceRule= recurrenceRule+';';
     }
     
-    console.log(recurrenceRule);
     const eventDetails = {
       id_family: family?.id_family,
       title: title,
@@ -165,11 +164,11 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       is_all_day: isAllDay,
       category: eventCategory?.id_category_event,
       location: location,
-      recurrence_exception: "",
-      recurrence_id: 0,
+      recurrence_exception: null,
+      recurrence_id: null,
       recurrence_rule: recurrenceRule,
-      start_timezone: "",
-      end_timezone: ""
+      start_timezone: null,
+      end_timezone: null
     };
   
     try {
@@ -247,7 +246,6 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
 
   return (
     <View style={styles.modalContainer}>
-    <ScrollView style={{ marginBottom: 30 }}  showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
     <View style={{ backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
         <View style={styles.row}>
           <Text style={styles.headerTitle}>Add New Event</Text>
@@ -455,7 +453,6 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
           onSave={handleCustomModalSubmit}
         />
       )}
-       </ScrollView>
     </View>
   );
 };
