@@ -32,10 +32,14 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {UserProfile} from 'src/interface/user/userProfile';
 import {RootState} from 'src/redux/store';
-import { setFamilies, setFamilyMembers, setSelectedFamily } from 'src/redux/slices/FamilySlice';
-import { Family } from 'src/interface/family/family';
-import { selectDarkMode } from 'src/redux/slices/ThemeSlice';
-import { setFamilyServices } from 'src/redux/slices/ServiceSlice';
+import {
+  setFamilies,
+  setFamilyMembers,
+  setSelectedFamily,
+} from 'src/redux/slices/FamilySlice';
+import {Family} from 'src/interface/family/family';
+import {selectDarkMode} from 'src/redux/slices/ThemeSlice';
+import {setFamilyServices} from 'src/redux/slices/ServiceSlice';
 
 const icons = {
   bundle,
@@ -77,7 +81,7 @@ const HomeScreen = ({
   const [isLightMode, setIsLightMode] = useState(true);
   const profile = useSelector((state: RootState) => state.profile.profile);
   const isDarkMode = useSelector(selectDarkMode);
-  const screenWidth = Dimensions.get('screen').width
+  const screenWidth = Dimensions.get('screen').width;
 
   const source =
     profile.avatar && profile.avatar !== '[NULL]'
@@ -120,12 +124,13 @@ const HomeScreen = ({
       const allFamilies = await FamilyServices.getAllFamily();
       const currentDate = new Date();
 
-      const validFamilies = allFamilies.filter((family: { expired_at: string | number | Date; }) => {
-        if (!family.expired_at) return false; 
-        const expiredAtDate = new Date(family.expired_at);
-        return expiredAtDate > currentDate;
-      });
-  
+      const validFamilies = allFamilies.filter(
+        (family: {expired_at: string | number | Date}) => {
+          if (!family.expired_at) return false;
+          const expiredAtDate = new Date(family.expired_at);
+          return expiredAtDate > currentDate;
+        },
+      );
 
       dispatch(setFamilies(validFamilies));
 
@@ -141,10 +146,11 @@ const HomeScreen = ({
         const members = await FamilyServices.getAllMembers({
           id_family: family.id_family,
         });
-        const service =  await PackageServices.getAvailableFunction(family.id_family);
+        const service = await PackageServices.getAvailableFunction(
+          family.id_family,
+        );
         dispatch(setFamilyServices(service));
         membersObject[family.id_family] = members;
-
       }
 
       dispatch(setFamilyMembers(membersObject));
@@ -153,8 +159,6 @@ const HomeScreen = ({
     }
   };
 
-
- 
   const handleChat = () => {
     navigation.navigate('MessageTab', {screen: 'ChatList'});
   };
@@ -274,7 +278,7 @@ const HomeScreen = ({
         navigation.navigate('FamilyStack', {screen: 'GuidelinePublic'});
       },
     },
-   
+
     {
       icon: 'language',
       label: 'Language',
@@ -301,23 +305,14 @@ const HomeScreen = ({
       resizeMode="stretch">
       <SafeAreaView style={{flex: 1, padding: 10}}>
         <View style={[styles.container, {marginBottom: 90}]}>
-          <View style={styles.circleContainer}>
-            <TouchableOpacity style={styles.circle}>
-              <Image
-                source={require('../../assets/images/menu-icon1.png')}
-                resizeMode="contain"
-                style={styles.image}
-              />
-            </TouchableOpacity>
-            
-          </View>
-
+          <View style={styles.circleContainer}></View>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
               bottom: 25,
+              marginTop: 40,
             }}>
             <View style={{flexDirection: 'column', paddingLeft: 20}}>
               <Text style={{color: COLORS.white, fontSize: 30}}>Welcome</Text>
@@ -332,7 +327,8 @@ const HomeScreen = ({
               </Text>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={{color: COLORS.white, fontSize: 17, right: 30}}></Text>
+                <Text
+                  style={{color: COLORS.white, fontSize: 17, right: 30}}></Text>
               </View>
             </View>
             <View style={{flexDirection: 'row', right: 20}}>
@@ -368,8 +364,8 @@ const HomeScreen = ({
             </View>
           </View>
 
-          <ScrollView style={{top: 40}}>
-            <View style={{marginBottom: 70}}>
+          <ScrollView showsVerticalScrollIndicator={false} style={{top: 40}}>
+            <View style={{marginBottom: 40}}>
               <FlatList
                 data={data}
                 numColumns={4}
@@ -381,10 +377,9 @@ const HomeScreen = ({
                       ref={scrollViewRef}
                       horizontal
                       pagingEnabled
-                      showsHorizontalScrollIndicator={false}
                       style={{flex: 1}}>
                       {viewsWithFake.map((view, index) => (
-                        <View key={index} style={{width, height: 300,}}>
+                        <View key={index} style={{width, height: 300}}>
                           {view}
                         </View>
                       ))}
@@ -403,15 +398,6 @@ const HomeScreen = ({
                     </View>
                     <View style={{flexDirection: 'column'}}>
                       <Text style={styles.title}>Let's Start with Service</Text>
-                      {/* <Text
-                        style={{
-                          fontSize: 15,
-                          color: 'gray',
-                          marginLeft: 20,
-                          bottom: 15,
-                        }}>
-                        We found 100 services in your area
-                      </Text> */}
                       <View style={{flexDirection: 'row'}}></View>
                     </View>
                   </>
@@ -444,16 +430,17 @@ const HomeScreen = ({
                       }}>
                       <Image
                         source={icons[item.icon]}
-                        style={{width: '75%', height: '50%'}}
+                        style={{width: '60%', height: '60%'}}
+                        resizeMode="stretch"
                       />
                       {(item.icon === 'feedback' || item.icon === 'chat') && (
                         <Image
-                          source={require('src/assets/images/New Button.png')} 
+                          source={require('src/assets/images/New Button.png')}
                           style={{
                             position: 'absolute',
                             top: -5,
                             right: -20,
-                            width: 40, 
+                            width: 40,
                             height: 18,
                           }}
                         />
@@ -472,8 +459,31 @@ const HomeScreen = ({
               />
             </View>
 
-            <View> 
-            <Image source={require('../../assets/images/special-combo-1.png')} style={styles.imageCombo} /> 
+            <View style={styles.comboContainer}>
+              <Text style={styles.textCombo}>FamFund's Combo</Text>
+              <ScrollView
+                horizontal={true}
+                style={styles.scrollViewContainer}
+                showsHorizontalScrollIndicator={false}>
+                <View>
+                  <Image
+                    source={require('../../assets/images/special-combo-1.png')}
+                    style={styles.imageCombo}
+                  />
+                </View>
+                <View>
+                  <Image
+                    source={require('../../assets/images/special-combo-2.png')}
+                    style={styles.imageCombo}
+                  />
+                </View>
+                <View>
+                  <Image
+                    source={require('../../assets/images/special-combo-3.png')}
+                    style={styles.imageCombo}
+                  />
+                </View>
+              </ScrollView>
             </View>
           </ScrollView>
         </View>

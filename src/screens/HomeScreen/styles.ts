@@ -378,7 +378,21 @@ const styles = StyleSheet.create({
   },
   imageCombo: {
      width: screenWidth * 0.8, 
-     height: screenWidth * 0.5, 
+    height: screenWidth * 0.5, 
+     marginRight: 20,
+  },
+  scrollViewContainer: {
+    marginLeft: 20,
+  },
+  textCombo: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: COLORS.Rhino,
+    marginLeft: 20,
+    marginBottom: 20,
+  },
+  comboContainer: {
+    marginBottom: 40,
   },
 });
 

@@ -1,7 +1,7 @@
-import { useSelector } from "react-redux";
-import { selectDarkMode } from "src/redux/slices/ThemeSlice";
+import {useSelector} from 'react-redux';
+import {selectDarkMode} from 'src/redux/slices/ThemeSlice';
 
-const isDarkMode = useSelector(selectDarkMode);
+// const isDarkMode = useSelector(selectDarkMode);
 
 const COLORS = {
   Mirage: '#171A21',
