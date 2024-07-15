@@ -10,7 +10,7 @@ import _ from 'lodash';
 import { Event } from 'src/interface/calendar/Event';
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAllEvent, selectSelectedDate, setSelectedDate } from 'src/redux/slices/CalendarSlice';
+import { selectAllEvent, selectEvents, selectSelectedDate, setSelectedDate } from 'src/redux/slices/CalendarSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PackedEvent } from 'react-native-calendars/src/timeline/EventBlock';
 import { Ionicons } from '@expo/vector-icons';
@@ -28,34 +28,17 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
   let date = useSelector(selectSelectedDate);
 
   const dispatch = useDispatch();
-  const [allEvent, setAllEvent] = useState<Event[] | null>(null);
+  const allEvent = useSelector(selectEvents);
 
-  useEffect(() => {
-    fetchEvent();
-  }, []);
+
 
   useEffect(() => {
     setSelectedDate(format(new Date(date).toISOString(), 'yyyy-MM-dd'));
-    handleGetCalendarForMonth(new Date(selectedDate));
+    //handleGetCalendarForMonth(new Date(selectedDate));
     handleGetCalendarForDay(new Date(selectedDate));
 
   }, [allEvent]);
 
-  const fetchEvent = async () => {
-    try {
-      const response = await CalendarServices.getCalendar({ id_family });
-      if (Array.isArray(response)) {
-        const formattedEvents: Event[] | null = response.map(item => ({
-          ...item,
-          time_start: new Date(item.time_start),
-          time_end: new Date(item.time_end),
-        }));
-        setAllEvent(formattedEvents);
-      }
-    } catch (error) {
-      console.error('Error fetching calendar data:', error);
-    }
-  };
 
   const cleanRecurrenceRule = (rule: string) => {
     return rule
@@ -63,130 +46,201 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
       .replace(/;$/, '');  
   };
 
-  const handleGetCalendarForMonth = useCallback(
-    async (date: Date) => {
-      const start = startOfMonth(subMonths(date, 1));
-      const end = endOfMonth(addMonths(date, 3));
+  // const handleGetCalendarForMonth = useCallback(
+  //   async (date: Date) => {
+  //     const start = startOfMonth(subMonths(date, 1));
+  //     const end = endOfMonth(addMonths(date, 3));
+  
+  //     try {
+  //       if (allEvent) {
+  //         const groupedEvents: { [dateKey: string]: Event[] } = {};
+  
+  //         allEvent.forEach((event) => {
+  //           const dateKey = format(event.time_start, 'yyyy-MM-dd');
+  //           if (!groupedEvents[dateKey]) {
+  //             groupedEvents[dateKey] = [];
+  //           }
+  
+  //           // Check recurrence exceptions
+  //           if (event.recurrence_exception && typeof event.recurrence_exception === 'string') {
+  //             const exceptionDates = event.recurrence_exception.split(',').map(dateStr => new Date(dateStr.trim()));
+  
+  //             // Filter out events that fall on exception dates
+  //             if (exceptionDates.some(exceptionDate => {
+  //               return exceptionDate.getFullYear() === date.getFullYear() &&
+  //                      exceptionDate.getMonth() === date.getMonth() &&
+  //                      exceptionDate.getDate() === date.getDate();
+  //             })) {
+  //               return; // Skip this event for the current date
+  //             }
+  //           }
+  
+  //           groupedEvents[dateKey].push({
+  //             ...event,
+  //             name: event.title,
+  //             height: 50,
+  //             day: dateKey,
+  //           });
+  
+  //           if (event.recurrence_rule) {
+  //             const cleanedRecurrenceRule = cleanRecurrenceRule(event.recurrence_rule);
+  //             try {
+  //               const rule = rrulestr(cleanedRecurrenceRule);
+  //               const dates = rule.between(start, end);
+  
+  //               dates.forEach((date) => {
+  //                 if (!isNaN(date.getTime())) {
+  //                   const recurrenceDateKey = format(date, 'yyyy-MM-dd');
+  //                   if (!groupedEvents[recurrenceDateKey]) {
+  //                     groupedEvents[recurrenceDateKey] = [];
+  //                   }
+  
+  //                   // Check recurrence exceptions for each occurrence
+  //                   if (event.recurrence_exception && typeof event.recurrence_exception === 'string') {
+  //                     const exceptionDates = event.recurrence_exception.split(',').map(dateStr => new Date(dateStr.trim()));
+  
+  //                     // Skip occurrence if it falls on an exception date
+  //                     if (exceptionDates.some(exceptionDate => {
+  //                       return exceptionDate.getFullYear() === date.getFullYear() &&
+  //                              exceptionDate.getMonth() === date.getMonth() &&
+  //                              exceptionDate.getDate() === date.getDate();
+  //                     })) {
+  //                       return;
+  //                     }
+  //                   }
+  
+  //                   groupedEvents[recurrenceDateKey].push({
+  //                     ...event,
+  //                     time_start: date,
+  //                     time_end: new Date(date.getTime() + (event.time_end.getTime() - event.time_start.getTime())),
+  //                     name: event.title,
+  //                     height: 50,
+  //                     day: recurrenceDateKey,
+  //                   });
+  //                 } else {
+  //                   console.error('Invalid date:', date);
+  //                 }
+  //               });
+  //             } catch (recurrenceError) {
+  //               console.error('Error parsing cleaned recurrence rule:', recurrenceError, cleanedRecurrenceRule);
+  //             }
+  //           }
+  //         });
+  
+  //         // Update state or dispatch groupedEvents
+  //       }
+  //     } catch (error) {
+  //       console.error('Error getting calendar for month:', error);
+  //     }
+  //   },
+  //   [allEvent, selectedDate],
+  // );
+  
+  const handleGetCalendarForDay = useCallback(
+    async (date: string | number | Date) => {
+      const start = startOfMonth(subMonths(new Date(date), 1));
+      const end = endOfMonth(addMonths(new Date(date), 3));
   
       try {
-        if (allEvent) { 
-          const groupedEvents = {};
+        if (allEvent) {
+          const groupedEvents: Event[] = [];
   
           allEvent.forEach(event => {
-            const dateKey = format(event.time_start, 'yyyy-MM-dd');
-            if (!groupedEvents[dateKey]) {
-              groupedEvents[dateKey] = [];
-            }
-            groupedEvents[dateKey].push({
-              ...event,
-              name: event.title,
-              height: 50,
-              day: dateKey,
-            });
-  
+            
             if (event.recurrence_rule) {
               const cleanedRecurrenceRule = cleanRecurrenceRule(event.recurrence_rule);
-              try {
-                const rule = rrulestr(cleanedRecurrenceRule);
-                const dates = rule.between(start, end);
-                dates.forEach(date => {
-                  if (!isNaN(date.getTime())) { 
-                    const recurrenceDateKey = format(date, 'yyyy-MM-dd');
-                    if (!groupedEvents[recurrenceDateKey]) {
-                      groupedEvents[recurrenceDateKey] = [];
-                    }
-                    groupedEvents[recurrenceDateKey].push({
-                      ...event,
-                      time_start: date,
-                      time_end: new Date(
-                        date.getTime() +
-                        (event.time_end.getTime() - event.time_start.getTime())
-                      ),
-                      name: event.title,
-                      height: 50,
-                      day: recurrenceDateKey,
-                    });
-                  } else {
-                    console.error('Invalid date:', date);
+              const rule = rrulestr(cleanedRecurrenceRule);
+              const dates = rule.between(start, end);
+              dates.forEach(date => {
+                const formattedStartDate = format(new Date(date), 'yyyy-MM-dd');
+                const formattedStartTime = event.is_all_day ? '00:00:00' : format(new Date(event.time_start), 'HH:mm:ss');
+                const formattedEndTime = event.is_all_day ? '23:59:59' : format(new Date(event.time_end), 'HH:mm:ss');
+                if (event.recurrence_exception && typeof event.recurrence_exception === 'string') {
+
+                  const exceptionDates = event.recurrence_exception
+                    .split(',')
+                    .map(dateStr => new Date(dateStr.trim()));
+  
+                  if (exceptionDates.some(exceptionDate => {
+                    return exceptionDate.getFullYear() === date.getFullYear() &&
+                           exceptionDate.getMonth() === date.getMonth() &&
+                           exceptionDate.getDate() === date.getDate();
+                  })) {
+                    return; 
                   }
+                }
+
+                groupedEvents.push({
+                  ...event,
+                  time_start: `${formattedStartDate} ${formattedStartTime}`,
+                  time_end: `${formattedStartDate} ${formattedEndTime}`,
+                  name: event.title,
+                  height: 50,
                 });
-              } catch (recurrenceError) {
-                console.error('Error parsing cleaned recurrence rule:', recurrenceError, cleanedRecurrenceRule);
-              }
+              });
+            } else {
+              const formattedStartDate = format(new Date(event.time_start), 'yyyy-MM-dd');
+              const formattedStartTime = event.is_all_day ? '00:00:00' : format(new Date(event.time_start), 'HH:mm:ss');
+              const formattedEndTime = event.is_all_day ? '23:59:59' : format(new Date(event.time_end), 'HH:mm:ss');
+  
+      
+
+              groupedEvents.push({
+                ...event,
+                time_start: `${formattedStartDate} ${formattedStartTime}`,
+                time_end: `${formattedStartDate} ${formattedEndTime}`,
+                name: event.title,
+                height: 50,
+              });
             }
           });
   
-          // setEvents(prevEvents => ({ ...prevEvents, ...groupedEvents }));
-        }
-      } catch (error) {
-        console.error('Error getting calendar for month:', error);
-      }
-    },
-    [allEvent, selectedDate],
-  );
-
-  const handleGetCalendarForDay = useCallback(async (date: string | number | Date) => {
-    const start = startOfMonth(subMonths(new Date(date), 1));
-    const end = endOfMonth(addMonths(new Date(date), 3));
+          const multiDayEvents: Event[] = [];
+          groupedEvents.forEach(event => {
+            let currentDate = new Date(event.time_start);
+            const endDate = new Date(event.time_end);
   
-    try {
-      if (allEvent) { 
-        const groupedEvents: Event[] = [];
-        
-        allEvent.forEach(event => {
-          if (event.recurrence_rule) {
-            const cleanedRecurrenceRule = cleanRecurrenceRule(event.recurrence_rule);
-            const rule = rrulestr(cleanedRecurrenceRule);
-            const dates = rule.between(start, end);
-            dates.forEach(date => {
-              groupedEvents.push({
-                ...event,
-                time_start: format(new Date(date), 'yyyy-MM-dd') + ' ' + format(new Date(event.time_start), 'HH:mm:ss'),
-                time_end: format(new Date(date.getTime() + (event.time_end.getTime() - event.time_start.getTime())), 'yyyy-MM-dd') + ' ' + format(new Date(event.time_end), 'HH:mm:ss'),
-                name: event.title,
-                height: 50,
-              });
-            });
-          } else {
-            groupedEvents.push(event);
-          }
-        });
-
-        const multiDayEvents: Event[] = [];
-        groupedEvents.forEach(event => {
-          let currentDate = new Date(event.time_start);
-          const endDate = new Date(event.time_end);
-
-          if (currentDate.toDateString() !== endDate.toDateString()) {
-            while (currentDate.getFullYear() <= endDate.getFullYear() && currentDate.getMonth() <= endDate.getMonth() && currentDate.getDate() <= endDate.getDate()) {
-              const eventStart = (currentDate.toDateString() === new Date(event.time_start).toDateString())
-                ? event.time_start
-                : new Date(currentDate.setHours(0, 0, 0, 0));
-              const eventEnd = (currentDate.toDateString() === endDate.toDateString())
-                ? event.time_end
-                : new Date(currentDate.setHours(23, 59, 59, 999));
-
+            if (currentDate.toDateString() !== endDate.toDateString()) {
+              while (currentDate <= endDate) {
+                const eventStart = (currentDate.toDateString() === new Date(event.time_start).toDateString())
+                  ? event.time_start
+                  : new Date(currentDate.setHours(0, 0, 0, 0));
+                const eventEnd = (currentDate.toDateString() === endDate.toDateString())
+                  ? event.time_end
+                  : new Date(currentDate.setHours(23, 59, 59, 999));
+  
+                multiDayEvents.push({
+                  ...event,
+                  time_start: format(new Date(eventStart), 'yyyy-MM-dd HH:mm:ss'),
+                  time_end: format(new Date(eventEnd), 'yyyy-MM-dd HH:mm:ss'),
+                  name: event.title,
+                  height: 50,
+                });
+                currentDate.setDate(currentDate.getDate() + 1);
+              }
+            } else {
               multiDayEvents.push({
                 ...event,
-                time_start: format(new Date(eventStart), 'yyyy-MM-dd HH:mm:ss'),
-                time_end: format(new Date(eventEnd), 'yyyy-MM-dd HH:mm:ss'),
+                time_start: format(new Date(event.time_start), 'yyyy-MM-dd HH:mm:ss'),
+                time_end: format(new Date(event.time_end), 'yyyy-MM-dd HH:mm:ss'),
                 name: event.title,
                 height: 50,
               });
-              currentDate.setDate(currentDate.getDate() + 1);
             }
-          } else {
-            multiDayEvents.push(event);
-          }
-        });
-
-        setEventTL(multiDayEvents );
+          });
+  
+          setEventTL(multiDayEvents);
+        }
+      } catch (error) {
+        console.log('Error fetching calendar data:', error);
       }
-    } catch (error) {
-      console.log('Error fetching calendar data:', error);
-    }
-  }, [allEvent]);
-
+    },
+    [allEvent],
+  );
+  
+  
+  
+  
   const loadItemsForMonth = async (data: any) => {
     const { year, month } = data[0];
     const selectedMonth = new Date(year, month);

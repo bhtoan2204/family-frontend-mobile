@@ -63,7 +63,7 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
                         text: 'Delete',
                         onPress: async () => {
                             try {
-                                await dispatch(deleteEvent(event.id_calendar));
+                                await dispatch(deleteEvent(event?.id_calendar));
                                 Alert.alert('Success', 'Event has been deleted successfully.');
                                 navigation.goBack();
                             } catch (error) {
@@ -155,7 +155,7 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
                 </View>
                 <View style={styles.locationContainer}>
                     <Text style={styles.location}>Category:</Text>
-                    <Text style={{ color: event.color, fontSize: 16 }}> {event.name_category}</Text>
+                    <Text style={{ color: event.color, fontSize: 16 }}> {event.categoryEvent.title}</Text>
                 </View>
             </View>
             <View style={styles.containerBtnDelete}>

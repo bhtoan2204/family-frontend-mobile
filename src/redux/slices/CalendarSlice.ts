@@ -5,7 +5,6 @@ import moment from 'moment';
 import { rrulestr } from 'rrule';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { AgendaSchedule } from 'react-native-calendars';
-
 interface CalendarState {
   events:  EventDetail[] ;
   allEvents: AgendaSchedule;
@@ -153,17 +152,16 @@ const calendarSlice = createSlice({
     setOnly(state, action: PayloadAction<boolean>) {
       state.isOnly = action.payload;
     },
+
     setSelectedDate(state, action: PayloadAction<string>) {
       state.selectedDate = action.payload;
-      
-      if(state.events){
-      const start = startOfMonth(subMonths(action.payload, 1));
-      const end = endOfMonth(addMonths(action.payload, 1));
+      const start = startOfMonth(subMonths(new Date(action.payload), 1));
+      const end = endOfMonth(addMonths(new Date(action.payload), 1));
       state.allEvents = {};
-      
-      state.events.forEach(event => {
+
+      state.events.forEach((event: EventDetail) => {
         if (!event.recurrence_rule) {
-          const dateKey = format(event.time_start, 'yyyy-MM-dd');
+          const dateKey = format(new Date(event.time_start), 'yyyy-MM-dd');
           if (!state.allEvents[dateKey]) {
             state.allEvents[dateKey] = [];
           }
@@ -184,10 +182,33 @@ const calendarSlice = createSlice({
                 if (!state.allEvents[recurrenceDateKey]) {
                   state.allEvents[recurrenceDateKey] = [];
                 }
+
+                if (event.recurrence_exception && typeof event.recurrence_exception === 'string') {
+                  const exceptionDates = event.recurrence_exception
+                    .split(',')
+                    .map(dateStr => new Date(dateStr.trim()));
+
+                  if (exceptionDates.some(exceptionDate => {
+                    return exceptionDate.getFullYear() === date.getFullYear() &&
+                           exceptionDate.getMonth() === date.getMonth() &&
+                           exceptionDate.getDate() === date.getDate();
+                  })) {
+                    return; 
+                  }
+                }
+
+                const adjustedStartTime = new Date(date);
+                adjustedStartTime.setHours(event.time_start.getHours());
+                adjustedStartTime.setMinutes(event.time_start.getMinutes());
+
+                const adjustedEndTime = new Date(date);
+                adjustedEndTime.setHours(event.time_end.getHours());
+                adjustedEndTime.setMinutes(event.time_end.getMinutes());
+
                 state.allEvents[recurrenceDateKey].push({
                   ...event,
-                  time_start: format(new Date(date), 'yyyy-MM-dd') + ' ' + format(new Date(event.time_start), 'HH:mm:ss'),
-                  time_end: format(new Date(date.getTime() + (event.time_end.getTime() - event.time_start.getTime())), 'yyyy-MM-dd') + ' ' + format(new Date(event.time_end), 'HH:mm:ss'),
+                  time_start: adjustedStartTime,
+                  time_end: adjustedEndTime,
                   name: event.title,
                   height: 50,
                   day: recurrenceDateKey,
@@ -201,11 +222,9 @@ const calendarSlice = createSlice({
           }
         }
       });
-    }
     },
-  },
+  }
 });
-
 export const {setSelectedEventById, deleteEventOnly, setOption, setOnly, setEvents, addEvent, updateEvent, deleteEvent, setSelectedEvent, setSelectedDate } = calendarSlice.actions;
 
 export const selectEvents = (state: RootState) => state.calendar.events;
