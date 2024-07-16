@@ -23,8 +23,12 @@ export interface Member {
     name: string;
     avatar: string;
   }
-
-  export interface Notification {
+  export interface FamilyInfo {
+    name: string;
+    avatar: string;
+  }
+  
+  export  interface Notification {
     _id: string;
     title: string;
     content: string;
@@ -32,8 +36,9 @@ export interface Member {
     id_family: number;
     id_target: number;
     isRead: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    timestamp: Date;
+    createdAt: string; 
+    updatedAt: string; 
+    timestamp: string; 
+    familyInfo: FamilyInfo;
   }
   

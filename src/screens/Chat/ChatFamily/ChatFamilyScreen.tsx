@@ -57,18 +57,18 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
       setKeyboardIsOpen(false);
     });
-    if (socket) {
-    socket.on('onNewFamilyMessage', fetchNewMessages);
-    socket.on('onNewFamilyImageMessage', fetchNewMessages);
+    // if (socket) {
+    // socket.on('onNewFamilyMessage', fetchNewMessages);
+    // socket.on('onNewFamilyImageMessage', fetchNewMessages);
 
-    }
+    // }
 
     return () => {
-      if (socket) {
-      socket.off('onNewFamilyMessage', fetchNewMessages);
-      socket.off('onNewFamilyImageMessage', fetchNewMessages);
+    //   if (socket) {
+    //   socket.off('onNewFamilyMessage', fetchNewMessages);
+    //   socket.off('onNewFamilyImageMessage', fetchNewMessages);
 
-    }
+    // }
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };

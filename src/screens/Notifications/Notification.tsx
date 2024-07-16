@@ -1,15 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {Alert, View } from 'react-native';
+import {View } from 'react-native';
 import * as Notifications from 'expo-notifications';
-import { getSocket } from "src/services/apiclient/Socket";
+import { getSocket } from "../../services/apiclient/Socket";
 import { AxiosResponse } from 'axios';
-import { ChatServices, FamilyServices, ProfileServices } from 'src/services/apiclient';
+import { FamilyServices } from '../../services/apiclient';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { HomeTabProps, LandingPageScreenProps, SignupScreenProps } from 'src/navigation/NavigationTypes';
-import { Family, Member, Message } from 'src/interface/notification/getNoti';
+import { selectProfile } from '../../redux/slices/ProfileSclice';
 
+interface Member {
+  id_user: string;
+  firstname: string;
+  lastname: string;
+  avatar: string;
+}
 
+interface Message {
+  senderId: string;
+  type: string;
+  content: string;
+  receiverId?: string;
+  _id: string;
+  isRead: boolean;
+  category: string; //user, family
+  familyId?: number;
+}
+
+interface Family {
+  id_family: number;
+  quantity: number;
+  description: string;
+  name: string;
+  avatar: string;
+}
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -19,29 +41,12 @@ Notifications.setNotificationHandler({
   }),
 });
 
-type CombinedScreenProps = SignupScreenProps &
-  HomeTabProps &
-  LandingPageScreenProps;
 
-const Notification = ({navigation}: CombinedScreenProps) => {
+const Notification = ({navigation}) => {
   const profile = useSelector(selectProfile);
   const [notificationQueue, setNotificationQueue] = useState<Message[]>([]);
-
-
   const socket = getSocket();
   const notificationListener = useRef<Notifications.Subscription | undefined>();
-
-  const fetchNotification = async (receiverId?: string) => {
-    try {
-      const response = await ProfileServices.getNotification(index);
-      if (response && response.data.length > 0) {
-        setNotification(response);
-      }
-    } catch (error) {
-      console.error('Error fetchNotification:', error);
-    }
-  };
-
 
   const fetchMember = async (receiverId?: string) => {
     try {
@@ -88,7 +93,8 @@ const Notification = ({navigation}: CombinedScreenProps) => {
   };
 
   const handleNewMessage = async (message: Message) => {
-
+    //console.log(message);
+    //if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
       const sender: Member | undefined = await fetchMember(message.senderId);
       if (sender) {
         await Notifications.scheduleNotificationAsync({
@@ -161,7 +167,6 @@ const Notification = ({navigation}: CombinedScreenProps) => {
     }
     return true;
 };
-
 useEffect(() => {
     checkNotificationPermission();
       if (socket) {
@@ -170,36 +175,38 @@ useEffect(() => {
         socket.on('onNewFamilyMessage', handleNewMessageFamily);
         socket.on('onNewFamilyImageMessage', handleNewImageFamily);
       }
-      const notificationResponseListener = Notifications.addNotificationResponseReceivedListener(response => {
-        const screen = response.notification.request.content.data.screen;
-        let id_user = response.notification.request.content.data.id_user;
-        const receiverId = response.notification.request.content.data.receiverId;
-        const familyId = response.notification.request.content.data.familyId;
-        if (navigation && screen === 'ChatUser'  && receiverId) {
-          navigation.navigate('ChatStack', {screen: 'ChatUser', params: {  receiverId: receiverId }});
-        }
-        if (navigation && screen === 'ChatFamily' && familyId) {
-          id_user = profile.id_user;
-          navigation.navigate('ChatStack', {screen: 'ChatFamily', params: {  id_family: familyId }});
-        }
-      });
-      navigation.navigate('LoginScreen');
-  
+
   return () => {
     if (socket) {
-      console.log('hi')
       socket.off('onNewMessage', handleNewMessage);
       socket.off('onNewImageMessage', handleNewImage);
       socket.off('onNewFamilyMessage', handleNewMessageFamily);
       socket.off('onNewFamilyImageMessage', handleNewImageFamily);
     }
-    Notifications.removeNotificationSubscription(notificationResponseListener);
-
   };
-}, [navigation]);
+}, []);
 
 
- 
+  useEffect(() => {
+    //console.log(navigation)
+    const notificationResponseListener = Notifications.addNotificationResponseReceivedListener(response => {
+      const screen = response.notification.request.content.data.screen;
+      let id_user = response.notification.request.content.data.id_user;
+      const receiverId = response.notification.request.content.data.receiverId;
+      const familyId = response.notification.request.content.data.familyId;
+      if (navigation && screen === 'ChatUser'  && receiverId) {
+        navigation.navigate('ChatStack', {screen: 'ChatUser', params: { id_user: id_user, receiverId: receiverId }});
+      }
+      if (navigation && screen === 'ChatFamily' && familyId) {
+        id_user = profile.id_user;
+        navigation.navigate('ChatStack', {screen: 'ChatFamily', params: { id_user: id_user, id_family: familyId }});
+      }
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationResponseListener);
+    };
+  }, [navigation]);
 
   return (
     <View>

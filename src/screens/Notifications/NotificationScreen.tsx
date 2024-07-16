@@ -121,11 +121,21 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
   const renderItem = ({ item }: { item: Notification }) => (
     <TouchableOpacity onPress={() => handlePressNoti(item)} style={[item.isRead ? {backgroundColor: '#fff'} : {backgroundColor: COLORS.AliceBlue}]}>
       <View style={styles.notificationItem}>
+      { item.familyInfo.avatar ? (
         <Image
-          source={require('../../assets/images/avatar.png')}
+          source={{uri: item.familyInfo.avatar}}
           style={styles.avatar}
           resizeMode="cover"
         />
+      ):(
+        <Image
+        source={require('../../assets/images/avatar.png')}
+
+        style={styles.avatar}
+        resizeMode="cover"
+      />
+      )
+    }
         <View style={styles.notificationContent}>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.content}>{item.content}</Text>

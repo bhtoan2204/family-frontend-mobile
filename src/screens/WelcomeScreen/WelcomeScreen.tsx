@@ -5,7 +5,7 @@ import {
   LoginScreenProps,
   SignupScreenProps,
 } from 'src/navigation/NavigationTypes';
-
+import Notification from '../Notifications';
 type CombinedScreenProps = SignupScreenProps & LoginScreenProps;
 
 const WelcomeScreen = ({navigation}: CombinedScreenProps) => {
@@ -38,6 +38,7 @@ const WelcomeScreen = ({navigation}: CombinedScreenProps) => {
           </TouchableOpacity>
         </View>
       </View>
+      <Notification navigation={navigation}/>
     </SafeAreaView>
   );
 };
