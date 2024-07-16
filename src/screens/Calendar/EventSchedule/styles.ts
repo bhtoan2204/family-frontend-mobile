@@ -5,8 +5,6 @@ const styles = StyleSheet.create({
     
     header: {
         backgroundColor: 'white',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
         paddingHorizontal: 16,
         paddingVertical: 10,
       },
@@ -29,11 +27,12 @@ const styles = StyleSheet.create({
       headerText: {
         fontSize: 18,
         fontWeight: 'bold',
-        marginLeft: 10, 
         textAlign: 'center',
       },
   calendar: {
     flex: 1,
+    backgroundColor: 'white',
+
     },
 
     headerp: {

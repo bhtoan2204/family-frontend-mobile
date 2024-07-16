@@ -15,11 +15,11 @@ const styles = StyleSheet.create({
   },
   senderMessageContainer: {
     alignSelf: 'flex-end',
-    backgroundColor: COLORS.DenimBlue,
     padding: 10,
     margin: 10,
     borderRadius: 10,
     width: 'auto',
+    borderColor: 'gray'
   },
   receiverMessageContainer: {
     alignSelf: 'flex-start',

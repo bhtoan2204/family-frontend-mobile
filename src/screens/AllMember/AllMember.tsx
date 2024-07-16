@@ -54,21 +54,21 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
         <View style={{ flex: 1 }}>
           <View style={{ top: 250, backgroundColor: '#f0f0f0', padding: 20, borderTopLeftRadius: 60, borderTopRightRadius: 60, width: '100%', alignSelf: 'center', flexDirection: 'column' }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', zIndex: 1, alignItems: 'center', marginBottom: -10 }}>
-              <View style={[styles.headerSearch, { bottom: 40, backgroundColor: '#8E8C8A', width: '60%', alignSelf: 'center', borderRadius: 12, padding: 3, height: 40, marginLeft: 40 }]}>
-                <FeatherIcon color="white" name="search" size={17} style={{ padding: 10 }} />
+              <View style={[styles.headerSearch, { bottom: 40, backgroundColor: 'white', width: '60%', alignSelf: 'center', borderRadius: 12, padding: 3, height: 40, marginLeft: 40 }]}>
+                <FeatherIcon color="black" name="search" size={17} style={{ padding: 10 }} />
                 <TextInput
                   autoCapitalize="none"
                   autoComplete="off"
                   placeholder="Search..."
-                  placeholderTextColor="white"
+                  placeholderTextColor="gray"
                   style={styles.headerSearchInput}
                   onChangeText={(text) => setSearchQuery(text)}
                   value={searchQuery}
                 />
               </View>
-              <View style={{ bottom: 40, backgroundColor: '#8E8C8A', height: 40, width: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 12, padding: 3, marginRight: 40 }}>
+              <View style={{ bottom: 40, backgroundColor: 'white', height: 40, width: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 12, padding: 3, marginRight: 40 }}>
                 <TouchableOpacity onPress={handleAddMember}>
-                  <FeatherIcon name="plus" size={24} style={{ color: 'white' }} />
+                  <FeatherIcon name="plus" size={24} style={{ color: 'black' }} />
                 </TouchableOpacity>
               </View>
             </View>

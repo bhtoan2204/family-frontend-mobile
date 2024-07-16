@@ -78,37 +78,36 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
       const currentMonth = moment().month() + 1;
       const response = await ExpenseServices.getExpenseByYear(year, id_family);
 
-    const filteredData = response.filter((monthData: MonthlyData) => {
-      if (year === currentYear) {
-        return monthData.month <= currentMonth;
-      }
-      return true;
-    });
-
-    const transformedData = filteredData.map((monthData: MonthlyData) => ({
-      ...monthData,
-      categories: monthData.categories.map(category => ({
-        ...category,
-        name: category.name ? category.name : 'Other',
-        amount: category.amount / 1000000,
-      })),
-    }));
-
-    setMonthlyData(transformedData);
-
-    const categoriesSet = new Set<string>();
-    transformedData.forEach(month => {
-      month.categories.forEach(category => {
-        categoriesSet.add(category.name);
+      const filteredData = response.filter((monthData: MonthlyData) => {
+        if (year === currentYear) {
+          return monthData.month <= currentMonth;
+        }
+        return true;
       });
-    });
-    setAllCategories(categoriesSet);
 
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
-};
-  
+      const transformedData = filteredData.map((monthData: MonthlyData) => ({
+        ...monthData,
+        categories: monthData.categories.map(category => ({
+          ...category,
+          name: category.name ? category.name : 'Other',
+          amount: category.amount / 1000000,
+        })),
+        total: monthData.total / 1000000,
+      }));
+
+      setMonthlyData(transformedData);
+
+      const categoriesSet = new Set<string>();
+      transformedData.forEach(month => {
+        month.categories.forEach(category => {
+          categoriesSet.add(category.name);
+        });
+      });
+      setAllCategories(categoriesSet);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const toggleLegend = (category: string) => {
     setSelectedLegends(prevLegends =>
@@ -185,7 +184,6 @@ if (monthlyData.length > 0) {
         return categoryDataAmount;
       }),
       color: () => categoryColors[categoryId.length % 20],
-      key: categoryId, 
     };
     categoryDatasets.push(dataset);
   });
@@ -203,7 +201,6 @@ if (monthlyData.length > 0) {
         {
           data: monthlyTotals,
           color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-          key: 'default', 
         },
       ];
      
@@ -215,7 +212,7 @@ if (monthlyData.length > 0) {
   };
     
   return (
-    <ScrollView style={{ height: '80%' }}>
+    <ScrollView style={{ height: '100%' }}>
       <TouchableOpacity
         style={[styles.monthPickerContainer, { zIndex: 1 }]}
         onPress={() => setYearPickerVisible(!isYearPickerVisible)}
@@ -238,7 +235,7 @@ if (monthlyData.length > 0) {
         </View>
       )}
       <View style={styles.chartLineContainer}>
-        <Text>(Unit: kVNĐ)</Text>
+        <Text>(Unit: VNĐ)</Text>
         {displayedDatasets.length > 0 && (
           <LineChart
           data={{
@@ -247,7 +244,7 @@ if (monthlyData.length > 0) {
           }}
           width={400}
           height={220}
-          yAxisSuffix="k"
+          yAxisSuffix="M"
           chartConfig={{
             backgroundGradientFrom: '#FFFFFF',
             backgroundGradientTo: '#FFFFFF',
@@ -281,8 +278,8 @@ if (monthlyData.length > 0) {
         
             return (
               <View>
-                <Text key={index} style={{ position: 'absolute', left: x, top: y - 20, fontSize: 10, color: 'gray' }}>
-                {categoryAmount !== 0 ? `${categoryAmount.toFixed(0)} VNĐ` : ''}
+                <Text key={index} style={{ position: 'absolute', left: x - 15, top: y - 20, fontSize: 10, color: 'gray' }}>
+                {categoryAmount !== 0 ? `${categoryAmount.toFixed(0)}M VNĐ` : ''}
                 </Text>
               </View>
             );
@@ -329,7 +326,6 @@ if (monthlyData.length > 0) {
             justifyContent: 'space-between',
             padding: 10,
             alignItems: 'center',
-            marginTop: 10,
           }}
           onPress={() => setShowDetails(!showDetails)}>
           <Text style={{ fontWeight: '500' }}>
@@ -358,7 +354,7 @@ if (monthlyData.length > 0) {
               </View>
               <View style={styles.expenseDetails}>
            
-                <Text style={styles.expenseAmount}>+{formatCurrency(monthData.total * 1000)}</Text>
+                <Text style={styles.expenseAmount}>- {formatCurrency(monthData.total * 1000000)}</Text>
 
                 <Icon name="chevron-right" size={20} color="#ccc" />
               </View>

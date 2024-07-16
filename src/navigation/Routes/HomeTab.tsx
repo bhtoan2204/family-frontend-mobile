@@ -53,7 +53,7 @@ const TabList = [
 
   {
     id: TEXTS.MORE_TAB,
-    title: TEXTS.MORE_TAB,
+    title: 'Profile',
     component: ProfileScreen,
     screen: 'ProfileScreen',
     icon: 'account-circle',

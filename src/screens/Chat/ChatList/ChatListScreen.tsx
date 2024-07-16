@@ -26,9 +26,10 @@ import {LastMessage} from 'src/interface/chat/chat';
 import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 import { UserProfile } from 'src/interface/user/userProfile';
 import { FamilyLastMessage } from 'src/interface/chat/family';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setLastMessage, setUserMessage } from 'src/redux/slices/MessageUser';
 import { setFamilyLastMessage } from 'src/redux/slices/MessageFamily';
+import { selectProfile } from 'src/redux/slices/ProfileSclice';
 const ChatListScreen = ({
   navigation,
 }: PurchasedScreenProps & ViewAllFamilyScreenProps) => {
@@ -45,7 +46,7 @@ const ChatListScreen = ({
   );
   let socket = getSocket();
   const dispatch = useDispatch();
-
+  const profile=useSelector(selectProfile);
 
   const formatDateTime = (dateTime: Date) => {
     if (!dateTime) {
@@ -258,44 +259,39 @@ const ChatListScreen = ({
       </Text>
     </View>
   );
-  const renderChatItem = ({item}: {item: LastMessage}) => (
+  const renderChatItem = ({ item }: { item: LastMessage }) => (
     <Swipeable renderRightActions={() => renderRightActions(item)}>
       <TouchableOpacity onPress={() => handlePressChat(item)}>
         <View style={styles.chatItem}>
           <View style={styles.avatarContainer}>
-            {item.latestMessage.receiver.avatar ? (
-              <>
-                <Image
-                  source={{uri: item.latestMessage.receiver.avatar}}
-                  style={[styles.avatar, {top: 5}]}
-                />
-                <View style={[styles.activeDot, {bottom: 15}]} />
-              </>
+            <Image
+              source={{ uri: item.latestMessage.receiver.avatar }}
+              style={styles.avatar}
+            />
+          </View>
+  
+          <View style={styles.messageContainer}>
+            <Text style={styles.username}>
+              {item.latestMessage.receiver.firstname}{' '}
+              {item.latestMessage.receiver.lastname}
+            </Text>
+            {item.latestMessage.type === 'photo' ? (
+              <Text style={styles.messageText}>Sent image</Text>
+            ) : item.latestMessage.type === 'video' ? (
+              <Text style={styles.messageText}>Sent video</Text>
             ) : (
-              <>
-                <Text style={styles.avatarText}>
-                  {`${item.latestMessage.receiver.firstname.charAt(0)}${item.latestMessage.receiver.lastname.charAt(0)}`}
-                </Text>
-                <View style={[styles.activeDot, {bottom: 15}]} />
-              </>
+              <Text
+                style={[
+                  styles.messageText,
+                  !item.latestMessage.isRead && styles.boldText,
+                ]}
+              >
+                {item.latestMessage.senderId === profile.id_user ? 'You: ' : item.latestMessage.receiver.firstname}
+                {item.latestMessage.content}
+              </Text>
             )}
           </View>
-
-          <View style={styles.messageContainer}>
-            <Text
-              style={
-                styles.username
-              }>{`${item.latestMessage.receiver.firstname} ${item.latestMessage.receiver.lastname}`}</Text>
-            {item.latestMessage.type === 'photo' ? (
-            <Text style={styles.messageText}>Sent image</Text>
-          ) : item.latestMessage.type === 'video' ? (
-            <Text style={styles.messageText}>Sent video</Text>
-          ) : (
-            <Text style={[styles.messageText, !item.latestMessage.isRead && styles.boldText]}>
-              {item.latestMessage.content}
-            </Text>
-          )}
-          </View>
+          
           <Text style={styles.messageTimestamp}>
             {item.latestMessage.timestamp
               ? formatDateTime(item.latestMessage.timestamp)
@@ -305,6 +301,7 @@ const ChatListScreen = ({
       </TouchableOpacity>
     </Swipeable>
   );
+  
   const handlePressChatFamily = async (message: FamilyLastMessage) => {
     await dispatch(setFamilyLastMessage(message));
     navigation.navigate('ChatStack', {
@@ -317,20 +314,14 @@ const ChatListScreen = ({
       <TouchableOpacity onPress={() => handlePressChatFamily(item)}>
         <View style={styles.chatItem}>
           <View style={styles.avatarContainer}>
-            {item.avatar ? (
+          
               <>
                 <Image
                   source={{ uri: item.avatar }}
                   style={[styles.avatar, { top: 5 }]}
                 />
-                <View style={[styles.activeDot, { bottom: 15 }]} />
               </>
-            ) : (
-              <>
-                <Text style={styles.avatarText}>{item.name.charAt(0)}</Text>
-                <View style={[styles.activeDot, { bottom: 15 }]} />
-              </>
-            )}
+            
           </View>
   
           <View style={styles.messageContainer}>

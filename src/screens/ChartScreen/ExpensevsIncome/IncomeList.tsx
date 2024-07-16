@@ -147,7 +147,7 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
 
   return (
     <ImageBackground
-      source={require('../../../assets/images/background-expense-chart1.png')}
+      source={require('../../../assets/images/income-detail-bg.png')}
       style={{ flex: 1 }}
       resizeMode="stretch">
       <SafeAreaView style={{ flex: 1 }}>
@@ -180,10 +180,10 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
                 marginBottom: 5,
                 color: 'white',
               }}>
-              Hello, {profile.firstname}
+              Hello, {profile.firstname} {profile.lastname}
             </Text>
             <Text style={{fontSize: 15, color: 'white'}}>
-            Manage your finances efficiently with a clear view of your income and expenses.
+            Below is a detailed list of your incomes for the selected date range.
 
             </Text>
           </View>
@@ -200,9 +200,9 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
                 setDateFrom(currentDate);
                 }}
             />
-            <Text style={{ fontSize: 15, marginLeft: 20, marginRight: 20 }}>To: </Text>
+            <Text style={{ fontSize: 15, marginLeft: 20 }}>To: </Text>
             <DateTimePicker
-                style={{ flex: 1 }}
+                style={{ flex: 1, marginRight: 20}}
                 value={dateTo}
                 mode="date"
                 display="default"

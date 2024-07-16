@@ -198,7 +198,7 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
               Hello, {profile.firstname} {profile.lastname}
             </Text>
             <Text style={{fontSize: 15, color: '#ccc'}}>
-            Here is a list of expenses your family has incurred for the day.
+            Here is a list of expenses your family has incurred for the selected date range.
             </Text>
 
           </View>
@@ -215,9 +215,9 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
                 setDateFrom(currentDate);
                 }}
             />
-            <Text style={{ fontSize: 15, marginLeft: 20, marginRight: 20 }}>To: </Text>
+            <Text style={{ fontSize: 15, marginLeft: 20}}>To: </Text>
             <DateTimePicker
-                style={{ flex: 1 }}
+                style={{ flex: 1 ,  marginRight: 20}}
                 value={dateTo}
                 mode="date"
                 display="default"

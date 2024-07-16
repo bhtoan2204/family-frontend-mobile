@@ -33,9 +33,10 @@ const ChartIncomeScreen = ({ navigation }: ChartIncomeScreenProps) => {
 
   return (
     <ImageBackground
-      source={require('../../../assets/images/background-expense-chart1.png')}
+      source={require('../../../assets/images/income-detail-bg.png')}
       style={{flex: 1}}
-      resizeMode="stretch">
+       resizeMode="cover"
+    >
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.container}>
         <View style={styles.headerContainer}>
@@ -68,17 +69,17 @@ const ChartIncomeScreen = ({ navigation }: ChartIncomeScreenProps) => {
               Hello, {profile.firstname} {profile.lastname}
             </Text>
             {selectedCategoryType === 'Year' && (
-            <Text style={{fontSize: 16, color: '#ccc'}}>
+              <Text style={{fontSize: 16, color: 'white'}}>
               Here you can view a brief overview of your income for the year.
             </Text>
             )}
             {selectedCategoryType === 'Month' && (
-              <Text style={{fontSize: 16, color: '#ccc'}}>
+              <Text style={{fontSize: 16, color: 'white'}}>
                For each month, you can see a summary of your income.
               </Text>
             )}
             {selectedCategoryType === 'Day' && (
-                <Text style={{fontSize: 16, color: '#ccc'}}>
+              <Text style={{fontSize: 16, color: 'white'}}>
                   Here you can view detailed incomes for each day.
                 </Text>
               )}

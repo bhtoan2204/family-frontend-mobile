@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   radioActive: {
-    borderColor: COLORS.BrandeisBlue1,
+    borderColor: COLORS.DenimBlue,
   },
   radioLabel: {
     fontSize: 14,
@@ -110,6 +110,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 36,
+  },
+  registerButton: {
+    backgroundColor: COLORS.DenimBlue,
+    paddingVertical: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  registerButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

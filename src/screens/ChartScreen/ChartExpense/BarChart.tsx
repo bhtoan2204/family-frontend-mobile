@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, Dimensions, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useDispatch, useSelector } from 'react-redux';
 import {  getDate, selectExpenses, setExpenses, setSelectedExpense } from 'src/redux/slices/ExpenseAnalysis';
@@ -98,7 +98,9 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }
           value={new Date(selectedDate)}
           mode="date"
           display="default"
+          textColor="white" 
           onChange={handleDateChange}
+          style={{ backgroundColor: COLORS.DenimBlue,  borderRadius: 10,}}
         />
       </View>
       {barChartData.length > 0 ? (
@@ -177,12 +179,12 @@ const styles = StyleSheet.create({
   },
   datePickerContainer: {
     top: 10,
-    paddingHorizontal: 0,
+    paddingHorizontal: 10,
     fontSize: 20,
     alignSelf: 'center',
     zIndex: 1,
-    backgroundColor: 'white',
-    borderRadius: 20,
+    borderRadius: 10,
+    backgroundColor: COLORS.DenimBlue,
     width: '30%',
     height: 40,
     shadowColor: '#000',
@@ -215,6 +217,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 50,
+    bottom: 10,
+    padding: 10,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    alignSelf: 'center',
+    flexDirection: 'column',
+    paddingTop: 40,
   },
   noDataImage: {
     width: 100,

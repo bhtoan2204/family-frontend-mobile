@@ -134,21 +134,8 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
         <Text style={styles.yourFamily}>Your families</Text>
         <View style={{flexDirection: 'row'}}>
           <View style={{alignItems: 'center'}}>
-            <TouchableOpacity
-              style={[styles.addfamilyCard]}
-              onPress={() => {
-                navigation.navigate('ViewAllPackage');
-              }}>
-              <Icon
-                name="add-circle-outline"
-                size={50}
-                color="#007AFF"
-                style={{marginRight: 5}}
-              />
-            </TouchableOpacity>
-            <Text style={{fontWeight: 'bold', color: '#5E5D5D'}}>
-              Add Family
-            </Text>
+        
+           
           </View>
 
           <FlatList
@@ -214,7 +201,12 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
               <View style={styles.serviceActions}>
                 {purchasedServices &&
                 purchasedServices.includes(pkg.id_extra_package) ? (
-                  <Text style={styles.purchasedIndicator}>Purchased</Text>
+                  <TouchableOpacity
+                    style={styles.purchaseButton}
+                    onPress={() => setSelectedService(pkg)}>
+                    <Text style={styles.purchaseButtonText}>Buy Now</Text>
+                    <FeatherIcon color="white" name="shopping-cart" size={17} />
+                  </TouchableOpacity>
                 ) : (
                   <TouchableOpacity
                     style={styles.purchaseButton}

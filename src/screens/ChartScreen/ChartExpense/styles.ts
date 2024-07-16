@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     backgroundColor: 'white',
     borderRadius: 20,
-    width: '30%',
+    width: '100%',
     height: 40,
     shadowColor: '#000',
     shadowOffset: {
@@ -190,6 +190,29 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
+    marginRight: 20,
+  },
+  expenseItem: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    elevation: 2,
+  },
+
+  dateText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  expenseCategoryList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
   },
 
   titleText: {
@@ -213,7 +236,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    height: 80,
+    height: 50,
+  },
+  legendContainerPieChart: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    height: 200,
   },
   legendItem: {
     flexDirection: 'row',
@@ -231,6 +260,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color:'black',
   },
+  legendTextPieChart: {
+    fontSize: 16,
+    color:'white',
+  },
   legendLineText: {
     fontSize: 16,
     color:'#000',
@@ -238,20 +271,20 @@ const styles = StyleSheet.create({
   selectedLegendItem: {
     backgroundColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 5,
     borderColor: '#ccc',
   },
   chartContainer: {
     bottom: 30,
     backgroundColor: 'white',
     padding: 10,
-    paddingTop: 20,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     width: '100%',
     alignSelf: 'center',
     flexDirection: 'column',
     height: '34%',
+
   },
   chartBarContainer: {
     bottom: 30,
@@ -284,7 +317,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: '#ccc',
     // borderRadius: 20,
-    marginBottom: 50,
+    marginBottom: 0,
   },
   expenseItem: {
     flexDirection: 'row',

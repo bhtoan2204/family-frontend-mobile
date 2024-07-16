@@ -129,8 +129,9 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
 
     return (
       <TouchableOpacity onPress={() => handlePressEvent(item)}>
-        <View style={[styles.agendaItem, { backgroundColor: item.color }]}>
-          <Text style={[styles.agendaItemText, { color: item.color !== 'white' ? 'white' : 'black' }]}>
+  
+    <View style={[styles.agendaItem, { backgroundColor: `${item.color}90` }]}>
+    <Text style={[styles.agendaItemText, { color: item.color !== 'white' ? 'white' : 'black' }]}>
             {item.title}
           </Text>
           {isAllDay ? (
@@ -161,9 +162,10 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
               </Text>
             )
           )}
-          <Text style={[styles.agendaItemText, { color: item.color !== 'white' ? 'white' : 'black' }]}>
-            {item.categoryEvent.title}
+          <Text style={[ { color: item.color !== 'white' ? 'white' : 'black', fontWeight: '800' }]}>
+            Location: {item.location }
           </Text>
+       
         </View>
       </TouchableOpacity>
     );

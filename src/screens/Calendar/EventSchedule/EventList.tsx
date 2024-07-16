@@ -356,7 +356,6 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
             firstDay={1}
             markedDates={formatMarkedDates(events)}
             onDayPress={(days) => onDayPress(days)}
-            hideArrows={true}
             hideExtraDays={true}
         
           />

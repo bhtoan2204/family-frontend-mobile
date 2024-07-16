@@ -28,20 +28,26 @@ const AuthServices = {
     firstname,
     lastname,
     phone,
+    genre,
+    birthdate,
   }: {
     email: string;
     password: string;
     firstname: string;
     lastname: string;
     phone: string;
+    genre: string;
+    birthdate: string;
   }) => {
     try {
       const response: AxiosResponse = await axios.post(AuthUrl.signup, {
         email,
+        phone,
         password,
         firstname,
         lastname,
-        phone,
+        genre,
+        birthdate
       });
 
       if (response.status === 200) {

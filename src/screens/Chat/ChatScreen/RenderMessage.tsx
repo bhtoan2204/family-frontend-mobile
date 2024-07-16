@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Video } from 'expo-av';
 import { Message } from 'src/interface/chat/chat';
 import styles from './styles'; 
+import { COLORS } from 'src/constants';
 
 interface Props {
   item: Message;
@@ -26,12 +27,12 @@ const MessageItem: React.FC<Props> = ({
         onPress={() => onMessagePress(item)}
         style={[
           item.senderId === profileId
-            ? styles.senderMessageContainer
-            : styles.receiverMessageContainer,
+          ? [styles.senderMessageContainer, item.type === 'text' && { backgroundColor: COLORS.DenimBlue }]
+          : styles.receiverMessageContainer,
         ]}>
-        <View style={styles.messageContainer}>
+        <View style={[styles.messageContainer ]}>
           {item.type === 'photo' ? (
-            <View style={styles.messageContentContainer}>
+            <View style={[styles.messageContentContainer]}>
               <Image source={{ uri: item.content }} style={styles.imageMessage} />
             </View>
           ) : item.type === 'video' ? (

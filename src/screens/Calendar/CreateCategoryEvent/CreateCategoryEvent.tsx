@@ -4,10 +4,10 @@ import { CreateCategoryEventScreenProps } from 'src/navigation/NavigationTypes';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import { CategoryEvent } from 'src/interface/calendar/CategoryEvent';
 import { useSelector } from 'react-redux';
-import { getFamily } from 'src/redux/slices/CalendarSlice';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Swipeable } from 'react-native-gesture-handler';
 import styles from './styles';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 
 const colorPalette = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D', '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC'];
 
@@ -18,16 +18,16 @@ const CreateCategoryEventScreen: React.FC<CreateCategoryEventScreenProps> = ({ r
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedEventName, setSelectedEventName] = useState('');
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
-  const id_family = useSelector(getFamily);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
+  const family= useSelector(selectSelectedFamily);
 
   useEffect(() => {
     fetchData();
-  }, [id_family]);
+  }, [family.id_family]);
 
   const fetchData = async () => {
     try {
-      const result = await CalendarServices.getAllCategoryEvent(id_family);
+      const result = await CalendarServices.getAllCategoryEvent(family.id_family);
       setCategoryEvents(result);
     } catch (error) {
       console.log('Error fetching category events:', error);
@@ -40,7 +40,7 @@ const CreateCategoryEventScreen: React.FC<CreateCategoryEventScreenProps> = ({ r
 
   const handleCreateCategoryEvent = async () => {
     try {
-      await CalendarServices.createCategoryEvent(eventName, selectedColor, id_family);
+      await CalendarServices.createCategoryEvent(eventName, selectedColor, family.id_family);
       fetchData();
       setEventName('');
       setSelectedColor('');
@@ -98,7 +98,7 @@ const CreateCategoryEventScreen: React.FC<CreateCategoryEventScreenProps> = ({ r
           text: 'Delete',
           onPress: async () => {
             try {
-              await CalendarServices.deleteCategoryEvent(id, id_family);
+              await CalendarServices.deleteCategoryEvent(id, family.id_family);
               fetchData();
               Alert.alert('Success', 'Category event has been deleted successfully.');
             } catch (error) {

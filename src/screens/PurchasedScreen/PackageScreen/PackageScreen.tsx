@@ -86,13 +86,12 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
             );
           })}
           <TouchableOpacity
-            style={styles.btn}
-            onPress={() =>
-              selectedPackage &&
-              handleSelectPackage(selectedPackage)
-            }>
-            <Text style={styles.btnText}>{TEXTS.PACKAGE_REGISTER}</Text>
-          </TouchableOpacity>
+          style={styles.registerButton}
+          disabled={!selectedPackage}
+          onPress={() => selectedPackage && handleSelectPackage(selectedPackage)}
+        >
+          <Text style={styles.registerButtonText}>{TEXTS.PACKAGE_REGISTER}</Text>
+        </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>

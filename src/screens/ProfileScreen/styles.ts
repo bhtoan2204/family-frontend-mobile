@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 20,
     paddingBottom: 10,
+    alignSelf : 'center'
   },
   headerText: {
     fontSize: 24,
@@ -62,6 +63,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#ccc',
     marginBottom: 10,
+    
   },
   item: {
     flexDirection: 'row',

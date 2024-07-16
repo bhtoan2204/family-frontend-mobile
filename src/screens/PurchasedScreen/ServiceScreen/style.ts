@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginVertical: 10,
     marginLeft: 20,
-    color: COLORS.Rhino,
+    color: '#ccc',
   },
   familyContainer: {
     alignItems: 'center', // Đảm bảo các thành phần được căn giữa theo chiều dọc

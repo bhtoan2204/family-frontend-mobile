@@ -112,7 +112,6 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   }, [currentIndex]);
 
   const fetchNewMessages = (newMessage: Message) => {
-    console.log(newMessage)
     setMessages(prevMessages => [newMessage, ...prevMessages]);
   };
   

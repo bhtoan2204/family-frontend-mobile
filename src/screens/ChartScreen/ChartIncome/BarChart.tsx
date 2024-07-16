@@ -103,7 +103,9 @@ const BarChartScreen : React.FC<BarChartScreenProps> = ({ id_family, navigation 
           value={new Date(selectedDate)}
           mode="date"
           display="default"
+          textColor="white" 
           onChange={handleDateChange}
+          style={{ backgroundColor: '#7CE2B3',  borderRadius: 10,}}
         />
       </View>
       {barChartData.length > 0 ? (
@@ -182,12 +184,12 @@ const styles = StyleSheet.create({
   },
   datePickerContainer: {
     top: 10,
-    paddingHorizontal: 0,
+    paddingHorizontal: 10,
     fontSize: 20,
     alignSelf: 'center',
     zIndex: 1,
-    backgroundColor: 'white',
-    borderRadius: 20,
+    backgroundColor: '#7CE2B3',
+    borderRadius: 10,
     width: '30%',
     height: 40,
     shadowColor: '#000',

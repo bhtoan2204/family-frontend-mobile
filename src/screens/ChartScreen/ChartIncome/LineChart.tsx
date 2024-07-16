@@ -78,8 +78,9 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
       categories: monthData.categories.map(category => ({
         ...category,
         name: category.name ? category.name : 'Other',
-        amount: category.amount / 1000,
+        amount: category.amount / 1000000,
       })),
+      total: monthData.total / 1000000,
     }));
 
     setMonthlyData(transformedData);
@@ -200,7 +201,7 @@ if (monthlyData.length > 0) {
   };
     
   return (
-    <ScrollView style={{ height: '80%' }}>
+    <ScrollView style={{ height: '100%' }}>
       <TouchableOpacity
         style={[styles.monthPickerContainer, { zIndex: 1 }]}
         onPress={() => setYearPickerVisible(!isYearPickerVisible)}
@@ -223,7 +224,7 @@ if (monthlyData.length > 0) {
         </View>
       )}
       <View style={styles.chartLineContainer}>
-        <Text>(Unit: kVNĐ)</Text>
+        <Text>(Unit: VNĐ)</Text>
         {displayedDatasets.length > 0 && (
           <LineChart
           data={{
@@ -232,7 +233,7 @@ if (monthlyData.length > 0) {
           }}
           width={400}
           height={220}
-          yAxisSuffix="k"
+          yAxisSuffix="M"
           chartConfig={{
             backgroundGradientFrom: '#FFFFFF',
             backgroundGradientTo: '#FFFFFF',
@@ -266,8 +267,8 @@ if (monthlyData.length > 0) {
         
             return (
               <View>
-                <Text key={index} style={{ position: 'absolute', left: x, top: y - 20, fontSize: 10, color: 'gray' }}>
-                {categoryAmount !== 0 ? `${categoryAmount.toFixed(0)} VNĐ` : ''}
+                <Text key={index} style={{ position: 'absolute', left: x - 15, top: y - 20, fontSize: 10, color: 'gray' }}>
+                {categoryAmount !== 0 ? `${categoryAmount.toFixed(0)}M VNĐ` : ''}
                 </Text>
               </View>
             );
@@ -343,7 +344,7 @@ if (monthlyData.length > 0) {
               </View>
               <View style={styles.incomeDetails}>
            
-                <Text style={styles.incomeAmount}>+{formatCurrency(monthData.total * 1000)}</Text>
+                <Text style={styles.incomeAmount}>+ {formatCurrency(monthData.total * 1000000)}</Text>
 
                 <Icon name="chevron-right" size={20} color="#ccc" />
               </View>

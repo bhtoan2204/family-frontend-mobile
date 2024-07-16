@@ -29,8 +29,7 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
   const currentDate = new Date().toLocaleDateString();
   const [value, setValue] = useState(0);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([
-    { id: 1, name: 'VNPay', code: 'vnpay', url_image: 'https://example.com/vnpay-logo.png' },
-    { id: 2, name: 'ZaloPay', code: 'zalopay', url_image: 'https://example.com/zalopay-logo.png' }
+    { id: 1, name: 'VNPay', code: 'vnpay', url_image: 'https://cdn-new.topcv.vn/unsafe/150x/https://static.topcv.vn/company_logos/cong-ty-cp-giai-phap-thanh-toan-viet-nam-vnpay-6194ba1fa3d66.jpg' },
   ]);
   let profile = useSelector(selectProfile);
   let selectedPackage: Package = useSelector(selectPackage);
@@ -57,10 +56,12 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
         console.log('Unknown id');
     }
   };
-
+  const formatCurrency = (amount: string) => {
+    return parseFloat(amount).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  };
   return (
     <GestureHandlerRootView>
-      <SafeAreaView style={{ backgroundColor: COLORS.white, padding: 10 }}>
+      <SafeAreaView style={{ backgroundColor: COLORS.white, padding: 20 , marginTop: 20, }}>
         <View style={styles.header}>
           <View style={styles.headerAction}>
             <TouchableOpacity
@@ -88,13 +89,10 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
 
           <View style={styles.receiptPrice}>
             <Text style={styles.receiptPriceText}>
-              {selectedPackage.price}
+              {formatCurrency(selectedPackage.price)}
             </Text>
 
-            <Text
-              style={[styles.receiptPriceText, { fontSize: 20, lineHeight: 32 }]}>
-              .00
-            </Text>
+      
           </View>
 
           <Text style={styles.receiptDescription}>
@@ -186,13 +184,7 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
             <Text style={styles.btnText}>Submit Receipt</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-          }}>
-          <View style={styles.btnSecondary}>
-            <Text style={styles.btnSecondaryText}>Screenshot</Text>
-          </View>
-        </TouchableOpacity>
+   
       </View>
     </GestureHandlerRootView>
   );

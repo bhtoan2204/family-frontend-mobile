@@ -63,6 +63,12 @@ const FamilyStack = () => {
         )}
       </Stack.Screen>
 
+      <Stack.Screen name="AllMember">
+        {props => (
+          <ViewAllMemberScreen {...(props as AllMemberScreenProps)} />
+        )}
+      </Stack.Screen>
+
       <Stack.Screen name="InviteNewMember" component={InviteNewMemberScreen} />
 
       <Stack.Screen name="ViewAllFamily">

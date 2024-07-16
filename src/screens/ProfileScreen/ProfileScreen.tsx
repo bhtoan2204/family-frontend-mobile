@@ -45,9 +45,7 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.header}>
-          <MaterialIcons name="keyboard-arrow-left" size={30} color="#333333" />
           <Text style={styles.headerText}>Profile</Text>
-          <MaterialIcons name="notifications" size={30} color="#333333" />
         </View>
         <View style={styles.profileView}>
           <Image

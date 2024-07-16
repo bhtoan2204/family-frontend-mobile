@@ -144,19 +144,19 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
   //   }),
   // );
 
-  const pieChartData = Object.entries(categoryData).map(
-    ([name, amount], index) => ({
-      pieCentroid: [0, 0],
-      data: {
-        label: name,
-      },
+const pieChartData = Object.entries(categoryData)
+  .map(([name, amount], index) => {
+    const percentage = (amount / totalExpense) * 100;
+    return {
       key: name,
-      value: (amount / totalExpense) * 100,
-      svg: {fill: categoryColors[index + 1]},
-      arc: {outerRadius: '100%', innerRadius: '60%'},
-      label: `${((amount / totalExpense) * 100).toFixed(2)}%`,
-    }),
-  );
+      value: percentage,
+      svg: { fill: categoryColors[index + 1] },
+      arc: { outerRadius: '100%', innerRadius: '60%' },
+      label: percentage > 10 ? `${percentage.toFixed(2)}%` : '',
+    };
+  })
+
+
 
   const formatMonthYear = (date: moment.MomentInput) => {
     return moment(date).format('MM/YYYY');
@@ -171,34 +171,36 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
   };
 
 
-  const Labels = ({slices}: {slices: SliceType[]}) => {
-    return slices.map((slice, index) => {
-      const {pieCentroid, data} = slice;
-      return (
-        <G key={index} x={pieCentroid[0]} y={pieCentroid[1]}>
-          <SVGText
-            fill="black"
-            textAnchor="middle"
-            alignmentBaseline="middle"
-            fontSize={14}
-            stroke="black"
-            strokeWidth={0.2}>
-            {data.label}
-          </SVGText>
-        </G>
-      );
-    });
-  };
+  const Labels = ({ slices }: { slices: SliceType[] }) => {
+  return slices.map((slice, index) => {
+    const { pieCentroid, data } = slice;
+    return (
+      <G key={index} x={pieCentroid[0]} y={pieCentroid[1]}>
+        <SVGText
+          fill="white" 
+          textAnchor="middle"
+          alignmentBaseline="middle"
+          fontSize={14}
+          fontWeight='900'
+          stroke="white"
+          strokeWidth={0.2}
+        >
+          {data.label}
+        </SVGText>
+      </G>
+    );
+  });
+};
 
   const Legend: React.FC<LegendProps> = ({data, style}) => {
     return (
-      <ScrollView contentContainerStyle={styles.legendContainer}>
+      <ScrollView contentContainerStyle={styles.legendContainerPieChart}>
         {data.map((item, index) => (
           <View key={index} style={styles.legendItem}>
             <View
               style={[styles.legendColorBox, {backgroundColor: item.svg.fill}]}
             />
-            <Text style={styles.legendText}>{item.key}</Text>
+            <Text style={styles.legendTextPieChart}>{item.key}</Text>
           </View>
         ))}
       </ScrollView>
@@ -266,15 +268,15 @@ const formatCurrency = (amount: string | number | bigint) => {
                 <View style={styles.expenseDetails}>
                   <Image
                     source={{
-                      uri: `https://via.placeholder.com/40?text=${detail.day}`,
+                      uri: `https://via.placeholder.com/40?text=${('0' + detail.day).slice(-2)}`,
                     }}
                     style={styles.avatar}
                   />
-                  <Text style={styles.expenseText}>{detail.day}</Text>
+                  <Text style={styles.expenseText}>{('0' + detail.day).slice(-2)}/{('0' + (selectedMonth.getMonth() + 1)).slice(-2)}</Text>
                 </View>
                 <View style={styles.expenseDetails}>
                   <Text style={styles.expenseAmount}>- {formatCurrency(detail.total)}</Text>
-                  {/* <Icon name="chevron-right" size={20} color="#ccc" /> */}
+                  <Icon name="chevron-right" size={20} color="#ccc" />
                 </View>
               </TouchableOpacity>
             ))}
@@ -285,8 +287,8 @@ const formatCurrency = (amount: string | number | bigint) => {
         style={{
           backgroundColor: 'white',
           width: '100%',
-          height: 600,
-          marginTop: -30,
+          height: 500,
+          marginTop: 0,
         }}
       />
     </View>
