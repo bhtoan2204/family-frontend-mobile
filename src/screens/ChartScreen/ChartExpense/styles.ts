@@ -133,18 +133,19 @@ const styles = StyleSheet.create({
   tabButton: {
     paddingVertical: 10,
     alignItems: 'center',
-    width: '30%',
+    width: '50%',
 
     marginBottom: 0,
-    backgroundColor: '#fff',
-    borderRadius: 20,
+    backgroundColor: 'white',
+
   },
+  
   tabButtonContent: {
     paddingVertical: 10,
     alignItems: 'center',
   },
   selectedTabButton: {
-    //backgroundColor: '#CCEAFB',
+    backgroundColor: COLORS.gray,
   },
   selectedTabButtonText: {
     color: '#2a475e',
@@ -152,11 +153,12 @@ const styles = StyleSheet.create({
   },
 
   tabButtonText: {
-    color: 'gray',
-    fontSize: 20,
+    color: '#ccc',
+    fontSize: 18,
     alignSelf: 'center',
-    fontWeight:'bold',
+    fontWeight: '600',
   },
+  
   containerTab: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -167,7 +169,7 @@ const styles = StyleSheet.create({
   bottomLine: {
     position: 'absolute',
     bottom: 0,
-    height: 2,
+    height: 1,
     backgroundColor: 'lightblue',
     width: '50%',
   },
@@ -362,7 +364,7 @@ const styles = StyleSheet.create({
 
   },
   selectedTabText: {
-
+    color: 'white'
   },
   totalTitle: {
     fontSize: 18,

@@ -306,7 +306,7 @@ const categoryTotalExpenses: { [key: string]: number } = dailyData.reduce(
               style={[
                 styles.tabButton,
                 selectedCategoryType === 'Total' && styles.selectedTabButton,
-                { borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }
+                { borderTopLeftRadius: 20, borderBottomLeftRadius:20 ,  }
               ]}>
               <Text style={[styles.tabButtonText, selectedCategoryType === 'Total' && styles.selectedTabText]}>Total</Text>
             </TouchableOpacity>
@@ -315,16 +315,16 @@ const categoryTotalExpenses: { [key: string]: number } = dailyData.reduce(
               style={[
                 styles.tabButton,
                 selectedCategoryType === 'Detail' && styles.selectedTabButton,
-
+                { borderTopRightRadius: 20, borderBottomRightRadius:20 ,  }
               ]}>
               <Text style={[styles.tabButtonText, selectedCategoryType === 'Detail' && styles.selectedTabText]}>Detail</Text>
             </TouchableOpacity>
-            <View
+            {/* <View
               style={[
                 styles.bottomLine,
                 { left: selectedCategoryType === 'Total' ? 0 : '50%', borderRadius: 0 }
               ]}
-            />
+            /> */}
           </View>
         <ScrollView style={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
           {selectedCategoryType === 'Detail' && (
