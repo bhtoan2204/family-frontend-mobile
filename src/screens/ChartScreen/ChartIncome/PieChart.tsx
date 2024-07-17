@@ -73,28 +73,34 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
   
 
 
-  const categoryColors: {[key: number]: string} = {
-    1: `rgba(255, 0, 0, 1)`,
-    2: `rgba(0, 255, 0, 1)`,
-    3: `rgba(0, 0, 255, 1)`,
-    4: `rgba(255, 255, 0, 1)`,
-    5: `rgba(255, 0, 255, 1)`,
-    6: `rgba(0, 255, 255, 1)`,
-    7: `rgba(128, 0, 0, 1)`,
-    8: `rgba(0, 128, 0, 1)`,
-    9: `rgba(0, 0, 128, 1)`,
-    10: `rgba(128, 128, 0, 1)`,
-    11: `rgba(128, 0, 128, 1)`,
-    12: `rgba(255, 165, 0, 1)`,
-    13: `rgba(255, 192, 203, 1)`,
-    14: `rgba(0, 255, 127, 1)`,
-    15: `rgba(255, 20, 147, 1)`,
-    16: `rgba(255, 140, 0, 1)`,
-    17: `rgba(0, 255, 255, 0.5)`,
-    18: `rgba(255, 255, 255, 0.5)`,
-    19: `rgba(255, 255, 0, 0.5)`,
-    20: `rgba(128, 0, 128, 0.5)`,
+  const categoryColors: { [key: number]: string } = {
+    1: `rgba(32, 178, 170, 0.8)`,    // Cyan
+    2: `rgba(210, 105, 30, 0.8)`,   // Light green
+    3: `rgba(0, 128, 128, 0.8)`,     // Teal
+    4: `rgba(255, 215, 0, 0.8)`,     // Gold
+    5: `rgba(75, 0, 130, 0.8)`,      // Indigo
+    6: `rgba(255, 20, 147, 0.5)`,   // Hot pink
+    7: `rgba(255, 20, 147, 0.5)`,    // Steel blue
+    8: `rgba(255, 165, 0, 0.8)`,     // Orange
+    9: `rgba(135, 206, 250, 0.8)`,   // Light sky blue
+    10: `rgba(210, 105, 30, 0.8)`,   // Chocolate
+    11: `rgba(218, 165, 32, 0.8)`,   // Goldenrod
+    12: `rgba(255, 140, 0, 0.8)`,    // Dark orange
+    13: `rgba(186, 85, 211, 0.8)`,   // Medium orchid
+    14: `rgba(32, 178, 170, 0.8)`,   // Cyan (duplicate, different opacity)
+    15: `rgba(0, 191, 255, 0.8)`,    // Deep sky blue
+    16: `rgba(240, 128, 128, 0.8)`,  // Light coral
+    17: `rgba(255, 20, 147, 0.5)`,   // Deep pink (transparent)
+    18: `rgba(255, 255, 255, 0.5)`,  // White (transparent)
+    19: `rgba(255, 255, 0, 0.5)`,    // Yellow (transparent)
+    20: `rgba(128, 0, 128, 0.5)`,    // Purple (transparent)
   };
+  
+  
+  
+  
+  
+  
 
   const totalExpense = dailyData.reduce(
     (total, expense) => total + expense.total,

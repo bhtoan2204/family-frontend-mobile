@@ -65,12 +65,17 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
   const [dailyData, setDailyData] = useState<ExpenseData[]>([]);
   const dispatch = useDispatch();
   const date = useSelector(getDate);
+  const [selectedCategoryType, setSelectedCategoryType] = useState<string>('Total');
 
   useEffect(() => {
+    console.log(date);
     const parsedDate = new Date(date);
-    setSelectedMonth(parsedDate);
-    fetchData(parsedDate.getMonth() + 1, parsedDate.getFullYear(), id_family);
+    if (!isNaN(parsedDate.getTime())) { 
+      setSelectedMonth(parsedDate);
+      fetchData(parsedDate.getMonth() + 1, parsedDate.getFullYear(), id_family);
+    }
   }, [date, id_family]);
+  
 
   const fetchData = async (month: number, year: number, id_family: number) => {
     try {
@@ -81,7 +86,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
 
         if (response) {
           response = response.filter((item: { day: number; }) => item.day < currentDate);
-          console.log(response)
+
         }
       } else {
         response = await ExpenseServices.getExpenseByMonth(month, year, id_family);
@@ -97,27 +102,29 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
 
 
   const categoryColors: {[key: number]: string} = {
-    1: `rgba(255, 0, 0, 1)`,
-    2: `rgba(0, 255, 0, 1)`,
-    3: `rgba(0, 0, 255, 1)`,
-    4: `rgba(255, 255, 0, 1)`,
-    5: `rgba(255, 0, 255, 1)`,
-    6: `rgba(0, 255, 255, 1)`,
-    7: `rgba(128, 0, 0, 1)`,
-    8: `rgba(0, 128, 0, 1)`,
-    9: `rgba(0, 0, 128, 1)`,
-    10: `rgba(128, 128, 0, 1)`,
-    11: `rgba(128, 0, 128, 1)`,
-    12: `rgba(255, 165, 0, 1)`,
-    13: `rgba(255, 192, 203, 1)`,
-    14: `rgba(0, 255, 127, 1)`,
-    15: `rgba(255, 20, 147, 1)`,
-    16: `rgba(255, 140, 0, 1)`,
-    17: `rgba(0, 255, 255, 0.5)`,
-    18: `rgba(255, 255, 255, 0.5)`,
-    19: `rgba(255, 255, 0, 0.5)`,
-    20: `rgba(128, 0, 128, 0.5)`,
+    11: `rgba(255, 99, 132, 0.8)`,
+    2: `rgba(75, 192, 192, 0.8)`,
+    15: `rgba(54, 162, 235, 0.8)`,
+    4: `rgba(255, 206, 86, 0.8)`,
+    5: `rgba(200, 200, 100, 0.8)`,
+    6: `rgba(255, 159, 64, 0.8)`,
+    7: `rgba(255, 99, 132, 0.8)`,
+    8: `rgba(75, 192, 192, 0.8)`,
+    9: `rgba(54, 162, 235, 0.8)`,
+    10: `rgba(255, 206, 86, 0.8)`,
+    1: `rgba(153, 102, 255, 0.8)`,
+    12: `rgba(255, 159, 64, 0.8)`,
+    13: `rgba(255, 99, 132, 0.8)`,
+    14: `rgba(75, 192, 192, 0.8)`,
+    3: `rgba(54, 162, 235, 0.8)`,
+    16: `rgba(255, 206, 86, 0.8)`,
+    17: `rgba(153, 102, 255, 0.8)`,
+    18: `rgba(255, 159, 64, 0.8)`,
+    19: `rgba(255, 206, 86, 0.8)`,
+    20: `rgba(153, 102, 255, 0.8)`,
   };
+  
+  
 
   const totalExpense = dailyData.reduce(
     (total, expense) => total + expense.total,
@@ -152,11 +159,11 @@ const pieChartData = Object.entries(categoryData)
       value: percentage,
       svg: { fill: categoryColors[index + 1] },
       arc: { outerRadius: '100%', innerRadius: '60%' },
-      label: percentage > 10 ? `${percentage.toFixed(2)}%` : '',
+      label: percentage > 10 ? `${percentage.toFixed(1)}%` : '',
     };
   })
 
-
+  pieChartData.sort((a, b) => b.value - a.value);
 
   const formatMonthYear = (date: moment.MomentInput) => {
     return moment(date).format('MM/YYYY');
@@ -165,7 +172,7 @@ const pieChartData = Object.entries(categoryData)
   const handleMonthPickerConfirm = (newDate: Date) => {
     const year = moment(newDate).year();
     const month = moment(newDate).month() + 1;
-    setSelectedMonth(newDate);
+    setSelectedMonth(new Date(newDate));
     setMonthPickerVisible(false);
     fetchData(month, year, id_family);
   };
@@ -192,20 +199,40 @@ const pieChartData = Object.entries(categoryData)
   });
 };
 
-  const Legend: React.FC<LegendProps> = ({data, style}) => {
-    return (
-      <ScrollView contentContainerStyle={styles.legendContainerPieChart}>
-        {data.map((item, index) => (
+const Legend: React.FC<LegendProps> = ({ data, style }) => {
+  const totalExpense = dailyData.reduce(
+    (total, expense) => total + expense.total,
+    0
+  );
+
+  const categoryData = dailyData.reduce<{[key: string]: number}>(
+    (acc, expense) => {
+      expense.categories.forEach(category => {
+        acc[category.name] = (acc[category.name] || 0) + category.amount;
+      });
+      return acc;
+    },
+    {},
+  );
+
+  return (
+    <ScrollView contentContainerStyle={styles.legendContainerPieChart}>
+      {data.map((item, index) => {
+        const percentage = (categoryData[item.key] / totalExpense) * 100;
+        return (
           <View key={index} style={styles.legendItem}>
             <View
-              style={[styles.legendColorBox, {backgroundColor: item.svg.fill}]}
+              style={[styles.legendColorBox, { backgroundColor: item.svg.fill }]}
             />
-            <Text style={styles.legendTextPieChart}>{item.key}</Text>
+            <Text style={styles.legendTextPieChart}>
+              {item.key == 'null' ? 'Other' : item.key} ({percentage.toFixed(1)}%)
+            </Text>
           </View>
-        ))}
-      </ScrollView>
-    );
-  };
+        );
+      })}
+    </ScrollView>
+  );
+};
 
   const handlePressDate = (day: number) => {
     const formattedDate = moment(selectedMonth).set('date', day).format('YYYY-MM-DD');
@@ -215,6 +242,21 @@ const pieChartData = Object.entries(categoryData)
 const formatCurrency = (amount: string | number | bigint) => {
   return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 };
+const selectOption = (option: string) => {
+  setSelectedCategoryType(option);
+};
+
+
+const categoryTotalExpenses: { [key: string]: number } = dailyData.reduce(
+  (acc, expense) => {
+    expense.categories.forEach((category) => {
+      acc[category.name] = (acc[category.name] || 0) + category.amount;
+    });
+    return acc;
+  },
+  {}
+);
+
   return (
     // <ScrollView style={{height: '80%'}}>
 
@@ -237,7 +279,7 @@ const formatCurrency = (amount: string | number | bigint) => {
         </PieChart>
         <Legend data={pieChartData} style={{flex: 1}} />
       </View>
-      <View style={{flexDirection: 'row', top: 0, zIndex: 1}}>
+      <View style={{flexDirection: 'row', bottom: 15, zIndex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <TouchableOpacity
           style={styles.monthPickerContainer}
           onPress={() => setMonthPickerVisible(!isMonthPickerVisible)}>
@@ -258,7 +300,34 @@ const formatCurrency = (amount: string | number | bigint) => {
         </View>
       )}
       <View style={styles.chartContainer}>
+      <View style={styles.containerTab}>
+            <TouchableOpacity
+              onPress={() => selectOption('Total')}
+              style={[
+                styles.tabButton,
+                selectedCategoryType === 'Total' && styles.selectedTabButton,
+                { borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }
+              ]}>
+              <Text style={[styles.tabButtonText, selectedCategoryType === 'Total' && styles.selectedTabText]}>Total</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => selectOption('Detail')}
+              style={[
+                styles.tabButton,
+                selectedCategoryType === 'Detail' && styles.selectedTabButton,
+
+              ]}>
+              <Text style={[styles.tabButtonText, selectedCategoryType === 'Detail' && styles.selectedTabText]}>Detail</Text>
+            </TouchableOpacity>
+            <View
+              style={[
+                styles.bottomLine,
+                { left: selectedCategoryType === 'Total' ? 0 : '50%', borderRadius: 0 }
+              ]}
+            />
+          </View>
         <ScrollView style={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
+          {selectedCategoryType === 'Detail' && (
           <View style={styles.ContainerCategory}>
             {dailyData.map((detail, index) => (
               <TouchableOpacity
@@ -281,6 +350,42 @@ const formatCurrency = (amount: string | number | bigint) => {
               </TouchableOpacity>
             ))}
           </View>
+          )}
+
+        {selectedCategoryType === 'Total' && (
+          <View style={styles.ContainerCategory}>
+              <Text style={{textAlign: 'center', fontSize: 18, paddingTop: 20, color: 'gray', paddingBottom: 10}}>
+                     Total Expense for {formatMonthYear(selectedMonth)}:  
+                     <Text style={{color:'red'}}> - {formatCurrency(totalExpense)}
+                     </Text>
+               </Text>
+            {Object.entries(categoryData).map(([name, amount], index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.expenseItem}
+                onPress={() => setShowDetails(!showDetails)}>
+                <View style={styles.expenseDetails}>
+                  <View
+                    style={[
+                      styles.CategoryColorBox,
+                      { backgroundColor: categoryColors[index + 1] },
+                    ]}
+                  />
+                  <Text style={styles.expenseText}>
+                    {name === 'null' ? 'Other' : name}
+                  </Text>
+                </View>
+                <View style={styles.expenseDetails}>
+                  <Text style={styles.expenseAmount}>
+                    - {formatCurrency(amount)}
+                  </Text>
+                  
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
         </ScrollView>
       </View>
       <View

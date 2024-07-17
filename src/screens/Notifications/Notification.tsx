@@ -7,30 +7,33 @@ import { FamilyServices } from '../../services/apiclient';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProfile } from '../../redux/slices/ProfileSclice';
 
-interface Member {
-  id_user: string;
-  firstname: string;
-  lastname: string;
+interface User {
   avatar: string;
+  birthdate: string;
+  created_at: string;
+  email: string;
+  firstname: string;
+  genre: string;
+  id_user: string;
+  is_banned: boolean;
+  isadmin: boolean;
+  isphoneverified: boolean;
+  lastname: string;
+  login_type: string;
+  phone: string;
+  updated_at: string;
 }
 
 interface Message {
-  senderId: string;
-  type: string;
-  content: string;
-  receiverId?: string;
   _id: string;
+  content: string;
   isRead: boolean;
-  category: string; //user, family
-  familyId?: number;
-}
-
-interface Family {
-  id_family: number;
-  quantity: number;
-  description: string;
-  name: string;
-  avatar: string;
+  receiverId: string;
+  receiverInfo: User;
+  senderId: string;
+  senderInfo: User;
+  timestamp: string;
+  type: string;
 }
 
 Notifications.setNotificationHandler({
@@ -48,36 +51,36 @@ const Notification = ({navigation}) => {
   const socket = getSocket();
   const notificationListener = useRef<Notifications.Subscription | undefined>();
 
-  const fetchMember = async (receiverId?: string) => {
-    try {
-      const response: AxiosResponse<Member[]> = await FamilyServices.getMember({ id_user: receiverId });
-      if (response && response.data.length > 0) {
-        return response.data[0];
-      }
-    } catch (error) {
-      console.error('Error fetching member:', error);
-    }
-  };
+  // const fetchMember = async (receiverId?: string) => {
+  //   try {
+  //     const response: AxiosResponse<Member[]> = await FamilyServices.getMember({ id_user: receiverId });
+  //     if (response && response.data.length > 0) {
+  //       return response.data[0];
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching member:', error);
+  //   }
+  // };
 
-  const fetchFamily = async (id_family?: number) => {
-    try {
-        const familyInfo: AxiosResponse<Family[]> = await FamilyServices.getFamily({ id_family });
-        //console.log(familyInfo[0])
-        return familyInfo[0];
-    } catch (error) {
-        console.error('Error fetching family:', error);
-    }
-};
+//   const fetchFamily = async (id_family?: number) => {
+//     try {
+//         const familyInfo: AxiosResponse<Family[]> = await FamilyServices.getFamily({ id_family });
+//         //console.log(familyInfo[0])
+//         return familyInfo[0];
+//     } catch (error) {
+//         console.error('Error fetching family:', error);
+//     }
+// };
 
 
   const handleNewImage = async (message: Message) => {
     //console.log('hi')
     //if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
-      const sender: Member | undefined = await fetchMember(message.senderId);
-      if (sender) {
+      //const sender: Member | undefined = await fetchMember(message.senderId);
+     
         await Notifications.scheduleNotificationAsync({
           content: {
-            title: `${sender.firstname} ${sender.lastname}`,
+            title: `${message.senderInfo.firstname} ${message.senderInfo.lastname}`,
             body: 'Sent image',
             data: {
               screen: 'ChatUser',
@@ -88,18 +91,18 @@ const Notification = ({navigation}) => {
           trigger: { seconds: 1 },
         });
         setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'User' }]);
-      }
+      
    //}
   };
 
   const handleNewMessage = async (message: Message) => {
-    //console.log(message);
-    //if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
-      const sender: Member | undefined = await fetchMember(message.senderId);
-      if (sender) {
+    console.log(message);
+    if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
+      //const sender: Member | undefined = await fetchMember(message.senderId);
+      //if (sender) {
         await Notifications.scheduleNotificationAsync({
           content: {
-            title: `${sender.firstname} ${sender.lastname}`,
+            title: `${message.senderInfo.firstname} ${message.senderInfo.lastname}`,
             body: message.content,
             data: {
               screen: 'ChatUser',
@@ -110,52 +113,52 @@ const Notification = ({navigation}) => {
           trigger: { seconds: 1 },
         });
         setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'User' }]);
-      }
-   // }
+      //}
+   }
   };
 
-  const handleNewMessageFamily = async (message: any) => {
-    console.log(message)
-    const sender: Member | undefined = await fetchMember(message.senderId);
-    const family: Family | undefined = await fetchFamily(message.familyId);
-    if (sender && family) {
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: `${sender.firstname} ${sender.lastname}`,
-          subtitle: `${family.name}`,
-          body: message.content,
-          data: {
-            screen: 'ChatFamily',
-            familyId: message.familyId,
-          },
-        },
-        trigger: { seconds: 1 },
-      });
-      setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'Family' }]);
-    }
-  };
+  // const handleNewMessageFamily = async (message: any) => {
+  //   console.log(message)
+  //   // const sender: Member | undefined = await fetchMember(message.senderId);
+  //   // const family: Family | undefined = await fetchFamily(message.familyId);
+  //   //if (sender && family) {
+  //     await Notifications.scheduleNotificationAsync({
+  //       content: {
+  //         title: `${message.senderInfo.firstname} ${message.senderInfo.lastname}`,
+  //         subtitle: `${family.name}`,
+  //         body: message.content,
+  //         data: {
+  //           screen: 'ChatFamily',
+  //           familyId: message.familyId,
+  //         },
+  //       },
+  //       trigger: { seconds: 1 },
+  //     });
+  //     setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'Family' }]);
+  //   //}
+  // };
 
-  const handleNewImageFamily = async (message: Message) => {
-    if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
-      const sender: Member | undefined = await fetchMember(message.senderId);
-      const family: Family | undefined = await fetchFamily(message.familyId);
-      if (sender && family) {
-        await Notifications.scheduleNotificationAsync({
-          content: {
-            title: `${sender.firstname} ${sender.lastname}`,
-            subtitle: `${family.name}`,
-            body: 'Sent image',
-            data: {
-              screen: 'ChatFamily',
-              familyId: message.familyId,
-            },
-            },
-          trigger: { seconds: 1 },
-        });
-        setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'Family' }]);
-      }
-    }
-  };
+  // const handleNewImageFamily = async (message: Message) => {
+  //   if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
+  //     const sender: Member | undefined = await fetchMember(message.senderId);
+  //     const family: Family | undefined = await fetchFamily(message.familyId);
+  //     if (sender && family) {
+  //       await Notifications.scheduleNotificationAsync({
+  //         content: {
+  //           title: `${sender.firstname} ${sender.lastname}`,
+  //           subtitle: `${family.name}`,
+  //           body: 'Sent image',
+  //           data: {
+  //             screen: 'ChatFamily',
+  //             familyId: message.familyId,
+  //           },
+  //           },
+  //         trigger: { seconds: 1 },
+  //       });
+  //       setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'Family' }]);
+  //     }
+  //   }
+  // };
   const checkNotificationPermission = async () => {
     const { status } = await Notifications.getPermissionsAsync();
     if (status !== 'granted') {
@@ -172,16 +175,16 @@ useEffect(() => {
       if (socket) {
         socket.on('onNewMessage', handleNewMessage);
         socket.on('onNewImageMessage', handleNewImage);
-        socket.on('onNewFamilyMessage', handleNewMessageFamily);
-        socket.on('onNewFamilyImageMessage', handleNewImageFamily);
+        // socket.on('onNewFamilyMessage', handleNewMessageFamily);
+        // socket.on('onNewFamilyImageMessage', handleNewImageFamily);
       }
 
   return () => {
     if (socket) {
       socket.off('onNewMessage', handleNewMessage);
       socket.off('onNewImageMessage', handleNewImage);
-      socket.off('onNewFamilyMessage', handleNewMessageFamily);
-      socket.off('onNewFamilyImageMessage', handleNewImageFamily);
+      // socket.off('onNewFamilyMessage', handleNewMessageFamily);
+      // socket.off('onNewFamilyImageMessage', handleNewImageFamily);
     }
   };
 }, []);
