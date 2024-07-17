@@ -5,6 +5,7 @@ import RBSheet from 'react-native-raw-bottom-sheet'
 import { COLORS } from 'src/constants'
 import SubjectSheet from '../SubjectSheet/SubjectSheet'
 import { ComponentScore, Subject } from 'src/interface/education/education'
+import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet'
 
 interface SubjectItemProps {
     id_education_progress: number,
@@ -18,7 +19,7 @@ interface SubjectItemProps {
 const SubjectItemEmpty = ({ index, id_education_progress, id_family, id_subject, bottomSheetRef }: SubjectItemProps) => {
     return (
         <TouchableOpacity className='flex-row items-center  border-b-[1px] border-gray-200 bg-white' onPress={() => {
-            bottomSheetRef.current?.open()
+            bottomSheetRef.current?.expand()
         }}>
             <View className='flex-1 py-6 ml-4 bg-[FFFFFE]'>
                 <Text className='text-xl font-light'>

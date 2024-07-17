@@ -11,6 +11,7 @@ import {
 
 } from 'react-native-popup-menu';
 import { iOSGrayColors, iOSColors } from 'src/constants/ios-color';
+import { GuildLineDetail } from 'src/interface/guideline/guideline';
 
 interface GuildLineHeaderProps {
     isAdding: boolean;
@@ -27,7 +28,8 @@ interface GuildLineHeaderProps {
     handleDeleteCurrentStep: () => Promise<void>;
     handleDeleteGuideline: () => Promise<void>;
     handleEditGuildline: () => void;
-    bottomSheetRef: React.RefObject<any>;
+    // bottomSheetRef: React.RefObject<any>;
+    item: GuildLineDetail;
 }
 
 const Divider = () => {
@@ -51,7 +53,8 @@ const GuildLineHeader = ({
     handleDeleteCurrentStep,
     handleDeleteGuideline,
     handleEditGuildline,
-    bottomSheetRef
+    item
+    // bottomSheetRef
 }: GuildLineHeaderProps
 ) => {
     return (
@@ -120,7 +123,7 @@ const GuildLineHeader = ({
 
                                         <View className='flex-row items-center justify-between'>
                                             <Text className='text-base ' style={{ color: iOSColors.systemBlue.defaultLight }}>Share</Text>
-                                            <Material name="share-all-outline" size={20} style={{ color: iOSColors.systemBlue.defaultLight, fontWeight: "bold" }} className='font-semibold' />
+                                            <Material name="share-all-outline" size={20} style={{ color: iOSColors.systemBlue.defaultLight, fontWeight: "bold" }} />
                                         </View>
                                     </MenuOption>
                                     <Divider />

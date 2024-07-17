@@ -19,7 +19,7 @@ import { GuildLineDetailScreenProps } from 'src/navigation/NavigationTypes';
 import GuildlineDetailInfo from './GuildlineDetailDescriptionInfo';
 const screenWidth = Dimensions.get('window').width;
 const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps) => {
-  const { id_guide_item, id_family } = route.params
+  const { id_item, id_family } = route.params
   const [currentStep, setCurrentStep] = useState(0)
   const [guildLineDetail, setGuildLineDetail] = useState<GuildLineDetail>()
   const [guildLineSteps, setGuildLineSteps] = useState<Step[]>()
@@ -57,7 +57,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
   useEffect(() => {
     const fetchGuildLineDetail = async () => {
       try {
-        const response = await GuildLineService.getGuildLineDetail(id_family!, id_guide_item); // API call to fetch guildline detail
+        const response = await GuildLineService.getGuildLineDetail(id_family!, id_item); // API call to fetch guildline detail
         setGuildLineDetail(response);
         console.log(response)
         if (response && response.steps) {
@@ -135,7 +135,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
       }
       console.log(newStep2)
       const a = await GuildLineService.addStepGuildLine(
-        id_guide_item!, id_family!, newStep2
+        id_item!, id_family!, newStep2
       )
       // setGuildLineSteps((prev) => {
       //     return prev?.map((step, index) => {
@@ -185,7 +185,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
       await GuildLineService.updateGuildLineDetail(
         "",
         id_family!,
-        id_guide_item!,
+        id_item!,
         newStep2,
         currentStep
       )
@@ -215,7 +215,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
   }
 
   const handleDeleteCurrentStep = async () => {
-    await GuildLineService.deleteStepGuildLine(id_family!, id_guide_item!, currentStep)
+    await GuildLineService.deleteStepGuildLine(id_family!, id_item!, currentStep)
     const currStep = currentStep
     if (currStep > 0) {
       setCurrentStep(currStep - 1)
@@ -229,8 +229,8 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
   }
 
   const handleDeleteGuideline = async () => {
-    await GuildLineService.deleteGuideline(id_family!, id_guide_item!)
-    dispatch(deleteGuideline(id_guide_item!))
+    await GuildLineService.deleteGuideline(id_family!, id_item!)
+    dispatch(deleteGuideline(id_item!))
     navigation.goBack()
   }
 
@@ -255,7 +255,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
           await GuildLineService.updateGuildLineDetail(
             result.assets[0].uri,
             id_family!,
-            id_guide_item!,
+            id_item!,
             guildLineSteps![currentStep],
             currentStep
           )
@@ -295,7 +295,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
           await GuildLineService.updateGuildLineDetail(
             result.assets[0].uri,
             id_family!,
-            id_guide_item!,
+            id_item!,
             guildLineSteps![currentStep],
             currentStep
           )
@@ -360,9 +360,10 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
           navigationBack={() => navigation.goBack()} handleIsAddingStep={handleIsAddingStep}
           handleEditGuildline={handleEditGuildline}
           handleShareGuideline={handleShareGuideline}
-          bottomSheetRef={bottomSheetRef}
+          // bottomSheetRef={bottomSheetRef}
           handleDeleteCurrentStep={handleDeleteCurrentStep}
           handleDeleteGuideline={handleDeleteGuideline}
+          item={guildLineDetail!}
         />
         <KeyboardAvoidingView className=' h-full flex flex-col items-center mt-3  ' behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
           {

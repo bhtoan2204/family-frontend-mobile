@@ -8,7 +8,6 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants'
 
 import RBSheet from 'react-native-raw-bottom-sheet'
-import AddGuildLineSheet from './AddGuildLineSheet/AddGuildLineSheet'
 
 import GuildlineItem from './GuildlineItem/GuildlineItem'
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color'
@@ -16,6 +15,9 @@ import * as Animatable from 'react-native-animatable';
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/redux/store'
 import { clearGuideline, setGuideline } from 'src/redux/slices/GuidelineSlice'
+import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet'
+import AddGuidelineSheet from 'src/components/user/guideline/sheet/add-guideline-sheet'
+import UpdateGuidelineSheet from 'src/components/user/guideline/sheet/update-guideline-sheet'
 // id_item: number;
 //   name: string;
 //   description: string;
@@ -38,6 +40,12 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
     const [loading, setLoading] = React.useState(true);
     const refRBSheet = React.useRef<any>(null);
     const [tab, setTab] = React.useState(0);
+    const addGuidelineBottomSheetRef = React.useRef<BottomSheet>(null);
+    const updateGuidelineBottomSheetRef = React.useRef<BottomSheet>(null);
+
+    const [pickedIdGuideline, setPickedIdGuideline] = React.useState<number>(-1);
+    const [pickedNameGuideline, setPickedNameGuideline] = React.useState<string>('');
+    const [pickedDescriptionGuideline, setPickedDescriptionGuideline] = React.useState<string>('');
 
     useEffect(() => {
         const fetchGuidelines = async () => {
@@ -84,7 +92,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                     <View className='mr-3'>
                         <TouchableOpacity onPress={() => {
                             // refRBSheet.current?.open()
-                            navigation.navigate('AddGuildLine', { id_family: id_family })
+                            addGuidelineBottomSheetRef.current?.expand()
 
                         }} >
                             {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
@@ -128,15 +136,22 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                                         <React.Fragment key={index}>
                                             <GuildlineItem item={item}
                                                 onPress={() => {
-                                                    navigation.navigate('GuildLineDetail', { id_family: id_family, id_guide_item: item.id_guide_item })
+                                                    navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_guide_item })
                                                 }}
                                                 key={index}
                                                 onUpdate={() => {
-                                                    navigation.navigate('UpdateGuildLine', {
-                                                        id_family: id_family, id_item: item.id_guide_item,
-                                                        title: item.name, description: item.description
-                                                    })
+                                                    setPickedIdGuideline(item.id_guide_item);
+                                                    setPickedNameGuideline(item.name);
+                                                    setPickedDescriptionGuideline(item.description);
+                                                    updateGuidelineBottomSheetRef.current?.expand()
+
                                                 }}
+                                            // onUpdate={() => {
+                                            //     navigation.navigate('UpdateGuildLine', {
+                                            //         id_family: id_family, id_item: item.id_guide_item,
+                                            //         title: item.name, description: item.description
+                                            //     })
+                                            // }}
                                             />
                                         </React.Fragment>
                                     ))
@@ -156,7 +171,15 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                 {/* <GuildlineItem item={guildLineData} onPress={() => {
                     navigation.navigate('SharedGuildLine', { id_family: id_family, id_item: guildLineData.id_item })
                 }} /> */}
-                <AddGuildLineSheet refRBSheet={refRBSheet} />
+                {/* <AddGuildLineSheet refRBSheet={refRBSheet} /> */}
+                <AddGuidelineSheet bottomSheetRef={addGuidelineBottomSheetRef} id_family={id_family!}
+                />
+                <UpdateGuidelineSheet bottomSheetRef={updateGuidelineBottomSheetRef} id_family={id_family!}
+                    description={pickedDescriptionGuideline}
+                    id_item={pickedIdGuideline}
+                    name={pickedNameGuideline}
+
+                />
             </View>
         </SafeAreaView>
     )

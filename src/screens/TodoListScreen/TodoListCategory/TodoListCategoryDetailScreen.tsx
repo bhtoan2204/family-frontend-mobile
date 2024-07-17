@@ -1,6 +1,6 @@
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns'
 import React, { useCallback, useEffect, useState } from 'react'
-import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView } from 'react-native'
+import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView, Alert } from 'react-native'
 import { Agenda, AgendaSchedule, Calendar, CalendarList } from 'react-native-calendars'
 import { useDispatch, useSelector } from 'react-redux'
 import { ShoppingListCategoryScreenProps, ShoppingListDetailScreenProps, TodoListItemDetailScreenProps } from 'src/navigation/NavigationTypes'
@@ -29,13 +29,12 @@ import { ScreenWidth } from '@rneui/base'
 import { ShoppingListItemInterface } from 'src/interface/checklist/checklist'
 import { updatePurchasedItem } from 'src/redux/slices/ShoppingListSlice'
 import BottomSheet from '@gorhom/bottom-sheet'
-import UpdateDateItemSheet from 'src/components/user/shopping/sheet/update-date-item-sheet'
-import AddMoreInfoSheet from 'src/components/user/shopping/sheet/add-more-info-sheet'
-import UpdateDescriptionSheet from 'src/components/user/shopping/sheet/update-description-sheet'
-import UpdatePriceSheet from 'src/components/user/shopping/sheet/update-price-sheet'
-import { convertToNumber } from 'src/utils/currency/convertPriceFromDB'
-import { updateDoneTodoList } from 'src/redux/slices/TodoListSlice'
 
+import { convertToNumber } from 'src/utils/currency/convertPriceFromDB'
+import { deleteTodoList, updateDoneTodoList } from 'src/redux/slices/TodoListSlice'
+import UpdateDateItemSheet from 'src/components/user/shopping-todo/sheet/update-date-item-sheet'
+import UpdateDescriptionSheet from 'src/components/user/shopping-todo/sheet/update-description-sheet'
+import { useColorScheme } from 'nativewind'
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -44,17 +43,16 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
     const { id_family, id_category, id_item } = route.params
     // console.log('id_family', id_family, 'id_category', id_category)
     const dispatch = useDispatch<AppDispatch>()
-    const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
+    // const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
     const itemDetail = useSelector((state: RootState) => state.todoList).todoList.find(item => item.id_checklist == id_item)
     const categoryDetail = useSelector((state: RootState) => state.todoList).todoListType.find(item => item.id_checklist_type == id_category)
 
     const updateDateBottomSheetRef = React.useRef<BottomSheet>(null)
     const addInformationBottomSheetRef = React.useRef<BottomSheet>(null)
     const updateDescriptionBottomSheetRef = React.useRef<BottomSheet>(null)
-    const updatePriceBottomSheetRef = React.useRef<BottomSheet>(null)
+    const { colorScheme } = useColorScheme()
 
-    const [price, setPrice] = useState<number>(0)
-    const [description, setDescription] = useState<string>('')
+
 
     useEffect(() => {
         console.log("item", itemDetail)
@@ -102,7 +100,7 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                             itemDetail?.is_completed && <Material name='check' size={24} color={'white'} />
                         }
                     </TouchableOpacity>
-                    <Text className='text-base text-[#2F2F34]'>{itemDetail?.task_name}</Text>
+                    <Text className='text-base text-[#2F2F34] dark:text-white'>{itemDetail?.task_name}</Text>
                 </View>
 
             </View>
@@ -116,10 +114,14 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
             <View className='flex-row  items-center  w-full  py-2 '>
                 <View className='mr-2'>
 
-                    <Material name='calendar-month-outline' size={30} color={'#5D5D5D'} />
+                    <Material name='calendar-month-outline' size={30} color={
+                        colorScheme == 'light' ? '#5D5D5D' : 'white'
+                    }
+
+                    />
                 </View>
 
-                <Text className='text-base text-[#2F2F34]'>{
+                <Text className='text-base text-[#2F2F34] dark:text-white'>{
                     itemDetail?.due_date ? format(new Date(itemDetail?.due_date), 'dd/MM/yyyy') : 'Set reminder date'
                 }</Text>
             </View>
@@ -136,10 +138,12 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
             <View className='flex-row  items-center  w-full  py-2 '>
                 <View className='mr-2'>
 
-                    <Material name='repeat' size={30} color={'#5D5D5D'} />
+                    <Material name='repeat' size={30} color={
+                        colorScheme == 'light' ? '#5D5D5D' : 'white'
+                    } />
                 </View>
 
-                <Text className='text-base text-[#2F2F34]'>Repeat</Text>
+                <Text className='text-base text-[#2F2F34] dark:text-white'>Repeat</Text>
             </View>
         </TouchableOpacity>
     }
@@ -154,10 +158,12 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
             <View className='flex-row  items-center  w-full  py-2 '>
                 <View className='mr-2'>
 
-                    <Material name='information-outline' size={30} color={'#5D5D5D'} />
+                    <Material name='information-outline' size={30} color={
+                        colorScheme == 'light' ? '#5D5D5D' : 'white'
+                    } />
                 </View>
 
-                <Text className='text-base text-[#2F2F34]'>Add more information</Text>
+                <Text className='text-base text-[#2F2F34] dark:text-white'>Add more information</Text>
             </View>
         </TouchableOpacity>
     }
@@ -171,30 +177,60 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
             <View className='flex-row  items-center  w-full  py-2 '>
                 <View className='mr-2'>
 
-                    <Material name='format-list-bulleted' size={30} color={'#5D5D5D'} />
+                    <Material name='format-list-bulleted' size={30} color={
+                        colorScheme == 'light' ? '#5D5D5D' : 'white'
+                    } />
                 </View>
 
-                <Text className='text-base text-[#2F2F34]'>{
+                <Text className='text-base text-[#2F2F34] dark:text-white'>{
                     itemDetail?.description != '' ? itemDetail?.description : 'Add description'
                 }</Text>
             </View>
         </TouchableOpacity>
     }
 
-
+    const handleDeleteItem = () => {
+        Alert.alert('Delete item', 'Are you sure you want to delete this item?', [
+            {
+                text: 'Delete',
+                style: 'destructive',
+                onPress: () => {
+                    navigation.goBack()
+                    dispatch(deleteTodoList({ id_item: id_item }))
+                }
+            },
+            {
+                text: 'Cancel',
+                onPress: () => {
+                    // dispatch()
+                }
+            },
+        ])
+    }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
+        <View style={{
+            flex: 1,
+            backgroundColor: colorScheme === 'light' ? '#f7f7f7' : '#0A1220'
+        }}>
             <View className='py-6 h-[29%] ' style={{
                 backgroundColor: colors[id_category - 1],
             }}>
 
-                <View className='flex-row  ml-3'>
-                    <TouchableOpacity className='flex-1 ' onPress={() => {
-                        navigation.goBack()
-                    }}>
-                        <Material name='chevron-left' size={35} color={COLORS.Rhino} />
-                    </TouchableOpacity>
+                <View className='flex-row z-10 '>
+                    <View className='flex-row justify-between w-full mt-2'>
+                        <TouchableOpacity className='' onPress={() => {
+                            navigation.goBack()
+                        }}>
+                            <Material name='chevron-left' size={35} color={COLORS.Rhino} />
+                        </TouchableOpacity>
+                        <TouchableOpacity className='' onPress={() => {
+                            handleDeleteItem()
+                        }}>
+                            <Material name='delete-outline' size={35} color={COLORS.Rhino} />
+                        </TouchableOpacity>
+
+                    </View>
                     {/* <Text className='flex-1 text-center text-lg'
                         style={{ color: COLORS.Rhino, fontWeight: 'bold' }}
                     >Shopping List</Text> */}
@@ -221,8 +257,8 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                 </View>
             </View>
 
-            <View className='flex-1 mt-[-5%] rounded-tl-xl rounded-tr-xl r bg-white overflow-hidden z-100'>
-                <View className='bg-white flex-1 '>
+            <View className='flex-1 mt-[-5%] rounded-tl-xl rounded-tr-xl r bg-white dark:bg-[#0A1220] overflow-hidden z-100'>
+                <View className='bg-white dark:bg-[#0A1220] flex-1 '>
                     <ScrollView className=''>
                         <View style={{
                         }} className=' py-4'>
@@ -241,6 +277,19 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                     </ScrollView>
                 </View>
             </View>
+            <UpdateDateItemSheet
+                bottomSheetRef={updateDateBottomSheetRef}
+                id_family={id_family!}
+                id_item={id_item}
+                initialDate={itemDetail?.due_date ? itemDetail?.due_date : new Date().toISOString()}
+            />
+            <UpdateDescriptionSheet
+                bottomSheetRef={updateDescriptionBottomSheetRef}
+                id_family={id_family!}
+                id_item={id_item}
+                description={itemDetail?.description || ""}
+            />
+
             {/* <UpdateDateItemSheet bottomSheetRef={updateDateBottomSheetRef} id_family={id_family!} id_list={id_shopping_list} id_item={id_item} initialDate={
                 itemDetail?.reminder_date ? itemDetail?.reminder_date : new Date().toISOString()
             } />

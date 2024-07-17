@@ -29,8 +29,8 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
     const { colorScheme, setColorScheme } = useColorScheme()
 
     useEffect(() => {
-        setColorScheme('dark')
-        console.log(colorScheme)
+        setColorScheme('light')
+        // console.log(colorScheme)
     }, [])
 
     // const handleFilterData = () => {

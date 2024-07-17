@@ -19,6 +19,19 @@ import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSh
 import AddProgressSheet from 'src/components/user/education/education-screen/sheet/add-progress-sheet';
 import AddProgressPickMemberSheet from 'src/components/user/education/education-screen/sheet/pick-member-sheet';
 import { useColorScheme } from 'nativewind';
+import {
+    Menu,
+    MenuOptions,
+    MenuOption,
+    MenuTrigger,
+    MenuOptionsCustomStyle,
+
+} from 'react-native-popup-menu';
+import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
+import UpdateProgressSheet from 'src/components/user/education/education-screen/sheet/update-progress-sheet';
+import { deleteEducation } from 'src/redux/slices/EducationSlice';
+import EducationServices from 'src/services/apiclient/EducationService';
+
 
 const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
@@ -34,14 +47,37 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     })
     const [pickedIdUser, setPickedIdUser] = React.useState<string>("")
     const { colorScheme, setColorScheme } = useColorScheme()
-
-    useEffect(()=>{
-        setColorScheme('dark')
-    },[])
+    const updateEducationSheetRef = useRef<BottomSheet>(null)
+    const [titleUpdate, setTitleUpdate] = React.useState<string>("")
+    const [schoolInfoUpdate, setSchoolInfoUpdate] = React.useState<string>("")
+    const [progressNotesUpdate, setProgressNotesUpdate] = React.useState<string>("")
+    const [pickedIdProgress, setPickedIdProgress] = React.useState<number>(-1)
+    // useEffect(() => {
+    //     setColorScheme('light')
+    // }, [])
 
     // console.log("members of family", id_family, members)
     const handleNavigateProgress = (id_progress: number) => {
         navigation.navigate('ProgressScreen', { id_family: id_family, id_progress: id_progress })
+    }
+
+    const openUpdateProgressSheet = (id_progress: number, title: string, school_info: string, progress_notes: string) => {
+        setPickedIdProgress(id_progress)
+        setTitleUpdate(title)
+        setSchoolInfoUpdate(school_info)
+        setProgressNotesUpdate(progress_notes)
+        updateEducationSheetRef.current?.expand()
+    }
+    const onDeleteItem = async (id_progress: number) => {
+        // console.log("delete item", id_progress)
+        dispatch(deleteEducation(id_progress))
+        const res = await EducationServices.deleteEducation(id_progress, id_family)
+        if (res) {
+            //setLoading here
+        }
+        else {
+            //handle error here
+        }
     }
 
     const buildListEmpty = () => {
@@ -57,12 +93,17 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
             {
                 educationData.map((item, index) => {
                     return <React.Fragment key={index}>
-                        <EducationItem item={item} handleNavigateProgress={handleNavigateProgress} />
+                        <EducationItem item={item} handleNavigateProgress={handleNavigateProgress}
+                            openUpdateProgressSheet={openUpdateProgressSheet}
+                            onDeleteItem={onDeleteItem}
+                        />
                     </React.Fragment>
                 })
             }
         </ScrollView>
     }
+
+
 
     return (
         <View className="flex-1 bg-[#F7F7F7]">
@@ -113,17 +154,32 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                     setPickedIdUser(id_user)
                 }}
             />
+            <UpdateProgressSheet bottomSheetRef={updateEducationSheetRef}
+                id_family={id_family!}
+                id_progress={pickedIdProgress}
+                progressNotes={progressNotesUpdate}
+                schoolInfo={schoolInfoUpdate}
+                title={titleUpdate}
+            />
         </View>
 
+    )
+}
+
+const Divider = () => {
+    return (
+        <View style={{ borderBottomWidth: 1, borderBottomColor: '#7F8487', opacity: 0.3 }} />
     )
 }
 
 interface EducationItemProps {
     item: Education,
     handleNavigateProgress: (id_progress: number) => void
+    openUpdateProgressSheet: (id_progress: number, title: string, school_info: string, progress_notes: string) => void
+    onDeleteItem: (id_progress: number) => Promise<void>
 }
 
-const EducationItem = ({ item, handleNavigateProgress }: EducationItemProps) => {
+const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, onDeleteItem }: EducationItemProps) => {
     return <TouchableOpacity className='flex-row mx-6 items-center my-2 py-3  bg-white shadow-lg rounded-lg'
         onPress={() => {
             handleNavigateProgress(item.id_education_progress)
@@ -142,8 +198,37 @@ const EducationItem = ({ item, handleNavigateProgress }: EducationItemProps) => 
                     <View className='w-[80%]'>
                         <Text className='text-base text-[#DEC802] font-bold' numberOfLines={1}>{item.title}</Text>
                     </View>
+
                     <View className=''>
-                        <Material name="dots-horizontal" size={ScreenHeight * 0.035} style={{ color: '#434343', fontWeight: "bold" }} />
+                        <Menu >
+                            <MenuTrigger>
+                                <Material name="dots-horizontal" size={ScreenHeight * 0.035} style={{ color: '#434343', fontWeight: "bold" }} />
+                            </MenuTrigger>
+                            <MenuOptions customStyles={optionsStyles} >
+                                <MenuOption onSelect={() => {
+                                    // setIsEditing(true)
+                                    openUpdateProgressSheet(item.id_education_progress, item.title, item.school_info, item.progress_notes)
+                                }} >
+
+                                    <View className='flex-row items-center justify-between'>
+                                        <Text className='text-base' style={{ color: iOSColors.systemBlue.defaultLight }}>Update</Text>
+                                        <Material name="pencil" size={20} style={{ color: iOSColors.systemBlue.defaultLight, fontWeight: "bold" }} />
+                                    </View>
+                                </MenuOption>
+                                <Divider />
+                                <MenuOption onSelect={async () => {
+                                    await onDeleteItem(item.id_education_progress)
+                                }} >
+
+                                    <View className='flex-row items-center justify-between'>
+                                        <Text className='text-base ' style={{ color: iOSColors.systemRed.defaultLight }}>Delete</Text>
+                                        <Material name="trash-can-outline" size={20} style={{ color: iOSColors.systemRed.defaultLight, fontWeight: "bold" }} />
+                                    </View>
+                                </MenuOption>
+                                <Divider />
+                            </MenuOptions>
+                        </Menu>
+
                     </View>
                 </View>
                 <View className='flex-row items-center overflow-clip mr-5 '>
@@ -166,4 +251,16 @@ const EducationItem = ({ item, handleNavigateProgress }: EducationItemProps) => 
     </TouchableOpacity>
 }
 
+const optionsStyles: MenuOptionsCustomStyle = {
+    optionsContainer: {
+        borderRadius: 10,
+        marginTop: 24,
+        backgroundColor: 'white',
+        // opacity: 0.9,
+    },
+    optionWrapper: {
+        padding: 10,
+    },
+
+};
 export default EducationScreen

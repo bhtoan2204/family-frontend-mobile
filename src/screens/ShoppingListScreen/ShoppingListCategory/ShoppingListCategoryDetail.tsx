@@ -1,6 +1,6 @@
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns'
 import React, { useCallback, useEffect, useState } from 'react'
-import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView } from 'react-native'
+import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView, Alert } from 'react-native'
 import { Agenda, AgendaSchedule, Calendar, CalendarList } from 'react-native-calendars'
 import { useDispatch, useSelector } from 'react-redux'
 import { ShoppingListCategoryScreenProps, ShoppingListDetailScreenProps } from 'src/navigation/NavigationTypes'
@@ -27,7 +27,7 @@ import { ListItem } from '@rneui/themed';
 import { gradients_list } from 'src/assets/images/gradients'
 import { ScreenWidth } from '@rneui/base'
 import { ShoppingListItemInterface } from 'src/interface/checklist/checklist'
-import { updatePurchasedItem } from 'src/redux/slices/ShoppingListSlice'
+import { deleteItem, updatePurchasedItem } from 'src/redux/slices/ShoppingListSlice'
 import BottomSheet from '@gorhom/bottom-sheet'
 import UpdateDateItemSheet from 'src/components/user/shopping/sheet/update-date-item-sheet'
 import AddMoreInfoSheet from 'src/components/user/shopping/sheet/add-more-info-sheet'
@@ -44,7 +44,7 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
     console.log(route.params)
     // console.log('id_family', id_family, 'id_category', id_category)
     const dispatch = useDispatch<AppDispatch>()
-    const familyInfo = useSelector((state: RootState) => state.family).family
+    const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
     const itemDetail = useSelector((state: RootState) => state.shoppinglist).shoppingList.find(item => item.id_shopping_list_type === id_category)!.items!.find(item => item.id_item === id_item)
     const item = useSelector((state: RootState) => state.shoppinglist).shoppingList.find(item => item.id_shopping_list_type === id_category)!.items
 
@@ -177,7 +177,7 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                 </View>
 
                 <Text className='text-base text-[#2F2F34]'>{
-                    itemDetail?.price != '' ? itemDetail?.description : 'Add description'
+                    itemDetail?.description != '' ? itemDetail?.description : 'Add description'
                 }</Text>
             </View>
         </TouchableOpacity>
@@ -196,12 +196,34 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                 </View>
 
                 <Text className='text-base text-[#2F2F34]'>{
-                    itemDetail?.price != '' && itemDetail?.price != null ? convertToNumber(itemDetail?.price)  : 'Add price'
+                    itemDetail?.price != '' && itemDetail?.price != null ? convertToNumber(itemDetail?.price) : 'Add price'
                 }</Text>
             </View>
         </TouchableOpacity>
     }
+    const handleDeleteItem = () => {
+        Alert.alert('Delete item', 'Are you sure you want to delete this item?', [
+            {
+                text: 'Delete',
+                style: 'destructive',
+                onPress: () => {
+                    navigation.goBack()
+                    dispatch(deleteItem({ id_item: id_item, id_list: id_shopping_list }))
+                    // dispatch(deleteTodoList({ id_item: id_item }))
+                }
+            },
+            {
+                text: 'Cancel',
+                onPress: () => {
+                    // dispatch()
+                }
+            },
+        ],
+            { cancelable: true, }
 
+
+        )
+    }
     return (
         <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
             <View className='py-6 h-[29%] ' style={{
@@ -209,11 +231,19 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
             }}>
 
                 <View className='flex-row  ml-3'>
-                    <TouchableOpacity className='flex-1 ' onPress={() => {
-                        navigation.goBack()
-                    }}>
-                        <Material name='chevron-left' size={35} color={COLORS.Rhino} />
-                    </TouchableOpacity>
+                    <View className='flex-row justify-between w-full mt-2'>
+                        <TouchableOpacity className='' onPress={() => {
+                            navigation.goBack()
+                        }}>
+                            <Material name='chevron-left' size={35} color={COLORS.Rhino} />
+                        </TouchableOpacity>
+                        <TouchableOpacity className='' onPress={() => {
+                            handleDeleteItem()
+                        }}>
+                            <Material name='delete-outline' size={35} color={COLORS.Rhino} />
+                        </TouchableOpacity>
+
+                    </View>
                     {/* <Text className='flex-1 text-center text-lg'
                         style={{ color: COLORS.Rhino, fontWeight: 'bold' }}
                     >Shopping List</Text> */}
@@ -252,8 +282,12 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                                 {buildCalendarBox()}
                                 {buildRepeatBox()}
                                 {buildDescriptionBox()}
-                                {buildPriceBox()}
-                                {buildAddInfoBox()}
+                                {
+                                    buildPriceBox()
+                                }
+                                {/* {
+                                    itemDetail && itemDetail.description == "" && itemDetail.price == "$0.00" && buildAddInfoBox()
+                                } */}
                             </View>
 
                         </View>

@@ -72,6 +72,11 @@ const todoListSlice = createSlice({
         return item;
       });
     },
+    deleteTodoList: (state, action: PayloadAction<{id_item: number}>) => {
+      state.todoList = state.todoList.filter(
+        item => item.id_checklist !== action.payload.id_item,
+      );
+    },
   },
 });
 
@@ -82,6 +87,7 @@ export const {
   updateDateTodoList,
   updateDescription,
   updateDoneTodoList,
+  deleteTodoList,
 } = todoListSlice.actions;
 
 export const selectProfile = (state: RootState) => state.profile;

@@ -19,36 +19,33 @@ import CategoryIcon from 'src/assets/images/household_assets/category.png';
 import NewItemImageSheet from 'src/assets/images/household_assets/new_item_image_sheet.png'
 import Camera from 'src/assets/images/household_assets/Camera.png'
 import Ingredients from 'src/assets/images/household_assets/Ingredients.png'
-import OpenedFolder from 'src/assets/images/household_assets/OpenedFolder.png'
-import Room2 from 'src/assets/images/household_assets/Room_2.png'
-
+import AddInfoImageSheet from 'src/assets/images/shoppinglist_assets/add_info_image_sheet.png'
 import { BlurView } from 'expo-blur';
 import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interface/shopping/shopping_list';
-import { addShoppingList, addShoppingListItem } from 'src/redux/slices/ShoppingListSlice';
-import EducationServices from 'src/services/apiclient/EducationService';
-import { addComponentScoreToSubject } from 'src/redux/slices/EducationSlice';
-import AddComponentScoreImage from 'src/assets/images/education_assets/add_component_score_img.png';
+import { addShoppingList, addShoppingListItem, updateDescriptionItem } from 'src/redux/slices/ShoppingListSlice';
+import { updateDescription, updateDateTodoList } from 'src/redux/slices/TodoListSlice';
+
+import { to_vietnamese } from 'src/utils/currency-str';
+
 
 
 interface AddItemSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
-    id_education_progress: number;
-    id_family: number;
-    id_subject: number;
+    id_family: number
+    description: string
+    id_item: number
 }
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
-const AddComponentScoreSheet = ({
+const UpdateDescriptionSheet = ({
     bottomSheetRef,
-    id_education_progress,
     id_family,
-    id_subject
-
+    description,
+    id_item
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
-
     const [loading, setLoading] = React.useState(false)
     const dispatch = useDispatch<AppDispatch>()
 
@@ -56,7 +53,10 @@ const AddComponentScoreSheet = ({
     const [errorText, setErrorText] = React.useState('')
     const [showError, setShowError] = React.useState(false)
 
-    const [inputName, setInputName] = React.useState('')
+
+    const [inputDescription, setInputDescription] = React.useState(description != "" ? description : '')
+
+    const [isKeyboardFocused, setIsKeyboardFocused] = React.useState(false)
 
     useEffect(() => {
         if (showError) {
@@ -68,7 +68,19 @@ const AddComponentScoreSheet = ({
 
     }, [showError])
 
+    const handleSubmit = async () => {
+        // dispatch(updateDescriptionItem({
+        //     id_list: id_list,
+        //     id_item: id_item,
+        //     description: inputDescription
+        // }))
+        dispatch(updateDescription({
+            id_item: id_item,
+            description: inputDescription
+        }))
 
+        bottomSheetRef.current?.close()
+    }
 
     const renderBackdrop = React.useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} pressBehavior={
@@ -77,126 +89,90 @@ const AddComponentScoreSheet = ({
         []
     );
 
-    const handleAddComponentScore = async () => {
-        Keyboard.dismiss()
-        await Promise.resolve(
-            new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve('1')
-                }, 100)
-            })
-        )
-        console.log(id_subject
-            , id_education_progress
-            , id_family
-            , inputName
-            , 0)
-        // const res = await EducationServices.addComponentScore(
-        //     id_subject
-        //     , id_education_progress
-        //     , id_family
-        //     , inputName
-        //     , 0
-        // )
-        dispatch(addComponentScoreToSubject({
-            component_name: inputName,
-            // expected_score: null,
-            score: 0,
-            id_subject: id_subject,
-            id_family: id_family,
-            id_education_progress: id_education_progress,
+    const buildInputDescription = () => {
+        return <View>
 
-        }))
-        bottomSheetRef.current?.close()
-        // if (res) {
-        //     dispatch(addComponentScoreToSubject({
-        //         component_name: inputName,
-        //         // expected_score: null,
-        //         score: 0,
-        //         id_subject: id_subject,
-        //         id_family: id_family,
-        //         id_education_progress: id_education_progress,
+            <BottomSheetTextInput
+                placeholder='Give your item a description'
+                value={inputDescription}
+                onChangeText={(text) => {
+                    setInputDescription(text)
+                }}
+                onFocus={() => {
+                    setIsKeyboardFocused(true)
+                }}
+                onBlur={() => {
+                    setIsKeyboardFocused(false)
+                }}
+                // className='rounded-lg'
+                style={{
+                    backgroundColor: '#f5f5f5',
+                    borderWidth: 1,
+                    borderColor: '#DEDCDC',
+                    borderRadius: 10,
+                    marginVertical: 10,
+                    paddingVertical: screenHeight * 0.02,
+                    paddingHorizontal: screenWidth * 0.05,
+                    marginHorizontal: screenWidth * 0.05,
+                    // fontWeight: 'bold',
+                    fontSize: 15,
+                    color: '#b0b0b0'
+                }}
+            />
 
-        //     }))
-        //     bottomSheetRef.current?.close()
-        // }
-        // else {
-        //     console.log("error")
-        //     bottomSheetRef.current?.close()
-        // }
+
+
+        </View>
     }
-
-
-
-
 
     return (
         <BottomSheet
             ref={bottomSheetRef}
             index={-1}
-            enableOverDrag={true}
-            enablePanDownToClose={loading ? false : true}
-            enableDynamicSizing={true}
-            // snapPoints={snapPoints}
+            enableOverDrag={isKeyboardFocused ? false : true}
+            enablePanDownToClose={isKeyboardFocused ? false : true}
+            snapPoints={snapPoints}
+
             // handleComponent={null}
             // handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
             backdropComponent={renderBackdrop}
-            keyboardBehavior='interactive'
-            keyboardBlurBehavior='restore'
             onClose={() => {
                 Keyboard.dismiss()
             }}
             onChange={(index) => {
-                console.log(index)
                 if (index == -1) {
+
 
                 }
             }}
-        // keyboardBehavior="extend"
-        // keyboardBlurBehavior="restore"
+            keyboardBehavior="interactive"
+            keyboardBlurBehavior="restore"
+
 
         >
-            <View className='flex-1 bg-[#F7F7F7] '>
-                <BottomSheetScrollView className='' showsVerticalScrollIndicator={false} automaticallyAdjustKeyboardInsets style={{}} keyboardShouldPersistTaps='handled'>
+            <BottomSheetView className='flex-1 bg-[#F7F7F7] ' style={{
+                flex: 1,
+                backgroundColor: '#F7F7F7',
+            }}>
+                <BottomSheetScrollView className='' showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='handled'>
 
                     <View className='flex-1  mt-10'>
                         <View className='my-3 items-center'>
-                            <Image source={AddComponentScoreImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
+                            <Image source={AddInfoImageSheet} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                         </View>
                         <View className=' items-center'>
                             <Text className='text-base font-semibold' style={{
                                 color: iOSGrayColors.systemGray6.accessibleDark
 
-                            }}>Add New Component Score</Text>
+                            }}>Add Item Information</Text>
                             <Text className='text-sm my-3' style={{
                                 color: iOSGrayColors.systemGray6.accessibleDark
 
-                            }}>Give your new component score a name</Text>
+                            }}>Enter description for your item</Text>
                         </View>
-                        <BottomSheetTextInput
-                            placeholder='Name of the item'
-                            value={inputName}
-                            onChangeText={(text) => {
-                                setInputName(text)
-                            }}
-                            // className='rounded-lg'
-                            style={{
-                                backgroundColor: '#f5f5f5',
-                                borderWidth: 1,
-                                borderColor: '#DEDCDC',
-                                borderRadius: 10,
-                                marginVertical: 10,
-                                paddingVertical: screenHeight * 0.02,
-                                paddingHorizontal: screenWidth * 0.05,
-                                marginHorizontal: screenWidth * 0.05,
-                                // fontWeight: 'bold',
-                                fontSize: 15,
-                                color: '#b0b0b0'
-                            }}
-                        />
-
-
-
+                        {
+                            buildInputDescription()
+                        }
 
                         <View>
                             {
@@ -204,29 +180,44 @@ const AddComponentScoreSheet = ({
                             }
                         </View>
 
-                        <View className='items-end pr-3 my-3 mt-12 '>
+                        <View className='mx-[8%] mt-6 mb-12 '>
+                            <TouchableOpacity style={{
+                                backgroundColor: COLORS.DenimBlue,
+                            }} className=' py-4 rounded-full items-center justify-center'
+                                onPress={async () => {
+                                    // console.log(selectDate)
+                                    // await handleSubmit()
+                                    // setSelectDate(new Date)
+                                    // bottomSheetRef.current?.snapTo(0)
+                                    handleSubmit()
+                                }}
+                            >
+                                <Text className='text-white text-base font-semibold'>Save</Text>
+                            </TouchableOpacity>
+                        </View>
+                        {/* <View className='items-end pr-3 my-3 mt-12 '>
                             <TouchableOpacity className='items-center rounded-lg justify-center' style={{
                                 width: screenWidth * 0.1,
                                 height: screenWidth * 0.1,
-                                backgroundColor: inputName != "" ? COLORS.DenimBlue : iOSGrayColors.systemGray6.defaultLight,
+                                backgroundColor: householdName != '' ? COLORS.DenimBlue : iOSGrayColors.systemGray6.defaultLight,
                             }}
                                 onPress={async () => {
-                                    await handleAddComponentScore()
+                                    await handleSubmit()
                                 }}
                             >
                                 <Material name='arrow-right' size={24} color={
-                                    inputName != "" ? 'white' : iOSGrayColors.systemGray.defaultDark
+                                    householdName != '' ? 'white' : iOSGrayColors.systemGray.defaultDark
                                 }
                                 />
                             </TouchableOpacity>
-                        </View>
+                        </View> */}
                     </View>
                 </BottomSheetScrollView>
-            </View>
+            </BottomSheetView>
 
         </BottomSheet>
     )
 }
 
 
-export default AddComponentScoreSheet
+export default UpdateDescriptionSheet

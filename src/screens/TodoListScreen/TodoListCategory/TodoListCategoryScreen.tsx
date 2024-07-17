@@ -96,8 +96,8 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
                             width: screenHeight * 0.2,
                         }} />
                     </View>
-                    <Text className='text-[#747474] my-2 font-bold text-lg'>Nothing to buy?</Text>
-                    <Text className='mx-[15%] text-center text-sm text-[#747474]'>Tap on the button to add product to your shopping list</Text>
+                    <Text className='text-[#747474] dark:text-[#8D94A5] my-2 font-bold text-lg'>Nothing to buy?</Text>
+                    <Text className='mx-[15%] text-center text-sm text-[#747474] dark:text-[#8D94A5]'>Tap on the button to add product to your shopping list</Text>
                 </View>
             </View>
         )
@@ -163,7 +163,7 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
                 </View>
             </View>
 
-            <View className='flex-1 mt-[-5%] rounded-tl-2xl rounded-tr-2xl r bg-white dark:bg-black overflow-hidden z-100'>
+            <View className='flex-1 mt-[-5%] rounded-tl-2xl rounded-tr-2xl r bg-white dark:bg-[#0A1220] overflow-hidden z-100'>
                 <TouchableOpacity activeOpacity={0.65} className='absolute rounded-full bottom-10 right-3 z-10  items-center justify-center' style={{
                     height: screenHeight * 0.08,
                     width: screenHeight * 0.08,
@@ -175,7 +175,7 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
                 >
                     <Material name='plus' size={35} color={'white'} />
                 </TouchableOpacity>
-                <View className='bg-white dark:bg-[#1B2838] flex-1 '>
+                <View className='bg-white dark:bg-[#0A1220] flex-1 '>
                     {
                         todoListCategoryItems && todoListCategoryItems.length > 0 ?
                             <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>

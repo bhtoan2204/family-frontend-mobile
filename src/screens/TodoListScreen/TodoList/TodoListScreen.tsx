@@ -16,6 +16,7 @@ import PharmacyImage from 'src/assets/images/shoppinglist_assets/Pharmacy.png'
 import OtherImage from 'src/assets/images/shoppinglist_assets/Other.png'
 import { colors } from '../const/color'
 import { TodoListItem, TodoListType } from 'src/interface/todo/todo'
+import { useColorScheme } from 'nativewind'
 const screenHeight = Dimensions.get('screen').height;
 
 
@@ -49,7 +50,8 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
     const todoListTypes = useSelector((state: RootState) => state.todoList).todoListType
     const todoList = useSelector((state: RootState) => state.todoList).todoList
     const todosMap = mapTodoList(todoList, todoListTypes)
-
+    const { colorScheme, setColorScheme } = useColorScheme();
+    const [key, setKey] = useState(false);
     // useEffect(() => {
     //     console.log(todosMap)
     //     console.log(todoList)
@@ -60,6 +62,13 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
 
     //     }
     // }
+    useEffect(() => {
+        setColorScheme('dark')
+    }, [])
+
+    useEffect(() => {
+        setKey((prev) => !prev)
+    }, [colorScheme])
 
     const loadItemsForMonth = (month: any) => {
         console.log('trigger items loading');
@@ -115,8 +124,8 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
             }}>
 
                 <View className=''>
-                    <Text className='flex-1 text-center text-base'
-                        style={{ color: '#2A475E', fontWeight: 'bold' }}
+                    <Text className='flex-1 text-center text-base text-[#2A475E] dark:text-[#fff]'
+                        style={{ fontWeight: 'bold' }}
                     >{buildDate(selectDate)}</Text>
                 </View>
                 <View className='flex-row '>
@@ -148,58 +157,92 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
                     })
                 }}
                 iconUrl={type.icon_url}
+                scheme={colorScheme}
             />
         })
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
+        <SafeAreaView style={{
+            flex: 1,
+            backgroundColor: colorScheme === 'light' ? '#f7f7f7' : '#0A1220',
+        }}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View className='flex-row  justify-between items-center py-6'>
                     <TouchableOpacity className='flex-1 ' onPress={() => {
                         navigation.goBack()
                     }}>
-                        <Material name='chevron-left' size={30} />
+                        <Material name='chevron-left' size={30}
+                            color={
+                                colorScheme === 'light' ? COLORS.DenimBlue : 'white'
+                            }
+                        />
                     </TouchableOpacity>
                     <Text className='flex-1 text-center text-lg'
-                        style={{ color: COLORS.Rhino, fontWeight: 'bold' }}
+                        style={{
+                            color:
+                                colorScheme === 'light' ? COLORS.Rhino : 'white'
+                            , fontWeight: 'bold'
+                        }}
                     >CheckList</Text>
                     <View className='flex-1 items-end'>
-                        <Material name='refresh' size={25} />
+                        <Material name='refresh' size={25}
+                            color={
+                                colorScheme === 'light' ? COLORS.DenimBlue : 'white'
+                            }
+                            onPress={() => {
+                                // toggleColorScheme()
+                            }}
+                        />
                     </View>
                 </View>
-                <Calendar
-                    onDayPress={handleDayPress}
-                    markedDates={{
-                        [selectDate]: { selected: true, selectedColor: COLORS.DenimBlue },
-                    }}
-                    initialDate={selectDate}
-                    theme={{
-                        calendarBackground: '#f7f7f7',
-                    }}
-                    minDate={'2024-05-10'}
-                    maxDate={'2026-06-10'}
-                    disableAllTouchEventsForDisabledDays={true}
+                <View className='bg-[#F7F7F7] dark:bg-[#252D3B] rounded-lg'
                     style={{
-                        backgroundColor: '#f7f7f7',
                         marginHorizontal: 10,
+
                     }}
+                >
+                    <Calendar
+                        key={key.toString()}
+                        onDayPress={handleDayPress}
+                        markedDates={{
+                            [selectDate]: { selected: true, selectedColor: COLORS.DenimBlue },
 
-                    // renderHeader={
-                    //     date =>{
-                    //         console.log(date)
-                    //     }
-                    // }
-                    customHeader={customCalendarHeader}
-                // disableArrowLeft={true}
-                // // Disable right arrow. Default = false
-                // disableArrowRight={true}
+                        }}
+                        initialDate={selectDate}
+                        theme={{
+                            // calendarBackground: colorScheme === 'light' ? '#f7f7f7' : '#1A1A1A',
+                            calendarBackground: 'transparent',
+                            dayTextColor: colorScheme === 'light' ? '#000000' : 'white',
+                            textDisabledColor: colorScheme === 'light' ? '#7C7C7C' : '#92969D',
+                        }}
+                        minDate={'2024-05-10'}
+                        maxDate={'2026-06-10'}
+                        disableAllTouchEventsForDisabledDays={true}
+                        style={{
+                            // backgroundColor: colorScheme === 'light' ? '#f7f7f7' : COLORS.Rhino,
 
-                />
+                            // color: '',
+
+
+                        }}
+
+                        // renderHeader={
+                        //     date =>{
+                        //         console.log(date)
+                        //     }
+                        // }
+                        customHeader={customCalendarHeader}
+                    // disableArrowLeft={true}
+                    // // Disable right arrow. Default = false
+                    // disableArrowRight={true}
+
+                    />
+                </View>
                 <View style={{
                 }} className=' py-4'>
-                    <Text className='ml-6 my-4 text-base font-semibold' style={{
-                        color: COLORS.Rhino,
+                    <Text className='ml-6 my-4 text-base font-semibold ' style={{
+                        color: colorScheme === 'dark' ? 'white' : '#292828',
                     }}>My checklist</Text>
 
 
@@ -220,27 +263,10 @@ interface TodoListCategoryItemProps {
     total_items: number;
     handleNavigateCategory: (id_category: number) => void;
     iconUrl: string;
+    scheme: string;
 }
 
-const TodoListCategoryItem = ({ id_category, category_name, total_items, handleNavigateCategory, iconUrl }: TodoListCategoryItemProps) => {
-    const getImage = (id_category: number) => {
-        if (id_category === 1) {
-            return GroceryImage
-        }
-        if (id_category === 2) {
-            return ElectronicsImage
-        }
-        if (id_category === 3) {
-            return ClothingImage
-        }
-        if (id_category === 4) {
-            return FurnitureImage
-        }
-        if (id_category === 5) {
-            return PharmacyImage
-        }
-        return OtherImage
-    }
+const TodoListCategoryItem = ({ id_category, category_name, total_items, handleNavigateCategory, iconUrl, scheme }: TodoListCategoryItemProps) => {
     const buildTotal = (total_items: number) => {
         if (total_items > 1) {
             return `${total_items} items`
@@ -265,8 +291,8 @@ const TodoListCategoryItem = ({ id_category, category_name, total_items, handleN
                     }} />
                 </View>
                 <View className=' justify-center'>
-                    <Text className='text-base font-semibold text-[#292828]'>{category_name}</Text>
-                    <Text className='text-sm text-[#5C5C5C]'>
+                    <Text className='text-base font-semibold text-[#292828] dark:text-[#fff]'>{category_name}</Text>
+                    <Text className='text-sm text-[#5C5C5C] dark:text-[#8D94A5]'>
                         {buildTotal(total_items)}
                     </Text>
                 </View>
@@ -274,7 +300,9 @@ const TodoListCategoryItem = ({ id_category, category_name, total_items, handleN
             <View className='' style={{
                 marginRight: 10
             }}>
-                <Material name='chevron-right' size={30} color={'#292828'} />
+                <Material name='chevron-right' size={30}
+                    color={scheme === 'light' ? '#292828' : 'white'}
+                />
             </View>
         </View>
     </TouchableOpacity>

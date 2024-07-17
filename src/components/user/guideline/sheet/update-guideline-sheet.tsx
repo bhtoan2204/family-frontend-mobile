@@ -3,12 +3,7 @@ import { View, Text, ScrollView, RefreshControl, Keyboard, Dimensions, Image, To
 import { COLORS } from 'src/constants'
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
-import RoomIcon from 'src/assets/images/household_assets/room.png';
-import ImageIcon from 'src/assets/images/household_assets/image.png';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import * as ImagePicker from 'expo-image-picker';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import HouseHoldService from 'src/services/apiclient/HouseHoldService';
 import { AppDispatch, RootState } from 'src/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { addRoom } from 'src/redux/slices/RoomSlice';
@@ -16,36 +11,30 @@ import { HouseHoldItemInterface } from 'src/interface/household/household_item';
 import * as Animatable from 'react-native-animatable';
 import CategoryIcon from 'src/assets/images/household_assets/category.png';
 
-import NewItemImageSheet from 'src/assets/images/household_assets/new_item_image_sheet.png'
-import Camera from 'src/assets/images/household_assets/Camera.png'
-import Ingredients from 'src/assets/images/household_assets/Ingredients.png'
-import OpenedFolder from 'src/assets/images/household_assets/OpenedFolder.png'
-import Room2 from 'src/assets/images/household_assets/Room_2.png'
 
-import { BlurView } from 'expo-blur';
-import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interface/shopping/shopping_list';
-import { addShoppingList, addShoppingListItem } from 'src/redux/slices/ShoppingListSlice';
-import EducationServices from 'src/services/apiclient/EducationService';
-import { addComponentScoreToSubject } from 'src/redux/slices/EducationSlice';
-import AddComponentScoreImage from 'src/assets/images/education_assets/add_component_score_img.png';
+import AddCourseImage from 'src/assets/images/education_assets/add_course_img.png';
+import { Subject } from 'src/interface/education/education';
+import { GuideLineService } from 'src/services/apiclient';
+import { addGuideline, updateGuidelineData, updateGuidelineTitleAndDescription } from 'src/redux/slices/GuidelineSlice';
 
 
 interface AddItemSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
-    id_education_progress: number;
     id_family: number;
-    id_subject: number;
+    id_item: number;
+    name: string;
+    description: string;
 }
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
-const AddComponentScoreSheet = ({
+const UpdateGuidelineSheet = ({
     bottomSheetRef,
-    id_education_progress,
     id_family,
-    id_subject
-
+    id_item,
+    name,
+    description
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
 
@@ -56,7 +45,11 @@ const AddComponentScoreSheet = ({
     const [errorText, setErrorText] = React.useState('')
     const [showError, setShowError] = React.useState(false)
 
-    const [inputName, setInputName] = React.useState('')
+    const [inputName, setInputName] = React.useState(name != "" ? name : '')
+    const [inputDescription, setInputDescription] = React.useState(
+        description != "" ? description : ''
+    )
+
 
     useEffect(() => {
         if (showError) {
@@ -86,47 +79,73 @@ const AddComponentScoreSheet = ({
                 }, 100)
             })
         )
-        console.log(id_subject
-            , id_education_progress
-            , id_family
-            , inputName
-            , 0)
-        // const res = await EducationServices.addComponentScore(
-        //     id_subject
-        //     , id_education_progress
-        //     , id_family
-        //     , inputName
-        //     , 0
-        // )
-        dispatch(addComponentScoreToSubject({
-            component_name: inputName,
-            // expected_score: null,
-            score: 0,
-            id_subject: id_subject,
-            id_family: id_family,
-            id_education_progress: id_education_progress,
 
-        }))
-        bottomSheetRef.current?.close()
-        // if (res) {
-        //     dispatch(addComponentScoreToSubject({
-        //         component_name: inputName,
-        //         // expected_score: null,
-        //         score: 0,
-        //         id_subject: id_subject,
-        //         id_family: id_family,
-        //         id_education_progress: id_education_progress,
-
-        //     }))
-        //     bottomSheetRef.current?.close()
-        // }
-        // else {
-        //     console.log("error")
-        //     bottomSheetRef.current?.close()
-        // }
+        try {
+            // const newGuildline = await GuideLineService.addGuildLine(id_family!, inputName, inputDescription)
+            // console.log(newGuildline)
+            // if (newGuildline) {
+            //     dispatch(addGuideline(newGuildline))
+            // }
+            dispatch(updateGuidelineTitleAndDescription({
+                id_guide_item: id_item,
+                title: inputName,
+                description: inputDescription
+            }))
+            bottomSheetRef.current?.close()
+        } catch (error) {
+            console.log(error)
+        }
     }
 
+    const buildInputName = () => {
+        return <BottomSheetTextInput
+            placeholder='Give your new guideline a name'
+            value={inputName}
+            onChangeText={(text) => {
+                setInputName(text)
+            }}
+            // className='rounded-lg'
+            style={{
+                backgroundColor: '#f5f5f5',
+                borderWidth: 1,
+                borderColor: '#DEDCDC',
+                borderRadius: 10,
+                marginVertical: 10,
+                paddingVertical: screenHeight * 0.02,
+                paddingHorizontal: screenWidth * 0.05,
+                marginHorizontal: screenWidth * 0.05,
+                // fontWeight: 'bold',
+                fontSize: 15,
+                color: '#b0b0b0'
+            }}
+        />
+    }
 
+    const buildInputDescription = () => {
+        return <BottomSheetTextInput
+            placeholder='Give your new guideline some description'
+            value={inputDescription}
+            onChangeText={(text) => {
+                setInputDescription(text)
+            }}
+            // className='rounded-lg'
+            style={{
+                backgroundColor: '#f5f5f5',
+                borderWidth: 1,
+                borderColor: '#DEDCDC',
+                borderRadius: 10,
+                marginVertical: 10,
+                paddingVertical: screenHeight * 0.02,
+                paddingHorizontal: screenWidth * 0.05,
+                marginHorizontal: screenWidth * 0.05,
+                // fontWeight: 'bold',
+                fontSize: 15,
+                color: '#b0b0b0'
+            }}
+        />
+
+
+    }
 
 
 
@@ -139,7 +158,7 @@ const AddComponentScoreSheet = ({
             enableDynamicSizing={true}
             // snapPoints={snapPoints}
             // handleComponent={null}
-            // handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
+            handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
             backdropComponent={renderBackdrop}
             keyboardBehavior='interactive'
             keyboardBlurBehavior='restore'
@@ -149,7 +168,11 @@ const AddComponentScoreSheet = ({
             onChange={(index) => {
                 console.log(index)
                 if (index == -1) {
-
+                    setInputName('')
+                    setInputDescription('')
+                } else {
+                    setInputName(name)
+                    setInputDescription(description)
                 }
             }}
         // keyboardBehavior="extend"
@@ -161,40 +184,26 @@ const AddComponentScoreSheet = ({
 
                     <View className='flex-1  mt-10'>
                         <View className='my-3 items-center'>
-                            <Image source={AddComponentScoreImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
+                            <Image source={AddCourseImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                         </View>
                         <View className=' items-center'>
                             <Text className='text-base font-semibold' style={{
                                 color: iOSGrayColors.systemGray6.accessibleDark
 
-                            }}>Add New Component Score</Text>
+                            }}>Update  Guideline</Text>
                             <Text className='text-sm my-3' style={{
                                 color: iOSGrayColors.systemGray6.accessibleDark
 
-                            }}>Give your new component score a name</Text>
+                            }}>Give your guideline a new name and a new description</Text>
                         </View>
-                        <BottomSheetTextInput
-                            placeholder='Name of the item'
-                            value={inputName}
-                            onChangeText={(text) => {
-                                setInputName(text)
-                            }}
-                            // className='rounded-lg'
-                            style={{
-                                backgroundColor: '#f5f5f5',
-                                borderWidth: 1,
-                                borderColor: '#DEDCDC',
-                                borderRadius: 10,
-                                marginVertical: 10,
-                                paddingVertical: screenHeight * 0.02,
-                                paddingHorizontal: screenWidth * 0.05,
-                                marginHorizontal: screenWidth * 0.05,
-                                // fontWeight: 'bold',
-                                fontSize: 15,
-                                color: '#b0b0b0'
-                            }}
-                        />
 
+                        {
+                            buildInputName()
+                        }
+
+                        {
+                            buildInputDescription()
+                        }
 
 
 
@@ -229,4 +238,4 @@ const AddComponentScoreSheet = ({
 }
 
 
-export default AddComponentScoreSheet
+export default UpdateGuidelineSheet

@@ -136,7 +136,7 @@ const AddItemSheet = ({
         } else {
             await addItem(shoppingList[0].id_list)
             bottomSheetRef.current?.close()
-
+            
         }
 
     }

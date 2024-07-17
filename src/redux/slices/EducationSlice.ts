@@ -133,6 +133,9 @@ const educationSlice = createSlice({
             component_name: action.payload.component_name,
             score: action.payload.score,
           };
+          if (state[index].subjects[subjectIndex].component_scores === null) {
+            state[index].subjects[subjectIndex].component_scores = [];
+          }
           state[index].subjects[subjectIndex].component_scores.push(
             newComponentScore,
           );
@@ -225,6 +228,62 @@ const educationSlice = createSlice({
         }
       }
     },
+    updateNameOfComponentScore(
+      state,
+      action: PayloadAction<{
+        id_subject: number;
+        id_education_progress: number;
+        index: number;
+        name: string;
+      }>,
+    ) {
+      const index = state.findIndex(
+        education =>
+          education.id_education_progress ===
+          action.payload.id_education_progress,
+      );
+      if (index !== -1) {
+        const subjectIndex = state[index].subjects.findIndex(
+          subject => subject.id_subject === action.payload.id_subject,
+        );
+        if (subjectIndex !== -1) {
+          state[index].subjects[subjectIndex].component_scores[
+            action.payload.index
+          ] = {
+            ...state[index].subjects[subjectIndex].component_scores[
+              action.payload.index
+            ],
+            component_name: action.payload.name,
+          };
+        }
+      }
+    },
+    deleteComponentScoreOfSubject(
+      state,
+      action: PayloadAction<{
+        id_subject: number;
+        id_education_progress: number;
+        index: number;
+      }>,
+    ) {
+      const index = state.findIndex(
+        education =>
+          education.id_education_progress ===
+          action.payload.id_education_progress,
+      );
+      if (index !== -1) {
+        const subjectIndex = state[index].subjects.findIndex(
+          subject => subject.id_subject === action.payload.id_subject,
+        );
+        if (subjectIndex !== -1) {
+          state[index].subjects[subjectIndex].component_scores = state[
+            index
+          ].subjects[subjectIndex].component_scores.filter(
+            (_, i) => i !== action.payload.index,
+          );
+        }
+      }
+    },
     // updateMidtermScoreOfSubject(state,action:PayloadAction){},
     clearScoreOfSubject(
       state,
@@ -283,6 +342,8 @@ export const {
   updateComponentScoreOfSubject,
   updateExpectedScoreOfSubject,
   clearScoreOfSubject,
+  updateNameOfComponentScore,
+  deleteComponentScoreOfSubject,
 } = educationSlice.actions;
 
 export default educationSlice.reducer;

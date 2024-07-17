@@ -64,7 +64,7 @@ const ShoppingListPickCategorySheet = ({
             keyboardBehavior="extend"
             keyboardBlurBehavior="restore"
             onChange={(index) => {
-                console.log(categories)
+                // console.log(categories)
                 if (index == -1) {
                     if (pickCategory === -1) {
                         setPickCategory(-1)
@@ -132,7 +132,6 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
     //     category_name: "",
     //     id_household_item_category: -1,
     // }
-    const newData = [data]
     const renderItem = (item: ShoppingListItemType, index: number) => {
         return (
             item.id_item_type == -1 ? <>

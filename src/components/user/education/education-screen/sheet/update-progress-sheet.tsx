@@ -26,7 +26,7 @@ import { BlurView } from 'expo-blur';
 import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interface/shopping/shopping_list';
 import { addShoppingList, addShoppingListItem } from 'src/redux/slices/ShoppingListSlice';
 import EducationServices from 'src/services/apiclient/EducationService';
-import { addComponentScoreToSubject, addEducation, addSubject } from 'src/redux/slices/EducationSlice';
+import { addComponentScoreToSubject, addEducation, addSubject, updateEducation } from 'src/redux/slices/EducationSlice';
 import AddProgressImage from 'src/assets/images/education_assets/add_progress_img.png';
 import { Education, Subject } from 'src/interface/education/education';
 import { Member } from 'src/interface/member/member';
@@ -35,21 +35,22 @@ import { Member } from 'src/interface/member/member';
 interface AddItemSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
     id_family: number;
-    members: Member[];
-    pickedIdUser: string;
-    setPickedIdUser: (id: string) => void;
-    pickMemberBottomSheetRef: React.RefObject<BottomSheet>
+    id_progress: number;
+    title: string;
+    progressNotes: string;
+    schoolInfo: string;
 }
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
-const AddProgressSheet = ({
+const UpdateProgressSheet = ({
     bottomSheetRef,
     id_family,
-    members,
-    pickMemberBottomSheetRef,
-    pickedIdUser,
+    id_progress,
+    title,
+    progressNotes,
+    schoolInfo
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
 
@@ -60,9 +61,9 @@ const AddProgressSheet = ({
     const [errorText, setErrorText] = React.useState('')
     const [showError, setShowError] = React.useState(false)
 
-    const [inputTitle, setInputTitle] = React.useState('')
-    const [inputProgressNotes, setInputProgressNotes] = React.useState('')
-    const [inputSchoolInfo, setInputSchoolInfo] = React.useState('')
+    const [inputTitle, setInputTitle] = React.useState(title != "" ? title : "")
+    const [inputProgressNotes, setInputProgressNotes] = React.useState(progressNotes != "" ? progressNotes : "")
+    const [inputSchoolInfo, setInputSchoolInfo] = React.useState(schoolInfo != "" ? schoolInfo : "")
     // const [pickedIdUser, setPickedIdUser] = React.useState<string>("")
 
     useEffect(() => {
@@ -97,14 +98,7 @@ const AddProgressSheet = ({
 
     }
 
-    const getMemberName = (id: string) => {
-        const memberData = members.find(member => member.id_user === id)
-        return memberData?.user.firstname + ' ' + memberData?.user.lastname
-    }
-    const getMemberAvatar = (id: string) => {
-        const memberData = members.find(member => member.id_user === id)
-        return memberData?.user.avatar
-    }
+
 
     const handleAdd = async () => {
         console.log('add')
@@ -117,34 +111,47 @@ const AddProgressSheet = ({
         //     id_household_item: Math.floor(Math.random() * 1000)
         // }
         // dispatch(addHouseholdItem(newHouseholdItem))
-        const memberData = members.find(member => member.id_user === pickedIdUser)
-        const res = await EducationServices.createEducation(
+        console.log(
+            id_progress,
             id_family!,
-            pickedIdUser,
+            inputTitle,
+            inputProgressNotes,
+            inputSchoolInfo
+        )
+        const res = await EducationServices.updateEducation(
+            id_progress,
+            id_family!,
             inputTitle,
             inputProgressNotes,
             inputSchoolInfo
         )
         if (res) {
-            const newEducation: Education = {
-                id_education_progress: res.id_education_progress,
+            // const newEducation: Education = {
+            //     id_education_progress: res.id_education_progress,
+            //     id_family: id_family!,
+            //     id_user: pickedIdUser,
+            //     created_at: res.created_at,
+            //     updated_at: res.updated_at,
+            //     title: res.title,
+            //     progress_notes: res.progress_notes,
+            //     school_info: res.school_info,
+            //     subjects: [],
+            //     user: {
+            //         avatar: memberData?.user.avatar || '',
+            //         birthdate: memberData?.user.birthdate || null,
+            //         firstname: memberData?.user.firstname || '',
+            //         lastname: memberData?.user.lastname || '',
+            //         genre: memberData?.user.genre || '',
+            //     }
+            // }
+            // dispatch(addEducation(newEducation))
+            dispatch(updateEducation({
+                id_education_progress: id_progress,
                 id_family: id_family!,
-                id_user: pickedIdUser,
-                created_at: res.created_at,
-                updated_at: res.updated_at,
-                title: res.title,
-                progress_notes: res.progress_notes,
-                school_info: res.school_info,
-                subjects: [],
-                user: {
-                    avatar: memberData?.user.avatar || '',
-                    birthdate: memberData?.user.birthdate || null,
-                    firstname: memberData?.user.firstname || '',
-                    lastname: memberData?.user.lastname || '',
-                    genre: memberData?.user.genre || '',
-                }
-            }
-            dispatch(addEducation(newEducation))
+                title: inputTitle,
+                progress_notes: inputProgressNotes,
+                school_info: inputSchoolInfo,
+            }))
             bottomSheetRef.current?.close()
         } else {
             console.log("error")
@@ -227,49 +234,7 @@ const AddProgressSheet = ({
 
     }
 
-    const buildPickMember = () => {
-        return <TouchableOpacity className=' bg-white  mt-3 justify-center rounded-lg  ' style={{
-            backgroundColor: '#f5f5f5',
-            borderWidth: 1,
-            borderColor: '#DEDCDC',
-            borderRadius: 10,
-            marginVertical: 10,
-            paddingVertical: screenHeight * 0.01,
-            paddingHorizontal: screenWidth * 0.05,
-            marginHorizontal: screenWidth * 0.05,
-        }} onPress={() => {
-            // pickCategorySheetRef.current?.expand()
-            // addRoomSheetRef.current?.expand()
-            pickMemberBottomSheetRef.current?.expand()
-        }}>
-            <View className='flex-row justify-between items-center'>
-                <View className='flex-row  items-center '>
-                    <Image source={
-                        pickedIdUser == "" ? OpenedFolder : { uri: getMemberAvatar(pickedIdUser) }
-                    } style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} />
-                    <Text className='pl-4' style={{
-                        color: "#b0b0b0",
-                        fontSize: 15,
-                        // fontWeight: 500
 
-                    }}>{
-                            pickedIdUser == "" ? 'Pick a category' : getMemberName(pickedIdUser)
-
-                        }</Text>
-                </View>
-                {/* <View className=''>
-                    <Text style={{
-                        color: pickedIdUser == "" ? "#b0b0b0" : iOSColors.systemBlue.defaultLight,
-                        fontSize: 15,
-
-                    }}>{
-                            pickedIdUser == "" ? 'Pick a category' : getMemberName(pickedIdUser)
-
-                        }</Text>
-                </View> */}
-            </View>
-        </TouchableOpacity>
-    }
 
     return (
         <BottomSheet
@@ -290,7 +255,14 @@ const AddProgressSheet = ({
             onChange={(index) => {
                 console.log(index)
                 if (index == -1) {
-
+                    setInputTitle("")
+                    setInputProgressNotes("")
+                    setInputSchoolInfo("")
+                }
+                else {
+                    setInputTitle(title)
+                    setInputProgressNotes(progressNotes)
+                    setInputSchoolInfo(schoolInfo)
                 }
             }}
         // keyboardBehavior="extend"
@@ -315,9 +287,7 @@ const AddProgressSheet = ({
                             }}>Give your education progress a name and some description</Text>
                         </View>
 
-                        {
-                            buildPickMember()
-                        }
+
                         {
                             buildInputTitle()
                         }
@@ -363,4 +333,4 @@ const AddProgressSheet = ({
 }
 
 
-export default AddProgressSheet
+export default UpdateProgressSheet

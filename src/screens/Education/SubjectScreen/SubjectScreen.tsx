@@ -44,6 +44,10 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
     }
 
     useEffect(() => {
+        console.log(subjectDetailData)
+    }, [])
+
+    useEffect(() => {
         const handleCalculateScore = () => {
             let totalScore = 0
             let totalExpectedScore = 0
@@ -93,6 +97,7 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
 
     if (!subjectDetailData) return
     <ActivityIndicator size='large' color={COLORS.AuroMetalSaurus} />
+
 
     return (
         <View className="flex-1 bg-[#F7F7F7]">
