@@ -98,14 +98,23 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
   const fetchMessages = useCallback(async () => {
     try {
       const response = await ChatServices.GetFamilyMessages({ id_family: LastMessageFamily.familyId, index: currentIndex });
-      if (response) {
-        const newMessages = response.map((message: any) => {
+      if (response.length > 0) {
+        const newMessages = response.map((message: Message) => {
           if (message.type === 'photo') {
             setImages(prevImages => [...prevImages, message.content]);
           }
-          return message;
+          return { ...message, timestamp: new Date(message.timestamp) };
+         
         });
-        setMessages(prevMessages => [...prevMessages, ...newMessages]);
+        
+        if (currentIndex === 0) {
+          setMessages(newMessages);
+        } else {
+          setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+        }
+        
+        setCurrentIndex(currentIndex + 1);
+        console.log(currentIndex)
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -310,15 +319,16 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
   const onMessagePress = (item: Message) => {
     if( item.type === 'photo'){
 
-    const itemIndex = messages.findIndex(
-      message =>
-        message.senderId === item.senderId && message.content === item.content,
+    const itemIndex = images.findIndex(
+      iamge =>
+        iamge === item.content,
     );
-  
-    setSelectedImageIndex(itemIndex );
+    console.log(itemIndex)
+    setSelectedImageIndex(itemIndex);
   }
     setSelectedMessageId(prevId => (prevId === item._id ? null : item._id));
   };
+
 
   return (
 <KeyboardAvoidingView

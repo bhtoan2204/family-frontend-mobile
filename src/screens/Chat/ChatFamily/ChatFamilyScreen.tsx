@@ -308,12 +308,12 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   const onMessagePress = (item: Message) => {
     if( item.type === 'photo'){
 
-    const itemIndex = messages.findIndex(
-      message =>
-        message.senderId === item.senderId && message.content === item.content,
+    const itemIndex = images.findIndex(
+      iamge =>
+        iamge === item.content,
     );
-  
-    setSelectedImageIndex(itemIndex );
+    console.log(itemIndex)
+    setSelectedImageIndex(itemIndex);
   }
     setSelectedMessageId(prevId => (prevId === item._id ? null : item._id));
   };

@@ -255,18 +255,18 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
     setSelectedImageIndex(null);
   };
 
-  const handlePressMessage = (item: Message) => {
+  const onMessagePress = (item: Message) => {
     if( item.type === 'photo'){
 
-    const itemIndex = messages.findIndex(
-      message =>
-        message.senderId === item.senderId && message.content === item.content,
-    );
-  
-    setSelectedImageIndex(itemIndex );
-  }
-    setSelectedMessageId(prevId => (prevId === item._id ? null : item._id));
-  };
+      const itemIndex = images.findIndex(
+        iamge =>
+          iamge === item.content,
+      );
+      console.log(itemIndex)
+      setSelectedImageIndex(itemIndex);
+    }
+      setSelectedMessageId(prevId => (prevId === item._id ? null : item._id));
+    };
 
 
 
@@ -435,7 +435,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
                <MessageItem
                  item={item}
                  profileId={profile.id_user}
-                 onMessagePress={handlePressMessage}
+                 onMessagePress={onMessagePress}
                  isSelected={selectedMessageId === item._id}
                  formatDateTime={formatDateTime}
                />
