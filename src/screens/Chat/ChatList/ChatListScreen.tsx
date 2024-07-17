@@ -97,21 +97,36 @@ const ChatListScreen = ({
   const fetchData = async () => {
     try {
       setLoading(true);
+      if (currentPage === 0) {
+        setChats([]);
+      }
       const response = await ChatServices.GetUserChat({ index: currentPage });
   
       if (Array.isArray(response)) {
         if (response.length > 0) {
-          const formattedResponse = response.map((item) => ({
+          response.sort((a, b) => new Date(b.latestMessage.timestamp) - new Date(a.latestMessage.timestamp));
+  
+          const uniqueMessages = [];
+          const seenPairs = new Set();
+  
+          response.forEach((item) => {
+            const pair = `${item.latestMessage.senderId}-${item.latestMessage.receiverId}`;
+            if (!seenPairs.has(pair)) {
+              seenPairs.add(pair);
+              uniqueMessages.push(item);
+            }
+          });
+  
+          const formattedResponse = uniqueMessages.map((item) => ({
             ...item,
             latestMessage: {
               ...item.latestMessage,
               timestamp: item.latestMessage.timestamp ? new Date(item.latestMessage.timestamp) : null,
             },
           }));
+  
           setChats((prevChats) => [...prevChats, ...formattedResponse]);
           setCurrentPage(currentPage + 1);
-        } else {
-          setCurrentPage(currentPage);
         }
       } else if (typeof response === 'object' && response.latestMessage) {
         const formattedResponse = {
@@ -122,7 +137,6 @@ const ChatListScreen = ({
           },
         };
         setChats((prevChats) => [...prevChats, formattedResponse]);
-        setCurrentPage(currentPage + 1);
       } else {
         console.error('Unexpected response format:', response);
         Alert.alert('Error', 'Unexpected response format. Please try again.');
@@ -135,6 +149,7 @@ const ChatListScreen = ({
       setLoading(false);
     }
   };
+  
   
   
   const loadMoreMessages = () => {
@@ -168,44 +183,10 @@ const ChatListScreen = ({
     setSelectedButton('Channels');
   };
 
-  // const renderAllUser = () => (
-  //   <View style={styles.userHeaderContainer}>
-  //     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-  //       {users.map((user, index) => (
-  //         <TouchableOpacity
-  //           key={index}
-  //           onPress={() => handlePressChat(user.id_user)}>
-  //           <View
-  //             style={[
-  //               styles.userContainer,
-  //               !user.avatar && styles.userContainerWithoutAvatar,
-  //             ]}>
-  //             {user.avatar ? (
-  //               <Image source={{uri: user.avatar}} style={styles.avatar} />
-  //             ) : (
-  //               <View style={styles.avatarPlaceholder}>
-  //                 <Text
-  //                   style={
-  //                     styles.avatarText
-  //                   }>{`${user.firstname.charAt(0)}${user.lastname.charAt(0)}`}</Text>
-  //               </View>
-  //             )}
-  //             {/* {user.isActive && <View style={styles.activeDot} />}  Chỉ hiển thị khi user.isActive là true */}
-  //             <View style={styles.activeDot} />
-  //             <Text
-  //               style={
-  //                 styles.userName
-  //               }>{`${user.firstname} ${user.lastname}`}</Text>
-  //           </View>
-  //         </TouchableOpacity>
-  //       ))}
-  //     </ScrollView>
-  //   </View>
-  // );
-  const onDelete = async (event: any) => {
+  const onDelete = async (message: LastMessage) => {
     Alert.alert(
       'Confirm Delete',
-      'Are you sure you want to delete this event?',
+      'Are you sure you want to delete this message?',
       [
         {
           text: 'Cancel',
@@ -215,14 +196,14 @@ const ChatListScreen = ({
           text: 'Delete',
           onPress: async () => {
             try {
-              //await CalendarServices.DeleteEvent(event.id_calendar);
-              Alert.alert('Success', 'Event has been deleted successfully.');
+              await ChatServices.removeMessage(receiverId, message._id)
+              Alert.alert('Success', 'Message has been deleted successfully.');
               //await handleGetCalendar();
             } catch (error) {
               console.error('Error deleting event:', error);
               Alert.alert(
                 'Error',
-                'An error occurred while deleting the event.',
+                'An error occurred while deleting the message.',
               );
             }
           },
@@ -286,7 +267,7 @@ const ChatListScreen = ({
                   !item.latestMessage.isRead && styles.boldText,
                 ]}
               >
-                {item.latestMessage.senderId === profile.id_user ? 'You: ' : item.latestMessage.receiver.firstname}
+                {item.latestMessage.senderId === profile.id_user ? 'You: ' : item.latestMessage.receiver.firstname + ': '}
                 {item.latestMessage.content}
               </Text>
             )}
