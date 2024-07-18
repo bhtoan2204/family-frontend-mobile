@@ -22,6 +22,7 @@ import { selectFamilies, setSelectedFamily } from 'src/redux/slices/FamilySlice'
 import moment from 'moment';
 import { AppDispatch } from 'src/redux/store';
 import { COLORS } from 'src/constants';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
   const profile = useSelector(selectProfile);
@@ -31,7 +32,8 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
   const itemsPerPage = 10;
   const families = useSelector(selectFamilies);
   const dispatch = useDispatch<AppDispatch>();
-  const [modalVisible, setModalVisible] = useState(false); // State để điều khiển hiển thị của modal
+  const [modalVisible, setModalVisible] = useState(false); 
+  const translate = useSelector(getTranslate);
 
   const handleViewAllPackage = () => {
     const id_family = undefined;
@@ -96,9 +98,9 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
         </View>
         <View style={styles.familyInfo}>
           <Text style={styles.familyName}>{family.name}</Text>
-          <Text style={styles.familyQuantity}>Members: {family.quantity}</Text>
+          <Text style={styles.familyQuantity}>{translate('FAMILY_MEMBERS')}: {family.quantity}</Text>
           <View style={styles.expiredAtContainer}>
-            <Text style={styles.familyQuantity}>Expired at: </Text>
+            <Text style={styles.familyQuantity}>{translate('EXPIRED_AT')}: </Text>
             <Text style={[styles.familyQuantity, styles.expiredAtText]}>
               {moment(new Date(family.expired_at)).format('DD/MM/YYYY')}
             </Text>
@@ -112,7 +114,7 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
             <TouchableOpacity
               style={[styles.buyServiceButton, styles.button]}
               onPress={() => handleViewService()}>
-              <Text style={styles.buyServiceButtonText}>Buy Service</Text>
+              <Text style={styles.buyServiceButtonText}>{translate('BUY_SERVICE')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -127,7 +129,7 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
             <Icon name="arrow-back" size={30} />
           </TouchableOpacity>
-          <Text style={styles.headerText}>Family Management</Text>
+          <Text style={styles.headerText}>{translate('FAMILY_MANAGEMENT')}</Text>
           <View style={{ flex: 1 }} />
         </View>
 
@@ -145,16 +147,16 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
           </View>
           <View style={styles.container}>
 
-          <Text style={styles.familyListTitle}>Your Families</Text>
+          <Text style={styles.familyListTitle}>{translate('YOUR_FAMILIES')}</Text>
           {renderFamilyCards()}
         </View>
       </ScrollView>
 
       <Modal
-        animationType="slide" // Slide từ dưới lên
+        animationType="slide" 
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}>
-        <TouchableOpacity // TouchableOpacity xung quanh modal để tắt modal khi bấm vào nền
+        <TouchableOpacity 
           style={styles.modalBackground}
           activeOpacity={1}
           onPress={() => setModalVisible(false)}>
@@ -162,7 +164,6 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
             <TouchableOpacity
               style={styles.modalOption}
               onPress={() => {
-                // Thực hiện hành động khi chọn option trong modal
                 setModalVisible(false);
               }}>
               <Text style={styles.modalOptionText}>Option 1</Text>
@@ -170,7 +171,6 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
             <TouchableOpacity
               style={styles.modalOption}
               onPress={() => {
-                // Thực hiện hành động khi chọn option trong modal
                 setModalVisible(false);
               }}>
               <Text style={styles.modalOptionText}>Option 2</Text>
@@ -178,7 +178,6 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
             <TouchableOpacity
               style={styles.modalOption}
               onPress={() => {
-                // Thực hiện hành động khi chọn option trong modal
                 setModalVisible(false);
               }}>
               <Text style={styles.modalOptionText}>Option 3</Text>

@@ -1,4 +1,3 @@
-
 import { createSlice } from '@reduxjs/toolkit';
 import { createSelector } from 'reselect';
 import { I18n } from 'i18n-js';
@@ -11,10 +10,11 @@ const i18n = new I18n({
   en: enTranslations,
   vi: viTranslations,
 });
-i18n.locale = 'en';
+i18n.defaultLocale = 'en';
+i18n.locale = Localization.locale || 'en';
 
 const initialState = {
-  locale: Localization.locale || 'en',
+  locale: 'en',
 };
 
 const localizationSlice = createSlice({
@@ -30,13 +30,14 @@ const localizationSlice = createSlice({
 
 export const { setLocale } = localizationSlice.actions;
 
-export const selectLocale = (state : RootState) => state.localization.locale;
-
-export const getLocale = (state: RootState) => state.localization.locale;
+export const selectLocale = (state: RootState) => state.localization.locale;
 
 export const getTranslate = createSelector(
-  [getLocale],
-  (locale) => (key) => i18n.t(key, { locale })
+  [selectLocale],
+  (locale) => (key) => {
+    i18n.locale = locale; 
+    return i18n.t(key);
+  }
 );
 
 export default localizationSlice.reducer;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {SafeAreaView, View, Image, Text, TouchableOpacity} from 'react-native';
 import styles from './styles';
 import {
@@ -6,12 +6,13 @@ import {
   SignupScreenProps,
 } from 'src/navigation/NavigationTypes';
 import Notification from '../Notifications';
-import { getTranslate } from 'src/redux/slices/languageSlice';
+import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
 import { useSelector } from 'react-redux';
 type CombinedScreenProps = SignupScreenProps & LoginScreenProps;
 
 const WelcomeScreen = ({navigation}: CombinedScreenProps) => {
   const translate=useSelector(getTranslate);
+ 
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -26,18 +27,18 @@ const WelcomeScreen = ({navigation}: CombinedScreenProps) => {
           style={styles.textLogo}
         />
         <Text style={styles.welcomeText}>
-          {translate('Intro')};
+          {translate('Intro')}
         </Text>
         <View style={{marginTop: 90}}>
           <TouchableOpacity
             style={styles.buttonLogin}
             onPress={() => navigation.navigate('LoginScreen')}>
-            <Text style={styles.btnLogin}>LOGIN</Text>
+            <Text style={styles.btnLogin}>{translate('Login')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.buttonSignUp}
             onPress={() => navigation.navigate('SignupScreen')}>
-            <Text style={styles.btnSignUp}>SIGN UP</Text>
+            <Text style={styles.btnSignUp}>{translate('Sign up')}</Text>
           </TouchableOpacity>
         </View>
       </View>

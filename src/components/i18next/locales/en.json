@@ -1,6 +1,6 @@
 {
-    "Login" : "Login",
-    "Sign up": "Sign up",
+    "Login" : "LOGIN",
+    "Sign up": "SIGN UP",
     "Intro" : "More than just an app, it's a journey",
     "welcome": "Welcome",
     "homeTab": "Home",
@@ -45,5 +45,20 @@
     "FeedbackQuestion" : "How was your experience?",
     "FeedbackInput": "Write your feedback here...",
     "SubmitFeedback" :"Submit feedback",
+    "FORGOT_PASSWORD": "Forget your Password?",
+    "Login_or": "or",
+    "DONT_HAVE_ACCOUNT": "Don't have an account?",
+    "INVALID_EMAIL": "Invalid email address",
+    "EMAIL_REQUIRED": "Email address is required",
+    "INVALID_PASSWORD": "Password must be at least 6 characters long",
+    "PASSWORD_REQUIRED": "Password is required",
+    "EMAIL_PLACEHOLDER" : "Enter your email address",
+    "PASSWORD_PLACEHOLDER": "Enter your password",
+    "FAMILY_MANAGEMENT": "Family management",
+    "YOUR_FAMILIES": "Your families",
+    "BUY_SERVICE" : "Buy service",
+    "FAMILY_MEMBERS": "Số thành viên",
+    "EXPIRED_AT": "Hết hạn vào"
+    
   }
   
