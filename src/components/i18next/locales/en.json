@@ -58,7 +58,19 @@
     "YOUR_FAMILIES": "Your families",
     "BUY_SERVICE" : "Buy service",
     "FAMILY_MEMBERS": "Số thành viên",
-    "EXPIRED_AT": "Hết hạn vào"
+    "EXPIRED_AT": "Expired at",
+    "BUY_NOW": "Buy now",
+    "SERVICE_TITLE": "Choose the service",
+    "SEARCH": "Search...",
+    "PACKAGE_TITLE" : "Choose the package",
+    "PACKAGE_REGISTER": "Register",
+    "Receipt" : "Receipt",
+    "Transaction details" : "Transaction details",
+    "Date": "Date",
+    "Bill owner": "Bill owner",
+    "Phone": "Phone",
+    "Choose Payment Method": "Choose Payment Method",
+    "Payment" : "Payment",
     
   }
   

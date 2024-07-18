@@ -346,18 +346,22 @@ export type FamilyStackParamList = {
 
 export type PackStackParamList = {
   ViewAllPurchased: undefined;
-  ViewAllPackage: undefined;
+  ViewAllPackage: {
+    id_family: number | null;
+  };
   ViewAllService: undefined;
   
   BankInfoScreen: {
-    id_family: number | undefined;
+    id_family: number | null;
     id_package: number | undefined;
     bankCode: string | undefined;
     amount: number | undefined;
     language: 'vn' | undefined;
     method: string | undefined;
   };
-  OrderDetailScreen: undefined;
+  OrderDetailScreen: {
+    id_family: number | null;
+  };
   ZaloPayScreen: undefined;
   ComboScreen: undefined;
 };

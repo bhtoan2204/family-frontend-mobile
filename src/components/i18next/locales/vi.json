@@ -58,5 +58,18 @@
   "YOUR_FAMILIES": "Gia đình của bạn",
   "BUY_SERVICE": "Mua dịch vụ",
   "FAMILY_MEMBERS": "Số thành viên",
-  "EXPIRED_AT": "Hết hạn vào"
+  "EXPIRED_AT": "Hết hạn vào",
+  "BUY_NOW": "Mua ngay",
+  "SERVICE_TITLE": "Chọn dịch vụ",
+  "SEARCH" : "Tìm kiếm...",
+  "PACKAGE_TITLE": "Chọn gói",
+  "PACKAGE_REGISTER": "Đăng ký",
+  "Receipt" : "Hóa đơn",
+  "Transaction details": "Chi tiết giao dịch",
+  "Date": "Ngày",
+  "Bill owner": "Chủ hóa đơn",
+  "Phone" : "Số điện thoại",
+  "Choose Payment Method" : "Chọn hình thức thanh toán",
+  "Payment" : "Thanh toán",
+
 }

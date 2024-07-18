@@ -23,6 +23,7 @@ import {Avatar} from 'react-native-elements';
 import {Service} from 'src/interface/package/mainPackage';
 import {TEXTS} from 'src/constants';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
   const [selectedService, setSelectedService] = useState<null | Service>(null);
@@ -35,6 +36,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
   const [purchasedServices, setPurchasedServices] = useState<number[]>([]);
   const [serviceFamily, setServiceFamily] = useState<Service[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const translate = useSelector(getTranslate);
 
   const handleGetService = async () => {
     try {
@@ -112,7 +114,6 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="gray" />
-          <Text>Loading...</Text>
         </View>
       </SafeAreaView>
     );
@@ -128,10 +129,10 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
         </View>
         <View style={styles.searchContainer}>
           <Icon name="search" size={20} color="#ccc" style={{marginRight: 5}} />
-          <TextInput style={styles.headerSearchInput} placeholder="Search..." />
+          <TextInput style={styles.headerSearchInput} placeholder={translate('SEARCH')}/>
         </View>
 
-        <Text style={styles.yourFamily}>Your families</Text>
+        <Text style={styles.yourFamily}>{translate('YOUR_FAMILIES')}</Text>
         <View style={{flexDirection: 'row'}}>
           <View style={{alignItems: 'center'}}>
         
@@ -172,7 +173,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
         </View>
 
         <View style={styles.serviceList}>
-          <Text style={styles.title}>{TEXTS.SERVICE_TITLE}</Text>
+          <Text style={styles.title}>{translate('SERVICE_TITLE')}</Text>
           {service.map((pkg, index) => (
             <TouchableOpacity
               key={pkg.id_extra_package}
@@ -204,14 +205,14 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
                   <TouchableOpacity
                     style={styles.purchaseButton}
                     onPress={() => setSelectedService(pkg)}>
-                    <Text style={styles.purchaseButtonText}>Buy Now</Text>
+                    <Text style={styles.purchaseButtonText}>{translate('BUY_NOW')}</Text>
                     <FeatherIcon color="white" name="shopping-cart" size={17} />
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity
                     style={styles.purchaseButton}
                     onPress={() => setSelectedService(pkg)}>
-                    <Text style={styles.purchaseButtonText}>Buy Now</Text>
+                    <Text style={styles.purchaseButtonText}>{translate('BUY_NOW')}</Text>
                     <FeatherIcon color="white" name="shopping-cart" size={17} />
                   </TouchableOpacity>
                 )}

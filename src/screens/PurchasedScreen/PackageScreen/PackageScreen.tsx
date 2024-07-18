@@ -14,18 +14,21 @@ import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Package } from 'src/interface/package/mainPackage';
 import { setPackage } from 'src/redux/slices/PackageSlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 
 const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
   const [value, setValue] = React.useState(0);
+  const {id_family} = route.params;
   const [selectedPackage, setSelectedPackage] = useState<null | Package>(null);
   const [selectedMount, setSelectedMount] = useState<number>(0);
   const [packages, setPackages] = useState<Package[]>([]);
   const profile = useSelector(selectProfile);
   const dispatch = useDispatch();
+  const translate = useSelector(getTranslate);
   const handleSelectPackage = (pkg: Package) => {
     dispatch(setPackage(pkg));
-    navigation.navigate('OrderDetailScreen');
+    navigation.navigate('OrderDetailScreen', {id_family});
   };
 
   const handleGetPackages = async () => {
@@ -51,7 +54,7 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
         </View>
 
         <View style={styles.container}>
-          <Text style={styles.title}>{TEXTS.PACKAGE_TITLE}</Text>
+          <Text style={styles.title}>{translate('PACKAGE_TITLE')}</Text>
           {packages.map((pkg, index) => {
             const isActive = value === index;
             return (
@@ -90,7 +93,7 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
           disabled={!selectedPackage}
           onPress={() => selectedPackage && handleSelectPackage(selectedPackage)}
         >
-          <Text style={styles.registerButtonText}>{TEXTS.PACKAGE_REGISTER}</Text>
+          <Text style={styles.registerButtonText}>{translate('PACKAGE_REGISTER')}</Text>
         </TouchableOpacity>
         </View>
       </ScrollView>
