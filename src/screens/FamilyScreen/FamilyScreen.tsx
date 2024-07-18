@@ -35,11 +35,12 @@ import styles from './styles';
 import {Family} from 'src/interface/family/family';
 import {Member} from 'src/interface/member/member';
 import * as ImagePicker from 'expo-image-picker';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const cards = [
   {
     id: 1,
-    title: 'Members',
+    title: 'Member',
     detail: 'Manage family members.',
     icon: require('../../assets/icons/family-member.png'),
   },
@@ -69,13 +70,13 @@ const cards = [
   },
   {
     id: 7,
-    title: 'Check List',
+    title: 'Checklist',
     detail: 'Manage family task lists.',
     icon: require('../../assets/icons/checklist.png'),
   },
   {
     id: 8,
-    title: 'Shopping List',
+    title: 'ShoppingList',
     detail: 'Organize and track groceries.',
     icon: require('../../assets/icons/shopping-list.png'),
   },
@@ -95,6 +96,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
   const screenHeight = Dimensions.get('screen').height;
   const secondBottomSheetRef = useRef(null);
+  const translate = useSelector(getTranslate);
 
   const source =
     selectedFamily?.avatar && selectedFamily.avatar !== '[NULL]'
@@ -413,7 +415,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
               key={card.id}
               onPress={() => handlePress(card.id)}
               style={styles.card}>
-              <Text style={styles.title}>{card.title}</Text>
+              <Text style={styles.title}>{translate(card.title)}</Text>
               <Text style={styles.detail}>{card.detail}</Text>
               <Image source={card.icon} style={styles.icon} />
             </TouchableOpacity>

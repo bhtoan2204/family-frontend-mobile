@@ -1,4 +1,7 @@
 {
+    "Login" : "Đăng nhập",
+    "Sign up": "Đăng ký",
+    "Intro" : "Không chỉ là một ứng dụng, đó là một cuộc hành trình",
     "welcome": "Xin chào",
     "homeTab": "Trang chủ",
     "chatTab": "Trò chuyện",
@@ -23,6 +26,24 @@
     "Newspaper": "Đọc báo",
     "Guideline": "Hướng dẫn",
     "Language" : "Ngôn ngữ",
-    "Theme": "Giao diện"
-  }
+    "Theme": "Giao diện",
+    "Report": "Báo cáo",
+    "Expense": "Chi tiêu",
+    "Income": "Thu nhập",
+    "Member": "Thành viên",
+    "Education": "Giáo dục",
+    "Calendar": "Lịch",
+    "Household" : "Vật dụng trong gia đình",
+    "Checklist": "Ghi chú",
+    "ShoppingList": "Danh sách mua sắm",
+    "ExpenseAnalysis": "Phân tích chi tiêu",
+    "IncomeAnalysis": "Phân tích thu nhập",
+    "ExpensevsIncome" : "Chi tiêu và thu nhập",
+    "Asset": "Tài sản",
+    "AssetDetail1": "Theo dõi tài sản của bạn",
+    "YourFeedback": "Phản hồi của bạn", 
+    "FeedbackQuestion" : "Trải nghiệm của bạn thể nào?",
+    "FeedbackInput": "Viết phản hồi của bạn ở đây...",
+    "SubmitFeedback": "Gửi phản hồi"
+  } 
   

@@ -1,4 +1,3 @@
-// languageSlice.js
 
 import { createSlice } from '@reduxjs/toolkit';
 import { createSelector } from 'reselect';
@@ -12,6 +11,7 @@ const i18n = new I18n({
   en: enTranslations,
   vi: viTranslations,
 });
+i18n.locale = 'en';
 
 const initialState = {
   locale: Localization.locale || 'en',

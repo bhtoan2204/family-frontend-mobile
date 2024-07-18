@@ -11,6 +11,7 @@ import {getSumIncome, setSelectedOptionIncome, setSumIncome} from 'src/redux/sli
 import moment from 'moment';
 import { ExpenseServices, IncomeServices } from 'src/services/apiclient';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [dateTo, setDateTo] = useState(new Date());
+  const translate = useSelector(getTranslate);
   const [dateFrom, setDateFrom] = useState(() => {
     const date = new Date(dateTo);
     date.setDate(date.getDate() - 30);
@@ -354,11 +356,10 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
             width: '80%',
             marginBottom: 15,
           }}>
-          Keep track of your assets
+          
+          {translate('AssetDetail1')}
         </Text>
-        <Text style={{color: '#CCCCCC'}}>
-          Economize your personal assets easily and safely.
-        </Text>
+
       </View>
       <Image
         source={require('../../assets/images/asset-bg.png')}
@@ -507,7 +508,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
                 fontWeight: '700',
                 fontSize: 14,
               }}>
-              Expense Analysis
+              {translate('ExpenseAnalysis')}
             </Text>
           </TouchableOpacity>
 
@@ -533,7 +534,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
                 fontWeight: '700',
                 fontSize: 14,
               }}>
-              Income Analysis
+              {translate('IncomeAnalysis')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -565,7 +566,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
                 fontWeight: '700',
                 fontSize: 14,
               }}>
-              Expense & Income
+              {translate('ExpensevsIncome')}
             </Text>
           </TouchableOpacity>
 
@@ -590,7 +591,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
                 fontWeight: '700',
                 fontSize: 14,
               }}>
-              Assets
+              {translate('Asset')}
             </Text>
           </TouchableOpacity>
         </View>

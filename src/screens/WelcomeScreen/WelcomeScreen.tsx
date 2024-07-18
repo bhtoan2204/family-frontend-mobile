@@ -6,9 +6,12 @@ import {
   SignupScreenProps,
 } from 'src/navigation/NavigationTypes';
 import Notification from '../Notifications';
+import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useSelector } from 'react-redux';
 type CombinedScreenProps = SignupScreenProps & LoginScreenProps;
 
 const WelcomeScreen = ({navigation}: CombinedScreenProps) => {
+  const translate=useSelector(getTranslate);
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -23,7 +26,7 @@ const WelcomeScreen = ({navigation}: CombinedScreenProps) => {
           style={styles.textLogo}
         />
         <Text style={styles.welcomeText}>
-          More than just an app, it's a journey
+          {translate('Intro')};
         </Text>
         <View style={{marginTop: 90}}>
           <TouchableOpacity

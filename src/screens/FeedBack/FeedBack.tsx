@@ -5,12 +5,14 @@ import { useNavigation } from '@react-navigation/native';
 import styles from './styles';
 import { COLORS } from 'src/constants';
 import { ProfileServices } from 'src/services/apiclient';
+import { useSelector } from 'react-redux';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const FeedbackScreen = () => {
   const [rating, setRating] = useState<number>(0);
   const [feedback, setFeedback] = useState<string>('');
   const navigation = useNavigation();
-
+  const translate = useSelector(getTranslate);
   const handleRating = (rate: React.SetStateAction<number>) => {
     setRating(rate);
   };
@@ -44,8 +46,8 @@ const FeedbackScreen = () => {
           <Ionicons name="arrow-back" size={32} color={COLORS.black} />
         </TouchableOpacity>
         <Ionicons name="chatbubble-ellipses-outline" size={64} color={COLORS.BlueLight} />
-        <Text style={styles.title}>Your Feedback</Text>
-        <Text style={styles.subtitle}>How was your experience?</Text>
+        <Text style={styles.title}>{translate('YourFeedback')}</Text>
+        <Text style={styles.subtitle}>{translate('FeedbackQuestion')}</Text>
         <View style={styles.ratingContainer}>
           {Array.from({ length: 5 }, (_, index) => (
             <TouchableOpacity key={index} onPress={() => handleRating(index + 1)}>
@@ -59,13 +61,13 @@ const FeedbackScreen = () => {
         </View>
         <TextInput
           style={styles.feedbackInput}
-          placeholder="Write your feedback here..."
+          placeholder={translate('FeedbackInput')}
           multiline
           value={feedback}
           onChangeText={setFeedback}
         />
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Submit Feedback</Text>
+          <Text style={styles.submitButtonText}>{translate('SubmitFeedback')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
