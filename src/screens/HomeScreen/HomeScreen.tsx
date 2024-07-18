@@ -40,6 +40,7 @@ import {
 import {Family} from 'src/interface/family/family';
 import {selectDarkMode} from 'src/redux/slices/ThemeSlice';
 import {setFamilyServices} from 'src/redux/slices/ServiceSlice';
+import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
 
 const icons = {
   bundle,
@@ -82,6 +83,7 @@ const HomeScreen = ({
   const profile = useSelector((state: RootState) => state.profile.profile);
   const isDarkMode = useSelector(selectDarkMode);
   const screenWidth = Dimensions.get('screen').width;
+  const locale = useSelector(selectLocale);
 
   const source =
     profile.avatar && profile.avatar !== '[NULL]'
@@ -96,6 +98,7 @@ const HomeScreen = ({
     extrapolate: 'clamp',
   });
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
+  const translate = useSelector(getTranslate);
 
   const handleScroll = (event: {
     nativeEvent: {layoutMeasurement: any; contentOffset: any};
@@ -245,35 +248,36 @@ const HomeScreen = ({
   const data: Item[] = [
     {
       icon: 'bundle',
-      label: 'Bundles',
+      label: translate('Bundles'),
       onPress: () => {
         handlePackage();
       },
     },
     {
       icon: 'family',
-      label: 'Family',
+      label: translate('Family'),
       onPress: () => {
         handleFamily();
       },
     },
     {
       icon: 'feedback',
-      label: 'Feedback',
+      label: translate('Feedback'),
       onPress: () => {
         navigation.navigate('AuthStack', {screen: 'Feedback'});
       },
     },
     {
       icon: 'news',
-      label: 'Newspaper',
+      label: translate('Newspaper'),
       onPress: () => {
         handleNavigateNews();
       },
     },
     {
+    
       icon: 'guideline',
-      label: 'Guideline',
+      label: translate('Guideline'),
       onPress: () => {
         navigation.navigate('FamilyStack', {screen: 'GuidelinePublic'});
       },
@@ -281,14 +285,14 @@ const HomeScreen = ({
 
     {
       icon: 'language',
-      label: 'Language',
+      label: translate('Language'),
       onPress: () => {
-        console.log('Language pressed');
+         navigation.navigate('FamilyStack', {screen: 'LanguageSelector'});
       },
     },
     {
       icon: 'theme',
-      label: 'Theme',
+      label: translate('Theme'),
       // onPress: () => {
       //   console.log('Theme pressed');
       // },
@@ -315,7 +319,7 @@ const HomeScreen = ({
               marginTop: 40,
             }}>
             <View style={{flexDirection: 'column', paddingLeft: 20}}>
-              <Text style={{color: COLORS.white, fontSize: 30}}>Welcome</Text>
+              <Text style={{color: COLORS.white, fontSize: 30}}>{translate('welcome')}</Text>
               <Text
                 style={{
                   color: COLORS.white,

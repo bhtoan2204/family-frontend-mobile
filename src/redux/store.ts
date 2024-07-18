@@ -28,6 +28,7 @@ import categorySlice from './slices/CategorySlice';
 import HouseHoldRefSlice from './slices/HouseHoldRefSlice';
 import TodoListSlice from './slices/TodoListSlice';
 import familyServiceReducer from './slices/ServiceSlice';
+import localizationReducer from './slices/languageSlice'
 
 export const store = configureStore({
   reducer: {
@@ -35,7 +36,7 @@ export const store = configureStore({
     family: familyReducer,
     theme: themeReducer,
     familyService: familyServiceReducer,
-
+    localization: localizationReducer,
     // checklist: checkListReducer,
     shoppinglist: shoppingListSlice,
     todoList: TodoListSlice,

@@ -30,6 +30,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLastMessage, setUserMessage } from 'src/redux/slices/MessageUser';
 import { setFamilyLastMessage } from 'src/redux/slices/MessageFamily';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
+
+
 const ChatListScreen = ({
   navigation,
 }: PurchasedScreenProps & ViewAllFamilyScreenProps) => {

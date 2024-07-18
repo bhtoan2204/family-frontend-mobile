@@ -13,6 +13,7 @@ import {
   BottomSheetView,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
+
 const App: React.FC = () => {
   useEffect(() => {
     connectSocket();

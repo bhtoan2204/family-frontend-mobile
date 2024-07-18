@@ -1,0 +1,21 @@
+{
+    "welcome": "Welcome",
+    "homeTab": "Home",
+    "chatTab": "Chat",
+    "notificationTab": "Notification",
+    "profileTab": "Profile",
+    "changePassword": "Change Password",
+    "editProfile": "Edit Profile",
+    "profile": "Profile",
+    "general": "General",
+    "edit_profile": "Edit Profile",
+    "change_profile_picture": "Change profile picture, number, E-mail, etc.",
+    "change_password": "Change Password",
+    "update_security": "Update and strengthen account security",
+    "preferences": "Preferences",
+    "feedback": "Feedback",
+    "provide_feedback": "Provide us with your valuable feedback",
+    "log_out": "Log Out",
+    "securely_log_out": "Securely log out of Account"
+  }
+  

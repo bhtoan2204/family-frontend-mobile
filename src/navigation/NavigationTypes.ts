@@ -282,7 +282,7 @@ export type FamilyStackParamList = {
   CreateFamily: {
     id_order: number | undefined;
   };
-
+  LanguageSelector: undefined;
   InviteMembers: undefined;
   
   ThemeSwitcher: undefined;
@@ -874,6 +874,15 @@ type FeedBackNavigationProp = NativeStackNavigationProp<
 >;
 export interface FeedbackProps {
   navigation: FeedBackNavigationProp;
+}
+
+
+type LanguageSelectorNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'LanguageSelector'
+>;
+export interface LanguageSelectorProps {
+  navigation: LanguageSelectorNavigationProp;
 }
 
 type ResetPasswordScreenNavigationProp = NativeStackNavigationProp<

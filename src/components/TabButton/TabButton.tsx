@@ -1,4 +1,4 @@
-import {MouseEvent, useEffect, useRef} from 'react';
+import { MouseEvent, useEffect, useRef } from 'react';
 import {
   AccessibilityState,
   Animated,
@@ -7,7 +7,9 @@ import {
 } from 'react-native';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from './styles';
-import {COLORS} from 'src/constants';
+import { COLORS } from 'src/constants';
+import { useSelector } from 'react-redux';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface TabButtonProps {
   item: {
@@ -21,13 +23,15 @@ interface TabButtonProps {
   onPress: ((e: MouseEvent<any> | GestureResponderEvent) => void) | undefined;
 }
 
-const TabButton = ({item, accessibilityState, onPress}: TabButtonProps) => {
+const TabButton = ({ item, accessibilityState, onPress }: TabButtonProps) => {
+  const translation = useSelector(getTranslate);
+
   const animatedValues = {
     translate: useRef(new Animated.Value(0)).current,
     scale: useRef(new Animated.Value(0)).current,
   };
 
-  const {translate, scale} = animatedValues;
+  const { translate, scale } = animatedValues;
 
   useEffect(() => {
     handleAnimated();
@@ -83,8 +87,8 @@ const TabButton = ({item, accessibilityState, onPress}: TabButtonProps) => {
           size={30}
         />
       </Animated.View>
-      <Animated.Text style={[styles.title, {opacity: scale}]}>
-        {item.title}
+      <Animated.Text style={[styles.title, { opacity: scale }]}>
+        {translation(item.title)}
       </Animated.Text>
     </TouchableOpacity>
   );
