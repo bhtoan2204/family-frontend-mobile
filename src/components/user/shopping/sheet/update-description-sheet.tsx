@@ -24,6 +24,7 @@ import { BlurView } from 'expo-blur';
 import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interface/shopping/shopping_list';
 import { addShoppingList, addShoppingListItem, updateDescriptionItem } from 'src/redux/slices/ShoppingListSlice';
 import { to_vietnamese } from 'src/utils/currency-str';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
 
 
@@ -63,7 +64,8 @@ const UpdateDescriptionSheet = ({
     const listType = useSelector((state: RootState) => state.shoppinglist).shoppingListType.find(listType => listType.id_shopping_list_type == id_shopping_list_type)
 
     const [isKeyboardFocused, setIsKeyboardFocused] = React.useState(false)
-
+    const isDarkMode = useSelector(getIsDarkMode)
+    
     useEffect(() => {
         if (showError) {
             setTimeout(() => {
@@ -136,6 +138,9 @@ const UpdateDescriptionSheet = ({
 
             // handleComponent={null}
             // handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
+            backgroundStyle={{
+                backgroundColor: isDarkMode ? '#0A1220' : '#f7f7f7'
+            }}
             backdropComponent={renderBackdrop}
             onClose={() => {
                 Keyboard.dismiss()
@@ -153,9 +158,9 @@ const UpdateDescriptionSheet = ({
         >
             <BottomSheetView className='flex-1 bg-[#F7F7F7] ' style={{
                 flex: 1,
-                backgroundColor: '#F7F7F7',
+                backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7',
             }}>
-                <BottomSheetScrollView className='' showsVerticalScrollIndicator={false}  keyboardShouldPersistTaps='handled'>
+                <BottomSheetScrollView className='' showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='handled'>
 
                     <View className='flex-1  mt-10'>
                         <View className='my-3 items-center'>

@@ -34,6 +34,7 @@ import AddMoreInfoSheet from 'src/components/user/shopping/sheet/add-more-info-s
 import UpdateDescriptionSheet from 'src/components/user/shopping/sheet/update-description-sheet'
 import UpdatePriceSheet from 'src/components/user/shopping/sheet/update-price-sheet'
 import { convertToNumber } from 'src/utils/currency/convertPriceFromDB'
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 
 
 const screenHeight = Dimensions.get('screen').height;
@@ -55,6 +56,9 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
 
     const [price, setPrice] = useState<number>(0)
     const [description, setDescription] = useState<string>('')
+
+    const isDarkMode = useSelector(getIsDarkMode)
+
 
     useEffect(() => {
         console.log("items", item)
@@ -80,6 +84,36 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
         return OtherBgImage
     }
 
+    // const buildInfoBox = () => {
+    //     return <View className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'>
+    //         <View className='flex-row  items-center  w-full  py-2 '>
+    //             <View className=' flex-row mr-2 items-center'>
+
+    //                 <TouchableOpacity className=' rounded-full mr-2  items-center justify-center' style={{
+    //                     height: screenHeight * 0.04,
+    //                     width: screenHeight * 0.04,
+    //                     borderWidth: itemDetail?.is_purchased ? 0 : 2,
+    //                     borderColor: itemDetail?.is_purchased ? 'transparent' : '#CBCBCB',
+    //                     backgroundColor: itemDetail?.is_purchased ? '#00AE00' : undefined,
+    //                 }}
+    //                     onPress={() => {
+    //                         console.log('hello')
+    //                         dispatch(updatePurchasedItem(
+    //                             {
+    //                                 id_item: id_item,
+    //                                 id_list: id_shopping_list
+    //                             }
+    //                         ))
+    //                     }}
+    //                 >
+    //                     <Material name='check' size={24} color={'white'} />
+    //                 </TouchableOpacity>
+    //                 <Text className='text-base text-[#2F2F34]'>{itemDetail?.item_name}</Text>
+    //             </View>
+
+    //         </View>
+    //     </View>
+    // }
     const buildInfoBox = () => {
         return <View className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'>
             <View className='flex-row  items-center  w-full  py-2 '>
@@ -94,23 +128,22 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                     }}
                         onPress={() => {
                             console.log('hello')
-                            dispatch(updatePurchasedItem(
-                                {
-                                    id_item: id_item,
-                                    id_list: id_shopping_list
-                                }
-                            ))
+                            dispatch(updatePurchasedItem({
+                                id_item: id_item,
+                                id_list: id_shopping_list
+                            }))
                         }}
                     >
-                        <Material name='check' size={24} color={'white'} />
+                        {
+                            itemDetail?.is_purchased && <Material name='check' size={24} color={'white'} />
+                        }
                     </TouchableOpacity>
-                    <Text className='text-base text-[#2F2F34]'>{itemDetail?.item_name}</Text>
+                    <Text className='text-base text-[#2F2F34] dark:text-white'>{itemDetail?.item_name}</Text>
                 </View>
 
             </View>
         </View>
     }
-
     const buildCalendarBox = () => {
         return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]' onPress={() => {
             updateDateBottomSheetRef.current?.expand()
@@ -118,10 +151,12 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
             <View className='flex-row  items-center  w-full  py-2 '>
                 <View className='mr-2'>
 
-                    <Material name='calendar-month-outline' size={30} color={'#5D5D5D'} />
+                    <Material name='calendar-month-outline' size={30} color={
+                        !isDarkMode ? '#5D5D5D' : 'white'
+                    } />
                 </View>
 
-                <Text className='text-base text-[#2F2F34]'>{
+                <Text className='text-base text-[#2F2F34] dark:text-white'>{
                     itemDetail?.reminder_date ? format(new Date(itemDetail?.reminder_date), 'dd/MM/yyyy') : 'Set reminder date'
                 }</Text>
             </View>
@@ -138,10 +173,12 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
             <View className='flex-row  items-center  w-full  py-2 '>
                 <View className='mr-2'>
 
-                    <Material name='repeat' size={30} color={'#5D5D5D'} />
+                    <Material name='repeat' size={30} color={
+                        !isDarkMode ? '#5D5D5D' : 'white'
+                    } />
                 </View>
 
-                <Text className='text-base text-[#2F2F34]'>Repeat</Text>
+                <Text className='text-base text-[#2F2F34] dark:text-white'>Repeat</Text>
             </View>
         </TouchableOpacity>
     }
@@ -156,10 +193,12 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
             <View className='flex-row  items-center  w-full  py-2 '>
                 <View className='mr-2'>
 
-                    <Material name='information-outline' size={30} color={'#5D5D5D'} />
+                    <Material name='information-outline' size={30} color={
+                        !isDarkMode ? '#5D5D5D' : 'white'
+                    } />
                 </View>
 
-                <Text className='text-base text-[#2F2F34]'>Add more information</Text>
+                <Text className='text-base text-[#2F2F34] dark:text-white'>Add more information</Text>
             </View>
         </TouchableOpacity>
     }
@@ -173,10 +212,12 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
             <View className='flex-row  items-center  w-full  py-2 '>
                 <View className='mr-2'>
 
-                    <Material name='format-list-bulleted' size={30} color={'#5D5D5D'} />
+                    <Material name='format-list-bulleted' size={30} color={
+                        !isDarkMode ? '#5D5D5D' : 'white'
+                    } />
                 </View>
 
-                <Text className='text-base text-[#2F2F34]'>{
+                <Text className='text-base text-[#2F2F34] dark:text-white'>{
                     itemDetail?.description != '' ? itemDetail?.description : 'Add description'
                 }</Text>
             </View>
@@ -192,10 +233,12 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
             <View className='flex-row  items-center  w-full  py-2 '>
                 <View className='mr-2'>
 
-                    <Material name='currency-usd' size={30} color={'#5D5D5D'} />
+                    <Material name='currency-usd' size={30} color={
+                        !isDarkMode ? '#5D5D5D' : 'white'
+                    } />
                 </View>
 
-                <Text className='text-base text-[#2F2F34]'>{
+                <Text className='text-base text-[#2F2F34] dark:text-white'>{
                     itemDetail?.price != '' && itemDetail?.price != null ? convertToNumber(itemDetail?.price) : 'Add price'
                 }</Text>
             </View>
@@ -225,7 +268,10 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
         )
     }
     return (
-        <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
+        <View style={{
+            flex: 1,
+            backgroundColor: isDarkMode ? '#0A1220' : '#ffffff'
+        }}>
             <View className='py-6 h-[29%] ' style={{
                 backgroundColor: colors[id_category - 1],
             }}>
@@ -270,8 +316,8 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                 </View>
             </View>
 
-            <View className='flex-1 mt-[-5%] rounded-tl-xl rounded-tr-xl r bg-white overflow-hidden z-100'>
-                <View className='bg-white flex-1 '>
+            <View className='flex-1 mt-[-5%] rounded-tl-xl rounded-tr-xl r bg-white dark:bg-[#0A1220] overflow-hidden z-100'>
+                <View className='bg-white dark:bg-[#0A1220] flex-1 '>
                     <ScrollView className=''>
                         <View style={{
                         }} className=' py-4'>

@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import {configureStore} from '@reduxjs/toolkit';
 import profileReducer from './slices/ProfileSclice';
 import checkListReducer from './slices/CheckListSlice';
 import financeReducer from './slices/FinanceSlice';
@@ -27,6 +27,8 @@ import incomeReducer from './slices/IncomeAnalysis';
 import categorySlice from './slices/CategorySlice';
 import HouseHoldRefSlice from './slices/HouseHoldRefSlice';
 import TodoListSlice from './slices/TodoListSlice';
+import DarkModeSlice from './slices/DarkModeSlice';
+
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
@@ -58,7 +60,7 @@ export const store = configureStore({
     expenseType: expenseTypeReducer,
     expense: expenseReducer,
     income: incomeReducer,
-
+    darkMode: DarkModeSlice,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

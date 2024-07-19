@@ -16,10 +16,12 @@ import ShoppingListStack from './Routes/ShoppingListStack';
 import ShoppingListCategoryStack from './Routes/ShoppingListCategoryStack';
 import TodoListStack from './Routes/TodoListStack';
 import EducationStack from './Routes/EducationStack';
+import { useGetColorScheme } from 'src/hooks/useColorScheme';
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
+  useGetColorScheme();
   return (
     <NavigationContainer>
       <Stack.Navigator

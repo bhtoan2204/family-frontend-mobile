@@ -5,6 +5,8 @@ import { View, Image, Text } from "react-native";
 import { ShoppingListItem, ShoppingListItemType } from "src/interface/shopping/shopping_list";
 import GamingIcon from 'src/assets/images/shoppinglist_assets/gaming_icon.png'
 import ShoppingListCategoryItemContent from "./shopping-list-category-item-content";
+import { useSelector } from "react-redux";
+import { getIsDarkMode } from "src/redux/slices/DarkModeSlice";
 
 interface ShoppingListCategoryItemProps {
     item_type: ShoppingListItemType,
@@ -15,7 +17,7 @@ interface ShoppingListCategoryItemProps {
 const ShoppingListCategoryItem = ({ item_type, items, handleNavigateItemDetail }: ShoppingListCategoryItemProps) => {
     // console.log(item.listType.icon_url)
     const [expanded, setExpanded] = useState(true);
-
+    const isDarkMode = useSelector(getIsDarkMode)
     const buildTotal = (total_items: number) => {
         if (total_items > 1) {
             return `${total_items} items`
@@ -28,21 +30,28 @@ const ShoppingListCategoryItem = ({ item_type, items, handleNavigateItemDetail }
 
 
     return (
-        <ListItem.Accordion className='border-[1px] py-1  overflow-hidden mt-10 bg-white ' style={{
-            // borderWidth: 1,
-            borderColor: '#CFCFCF',
+        <ListItem.Accordion className='border-[1px]   overflow-hidden mt-10  ' style={{
+            borderWidth: 2,
+            borderColor: isDarkMode ? '#232A3D' : '#CFCFCF',
             marginHorizontal: ScreenWidth * 0.05,
             // paddingVertical: 1,
             // overflow: 'hidden',
             borderRadius: 15,
+            // backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7'
 
         }}
+            containerStyle={{
+                backgroundColor: 'transparent'
+            }}
             content={
                 <>
                     {/* <Icon name="place" size={30} /> */}
-                    <ListItem.Content className='bg-transparent  '>
+                    <ListItem.Content className='  ' style={{
+                        // backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7'
+
+                    }}>
                         {/* <ListItem.Title>List Accordion</ListItem.Title> */}
-                        <View className='flex-row items-center'>
+                        <View className='flex-row items-center' >
                             <View className='mr-6'>
                                 <View className='items-center justify-center overflow-hidden ' style={{
                                     height: ScreenWidth * 0.2,
@@ -57,8 +66,8 @@ const ShoppingListCategoryItem = ({ item_type, items, handleNavigateItemDetail }
                                 </View>
                             </View>
                             <View className=''>
-                                <Text className='text-xl font-semibold mb-2'>{item_type.item_type_name_en}</Text>
-                                <Text className='text-sm  '>{buildTotal(items.length)}</Text>
+                                <Text className='text-xl font-semibold mb-2 text-[#2F2F34] dark:text-white'>{item_type.item_type_name_en}</Text>
+                                <Text className='text-sm text-[#5C5C5C] dark:text-[#8D94A5] '>{buildTotal(items.length)}</Text>
                             </View>
                         </View>
                     </ListItem.Content>
@@ -71,7 +80,7 @@ const ShoppingListCategoryItem = ({ item_type, items, handleNavigateItemDetail }
         >
             <View style={{
                 borderWidth: 1,
-                borderColor: '#CFCFCF',
+                borderColor: isDarkMode ? '#232A3D' : '#CFCFCF',
                 marginHorizontal: ScreenWidth * 0.05,
                 // padding: 0,
                 // paddingVertical: 5,

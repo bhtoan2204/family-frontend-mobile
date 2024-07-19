@@ -1,6 +1,8 @@
 import { ListItem } from "@rneui/themed"
 import { TouchableOpacity, View, Text } from "react-native"
+import { useSelector } from "react-redux"
 import { ShoppingListItem } from "src/interface/shopping/shopping_list"
+import { getIsDarkMode } from "src/redux/slices/DarkModeSlice"
 
 interface ShoppingListCategoryItemContentProps {
     item: ShoppingListItem,
@@ -10,16 +12,23 @@ interface ShoppingListCategoryItemContentProps {
 }
 
 const ShoppingListCategoryItemContent = ({ item, index, isLast, handleNavigateItemDetail }: ShoppingListCategoryItemContentProps) => {
+    const isDarkMode = useSelector(getIsDarkMode)
     return (
         <ListItem onPress={() => { }} className='' style={{
             // borderWidth: 1,
-            borderColor: '#CFCFCF',
+            borderColor: isDarkMode ? '#232A3D' : '#CFCFCF',
             borderBottomWidth: isLast ? 0 : 1,
-        }}  >
+        }}
+            containerStyle={{
+                backgroundColor: 'transparent'
+            }}
+        >
             <ListItem.Content style={{
                 padding: 0,
-                margin: 0
-            }}>
+                margin: 0,
+            }}
+
+            >
                 <TouchableOpacity className='flex-row justify-between items-center  w-full  py-2 '
                     onPress={() => {
                         // console.log(item.id_item, item.id_list)
@@ -32,7 +41,7 @@ const ShoppingListCategoryItemContent = ({ item, index, isLast, handleNavigateIt
                             borderColor: '#CBCBCB'
                         }}>
                         </View>
-                        <Text className='text-base text-[#2F2F34]'>{item.item_name}</Text>
+                        <Text className='text-base text-[#2F2F34] dark:text-white'>{item.item_name}</Text>
                     </View>
                     <View className='justify-end '>
                         <Text className='text-sm text-[#B2B2B4]'>{item.price} VND</Text>

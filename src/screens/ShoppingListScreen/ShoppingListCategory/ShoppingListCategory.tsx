@@ -23,6 +23,7 @@ import BottomSheet from '@gorhom/bottom-sheet'
 import AddItemSheet from 'src/components/user/shopping/sheet/add-item-sheet'
 import ShoppingListPickCategorySheet from 'src/components/user/shopping/sheet/add-category-sheet'
 import { useColorScheme } from 'nativewind'
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -80,8 +81,7 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
     const addItemBottomSheetRef = React.useRef<BottomSheet>(null)
     const addCategoryBottomSheetRef = React.useRef<BottomSheet>(null)
     const [pickedCategory, setPickedCategory] = useState<number>(-1)
-    const { colorScheme, setColorScheme } = useColorScheme()
-
+    const isDarkMode = useSelector(getIsDarkMode)
     // const items: ShoppingListItem[] = []
     useEffect(() => {
         console.log("shopping list", shoppingListInfo)
@@ -89,7 +89,6 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
     }, [shoppingListInfo])
 
     useEffect(() => {
-        console.log(colorScheme)
     }, [])
 
 
@@ -143,7 +142,7 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
 
     const buildEmptyList = () => {
         return (
-            <View className='flex-1 justify-center items-center bg-white dark:bg-[#121212] '>
+            <View className='flex-1 justify-center items-center bg-white dark:bg-[#0A1220] '>
                 <View className='justify-center items-center mt-[-4%]'>
                     <View className='mb-4'>
                         <Image source={EmptyListIcon} style={{
@@ -162,9 +161,12 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
         return (
             Array.from(items.entries()).map(([item, index]) => {
                 return (
-                    <ShoppingListCategoryItem item_type={JSON.parse(item)} items={
-                        items.get(item) || []
-                    } handleNavigateItemDetail={handleNavigateItemDetail} />
+                    <ShoppingListCategoryItem
+                        item_type={JSON.parse(item)} items={
+                            items.get(item) || []
+                        } handleNavigateItemDetail={handleNavigateItemDetail}
+                        
+                    />
                 )
             })
         )
@@ -174,7 +176,7 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
 
     return (
         <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
-            <StatusBar barStyle={colorScheme === 'light' ? 'dark-content' : 'dark-content'} />
+            <StatusBar barStyle={!isDarkMode ? 'dark-content' : 'dark-content'} />
             <View className='py-6 h-[29%] ' style={{
                 backgroundColor: colors[id_category - 1],
             }}>
@@ -210,7 +212,7 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
                 </View>
             </View>
 
-            <View className='flex-1 mt-[-5%] rounded-tl-xl rounded-tr-xl r bg-white dark:bg-[#121212] overflow-hidden z-100'>
+            <View className='flex-1 mt-[-5%] rounded-tl-xl rounded-tr-xl r bg-white dark:bg-[#0A1220] overflow-hidden z-100'>
                 <TouchableOpacity activeOpacity={0.65} className='absolute rounded-full bottom-10 right-3 z-10  items-center justify-center' style={{
                     height: screenHeight * 0.08,
                     width: screenHeight * 0.08,
@@ -225,7 +227,7 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
                 <View className='bg-white flex-1 '>
                     {
                         items && items.size > 0 ?
-                            <ScrollView className='flex-1 bg-white dark:bg-[#121212]' showsVerticalScrollIndicator={false}>
+                            <ScrollView className='flex-1 bg-white dark:bg-[#0A1220]' showsVerticalScrollIndicator={false}>
                                 <View style={{
                                 }} className='flex-1 py-4 '>
                                     {/* <View className='my-4'></View> */}
@@ -257,6 +259,7 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
                 onSetCategory={(id_category) => {
                     console.log('id_category', id_category)
                     setPickedCategory(id_category)
+                    addCategoryBottomSheetRef.current?.close()
                 }}
                 category={pickedCategory}
                 onNavigateCreateCategory={() => {

@@ -1,6 +1,6 @@
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns'
 import React, { useCallback, useEffect, useState } from 'react'
-import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView } from 'react-native'
+import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView, StatusBar } from 'react-native'
 import { Agenda, AgendaSchedule, Calendar, CalendarList } from 'react-native-calendars'
 import { useSelector } from 'react-redux'
 import { ShoppingListScreenProps, TodoListScreenProps } from 'src/navigation/NavigationTypes'
@@ -17,6 +17,7 @@ import OtherImage from 'src/assets/images/shoppinglist_assets/Other.png'
 import { colors } from '../const/color'
 import { TodoListItem, TodoListType } from 'src/interface/todo/todo'
 import { useColorScheme } from 'nativewind'
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 const screenHeight = Dimensions.get('screen').height;
 
 
@@ -52,6 +53,7 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
     const todosMap = mapTodoList(todoList, todoListTypes)
     const { colorScheme, setColorScheme } = useColorScheme();
     const [key, setKey] = useState(false);
+    const isDarkMode = useSelector(getIsDarkMode)
     // useEffect(() => {
     //     console.log(todosMap)
     //     console.log(todoList)
@@ -62,9 +64,9 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
 
     //     }
     // }
-    useEffect(() => {
-        setColorScheme('dark')
-    }, [])
+    // useEffect(() => {
+    //     setColorScheme('dark')
+    // }, [])
 
     useEffect(() => {
         setKey((prev) => !prev)
@@ -165,8 +167,9 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
     return (
         <SafeAreaView style={{
             flex: 1,
-            backgroundColor: colorScheme === 'light' ? '#f7f7f7' : '#0A1220',
+            backgroundColor: !isDarkMode ? '#f7f7f7' : '#0A1220',
         }}>
+            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View className='flex-row  justify-between items-center py-6'>
                     <TouchableOpacity className='flex-1 ' onPress={() => {
@@ -174,21 +177,21 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
                     }}>
                         <Material name='chevron-left' size={30}
                             color={
-                                colorScheme === 'light' ? COLORS.DenimBlue : 'white'
+                                !isDarkMode ? COLORS.DenimBlue : 'white'
                             }
                         />
                     </TouchableOpacity>
                     <Text className='flex-1 text-center text-lg'
                         style={{
                             color:
-                                colorScheme === 'light' ? COLORS.Rhino : 'white'
+                                !isDarkMode ? COLORS.Rhino : 'white'
                             , fontWeight: 'bold'
                         }}
                     >CheckList</Text>
                     <View className='flex-1 items-end'>
                         <Material name='refresh' size={25}
                             color={
-                                colorScheme === 'light' ? COLORS.DenimBlue : 'white'
+                                !isDarkMode ? COLORS.DenimBlue : 'white'
                             }
                             onPress={() => {
                                 // toggleColorScheme()
@@ -213,8 +216,8 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
                         theme={{
                             // calendarBackground: colorScheme === 'light' ? '#f7f7f7' : '#1A1A1A',
                             calendarBackground: 'transparent',
-                            dayTextColor: colorScheme === 'light' ? '#000000' : 'white',
-                            textDisabledColor: colorScheme === 'light' ? '#7C7C7C' : '#92969D',
+                            dayTextColor: !isDarkMode ? '#000000' : 'white',
+                            textDisabledColor: !isDarkMode ? '#7C7C7C' : '#92969D',
                         }}
                         minDate={'2024-05-10'}
                         maxDate={'2026-06-10'}
@@ -242,7 +245,7 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
                 <View style={{
                 }} className=' py-4'>
                     <Text className='ml-6 my-4 text-base font-semibold ' style={{
-                        color: colorScheme === 'dark' ? 'white' : '#292828',
+                        color: isDarkMode ? 'white' : '#292828',
                     }}>My checklist</Text>
 
 

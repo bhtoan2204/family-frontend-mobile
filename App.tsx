@@ -15,7 +15,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import { useGetColorScheme } from 'src/hooks/useColorScheme';
 const App: React.FC = () => {
-  useGetColorScheme();
+
   useEffect(() => {
     connectSocket();
   }, []);

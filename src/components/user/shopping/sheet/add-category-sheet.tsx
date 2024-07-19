@@ -14,6 +14,7 @@ import { HouseHoldCategoryInterface } from 'src/interface/household/household_ca
 import { FlatGrid } from 'react-native-super-grid';
 import { useSelector } from 'react-redux';
 import { ShoppingListItemType } from 'src/interface/shopping/shopping_list';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
 
 const screenWidth = Dimensions.get('screen').width
@@ -47,7 +48,8 @@ const ShoppingListPickCategorySheet = ({
     // const categories = useSelector((state: any) => state.household_category)
     const [pickCategory, setPickCategory] = React.useState<number>(category)
     const addRoomSheetRef = useRef<BottomSheet>(null)
-    
+    const isDarkMode = useSelector(getIsDarkMode)
+
     return (
         <BottomSheet
             ref={refRBSheet}
@@ -61,6 +63,9 @@ const ShoppingListPickCategorySheet = ({
             onClose={() => {
                 Keyboard.dismiss()
             }}
+            backgroundStyle={{
+                backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7'
+            }}
             keyboardBehavior="extend"
             keyboardBlurBehavior="restore"
             onChange={(index) => {
@@ -72,7 +77,7 @@ const ShoppingListPickCategorySheet = ({
                 }
             }}
         >
-            <View className='flex-1 items-center bg-[#F7F7F7]'>
+            <View className='flex-1 items-center bg-[#F7F7F7] dark:bg-[#0A1220]'>
                 <View className='py-4'>
                     {/* <Image source={RoomIcon} style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} /> */}
                 </View>
@@ -92,23 +97,21 @@ const ShoppingListPickCategorySheet = ({
                     }} className='' onPress={() => {
                         refRBSheet.current?.close()
                     }}>
-                        <Material name='close' size={24} color={iOSGrayColors.systemGray.defaultLight} />
+                        <Material name='close' size={24} color={
+                            isDarkMode ? 'white' : iOSGrayColors.systemGray.defaultLight
+                        } />
                     </TouchableOpacity>
                 </View>
                 <BottomSheetScrollView snapToInterval={Dimensions.get('screen').width} showsHorizontalScrollIndicator={false} contentContainerStyle={{ minHeight: '100%' }}>
                     <View className='mt-5'>
-                        <ItemItems data={categories} addRoomSheetRef={addRoomSheetRef} onNavigateCreateRoom={onNavigateCreateCategory} pickRoom={pickCategory} setPickCategory={setPickCategory} onSetCategory={onSetCategory} />
+                        <ItemItems
+                            data={categories} addRoomSheetRef={addRoomSheetRef} onNavigateCreateRoom={onNavigateCreateCategory} pickRoom={pickCategory} setPickCategory={setPickCategory} onSetCategory={onSetCategory}
+                            isDarkMode={isDarkMode}
+                        />
 
                     </View>
                 </BottomSheetScrollView >
-                {/* <TouchableOpacity className='w-[60%] h-14 rounded-lg my-3 justify-center items-center' style={{
-                    backgroundColor: iOSColors.systemBlue.defaultLight,
-                }} onPress={() => {
-                    onSetCategory(pickCategory)
-                    refRBSheet.current?.close()
-                }}>
-                    <Text className='font-bold text-white'>OK</Text>
-                </TouchableOpacity> */}
+
 
             </View>
 
@@ -123,10 +126,11 @@ interface ItemItemsProps {
     pickRoom: number
     setPickCategory: (id: number) => void
     onSetCategory: (id: number) => void
+    isDarkMode: boolean
     // handleNavigateHouseHoldDetail: (id_item: number) => void;
 }
 
-const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setPickCategory, onSetCategory }: ItemItemsProps) => {
+const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setPickCategory, onSetCategory, isDarkMode }: ItemItemsProps) => {
     // const addRoomObj: ShoppingListItemType = {
     //     category_image: "",
     //     category_name: "",
@@ -145,7 +149,7 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                     <TouchableOpacity onPress={onNavigateCreateRoom}>
                         <View className='items-center justify-center' style={{
                             // width: screenWidth * 0.3,
-                            backgroundColor: '#e1e1e1',
+                            backgroundColor: isDarkMode ? '#252D3B' : '#e1e1e1',
                             width: '100%',
                             height: undefined,
                             borderRadius: 15,
@@ -180,7 +184,7 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                         addRoomSheetRef?.current?.close()
                         // handleNavigateHouseHoldDetail(item.id_household_item)
                     }}>
-                        <View className='bg-[#EAEAEA] justify-center items-center rounded-xl'
+                        <View className='bg-[#EAEAEA] dark:bg-[#252D3B] justify-center items-center rounded-xl'
                             style={{
                                 // width: screenWidth * 0.3,
                                 width: '100%',
@@ -204,12 +208,14 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                         </View>
                         <Text style={{
                             textAlign: 'center',
-                            color: item.id_item_type == pickRoom ? iOSColors.systemBlue.defaultLight : COLORS.Rhino,
+                            color: item.id_item_type === pickRoom ? iOSColors.systemBlue.defaultLight : (isDarkMode ? 'white' : '#2A475E'),
+
                             fontSize: 16,
                             fontWeight: 500,
                             marginTop: 10,
 
-                        }}>{item.item_type_name_en} {
+                        }}
+                        >{item.item_type_name_en} {
                                 item.id_item_type == pickRoom ? <Material name='check' size={20} color={iOSColors.systemBlue.defaultLight} /> : null
                             }</Text>
                     </TouchableOpacity>
