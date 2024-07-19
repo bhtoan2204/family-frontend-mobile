@@ -16,13 +16,15 @@ import LineChartScreen from './LineChart';
 import { DailyIncome } from 'src/interface/income/IncomeDaily';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const ChartIncomeScreen = ({ navigation }: ChartIncomeScreenProps) => {
   const [selectedCategoryType, setSelectedCategoryType] = useState<string>('');
   let option = useSelector(getSelectedOption);
   const profile = useSelector(selectProfile);
   let family =useSelector(selectSelectedFamily);
-  
+  const translate = useSelector(getTranslate);
+
   useEffect(() => {
       setSelectedCategoryType(option);
     
@@ -66,22 +68,20 @@ const ChartIncomeScreen = ({ navigation }: ChartIncomeScreenProps) => {
                 marginBottom: 5,
                 color: 'white',
               }}>
-              Hello, {profile.firstname} {profile.lastname}
+              {translate('Hello')}, {profile.firstname} {profile.lastname}
             </Text>
             {selectedCategoryType === 'Year' && (
               <Text style={{fontSize: 16, color: 'white'}}>
-              Here you can view a brief overview of your income for the year.
+              {translate('overviewYearIncome')}
             </Text>
             )}
             {selectedCategoryType === 'Month' && (
               <Text style={{fontSize: 16, color: 'white'}}>
-               For each month, you can see a summary of your income.
-              </Text>
+                {translate('overviewMonthIncome')}              </Text>
             )}
             {selectedCategoryType === 'Day' && (
               <Text style={{fontSize: 16, color: 'white'}}>
-                  Here you can view detailed incomes for each day.
-                </Text>
+                {translate('detailDayIncome')}                  </Text>
               )}
           </View>
 

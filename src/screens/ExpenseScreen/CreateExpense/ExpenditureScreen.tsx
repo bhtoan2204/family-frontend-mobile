@@ -51,6 +51,7 @@ import { Member } from 'src/interface/member/member';
 import ImagePickerComponent from './ImagePicker';
 import PickerModal from './ModalOption';
 import CategoryUtilities from './CategoryUtilities';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
 
@@ -87,7 +88,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const members = useSelector(selectFamilyMembers);
   const [memberSelected, setMemberSelected] = useState<Member | null>(null);
   const [utilitiesSelect, setUtilitiesSelect] = useState<UtilitiesType|null>(null)
-
+  const translate = useSelector(getTranslate);
 
   useEffect(() => {
     fetchExpenseType();
@@ -307,7 +308,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
               <TouchableOpacity onPress={() => headerPress()}>
                 <View style={styles.itemContainer}>
                   <Text style={[styles.headerText, {marginRight: 10}]}>
-                    {selectedMenu}
+                    {translate(selectedMenu)}
                   </Text>
                   <Octicons name="triangle-down" size={35} color="#fff" />
                 </View>
@@ -325,13 +326,13 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
           <ScrollView contentContainerStyle={styles.headcontainer}>
             <View style={styles.inputContainer}>
               <Text style={{textAlign: 'left', fontSize: 18, color: '#1b2838'}}>
-                Amount
+                {translate('Amount')}
               </Text>
               <View style={{flexDirection: 'row'}}>
                 <View style={styles.inputWrapper}>
                   <TextInput
                     style={[styles.inputAmount, {color: 'red', fontSize: 20}]}
-                    placeholder="Enter amount"
+                    placeholder={translate('Enter amount')}
                     value={amount !== null ? amount.toString() : ''}
                     onChangeText={text => setAmount(text ? Number(text) : null)}
                     keyboardType="numeric"

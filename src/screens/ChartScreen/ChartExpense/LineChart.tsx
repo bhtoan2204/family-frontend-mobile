@@ -11,7 +11,7 @@ import {LineChart} from 'react-native-chart-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
 import {Picker} from '@react-native-picker/picker';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   setSelectedDate,
   setSelectedOption,
@@ -19,6 +19,7 @@ import {
 import moment from 'moment';
 import {ExpenseServices} from 'src/services/apiclient';
 import {Ionicons} from '@expo/vector-icons';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface Category {
   name: string;
@@ -56,7 +57,8 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
-  
+  const translate = useSelector(getTranslate);
+
   useEffect(() => {
     const recentYears = generateRecentYears();
     setYears(recentYears);
@@ -235,7 +237,7 @@ if (monthlyData.length > 0) {
         </View>
       )}
       <View style={styles.chartLineContainer}>
-        <Text>(Unit: VNĐ)</Text>
+        <Text>({translate('Unit')}: VNĐ)</Text>
         {displayedDatasets.length > 0 && (
           <LineChart
           data={{
@@ -329,7 +331,7 @@ if (monthlyData.length > 0) {
           }}
           onPress={() => setShowDetails(!showDetails)}>
           <Text style={{ fontWeight: '500' }}>
-            {showDetails ? 'Hide details' : 'View details'}
+            {showDetails ? translate('Hide details') : translate('View details')}
           </Text>
           <Ionicons
             name={showDetails ? 'chevron-down' : 'chevron-forward'}
@@ -350,7 +352,7 @@ if (monthlyData.length > 0) {
                   style={styles.avatar}
                 />
                 <Text
-                  style={styles.expenseText}>{fullLabels[monthData.month-1]}</Text>
+                  style={styles.expenseText}>{translate(fullLabels[monthData.month-1])}</Text>
               </View>
               <View style={styles.expenseDetails}>
            

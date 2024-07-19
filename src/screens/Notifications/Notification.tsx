@@ -116,27 +116,46 @@ const Notification = ({navigation}) => {
       //}
    }
   };
+  const handleNewNotification = async (message: any) => {
+    console.log(message);
+      //const sender: Member | undefined = await fetchMember(message.senderId);
+      //if (sender) {
+        await Notifications.scheduleNotificationAsync({
+          content: {
+            title: `${message.familyInfo.name} `,
+            body: message.content,
+            // data: {
+            //   screen: 'ChatUser',
+            //   id_user: message.receiverId,
+            //   receiverId: message.senderId,
+            // },
+          },
+          trigger: { seconds: 1 },
+        });
+      //}
+   
+  };
 
-  // const handleNewMessageFamily = async (message: any) => {
-  //   console.log(message)
-  //   // const sender: Member | undefined = await fetchMember(message.senderId);
-  //   // const family: Family | undefined = await fetchFamily(message.familyId);
-  //   //if (sender && family) {
-  //     await Notifications.scheduleNotificationAsync({
-  //       content: {
-  //         title: `${message.senderInfo.firstname} ${message.senderInfo.lastname}`,
-  //         subtitle: `${family.name}`,
-  //         body: message.content,
-  //         data: {
-  //           screen: 'ChatFamily',
-  //           familyId: message.familyId,
-  //         },
-  //       },
-  //       trigger: { seconds: 1 },
-  //     });
-  //     setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'Family' }]);
-  //   //}
-  // };
+  const handleNewMessageFamily = async (message: any) => {
+    console.log(message)
+    // const sender: Member | undefined = await fetchMember(message.senderId);
+    // const family: Family | undefined = await fetchFamily(message.familyId);
+    //if (sender && family) {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: `${message.senderInfo.firstname} ${message.senderInfo.lastname}`,
+          subtitle: `${message.senderInfo.firstname}`,
+          body: message.content,
+          data: {
+            screen: 'ChatFamily',
+            familyId: message.familyId,
+          },
+        },
+        trigger: { seconds: 1 },
+      });
+      setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'Family' }]);
+    //}
+  };
 
   // const handleNewImageFamily = async (message: Message) => {
   //   if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
@@ -175,13 +194,17 @@ useEffect(() => {
       if (socket) {
         socket.on('onNewMessage', handleNewMessage);
         socket.on('onNewImageMessage', handleNewImage);
-        // socket.on('onNewFamilyMessage', handleNewMessageFamily);
+        socket.on('onNewFamilyMessage', handleNewMessageFamily);
         // socket.on('onNewFamilyImageMessage', handleNewImageFamily);
+        socket.on('onNewNotification', handleNewNotification);
+
       }
 
   return () => {
     if (socket) {
       socket.off('onNewMessage', handleNewMessage);
+      socket.off('onNewNotification', handleNewNotification);
+
       socket.off('onNewImageMessage', handleNewImage);
       // socket.off('onNewFamilyMessage', handleNewMessageFamily);
       // socket.off('onNewFamilyImageMessage', handleNewImageFamily);

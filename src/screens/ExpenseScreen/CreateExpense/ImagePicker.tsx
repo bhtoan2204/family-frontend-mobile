@@ -3,6 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'reac
 import Icon from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from './styles';
+import { useSelector } from 'react-redux';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const ImagePickerComponent = ({
   description,
@@ -16,6 +18,7 @@ const ImagePickerComponent = ({
   handleTakePhoto,
   selectedMenu
 }) => {
+  const translate= useSelector(getTranslate);
   return (
     <View style={styles.container}>
       <View style={styles.datePickerContainer}>
@@ -28,7 +31,7 @@ const ImagePickerComponent = ({
           />
           <TextInput
             style={styles.titleText}
-            placeholder="Description"
+            placeholder={translate('Description')}
             value={description}
             onChangeText={setDescription}
           />
@@ -44,7 +47,7 @@ const ImagePickerComponent = ({
             style={styles.icon}
           />
           <Text style={[styles.text, {marginRight: 90, right: 10}]}>
-            Select Date
+            {translate('Select Date')}
           </Text>
         </View>
         <DateTimePicker

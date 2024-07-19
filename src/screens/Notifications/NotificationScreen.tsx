@@ -26,6 +26,9 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
 
     setLoading(true);
     try {
+      if (index==0){
+        dispatch(setNotificationSlice([]));
+      }
       const response = await ProfileServices.getNotification(index);
       if (response) {
         setIndex(index + 1);
@@ -111,7 +114,16 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
         dispatch(setSelectedDate(formatDate(item.timestamp)));
         dispatch(setSelectedFamilyById(item.id_family));
         navigation.navigate('CalendarStack', { screen: 'CalendarScreen', params: item.id_family });
-        break;      
+        break;   
+      case 'EDUCATION':
+
+        break;   
+      case 'GUIDELINE':
+
+        break;  
+        case 'CHAT':
+
+        break;     
       default:
         console.log(`Unhandled notification type: ${item.type}`);
     }
@@ -121,7 +133,7 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
   const renderItem = ({ item }: { item: Notification }) => (
     <TouchableOpacity onPress={() => handlePressNoti(item)} style={[item.isRead ? {backgroundColor: '#fff'} : {backgroundColor: COLORS.AliceBlue}]}>
       <View style={styles.notificationItem}>
-      { item.familyInfo.avatar ? (
+      {/* { item.familyInfo.avatar ? (
         <Image
           source={{uri: item.familyInfo.avatar}}
           style={styles.avatar}
@@ -135,7 +147,7 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
         resizeMode="cover"
       />
       )
-    }
+    } */}
         <View style={styles.notificationContent}>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.content}>{item.content}</Text>

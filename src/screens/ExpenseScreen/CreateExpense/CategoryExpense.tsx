@@ -3,10 +3,14 @@ import { View, Text, Image, TouchableOpacity, Animated, FlatList, NativeSyntheti
 import Icon from 'react-native-vector-icons/Ionicons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import styles from './styles';
+import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useSelector } from 'react-redux';
 
 const CategoryExpense = ({ expenseCategory, pressSelectCategory, handleMostUsedPress, isScrollViewVisible, scrollX, expenseType, dataExpenseTypeToShow, handleExpenseTypePress, widthOfYourPage }) => {
     const [currentPage, setCurrentPage] = useState(0);
     const scrollViewRef = useRef(null);
+    const translate = useSelector(getTranslate);
+
     const urlCatetory = 'https://png.pngtree.com/element_our/20190530/ourmid/pngtree-correct-icon-image_1267804.jpg';
     useEffect( () =>{
         console.log(expenseType)
@@ -23,7 +27,7 @@ const CategoryExpense = ({ expenseCategory, pressSelectCategory, handleMostUsedP
               { color: '#1b2838' },
             ]}
           >
-            {expenseCategory?.expense_type_name || 'Select category'}
+            {expenseCategory?.expense_type_name || translate('Select category')}
           </Text>
   
           <TouchableOpacity
@@ -40,7 +44,7 @@ const CategoryExpense = ({ expenseCategory, pressSelectCategory, handleMostUsedP
                 },
               ]}
             >
-              View All
+              {translate('View All')}
             </Text>
             <Icon
               name="chevron-forward-outline"
@@ -60,7 +64,7 @@ const CategoryExpense = ({ expenseCategory, pressSelectCategory, handleMostUsedP
           }}
         >
           <Text style={[styles.mostUsedButton, { marginRight: -10 }]}>
-            Most used{' '}
+            {translate('Most used')}{' '}
           </Text>
           <EvilIcons
             name={

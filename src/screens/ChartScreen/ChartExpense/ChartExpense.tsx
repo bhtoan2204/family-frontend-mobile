@@ -17,10 +17,11 @@ import {getOption} from 'src/redux/slices/ExpenseAnalysis';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
   const [selectedCategoryType, setSelectedCategoryType] = useState<string>('');
-
+  const translate = useSelector(getTranslate);
   let option = useSelector(getOption);
 
   const profile = useSelector(selectProfile);
@@ -50,7 +51,7 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
               <Icon name="arrow-back" size={30} style={styles.backButton} />
             </TouchableOpacity>
             <View style={styles.headerTitleContainer}>
-              <Text style={styles.headerText}>Expense Analysis</Text>
+              <Text style={styles.headerText}>{translate('ExpenseAnalysis')}</Text>
             </View>
 
           </View>
@@ -68,21 +69,21 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
                 marginBottom: 5,
                 color: 'white',
               }}>
-              Hello, {profile.firstname} {profile.lastname}
+              {translate('Hello')}, {profile.firstname} {profile.lastname}
             </Text>
             {selectedCategoryType === 'Year' && (
                 <Text style={{fontSize: 16, color: '#ccc'}}>
-                  Here you can view a brief overview of your expenses for the year.
+                  {translate('overviewYear')}
                 </Text>
               )}
               {selectedCategoryType === 'Month' && (
                 <Text style={{fontSize: 16, color: '#ccc'}}>
-                  For each month, you can see a summary of your expenses day.
+                  {translate('overviewMonth')}
                 </Text>
               )}
               {selectedCategoryType === 'Day' && (
                 <Text style={{fontSize: 16, color: '#ccc'}}>
-                  Here you can view detailed expenses for each day.
+                  {translate('detailDay')}
                 </Text>
               )}
 

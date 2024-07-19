@@ -4,11 +4,12 @@ import { LineChart } from "react-native-chart-kit";
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSelectedDate, setSelectedOptionIncome } from 'src/redux/slices/IncomeAnalysis';
 import moment from 'moment';
 import { ExpenseServices, IncomeServices } from "src/services/apiclient";
 import { Ionicons } from "@expo/vector-icons";
+import { getTranslate } from "src/redux/slices/languageSlice";
 
 interface Category {
     name: string;
@@ -35,6 +36,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const dispatch = useDispatch();
   const [allCategories, setAllCategories] = useState<Set<string>>(new Set());
+  const translate = useSelector(getTranslate);
 
   const labels = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -319,7 +321,7 @@ if (monthlyData.length > 0) {
           }}
           onPress={() => setShowDetails(!showDetails)}>
           <Text style={{ fontWeight: '500' }}>
-            {showDetails ? 'Hide details' : 'View details'}
+            {showDetails ? translate('Hide details') : translate('View details')}
           </Text>
           <Ionicons
             name={showDetails ? 'chevron-down' : 'chevron-forward'}
@@ -340,7 +342,7 @@ if (monthlyData.length > 0) {
                   style={styles.avatar}
                 />
                 <Text
-                  style={styles.incomeText}>{fullLabels[monthData.month-1]}</Text>
+                  style={styles.incomeText}>{translate(fullLabels[monthData.month-1])}</Text>
               </View>
               <View style={styles.incomeDetails}>
            

@@ -2,6 +2,8 @@ import React from 'react';
 import { Modal, View, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
+import { useSelector } from 'react-redux';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const PickerModal = ({
   isPickerOpen,
@@ -9,6 +11,7 @@ const PickerModal = ({
   selectedMenu,
   handleOptionPress
 }) => {
+  const translate = useSelector(getTranslate);
   return (
     <Modal
       animationType="fade"
@@ -30,7 +33,7 @@ const PickerModal = ({
                   resizeMode="stretch"
                   style={styles.avatar}
                 />
-                <Text style={styles.text}>Expense</Text>
+                <Text style={styles.text}>{translate('Expense')}</Text>
                 <View style={styles.checkIcon}>
                   {selectedMenu === 'Expense' && (
                     <Icon name="checkmark-sharp" size={20} color="green" />
@@ -45,7 +48,7 @@ const PickerModal = ({
                   resizeMode="stretch"
                   style={styles.avatar}
                 />
-                <Text style={styles.text}>Income</Text>
+                <Text style={styles.text}>{translate('Income')}</Text>
                 <View style={styles.checkIcon}>
                   {selectedMenu === 'Income' && (
                     <Icon name="checkmark-sharp" size={20} color="green" />
@@ -60,7 +63,7 @@ const PickerModal = ({
                   resizeMode="stretch"
                   style={styles.avatar}
                 />
-                <Text style={styles.text}>Utilities</Text>
+                <Text style={styles.text}>{translate('Utilities')}</Text>
                 <View style={styles.checkIcon}>
                   {selectedMenu === 'Utilities' && (
                     <Icon name="checkmark-sharp" size={20} color="green" />
