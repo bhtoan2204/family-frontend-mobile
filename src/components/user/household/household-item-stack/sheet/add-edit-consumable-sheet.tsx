@@ -16,6 +16,7 @@ import Camera from 'src/assets/images/household_assets/Camera.png'
 import Room2 from 'src/assets/images/household_assets/Room_2.png'
 import EditConsumableImage from 'src/assets/images/household_assets/edit_consumable_sheet_img.png'
 import { updateComsumableItem } from 'src/redux/slices/HouseHoldDetailSlice';
+import { handleRestore } from 'src/utils/sheet/func';
 
 interface AddEditConsumableSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -74,6 +75,8 @@ const AddEditConsumableSheet = ({
 
 
     const handleSubmit = async () => {
+        Keyboard.dismiss()
+        await handleRestore()
         try {
             setLoading(true)
             dispatch(updateComsumableItem({

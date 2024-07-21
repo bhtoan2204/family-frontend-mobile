@@ -59,7 +59,7 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
     }, [progressData])
 
     const buildListEmpty = () => {
-        return <TouchableOpacity className='flex-1 z-10 items-center justify-center bg-[#F7F7F7]' activeOpacity={1.0} onPress={() => {
+        return <TouchableOpacity className='flex-1 z-10 items-center justify-center bg-[#F7F7F7] dark:bg-[#0A1220]' activeOpacity={1.0} onPress={() => {
             Keyboard.dismiss()
         }}>
             <Text className='text-center text-lg text-gray-500'>No Education Found</Text>
@@ -71,7 +71,9 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
 
 
     const buildList = () => {
-        return <ScrollView className='flex-1 z-10 mt-5 bg-[#F7F7F7]'>
+        return <ScrollView className='flex-1 z-10 mt-5 bg-[#F7F7F7] dark:bg-[#0A1220]'
+            showsVerticalScrollIndicator={false}
+        >
             {
                 progressData && progressData.subjects.map((item, index) => {
                     return <React.Fragment key={index}>
@@ -91,7 +93,7 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
     }
 
     return (
-        <View className="flex-1 bg-[#F7F7F7]">
+        <View className="flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]">
             {/* <TouchableOpacity activeOpacity={1.0} className='flex-1 bg-transparent' onPress={() => {
                 console.log('pressed')
                 Keyboard.dismiss()
@@ -107,7 +109,7 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
                 addCourseBottomSheetRef={addCourseBottomSheetRef}
             />
 
-            <View className=' bg-[#f7f7f7] mt-[-3%]  rounded-tl-xl rounded-tr-xl h-[4%]'>
+            <View className=' bg-[#f7f7f7] dark:bg-[#0A1220] mt-[-3%]  rounded-tl-xl rounded-tr-xl h-[4%]'>
                 <View className='mt-[-5%] bg-transparent justify-center items-center  '>
                     <ProgressTab choosenTab={choosenTab} setChoosenTab={setChoosenTab} />
                 </View>

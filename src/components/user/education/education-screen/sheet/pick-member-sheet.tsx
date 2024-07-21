@@ -10,6 +10,8 @@ import { FlatGrid } from 'react-native-super-grid';
 import { COLORS } from 'src/constants';
 import { RoomInterface } from 'src/interface/household/room';
 import { Member } from 'src/interface/member/member';
+import { useSelector } from 'react-redux';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
 
 
@@ -30,6 +32,7 @@ const AddProgressPickMemberSheet = ({
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />,
         []
     );
+    const isDarkMode = useSelector(getIsDarkMode)
     // const [pickedUser, setPickedUser] = React.useState<string>(pickedIdUser)
     return (
         <BottomSheet
@@ -39,7 +42,9 @@ const AddProgressPickMemberSheet = ({
             snapPoints={snapPoints}
             enablePanDownToClose={true}
             handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
-            backdropComponent={renderBackdrop}
+            backgroundStyle={{
+                backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7',
+            }} backdropComponent={renderBackdrop}
             onClose={() => {
                 Keyboard.dismiss()
             }}
@@ -52,7 +57,7 @@ const AddProgressPickMemberSheet = ({
             }}
 
         >
-            <View className='flex-1 items-center bg-[#F7F7F7]'>
+            <View className='flex-1 items-center bg-[#F7F7F7] dark:bg-[#0A1220] '>
                 <View className='py-4'>
                     {/* <Image source={RoomIcon} style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} /> */}
                 </View>
@@ -63,7 +68,7 @@ const AddProgressPickMemberSheet = ({
                     }} className=''>
 
                     </View>
-                    <Text className=' font-bold ' style={{
+                    <Text className=' font-bold text-black dark:text-white' style={{
                         fontSize: 18,
                     }}>Pick member</Text>
                     <TouchableOpacity style={{
@@ -72,7 +77,9 @@ const AddProgressPickMemberSheet = ({
                     }} className='' onPress={() => {
                         refRBSheet.current?.close()
                     }}>
-                        <Material name='close' size={24} color={iOSGrayColors.systemGray.defaultLight} />
+                        <Material name='close' size={24} color={
+                            isDarkMode ? 'white' : iOSGrayColors.systemGray.defaultLight
+                        } />
                     </TouchableOpacity>
                 </View>
 
@@ -84,6 +91,7 @@ const AddProgressPickMemberSheet = ({
                             setPickedIdUser={setPickedIdUser}
                             // setPickedUser={setPickedUser}
                             pickMemberSheetRef={refRBSheet}
+                            isDark={isDarkMode}
                         />
 
                     </View>
@@ -102,10 +110,11 @@ interface ItemItemsProps {
     setPickedIdUser: (id: string) => void,
     // setPickedUser: (id: string) => void,
     pickMemberSheetRef: React.RefObject<BottomSheet>;
+    isDark: boolean;
     // handleNavigateHouseHoldDetail: (id_item: number) => void;
 }
 
-const ItemItems = ({ data, pickedIdUser, setPickedIdUser, pickMemberSheetRef }: ItemItemsProps) => {
+const ItemItems = ({ data, pickedIdUser, setPickedIdUser, pickMemberSheetRef, isDark }: ItemItemsProps) => {
     const renderItem = (item: Member, index: number) => {
         return (
             <View className='items-center ' style={{
@@ -113,7 +122,6 @@ const ItemItems = ({ data, pickedIdUser, setPickedIdUser, pickMemberSheetRef }: 
                 marginRight: index % 2 == 0 ? 10 : 0,
                 marginLeft: index % 2 == 1 ? 10 : 0,
                 marginBottom: 20,
-                borderColor: iOSGrayColors.systemGray5.defaultLight,
             }}>
                 <TouchableOpacity onPress={() => {
                     // setPickedUser(item.id_user)
@@ -127,18 +135,25 @@ const ItemItems = ({ data, pickedIdUser, setPickedIdUser, pickMemberSheetRef }: 
                     }
                     // handleNavigateHouseHoldDetail(item.id_household_item)
                 }}>
-                    <Image
-                        source={item.user.avatar ? { uri: item.user.avatar } : gradients_list[index - 1 % gradients_list.length]}
-                        style={{
-                            width: '100%',
-                            height: undefined,
-                            borderRadius: 15,
-                            aspectRatio: 1,
-                        }}
-                    />
+                    <View className='border-[1px] border-[#f7f7f7] dark:border-[#2A475E] ' style={{
+                        borderRadius: 15,
+                        overflow: 'hidden',
+                    }}>
+                        <Image
+                            source={item.user.avatar ? { uri: item.user.avatar } : gradients_list[index - 1 % gradients_list.length]}
+                            style={{
+                                width: '100%',
+                                height: undefined,
+                                aspectRatio: 1,
+                            }}
+                        />
+                        <View className='w-full h-full z-[-10] absolute bg-[#A6A6A6] dark:bg-[#2A475E]'>
+
+                        </View>
+                    </View>
                     <Text style={{
                         textAlign: 'center',
-                        color: item.id_user == pickedIdUser ? iOSColors.systemBlue.defaultLight : COLORS.Rhino,
+                        color: item.id_user == pickedIdUser ? iOSColors.systemBlue.defaultLight : (isDark ? 'white' : COLORS.Rhino),
                         fontSize: 16,
                         fontWeight: 500,
                         marginTop: 10,

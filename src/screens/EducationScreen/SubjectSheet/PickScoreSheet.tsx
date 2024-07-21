@@ -6,8 +6,9 @@ import { Picker } from '@react-native-picker/picker';
 import { ComponentScore, Subject } from 'src/interface/education/education';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { AppDispatch } from 'src/redux/store';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateComponentScoreOfSubject } from 'src/redux/slices/EducationSlice';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 interface PickScoreSheetProps {
     setScoreSheetRef: React.RefObject<any>;
     // setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>;
@@ -34,7 +35,7 @@ const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress,
     const [isValid, setIsValid] = React.useState<boolean>(isNumberInRange(inputValue))
     const inputRef = React.useRef<TextInput>(null)
     const dispatch = useDispatch<AppDispatch>();
-
+    const isDarkMode = useSelector(getIsDarkMode)
     const handleFocus = () => {
         setIsFocus(true)
     }
@@ -123,7 +124,7 @@ const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress,
             // closeOnPressBack
             customStyles={{
                 container: {
-                    backgroundColor: "#F5F6F7",
+                    backgroundColor: isDarkMode ? "#0A1220" : "#f7f7f7",
                     borderTopRightRadius: Dimensions.get("window").width * 0.03,
                     borderTopLeftRadius: Dimensions.get("window").width * 0.03
                     ,
@@ -187,6 +188,7 @@ const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress,
                                 editable
                                 placeholder="Input actual score"
                                 multiline={false}
+                                placeholderTextColor={!isDarkMode ? '#b0b0b0' : '#A6A6A6'}
                                 onChangeText={(text) => {
                                     console.log(parseFloat(text) <= 10 && parseFloat(text) >= 0)
                                     setInputValue(text)
@@ -198,13 +200,14 @@ const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress,
                                     }
                                 }}
                                 style={{
-                                    borderColor: isFocus ? iOSColors.systemBlue.defaultDark : iOSGrayColors.systemGray3.defaultLight,
+                                    borderColor: isFocus ? iOSColors.systemBlue.defaultDark : iOSColors.systemBlue.defaultDark,
                                     borderWidth: 1,
                                     borderRadius: 5,
                                     marginBottom: 15,
                                     fontSize: 17,
                                     padding: 17,
-                                    backgroundColor: "#fff"
+                                     backgroundColor: isDarkMode ? "#171A21" : "#F7F7F7",
+                                    color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
 
                                 }}
                             />
@@ -216,7 +219,7 @@ const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress,
                                 fontSize: 15
                             }}>
                                 <Text style={{
-                                    color: !isValid ? iOSColors.systemRed.defaultDark : undefined
+                                    color: !isValid ? iOSColors.systemRed.defaultDark : (isDarkMode ? 'white' : 'black')
                                 }}>{showText(inputValue)}</Text>
                             </Text>
                         </View>

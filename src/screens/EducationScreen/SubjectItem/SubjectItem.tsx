@@ -31,20 +31,20 @@ const SubjectItem = ({ isGraded, subjectComponentData, index, id_education_progr
     }, [subjectComponentData])
 
     return (
-        subjectComponentData ? <TouchableOpacity className='flex-row items-center  border-b-[1px] border-gray-200 bg-white' onPress={() => {
+        subjectComponentData ? <TouchableOpacity className='flex-row items-center  border-b-[1px] border-gray-200 dark:border-[#232A3D] bg-white dark:bg-[#0A1220]' onPress={() => {
             bottomSheetRef.current?.open()
         }}>
-            <View className='flex-1 py-6 ml-4 bg-[FFFFFE]'>
-                <Text className='text-2xl font-light'>
+            <View className='flex-1 py-6 ml-4 '>
+                <Text className='text-2xl font-light text-[#2F2F34] dark:text-white'>
                     {subjectComponentData.component_name}
                 </Text>
             </View>
-            <View className=' w-36 items-center border-l-[1px] border-gray-200 py-6 px-5 bg-[#f8f7fd]'>
+            <View className=' w-36 items-center border-l-[1px] border-gray-200 dark:border-[#232A3D] py-6 px-5 bg-[#f8f7fd] dark:bg-[#252D3B]'>
                 {
                     isGradded ?
-                        <><Text className='  text-base opacity-40' style={{ color: COLORS.AuroMetalSaurus }}>score</Text><Text className=' text-[#918D92] text-xl mt-1 opacity-40'>{subjectComponentData.score} / 10</Text></>
+                        <><Text className='  text-base opacity-40 text-[#2F2F34] dark:text-white' >score</Text><Text className=' text-[#918D92] text-xl mt-1 opacity-40'>{subjectComponentData.score} / 10</Text></>
                         :
-                        <><Text className='  text-base' style={{ color: COLORS.AuroMetalSaurus }}>need</Text><Text className='  text-xl mt-1'>{subjectComponentData.expected_score || 0}</Text></>
+                        <><Text className='  text-base text-[#2F2F34] dark:text-white' >need</Text><Text className='text-[#2F2F34] dark:text-white  text-xl mt-1'>{subjectComponentData.expected_score || 0}</Text></>
                 }
 
             </View>
@@ -60,16 +60,16 @@ const SubjectItem = ({ isGraded, subjectComponentData, index, id_education_progr
             bottomSheetRef.current?.open()
         }}>
             <View className='flex-1 py-6 ml-4 bg-[FFFFFE]'>
-                <Text className='text-2xl font-light'>
+                <Text className='text-2xl font-light text-[#2F2F34] dark:text-white'>
                     Error
                 </Text>
             </View>
             <View className=' w-36 items-center border-l-[1px] border-gray-200 py-6 px-5 bg-[#f8f7fd]'>
                 {
                     isGradded ?
-                        <><Text className='  text-base opacity-40' style={{ color: COLORS.AuroMetalSaurus }}>score</Text><Text className=' text-[#918D92] text-xl mt-1 opacity-40'>0 / 10</Text></>
+                        <><Text className='  text-base opacity-40 text-[#2F2F34] dark:text-white' >score</Text><Text className=' text-[#918D92] text-xl mt-1 opacity-40'>0 / 10</Text></>
                         :
-                        <><Text className='  text-base' style={{ color: COLORS.AuroMetalSaurus }}>need</Text><Text className='  text-xl mt-1'>0</Text></>
+                        <><Text className='  text-base text-[#2F2F34] dark:text-white' >need</Text><Text className='  text-xl mt-1'>0</Text></>
                 }
 
             </View>

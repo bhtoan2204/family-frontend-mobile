@@ -10,7 +10,7 @@ interface EducationScreenSearchBarProps {
 
 const EducationScreenSearchBar = ({ searchQuery, setSearchQuery }: EducationScreenSearchBarProps) => {
     return (
-        <View className=' bg-[#8D8C8A] w-[75%]  h-[100%] rounded-xl  text-base text-white flex-row items-center'>
+        <View className=' bg-[#8D8C8A] dark:bg-[#252D3B] w-[75%]  h-[100%] rounded-xl  text-base text-white flex-row items-center'>
             <View className='mx-3'>
                 <Material name="magnify" size={20} style={{ color: "white", fontWeight: "bold" }} />
 

@@ -26,6 +26,7 @@ import { BlurView } from 'expo-blur';
 import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interface/shopping/shopping_list';
 import { addShoppingList, addShoppingListItem } from 'src/redux/slices/ShoppingListSlice';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import { handleRestore } from 'src/utils/sheet/func';
 
 
 
@@ -85,6 +86,8 @@ const AddItemSheet = ({
     );
 
     const handleSubmit = async () => {
+        Keyboard.dismiss()
+        await handleRestore()
         if (householdName == '' || pickedCategory == -1) {
             setErrorText('Please fill in all the fields')
             setShowError(true)
@@ -171,8 +174,8 @@ const AddItemSheet = ({
                     setHouseholdCategory(-1)
                 }
             }}
-        // keyboardBehavior="extend"
-        // keyboardBlurBehavior="restore"
+            keyboardBehavior="interactive"
+            keyboardBlurBehavior="restore"
 
         >
             <View className='flex-1 bg-[#F7F7F7] dark:bg-[#0A1220] '>
@@ -225,6 +228,7 @@ const AddItemSheet = ({
 
                         }} onPress={() => {
                             // pickCategorySheetRef.current?.expand()
+                            Keyboard.dismiss()
                             addRoomSheetRef.current?.expand()
                         }}>
                             <View className='flex-row justify-between items-center'>

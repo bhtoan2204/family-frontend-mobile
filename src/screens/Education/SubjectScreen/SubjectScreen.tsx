@@ -100,26 +100,26 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
 
 
     return (
-        <View className="flex-1 bg-[#F7F7F7]">
+        <View className="flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]">
             <SubjectScreenHeader navigationBack={() => navigation.goBack()}
                 idFamily={id_family!}
                 imageUrl={familyInfo!.avatar || undefined}
                 title={getFirstLetterSubject(subjectDetailData.subject_name)}
                 addComponentScoreSheetRef={addComponentScoreSheetRef}
             />
-            <View className='flex-1   mt-[-3%]  rounded-tl-xl rounded-tr-xl overflow-hidden'>
-                <View className='h-28 bg-white border-b-[1px] border-gray-200'>
-                    <View className='flex-row h-full p-2 bg-[#FFFFFE]'>
-                        <View className='flex-1 border-r-[1px] border-gray-200  flex-col  items-center'>
-                            <Text className='text-base  text-opacity-0 font-medium' style={{ color: COLORS.AuroMetalSaurus }}  >Current grades</Text>
+            <View className='flex-1   mt-[-3%] bg-white dark:bg-[#0A1220] rounded-tl-xl rounded-tr-xl overflow-hidden'>
+                <View className='h-28 bg-white dark:bg-[#0A1220] border-b-[1px] border-gray-200 dark:border-[#232A3D]'>
+                    <View className='flex-row h-full p-2 bg-[#FFFFFE] dark:bg-[#0A1220]'>
+                        <View className='flex-1 border-r-[1px] border-gray-200 dark:border-[#232A3D]  flex-col  items-center'>
+                            <Text className='text-base  text-opacity-0 font-medium text-[#2F2F34] dark:text-white'  >Current grades</Text>
                             <View className='mt-2'>
-                                <Text className='text-4xl font-light' style={{ color: COLORS.AuroMetalSaurus }} >{currentGrade}</Text>
+                                <Text className='text-4xl font-light text-[#2F2F34] dark:text-white'  >{currentGrade}</Text>
                             </View>
                         </View>
                         <View className='flex-1   flex-col  items-center'>
-                            <Text className='text-base  font-medium'  >Target grades</Text>
-                            <View className='border-b-[1px] mt-2 border-[#56409e]'>
-                                <Text className='text-4xl font-light' >{expectedGrade}</Text>
+                            <Text className='text-base  font-medium text-[#2F2F34] dark:text-white'  >Target grades</Text>
+                            <View className='border-b-[1px] mt-2 border-[#56409e] dark:border-white'>
+                                <Text className='text-4xl font-light text-[#2F2F34] dark:text-white' >{expectedGrade}</Text>
                             </View>
                         </View>
                     </View>

@@ -31,6 +31,7 @@ import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
 import UpdateProgressSheet from 'src/components/user/education/education-screen/sheet/update-progress-sheet';
 import { deleteEducation } from 'src/redux/slices/EducationSlice';
 import EducationServices from 'src/services/apiclient/EducationService';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
 
 const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) => {
@@ -81,7 +82,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     }
 
     const buildListEmpty = () => {
-        return <TouchableOpacity className='flex-1 z-10 items-center justify-center bg-[#F7F7F7]' activeOpacity={1.0} onPress={() => {
+        return <TouchableOpacity className='flex-1 z-10 items-center justify-center bg-[#F7F7F7] dark:bg-[#0A1220]' activeOpacity={1.0} onPress={() => {
             Keyboard.dismiss()
         }}>
             <Text className='text-center text-lg text-gray-500'>No Education Found</Text>
@@ -89,7 +90,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     }
 
     const buildList = () => {
-        return <ScrollView className='flex-1 z-10 mt-5 bg-[#F7F7F7] '>
+        return <ScrollView className='flex-1 z-10 mt-5 bg-[#F7F7F7] dark:bg-[#0A1220]'>
             {
                 educationData.map((item, index) => {
                     return <React.Fragment key={index}>
@@ -106,7 +107,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
 
 
     return (
-        <View className="flex-1 bg-[#F7F7F7]">
+        <View className="flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]">
             {/* <TouchableOpacity activeOpacity={1.0} className='flex-1 bg-transparent' onPress={() => {
                 console.log('pressed')
                 Keyboard.dismiss()
@@ -122,13 +123,13 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                 addProgressBottomSheetRef={addProgressBottomSheetRef}
             />
 
-            <View className=' bg-[#f7f7f7] mt-[-3%]  rounded-tl-xl rounded-tr-xl h-[3%]'>
+            <View className=' bg-[#f7f7f7] dark:bg-[#0A1220] mt-[-3%]  rounded-tl-xl rounded-tr-xl h-[3%]'>
                 <View className='mt-[-5%] bg-transparent justify-center items-center  '>
                     <EducationScreenSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
                 </View>
 
             </View>
-            <View className='flex-1 '>
+            <View className='flex-1 bg-[#f7f7f7] dark:bg-[#0A1220]'>
                 {
                     educationData.length > 0 ? <>
                         {buildList()}
@@ -180,11 +181,13 @@ interface EducationItemProps {
 }
 
 const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, onDeleteItem }: EducationItemProps) => {
-    return <TouchableOpacity className='flex-row mx-6 items-center my-2 py-3  bg-white shadow-lg rounded-lg'
+    const isDarkMode = useSelector(getIsDarkMode)
+    return <TouchableOpacity className='flex-row mx-6 items-center my-2 py-3  bg-white dark:bg-[#252D3B] shadow-lg rounded-lg'
         onPress={() => {
             handleNavigateProgress(item.id_education_progress)
         }}
     >
+
         <View className='flex-row items-center'>
             <View className='mx-4'>
                 <Image source={item.user.avatar != "" ? { uri: item.user.avatar } : DefaultAvatar} style={{ width: ScreenHeight * 0.17, height: ScreenHeight * 0.17, borderRadius: 12 }}
@@ -202,9 +205,18 @@ const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, 
                     <View className=''>
                         <Menu >
                             <MenuTrigger>
-                                <Material name="dots-horizontal" size={ScreenHeight * 0.035} style={{ color: '#434343', fontWeight: "bold" }} />
+                                <Material name="dots-horizontal" size={ScreenHeight * 0.035} style={{ color: isDarkMode ? 'white' : '#434343', fontWeight: "bold" }} />
                             </MenuTrigger>
-                            <MenuOptions customStyles={optionsStyles} >
+                            <MenuOptions customStyles={{
+                                optionsContainer: {
+                                    borderRadius: 10,
+                                    marginTop: 24,
+                                    backgroundColor: isDarkMode ? '#0A1220' : 'white',
+                                },
+                                optionWrapper: {
+                                    padding: 10,
+                                },
+                            }} >
                                 <MenuOption onSelect={() => {
                                     // setIsEditing(true)
                                     openUpdateProgressSheet(item.id_education_progress, item.title, item.school_info, item.progress_notes)
@@ -232,15 +244,18 @@ const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, 
                     </View>
                 </View>
                 <View className='flex-row items-center overflow-clip mr-5 '>
-                    <Material name="account-outline" size={ScreenHeight * 0.035} style={{ color: '#2F2F34', fontWeight: "bold" }} />
-                    <Text className='ml-3 text-sm font-semibold ' numberOfLines={1} >{item.user.firstname} {item.user.lastname}</Text>
+                    <Material name="account-outline" size={ScreenHeight * 0.035} style={{
+                        color: isDarkMode ? 'white' : '#2F2F34',
+                        fontWeight: "bold"
+                    }} />
+                    <Text className='ml-3 text-sm font-semibold dark:text-white ' numberOfLines={1} >{item.user.firstname} {item.user.lastname}</Text>
                 </View>
                 <View className='flex-row items-center overflow-clip mr-5'>
-                    <Material name="town-hall" size={ScreenHeight * 0.035} style={{ color: '#2F2F34', fontWeight: "bold" }} />
+                    <Material name="town-hall" size={ScreenHeight * 0.035} style={{ color: isDarkMode ? 'white' : '#2F2F34', fontWeight: "bold" }} />
                     <Text className='ml-3 text-sm text-[#9A9A9A]' numberOfLines={1}>{item.school_info}</Text>
                 </View>
                 <View className='flex-row items-center overflow-clip mr-5'>
-                    <Material name="note-outline" size={ScreenHeight * 0.035} style={{ color: '#2F2F34', fontWeight: "bold" }} />
+                    <Material name="note-outline" size={ScreenHeight * 0.035} style={{ color: isDarkMode ? 'white' : '#2F2F34', fontWeight: "bold" }} />
                     <Text className='ml-3 text-sm text-[#9A9A9A]' numberOfLines={1}>{item.progress_notes}</Text>
                 </View>
 
@@ -248,7 +263,7 @@ const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, 
 
         </View>
 
-    </TouchableOpacity>
+    </TouchableOpacity >
 }
 
 const optionsStyles: MenuOptionsCustomStyle = {

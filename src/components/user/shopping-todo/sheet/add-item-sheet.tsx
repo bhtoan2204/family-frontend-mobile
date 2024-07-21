@@ -115,8 +115,12 @@ const AddItemSheet = ({
             // snapPoints={snapPoints}
 
             // handleComponent={null}
-            handleIndicatorStyle={{ backgroundColor: colorScheme == 'dark' ? '#D9D9D9' : '#D9D9D9', }}
-            backgroundComponent={null}
+            handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
+            backgroundStyle={{
+                backgroundColor: colorScheme === 'dark' ? '#0A1220' : '#F7F7F7',
+            }}
+
+            // backgroundComponent={null}
             backdropComponent={renderBackdrop}
             keyboardBehavior='interactive'
             keyboardBlurBehavior='restore'

@@ -16,6 +16,7 @@ import Camera from 'src/assets/images/household_assets/Camera.png'
 import Room2 from 'src/assets/images/household_assets/Room_2.png'
 import EditDescriptionImage from 'src/assets/images/household_assets/edit_description_sheet_img.png'
 import { updateDescription } from 'src/redux/slices/HouseHoldDetailSlice';
+import { handleRestore } from 'src/utils/sheet/func';
 
 interface AddEditDescriptionSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -63,6 +64,7 @@ const AddEditDescriptionSheet = ({
 
     const handleSubmit = async () => {
         Keyboard.dismiss()
+        await handleRestore()
         try {
             setLoading(true)
             dispatch(updateDescription(
@@ -119,7 +121,7 @@ const AddEditDescriptionSheet = ({
             handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
             backdropComponent={renderBackdrop}
             keyboardBehavior='interactive'
-            keyboardBlurBehavior='none'
+            keyboardBlurBehavior='restore'
             android_keyboardInputMode='adjustResize'
             onClose={() => {
                 Keyboard.dismiss()

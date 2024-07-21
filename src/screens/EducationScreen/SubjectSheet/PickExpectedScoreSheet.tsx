@@ -6,9 +6,10 @@ import { Picker } from '@react-native-picker/picker';
 import { ComponentScore, Subject } from 'src/interface/education/education';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useKeyboardVisible } from 'src/hooks/useKeyboardVisible';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from 'src/redux/store';
 import { updateComponentScoreOfSubject, updateExpectedScoreOfSubject } from 'src/redux/slices/EducationSlice';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
 interface PickExpectedScoreSheetProps {
     id_family: number;
@@ -36,6 +37,9 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, 
     const [isValid, setIsValid] = React.useState<boolean>(isNumberInRange(inputValue))
     const inputRef = React.useRef<TextInput>(null)
     const dispatch = useDispatch<AppDispatch>();
+    const isDarkMode = useSelector(getIsDarkMode)
+
+
     useEffect(() => {
         setIsValid(isNumberInRange(inputValue))
     }, [inputValue])
@@ -131,7 +135,7 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, 
             // closeOnPressBack
             customStyles={{
                 container: {
-                    backgroundColor: "#F5F6F7",
+                    backgroundColor: isDarkMode ? "#0A1220" : "#F7F7F7",
                     borderTopRightRadius: Dimensions.get("window").width * 0.03,
                     borderTopLeftRadius: Dimensions.get("window").width * 0.03
                     ,
@@ -154,9 +158,9 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, 
                     <TouchableOpacity onPress={() => {
                         setExpectedSheetRef.current?.close()
                     }} >
-                        <Text className='text-base font-semibold' style={{
+                        {/* <Text className='text-base font-semibold' style={{
                             color: iOSColors.systemRed.defaultDark
-                        }}>Cancel</Text>
+                        }}>Cancel</Text> */}
                     </TouchableOpacity >
                     <Text className='text-base font-semibold '>Set expected score </Text>
                     <TouchableOpacity onPress={() => {
@@ -165,11 +169,11 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, 
                             setExpectedSheetRef.current?.close()
                         }
                     }}>
-                        <Text className='text-base font-semibold'
+                        {/* <Text className='text-base font-semibold'
                             style={{
                                 color: iOSColors.systemBlue.defaultDark
                             }}
-                        >Save</Text>
+                        >Save</Text> */}
                     </TouchableOpacity>
                 </View>
 
@@ -206,15 +210,16 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, 
                                         setExpectedSheetRef.current?.close()
                                     }
                                 }}
+                                placeholderTextColor={!isDarkMode ? '#b0b0b0' : '#A6A6A6'}
                                 style={{
-                                    borderColor: isFocus ? iOSColors.systemBlue.defaultDark : iOSGrayColors.systemGray3.defaultLight,
+                                    borderColor: isFocus ? iOSColors.systemBlue.defaultDark : iOSColors.systemBlue.defaultDark,
                                     borderWidth: 1,
                                     borderRadius: 5,
                                     marginBottom: 15,
                                     fontSize: 17,
                                     padding: 17,
-                                    backgroundColor: "#fff"
-
+                                    backgroundColor: isDarkMode ? "#171A21" : "#F7F7F7",
+                                    color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
                                 }}
                             />
                             <Text style={{
@@ -225,7 +230,7 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, 
                                 fontSize: 15
                             }}>
                                 <Text style={{
-                                    color: !isValid ? iOSColors.systemRed.defaultDark : undefined
+                                    color: !isValid ? iOSColors.systemRed.defaultDark : (isDarkMode ? 'white' : 'black')
                                 }}>{showText(inputValue)}</Text>
                             </Text>
                         </View>

@@ -15,9 +15,9 @@ const ProgressTab = ({
 }: ProgressTabProps
 ) => {
     return (
-        <View className=' items-center  rounded-2xl mx-[7%]  bg-[#f7f7f7]'
+        <View className=' items-center  rounded-2xl mx-[7%]  bg-[#f7f7f7] dark:bg-[#252D3B] border-[1px] dark:border-[0px]'
             style={{
-                borderWidth: 1,
+                // borderWidth: 1,
                 borderColor: iOSGrayColors.systemGray5.defaultLight,
             }}
         >
@@ -26,14 +26,14 @@ const ProgressTab = ({
                     <TouchableOpacity className=' flex-1' onPress={() => {
                         setChoosenTab(0)
                     }}>
-                        <View className=' py-2 rounded-2xl'
+                        <View className={` py-2 rounded-2xl ${choosenTab == 0 ? 'bg-[#2a475e] dark:bg-[#66C0F4]' : 'bg-transparent'}`}
                             style={{
-                                backgroundColor: choosenTab == 0 ? COLORS.Rhino : 'transparent',
+                                // backgroundColor: choosenTab == 0 ? COLORS.Rhino : 'transparent',
                             }}>
-                            <Text className='text-center  text-sm font-semibold '
-                                style={{
-                                    color: choosenTab == 0 ? 'white' : COLORS.Rhino
-                                }}
+                            <Text className={`text-center  text-sm font-semibold ${choosenTab == 0 ? 'text-white ' : 'text-[#2A475E] dark:text-white'}`}
+                                // style={{
+                                //     color: choosenTab == 0 ? 'white' : COLORS.Rhino
+                                // }}
 
                             >All</Text>
                         </View>
@@ -41,14 +41,14 @@ const ProgressTab = ({
                     <TouchableOpacity className=' flex-1' onPress={() => {
                         setChoosenTab(1)
                     }}>
-                        <View className=' py-2 rounded-2xl'
+                        <View className={` py-2 rounded-2xl ${choosenTab == 1 ? 'bg-[#2a475e] dark:bg-[#66C0F4]' : 'bg-transparent'}`}
                             style={{
-                                backgroundColor: choosenTab == 1 ? COLORS.Rhino : 'transparent',
+                                // backgroundColor: choosenTab == 1 ? COLORS.Rhino : 'transparent',
                             }}>
-                            <Text className='text-center text-sm font-semibold '
-                                style={{
-                                    color: choosenTab == 1 ? 'white' : COLORS.Rhino
-                                }}
+                            <Text className={`text-center  text-sm font-semibold ${choosenTab == 1 ? 'text-white ' : 'text-[#2A475E] dark:text-white'}`}
+                                // style={{
+                                //     color: choosenTab == 1 ? 'white' : COLORS.Rhino
+                                // }}
 
                             >On Progress</Text>
                         </View>
@@ -56,14 +56,14 @@ const ProgressTab = ({
                     <TouchableOpacity className=' flex-1' onPress={() => {
                         setChoosenTab(2)
                     }}>
-                        <View className=' py-2 rounded-2xl'
+                        <View className={` py-2 rounded-2xl ${choosenTab == 2 ? 'bg-[#2a475e] dark:bg-[#66C0F4]' : 'bg-transparent'}`}
                             style={{
-                                backgroundColor: choosenTab == 2 ? COLORS.Rhino : 'transparent',
+                                // backgroundColor: choosenTab == 2 ? COLORS.Rhino : 'transparent',
                             }}>
-                            <Text className='text-center  text-sm font-semibold '
-                                style={{
-                                    color: choosenTab == 2 ? 'white' : COLORS.Rhino
-                                }}
+                            <Text className={`text-center  text-sm font-semibold ${choosenTab == 2 ? 'text-white ' : 'text-[#2A475E] dark:text-white'}`}
+                                // style={{
+                                //     color: choosenTab == 2 ? 'white' : COLORS.Rhino
+                                // }}
 
                             >Completed</Text>
                         </View>

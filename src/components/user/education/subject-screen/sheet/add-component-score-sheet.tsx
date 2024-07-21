@@ -28,6 +28,8 @@ import { addShoppingList, addShoppingListItem } from 'src/redux/slices/ShoppingL
 import EducationServices from 'src/services/apiclient/EducationService';
 import { addComponentScoreToSubject } from 'src/redux/slices/EducationSlice';
 import AddComponentScoreImage from 'src/assets/images/education_assets/add_component_score_img.png';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import { handleRestore } from 'src/utils/sheet/func';
 
 
 interface AddItemSheetProps {
@@ -57,7 +59,7 @@ const AddComponentScoreSheet = ({
     const [showError, setShowError] = React.useState(false)
 
     const [inputName, setInputName] = React.useState('')
-
+    const isDarkMode = useSelector(getIsDarkMode)
     useEffect(() => {
         if (showError) {
             setTimeout(() => {
@@ -79,13 +81,7 @@ const AddComponentScoreSheet = ({
 
     const handleAddComponentScore = async () => {
         Keyboard.dismiss()
-        await Promise.resolve(
-            new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve('1')
-                }, 100)
-            })
-        )
+        await handleRestore()
         console.log(id_subject
             , id_education_progress
             , id_family
@@ -139,7 +135,10 @@ const AddComponentScoreSheet = ({
             enableDynamicSizing={true}
             // snapPoints={snapPoints}
             // handleComponent={null}
-            // handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
+            handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
+            backgroundStyle={{
+                backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7',
+            }}
             backdropComponent={renderBackdrop}
             keyboardBehavior='interactive'
             keyboardBlurBehavior='restore'
@@ -156,7 +155,7 @@ const AddComponentScoreSheet = ({
         // keyboardBlurBehavior="restore"
 
         >
-            <View className='flex-1 bg-[#F7F7F7] '>
+            <View className='flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]'>
                 <BottomSheetScrollView className='' showsVerticalScrollIndicator={false} automaticallyAdjustKeyboardInsets style={{}} keyboardShouldPersistTaps='handled'>
 
                     <View className='flex-1  mt-10'>
@@ -164,14 +163,8 @@ const AddComponentScoreSheet = ({
                             <Image source={AddComponentScoreImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                         </View>
                         <View className=' items-center'>
-                            <Text className='text-base font-semibold' style={{
-                                color: iOSGrayColors.systemGray6.accessibleDark
-
-                            }}>Add New Component Score</Text>
-                            <Text className='text-sm my-3' style={{
-                                color: iOSGrayColors.systemGray6.accessibleDark
-
-                            }}>Give your new component score a name</Text>
+                            <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >Add New Component Score</Text>
+                            <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]'>Give your new component score a name</Text>
                         </View>
                         <BottomSheetTextInput
                             placeholder='Name of the item'
@@ -181,9 +174,9 @@ const AddComponentScoreSheet = ({
                             }}
                             // className='rounded-lg'
                             style={{
-                                backgroundColor: '#f5f5f5',
-                                borderWidth: 1,
-                                borderColor: '#DEDCDC',
+                                backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
+                                borderWidth: !isDarkMode ? 1 : 1.5,
+                                borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
                                 borderRadius: 10,
                                 marginVertical: 10,
                                 paddingVertical: screenHeight * 0.02,
@@ -191,7 +184,7 @@ const AddComponentScoreSheet = ({
                                 marginHorizontal: screenWidth * 0.05,
                                 // fontWeight: 'bold',
                                 fontSize: 15,
-                                color: '#b0b0b0'
+                                color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
                             }}
                         />
 

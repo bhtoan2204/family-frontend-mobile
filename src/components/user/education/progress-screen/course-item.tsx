@@ -60,7 +60,7 @@ const CourseItem = ({ data, onPress, index }: CourseItemProps) => {
 
     return (
         data && <TouchableOpacity className=' h-auto  mt-4 mx-5 ' onPress={onPress}>
-            <View className='flex-row items-center bg-white p-4 rounded-lg shadow-lg '>
+            <View className='flex-row items-center bg-white dark:bg-[#252D3B] p-4 rounded-lg shadow-lg '>
                 <Image source={gradients_list[index % gradients_list.length]} width={ScreenHeight * 0.2}
                     height={ScreenHeight * 0.12}
                     className=" mr-4  "
@@ -74,7 +74,7 @@ const CourseItem = ({ data, onPress, index }: CourseItemProps) => {
                 <View className='flex-1 ' style={{
 
                 }}>
-                    <Text className='font-bold text-[#2F2F34] flex-1 '
+                    <Text className='font-bold text-[#2F2F34] dark:text-white flex-1 '
                         style={{
                             fontSize: 16,
                             lineHeight: 0
@@ -82,7 +82,7 @@ const CourseItem = ({ data, onPress, index }: CourseItemProps) => {
                         }}
                         numberOfLines={1}
                     >{data.subject_name}</Text>
-                    <Text className='font-medium text-[#2F2F34]  flex-1' style={{
+                    <Text className='font-medium text-[#2F2F34] dark:text-[#8D94A5]  flex-1' style={{
                         fontSize: 15,
                         lineHeight: 0
 
@@ -90,7 +90,7 @@ const CourseItem = ({ data, onPress, index }: CourseItemProps) => {
                         numberOfLines={1}
                     >{data.description || "no description"}</Text>
 
-                    <Text className=' text-[#8F8F8F] font-light flex-1 '
+                    <Text className=' text-[#8F8F8F] dark:text-white font-light flex-1 '
                         style={{
                             fontSize: 14,
                             lineHeight: 0

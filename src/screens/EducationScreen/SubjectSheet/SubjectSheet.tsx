@@ -53,24 +53,24 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                 // }
             }}
         >
-            <View className='flex-col px-6 py-6 bg-[#fafafa] justify-center'>
-                <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={() => {
+            <View className='flex-col px-6 py-6 bg-[#fafafa] dark:bg-[#0A1220] justify-center'>
+                <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] dark:border-[#232A3D] rounded-lg shadow-sm bg-white dark:bg-[#232A3D]' onPress={() => {
                     // bottomSheetRef.current?.close()
                     setExpectedSheetRef.current?.open()
                     // await handleTakePhoto()
                 }}>
-                    <Text className='text-lg font-semibold'>Set expect score</Text>
+                    <Text className='text-lg font-semibold text-black dark:text-white'>Set expect score</Text>
                 </TouchableOpacity>
-                <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={() => {
+                <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] dark:border-[#232A3D] rounded-lg shadow-sm bg-white dark:bg-[#232A3D]' onPress={() => {
                     // bottomSheetRef.current?.close()
                     setScoreSheetRef.current?.open()
                     // await handleTakePhoto()
 
                 }}>
-                    <Text className='text-lg font-semibold'>Set score</Text>
+                    <Text className='text-lg font-semibold text-black dark:text-white'>Set score</Text>
                 </TouchableOpacity>
                 {
-                    index !== -1 && index !== -2 && <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
+                    index !== -1 && index !== -2 && <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] dark:border-[#232A3D] rounded-lg shadow-sm bg-white dark:bg-[#232A3D]' onPress={async () => {
                         // dispatch(clearScoreOfSubject({
                         //     id_subject,
                         //     id_education_progress,
@@ -84,7 +84,7 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                         }}>Update name</Text>
                     </TouchableOpacity>
                 }
-                <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
+                <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] dark:border-[#232A3D] rounded-lg shadow-sm bg-white dark:bg-[#232A3D]' onPress={async () => {
                     dispatch(clearScoreOfSubject({
                         id_subject,
                         id_education_progress,
@@ -97,7 +97,7 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                     }}>Clear score data</Text>
                 </TouchableOpacity>
                 {
-                    index !== -1 && index !== -2 && <TouchableOpacity className='h-16 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
+                    index !== -1 && index !== -2 && <TouchableOpacity className='h-16 flex-row items-center justify-center border-[1px] border-[#d1d1d1] dark:border-[#232A3D]  rounded-lg shadow-sm bg-white dark:bg-[#232A3D]' onPress={async () => {
                         dispatch(deleteComponentScoreOfSubject({
                             id_subject,
                             id_education_progress,

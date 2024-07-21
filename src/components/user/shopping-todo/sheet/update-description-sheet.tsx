@@ -26,6 +26,7 @@ import { addShoppingList, addShoppingListItem, updateDescriptionItem } from 'src
 import { updateDescription, updateDateTodoList } from 'src/redux/slices/TodoListSlice';
 
 import { to_vietnamese } from 'src/utils/currency-str';
+import { handleRestore } from 'src/utils/sheet/func';
 
 
 
@@ -74,6 +75,8 @@ const UpdateDescriptionSheet = ({
         //     id_item: id_item,
         //     description: inputDescription
         // }))
+        Keyboard.dismiss()
+        await handleRestore()
         dispatch(updateDescription({
             id_item: id_item,
             description: inputDescription
