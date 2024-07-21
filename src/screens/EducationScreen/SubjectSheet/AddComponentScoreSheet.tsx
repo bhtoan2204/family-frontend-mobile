@@ -9,11 +9,12 @@ import ImageComponent from 'src/components/Image/Image';
 import { useKeyboardVisible } from 'src/hooks/useKeyboardVisible';
 import * as ImagePicker from 'expo-image-picker';
 import { Subject } from 'src/interface/education/education';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from 'src/redux/store';
 import { addComponentScoreToSubject } from 'src/redux/slices/EducationSlice';
 import { iOSColors } from 'src/constants/ios-color';
 import EducationServices from 'src/services/apiclient/EducationService';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 // import PickImageSheet from 'src/screens/GuildLineScreen/PickImageSheet/PickImageSheet';
 
 interface AddComponentScoreSheetProps {
@@ -34,6 +35,7 @@ const AddComponentScoreSheet = ({ refRBSheet, id_education_progress, id_family, 
     const nameInputRef = React.useRef<TextInput>(null);
     const descriptionInputRef = React.useRef<TextInput>(null);
     const dispatch = useDispatch<AppDispatch>();
+    const isDarkMode = useSelector(getIsDarkMode)
     const handleAddComponentScore = async () => {
         // setSubjectDetailData((prev) => {
         //     return {
