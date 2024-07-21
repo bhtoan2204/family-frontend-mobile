@@ -21,6 +21,9 @@ const LocalStorage = {
   },
   RemoveUserData: async () => await AsyncStorage.removeItem(KeyStore.USER_DATA),
   ClearAll: async () => await AsyncStorage.clear(),
+  GetIsDarkMode: async () => await AsyncStorage.getItem(KeyStore.IS_DARK_MODE),
+  StoreIsDarkMode: async (isDarkMode: string) =>
+    await AsyncStorage.setItem(KeyStore.IS_DARK_MODE, isDarkMode),
 };
 
 export default LocalStorage;

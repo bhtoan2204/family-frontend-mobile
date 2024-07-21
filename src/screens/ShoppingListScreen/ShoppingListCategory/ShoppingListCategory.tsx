@@ -1,7 +1,5 @@
-import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns'
 import React, { useCallback, useEffect, useState } from 'react'
-import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView } from 'react-native'
-import { Agenda, AgendaSchedule, Calendar, CalendarList } from 'react-native-calendars'
+import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView, StatusBar } from 'react-native'
 import { useSelector } from 'react-redux'
 import { ShoppingListCategoryScreenProps } from 'src/navigation/NavigationTypes'
 import { RootState } from 'src/redux/store'
@@ -9,33 +7,23 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import { COLORS } from 'src/constants'
 import { colors, textColors } from '../const/color'
 
-import GroceryImage from 'src/assets/images/shoppinglist_assets/grocery.png'
-import ElectronicsImage from 'src/assets/images/shoppinglist_assets/Electronics.png'
-import ClothingImage from 'src/assets/images/shoppinglist_assets/Clothing.png'
-import FurnitureImage from 'src/assets/images/shoppinglist_assets/Furniture.png'
-import PharmacyImage from 'src/assets/images/shoppinglist_assets/Pharmacy.png'
-import OtherImage from 'src/assets/images/shoppinglist_assets/Other.png'
+
 import GroceryBgImage from 'src/assets/images/shoppinglist_assets/grocery_bg_image.png'
 import ElectronicsBgImage from 'src/assets/images/shoppinglist_assets/electronics_bg_image.png'
 import ClothingBgImage from 'src/assets/images/shoppinglist_assets/clothing_bg_image.png'
 import FurnitureBgImage from 'src/assets/images/shoppinglist_assets/furniture_bg_image.png'
 import PharmacyBgImage from 'src/assets/images/shoppinglist_assets/pharmacy_bg_image.png'
 import OtherBgImage from 'src/assets/images/shoppinglist_assets/other_bg_image.png'
-import GamingIcon from 'src/assets/images/shoppinglist_assets/gaming_icon.png'
 import EmptyListIcon from 'src/assets/images/shoppinglist_assets/empty_list_icon.png'
 
-import { ListItem } from '@rneui/themed';
-import { gradients_list } from 'src/assets/images/gradients'
-import { ScreenWidth } from '@rneui/base'
-import { ShoppingListItemInterface } from 'src/interface/checklist/checklist'
-import ShoppingListServices from 'src/services/apiclient/ShoppingListServices'
+
 import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interface/shopping/shopping_list'
 import ShoppingListCategoryItem from 'src/components/user/shopping/shopping-list-category/shopping-list-category-item'
 import BottomSheet from '@gorhom/bottom-sheet'
 import AddItemSheet from 'src/components/user/shopping/sheet/add-item-sheet'
-import AddCategorySheet from 'src/components/user/shopping/sheet/add-category-sheet'
 import ShoppingListPickCategorySheet from 'src/components/user/shopping/sheet/add-category-sheet'
-
+import { useColorScheme } from 'nativewind'
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -82,7 +70,7 @@ const mapByItemType2 = (items: ShoppingListItem[]): Map<string, ShoppingListItem
 const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryScreenProps) => {
     const { id_family, id_category } = route.params
     // console.log('id_family', id_family, 'id_category', id_category)
-    const familyInfo = useSelector((state: RootState) => state.family).family
+    const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
     const shoppingListInfo = useSelector((state: RootState) => state.shoppinglist).shoppingList.filter((item) => item.id_shopping_list_type === id_category)
     const [mapItems, setMapItems] = useState<Map<ShoppingListItemType, ShoppingListItem[]>>(new Map())
     console.log('cout', shoppingListInfo)
@@ -93,15 +81,15 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
     const addItemBottomSheetRef = React.useRef<BottomSheet>(null)
     const addCategoryBottomSheetRef = React.useRef<BottomSheet>(null)
     const [pickedCategory, setPickedCategory] = useState<number>(-1)
-
-
+    const isDarkMode = useSelector(getIsDarkMode)
     // const items: ShoppingListItem[] = []
     useEffect(() => {
         console.log("shopping list", shoppingListInfo)
         console.log(items)
     }, [shoppingListInfo])
 
-
+    useEffect(() => {
+    }, [])
 
 
     const getImage = (id_category: number) => {
@@ -154,7 +142,7 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
 
     const buildEmptyList = () => {
         return (
-            <View className='flex-1 justify-center items-center '>
+            <View className='flex-1 justify-center items-center bg-white dark:bg-[#0A1220] '>
                 <View className='justify-center items-center mt-[-4%]'>
                     <View className='mb-4'>
                         <Image source={EmptyListIcon} style={{
@@ -162,8 +150,8 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
                             width: screenHeight * 0.2,
                         }} />
                     </View>
-                    <Text className='text-[#747474] my-2 font-bold text-lg'>Nothing to buy?</Text>
-                    <Text className='mx-[15%] text-center text-sm text-[#747474]'>Tap on the button to add product to your shopping list</Text>
+                    <Text className='text-[#747474] my-2 font-bold text-lg dark:text-[#d8d8d8]'>Nothing to buy?</Text>
+                    <Text className='mx-[15%] text-center text-sm text-[#747474] dark:text-[#d8d8d8]'>Tap on the button to add product to your shopping list</Text>
                 </View>
             </View>
         )
@@ -173,9 +161,12 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
         return (
             Array.from(items.entries()).map(([item, index]) => {
                 return (
-                    <ShoppingListCategoryItem item_type={JSON.parse(item)} items={
-                        items.get(item) || []
-                    } handleNavigateItemDetail={handleNavigateItemDetail} />
+                    <ShoppingListCategoryItem
+                        item_type={JSON.parse(item)} items={
+                            items.get(item) || []
+                        } handleNavigateItemDetail={handleNavigateItemDetail}
+                        
+                    />
                 )
             })
         )
@@ -185,6 +176,7 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
 
     return (
         <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
+            <StatusBar barStyle={!isDarkMode ? 'dark-content' : 'dark-content'} />
             <View className='py-6 h-[29%] ' style={{
                 backgroundColor: colors[id_category - 1],
             }}>
@@ -220,7 +212,7 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
                 </View>
             </View>
 
-            <View className='flex-1 mt-[-5%] rounded-tl-xl rounded-tr-xl r bg-white overflow-hidden z-100'>
+            <View className='flex-1 mt-[-5%] rounded-tl-xl rounded-tr-xl r bg-white dark:bg-[#0A1220] overflow-hidden z-100'>
                 <TouchableOpacity activeOpacity={0.65} className='absolute rounded-full bottom-10 right-3 z-10  items-center justify-center' style={{
                     height: screenHeight * 0.08,
                     width: screenHeight * 0.08,
@@ -235,7 +227,7 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
                 <View className='bg-white flex-1 '>
                     {
                         items && items.size > 0 ?
-                            <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
+                            <ScrollView className='flex-1 bg-white dark:bg-[#0A1220]' showsVerticalScrollIndicator={false}>
                                 <View style={{
                                 }} className='flex-1 py-4 '>
                                     {/* <View className='my-4'></View> */}
@@ -267,6 +259,7 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
                 onSetCategory={(id_category) => {
                     console.log('id_category', id_category)
                     setPickedCategory(id_category)
+                    addCategoryBottomSheetRef.current?.close()
                 }}
                 category={pickedCategory}
                 onNavigateCreateCategory={() => {

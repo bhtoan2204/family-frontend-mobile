@@ -5,11 +5,12 @@
     "scheme": "mobile_shell",
     "version": "1.0.0",
     "orientation": "portrait",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -19,7 +20,9 @@
       "bundleIdentifier": "com.anonymous.mobile_shell",
       "infoPlist": {
         "UIViewControllerBasedStatusBarAppearance": false
-      }
+      },
+      "userInterfaceStyle": "automatic"
+
     },
     "platforms": ["ios", "android"],
     "notification": {
@@ -28,7 +31,8 @@
       "iosDisplayInForeground": true
     },
     "android": {
-      "package": "com.anonymous.mobile_shell"
+      "package": "com.anonymous.mobile_shell",
+      "userInterfaceStyle": "automatic"
     }
   }
 }

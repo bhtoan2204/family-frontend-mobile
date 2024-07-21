@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Image, View, Text, Dimensions } from 'react-native'
+import { TouchableOpacity, Image, View, Text, Dimensions, Alert } from 'react-native'
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import MemberIcon from 'src/assets/images/diversity.png'
 import { COLORS } from 'src/constants'
@@ -28,6 +28,22 @@ const GuildlineItem = ({ item, onPress, onUpdate }: GuildlineItemProps) => {
         dispatch(deleteGuideline(item.id_guide_item))
         itemRef.current?.close();
     };
+    const handleDeleteUi = () => {
+        Alert.alert(
+            "Delete Guideline",
+            "Are you sure you want to delete this guideline?",
+            [
+
+                { text: "Confirm", onPress: () => handleDelete() },
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "destructive"
+                },
+            ],
+            { cancelable: true }
+        )
+    }
     const handleUpdate = () => {
         // itemRef.current?.close();
         onUpdate();
@@ -42,7 +58,7 @@ const GuildlineItem = ({ item, onPress, onUpdate }: GuildlineItemProps) => {
                 </View>
 
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleDelete} style={{ backgroundColor: '#EF3B4F', width: "auto" }} className='flex-1 flex-row items-center h-full py-6  justify-center border-r-[1px] border-white' >
+            <TouchableOpacity onPress={handleDeleteUi} style={{ backgroundColor: '#EF3B4F', width: "auto" }} className='flex-1 flex-row items-center h-full py-6  justify-center border-r-[1px] border-white' >
                 {/* py-6 px-2  mb-3 */}
                 <View className='flex-col items-center '>
                     <Icon name="trash" size={20} color={"white"} style={{ marginHorizontal: 4 }} />

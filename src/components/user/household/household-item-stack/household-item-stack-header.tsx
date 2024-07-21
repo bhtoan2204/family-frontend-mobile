@@ -46,9 +46,9 @@ const HouseHoldItemStackHeader = ({
         <>
             <ImageBackground
                 source={data.item_imageurl ? { uri: data.item_imageurl } : data.item_image!}
-                style={{ width: screenWidth, height: screenHeight * 0.25 }}
+                style={{ width: screenWidth, height: screenHeight * 0.3 }}
             >
-                <View className='w-full absolute z-10 flex-row justify-between items-center py-3'>
+                <View className='w-full absolute z-10 flex-row justify-between items-center py-3 mt-5'>
                     <BlurView intensity={35} tint='dark' className=' ml-1 rounded-lg overflow-hidden'>
                         <TouchableOpacity onPress={navigationBack} className=' flex-row items-center'>
                             <Material name="chevron-left" size={30} style={{ color: "white", fontWeight: "bold" }} />
@@ -62,19 +62,7 @@ const HouseHoldItemStackHeader = ({
                             <Text className='text-lg font-semibold text-white' >{data.item_name}</Text>
                         </View>
                     </BlurView>
-
-                    {/* <View className='mr-1'>
-                    <TouchableOpacity onPress={() => {
-                        // refRBSheet.current?.open()
-                        // navigation.navigate('AddHouseHoldItem', {
-                        //   id_family
-                        // })
-
-                    }} >
-                        <Material name="dots-horizontal" size={24} style={{ color: 'white', fontWeight: "bold" }} />
-                        
-                    </TouchableOpacity>
-                </View> */}
+                    
                     <BlurView intensity={35} tint='dark' className='flex-row items-center  mr-1 rounded-lg overflow-hidden'>
                         <Menu >
                             <MenuTrigger>

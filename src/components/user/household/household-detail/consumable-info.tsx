@@ -1,11 +1,12 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Image } from 'react-native'
 import { iOSGrayColors } from 'src/constants/ios-color'
 import { HouseHoldItemDetailInterface } from 'src/interface/household/household_item_detail'
 import { COLORS } from 'src/constants'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import ConsumableSkeleton from './consumable-skeleton'
-
+import EmptyConsumableIcon from 'src/assets/images/household_assets/edit_consumable_sheet_img.png'
+import { ScreenHeight } from '@rneui/base'
 
 interface ConsumableInfoProps {
     data: HouseHoldItemDetailInterface
@@ -75,14 +76,21 @@ const ConsumableInfo = ({ data }: ConsumableInfoProps) => {
                 <View className='justify-center'>
                     <View className=' items-center'>
                         {/* <Image source={QuantityIcon} style={{ width: 24, height: 24 }} /> */}
-                        <Material name='plus' size={24} color={iOSGrayColors.systemGray.accessibleDark} />
+                        {/* <Material name='plus' size={24} color={iOSGrayColors.systemGray.accessibleDark} /> */}
+                        <Image source={EmptyConsumableIcon} style={{ width: ScreenHeight * 0.08, height: ScreenHeight * 0.08 }} />
                     </View>
-                    <Text className=' text-center text-base py-5'
+                    <Text className=' text-center text-base pt-5 pb-2 font-semibold '
                         style={{
                             color: COLORS.Rhino,
 
                         }}
-                    >Add consumable item</Text>
+                    >You forgot somthing?</Text>
+                    <Text className=' text-center text-sm pb-5'
+                        style={{
+                            color: COLORS.Rhino,
+
+                        }}
+                    >Add consumable for this item</Text>
                 </View>
             </View>
         </>

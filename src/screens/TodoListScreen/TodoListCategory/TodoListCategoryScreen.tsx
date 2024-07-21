@@ -2,9 +2,9 @@ import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns
 import React, { useCallback, useEffect, useState } from 'react'
 import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView, Appearance } from 'react-native'
 import { Agenda, AgendaSchedule, Calendar, CalendarList } from 'react-native-calendars'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ShoppingListCategoryScreenProps, TodoListCategoryScreenProps } from 'src/navigation/NavigationTypes'
-import { RootState } from 'src/redux/store'
+import { AppDispatch, RootState } from 'src/redux/store'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import { COLORS } from 'src/constants'
 import { colors, textColors } from '../const/color'
@@ -32,12 +32,13 @@ import ShoppingListServices from 'src/services/apiclient/ShoppingListServices'
 import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interface/shopping/shopping_list'
 import ShoppingListCategoryItem from 'src/components/user/shopping/shopping-list-category/shopping-list-category-item'
 import BottomSheet from '@gorhom/bottom-sheet'
-import AddItemSheet from 'src/components/user/shopping/sheet/add-item-sheet'
-import AddCategorySheet from 'src/components/user/shopping/sheet/add-category-sheet'
-import ShoppingListPickCategorySheet from 'src/components/user/shopping/sheet/add-category-sheet'
+import AddItemSheet from 'src/components/user/shopping-todo/sheet/add-item-sheet'
+
+
 import { categoriesImage } from '../const/image'
 import { TodoListItem } from 'src/interface/todo/todo'
 import { styled, useColorScheme } from "nativewind";
+import { updateDoneTodoList } from 'src/redux/slices/TodoListSlice'
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -51,42 +52,38 @@ const screenHeight = Dimensions.get('screen').height;
 const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenProps) => {
     const { id_family, id_category } = route.params
     // console.log('id_family', id_family, 'id_category', id_category)
-    const familyInfo = useSelector((state: RootState) => state.family).family
-    // const shoppingListInfo = useSelector((state: RootState) => state.shoppinglist).shoppingList.filter((item) => item.id_shopping_list_type === id_category)
-    const todoCategories = useSelector((state: RootState) => state.todoList).todoListType
+    const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
 
+    const dispatch = useDispatch<AppDispatch>();
+    const todoCategories = useSelector((state: RootState) => state.todoList).todoListType
+    const todoListCategoryItems = useSelector((state: RootState) => state.todoList).todoList.filter((item) => item.id_checklist_type === id_category)
+    const todoListType = todoCategories.find(item => item.id_checklist_type == id_category)!
     const addItemBottomSheetRef = React.useRef<BottomSheet>(null)
     const addCategoryBottomSheetRef = React.useRef<BottomSheet>(null)
     const { colorScheme, toggleColorScheme } = useColorScheme();
 
-    // React.useEffect(() => {
-    //     console.log(colorScheme)
-    // }, [colorScheme])
-    // const items: ShoppingListItem[] = []
-
-
-
-
 
     const getImage = (id_category: number) => {
-
         return categoriesImage[id_category - 1]
     }
 
     const getCategoryName = (id_category: number) => {
-
-        const name = todoCategories.find((item) => item.id_checklist_type === id_category)
-        return name ? name.name_en : "No name found"
+        return todoListType ? todoListType.name_en : "No name found"
     }
 
-    const handleNavigateItemDetail = (id_list: number, id_item: number) => {
-        console.log('id_list', id_list, 'id_item', id_item)
+    const handleNavigateItemDetail = (id_item: number) => {
+        console.log('id_item', id_item)
         navigation.navigate('TodoListItemDetail', {
             id_family: id_family,
-            id_list: id_list,
             id_category: id_category,
             id_item: id_item,
         })
+    }
+
+    const handleUpdateComplete = (id_item: number) => {
+        dispatch(updateDoneTodoList({
+            id_item: id_item,
+        }))
     }
 
     const buildEmptyList = () => {
@@ -99,8 +96,8 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
                             width: screenHeight * 0.2,
                         }} />
                     </View>
-                    <Text className='text-[#747474] my-2 font-bold text-lg'>Nothing to buy?</Text>
-                    <Text className='mx-[15%] text-center text-sm text-[#747474]'>Tap on the button to add product to your shopping list</Text>
+                    <Text className='text-[#747474] dark:text-[#8D94A5] my-2 font-bold text-lg'>Nothing to buy?</Text>
+                    <Text className='mx-[15%] text-center text-sm text-[#747474] dark:text-[#8D94A5]'>Tap on the button to add product to your shopping list</Text>
                 </View>
             </View>
         )
@@ -110,8 +107,19 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
         return (
             <View className='mx-8 my-4 '>
                 <View className='my-2'></View>
-                <TodoListCategoryItem item={{}} handleNavigateItemDetail={handleNavigateItemDetail} />
-                <TodoListCategoryItem item={{}} handleNavigateItemDetail={handleNavigateItemDetail} />
+                {
+                    todoListCategoryItems.map((item, index) => {
+                        return (
+                            <React.Fragment key={index}>
+                                <TodoListCategoryItem item={item} handleNavigateItemDetail={handleNavigateItemDetail}
+                                    handleUpdateComplete={handleUpdateComplete}
+                                />
+                            </React.Fragment>
+                        )
+                    })
+                }
+                {/* <TodoListCategoryItem item={{}} handleNavigateItemDetail={handleNavigateItemDetail} />
+                <TodoListCategoryItem item={{}} handleNavigateItemDetail={handleNavigateItemDetail} /> */}
             </View>
         )
     }
@@ -155,7 +163,7 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
                 </View>
             </View>
 
-            <View className='flex-1 mt-[-5%] rounded-tl-2xl rounded-tr-2xl r bg-white dark:bg-black overflow-hidden z-100'>
+            <View className='flex-1 mt-[-5%] rounded-tl-2xl rounded-tr-2xl r bg-white dark:bg-[#0A1220] overflow-hidden z-100'>
                 <TouchableOpacity activeOpacity={0.65} className='absolute rounded-full bottom-10 right-3 z-10  items-center justify-center' style={{
                     height: screenHeight * 0.08,
                     width: screenHeight * 0.08,
@@ -167,9 +175,9 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
                 >
                     <Material name='plus' size={35} color={'white'} />
                 </TouchableOpacity>
-                <View className='bg-white dark:bg-[#1B2838] flex-1 '>
+                <View className='bg-white dark:bg-[#0A1220] flex-1 '>
                     {
-                        1 == 1 ?
+                        todoListCategoryItems && todoListCategoryItems.length > 0 ?
                             <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
                                 <View style={{
                                 }} className='flex-1 py-4 '>
@@ -191,11 +199,7 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
 
                 </View>
             </View>
-            {/* <AddItemSheet addRoomSheetRef={addCategoryBottomSheetRef} id_family={id_family!} bottomSheetRef={addItemBottomSheetRef}
-                pickedCategory={pickedCategory}
-                categories={categories}
-                id_shopping_list_type={id_category!}
-            /> */}
+            <AddItemSheet bottomSheetRef={addItemBottomSheetRef} id_family={id_family!} id_checklist_type={id_category!} checklistType={todoListType} />
             {/* <AddCategorySheet bottomSheetRef={addCategoryBottomSheetRef} id_family={id_family!} /> */}
 
         </View>
@@ -203,23 +207,43 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
     )
 }
 
-const TodoListCategoryItem = ({ item, handleNavigateItemDetail }: { item: TodoListItem, handleNavigateItemDetail: (id_list: number, id_item: number) => void }) => {
+interface TodoListCategoryItemProps {
+    item: TodoListItem
+    handleNavigateItemDetail: (id_item: number) => void
+    handleUpdateComplete: (id_item: number) => void
+}
+
+
+const TodoListCategoryItem = ({ item, handleNavigateItemDetail, handleUpdateComplete }: TodoListCategoryItemProps) => {
     return <TouchableOpacity className='flex-row justify-between items-center  w-full  py-4 '
         onPress={() => {
             // console.log(item.id_item, item.id_list)
-            handleNavigateItemDetail(item.id_checklist || 1, item.id_item || 1)
+            handleNavigateItemDetail(item.id_checklist)
         }}
     >
         <View className=' flex-row mr-2 items-center'>
 
-            <View className='border-2 p-3 rounded-full mr-2' style={{
-                borderColor: '#CBCBCB'
-            }}>
-            </View>
+            <TouchableOpacity className='border-2 w-8 h-8 rounded-full mr-4 items-center justify-center' style={{
+                borderWidth: item?.is_completed ? 0 : 2,
+                borderColor: item?.is_completed ? 'transparent' : '#CBCBCB',
+                backgroundColor: item?.is_completed ? '#00AE00' : undefined,
+            }}
+                onPress={() => {
+                    console.log('hello')
+                    handleUpdateComplete(item.id_checklist)
+                    // dispatch(updateDoneTodoList({
+                    //     id_item: id_item,
+                    // }))
+                }}
+            >
+                {
+                    item?.is_completed && <Material name='check' size={20} color={'white'} />
+                }
+            </TouchableOpacity>
             <Text className='text-base text-[#2F2F34] dark:text-white'
                 numberOfLines={1}
 
-            >{item.item_name || "name"}</Text>
+            >{item.task_name || "name"}</Text>
         </View>
         <View className='justify-end '>
             {/* <Text className='text-sm text-[#B2B2B4]'>{item.price} VND</Text> */}

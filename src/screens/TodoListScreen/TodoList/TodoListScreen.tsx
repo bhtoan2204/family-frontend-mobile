@@ -1,6 +1,6 @@
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns'
 import React, { useCallback, useEffect, useState } from 'react'
-import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView } from 'react-native'
+import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView, StatusBar } from 'react-native'
 import { Agenda, AgendaSchedule, Calendar, CalendarList } from 'react-native-calendars'
 import { useSelector } from 'react-redux'
 import { ShoppingListScreenProps, TodoListScreenProps } from 'src/navigation/NavigationTypes'
@@ -15,20 +15,62 @@ import FurnitureImage from 'src/assets/images/shoppinglist_assets/Furniture.png'
 import PharmacyImage from 'src/assets/images/shoppinglist_assets/Pharmacy.png'
 import OtherImage from 'src/assets/images/shoppinglist_assets/Other.png'
 import { colors } from '../const/color'
+import { TodoListItem, TodoListType } from 'src/interface/todo/todo'
+import { useColorScheme } from 'nativewind'
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 const screenHeight = Dimensions.get('screen').height;
 
 
+const mapTodoList = (todoList: TodoListItem[], todoListTypes: TodoListType[]): Map<string, TodoListItem[]> => {
+    const data: TodoListItem[] = JSON.parse(JSON.stringify(todoList))
+    const map: Map<string, TodoListItem[]> = new Map()
+    for (let i = 0; i < todoListTypes.length; i++) {
+        const type = todoListTypes[i]
+        if (!map.has(JSON.stringify(type))) {
+            map.set(JSON.stringify(type), [])
+        }
+    }
+
+
+    for (let i = 0; i < data.length; i++) {
+        const itemType = JSON.stringify(data[i].checklistType)
+        if (!map.has(JSON.stringify(data[i].checklistType))) {
+            const arr = [data[i]]
+            map.set(itemType, arr)
+        } else {
+            map.get(itemType)?.push(data[i])
+        }
+    }
+    return map
+}
+
 const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
     const { id_family } = route.params
-    const familyInfo = useSelector((state: RootState) => state.family).family
+    const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
     const [selectDate, setSelectDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
     const todoListTypes = useSelector((state: RootState) => state.todoList).todoListType
+    const todoList = useSelector((state: RootState) => state.todoList).todoList
+    const todosMap = mapTodoList(todoList, todoListTypes)
+    const { colorScheme, setColorScheme } = useColorScheme();
+    const [key, setKey] = useState(false);
+    const isDarkMode = useSelector(getIsDarkMode)
+    // useEffect(() => {
+    //     console.log(todosMap)
+    //     console.log(todoList)
+    // }, [todosMap])
     // const handleFilterData = () => {
     //     const returnArray = []
     //     for (let i = 0; i < data.length; i++) {
 
     //     }
     // }
+    // useEffect(() => {
+    //     setColorScheme('dark')
+    // }, [])
+
+    useEffect(() => {
+        setKey((prev) => !prev)
+    }, [colorScheme])
 
     const loadItemsForMonth = (month: any) => {
         console.log('trigger items loading');
@@ -40,9 +82,7 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
             </View>
         );
     };
-    const rowHasChanged = (r1: any, r2: any) => {
-        return r1.id_calendar !== r2.id_calendar;
-    };
+
     const handleDayPress = (date: any) => {
         if (selectDate === date.dateString) {
             // setSelectDate(new Date); 
@@ -86,8 +126,8 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
             }}>
 
                 <View className=''>
-                    <Text className='flex-1 text-center text-base'
-                        style={{ color: '#2A475E', fontWeight: 'bold' }}
+                    <Text className='flex-1 text-center text-base text-[#2A475E] dark:text-[#fff]'
+                        style={{ fontWeight: 'bold' }}
                     >{buildDate(selectDate)}</Text>
                 </View>
                 <View className='flex-row '>
@@ -106,85 +146,112 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
         )
     }
 
+    const buildItems = () => {
+        // const a = Array.from(todosMap.entries())
+        return Array.from(todosMap.entries()).map(([item, index]) => {
+            const type = JSON.parse(item) as TodoListType
+            return todosMap.get(item) && <TodoListCategoryItem id_category={type.id_checklist_type} category_name={type.name_en} total_items={todosMap.get(item)!.length}
+                handleNavigateCategory={() => {
+                    // console.log('navigate')
+                    navigation.navigate('TodoListCategory', {
+                        id_family: id_family,
+                        id_category: type.id_checklist_type
+                    })
+                }}
+                iconUrl={type.icon_url}
+                scheme={colorScheme}
+            />
+        })
+    }
+
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
+        <SafeAreaView style={{
+            flex: 1,
+            backgroundColor: !isDarkMode ? '#f7f7f7' : '#0A1220',
+        }}>
+            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View className='flex-row  justify-between items-center py-6'>
                     <TouchableOpacity className='flex-1 ' onPress={() => {
                         navigation.goBack()
                     }}>
-                        <Material name='chevron-left' size={30} />
+                        <Material name='chevron-left' size={30}
+                            color={
+                                !isDarkMode ? COLORS.DenimBlue : 'white'
+                            }
+                        />
                     </TouchableOpacity>
                     <Text className='flex-1 text-center text-lg'
-                        style={{ color: COLORS.Rhino, fontWeight: 'bold' }}
+                        style={{
+                            color:
+                                !isDarkMode ? COLORS.Rhino : 'white'
+                            , fontWeight: 'bold'
+                        }}
                     >CheckList</Text>
                     <View className='flex-1 items-end'>
-                        <Material name='refresh' size={25} />
+                        <Material name='refresh' size={25}
+                            color={
+                                !isDarkMode ? COLORS.DenimBlue : 'white'
+                            }
+                            onPress={() => {
+                                // toggleColorScheme()
+                            }}
+                        />
                     </View>
                 </View>
-                <Calendar
-                    onDayPress={handleDayPress}
-                    markedDates={{
-                        [selectDate]: { selected: true, selectedColor: COLORS.DenimBlue },
-                    }}
-                    initialDate={selectDate}
-                    theme={{
-                        calendarBackground: '#f7f7f7',
-                    }}
-                    minDate={'2024-05-10'}
-                    maxDate={'2026-06-10'}
-                    disableAllTouchEventsForDisabledDays={true}
+                <View className='bg-[#F7F7F7] dark:bg-[#252D3B] rounded-lg'
                     style={{
-                        backgroundColor: '#f7f7f7',
                         marginHorizontal: 10,
+
                     }}
+                >
+                    <Calendar
+                        key={key.toString()}
+                        onDayPress={handleDayPress}
+                        markedDates={{
+                            [selectDate]: { selected: true, selectedColor: COLORS.DenimBlue },
 
-                    // renderHeader={
-                    //     date =>{
-                    //         console.log(date)
-                    //     }
-                    // }
-                    customHeader={customCalendarHeader}
-                // disableArrowLeft={true}
-                // // Disable right arrow. Default = false
-                // disableArrowRight={true}
+                        }}
+                        initialDate={selectDate}
+                        theme={{
+                            // calendarBackground: colorScheme === 'light' ? '#f7f7f7' : '#1A1A1A',
+                            calendarBackground: 'transparent',
+                            dayTextColor: !isDarkMode ? '#000000' : 'white',
+                            textDisabledColor: !isDarkMode ? '#7C7C7C' : '#92969D',
+                        }}
+                        minDate={'2024-05-10'}
+                        maxDate={'2026-06-10'}
+                        disableAllTouchEventsForDisabledDays={true}
+                        style={{
+                            // backgroundColor: colorScheme === 'light' ? '#f7f7f7' : COLORS.Rhino,
 
-                />
+                            // color: '',
+
+
+                        }}
+
+                        // renderHeader={
+                        //     date =>{
+                        //         console.log(date)
+                        //     }
+                        // }
+                        customHeader={customCalendarHeader}
+                    // disableArrowLeft={true}
+                    // // Disable right arrow. Default = false
+                    // disableArrowRight={true}
+
+                    />
+                </View>
                 <View style={{
                 }} className=' py-4'>
-                    <Text className='ml-6 my-4 text-base font-semibold' style={{
-                        color: COLORS.Rhino,
+                    <Text className='ml-6 my-4 text-base font-semibold ' style={{
+                        color: isDarkMode ? 'white' : '#292828',
                     }}>My checklist</Text>
-                    {/* <ShoppingListCategoryItem id_category={1} category_name='Grocery' total_items={10}
-                        handleNavigateCategory={handleNavigateCategory}
-                    />
-                    <ShoppingListCategoryItem id_category={2} category_name='Electronics' total_items={10} handleNavigateCategory={handleNavigateCategory} />
-                    <ShoppingListCategoryItem id_category={3} category_name='Clothing' total_items={10} handleNavigateCategory={handleNavigateCategory} />
-                    <ShoppingListCategoryItem id_category={4} category_name='Furniture' total_items={10} handleNavigateCategory={handleNavigateCategory} />
-                    <ShoppingListCategoryItem id_category={5} category_name='Pharmacy' total_items={10} handleNavigateCategory={handleNavigateCategory} />
-                    <ShoppingListCategoryItem id_category={6} category_name='Other' total_items={10} handleNavigateCategory={handleNavigateCategory} /> */}
-                    <TodoListCategoryItem id_category={1} category_name={"Daily Task"} total_items={10}
-                        handleNavigateCategory={() => {
-                            // console.log('navigate')
-                            navigation.navigate('TodoListCategory', {
-                                id_family: id_family,
-                                id_category: 1
-                            })
-                        }}
-                    />
+
+
+
                     {
-                        todoListTypes.length > 0 && todoListTypes.length > 0 && todoListTypes.map((item, index) => {
-                            // const total_items = todoListTypes.filter((shoppingItem) => shoppingItem.id_shopping_list_type === item.id_shopping_list_type).length
-                            return <TodoListCategoryItem key={index} id_category={item.id_checklist_type} category_name={item.name_en} total_items={10}
-                                handleNavigateCategory={() => {
-                                    // console.log('navigate')
-                                    navigation.navigate('TodoListCategory', {
-                                        id_family: id_family,
-                                        id_category: item.id_checklist_type
-                                    })
-                                }}
-                            />
-                        })
+                        buildItems()
                     }
                 </View>
 
@@ -198,27 +265,11 @@ interface TodoListCategoryItemProps {
     category_name: string;
     total_items: number;
     handleNavigateCategory: (id_category: number) => void;
+    iconUrl: string;
+    scheme: string;
 }
 
-const TodoListCategoryItem = ({ id_category, category_name, total_items, handleNavigateCategory }: TodoListCategoryItemProps) => {
-    const getImage = (id_category: number) => {
-        if (id_category === 1) {
-            return GroceryImage
-        }
-        if (id_category === 2) {
-            return ElectronicsImage
-        }
-        if (id_category === 3) {
-            return ClothingImage
-        }
-        if (id_category === 4) {
-            return FurnitureImage
-        }
-        if (id_category === 5) {
-            return PharmacyImage
-        }
-        return OtherImage
-    }
+const TodoListCategoryItem = ({ id_category, category_name, total_items, handleNavigateCategory, iconUrl, scheme }: TodoListCategoryItemProps) => {
     const buildTotal = (total_items: number) => {
         if (total_items > 1) {
             return `${total_items} items`
@@ -237,14 +288,14 @@ const TodoListCategoryItem = ({ id_category, category_name, total_items, handleN
                 <View className='p-3 mr-3  rounded-full items-center justify-center' style={{
                     backgroundColor: colors[id_category - 1],
                 }}>
-                    <Image source={getImage(id_category)} style={{
+                    <Image source={{ uri: iconUrl }} style={{
                         width: screenHeight * 0.04,
                         height: screenHeight * 0.04,
                     }} />
                 </View>
                 <View className=' justify-center'>
-                    <Text className='text-base font-semibold text-[#292828]'>{category_name}</Text>
-                    <Text className='text-sm text-[#5C5C5C]'>
+                    <Text className='text-base font-semibold text-[#292828] dark:text-[#fff]'>{category_name}</Text>
+                    <Text className='text-sm text-[#5C5C5C] dark:text-[#8D94A5]'>
                         {buildTotal(total_items)}
                     </Text>
                 </View>
@@ -252,7 +303,9 @@ const TodoListCategoryItem = ({ id_category, category_name, total_items, handleN
             <View className='' style={{
                 marginRight: 10
             }}>
-                <Material name='chevron-right' size={30} color={'#292828'} />
+                <Material name='chevron-right' size={30}
+                    color={scheme === 'light' ? '#292828' : 'white'}
+                />
             </View>
         </View>
     </TouchableOpacity>

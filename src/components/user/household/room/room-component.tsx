@@ -64,7 +64,7 @@ const RoomComponent = ({ data, handleNavigateRoomDetail, addRoomSheetRef }: Room
                         style={{
                             color: COLORS.Rhino,
                         }}
-                    >5 items add</Text>
+                    >{data.length} items add</Text>
 
 
                     <Text className='text-sm font-semibold'

@@ -179,9 +179,6 @@ const AddMoreInfoSheet = ({
         </View>
     }
 
-    const buildText2 = () => {
-
-    }
 
     return (
         <BottomSheet
@@ -203,7 +200,7 @@ const AddMoreInfoSheet = ({
 
                 }
             }}
-            keyboardBehavior="extend"
+            keyboardBehavior="interactive"
             keyboardBlurBehavior="restore"
 
 

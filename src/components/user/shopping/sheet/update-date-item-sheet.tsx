@@ -27,6 +27,7 @@ import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interf
 import { addShoppingList, addShoppingListItem, updateReminderDateItem } from 'src/redux/slices/ShoppingListSlice';
 import { addMonths, format, subMonths } from 'date-fns';
 import { Calendar } from 'react-native-calendars';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
 
 
@@ -50,16 +51,20 @@ const UpdateDateItemSheet = ({
 
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
-    const [text, setText] = React.useState('')
-    const [step, setStep] = React.useState(0)
     const [loading, setLoading] = React.useState(false)
     const dispatch = useDispatch<AppDispatch>()
 
 
     const [errorText, setErrorText] = React.useState('')
     const [showError, setShowError] = React.useState(false)
-
     const [selectDate, setSelectDate] = useState<string>(format(new Date(initialDate), 'yyyy-MM-dd'));
+    const [key, setKey] = useState(false)
+    const isDarkMode = useSelector(getIsDarkMode)
+
+    useEffect(() => {
+        setKey((prev) => !prev)
+    }, [isDarkMode])
+
     console.log('hello dcmm', format(new Date('2024-07-05T19:26:03.642Z'), 'yyyy-MM-dd'))
 
     const buildDate = (dateString: string) => {
@@ -115,7 +120,7 @@ const UpdateDateItemSheet = ({
 
                 <View className=''>
                     <Text className='flex-1 text-center text-base'
-                        style={{ color: '#2A475E', fontWeight: 'bold' }}
+                        style={{ color: !isDarkMode ? '#2A475E' : COLORS.DenimBlue, fontWeight: 'bold' }}
                     >{buildDate(selectDate)}</Text>
                 </View>
                 <View className='flex-row '>
@@ -153,6 +158,9 @@ const UpdateDateItemSheet = ({
 
             // snapPoints={snapPoints}
             handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
+            backgroundStyle={{
+                backgroundColor: isDarkMode ? '#0A1220' : '#f7f7f7'
+            }}
             backdropComponent={renderBackdrop}
             onClose={() => {
                 Keyboard.dismiss()
@@ -161,34 +169,59 @@ const UpdateDateItemSheet = ({
             keyboardBlurBehavior='none'
             android_keyboardInputMode='adjustResize'
             onChange={(index) => {
-                if (index === -1){
+                if (index === -1) {
                     setSelectDate(format(new Date(initialDate), 'yyyy-MM-dd'))
                 }
             }}
 
         >
-            <BottomSheetView style={{ minHeight: 100, flex: 0, backgroundColor: '#f7f7f7' }}>
+            <BottomSheetView style={{
+                minHeight: 100, flex: 0,
+                backgroundColor: isDarkMode ? '#0A1220' : '#f7f7f7'
+            }}>
                 <View className='my-3'>
-                    <Calendar
-                        onDayPress={handleDayPress}
-                        markedDates={{
-                            [selectDate]: { selected: true, selectedColor: COLORS.DenimBlue },
-                        }}
-                        initialDate={selectDate}
-                        theme={{
-                            calendarBackground: '#f7f7f7',
-                        }}
-                        minDate={'2024-05-10'}
-                        maxDate={'2026-06-10'}
-                        disableAllTouchEventsForDisabledDays={true}
-                        // hideDayNames={true}
+                    <View className='bg-[#F7F7F7] dark:bg-[#252D3B] rounded-lg'
                         style={{
-                            backgroundColor: '#f7f7f7',
                             marginHorizontal: 10,
                         }}
-                        customHeader={customCalendarHeader}
+                    >
+                        <Calendar
+                            key={key.toString()}
+                            onDayPress={handleDayPress}
+                            markedDates={{
+                                [selectDate]: { selected: true, selectedColor: COLORS.DenimBlue },
 
-                    />
+                            }}
+                            initialDate={selectDate}
+                            theme={{
+                                // calendarBackground: colorScheme === 'light' ? '#f7f7f7' : '#1A1A1A',
+                                calendarBackground: 'transparent',
+                                dayTextColor: !isDarkMode ? '#000000' : 'white',
+                                textDisabledColor: !isDarkMode ? '#7C7C7C' : '#92969D',
+                            }}
+                            minDate={'2024-05-10'}
+                            maxDate={'2026-06-10'}
+                            disableAllTouchEventsForDisabledDays={true}
+                            style={{
+                                // backgroundColor: colorScheme === 'light' ? '#f7f7f7' : COLORS.Rhino,
+
+                                // color: '',
+
+
+                            }}
+
+                            // renderHeader={
+                            //     date =>{
+                            //         console.log(date)
+                            //     }
+                            // }
+                            customHeader={customCalendarHeader}
+                        // disableArrowLeft={true}
+                        // // Disable right arrow. Default = false
+                        // disableArrowRight={true}
+
+                        />
+                    </View>
                 </View>
                 <View className='mx-[10%] mt-4 mb-12 '>
                     <TouchableOpacity style={{

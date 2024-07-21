@@ -18,6 +18,11 @@ import HouseHoldItemStackHeader from 'src/components/user/household/household-it
 
 import * as ImagePicker from 'expo-image-picker';
 import PickImageSheet from 'src/components/user/household/household-item-stack/pick-image-sheet';
+import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
+import AddEditConsumableSheet from 'src/components/user/household/household-item-stack/sheet/add-edit-consumable-sheet';
+import UpdateExpiredDateItemSheet from 'src/components/user/household/household-item-stack/sheet/update-expired-date-sheet';
+import AddEditDescriptionSheet from 'src/components/user/household/household-item-stack/sheet/add-edit-description-sheet';
+import { format } from 'date-fns';
 
 
 
@@ -38,14 +43,25 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
     const id_item = route.params?.params?.id_item
     const dispatch = useDispatch<AppDispatch>()
     const houseHoldItemInfo = useSelector((state: RootState) => state.householdItemDetail)
-    const image = useSelector((state: RootState) => state.householdItems).find(item => item.id_household_item === id_item)?.item_image!
     const pickPhotoSheetRef = React.useRef<any>()
+    const addEditConsumableItemSheetRef = React.useRef<BottomSheet>(null)
+    const addEditDescriptionSheetRef = React.useRef<BottomSheet>(null)
+    const updateExpiredDateSheet = React.useRef<BottomSheet>(null)
+
+    const [expired_date, setExpiredDate] = React.useState<string>(new Date().toISOString())
+
     useEffect(() => {
         const fetchHouseHoldItemDetail = async () => {
             const data = await HouseHoldService.getHouseHoldItemDetail(id_item!, id_family!)
             if (data) {
                 // setHouseHoldItemData(data)
                 console.log("data ne", data)
+                // setExpiredDate(data.consumableItem?.expired_date || "")
+                const expiredDate = data.consumableItem && data.consumableItem.expired_date ? new Date(data.consumableItem.expired_date).toISOString() : new Date().toISOString()
+                const expiredDate2 = format(new Date("2022-12-31"), 'yyyy-MM-dd')
+                console.log(expiredDate + "dcmm")
+                console.log(expiredDate2 + "dcmm")
+                setExpiredDate(expiredDate)
                 dispatch(setHouseholdItemDetail(data))
 
             }
@@ -141,63 +157,41 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
     }
 
     return (
-        <SafeAreaView className="flex-1 bg-[#F7F7F7]">
-            <View className="flex-1 bg-[#F7F7F7]">
-                <HouseHoldItemStackHeader data={houseHoldItemInfo} navigationBack={() => navigation.goBack()}
-                    handleEditImage={handlePickEditImage}
-                />
-                <View className='flex-1 bg-[#f7f7f7] mt-[-3%]  rounded-tl-xl rounded-tr-xl overflow-hidden'>
-                    {/* <View className='mt-[-3%] bg-transparent '>
-                        <HouseHoldItemTab choosenTab={choosenTab}
-                            setChoosenTab={(num) => {
-                                // setChoosenTab(num)
+        <View className="flex-1 bg-[#F7F7F7]">
+            <HouseHoldItemStackHeader data={houseHoldItemInfo} navigationBack={() => navigation.goBack()}
+                handleEditImage={handlePickEditImage}
+            />
+            <View className='flex-1 bg-[#f7f7f7] mt-[-3%]  rounded-tl-xl rounded-tr-xl overflow-hidden'>
+                <Stack.Navigator
+                    screenOptions={{
+                        headerShown: false,
+                    }}>
 
-                                // if (num == 0) {
-                                //     // if (currScreen == 'HouseHoldScreen') {
-                                //     //     return
-                                //     // }
-                                //     navigation.navigate('HouseHoldStack', {
-                                //         screen: 'HouseHoldScreen',
-                                //         params: { id_family: id_family },
-                                //     });
-                                // } else if (num == 1) {
-                                //     navigation.navigate('HouseHoldStack', {
-                                //         screen: 'ItemScreen',
-                                //         params: { id_family: id_family },
-                                //     });
-                                // } else if (num == 2) {
-                                //     navigation.navigate('HouseHoldStack', {
-                                //         screen: 'CategoryScreen',
-                                //         params: { id_family: id_family },
-                                //     });
-                                // }
-
-                            }}
-                        />
-                    </View> */}
-
-                    <Stack.Navigator
-                        screenOptions={{
-                            headerShown: false,
-                        }}>
-
-                        <Stack.Screen name="HouseHoldItem" >{(props:any) => <HouseHoldItemScreen {...props as HouseHoldItemScreenProps} />}</Stack.Screen>
-                        <Stack.Screen name="AddConsumableItem">{(props:any) => <AddConsumableHouseHoldItemScreen {...props as AddConsumableItemScreenProps} />}</Stack.Screen>
-                        <Stack.Screen name="EditDescription">{(props:any) => <EditHouseHoldDescriptionScreen {...props as EditDescriptionScreenProps} />}</Stack.Screen>
+                    <Stack.Screen name="HouseHoldItem" >{(props: any) => <HouseHoldItemScreen {...props as HouseHoldItemScreenProps}
+                        addEditConsumableItemSheetRef={addEditConsumableItemSheetRef}
+                        addEditDescriptionSheetRef={addEditDescriptionSheetRef}
+                    />}</Stack.Screen>
+                    <Stack.Screen name="AddConsumableItem">{(props: any) => <AddConsumableHouseHoldItemScreen {...props as AddConsumableItemScreenProps} />}</Stack.Screen>
+                    <Stack.Screen name="EditDescription">{(props: any) => <EditHouseHoldDescriptionScreen {...props as EditDescriptionScreenProps} />}</Stack.Screen>
 
 
 
 
-                    </Stack.Navigator>
+                </Stack.Navigator>
 
 
-                </View>
-                <PickImageSheet bottomSheetRef={pickPhotoSheetRef} handleTakePhoto={handleTakePhoto} handlePickImage={handlePickImage} />
-                {/* <AddRoomSheet bottomSheetRef={addRoomSheetRef} id_family={id_family!} /> */}
             </View>
-
-
-        </SafeAreaView>
+            <PickImageSheet bottomSheetRef={pickPhotoSheetRef} handleTakePhoto={handleTakePhoto} handlePickImage={handlePickImage} />
+            {/* <AddRoomSheet bottomSheetRef={addRoomSheetRef} id_family={id_family!} /> */}
+            <AddEditConsumableSheet bottomSheetRef={addEditConsumableItemSheetRef} id_family={id_family!} id_item={id_item!} updateExpiredDateSheet={updateExpiredDateSheet}
+                consumableItem={houseHoldItemInfo.consumableItem}
+                expired_date={expired_date}
+            />
+            <UpdateExpiredDateItemSheet bottomSheetRef={updateExpiredDateSheet} id_family={id_family!} id_item={id_item!} initialDate={expired_date} onSetDate={(date: string) => {
+                setExpiredDate(date)
+            }} />
+            <AddEditDescriptionSheet bottomSheetRef={addEditDescriptionSheetRef} id_family={id_family!} id_item={id_item!} description={houseHoldItemInfo.description || ""} />
+        </View>
 
     );
 };

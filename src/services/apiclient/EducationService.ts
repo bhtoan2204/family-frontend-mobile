@@ -108,7 +108,7 @@ const EducationServices = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         throw new Error(ERROR_TEXTS.API_ERROR);
       }

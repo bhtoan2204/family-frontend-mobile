@@ -1,6 +1,6 @@
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns'
 import React, { useCallback, useEffect, useState } from 'react'
-import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView } from 'react-native'
+import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView, StatusBar } from 'react-native'
 import { Agenda, AgendaSchedule, Calendar, CalendarList } from 'react-native-calendars'
 import { useSelector } from 'react-redux'
 import { ShoppingListScreenProps } from 'src/navigation/NavigationTypes'
@@ -15,6 +15,7 @@ import ClothingImage from 'src/assets/images/shoppinglist_assets/Clothing.png'
 import FurnitureImage from 'src/assets/images/shoppinglist_assets/Furniture.png'
 import PharmacyImage from 'src/assets/images/shoppinglist_assets/Pharmacy.png'
 import OtherImage from 'src/assets/images/shoppinglist_assets/Other.png'
+import { useColorScheme } from 'nativewind'
 const screenHeight = Dimensions.get('screen').height;
 
 
@@ -25,6 +26,15 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
     const shoppingList = useSelector((state: RootState) => state.shoppinglist).shoppingList
     const shoppingListType = useSelector((state: RootState) => state.shoppinglist).shoppingListType
     const shoppingListFiltered = shoppingList.filter((item) => item.id_family === id_family)
+    const { colorScheme, setColorScheme } = useColorScheme()
+    const [key, setKey] = useState(false)
+    useEffect(() => {
+        // setColorScheme('dark')
+        // console.log(colorScheme)
+    }, [])
+    useEffect(() => {
+        setKey((prev) => !prev)
+    }, [colorScheme])
     // const handleFilterData = () => {
     //     const returnArray = []
     //     for (let i = 0; i < data.length; i++) {
@@ -89,7 +99,7 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
 
                 <View className=''>
                     <Text className='flex-1 text-center text-base'
-                        style={{ color: '#2A475E', fontWeight: 'bold' }}
+                        style={{ color: colorScheme === 'light' ? '#2A475E' : COLORS.DenimBlue, fontWeight: 'bold' }}
                     >{buildDate(selectDate)}</Text>
                 </View>
                 <View className='flex-row '>
@@ -109,53 +119,78 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
+        <SafeAreaView style={{ flex: 1 }} className='bg-[#f7f7f7] dark:bg-[#0A1220] '>
+            <StatusBar barStyle={colorScheme === 'light' ? 'dark-content' : 'light-content'} />
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View className='flex-row  justify-between items-center py-6'>
                     <TouchableOpacity className='flex-1 ' onPress={() => {
                         navigation.goBack()
                     }}>
-                        <Material name='chevron-left' size={30} />
+                        <Material name='chevron-left' size={30} style={{
+                            color: colorScheme === 'light' ? '#2A475E' : 'white',
+                        }} />
                     </TouchableOpacity>
                     <Text className='flex-1 text-center text-lg'
-                        style={{ color: COLORS.Rhino, fontWeight: 'bold' }}
+                        style={{
+                            color:
+                                colorScheme === 'light' ? COLORS.Rhino : 'white'
+                            , fontWeight: 'bold'
+                        }}
                     >Shopping List</Text>
                     <View className='flex-1 items-end'>
-                        <Material name='refresh' size={25} />
+                        <Material name='refresh' size={25} style={{
+                            color: colorScheme === 'light' ? '#2A475E' : 'white',
+                        }} />
                     </View>
                 </View>
-                <Calendar
-                    onDayPress={handleDayPress}
-                    markedDates={{
-                        [selectDate]: { selected: true, selectedColor: COLORS.DenimBlue },
-                    }}
-                    initialDate={selectDate}
-                    theme={{
-                        calendarBackground: '#f7f7f7',
-                    }}
-                    minDate={'2024-05-10'}
-                    maxDate={'2026-06-10'}
-                    disableAllTouchEventsForDisabledDays={true}
+                <View className='bg-[#F7F7F7] dark:bg-[#252D3B] rounded-lg'
                     style={{
-                        backgroundColor: '#f7f7f7',
                         marginHorizontal: 10,
+
                     }}
+                >
+                    <Calendar
+                        key={key.toString()}
+                        onDayPress={handleDayPress}
+                        markedDates={{
+                            [selectDate]: { selected: true, selectedColor: COLORS.DenimBlue },
 
-                    // renderHeader={
-                    //     date =>{
-                    //         console.log(date)
-                    //     }
-                    // }
-                    customHeader={customCalendarHeader}
-                // disableArrowLeft={true}
-                // // Disable right arrow. Default = false
-                // disableArrowRight={true}
+                        }}
+                        initialDate={selectDate}
+                        theme={{
+                            // calendarBackground: colorScheme === 'light' ? '#f7f7f7' : '#1A1A1A',
+                            calendarBackground: 'transparent',
+                            dayTextColor: colorScheme === 'light' ? '#000000' : 'white',
+                            textDisabledColor: colorScheme === 'light' ? '#7C7C7C' : '#92969D',
+                        }}
+                        minDate={'2024-05-10'}
+                        maxDate={'2026-06-10'}
+                        disableAllTouchEventsForDisabledDays={true}
+                        style={{
+                            // backgroundColor: colorScheme === 'light' ? '#f7f7f7' : COLORS.Rhino,
 
-                />
+                            // color: '',
+
+
+                        }}
+
+                        // renderHeader={
+                        //     date =>{
+                        //         console.log(date)
+                        //     }
+                        // }
+                        customHeader={customCalendarHeader}
+                    // disableArrowLeft={true}
+                    // // Disable right arrow. Default = false
+                    // disableArrowRight={true}
+
+                    />
+                </View>
                 <View style={{
                 }} className=' py-4'>
                     <Text className='ml-6 my-4 text-base font-semibold' style={{
-                        color: COLORS.Rhino,
+                        color:
+                            colorScheme === 'light' ? COLORS.Rhino : 'white',
                     }}>My shopping list</Text>
                     {/* <ShoppingListCategoryItem id_category={1} category_name='Grocery' total_items={10}
                         handleNavigateCategory={handleNavigateCategory}
@@ -170,6 +205,7 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
                             const total_items = shoppingList.filter((shoppingItem) => shoppingItem.id_shopping_list_type === item.id_shopping_list_type)[0]?.items?.length || 0
                             return <ShoppingListCategoryItem key={index} id_category={item.id_shopping_list_type} category_name={item.type_name_en} total_items={total_items}
                                 handleNavigateCategory={handleNavigateCategory}
+                                scheme={colorScheme}
                             />
                         })
                     }
@@ -185,9 +221,10 @@ interface ShoppingListCategoryItemProps {
     category_name: string;
     total_items: number;
     handleNavigateCategory: (id_category: number) => void;
+    scheme: string
 }
 
-const ShoppingListCategoryItem = ({ id_category, category_name, total_items, handleNavigateCategory }: ShoppingListCategoryItemProps) => {
+const ShoppingListCategoryItem = ({ id_category, category_name, total_items, handleNavigateCategory, scheme }: ShoppingListCategoryItemProps) => {
 
 
     const getImage = (id_category: number) => {
@@ -232,16 +269,18 @@ const ShoppingListCategoryItem = ({ id_category, category_name, total_items, han
                     }} />
                 </View>
                 <View className=' justify-center'>
-                    <Text className='text-base font-semibold text-[#292828]'>{category_name}</Text>
-                    <Text className='text-sm text-[#5C5C5C]'>
+                    <Text className='text-base font-semibold text-[#292828] dark:text-white'>{category_name}</Text>
+                    <Text className='text-sm text-[#5C5C5C] dark:text-[#8D94A5]'>
                         {buildTotal(total_items)}
                     </Text>
                 </View>
             </View>
             <View className='' style={{
-                marginRight: 10
+                marginRight: 10,
             }}>
-                <Material name='chevron-right' size={30} color={'#292828'} />
+                <Material name='chevron-right' size={30} color={
+                    scheme === 'light' ? COLORS.Rhino : 'white'
+                } />
             </View>
         </View>
     </TouchableOpacity>

@@ -47,9 +47,9 @@ const HouseHoldStackHeader = ({
         <>
             <ImageBackground
                 source={imageUrl ? { uri: imageUrl } : gradients_list[idFamily % gradients_list.length]}
-                style={{ width: screenWidth, height: screenHeight * 0.25 }}
+                style={{ width: screenWidth, height: screenHeight * 0.3 }}
             >
-                <View className='w-full absolute z-10 flex-row justify-between items-center py-3'>
+                <View className='w-full absolute z-10 flex-row justify-between items-center py-3 mt-5'>
                     <BlurView intensity={35} tint='dark' className=' ml-1 rounded-lg overflow-hidden'>
                         <TouchableOpacity onPress={navigationBack} className=' flex-row items-center'>
                             <Material name="chevron-left" size={30} style={{ color: "white", fontWeight: "bold" }} />

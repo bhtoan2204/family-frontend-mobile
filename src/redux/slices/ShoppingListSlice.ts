@@ -133,6 +133,20 @@ const shoppingListSlice = createSlice({
         }
       }
     },
+    deleteItem: (
+      state,
+      action: PayloadAction<{id_item: number; id_list: number}>,
+    ) => {
+      const {id_item, id_list} = action.payload;
+      const itemIndex = state.shoppingList.findIndex(
+        list => list.id_list === id_list,
+      );
+      if (itemIndex !== -1) {
+        state.shoppingList[itemIndex].items = state.shoppingList[
+          itemIndex
+        ].items?.filter(item => item.id_item !== id_item);
+      }
+    },
   },
 });
 
@@ -147,7 +161,8 @@ export const {
   addShoppingListItem,
   updateDescriptionItem,
   updatePriceItem,
-  updateReminderDateItem
+  updateReminderDateItem,
+  deleteItem,
 } = shoppingListSlice.actions;
 
 export const selectProfile = (state: RootState) => state.profile;

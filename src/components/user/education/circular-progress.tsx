@@ -35,8 +35,7 @@ const CircularProgress = ({ size, progress, strokeWidth, backgroundColor, progre
                 />
                 {
                     disableProgressText ?? <View className='h-full w-full flex-col justify-center items-center'>
-                        <Text className='font-normal' style={{
-                            color: iOSGrayColors.systemGray.accessibleDark
+                        <Text className='font-normal text-[#494848] dark:text-white' style={{
                         }}>{progress}%</Text>
                     </View>
                 }

@@ -15,10 +15,13 @@ import HouseHoldItemStack from './Routes/HouseHoldItemStack';
 import ShoppingListStack from './Routes/ShoppingListStack';
 import ShoppingListCategoryStack from './Routes/ShoppingListCategoryStack';
 import TodoListStack from './Routes/TodoListStack';
+import EducationStack from './Routes/EducationStack';
+import { useGetColorScheme } from 'src/hooks/useColorScheme';
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
+  useGetColorScheme();
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -39,6 +42,7 @@ const Navigation = () => {
         <Stack.Screen name="HouseHoldItemStack" component={HouseHoldItemStack} />
         <Stack.Screen name="ShoppingListStack" component={ShoppingListStack} />
         <Stack.Screen name="TodoListStack" component={TodoListStack} />
+        <Stack.Screen name="EducationStack" component={EducationStack} />
 
         {/* <Stack.Screen name="ShoppingListCategoryStack" component={ShoppingListCategoryStack}/> */}
 
