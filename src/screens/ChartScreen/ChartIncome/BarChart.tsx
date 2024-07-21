@@ -51,7 +51,7 @@ const BarChartScreen : React.FC<BarChartScreenProps> = ({ id_family, navigation 
 
   const handlePressExpenseItem = async (item: DailyIncome) => {
     await dispatch(setSelectedIncome(item));
-    navigation.navigate('ExpenseDetailScreen');
+    navigation.navigate('ExpenseStack', {screen: 'ExpenseDetailScreen'});
   };
 
   const formatCurrency = (amount: any) => {

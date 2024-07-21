@@ -1,5 +1,5 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import ExpenditureScreen from 'src/screens/ExpenseScreen';
+import ExpenditureScreen from 'src/screens/ExpenseScreen/CreateExpense';
 import { AddAssetScreenProps, AssetDetailScreenProps, AssetScreenProps, CategoryExpenseScreenProps, ChartExpenseProps, ExpenditureScreenProps, ExpenseDetailScreenProps, ExpenseScreenProps, FamilySpecProps, IncomeExpenseScreenProps } from '../NavigationTypes';
 import CategoryExpenseScreen from 'src/screens/ExpenseScreen/CategoryScreen';
 import FamilySpec from 'src/screens/ExpenseScreen/FamilySpec';

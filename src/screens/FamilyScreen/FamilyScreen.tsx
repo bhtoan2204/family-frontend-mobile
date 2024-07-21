@@ -21,7 +21,7 @@ import {
   setSelectedFamily,
   setFamilies,
   setFamilyMembers,
-  updateFamily,
+  
 } from 'src/redux/slices/FamilySlice';
 import { AppDispatch } from 'src/redux/store';
 import RBSheet from 'react-native-raw-bottom-sheet';

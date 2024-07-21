@@ -4,7 +4,7 @@ import TabButton from 'src/components/TabButton';
 import { TEXTS } from 'src/constants';
 import ChatListScreen from 'src/screens/Chat/ChatList/ChatListScreen';
 import PeopleScreen from 'src/screens/Chat/ChatList/People';
-import ExpenditureScreen from 'src/screens/ExpenseScreen';
+import ExpenditureScreen from 'src/screens/ExpenseScreen/CreateExpense';
 import ViewFamilyScreen from 'src/screens/FamilyScreen';
 import ReportScreen from 'src/screens/Report';
 import FamilyScreen from 'src/screens/ExpenseScreen/FamilyScreen';

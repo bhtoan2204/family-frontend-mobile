@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   headcontainer: {
-    height: '100%',
+    height: '70%',
   },
   pagination: {
     flexDirection: 'row',

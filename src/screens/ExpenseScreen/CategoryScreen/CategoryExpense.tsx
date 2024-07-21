@@ -51,7 +51,7 @@ const CategoryExpenseScreen = ({ navigation }: CategoryExpenseScreenProps) => {
     } else if (selectedCategoryType === 'Income') {
       dispatch(setSelectedIncomeType(item));
     }
-    navigation.navigate('ExpenseStack', { screen: 'Expenditure' });
+    navigation.navigate('FamilyTab', {screen: 'Expense'});
   };
 
   const onDeleteIncome = async (item: any) => {
@@ -129,7 +129,7 @@ const CategoryExpenseScreen = ({ navigation }: CategoryExpenseScreenProps) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerButton}>
+        <TouchableOpacity onPress={() => navigation.navigate('FamilyTab', {screen: 'Expense'})} style={styles.headerButton}>
           <Icon name="arrow-back" size={25} style={styles.backButton} />
         </TouchableOpacity>
         <View style={styles.headerTitleContainer}>

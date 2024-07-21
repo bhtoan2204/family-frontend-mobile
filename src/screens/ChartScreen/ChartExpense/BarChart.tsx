@@ -28,7 +28,8 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }
 
   const fetchData = async (date: string, id_family: number) => {
     try {
-      const response = await ExpenseServices.getExpenseByDate(date, id_family);
+      console.log(selectedDate)
+      const response = await ExpenseServices.getExpenseByDate(selectedDate, id_family);
       if (response) {
         dispatch(setExpenses(response));
       }
@@ -65,7 +66,7 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }
       <View style={styles.itemContainer}>
         <View style={styles.expenseContent}>
           <View>
-            <Text style={styles.expenseCategory}>{item.financeExpenditureType.expense_type_name}</Text>
+            {/* <Text style={styles.expenseCategory}>{item.financeExpenditureType.expense_type_name}</Text> */}
             <View style={styles.row}>
               <Text style={{ color: 'gray' }}>By: </Text>
               <Text style={styles.expenseName}>{item.users.firstname} {item.users.lastname}</Text>

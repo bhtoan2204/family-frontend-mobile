@@ -207,7 +207,6 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
 
   const handlePressDate = (day: number) => {
     const formattedDate = moment(selectedMonth).set('date', day).format('YYYY-MM-DD');
-    console.log(date)
     dispatch(setSelectedOption('Day'));
     dispatch(setSelectedDate(formattedDate));
 };
