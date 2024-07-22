@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ExpenseServices } from 'src/services/apiclient';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import { Asset } from 'src/interface/asset/asset';
-import { selectAsset, setAsset } from 'src/redux/slices/AssetSlice';
+import { selectAsset, selectAssets, setAsset } from 'src/redux/slices/AssetSlice';
 import Feather from 'react-native-vector-icons/Feather';
 import { RootState } from 'src/redux/store';
 import { getTranslate } from 'src/redux/slices/languageSlice';
@@ -16,7 +16,7 @@ import { useThemeColors } from 'src/hooks/useThemeColor';
 const AssetScreen = ({ navigation }: AssetScreenProps) => {
   const dispatch = useDispatch();
   const family = useSelector(selectSelectedFamily);
-  const assets = useSelector((state: RootState) => state.asset.assets);
+  const assets = useSelector(selectAssets);
   const translate = useSelector(getTranslate);
   const color = useThemeColors();  
 
@@ -27,7 +27,6 @@ const AssetScreen = ({ navigation }: AssetScreenProps) => {
   const fetchData = async () => {
     try {
       const data = await ExpenseServices.getAsset(family.id_family);
-      console.log(data);
       dispatch(setAsset(data));
     } catch (error) {
       console.log(error);

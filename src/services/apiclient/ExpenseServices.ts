@@ -74,9 +74,9 @@ const ExpenseServices = {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
 
-        return response.data.data;
+        return response.data;
       } 
     } catch (error: any) {
       console.error('Error in createAsset:', error.message);
