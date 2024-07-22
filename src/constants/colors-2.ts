@@ -31,8 +31,13 @@ const COLORS = {
       Azure: '#0095FF',
       BlueLight: '#87CEEB',
       SpringWood: '#FEF5E9',
+      background: '#f0f0f0',
+      text: 'black',
     },
     dark: {
+      text: 'white',
+
+      background: '#0A1220',
       Mirage: '#0B0C0E',
       DenimBlue: '#1E3A5F',
       EbonyClay: '#141920',
@@ -40,7 +45,7 @@ const COLORS = {
       PaleAqua: '#A3B3C1',
       login: '#4B3E80',
       tertiary: '#0000CC',
-      white: '#E0E0E0',
+      white: 'gray',
       black: '#101010',
       gray: '#333333',
       red: '#CC0000',

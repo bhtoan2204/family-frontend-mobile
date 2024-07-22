@@ -1,7 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../store';
-import {RoomInterface} from 'src/interface/household/room';
-import {HouseHoldCategoryInterface} from 'src/interface/household/household_category';
 
 interface DarkModeState {
   isDarkMode: boolean;

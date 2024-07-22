@@ -28,6 +28,7 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
     const shoppingListFiltered = shoppingList.filter((item) => item.id_family === id_family)
     const { colorScheme, setColorScheme } = useColorScheme()
     const [key, setKey] = useState(false)
+    
     useEffect(() => {
         // setColorScheme('dark')
         // console.log(colorScheme)
