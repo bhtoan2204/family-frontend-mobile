@@ -46,8 +46,8 @@ const AssetScreen = ({ navigation }: AssetScreenProps) => {
       <View style={styles.assetInfo}>
         <Text style={[styles.assetName, {color: color.text}]}>{item.name}</Text>
         <Text style={[styles.assetDescription, {color: color.text}]}>{item.description}</Text>
-        <Text style={[styles.assetValue, {color: color.text}]}>{`{translate('Value')}: ${parseInt(item.value).toLocaleString()} VND`}</Text>
-        <Text style={[styles.assetDate, {color: color.text}]}>{`{translate('Purchase Date')}: ${item.purchase_date}`}</Text>
+        <Text style={[styles.assetValue, {color: color.text}]}>{`${translate('Value')}: ${parseInt(item.value).toLocaleString()} VND`}</Text>
+        <Text style={[styles.assetDate, {color: color.text}]}>{`${translate('Purchase Date')}: ${item.purchase_date}`}</Text>
       </View>
     </TouchableOpacity>
   );

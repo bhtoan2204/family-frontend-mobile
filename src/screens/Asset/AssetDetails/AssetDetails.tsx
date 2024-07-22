@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, Platform, Alert, Modal as RNModal } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, Platform, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import moment from 'moment';
@@ -12,6 +12,7 @@ import { deleteAsset, selectSelectedAsset, updateAsset } from 'src/redux/slices/
 import { ExpenseServices } from 'src/services/apiclient';
 import Modal from 'react-native-modal';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
   const asset = useSelector(selectSelectedAsset);
@@ -23,8 +24,10 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
   const [purchaseDate, setPurchaseDate] = useState(new Date(asset?.purchase_date));
   const [image, setImage] = useState(asset?.image_url);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
+  const color = useThemeColors();
 
   const handleEditPress = () => {
     setIsEditing(true);
@@ -98,22 +101,17 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
     }
   };
 
-  const renderDateTimePicker = () => {
-    if (Platform.OS === 'ios' || isEditing) {
-      return (
-        <DateTimePicker
-          value={purchaseDate}
-          mode="date"
-          display="default"
-          onChange={(event, selectedDate) => {
-            const currentDate = selectedDate || purchaseDate;
-            setPurchaseDate(currentDate);
-          }}
-        />
-      );
-    } else {
-      return null;
-    }
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    setPurchaseDate(date);
+    hideDatePicker();
   };
 
   const handleImagePress = () => {
@@ -123,14 +121,13 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
   const closeModal = () => {
     setIsModalVisible(false);
   };
-
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {backgroundColor: color.background}]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={30} color="#000" />
+          <Icon name="arrow-back" size={30} color={color.text} />
         </TouchableOpacity>
-        <Text style={styles.title}>{translate('Asset Detail')}</Text>
+        <Text style={[styles.title, {color: color.text}]}>{translate('Asset Detail')}</Text>
       </View>
       <View style={styles.imageContainer}>
         <TouchableOpacity onPress={handleImagePress}>
@@ -142,8 +139,8 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
           </TouchableOpacity>
         )}
       </View>
-      <View style={styles.assetInfo}>
-        <Text style={styles.assetDetailLabel}>{translate('Asset Name')}</Text>
+      <View style={[styles.assetInfo, {backgroundColor: color.white}]}>
+        <Text style={[styles.assetDetailLabel, {color: color.text}]}>{translate('Asset Name')}</Text>
         {isEditing ? (
           <TextInput
             style={styles.input}
@@ -152,9 +149,9 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
             placeholder={translate('Enter Asset Name')}
           />
         ) : (
-          <Text style={styles.assetDetailText}>{asset?.name}</Text>
+          <Text style={[styles.assetDetailText, {color: color.textSubdued}]}>{asset?.name}</Text>
         )}
-        <Text style={styles.assetDetailLabel}>{translate('Description')}</Text>
+         <Text style={[styles.assetDetailLabel, {color: color.text}]}>{translate('Description')}</Text>
         {isEditing ? (
           <TextInput
             style={[styles.input, styles.multilineInput]}
@@ -164,9 +161,9 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
             multiline
           />
         ) : (
-          <Text style={styles.assetDetailText}>{asset?.description}</Text>
+          <Text style={[styles.assetDetailText, {color: color.textSubdued}]}>{asset?.description}</Text>
         )}
-        <Text style={styles.assetDetailLabel}>{translate('Value')}</Text>
+         <Text style={[styles.assetDetailLabel, {color: color.text}]}>{translate('Value')}</Text>
         {isEditing ? (
           <TextInput
             style={styles.input}
@@ -176,15 +173,24 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
             placeholder={translate('Enter Value')}
           />
         ) : (
-          <Text style={styles.assetDetailText}>{`${parseInt(asset?.value).toLocaleString()} VND`}</Text>
+          <Text style={[styles.assetDetailText, {color: color.textSubdued}]}>{`${parseInt(asset?.value).toLocaleString()} VND`}</Text>
         )}
-        <Text style={styles.assetDetailLabel}>{translate('Purchase Date')}</Text>
+         <Text style={[styles.assetDetailLabel, {color: color.text}]}>{translate('Purchase Date')}</Text>
         {isEditing ? (
-          <TouchableOpacity onPress={renderDateTimePicker}>
+          <>
+          <TouchableOpacity onPress={showDatePicker}>
             <Text style={styles.input}>{moment(purchaseDate).format('YYYY-MM-DD')}</Text>
           </TouchableOpacity>
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="date"
+            date={purchaseDate}
+            onConfirm={handleConfirm}
+            onCancel={hideDatePicker}
+          />
+        </>
         ) : (
-          <Text style={styles.assetDetailText}>{moment(asset?.purchase_date).format('YYYY-MM-DD')}</Text>
+          <Text style={[styles.assetDetailText, {color: color.textSubdued}]}>{moment(asset?.purchase_date).format('YYYY-MM-DD')}</Text>
         )}
         <View style={styles.buttonContainer}>
           {isEditing ? (
@@ -209,7 +215,7 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
         </View>
       </View>
 
-      <RNModal
+      <Modal
         animationType="slide"
         transparent={true}
         visible={isModalVisible}
@@ -220,7 +226,7 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
             <Image source={{ uri: asset?.image_url }} style={styles.modalImage} />
           </View>
         </TouchableOpacity>
-      </RNModal>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -228,7 +234,6 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     padding: 16,
   },
   header: {

@@ -46,7 +46,7 @@ const COLORS = {
       PaleAqua: '#A3B3C1',
       login: '#4B3E80',
       tertiary: '#0000CC',
-      white: 'gray',
+      white: '#252D3B',
       black: '#101010',
       gray: '#333333',
       red: '#CC0000',
