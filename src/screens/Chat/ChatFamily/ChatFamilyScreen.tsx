@@ -57,18 +57,18 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
       setKeyboardIsOpen(false);
     });
-    if (socket) {
-    socket.on('onNewFamilyMessage', fetchNewMessages);
-    socket.on('onNewFamilyImageMessage', fetchNewMessages);
+    // if (socket) {
+    // socket.on('onNewFamilyMessage', fetchNewMessages);
+    // socket.on('onNewFamilyImageMessage', fetchNewMessages);
 
-    }
+    // }
 
     return () => {
-      if (socket) {
-      socket.off('onNewFamilyMessage', fetchNewMessages);
-      socket.off('onNewFamilyImageMessage', fetchNewMessages);
+    //   if (socket) {
+    //   socket.off('onNewFamilyMessage', fetchNewMessages);
+    //   socket.off('onNewFamilyImageMessage', fetchNewMessages);
 
-    }
+    // }
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
@@ -112,7 +112,6 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   }, [currentIndex]);
 
   const fetchNewMessages = (newMessage: Message) => {
-    console.log(newMessage)
     setMessages(prevMessages => [newMessage, ...prevMessages]);
   };
   
@@ -309,12 +308,12 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   const onMessagePress = (item: Message) => {
     if( item.type === 'photo'){
 
-    const itemIndex = messages.findIndex(
-      message =>
-        message.senderId === item.senderId && message.content === item.content,
+    const itemIndex = images.findIndex(
+      iamge =>
+        iamge === item.content,
     );
-  
-    setSelectedImageIndex(itemIndex );
+    console.log(itemIndex)
+    setSelectedImageIndex(itemIndex);
   }
     setSelectedMessageId(prevId => (prevId === item._id ? null : item._id));
   };

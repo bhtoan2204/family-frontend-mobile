@@ -3,6 +3,8 @@ import { View, Text, Image, TouchableOpacity, Animated, FlatList, NativeSyntheti
 import Icon from 'react-native-vector-icons/Ionicons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import styles from './styles';
+import { useSelector } from 'react-redux';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 
 const CategoryIncome = ({
@@ -18,6 +20,7 @@ const CategoryIncome = ({
     const [currentPage, setCurrentPage] = useState(0);
     const scrollViewRef = useRef(null);
     const urlCatetory = 'https://png.pngtree.com/element_our/20190530/ourmid/pngtree-correct-icon-image_1267804.jpg';
+    const translate = useSelector(getTranslate);
 
     return (
       <View style={styles.ContainerCategory}>
@@ -31,7 +34,7 @@ const CategoryIncome = ({
               { color: '#1b2838' },
             ]}
           >
-            {incomeCategory?.income_source_name || 'Select category'}
+            {incomeCategory?.income_source_name || translate('Select category')}
           </Text>
   
           <TouchableOpacity
@@ -48,8 +51,8 @@ const CategoryIncome = ({
                 },
               ]}
             >
-              View All
-            </Text>
+              {translate('View All')}
+              </Text>
             <Icon
               name="chevron-forward-outline"
               size={22}
@@ -69,7 +72,7 @@ const CategoryIncome = ({
           }}
         >
           <Text style={[styles.mostUsedButton, { marginRight: -10 }]}>
-            Most used{' '}
+          {translate('Most used')}{' '}
           </Text>
           <EvilIcons
             name={

@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import navigation from 'src/navigation';
 import { GuidelinePublicScreenProps } from 'src/navigation/NavigationTypes';
 
-const GuidelineScreen = ({navigation} : GuidelinePublicScreenProps) => {
+const GuidelineScreen = ({ navigation }: GuidelinePublicScreenProps) => {
   const guidelineData = [
     {
       id: '1',
@@ -35,18 +35,25 @@ const GuidelineScreen = ({navigation} : GuidelinePublicScreenProps) => {
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.content}>{item.content}</Text>
         </View>
+        <Icon
+          name="chevron-forward-outline"
+          size={22}
+          color="#1b2838"
+          style={styles.icon}
+        />
       </View>
     </TouchableOpacity>
   );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() =>  navigation.navigate('HomeTab', {screen: 'HomeScreen'})}>
+        <TouchableOpacity onPress={() => navigation.navigate('HomeTab', { screen: 'HomeScreen' })}>
           <Icon name="arrow-back" size={24} style={styles.backButton} />
         </TouchableOpacity>
         <Text style={styles.headerText}>Guidelines</Text>
       </View>
-      
+
       <FlatList
         data={guidelineData}
         renderItem={renderItem}
@@ -60,7 +67,7 @@ const GuidelineScreen = ({navigation} : GuidelinePublicScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f0f0f0', 
     paddingHorizontal: 20,
     paddingTop: 20,
   },
@@ -71,10 +78,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#cccccc',
+    borderBottomColor: '#e0e0e0',
   },
   textContainer: {
     flex: 1,
+    marginLeft: 10,
   },
   image: {
     width: 80,
@@ -85,7 +93,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginLeft: 10,
+    color: '#333333',
   },
   backButton: {
     color: '#333333',
@@ -94,19 +102,30 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   itemContainer: {
-    marginBottom: 20,
-    padding: 10,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
+    marginBottom: 10,
+    padding: 15,
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
+    color: '#333333',
   },
   content: {
     fontSize: 16,
-    color: '#333333',
+    color: 'gray',
+  },
+  icon: {
+    marginLeft: 'auto', 
   },
 });
 

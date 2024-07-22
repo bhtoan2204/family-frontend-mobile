@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, Platform, Alert } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, Platform, Alert, Modal as RNModal } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -10,6 +10,8 @@ import { AssetDetailScreenProps } from 'src/navigation/NavigationTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAsset, selectSelectedAsset, updateAsset } from 'src/redux/slices/AssetSlice';
 import { ExpenseServices } from 'src/services/apiclient';
+import Modal from 'react-native-modal';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
   const asset = useSelector(selectSelectedAsset);
@@ -20,8 +22,10 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
   const [value, setValue] = useState(asset?.value.toString());
   const [purchaseDate, setPurchaseDate] = useState(new Date(asset?.purchase_date));
   const [image, setImage] = useState(asset?.image_url);
-  const dispatch= useDispatch();
-  
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const dispatch = useDispatch();
+  const translate = useSelector(getTranslate);
+
   const handleEditPress = () => {
     setIsEditing(true);
   };
@@ -54,16 +58,13 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
         updatedAsset.purchase_date,
         updatedAsset.image_url
       );
-      console.log(data);
       dispatch(updateAsset(data));
       setIsEditing(false);
       Alert.alert('Success', 'Asset updated successfully');
     } catch (error) {
-        console.log(error);
       Alert.alert('Error', 'Failed to update asset');
     }
   };
-  
 
   const handleDeletePress = async () => {
     try {
@@ -92,7 +93,7 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
   };
@@ -115,16 +116,26 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
     }
   };
 
+  const handleImagePress = () => {
+    setIsModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={30} color="#000" />
         </TouchableOpacity>
-        <Text style={styles.title}>Asset Detail</Text>
+        <Text style={styles.title}>{translate('Asset Detail')}</Text>
       </View>
       <View style={styles.imageContainer}>
-        <Image source={{ uri: image }} style={styles.assetImage} />
+        <TouchableOpacity onPress={handleImagePress}>
+          <Image source={{ uri: image }} style={styles.assetImage} />
+        </TouchableOpacity>
         {isEditing && (
           <TouchableOpacity onPress={handleImagePicker} style={styles.cameraIconContainer}>
             <Icon name="camera" size={24} color="#fff" style={styles.cameraIcon} />
@@ -132,42 +143,42 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
         )}
       </View>
       <View style={styles.assetInfo}>
-        <Text style={styles.assetDetailLabel}>Asset Name</Text>
+        <Text style={styles.assetDetailLabel}>{translate('Asset Name')}</Text>
         {isEditing ? (
           <TextInput
             style={styles.input}
             value={name}
             onChangeText={setName}
-            placeholder="Enter Asset Name"
+            placeholder={translate('Enter Asset Name')}
           />
         ) : (
           <Text style={styles.assetDetailText}>{asset?.name}</Text>
         )}
-        <Text style={styles.assetDetailLabel}>Description</Text>
+        <Text style={styles.assetDetailLabel}>{translate('Description')}</Text>
         {isEditing ? (
           <TextInput
             style={[styles.input, styles.multilineInput]}
             value={description}
             onChangeText={setDescription}
-            placeholder="Enter Description"
+            placeholder={translate('Enter Description')}
             multiline
           />
         ) : (
           <Text style={styles.assetDetailText}>{asset?.description}</Text>
         )}
-        <Text style={styles.assetDetailLabel}>Value</Text>
+        <Text style={styles.assetDetailLabel}>{translate('Value')}</Text>
         {isEditing ? (
           <TextInput
             style={styles.input}
             value={value}
             onChangeText={setValue}
             keyboardType="numeric"
-            placeholder="Enter Value"
+            placeholder={translate('Enter Value')}
           />
         ) : (
           <Text style={styles.assetDetailText}>{`${parseInt(asset?.value).toLocaleString()} VND`}</Text>
         )}
-        <Text style={styles.assetDetailLabel}>Purchase Date</Text>
+        <Text style={styles.assetDetailLabel}>{translate('Purchase Date')}</Text>
         {isEditing ? (
           <TouchableOpacity onPress={renderDateTimePicker}>
             <Text style={styles.input}>{moment(purchaseDate).format('YYYY-MM-DD')}</Text>
@@ -179,24 +190,37 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
           {isEditing ? (
             <>
               <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSavePress}>
-                <Text style={styles.buttonText}>Save</Text>
+                <Text style={styles.buttonText}>{translate('Save')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={handleCancel}>
-                <Text style={styles.buttonText}>Cancel</Text>
+                <Text style={styles.buttonText}>{translate('Cancel')}</Text>
               </TouchableOpacity>
             </>
           ) : (
             <>
               <TouchableOpacity style={[styles.button, styles.editButton]} onPress={handleEditPress}>
-                <Text style={styles.buttonText}>Edit</Text>
+                <Text style={styles.buttonText}>{translate('Edit')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.button, styles.deleteButton]} onPress={handleDeletePress}>
-                <Text style={styles.buttonText}>Delete</Text>
+                <Text style={styles.buttonText}>{translate('Delete')}</Text>
               </TouchableOpacity>
             </>
           )}
         </View>
       </View>
+
+      <RNModal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={closeModal}
+      >
+        <TouchableOpacity style={styles.modalOverlay} onPress={closeModal}>
+          <View>
+            <Image source={{ uri: asset?.image_url }} style={styles.modalImage} />
+          </View>
+        </TouchableOpacity>
+      </RNModal>
     </SafeAreaView>
   );
 };
@@ -216,12 +240,15 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginLeft: 10,
+    color: '#333',
   },
   imageContainer: {
     position: 'relative',
     marginBottom: 16,
     borderRadius: 8,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
   assetImage: {
     width: '100%',
@@ -240,64 +267,84 @@ const styles = StyleSheet.create({
   },
   assetInfo: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f9f9f9',
     padding: 16,
     borderRadius: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
-    elevation: 2,
+    elevation: 3,
   },
   assetDetailLabel: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 4,
+    color: '#333',
   },
   assetDetailText: {
     fontSize: 16,
-    marginBottom: 8,
+    marginBottom: 16,
+    color: '#666',
   },
   input: {
+    fontSize: 16,
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 12,
+    padding: 8,
     marginBottom: 16,
+    borderRadius: 8,
+    backgroundColor: '#fff',
   },
   multilineInput: {
-    height: 100,
+    height: 80,
     textAlignVertical: 'top',
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     marginTop: 16,
   },
   button: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    padding: 12,
     borderRadius: 8,
     alignItems: 'center',
-    justifyContent: 'center',
+  },
+  saveButton: {
+    backgroundColor: '#4CAF50',
+    flex: 1,
+    marginRight: 8,
+  },
+  cancelButton: {
+    backgroundColor: '#f44336',
+    flex: 1,
     marginLeft: 8,
   },
   editButton: {
     backgroundColor: '#2196F3',
+    flex: 1,
+    marginRight: 8,
   },
   deleteButton: {
-    backgroundColor: '#FF6347',
-  },
-  saveButton: {
-    backgroundColor: '#4CAF50',
-  },
-  cancelButton: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#f44336',
+    flex: 1,
+    marginLeft: 8,
   },
   buttonText: {
-    fontSize: 16,
     color: '#fff',
+    fontSize: 16,
     fontWeight: 'bold',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalImage: {
+    width: '90%',
+    height: '70%',
+    resizeMode: 'contain',
   },
 });
 

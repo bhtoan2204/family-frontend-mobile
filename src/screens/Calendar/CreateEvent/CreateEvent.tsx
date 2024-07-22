@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, Alert, Switch } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Alert, Switch, ScrollView  } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import { CreateEventScreenProps } from 'src/navigation/NavigationTypes';
@@ -9,36 +9,40 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ColorPicker from './ColorPicker';
 import { useSelector } from 'react-redux';
-import { getColor, getIDcate } from 'src/redux/slices/CalendarSlice';
 import Custom from './Custom';
 import { RRule, RRuleStrOptions } from 'rrule';
 import { differenceInDays, differenceInWeeks, differenceInMonths, differenceInYears } from 'date-fns';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { CategoryEvent } from 'src/interface/calendar/CategoryEvent';
+import { TEXTS } from 'src/constants';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   navigation,
   route,
 }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [location, setLocation] = useState('');
+  const [title, setTitle] = useState<string | null>(null);
+  const [description, setDescription] = useState<string>('');
+  const [location, setLocation] = useState<string | null>(null);
   const [chosenDateStart, setChosenDateStart] = useState(new Date());
   const [chosenDateEnd, setChosenDateEnd] = useState(new Date());
-  const { id_family } = route.params;
   const [isPickerRepeatOpen, setIsPickerRepeatOpen] = useState(false);
   const [isPickerEndRepeatOpen, setIsPickerEndRepeatOpen] = useState(false);
   const [selectedOptionRepeat, setSelectedOptionRepeat] = useState('none');
   const [selectedOptionEndRepeat, setSelectedOptionEndRepeat] = useState('never');
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedDays, setSelectedDays] = useState<string>('');
-  const [selectedMonths, setSelectedMonths] = useState<string>('');
-  const [selectedYears, setSelectedYears] = useState<string>('');
+  const [selectedDays, setSelectedDays] = useState<string | null>(null);
+  const [selectedMonths, setSelectedMonths] = useState<string | null>(null);
+  const [selectedYears, setSelectedYears] = useState<string | null>(null);
   const [number, setNumber] = useState<number>(1);
   const [isAllDay, setIsAllDay] = useState(false);
   const [repeatEndDate, setRepeatEndDate] = useState(new Date());
-  let color = useSelector(getColor);
-  let category = useSelector(getIDcate);
+  const family= useSelector(selectSelectedFamily);
   const [count, setCount] = useState(1);
-
+  const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(null);
+  const [eventCategory, setEventCategory] = useState<CategoryEvent | null> (null)
+  const translate = useSelector(getTranslate);
+  
   const handleDecrease = () => {
     setCount(prevCount => Math.max(1, prevCount - 1));
   };
@@ -152,22 +156,21 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       recurrenceRule= recurrenceRule+';';
     }
     
-    console.log(recurrenceRule);
     const eventDetails = {
-      id_family: id_family,
+      id_family: family?.id_family,
       title: title,
       time_start: chosenDateStart,
       time_end: chosenDateEnd,
       description: description,
-      color: color,
+      color: eventCategory?.color,
       is_all_day: isAllDay,
-      category: category,
+      category: eventCategory?.id_category_event,
       location: location,
-      recurrence_exception: "",
-      recurrence_id: 0,
+      recurrence_exception: null,
+      recurrence_id: null,
       recurrence_rule: recurrenceRule,
-      start_timezone: "",
-      end_timezone: ""
+      start_timezone: null,
+      end_timezone: null
     };
   
     try {
@@ -245,18 +248,18 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
 
   return (
     <View style={styles.modalContainer}>
-      <View style={{ backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
+    <View style={{ backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
         <View style={styles.row}>
-          <Text style={styles.headerTitle}>Add New Event</Text>
+          <Text style={styles.headerTitle}>{translate('add_new_event')}</Text>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Icon name="close" size={30} style={styles.backButton} />
           </TouchableOpacity>
         </View>
         <View>
-          <Text style={{ color: 'gray', fontSize: 16 }}>Title</Text>
+          <Text style={{ color: 'gray', fontSize: 16 }}>{translate('title')}</Text>
           <TextInput
             style={styles.input1}
-            placeholder="Enter title"
+            placeholder={translate('enter_title')}
             value={title}
             onChangeText={setTitle}
           />
@@ -269,7 +272,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
           </View>
           <TextInput
             style={styles.input2}
-            placeholder="Enter location"
+            placeholder={translate('enter_location')}
             value={location}
             onChangeText={setLocation}
           />
@@ -284,7 +287,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
           </View>
           <TextInput
             style={styles.input2}
-            placeholder="Enter description"
+            placeholder={translate('Enter Description')}
             value={description}
             onChangeText={setDescription}
           />
@@ -292,7 +295,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       </View>
       <View style={styles.datetimeContainer}>
         <View style={styles.allDayConTainer}>
-          <Text style={styles.text}>All day</Text>
+          <Text style={styles.text}>{translate('all_day')}</Text>
           <View style={styles.switches}>
             <Switch
               value={isAllDay}
@@ -309,7 +312,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
                 style={{ color: 'gray' }}
               />
               <Text style={{ fontSize: 16, color: 'gray' }}>
-                Start
+              {translate('start')}
               </Text>
             </View>
             <DateTimePicker
@@ -327,7 +330,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
                 style={{ color: 'gray' }}
               />
               <Text style={{ fontSize: 16, color: 'gray' }}>
-                End
+              {translate('end')}
               </Text>
             </View>
             <DateTimePicker
@@ -346,7 +349,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
           style={{ color: 'gray' }}
         />
         <Text style={{ right: 30, fontSize: 16, color: 'gray' }}>
-          Repeat
+        {translate('repeat')}
         </Text>
         <DropDownPicker
           open={isPickerRepeatOpen}
@@ -355,9 +358,9 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
           items={optionRepeat}
           setValue={setSelectedOptionRepeat}
           placeholder="None"
-          containerStyle={{ height: 40, width: 100 }}
-          style={{ borderColor: 'white', borderWidth: 1 }}
-          dropDownContainerStyle={{ borderColor: '#ccc', borderWidth: 1, zIndex: 1000, width: 100 }}
+          containerStyle={{ height: TEXTS.SCEEN_HEIGHT*0.05, width: TEXTS.SCREEN_WIDTH*0.35 ,borderBottomWidth: 1}}
+          style={{ borderColor: 'white', borderWidth: 1, width: TEXTS.SCREEN_WIDTH*0.35 }}
+          dropDownContainerStyle={{width: TEXTS.SCREEN_WIDTH*0.35, borderColor: '#ccc', borderWidth: 1, zIndex: 1000, }}
           zIndex={1000}
           zIndexInverse={1000}
         />
@@ -370,7 +373,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
             style={{ color: 'gray' }}
           />
           <Text style={{ right: 30, fontSize: 16, color: 'gray' }}>
-            End Repeat
+          {translate('end_repeat')}
           </Text>
           <DropDownPicker
             open={isPickerEndRepeatOpen}
@@ -379,9 +382,9 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
             items={optionEndRepeat}
             setValue={setSelectedOptionEndRepeat}
             placeholder="Never"
-            containerStyle={{ height: 40, width: 100 }}
+            containerStyle={{ height: TEXTS.SCEEN_HEIGHT*0.05,  width: TEXTS.SCREEN_WIDTH*0.35 }}
             style={{ borderColor: 'white', borderWidth: 1 }}
-            dropDownContainerStyle={{ borderColor: '#ccc', borderWidth: 1, zIndex: 1000, width: 100 }}
+            dropDownContainerStyle={{ borderColor: '#ccc', borderWidth: 1, zIndex: 1000, width: TEXTS.SCREEN_WIDTH*0.35 }}
             zIndex={1000}
             zIndexInverse={1000}
           />
@@ -430,11 +433,18 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       )}
 
 
-      <ColorPicker navigation={navigation} />
+      <ColorPicker 
+      navigation={navigation} 
+      id_Family = {family?.id_Family}
+      selectedColorIndex={selectedColorIndex}
+      setSelectedColorIndex={setSelectedColorIndex}
+      setEventCategory={setEventCategory}
+      />
+
       <View style={[styles.formAction, { paddingVertical: 10 }]}>
         <TouchableOpacity onPress={handleSubmit}>
           <View style={styles.btn}>
-            <Text style={styles.btnText}>Submit</Text>
+            <Text style={styles.btnText}>{translate('submit')}</Text>
           </View>
         </TouchableOpacity>
       </View>

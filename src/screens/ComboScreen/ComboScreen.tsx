@@ -12,6 +12,9 @@ import stylesCalendar from './styles/stylesCalendar';
 import stylesList from './styles/stylesList';
 import stylesEducation from './styles/stylesEducation';
 import stylesHousehold from './styles/stylesHousehold';
+import styles from './styles';
+import CustomButton from 'src/components/Button';
+import {TouchableOpacity} from '@gorhom/bottom-sheet';
 
 const ComboScreen = () => {
   return (
@@ -19,7 +22,7 @@ const ComboScreen = () => {
       <View style={stylesAnalysis.container}>
         <View style={stylesAnalysis.analysis}>
           <View style={{bottom: 10}}>
-            {/* <Image
+            <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/background-top.png')}
               resizeMode="stretch"
               style={stylesAnalysis.imageTop}
@@ -49,21 +52,21 @@ const ComboScreen = () => {
               resizeMode="stretch"
               style={stylesAnalysis.imagePieChart}
             />
-            {/* <Image
+            <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/barchart.png')}
               resizeMode="stretch"
               style={stylesAnalysis.imageBarChart}
-            /> */}
-            {/* <Image
+            />
+            <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/back.png')}
               resizeMode="stretch"
               style={stylesAnalysis.imageBack}
-            /> */}
-            {/* <Image
+            />
+            <Image
               source={require('../../assets/images/combo-package/Analysis_Finance/front.png')}
               resizeMode="stretch"
               style={stylesAnalysis.imageFront}
-            /> */} */
+            />
           </View>
           <View style={stylesAnalysis.bottomField}>
             <Image
@@ -84,11 +87,7 @@ const ComboScreen = () => {
           />
 
           <View
-            style={{
-              backgroundColor: 'white',
-              height: 2000,
-              zIndex: -1,
-            }}></View>
+            style={{backgroundColor: 'white', height: 2000, zIndex: -1}}></View>
 
           <View style={stylesChat.chat}>
             <Image
@@ -106,11 +105,11 @@ const ComboScreen = () => {
               resizeMode="stretch"
               style={stylesChat.imageThumbUp}
             />
-            {/* <Image
+            <Image
               source={require('../../assets/images/combo-package/Chat/left-side.png')}
               resizeMode="stretch"
               style={stylesChat.imageLeftSide}
-            /> */}
+            />
             <Image
               source={require('../../assets/images/combo-package/Chat/oval.png')}
               resizeMode="stretch"
@@ -161,11 +160,11 @@ const ComboScreen = () => {
             resizeMode="stretch"
             style={stylesCalendar.imageTablet}
           />
-          {/* <Image
+          <Image
             source={require('../../assets/images/combo-package/Calendar/right-side.png')}
             resizeMode="stretch"
             style={stylesCalendar.imageRightSide}
-          /> */}
+          />
           <Image
             source={require('../../assets/images/combo-package/Calendar/character.png')}
             resizeMode="stretch"
@@ -194,11 +193,11 @@ const ComboScreen = () => {
               never miss a birthday or special event.
             </Text>
           </View>
-          {/* <Image
+          <Image
             source={require('../../assets/images/combo-package/Calendar/left-side.png')}
             resizeMode="stretch"
             style={stylesCalendar.imageLeftSide}
-          /> */}
+          />
           <Image
             source={require('../../assets/images/combo-package/Calendar/wave.png')}
             resizeMode="stretch"
@@ -212,7 +211,7 @@ const ComboScreen = () => {
               height: 640,
               bottom: 2150,
             }}></View>
-          {/* <Image
+          <Image
             source={require('../../assets/images/combo-package/Lists/background.png')}
             resizeMode="stretch"
             style={stylesList.background}
@@ -251,7 +250,7 @@ const ComboScreen = () => {
             source={require('../../assets/images/combo-package/Lists/bottom-front.png')}
             resizeMode="stretch"
             style={stylesList.bottomFront}
-          /> */}
+          />
           <View style={{bottom: 2450}}>
             <Text style={stylesList.title}>Check list & Shopping list</Text>
             <Text style={stylesList.detail}>
@@ -303,7 +302,7 @@ const ComboScreen = () => {
               deadlines for academic success.
             </Text>
           </View>
-          {/* <Image
+          <Image
             source={require('../../assets/images/combo-package/Chat/connect.png')}
             resizeMode="stretch"
             style={stylesEducation.imageConnect}
@@ -322,7 +321,7 @@ const ComboScreen = () => {
             source={require('../../assets/images/combo-package/Household/Character.png')}
             resizeMode="stretch"
             style={stylesHousehold.character}
-          /> */}
+          />
           <View style={{bottom: 720}}>
             <Text style={stylesEducation.title}>Household</Text>
             <Text style={stylesEducation.detail}>
@@ -330,11 +329,11 @@ const ComboScreen = () => {
               efficiency and convenience.
             </Text>
           </View>
-          {/* <Image
+          <Image
             source={require('../../assets/images/combo-package/Chat/left-side.png')}
             resizeMode="stretch"
             style={stylesHousehold.imageLeftSide}
-          /> */}
+          />
           <Image
             source={require('../../assets/images/combo-package/Household/bottom-back.png')}
             resizeMode="stretch"
@@ -361,7 +360,29 @@ const ComboScreen = () => {
             style={stylesHousehold.upSideDown}
           />
         </View>
-        <View style={{backgroundColor: '#fff', height: 180}}></View>
+        <View
+          style={{height: 250, backgroundColor: '#fff', position: 'relative'}}>
+          <Image
+            source={require('../../assets/images/bottom-combo.png')}
+            resizeMode="stretch"
+            style={styles.bottomComboImage}
+          />
+          <Text style={styles.title}>Discover your ideal option here</Text>
+          <Text style={styles.description}>
+            Explore all the exciting features FamFund offers for your family's
+            needs and more.
+          </Text>
+          <CustomButton
+            style={styles.comboButton}
+            title={'Combo'}
+            filled
+            // onPress={{}}
+            backgroundImage={require('../../assets/images/button.png')}
+          />
+          <TouchableOpacity style={styles.packageButton}>
+            <Text style={styles.packageText}>Extra</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );

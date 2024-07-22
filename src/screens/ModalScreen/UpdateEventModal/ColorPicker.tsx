@@ -2,30 +2,29 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, FlatList, Dimensions } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useDispatch, useSelector } from 'react-redux';
-import { getEvent, getFamily, setColor, setIdcate } from 'src/redux/slices/CalendarSlice';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import Navigation from 'src/navigation/NavigationContainer';
 import { CategoryEvent } from 'src/interface/calendar/CategoryEvent';
 import { Event } from 'src/interface/calendar/Event';
+import { selectSelectedEvent, updateEvent } from 'src/redux/slices/CalendarSlice';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 
 
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('window').width;
 
-const ColorPicker = ({ navigation }) => {
+const ColorPicker = ({ navigation, selectedColorIndex, setSelectedColorIndex, setColor }) => {
 
-  const [event , setEvent ] = useState<Event>(useSelector(getEvent));
+  const event = useSelector(selectSelectedEvent);
 
-  const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(event.category);
   const [availableColors, setAvailableColors] = useState<CategoryEvent[]>([]);
-  const id_family = useSelector(getFamily);
+  const family = useSelector(selectSelectedFamily);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(event.category)
     const fetchData = async () => {
       try {
-        const result = await CalendarServices.getAllCategoryEvent(id_family);
+        const result = await CalendarServices.getAllCategoryEvent(family?.id_family);
         setAvailableColors(result);
 
       } catch (error) {
@@ -34,17 +33,17 @@ const ColorPicker = ({ navigation }) => {
 
     };
     fetchData();
-  }, [id_family]);
+  }, [family?.id_family]);
 
   const handleColorSelect = (index: number, item: CategoryEvent) => {
-    dispatch(setColor(item.color))
-    dispatch(setIdcate(item.id_category_event))
+    // dispatch(updateEvent({...event!, color: item.color}))
+    setColor(item.color);
     setSelectedColorIndex(selectedColorIndex === item.id_category_event ? null : item.id_category_event);
   };
 
   const handleCreateCategory= () => {
     //bottomSheetRef.current?.open();
-    navigation.navigate('CalendarStack', {screen: 'CreateCategoryEvent', params: {id_famiy: id_family}})
+    navigation.navigate('CalendarStack', {screen: 'CreateCategoryEvent', params: {id_famiy: family?.id_family}})
   };
   const renderColorCircle = ({ item, index }: { item: CategoryEvent, index: number }) => (
     <View style= { styles.containerColor}> 

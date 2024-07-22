@@ -66,7 +66,9 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
     };
     fetchNews();
   }, []);
-
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
   const buildDateDiff = (pubDate: string) => {
     const today = new Date();
     const publishedDate = new Date(pubDate);
@@ -191,7 +193,7 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
                         color: categoryColors[choosenCategoryIndex].textColor,
                       }}>
                       {item.category && item.category.name && (
-                        <Text>{item.category.name}</Text>
+                        <Text>{capitalizeFirstLetter(item.category.name)}</Text>
                       )}
 
                     </Text>
@@ -283,7 +285,8 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
               ? {fontSize: 16, fontWeight: '600', color: COLORS.primary}
               : {fontSize: 16, fontWeight: '600', color: COLORS.gray}
           }>
-          {category.name}
+          {capitalizeFirstLetter(category.name)}
+
         </Text>
       </TouchableOpacity>
     ))}

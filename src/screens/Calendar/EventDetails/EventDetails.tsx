@@ -1,193 +1,188 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert, Dimensions } from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { EventDetailsScreenProps } from 'src/navigation/NavigationTypes';
-import styles from './styles';
-import CalendarServices from 'src/services/apiclient/CalendarService';
-import { Event } from 'src/interface/calendar/Event';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import BottomSheet from '../BottomSheet';
-import { getEvent, setOnly } from 'src/redux/slices/CalendarSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
 import { COLORS } from 'src/constants';
+import { deleteEventOnly, selectSelectedEvent, setOnly } from 'src/redux/slices/CalendarSlice';
+import { deleteEvent } from 'src/redux/slices/CalendarSlice';
+import moment from 'moment';
+import styles from './styles';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import CalendarServices from 'src/services/apiclient/CalendarService';
+import { getTranslate } from 'src/redux/slices/languageSlice';
+
 const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
-    const { id_family, id_calendar } = route.params;
-    const [event , setEvent ] = useState<Event>(useSelector(getEvent));
-    const bottomSheetRef = useRef<RBSheet>(null);
-    const screenHeight = Dimensions.get('screen').height;
+    const { id_family } = route.params;
+    const event = useSelector(selectSelectedEvent);
     const dispatch = useDispatch();
+    const translate = useSelector(getTranslate);
 
-
-
-    const onUpdate = async () => {
-        if (event.recurrence_rule){
-
-        
-        Alert.alert(
-          'Choose Edit Option',
-          'Do you want to edit only this event or all future events?',
-          [
-            {
-              text: 'Only this event',
-              onPress: async () => {
-                await dispatch(setOnly(true));
-                navigation.navigate('UpdateEvent', { id_family });
-              },
-            },
-            {
-              text: 'All future events',
-              onPress: async () => {
-                await dispatch(setOnly(false));
-                navigation.navigate('UpdateEvent', { id_family });
-              },
-            },
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-          ],
-          { cancelable: false }
-        );
-    } else{
-        await dispatch(setOnly(true));
-        navigation.navigate('UpdateEvent', { id_family });
-    }
-      };
-      
-    const onDelete = async () => {
-      if (!event.recurrence_rule){
-        Alert.alert(
-            'Confirm Delete',
-            'Are you sure you want to delete this event?',
-            [
-                {
-                    text: 'Cancel',
-                    style: 'cancel',
-                },
-                {
-                    text: 'Delete',
-                    onPress: async () => {
-                        try {
-                            await CalendarServices.DeleteEvent(event?.id_calendar);
-                            Alert.alert('Success', 'Event has been deleted successfully.');
-                            navigation.goBack()
-                        } catch (error) {
-                            console.error('Error deleting event:', error);
-                            Alert.alert('Error', 'An error occurred while deleting the event.');
-                        }
+    const onUpdate = () => {
+        if (event?.recurrence_rule) {
+            Alert.alert(
+                translate('Choose Edit Option'),
+                translate('Do you want to edit only this event or all future events?'),
+                [
+                    {
+                        text: translate('Only this event'),
+                        onPress: async () => {
+                            await dispatch(setOnly(true));
+                            navigation.navigate('UpdateEvent', { id_family });
+                        },
                     },
-                },
-            ],
-            { cancelable: true }
-        );
-      }
-      else{
-        Alert.alert(
-          'Confirm Delete',
-          'What do you want to do with this event?',
-          [
-              {
-                  text: 'Cancel',
-                  style: 'cancel',
-              },
-              {
-                  text: 'Delete This Event Only',
-                  onPress: async () => {
-                      try {
-                          // await CalendarServices.UpdateEvent()
-                          Alert.alert('Success', 'Event has been deleted successfully.');
-                          navigation.goBack();
-                      } catch (error) {
-                          console.error('Error deleting event:', error);
-                          Alert.alert('Error', 'An error occurred while deleting the event.');
-                      }
-                  },
-              },
-              {
-                  text: 'Delete All Future Events',
-                  onPress: async () => {
-                      try {
-                         
-                            await CalendarServices.DeleteEvent(event.id_calendar);
-                            Alert.alert('Success', 'Event has been deleted successfully.');
-                          
-                          navigation.goBack();
-                      } catch (error) {
-                          console.error('Error deleting event:', error);
-                          Alert.alert('Error', 'An error occurred while deleting the event.');
-                      }
-                  },
-              },
-          ],
-          { cancelable: true }
-      );
-      };
+                    {
+                        text: translate('All future events'),
+                        onPress: async () => {
+                            await dispatch(setOnly(false));
+                            navigation.navigate('UpdateEvent', { id_family });
+                        },
+                    },
+                    {
+                        text: translate('Cancel'),
+                        style: 'cancel',
+                    },
+                ],
+                { cancelable: false }
+            );
+        } else {
+            navigation.navigate('UpdateEvent', { id_family });
+        }
+    };
 
-  return (
-    <View style={styles.container}>
-        <View style={styles.header}>
+    const onDelete = () => {
+        if (!event?.recurrence_rule) {
+            Alert.alert(
+                translate('Confirm Delete'),
+                translate('Are you sure you want to delete this event?'),
+                [
+                    {
+                        text: translate('Cancel'),
+                        style: 'cancel',
+                    },
+                    {
+                        text: translate('Delete'),
+                        onPress: async () => {
+                            try {
+                                await CalendarServices.DeleteEvent(event?.id_family, event?.id_calendar);
+                                await dispatch(deleteEvent(event?.id_calendar));
+                                Alert.alert(translate('Success'), translate('Event has been deleted successfully.'));
+                                navigation.goBack();
+                            } catch (error) {
+                                console.error('Error deleting event:', error);
+                                Alert.alert(translate('Error'), translate('An error occurred while deleting the event.'));
+                            }
+                        },
+                    },
+                ],
+                { cancelable: true }
+            );
+        } else {
+            Alert.alert(
+                translate('Confirm Delete'),
+                translate('What do you want to do with this event?'),
+                [
+                    {
+                        text: translate('Cancel'),
+                        style: 'cancel',
+                    },
+                    {
+                        text: translate('Delete This Event Only'),
+                        onPress: async () => {
+                            try {
+                                await CalendarServices.UpdateEvent(
+                                    event.id_calendar,
+                                    id_family,
+                                    event.title,
+                                    event.description,
+                                    event.time_start,
+                                    event.time_end,
+                                    event.color,
+                                    event.is_all_day,
+                                    event.category,
+                                    event.location,
+                                    moment(event.time_start).toISOString() + ',',
+                                    event.recurrence_id,
+                                    event.recurrence_rule,
+                                    event.start_timezone,
+                                    event.end_timezone
+                                );
+                                dispatch(deleteEventOnly({ id_calendar: event.id_calendar, time_start: event.time_start }));
+                                Alert.alert(translate('Success'), translate('Event has been deleted successfully.'));
+                                navigation.goBack();
+                            } catch (error) {
+                                console.error('Error deleting event:', error);
+                                Alert.alert(translate('Error'), translate('An error occurred while deleting the event.'));
+                            }
+                        },
+                    },
+                    {
+                        text: translate('Delete All Future Events'),
+                        onPress: async () => {
+                            try {
+                                await dispatch(deleteEvent(event.id_calendar));
+                                Alert.alert(translate('Success'), translate('Event has been deleted successfully.'));
+                                navigation.goBack();
+                            } catch (error) {
+                                console.error('Error deleting event:', error);
+                                Alert.alert(translate('Error'), translate('An error occurred while deleting the event.'));
+                            }
+                        },
+                    },
+                ],
+                { cancelable: true }
+            );
+        }
+    };
 
-                <View style={styles.headerp}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Icon name="arrow-left" size={20} color="black" />
-                    </TouchableOpacity>
-                    <Text style={styles.headerText}>Event Detail</Text>
-                </View>
+    if (!event) {
+        return null;
+    }
 
-               
-
-                <View style={styles.headerp}>
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Feather name="arrow-left" size={20} color="black" />
+                </TouchableOpacity>
+                <Text style={styles.headerText}>{translate('Event Detail')}</Text>
                 <TouchableOpacity
                     onPress={onUpdate}
                     style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      backgroundColor: '#00adf5',
-                      padding: 15,
-                      borderRadius: 30,
-                      paddingHorizontal: 20,
-                      shadowColor: '#00adf5',
-                      shadowOffset: {width: 0, height: 4},
-                      shadowOpacity: 0.3,
-                      shadowRadius: 2,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        backgroundColor: '#00adf5',
+                        padding: 15,
+                        borderRadius: 30,
+                        paddingHorizontal: 20,
+                        shadowColor: '#00adf5',
+                        shadowOffset: { width: 0, height: 4 },
+                        shadowOpacity: 0.3,
+                        shadowRadius: 2,
                     }}>
                     <Feather name="edit" size={20} color="white" />
-                    <Text style={{marginLeft: 10, fontWeight: '700', color: 'white'}}>
-                      Edit
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-
+                    <Text style={{ marginLeft: 10, fontWeight: '700', color: 'white' }}>{translate('Edit')}</Text>
+                </TouchableOpacity>
             </View>
             <View style={styles.card}>
-
-                <View> 
-                    <Text style={styles.title}>{event.title}</Text>
-                    <Text style={styles.description}>Description: {event?.description}</Text>
-                    <View style={styles.locationContainer}> 
-                      <Text style={styles.location}>Location: </Text>
-                      <Text style={{color: COLORS.DenimBlue,fontSize: 16, }}> {event?.location}</Text>
-                    </View>
-                    <View style={styles.locationContainer}> 
-                    <Text style={styles.location}>Category: </Text>
-                    <Text style={{color: event.color,fontSize: 16, }}> {event?.name_category}</Text>
-                    </View>
+                <Text style={styles.title}>{event.title}</Text>
+                <Text style={styles.description}>{translate('Description')}: {event.description}</Text>
+                <View style={styles.locationContainer}>
+                    <Text style={styles.location}>{translate('Location')}:</Text>
+                    <Text style={[styles.description, { fontSize: 16 }]}> {event.location}</Text>
                 </View>
-                
+                <View style={styles.locationContainer}>
+                    <Text style={styles.location}>{translate('Category')}:</Text>
+                    <Text style={{ color: event.color, fontSize: 16 }}> {event.categoryEvent.title}</Text>
                 </View>
-
-                <View style={styles.containerBtnDelete}>
-                  <TouchableOpacity style={styles.button} onPress={() => onDelete()}>
-                    <Text style={styles.textDelete}>Delete event</Text>
-                  </TouchableOpacity>
-                </View>
-
-                    
-                
             </View>
-  );
+            <View style={styles.containerBtnDelete}>
+                <TouchableOpacity style={styles.button} onPress={onDelete}>
+                    <Text style={styles.textDelete}>{translate('Delete event')}</Text>
+                </TouchableOpacity>
+            </View>
+        </SafeAreaView>
+    );
 };
-}
-export default EventDetailsScreen;
 
+export default EventDetailsScreen;

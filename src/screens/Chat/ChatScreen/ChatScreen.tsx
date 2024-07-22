@@ -73,30 +73,39 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   };
 
 
-
   const fetchMessages = useCallback(async () => {
     setReceiver(user);
-
+  
     try {
       const response = await ChatServices.GetMessages({
         id_user: receiverId,
         index: currentIndex,
       });
       if (response.length > 0) {
+        markSeenMessage(receiverId)
         const newMessages = response.map((message: Message) => {
           if (message.type === 'photo') {
             setImages(prevImages => [...prevImages, message.content]);
           }
           return { ...message, timestamp: new Date(message.timestamp) };
+         
         });
-        setMessages((prevMessages) => [...prevMessages, ...newMessages]);
-        setHasReceivedMessage(true); 
-        setCurrentIndex(currentIndex+1);
+        
+        if (currentIndex === 0) {
+          setMessages(newMessages);
+        } else {
+          setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+        }
+        
+        setHasReceivedMessage(true);
+        setCurrentIndex(currentIndex + 1);
+        console.log(currentIndex)
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
   }, [receiverId, currentIndex]);
+  
 
   useEffect(() => {
     fetchMessages();
@@ -109,7 +118,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         message: message,
         receiverId: receiverId,
       });
-      fetchNewMessages(response);
+      //fetchNewMessages(response);
     } catch (error) {
       console.error('Error sending messages:', error);
     }
@@ -121,7 +130,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         uri: uri,
         receiverId: receiverId,
       });
-      fetchNewMessages(response);
+      //fetchNewMessages(response);
     } catch (error) {
       console.error('Error sendImage:', error);
     }
@@ -246,18 +255,18 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
     setSelectedImageIndex(null);
   };
 
-  const handlePressMessage = (item: Message) => {
+  const onMessagePress = (item: Message) => {
     if( item.type === 'photo'){
 
-    const itemIndex = messages.findIndex(
-      message =>
-        message.senderId === item.senderId && message.content === item.content,
-    );
-  
-    setSelectedImageIndex(itemIndex );
-  }
-    setSelectedMessageId(prevId => (prevId === item._id ? null : item._id));
-  };
+      const itemIndex = images.findIndex(
+        iamge =>
+          iamge === item.content,
+      );
+      console.log(itemIndex)
+      setSelectedImageIndex(itemIndex);
+    }
+      setSelectedMessageId(prevId => (prevId === item._id ? null : item._id));
+    };
 
 
 
@@ -284,9 +293,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
     };
   }, [message]);
 
-  useEffect(() => {
-    markSeenMessage(receiverId);
-  }, [receiverId]);
+
 
   useEffect(() => {
     if (socket) {
@@ -428,7 +435,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
                <MessageItem
                  item={item}
                  profileId={profile.id_user}
-                 onMessagePress={handlePressMessage}
+                 onMessagePress={onMessagePress}
                  isSelected={selectedMessageId === item._id}
                  formatDateTime={formatDateTime}
                />

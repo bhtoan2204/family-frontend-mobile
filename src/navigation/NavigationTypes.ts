@@ -1,7 +1,7 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
-import {Member} from 'src/interface/member/member';
+import { Member } from 'src/interface/member/member';
 import BottomSheet from '@gorhom/bottom-sheet';
 
 export type RootParamList = {
@@ -21,7 +21,6 @@ export type RootParamList = {
   HouseHoldItemStack: NavigatorScreenParams<HouseHoldItemStackParamList>;
   ShoppingListStack: NavigatorScreenParams<ShoppingListStackParamList>;
   TodoListStack: NavigatorScreenParams<TodoListStackParamList>;
-  EducationStack: NavigatorScreenParams<EducationTabParamList>;
   // ShoppingListCategoryStack: NavigatorScreenParams<ShoppingListCategoryStackParamList>;
 };
 
@@ -38,12 +37,14 @@ export type ExpenseStackParamList = {
   AssetDetailScreen: undefined;
   AddAssetScreen: undefined;
   ExpenseScreen: undefined;
+
 };
 
 export type IncomeStackParamList = {
   ChartIncomeScreen: undefined;
   IncomeDetailScreen: undefined;
   IncomeScreen: undefined;
+
 };
 
 type ChartIncomeScreenNavigationProp = NativeStackNavigationProp<
@@ -95,6 +96,7 @@ export interface AssetScreenProps {
   route: RouteProp<ExpenseStackParamList, 'AssetScreen'>;
 }
 
+
 type AssetDetailScreenNavigationProp = NativeStackNavigationProp<
   ExpenseStackParamList,
   'AssetDetailScreen'
@@ -124,8 +126,9 @@ export interface ExpenseScreenProps {
   route: RouteProp<ExpenseStackParamList, 'ExpenseScreen'>;
 }
 
+
 type IncomeDetailScreenNavigationProp = NativeStackNavigationProp<
-  IncomeStackParamList,
+IncomeStackParamList,
   'IncomeDetailScreen'
 >;
 
@@ -135,7 +138,7 @@ export interface IncomeDetailScreenProps {
 }
 
 type IncomeScreenNavigationProp = NativeStackNavigationProp<
-  IncomeStackParamList,
+IncomeStackParamList,
   'IncomeScreen'
 >;
 
@@ -165,8 +168,8 @@ export interface FamilySpecProps {
 }
 
 export type ChatStackParamList = {
-  ChatFamily: undefined;
-
+  ChatFamily:  undefined;
+  
   ChatFamilyLast: undefined;
 
   ChatUser: {
@@ -218,7 +221,7 @@ export interface ChatListProps {
 }
 
 type FamilyNavigationProp = NativeStackNavigationProp<
-  FamilyTabParamList,
+FamilyTabParamList,
   'Family'
 >;
 
@@ -257,9 +260,8 @@ export type CalendarStackParamList = {
   ScheduleScreen: {
     id_family: number | undefined;
   };
-  CreateEvent: {
-    id_family: number | undefined;
-  };
+  CreateEvent: undefined;
+  
   CreateCategoryEvent: {
     id_family: number | undefined;
   };
@@ -280,8 +282,10 @@ export type FamilyStackParamList = {
   CreateFamily: {
     id_order: number | undefined;
   };
-
+  LanguageSelector: undefined;
   InviteMembers: undefined;
+  
+  ThemeSwitcher: undefined;
 
   ViewFamily: undefined;
 
@@ -335,26 +339,29 @@ export type FamilyStackParamList = {
   };
   News: undefined;
   UpcomingEvents: undefined;
-  MemberDetails: {
-    member: Member;
-  };
-  GuidelinePublic: undefined;
+  MemberDetails: undefined;
+  GuidelinePublic: undefined
+
 };
 
 export type PackStackParamList = {
   ViewAllPurchased: undefined;
-  ViewAllPackage: undefined;
+  ViewAllPackage: {
+    id_family: number | null;
+  };
   ViewAllService: undefined;
-
+  
   BankInfoScreen: {
-    id_family: number | undefined;
+    id_family: number | null;
     id_package: number | undefined;
     bankCode: string | undefined;
     amount: number | undefined;
     language: 'vn' | undefined;
     method: string | undefined;
   };
-  OrderDetailScreen: undefined;
+  OrderDetailScreen: {
+    id_family: number | null;
+  };
   ZaloPayScreen: undefined;
   ComboScreen: undefined;
 };
@@ -442,8 +449,7 @@ type HouseHoldItemNavigationProp = NativeStackNavigationProp<
 export interface HouseHoldItemScreenProps {
   navigation: HouseHoldItemNavigationProp;
   route: RouteProp<HouseHoldItemStackParamList, 'HouseHoldItem'>;
-  addEditConsumableItemSheetRef: React.RefObject<BottomSheet> | undefined;
-  addEditDescriptionSheetRef: React.RefObject<BottomSheet> | undefined;
+  addRoomRef: React.RefObject<BottomSheet> | undefined;
 }
 
 type ReceiptInfoNavigationProp = NativeStackNavigationProp<
@@ -633,6 +639,52 @@ export interface ShoppingListDetailScreenProps {
   navigation: ShoppingListDetailNavigationProp;
   route: RouteProp<ShoppingListStackParamList, 'ShoppingListDetail'>;
 }
+//Shopping Category Stack
+// type ShoppingListCategoryStackParamList = {
+//   ShoppingListCategory: {
+//     id_family: number | undefined;
+//     id_category: number;
+//   };
+//   ShoppingListCategoryDetail: {
+//     id_family: number | undefined;
+//     id_category: number;
+//     id_item: number;
+//     id_list: number;
+//   };
+// };
+
+// type ShoppingListCategoryStackNavigationProp = NativeStackNavigationProp<
+//   RootParamList,
+//   'ShoppingListCategoryStack'
+// >;
+
+// export interface ShoppingListCategoryStackProps {
+//   navigation: ShoppingListCategoryStackNavigationProp;
+//   route: RouteProp<RootParamList, 'ShoppingListCategoryStack'>;
+// }
+
+// type ShoppingCategoryNavigationProp = NativeStackNavigationProp<
+//   ShoppingListCategoryStackParamList,
+//   'ShoppingListCategory'
+// >;
+
+// export interface ShoppingListCategoryScreenProps {
+//   navigation: ShoppingCategoryNavigationProp;
+//   route: RouteProp<ShoppingListCategoryStackParamList, 'ShoppingListCategory'>;
+// }
+
+// type ShoppingCategoryDetailNavigationProp = NativeStackNavigationProp<
+//   ShoppingListCategoryStackParamList,
+//   'ShoppingListCategoryDetail'
+// >;
+
+// export interface ShoppingCategoryDetailScreenProps {
+//   navigation: ShoppingCategoryDetailNavigationProp;
+//   route: RouteProp<
+//     ShoppingListCategoryStackParamList,
+//     'ShoppingListCategoryDetail'
+//   >;
+// }
 
 type TodoListStackParamList = {
   TodoList: {
@@ -644,6 +696,7 @@ type TodoListStackParamList = {
   };
   TodoListItemDetail: {
     id_family: number | undefined;
+    id_list: number;
     id_category: number;
     id_item: number;
   };
@@ -688,69 +741,10 @@ export interface TodoListItemDetailScreenProps {
   navigation: TodoListItemDetailNavigationProp;
   route: RouteProp<TodoListStackParamList, 'TodoListItemDetail'>;
 }
-/////
 
-type EducationTabParamList = {
-  EducationScreen: {
-    id_family: number;
-  };
-  ProgressScreen: {
-    id_family: number;
-    id_progress: number;
-  };
-  SubjectScreen: {
-    id_family: number;
-    id_progress: number;
-    id_subject: number;
-  };
-};
-
-type EducationStackNavigationProp = NativeStackNavigationProp<
-  RootParamList,
-  'EducationStack'
->;
-
-export interface EducationStackProps {
-  navigation: EducationStackNavigationProp;
-  route: RouteProp<RootParamList, 'EducationStack'>;
-}
-
-type EducationScreenNavigationProp = NativeStackNavigationProp<
-  EducationTabParamList,
-  'EducationScreen'
->;
-
-export interface EducationScreenProps {
-  navigation: EducationScreenNavigationProp;
-  route: RouteProp<EducationTabParamList, 'EducationScreen'>;
-}
-
-type ProgressScreenNavigationProp = NativeStackNavigationProp<
-  EducationTabParamList,
-  'ProgressScreen'
->;
-
-export interface ProgressScreenProps {
-  navigation: ProgressScreenNavigationProp;
-  route: RouteProp<EducationTabParamList, 'ProgressScreen'>;
-}
-
-type SubjectScreenNavigationProp = NativeStackNavigationProp<
-  EducationTabParamList,
-  'SubjectScreen'
->;
-
-export interface SubjectScreenProps {
-  navigation: SubjectScreenNavigationProp;
-  route: RouteProp<EducationTabParamList, 'SubjectScreen'>;
-}
-
-export interface EducationScreenProps {
-  navigation: EducationScreenNavigationProp;
-  route: RouteProp<EducationTabParamList, 'EducationScreen'>;
-}
 
 /////
+
 
 type CalendarStackNavigationProp = NativeStackNavigationProp<
   RootParamList,
@@ -775,7 +769,7 @@ type EventListScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export interface EventListScreenProps {
-  navigation: EventListScreenNavigationProp;
+  navigation: EventListScreenNavigationProp ;
   route: RouteProp<CalendarStackParamList, 'EventListScreen'>;
 }
 type ScheduleScreenNavigationProp = NativeStackNavigationProp<
@@ -828,11 +822,8 @@ type ZaloPayScreenNavigationProp = NativeStackNavigationProp<
 >;
 export type ZaloPayScreenProps = {navigation: ZaloPayScreenNavigationProp};
 
-type ComboScreenNavigationProp = NativeStackNavigationProp<
-  PackStackParamList,
-  'ComboScreen'
->;
-export type ComboScreenProps = {navigation: ComboScreenNavigationProp};
+type ComboScreenNavigationProp = NativeStackNavigationProp<PackStackParamList, 'ComboScreen'>;
+export type ComboScreenProps = { navigation: ComboScreenNavigationProp };
 
 type OrderDetailScreenNavigationProp = NativeStackNavigationProp<
   PackStackParamList,
@@ -889,6 +880,15 @@ export interface FeedbackProps {
   navigation: FeedBackNavigationProp;
 }
 
+
+type LanguageSelectorNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'LanguageSelector'
+>;
+export interface LanguageSelectorProps {
+  navigation: LanguageSelectorNavigationProp;
+}
+
 type ResetPasswordScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
   'ResetPasswordScreen'
@@ -927,7 +927,7 @@ type ViewAllServiceNavigationProp = NativeStackNavigationProp<
   'ViewAllService'
 >;
 export interface ViewAllServiceProps {
-  navigation: ViewAllServiceNavigationProp;
+  navigation: ViewAllServiceNavigationProp ;
   route: RouteProp<PackStackParamList, 'ViewAllService'>;
 }
 
@@ -966,15 +966,15 @@ type SharedGuildLineNavigationProp = NativeStackNavigationProp<
   'SharedGuildLine'
 >;
 
-// type EducationNavigationprop = NativeStackNavigationProp<
-//   FamilyStackParamList,
-//   'Education'
-// >;
+type EducationNavigationprop = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'Education'
+>;
 
-// type SubjectDetailNavigationProp = NativeStackNavigationProp<
-//   FamilyStackParamList,
-//   'SubjectDetail'
-// >;
+type SubjectDetailNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'SubjectDetail'
+>;
 
 type HouseHoldNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
@@ -1009,6 +1009,7 @@ export interface CheckListDetailScreenProps {
   navigation: CheckListDetailNavigationProp;
   route: RouteProp<FamilyStackParamList, 'CheckListDetail'>;
 }
+
 
 type MemberDetailsNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
@@ -1054,25 +1055,25 @@ export interface HouseHoldCategoryDetailScreenProps {
   route: RouteProp<FamilyStackParamList, 'HouseHoldCategoryDetail'>;
 }
 
-// export interface SubjectDetailScreenProps {
-//   navigation: SubjectDetailNavigationProp;
-//   route: RouteProp<FamilyStackParamList, 'SubjectDetail'>;
-// }
+export interface SubjectDetailScreenProps {
+  navigation: SubjectDetailNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'SubjectDetail'>;
+}
 
-// export interface EducationScreenProps {
-//   navigation: EducationNavigationprop;
-//   route: RouteProp<FamilyStackParamList, 'Education'>;
-// }
+export interface EducationScreenProps {
+  navigation: EducationNavigationprop;
+  route: RouteProp<FamilyStackParamList, 'Education'>;
+}
 
-// type EducationDetailNavigationProp = NativeStackNavigationProp<
-//   FamilyStackParamList,
-//   'EducationDetail'
-// >;
+type EducationDetailNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'EducationDetail'
+>;
 
-// export interface EducationDetailScreenProps {
-//   navigation: EducationDetailNavigationProp;
-//   route: RouteProp<FamilyStackParamList, 'EducationDetail'>;
-// }
+export interface EducationDetailScreenProps {
+  navigation: EducationDetailNavigationProp;
+  route: RouteProp<FamilyStackParamList, 'EducationDetail'>;
+}
 
 export interface GuildLineScreenProps {
   navigation: GuildLineNavigationProp;
@@ -1173,20 +1174,28 @@ export interface AddEditFamilyMemberScreenProps {
 type InviteMembersNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'InviteMembers'
->;
+  >;
 
 export interface InviteMembersScreenProps {
   navigation: InviteMembersNavigationProp;
 }
 
+
+type ThemeSwitcherNavigationProp = NativeStackNavigationProp<
+  FamilyStackParamList,
+  'ThemeSwitcher'
+  >;
+
+export interface ThemeSwitcherProps {
+  navigation: ThemeSwitcherNavigationProp;
+}
+
 type UpcomingEventsNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,
   'UpcomingEvents'
->;
+  >;
 
-export interface UpcomingEventsScreenProps {
-  navigation: UpcomingEventsNavigationProp;
-}
+export interface UpcomingEventsScreenProps { navigation: UpcomingEventsNavigationProp; }
 
 type ForgotPasswordScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -1209,18 +1218,14 @@ type LandingPage2NavigationProp = NativeStackNavigationProp<
   'LandingPage2'
 >;
 
-export interface LandingPage2ScreenProps {
-  navigation: LandingPage2NavigationProp;
-}
+export interface LandingPage2ScreenProps { navigation: LandingPage2NavigationProp; }
 
 type LandingPage3NavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
   'LandingPage3'
 >;
 
-export interface LandingPage3ScreenProps {
-  navigation: LandingPage3NavigationProp;
-}
+export interface LandingPage3ScreenProps {navigation: LandingPage3NavigationProp;}  
 
 type ViewAllPackageNavigationProp = NativeStackNavigationProp<
   PackStackParamList,
@@ -1245,6 +1250,7 @@ export type MessageTabParamList = {
 };
 export type FamilyTabParamList = {
   Family: undefined;
+ 
 };
 type CategoryExpenseNavigationProp = NativeStackNavigationProp<
   HomeTabParamList,

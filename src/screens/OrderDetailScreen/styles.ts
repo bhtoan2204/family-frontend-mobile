@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     lineHeight: 38,
     fontWeight: 'bold',
     letterSpacing: 0.35,
-    color: COLORS.BrandeisBlue,
+    color: COLORS.DenimBlue,
   },
   receiptDescription: {
     fontSize: 14,
@@ -168,8 +168,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderWidth: 1,
-    backgroundColor: COLORS.BrandeisBlue,
-    borderColor: COLORS.BrandeisBlue,
+    backgroundColor: COLORS.DenimBlue,
+    borderColor: COLORS.DenimBlue,
     marginBottom: 12,
   },
   btnText: {
@@ -231,7 +231,13 @@ const styles = StyleSheet.create({
   },
   radioInputActive: {
     borderWidth: 7,
-    borderColor: '#0069fe',
+    borderColor: COLORS.DenimBlue,
+  },
+   submitButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    textAlign: 'center',
   },
   radioLabel: {
     fontSize: 16,

@@ -10,7 +10,7 @@ import {
   FlatList,
 } from 'react-native';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import {PackageServices} from 'src/services/apiclient';
+import {FamilyServices, PackageServices} from 'src/services/apiclient';
 import styles from './styles';
 import {
   PurchasedScreenProps,
@@ -32,6 +32,15 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {UserProfile} from 'src/interface/user/userProfile';
 import {RootState} from 'src/redux/store';
+import {
+  setFamilies,
+  setFamilyMembers,
+  setSelectedFamily,
+} from 'src/redux/slices/FamilySlice';
+import {Family} from 'src/interface/family/family';
+import {selectDarkMode} from 'src/redux/slices/ThemeSlice';
+import {setFamilyServices} from 'src/redux/slices/ServiceSlice';
+import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
 
 const icons = {
   bundle,
@@ -72,6 +81,10 @@ const HomeScreen = ({
   const dispatch = useDispatch();
   const [isLightMode, setIsLightMode] = useState(true);
   const profile = useSelector((state: RootState) => state.profile.profile);
+  const isDarkMode = useSelector(selectDarkMode);
+  const screenWidth = Dimensions.get('screen').width;
+  const locale = useSelector(selectLocale);
+
   const source =
     profile.avatar && profile.avatar !== '[NULL]'
       ? {uri: profile.avatar}
@@ -85,6 +98,7 @@ const HomeScreen = ({
     extrapolate: 'clamp',
   });
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
+  const translate = useSelector(getTranslate);
 
   const handleScroll = (event: {
     nativeEvent: {layoutMeasurement: any; contentOffset: any};
@@ -102,9 +116,52 @@ const HomeScreen = ({
   const handleFamily = () => {
     navigation.navigate('FamilyTab', {
       screen: 'Family',
-      params: {id_family: 0},
     });
   };
+  useEffect(() => {
+    fetchFamiliesAndMembers();
+  }, []);
+
+  const fetchFamiliesAndMembers = async () => {
+    try {
+      const allFamilies = await FamilyServices.getAllFamily();
+      const currentDate = new Date();
+
+      const validFamilies = allFamilies.filter(
+        (family: {expired_at: string | number | Date}) => {
+          if (!family.expired_at) return false;
+          const expiredAtDate = new Date(family.expired_at);
+          return expiredAtDate > currentDate;
+        },
+      );
+
+      dispatch(setFamilies(validFamilies));
+
+      if (validFamilies.length > 0) {
+        const initialFamily = validFamilies[0];
+        dispatch(setSelectedFamily(initialFamily));
+      }
+
+      const membersObject = {};
+
+      for (let i = 0; i < validFamilies.length; i++) {
+        const family = validFamilies[i];
+        const members = await FamilyServices.getAllMembers({
+          id_family: family.id_family,
+        });
+        const service = await PackageServices.getAvailableFunction(
+          family.id_family,
+        );
+        dispatch(setFamilyServices(service));
+        membersObject[family.id_family] = members;
+      }
+
+      dispatch(setFamilyMembers(membersObject));
+    } catch (error) {
+      console.error('Error fetching families or members:', error);
+    }
+  };
+
   const handleChat = () => {
     navigation.navigate('MessageTab', {screen: 'ChatList'});
   };
@@ -191,55 +248,56 @@ const HomeScreen = ({
   const data: Item[] = [
     {
       icon: 'bundle',
-      label: 'Bundles',
+      label: translate('Bundles'),
       onPress: () => {
         handlePackage();
       },
     },
     {
       icon: 'family',
-      label: 'Family',
+      label: translate('Family'),
       onPress: () => {
         handleFamily();
       },
     },
     {
       icon: 'feedback',
-      label: 'Feedback',
+      label: translate('Feedback'),
       onPress: () => {
         navigation.navigate('AuthStack', {screen: 'Feedback'});
       },
     },
     {
       icon: 'news',
-      label: 'Newspaper',
+      label: translate('Newspaper'),
       onPress: () => {
         handleNavigateNews();
       },
     },
     {
+    
       icon: 'guideline',
-      label: 'Guideline',
+      label: translate('Guideline'),
       onPress: () => {
         navigation.navigate('FamilyStack', {screen: 'GuidelinePublic'});
       },
     },
-   
+
     {
       icon: 'language',
-      label: 'Language',
+      label: translate('Language'),
       onPress: () => {
-        console.log('Language pressed');
+         navigation.navigate('FamilyStack', {screen: 'LanguageSelector'});
       },
     },
     {
       icon: 'theme',
-      label: 'Theme',
+      label: translate('Theme'),
       // onPress: () => {
       //   console.log('Theme pressed');
       // },
       onPress: () => {
-        navigation.navigate('PackStack', {screen: 'ComboScreen'});
+        navigation.navigate('FamilyStack', {screen: 'ThemeSwitcher'});
       },
     },
   ];
@@ -251,31 +309,20 @@ const HomeScreen = ({
       resizeMode="stretch">
       <SafeAreaView style={{flex: 1, padding: 10}}>
         <View style={[styles.container, {marginBottom: 90}]}>
-          <View style={styles.circleContainer}>
-            <TouchableOpacity style={styles.circle}>
-              <Image
-                source={require('../../assets/images/menu-icon1.png')}
-                resizeMode="contain"
-                style={styles.image}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.circle}>
-              <Material name="bell-badge-outline" size={30} color="#fff" />
-            </TouchableOpacity>
-          </View>
-
+          <View style={styles.circleContainer}></View>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
               bottom: 25,
+              marginTop: 40,
             }}>
             <View style={{flexDirection: 'column', paddingLeft: 20}}>
-              <Text style={{color: 'white', fontSize: 30}}>Welcome</Text>
+              <Text style={{color: COLORS.white, fontSize: 30}}>{translate('welcome')}</Text>
               <Text
                 style={{
-                  color: 'white',
+                  color: COLORS.white,
                   fontSize: 38,
                   fontWeight: 'bold',
                   marginBottom: 8,
@@ -284,8 +331,8 @@ const HomeScreen = ({
               </Text>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <MaterialIcons name="location-on" size={22} color="#fff" />
-                <Text style={{color: 'white', fontSize: 17, right: 30}}></Text>
+                <Text
+                  style={{color: COLORS.white, fontSize: 17, right: 30}}></Text>
               </View>
             </View>
             <View style={{flexDirection: 'row', right: 20}}>
@@ -321,8 +368,8 @@ const HomeScreen = ({
             </View>
           </View>
 
-          <ScrollView style={{top: 40}}>
-            <View style={{marginBottom: 70}}>
+          <ScrollView showsVerticalScrollIndicator={false} style={{top: 40}}>
+            <View style={{marginBottom: 40}}>
               <FlatList
                 data={data}
                 numColumns={4}
@@ -330,15 +377,13 @@ const HomeScreen = ({
                 keyExtractor={(item, index) => index.toString()}
                 ListHeaderComponent={() => (
                   <>
-                    <Text style={styles.title}>Trending Search</Text>
                     <ScrollView
                       ref={scrollViewRef}
                       horizontal
                       pagingEnabled
-                      showsHorizontalScrollIndicator={false}
                       style={{flex: 1}}>
                       {viewsWithFake.map((view, index) => (
-                        <View key={index} style={{width}}>
+                        <View key={index} style={{width, height: 300}}>
                           {view}
                         </View>
                       ))}
@@ -357,15 +402,6 @@ const HomeScreen = ({
                     </View>
                     <View style={{flexDirection: 'column'}}>
                       <Text style={styles.title}>Let's Start with Service</Text>
-                      {/* <Text
-                        style={{
-                          fontSize: 15,
-                          color: 'gray',
-                          marginLeft: 20,
-                          bottom: 15,
-                        }}>
-                        We found 100 services in your area
-                      </Text> */}
                       <View style={{flexDirection: 'row'}}></View>
                     </View>
                   </>
@@ -398,16 +434,17 @@ const HomeScreen = ({
                       }}>
                       <Image
                         source={icons[item.icon]}
-                        style={{width: '75%', height: '75%'}}
+                        style={{width: '60%', height: '60%'}}
+                        resizeMode="stretch"
                       />
                       {(item.icon === 'feedback' || item.icon === 'chat') && (
                         <Image
-                          source={require('src/assets/images/New Button.png')} // Đường dẫn đến hình "new"
+                          source={require('src/assets/images/New Button.png')}
                           style={{
                             position: 'absolute',
                             top: -5,
                             right: -20,
-                            width: 40, // Kích thước của hình "new"
+                            width: 40,
                             height: 18,
                           }}
                         />
@@ -424,6 +461,33 @@ const HomeScreen = ({
                   </View>
                 )}
               />
+            </View>
+
+            <View style={styles.comboContainer}>
+              <Text style={styles.textCombo}>FamFund's Combo</Text>
+              <ScrollView
+                horizontal={true}
+                style={styles.scrollViewContainer}
+                showsHorizontalScrollIndicator={false}>
+                <View>
+                  <Image
+                    source={require('../../assets/images/special-combo-1.png')}
+                    style={styles.imageCombo}
+                  />
+                </View>
+                <View>
+                  <Image
+                    source={require('../../assets/images/special-combo-2.png')}
+                    style={styles.imageCombo}
+                  />
+                </View>
+                <View>
+                  <Image
+                    source={require('../../assets/images/special-combo-3.png')}
+                    style={styles.imageCombo}
+                  />
+                </View>
+              </ScrollView>
             </View>
           </ScrollView>
         </View>

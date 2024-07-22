@@ -1,14 +1,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store'; 
-
-interface Notification {
-  _id: string;
-  title: string;
-  content: string;
-  timestamp: Date;
-  isRead: boolean;
-}
+import { Notification } from 'src/interface/notification/getNoti';
 
 interface NotificationState {
   notifications: Notification[];

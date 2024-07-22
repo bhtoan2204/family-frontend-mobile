@@ -73,28 +73,34 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
   
 
 
-  const categoryColors: {[key: number]: string} = {
-    1: `rgba(255, 0, 0, 1)`,
-    2: `rgba(0, 255, 0, 1)`,
-    3: `rgba(0, 0, 255, 1)`,
-    4: `rgba(255, 255, 0, 1)`,
-    5: `rgba(255, 0, 255, 1)`,
-    6: `rgba(0, 255, 255, 1)`,
-    7: `rgba(128, 0, 0, 1)`,
-    8: `rgba(0, 128, 0, 1)`,
-    9: `rgba(0, 0, 128, 1)`,
-    10: `rgba(128, 128, 0, 1)`,
-    11: `rgba(128, 0, 128, 1)`,
-    12: `rgba(255, 165, 0, 1)`,
-    13: `rgba(255, 192, 203, 1)`,
-    14: `rgba(0, 255, 127, 1)`,
-    15: `rgba(255, 20, 147, 1)`,
-    16: `rgba(255, 140, 0, 1)`,
-    17: `rgba(0, 255, 255, 0.5)`,
-    18: `rgba(255, 255, 255, 0.5)`,
-    19: `rgba(255, 255, 0, 0.5)`,
-    20: `rgba(128, 0, 128, 0.5)`,
+  const categoryColors: { [key: number]: string } = {
+    1: `rgba(32, 178, 170, 0.8)`,    // Cyan
+    2: `rgba(210, 105, 30, 0.8)`,   // Light green
+    3: `rgba(0, 128, 128, 0.8)`,     // Teal
+    4: `rgba(255, 215, 0, 0.8)`,     // Gold
+    5: `rgba(75, 0, 130, 0.8)`,      // Indigo
+    6: `rgba(255, 20, 147, 0.5)`,   // Hot pink
+    7: `rgba(255, 20, 147, 0.5)`,    // Steel blue
+    8: `rgba(255, 165, 0, 0.8)`,     // Orange
+    9: `rgba(135, 206, 250, 0.8)`,   // Light sky blue
+    10: `rgba(210, 105, 30, 0.8)`,   // Chocolate
+    11: `rgba(218, 165, 32, 0.8)`,   // Goldenrod
+    12: `rgba(255, 140, 0, 0.8)`,    // Dark orange
+    13: `rgba(186, 85, 211, 0.8)`,   // Medium orchid
+    14: `rgba(32, 178, 170, 0.8)`,   // Cyan (duplicate, different opacity)
+    15: `rgba(0, 191, 255, 0.8)`,    // Deep sky blue
+    16: `rgba(240, 128, 128, 0.8)`,  // Light coral
+    17: `rgba(255, 20, 147, 0.5)`,   // Deep pink (transparent)
+    18: `rgba(255, 255, 255, 0.5)`,  // White (transparent)
+    19: `rgba(255, 255, 0, 0.5)`,    // Yellow (transparent)
+    20: `rgba(128, 0, 128, 0.5)`,    // Purple (transparent)
   };
+  
+  
+  
+  
+  
+  
 
   const totalExpense = dailyData.reduce(
     (total, expense) => total + expense.total,
@@ -121,19 +127,18 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
   //   }),
   // );
 
-  const pieChartData = Object.entries(categoryData).map(
-    ([name, amount], index) => ({
-      pieCentroid: [0, 0],
-      data: {
-        label: name,
-      },
+  const pieChartData = Object.entries(categoryData)
+  .map(([name, amount], index) => {
+    const percentage = (amount / totalExpense) * 100;
+    return {
       key: name,
-      value: (amount / totalExpense) * 100,
-      svg: {fill: categoryColors[index + 1]},
-      arc: {outerRadius: '100%', innerRadius: '60%'},
-      label: `${((amount / totalExpense) * 100).toFixed(2)}%`,
-    }),
-  );
+      value: percentage,
+      svg: { fill: categoryColors[index + 1] },
+      arc: { outerRadius: '100%', innerRadius: '60%' },
+      label: percentage > 10 ? `${percentage.toFixed(2)}%` : '',
+    };
+  })
+
 
   const formatMonthYear = (date: moment.MomentInput) => {
     return moment(date).format('MM/YYYY');
@@ -154,10 +159,11 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
       return (
         <G key={index} x={pieCentroid[0]} y={pieCentroid[1]}>
           <SVGText
-            fill="black"
+            fill="white"
             textAnchor="middle"
             alignmentBaseline="middle"
             fontSize={14}
+            fontWeight='900'
             stroke="black"
             strokeWidth={0.2}>
             {data.label}
@@ -169,13 +175,13 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
 
   const Legend: React.FC<LegendProps> = ({data, style}) => {
     return (
-      <ScrollView contentContainerStyle={styles.legendContainer}>
+      <ScrollView contentContainerStyle={styles.legendContainerPieChart}>
         {data.map((item, index) => (
           <View key={index} style={styles.legendItem}>
             <View
               style={[styles.legendColorBox, {backgroundColor: item.svg.fill}]}
             />
-            <Text style={styles.legendText}>{item.key}</Text>
+            <Text style={styles.legendLineText}>{item.key}</Text>
           </View>
         ))}
       </ScrollView>
@@ -244,15 +250,15 @@ const formatCurrency = (amount: string | number | bigint) => {
                 <View style={styles.expenseDetails}>
                   <Image
                     source={{
-                      uri: `https://via.placeholder.com/40?text=${detail.day}`,
+                      uri: `https://via.placeholder.com/40?text=${('0' + detail.day).slice(-2)}`,
                     }}
                     style={styles.avatar}
                   />
-                  <Text style={styles.expenseText}>{detail.day}</Text>
-                </View>
+                  <Text style={styles.expenseText}>{('0' + detail.day).slice(-2)}/{('0' + (selectedMonth.getMonth() + 1)).slice(-2)}</Text>
+                  </View>
                 <View style={styles.expenseDetails}>
-                  <Text style={styles.incomeAmount}>+{formatCurrency(detail.total)} đ</Text>
-                  {/* <Icon name="chevron-right" size={20} color="#ccc" /> */}
+                  <Text style={styles.incomeAmount}>+ {formatCurrency(detail.total)}</Text>
+                  <Icon name="chevron-right" size={20} color="#ccc" />
                 </View>
               </TouchableOpacity>
             ))}

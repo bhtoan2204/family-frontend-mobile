@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import { Package } from 'src/interface/package/mainPackage';
 import { selectPackage } from 'src/redux/slices/PackageSlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 type PaymentMethod = {
   id: number;
@@ -26,15 +27,15 @@ type PaymentMethod = {
 
 const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
   const [code, setCodeMethod] = useState('vnpay');
+  const {id_family} = route.params;
   const currentDate = new Date().toLocaleDateString();
   const [value, setValue] = useState(0);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([
-    { id: 1, name: 'VNPay', code: 'vnpay', url_image: 'https://example.com/vnpay-logo.png' },
-    { id: 2, name: 'ZaloPay', code: 'zalopay', url_image: 'https://example.com/zalopay-logo.png' }
+    { id: 1, name: 'VNPay', code: 'vnpay', url_image: 'https://cdn-new.topcv.vn/unsafe/150x/https://static.topcv.vn/company_logos/cong-ty-cp-giai-phap-thanh-toan-viet-nam-vnpay-6194ba1fa3d66.jpg' },
   ]);
   let profile = useSelector(selectProfile);
   let selectedPackage: Package = useSelector(selectPackage);
-
+  const translate = useSelector(getTranslate);
   const handleSelectMethod = (
     code: string,
     id_family: number,
@@ -58,9 +59,12 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
     }
   };
 
+  const formatCurrency = (amount: string) => {
+    return parseFloat(amount).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  };
   return (
     <GestureHandlerRootView>
-      <SafeAreaView style={{ backgroundColor: COLORS.white, padding: 10 }}>
+      <SafeAreaView style={{ backgroundColor: COLORS.white, padding: 20 , marginTop: 20, }}>
         <View style={styles.header}>
           <View style={styles.headerAction}>
             <TouchableOpacity
@@ -71,7 +75,7 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.headerTitle}>Receipt</Text>
+          <Text style={styles.headerTitle}>{translate('Receipt')}</Text>
 
           <View style={[styles.headerAction, { alignItems: 'flex-end' }]} />
         </View>
@@ -88,13 +92,10 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
 
           <View style={styles.receiptPrice}>
             <Text style={styles.receiptPriceText}>
-              {selectedPackage.price}
+              {formatCurrency(selectedPackage.price)}
             </Text>
 
-            <Text
-              style={[styles.receiptPriceText, { fontSize: 20, lineHeight: 32 }]}>
-              .00
-            </Text>
+      
           </View>
 
           <Text style={styles.receiptDescription}>
@@ -105,31 +106,31 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
             <View style={styles.dividerInset} />
           </View>
           <View style={styles.details}>
-            <Text style={styles.detailsTitle}>Transaction details</Text>
+            <Text style={styles.detailsTitle}>{translate('Transaction details')}</Text>
 
             <View style={styles.detailsRow}>
-              <Text style={styles.detailsField}>Date</Text>
+              <Text style={styles.detailsField}>{translate('Date')}</Text>
               <Text style={styles.detailsValue}>{currentDate}</Text>
             </View>
             <View style={styles.detailsRow}>
-              <Text style={styles.detailsField}>Billing Name</Text>
+              <Text style={styles.detailsField}>{translate('Bill owner')}</Text>
               <Text style={styles.detailsValue}>
                 {profile.firstname} {profile.lastname}
               </Text>
             </View>
             <View style={styles.detailsRow}>
-              <Text style={styles.detailsField}>Billing Phone</Text>
+              <Text style={styles.detailsField}>{translate('Phone')}</Text>
               <Text style={styles.detailsValue}>{profile.phone}</Text>
             </View>
             <View style={styles.detailsRow}>
-              <Text style={styles.detailsField}>Billing Email</Text>
+              <Text style={styles.detailsField}>Email</Text>
               <Text style={styles.detailsValue}>{profile.email}</Text>
             </View>
             <View style={styles.divider}>
               <View style={styles.dividerInset} />
             </View>
             <View style={styles.detailsRow}>
-              <Text style={styles.detailsTitle}>Choose Payment Method</Text>
+              <Text style={styles.detailsTitle}>{translate('Choose Payment Method')}</Text>
             </View>
             <View>
               {paymentMethods.map(({ code, name, url_image }, index) => {
@@ -183,16 +184,10 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
             handleSelectMethod(code, id_family, selectedPackage.id_main_package, selectedPackage.price);
           }}>
           <View style={styles.btn}>
-            <Text style={styles.btnText}>Submit Receipt</Text>
+            <Text style={styles.btnText}>{translate('Payment')}</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-          }}>
-          <View style={styles.btnSecondary}>
-            <Text style={styles.btnSecondaryText}>Screenshot</Text>
-          </View>
-        </TouchableOpacity>
+   
       </View>
     </GestureHandlerRootView>
   );

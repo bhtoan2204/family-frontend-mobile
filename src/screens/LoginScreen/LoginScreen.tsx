@@ -36,10 +36,11 @@ import {AuthUrl} from 'src/services/urls';
 import LocalStorage from 'src/store/localstorage';
 import * as Yup from 'yup';
 import styles from './styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as WebBrowser from 'expo-web-browser';
 import {makeRedirectUri, useAuthRequest} from 'expo-auth-session';
 import * as Notifications from 'expo-notifications';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 interface FormValues {
   email: string;
   password: string;
@@ -63,7 +64,7 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const projectId = "f5584d17-960b-4d2e-9f4d-1a6681f0bbea"; 
-
+  const translate = useSelector(getTranslate);
 
 
   const handleLogin = async (
@@ -166,12 +167,12 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
                 onSubmit={handleLogin}
                 validationSchema={Yup.object().shape({
                   email: Yup.string()
-                    .email(TEXTS.INVALID_EMAIL)
-                    .required(TEXTS.EMAIL_REQUIRED),
+                    .email(translate('INVALID_EMAIL'))
+                    .required(translate('EMAIL_REQUIRED')),
                   password: Yup.string()
                     .max(255)
-                    .min(6, TEXTS.INVALID_PASSWORD)
-                    .required(TEXTS.PASSWORD_REQUIRED),
+                    .min(6, translate('INVALID_PASSWORD'))
+                    .required(translate('PASSWORD_REQUIRED')),
                 })}>
                 {({
                   errors,
@@ -185,7 +186,7 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
                   <View style={{ marginTop: 15 }}>
                     <View className="mb-2">
                       {/* <Text className="text-base font-normal my-2">
-                        {TEXTS.EMAIL}
+                        {translate('EMAIL}
                       </Text> */}
                       <View
                         style={[
@@ -198,7 +199,7 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
                           style={styles.Icon}
                         />
                         <TextInput
-                          placeholder={TEXTS.EMAIL_PLACEHOLDER}
+                          placeholder={translate('EMAIL_PLACEHOLDER')}
                           placeholderTextColor={
                             errors.email ? COLORS.red : '#A6A6A6'
                           }
@@ -240,7 +241,7 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
                         />
                         <TextInput
                           className="w-full"
-                          placeholder={TEXTS.PASSWORD_PLACEHOLDER}
+                          placeholder={translate('PASSWORD_PLACEHOLDER')}
                           placeholderTextColor={
                             errors.password ? COLORS.red : '#A6A6A6'
                           }
@@ -293,13 +294,13 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
                           navigation.navigate('ForgotPasswordScreen');
                         }}>
                         <Text style={styles.forgotPassword}>
-                          {TEXTS.FORGOT_PASSWORD}
+                          {translate('FORGOT_PASSWORD')}
                         </Text>
                       </Pressable>
                     </View>
                     <CustomButton
                       style={styles.button}
-                      title={TEXTS.LOGIN}
+                      title={translate('Login')}
                       filled
                       onPress={handleSubmit}
                       backgroundImage={require('../../assets/images/button.png')}
@@ -320,7 +321,7 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
                     { marginBottom: -20 },
                     { color: '#2A475E' },
                   ]}>
-                  {TEXTS.LOGIN_OR}
+                  {translate('Login_or')}
                 </Text>
               </View>
               <View style={[styles.container, { bottom: 20 }]}>
@@ -349,7 +350,7 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
                 className="flex-row justify-center my-5"
                 style={{ bottom: 40 }}>
                 <Text className="text-base mr-1" style={{ color: '#2A475E' }}>
-                  {TEXTS.DONT_HAVE_ACCOUNT}
+                  {translate('DONT_HAVE_ACCOUNT')}
                 </Text>
 
                 <TouchableOpacity
@@ -363,7 +364,7 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
                       { fontSize: 16 },
                       { fontWeight: 'bold' },
                     ]}>
-                    {TEXTS.SIGNUP}
+                    {translate('Sign up')}
                   </Text>
                 </TouchableOpacity>
               </View>

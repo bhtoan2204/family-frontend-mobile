@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet } from 'react-native';
+import { useSelector } from 'react-redux';
 import { Member } from 'src/interface/member/member';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const SelectMember = ({ members, memberSelected, setMemberSelected }) => {
-
+  const translate = useSelector(getTranslate);
   useEffect(() => {
     if (members.length > 0 && !memberSelected) {
         console.log(members[0])
@@ -17,7 +19,7 @@ const SelectMember = ({ members, memberSelected, setMemberSelected }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Select Member</Text>
+      <Text style={styles.title}>{translate('Create by')}</Text>
       <FlatList
         data={members}
         keyExtractor={(item, index) => index.toString()} 

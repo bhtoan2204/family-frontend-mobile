@@ -9,17 +9,18 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ColorPicker from './ColorPicker';
 import { useDispatch, useSelector } from 'react-redux';
-import { getColor, getEvent, getIDcate, getOnly, getTimeEnd, getTimeStart } from 'src/redux/slices/CalendarSlice';
+import {  getOnly, selectSelectedEvent } from 'src/redux/slices/CalendarSlice';
 import Custom from './Custom';
 import { RRule, RRuleStrOptions } from 'rrule';
 import { differenceInDays, differenceInWeeks, differenceInMonths, differenceInYears } from 'date-fns';
 import { Event } from 'src/interface/calendar/Event';
+import { CategoryEvent } from 'src/interface/calendar/CategoryEvent';
 
 const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route }) => {
   const { id_family } = route.params || {};
   const [chosenDate, setChosenDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const event = useSelector(getEvent);
+  const event = useSelector(selectSelectedEvent);
   
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -37,13 +38,11 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
   const [number, setNumber] = useState<number>(1);
   const [isAllDay, setIsAllDay] = useState(false);
   const [repeatEndDate, setRepeatEndDate] = useState(new Date());
-  const color = useSelector(getColor);
-  const category = useSelector(getIDcate);
+  const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(event?.category);
+  const [color, setColor] = useState<number | null>(event?.color);
+
   const [count, setCount] = useState(1);
   const isOnly = useSelector(getOnly);
-  
-  const time_start = useSelector(getTimeStart);
-  const time_end = useSelector(getTimeEnd);
 
   useEffect(() => {
     if (event) {
@@ -94,9 +93,10 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
   };
   
   const handleEditOnlyEvent = async () => {
-    const updatedRecurrenceException = event.recurrence_exception 
-        ? `${event.recurrence_exception},${event.time_start}`
-        : event.time_start;
+
+    const updatedRecurrenceException = event?.recurrence_exception 
+    ? `${event.recurrence_exception},${new Date(event.time_start).toISOString()}`
+    : new Date(event?.time_start).toISOString();
 
 
     const formatDateToString = (date: Date | string) => {
@@ -104,20 +104,20 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
     };
     
     const eventDetails2 = {
-        id_calendar: event.id_calendar,
-        title: event.title,
-        time_start: event.time_start,
-        time_end: event.time_end,
-        description: event.description,
-        color: event.color,
-        is_all_day: event.is_all_day,
-        category: event.category,
-        location: event.location,
+        id_calendar: event?.id_calendar,
+        title: event?.title,
+        time_start: event?.time_start,
+        time_end: event?.time_end,
+        description: event?.description,
+        color: event?.color,
+        is_all_day: event?.is_all_day,
+        category: selectedColorIndex,
+        location: event?.location,
         recurrence_exception: formatDateToString(updatedRecurrenceException),
-        recurrence_id: event.recurrence_id,
-        recurrence_rule: event.recurrence_rule,
-        start_timezone: event.start_timezone,
-        end_timezone: event.end_timezone,
+        recurrence_id: event?.recurrence_id,
+        recurrence_rule: event?.recurrence_rule,
+        start_timezone: event?.start_timezone,
+        end_timezone: event?.end_timezone,
         id_family: id_family,
     };
 
@@ -128,16 +128,16 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
         description: description,
         color: color,
         is_all_day: isAllDay,
-        category: category,
+        category: event?.category,
         location: location,
-        recurrence_exception: "",
-        recurrence_id: event.id_calendar,
-        recurrence_rule: "",
-        start_timezone: "",
-        end_timezone: "",
+        recurrence_exception: null,
+        recurrence_id: event?.id_calendar,
+        recurrence_rule: null,
+        start_timezone: null,
+        end_timezone: null,
         id_family: id_family,
     };
-
+    console.log(eventDetails2)
     try {
         const message1 = await CalendarServices.CreateEvent(
             eventDetails1.title,
@@ -155,9 +155,10 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
             eventDetails1.end_timezone,
             eventDetails1.id_family,
         );
-       
+     
+
         const message2 = await CalendarServices.UpdateEvent(
-            eventDetails2.id_calendar,
+            eventDetails2?.id_calendar,
             eventDetails2.id_family,
             eventDetails2.title,
             eventDetails2.description,
@@ -274,24 +275,26 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
     }
     
     const eventDetails = {
-      id_calendar: event.id_calendar,
+      id_calendar: event?.id_calendar,
+      id_family: id_family,
       title: title,
       time_start: chosenDateStart,
       time_end: chosenDateEnd,
       description: description,
       color: color,
       is_all_day: isAllDay,
-      category: category,
+      category: selectedColorIndex,
       location: location,
-      recurrence_exception: "",
-      recurrence_id: 0,
+      recurrence_exception: null,
+      recurrence_id: event?.recurrence_id,
       recurrence_rule: recurrenceRule,
-      start_timezone: "",
-      end_timezone: ""
+      start_timezone: null,
+      end_timezone: null
     };
     try {
       const message = await CalendarServices.UpdateEvent(
         eventDetails.id_calendar,
+        eventDetails.id_family,
         eventDetails.title,
         eventDetails.description,
         eventDetails.time_start,
@@ -562,7 +565,10 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({ navigation, route
 
 
 
-      <ColorPicker navigation={navigation} />
+      <ColorPicker navigation={navigation} selectedColorIndex={selectedColorIndex} 
+      setSelectedColorIndex= {setSelectedColorIndex}
+      setColor={setColor}
+       />
       <View style={[styles.formAction, { paddingVertical: 10 }]}>
         <TouchableOpacity onPress={handleSubmit}>
           <View style={styles.btn}>

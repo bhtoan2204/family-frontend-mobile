@@ -12,20 +12,20 @@ import { ExpenseScreenProps } from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS } from 'src/constants';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { setExpense, setSelectedExpense } from 'src/redux/slices/ExpenseAnalysis';
-import { setIncomeDetails } from 'src/redux/slices/IncomeAnalysis';
+import {  getSumExpense, selectExpenses, setExpenses, setSelectedExpense, setSumExpense } from 'src/redux/slices/ExpenseAnalysis';
 const screenWidth = Dimensions.get('window').width;
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { DailyExpense } from 'src/interface/expense/DailyExpense';
+import { setDate } from 'date-fns';
 
 const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
-  const [expenses, setExpenses] = useState<DailyExpense[]>([]);
+  const expenses = useSelector(selectExpenses);
   const [currentPageExpense, setCurrentPageExpense] = useState<number>(1);
 
   const [totalPageExpense, setTotalPageExpense] = useState<number>(1);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<number>(30);
-  const [sumExpense, setSumExpense] = useState<number>(0);
+  const sumExpense = useSelector(getSumExpense);
   const [selectedFamily, setSelectedFamily] = useState<number | undefined>(undefined);
   const [isFamilyModalOpen, setIsFamilyModalOpen] = useState(false);
   const filterUri = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL0i6wYs08kFWJKDu9843LWdW43Xom8IW89cIZREgBKg&s';
@@ -35,19 +35,28 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   let profile = useSelector(selectProfile);
   const dispatch = useDispatch();
-  const [dateFrom, setDateFrom] = useState(new Date());
   const [dateTo, setDateTo] = useState(new Date());
+  const [dateFrom, setDateFrom] = useState(() => {
+    const date = new Date(dateTo);
+    date.setDate(date.getDate() - 30);
+    return date;
+  });
+
 
 
   const fetchDataExpense = async (page: number, reset: boolean = false) => {
     setIsLoading(true);
     try {
+      
         const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
         const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
         const response = await ExpenseServices.getExpenseByDateRange(page, itemsPerPage, family.id_family, formattedDateFrom, formattedDateTo )
-        setExpenses(prevExpenses => reset ? response.data : [...prevExpenses, ...response.data]);
-        setTotalPageExpense(Math.ceil(response.total / itemsPerPage));
-      
+        if(response){
+          dispatch(setExpenses(reset ? response.data : [...expenses, ...response.data]));
+          setTotalPageExpense(Math.ceil(response.total / itemsPerPage));
+          dispatch(setSumExpense(response.sum));
+        }
+
     } catch (error) {
       console.log(error);
     } finally {
@@ -71,12 +80,7 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
 
 
 
-  const filter = (option: number) => {
-    setFilterModalVisible(false);
-    setSelectedFilter(option);
-    setCurrentPageExpense(1);
 
-  };
 
   const formatDate = (isoDateTime: string) => {
     return moment(isoDateTime).format('DD/MM/YYYY HH:mm');
@@ -94,12 +98,17 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
       <View style={styles.itemContainer}>
         <View style={styles.expenseContent}>
           <View>
-            <Text style={styles.expenseCategory}>{item.financeExpenditureType.expense_type_name}</Text>
+          {item.financeExpenditureType ? 
+              <Text style={styles.expenseCategory}>{item.financeExpenditureType.expense_type_name}</Text> : 
+              <Text style={styles.expenseCategory}>Other</Text>
+            }
+
             <View style={styles.row}>
               
               <Text style={{color: 'gray', }}>By: </Text>
+              {item.users && (
               <Text style={styles.expenseName}>{item.users.firstname} {item.users.lastname}</Text>
-
+              )}
             </View>
             <Text style={styles.expenseDescription}>{item.description}</Text>
           </View>
@@ -189,7 +198,7 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
               Hello, {profile.firstname} {profile.lastname}
             </Text>
             <Text style={{fontSize: 15, color: '#ccc'}}>
-            Here is a list of expenses your family has incurred for the day.
+            Here is a list of expenses your family has incurred for the selected date range.
             </Text>
 
           </View>
@@ -206,9 +215,9 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
                 setDateFrom(currentDate);
                 }}
             />
-            <Text style={{ fontSize: 15, marginLeft: 20, marginRight: 20 }}>To: </Text>
+            <Text style={{ fontSize: 15, marginLeft: 20}}>To: </Text>
             <DateTimePicker
-                style={{ flex: 1 }}
+                style={{ flex: 1 ,  marginRight: 20}}
                 value={dateTo}
                 mode="date"
                 display="default"
@@ -222,7 +231,7 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
 
             <View style={styles.sumContainer}>
               <Text style={styles.sumText}>Total Expense: </Text>
-              <Text style={[styles.sumText, { color: 'red' }]}>-{(sumExpense)} </Text>
+              <Text style={[styles.sumText, { color: 'red' }]}>-{formatCurrency(sumExpense)} </Text>
               </View>
           
        

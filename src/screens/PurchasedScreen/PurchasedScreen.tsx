@@ -1,21 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  ScrollView,
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  FlatList,
+  Image,
+  Modal,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FamilyServices, PackageServices } from 'src/services/apiclient';
 import { PurchasedScreenProps } from 'src/navigation/NavigationTypes';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import { Purchased } from 'src/interface/purchased/purchased';
 import styles from './styles';
 import { Family } from 'src/interface/family/family';
+import { selectFamilies, setSelectedFamily } from 'src/redux/slices/FamilySlice';
+import moment from 'moment';
+import { AppDispatch } from 'src/redux/store';
+import { COLORS } from 'src/constants';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
   const profile = useSelector(selectProfile);
   const [purchasedItems, setPurchasedItems] = useState<Purchased[]>([]);
   const [page, setPage] = useState<number>(1);
-  const [family, setFamily] = useState<Family[]>([])
+  const [family, setFamily] = useState<Family[]>([]);
   const itemsPerPage = 10;
+  const families = useSelector(selectFamilies);
+  const dispatch = useDispatch<AppDispatch>();
+  const [modalVisible, setModalVisible] = useState(false); 
+  const translate = useSelector(getTranslate);
 
   const handleViewAllPackage = () => {
     const id_family = undefined;
@@ -26,17 +44,16 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
   };
 
   const handleViewService = () => {
-    // navigation.navigate('PackStack', { screen: 'ComboScreen' });
-    navigation.navigate('PackStack', {screen: 'ViewAllService'});
+    navigation.navigate('PackStack', { screen: 'ViewAllService' });
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await PackageServices.paymentHistory(itemsPerPage , page);
-        
-        if (result){
+        const result = await PackageServices.paymentHistory(itemsPerPage, page);
+
+        if (result) {
           setPurchasedItems(result);
-         
         }
       } catch (error) {
         console.log('PackageServices.getPackage error:', error);
@@ -45,161 +62,133 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
     fetchData();
   }, [page]);
 
+  const onRenewPress = (family: Family) => {
+    navigation.navigate('PackStack', {
+      screen: 'ViewAllPackage',
+      params: { id_family: family.id_family },
+    });
+  };
+
+  const NavigateFamily = (family: Family) => {
+    dispatch(setSelectedFamily(family));
+
+    navigation.navigate('FamilyStack', {
+      screen: 'ViewFamily',
+      params: { id_family: family.id_family },
+    });
+  };
+
+  const renderFamilyCards = () => {
+    return families.map((family) => (
+      <TouchableOpacity
+        key={family.id_family}
+        onPress={() => NavigateFamily(family)}
+        style={styles.familyCard}>
+        <TouchableOpacity 
+          style={styles.settingsIconContainer}
+          onPress={() => setModalVisible(true)}>
+          <Icon name="ellipsis-vertical" size={24} style={styles.settingsIcon} />
+        </TouchableOpacity>
+        <View style={styles.familyAvatarContainer}>
+          {family.avatar ? (
+            <Image source={{ uri: family.avatar }} style={styles.familyAvatar} />
+          ) : (
+            <View style={styles.defaultAvatar} />
+          )}
+        </View>
+        <View style={styles.familyInfo}>
+          <Text style={styles.familyName}>{family.name}</Text>
+          <Text style={styles.familyQuantity}>{translate('FAMILY_MEMBERS')}: {family.quantity}</Text>
+          <View style={styles.expiredAtContainer}>
+            <Text style={styles.familyQuantity}>{translate('EXPIRED_AT')}: </Text>
+            <Text style={[styles.familyQuantity, styles.expiredAtText]}>
+              {moment(new Date(family.expired_at)).format('DD/MM/YYYY')}
+            </Text>
+          </View>
+          <View style={styles.buttonContainerFamily}>
+            {/* <TouchableOpacity
+              style={[styles.renewButton, styles.button]}
+              onPress={() => onRenewPress(family)}>
+              <Text style={styles.renewButtonText}>Renew</Text>
+            </TouchableOpacity> */}
+            <TouchableOpacity
+              style={[styles.buyServiceButton, styles.button]}
+              onPress={() => handleViewService()}>
+              <Text style={styles.buyServiceButtonText}>{translate('BUY_SERVICE')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableOpacity>
+    ));
+  };
+
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <ScrollView>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" size={24} style={styles.backButton} />
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+            <Icon name="arrow-back" size={30} />
           </TouchableOpacity>
-          <Text style={styles.title}>Purchased</Text>
+          <Text style={styles.headerText}>{translate('FAMILY_MANAGEMENT')}</Text>
+          <View style={{ flex: 1 }} />
         </View>
 
-        <View style={styles.container}>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={handleViewAllPackage}
-              style={styles.button}>
-              <Text style={styles.buttonText}>Buy Package</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={handleViewService}
-              style={[styles.button, styles.serviceButton]}>
-              <Text style={styles.buttonText}>Buy Service</Text>
+            <TouchableOpacity onPress={handleViewAllPackage} style={styles.button}>
+              <Image
+                source={require('../../assets/images/image-purchase.png')}
+                style={styles.buttonImage}
+              />
+              <Image
+                source={require('../../assets/images/new-family-button.png')}
+                style={styles.buttonAddFamily}
+              />
             </TouchableOpacity>
           </View>
+          <View style={styles.container}>
 
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <View style={{ flex: 1, marginRight: 8 }}>
-              <Text style={styles.sectionTitle}>Packages</Text>
-              {purchasedItems
-                .filter((item) => item.type === 'package')
-                .map((pkg, index) => (
-                  <TouchableOpacity
-                    key={pkg.orders.id_package_main + index.toString()}
-                    onPress={() => {
-                  
-                    }}>
-                    <View style={styles.card}>
-                      <Text style={styles.packageName}>{pkg.orders.id_package_main}</Text>
-
-                      <View style={styles.infoContainer}>
-                        <Text style={styles.infoText}>
-                          Expiration Date: {new Date(pkg.orders.created_at).toLocaleDateString()}
-                        </Text>
-                      </View>
-
-                      <View style={styles.actions}>
-                        {pkg.orders.id_family ? (
-                          <>
-                            <TouchableOpacity
-                              onPress={() =>
-                                navigation.navigate('FamilyStack', {
-                                  screen: 'ViewFamily',
-                                  params: { id_family: pkg.orders.id_family },
-                                })
-                              }
-                              style={styles.actionButton}>
-                              <Text style={styles.actionText}>View Details</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                              onPress={() =>
-                                navigation.navigate('PackStack', {
-                                  screen: 'ViewAllPackage',
-                                  params: { id_family: pkg.orders.id_family },
-                                })
-                              }
-                              style={styles.actionButton}>
-                              <Text style={styles.actionText}>Extend Family</Text>
-                            </TouchableOpacity>
-                          </>
-                        ) : (
-                          <TouchableOpacity
-                            onPress={() =>
-                              navigation.navigate('FamilyStack', {
-                                screen: 'CreateFamily',
-                                params: { id_order: pkg.id_order },
-                              })
-                            }
-                            style={styles.actionButton}>
-                            <Text style={styles.actionText}>Create Family</Text>
-                          </TouchableOpacity>
-                        )}
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-            </View>
-
-            <View style={{ flex: 1, marginLeft: 8 }}>
-              <Text style={styles.sectionTitle}>Services</Text>
-              {purchasedItems
-                .filter((item) => item.type === 'service')
-                .map((service, index) => (
-                  <TouchableOpacity
-                    key={service.orders.id_package_main + index.toString()}
-                    onPress={() => {
-                      // handle item press if needed
-                    }}>
-                    <View style={styles.card}>
-                      <Text style={styles.packageName}>{service.orders.id_package_main}</Text>
-
-                      <View style={styles.infoContainer}>
-                        <Text style={styles.infoText}>
-                          Expiration Date: {new Date(service.orders.created_at).toLocaleDateString()}
-                        </Text>
-                      </View>
-
-                      <View style={styles.actions}>
-                        {service.orders.id_family ? (
-                          <>
-                            <TouchableOpacity
-                              onPress={() =>
-                                navigation.navigate('FamilyStack', {
-                                  screen: 'ViewFamily',
-                                  params: { id_family: service.orders.id_family },
-                                })
-                              }
-                              style={styles.actionButton}>
-                              <Text style={styles.actionText}>View Details</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                              onPress={() =>
-                                navigation.navigate('PackStack', {
-                                  screen: 'ViewAllPackage',
-                                  params: { id_family: service.orders.id_family },
-                                })
-                              }
-                              style={styles.actionButton}>
-                              <Text style={styles.actionText}>Extend Family</Text>
-                            </TouchableOpacity>
-                          </>
-                        ) : (
-                          <TouchableOpacity
-                            onPress={() =>
-                              navigation.navigate('FamilyStack', {
-                                screen: 'CreateFamily',
-                                params: { id_order: service.id_order },
-                              })
-                            }
-                            style={styles.actionButton}>
-                            <Text style={styles.actionText}>Create Family</Text>
-                          </TouchableOpacity>
-                        )}
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-            </View>
-          </View>
+          <Text style={styles.familyListTitle}>{translate('YOUR_FAMILIES')}</Text>
+          {renderFamilyCards()}
         </View>
       </ScrollView>
-    </SafeAreaView>
+
+      <Modal
+        animationType="slide" 
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}>
+        <TouchableOpacity 
+          style={styles.modalBackground}
+          activeOpacity={1}
+          onPress={() => setModalVisible(false)}>
+          <View style={styles.modalContainer}>
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={() => {
+                setModalVisible(false);
+              }}>
+              <Text style={styles.modalOptionText}>Option 1</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={() => {
+                setModalVisible(false);
+              }}>
+              <Text style={styles.modalOptionText}>Option 2</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={() => {
+                setModalVisible(false);
+              }}>
+              <Text style={styles.modalOptionText}>Option 3</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    </View>
   );
 };
 
 export default PurchasedScreen;
+
 

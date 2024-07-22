@@ -98,12 +98,13 @@ const ExpenseServices = {
         let filename = image.split('/').pop()!;
         let match = /\.(\w+)$/.exec(filename);
         let type = match ? `image/${match[1]}` : `image`;
-  
-        formData.append('image', {
-          uri: image,
+        const file = {
+          image,
           name: filename,
-          type: type,
-        });
+          type,
+        };
+
+        formData.append(file);
       }
   
       formData.append('id_asset', id_asset?.toString() || '');
@@ -188,7 +189,7 @@ const ExpenseServices = {
         `${baseUrl}/api/v1/finance/expensediture/getExpensebyYear/${id_family}`,
         {
           params: {
-            year
+            id_family , year
           }
         }
       );
@@ -307,7 +308,36 @@ const ExpenseServices = {
         console.error('Error in createExpense:', error.message);
       }
     },
-
+updateIncome: async (id_income?:number, id_family: number | null, amount: number, id_created_by: string, id_income_source?: number, income_date?: string, description?: string) => {
+      try {
+        console.log(id_income,
+          id_family,
+          id_created_by,
+          id_income_source,
+          amount,
+          income_date,
+          description
+        )
+        const response: AxiosResponse = await instance.put(
+          `${baseUrl}/api/v1/finance/income/updateIncome`,
+          {
+            id_income,
+              id_family,
+              id_created_by,
+              id_income_source,
+              amount,
+              income_date,
+              description
+            
+          }
+        );
+        if (response.status === 200) {
+          return response.data.data;
+        } 
+      } catch (error: any) {
+        console.error('Error in updateIncome:', error.message);
+      }
+    },
     deleteExpense: async (id_family: number, id_expenditure : number) => {
       try {
 
@@ -324,14 +354,14 @@ const ExpenseServices = {
     },
 
     updateExpense: async (
-      id_expenditure: number ,
-      id_family: number,
-      id_created_by: string ,
-      id_expense_type: number,
-      amount: number,
-      expenditure_date: string,
-      description: string,
-      uri: string
+      id_expenditure?: number ,
+      id_family?: number,
+      id_created_by?: string ,
+      id_expense_type?: number,
+      amount?: number,
+      expenditure_date?: string,
+      description?: string,
+      uri?: string
     ) => {
       try {
         const createFormData = (): FormData => {

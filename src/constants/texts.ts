@@ -1,3 +1,5 @@
+import { Dimensions } from "react-native";
+
 const TEXTS = {
   HOME_TAB: 'Home',
   PROFILE_TAB: 'Profile',
@@ -101,6 +103,10 @@ const TEXTS = {
   PROFILE_DETAILS: 'Profile Details',
   CHANGE_PASSWORD: 'Change Password',
   LOGOUT: 'Logout',
+  SCEEN_HEIGHT : Dimensions.get('screen').height,
+  SCREEN_WIDTH : Dimensions.get('window').width,
 };
 
 export default TEXTS;
+TEXTS.SCEEN_HEIGHT
+TEXTS.SCREEN_WIDTH

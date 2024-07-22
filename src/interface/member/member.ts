@@ -12,6 +12,7 @@ export interface User {
   avatar: string;
   genre: string | null;
   birthdate: string | null;
+  is_banned: boolean;
 }
 
 export interface Member {

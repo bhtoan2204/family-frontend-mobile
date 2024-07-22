@@ -4,10 +4,11 @@ import { CreateCategoryEventScreenProps } from 'src/navigation/NavigationTypes';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import { CategoryEvent } from 'src/interface/calendar/CategoryEvent';
 import { useSelector } from 'react-redux';
-import { getFamily } from 'src/redux/slices/CalendarSlice';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Swipeable } from 'react-native-gesture-handler';
 import styles from './styles';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const colorPalette = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D', '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC'];
 
@@ -18,16 +19,17 @@ const CreateCategoryEventScreen: React.FC<CreateCategoryEventScreenProps> = ({ r
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedEventName, setSelectedEventName] = useState('');
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
-  const id_family = useSelector(getFamily);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
+  const family= useSelector(selectSelectedFamily);
+  const t = useSelector(getTranslate);
 
   useEffect(() => {
     fetchData();
-  }, [id_family]);
+  }, [family.id_family]);
 
   const fetchData = async () => {
     try {
-      const result = await CalendarServices.getAllCategoryEvent(id_family);
+      const result = await CalendarServices.getAllCategoryEvent(family.id_family);
       setCategoryEvents(result);
     } catch (error) {
       console.log('Error fetching category events:', error);
@@ -40,7 +42,7 @@ const CreateCategoryEventScreen: React.FC<CreateCategoryEventScreenProps> = ({ r
 
   const handleCreateCategoryEvent = async () => {
     try {
-      await CalendarServices.createCategoryEvent(eventName, selectedColor, id_family);
+      await CalendarServices.createCategoryEvent(eventName, selectedColor, family.id_family);
       fetchData();
       setEventName('');
       setSelectedColor('');
@@ -56,54 +58,54 @@ const CreateCategoryEventScreen: React.FC<CreateCategoryEventScreenProps> = ({ r
     setIsUpdateModalVisible(true);
   };
 
-  const handleConfirmUpdateCategoryEvent = async () => {
+   const handleConfirmUpdateCategoryEvent = async () => {
     Alert.alert(
-        'Confirm Update',
-        'Are you sure you want to update this category event?',
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {
-            text: 'Update',
-            onPress: async () => {
-              try {
-                await CalendarServices.updateCategoryEvent(selectedCategoryId, selectedEventName, selectedColor, id_family);
-                fetchData();
-                setIsUpdateModalVisible(false);
-                setSelectedEventName('');
-                Alert.alert('Success', 'Category event has been updated successfully.');
-              } catch (error) {
-                console.log('Error updating category event:', error);
-                Alert.alert('Error', 'An error occurred while updating the category event.');
-              }
-            },
-          },
-        ],
-        { cancelable: true }
-      );
-  };
-
-  const handleDeleteCategoryEvent = async (id: number) => {
-    Alert.alert(
-      'Confirm Delete',
-      'Are you sure you want to delete this category event?',
+      t('confirmUpdate'),
+      t('confirmUpdateMessage'),
       [
         {
           text: 'Cancel',
           style: 'cancel',
         },
         {
-          text: 'Delete',
+          text: t('update'),
           onPress: async () => {
             try {
-              await CalendarServices.deleteCategoryEvent(id, id_family);
+              await CalendarServices.updateCategoryEvent(selectedCategoryId, selectedEventName, selectedColor, family.id_family);
               fetchData();
-              Alert.alert('Success', 'Category event has been deleted successfully.');
+              setIsUpdateModalVisible(false);
+              setSelectedEventName('');
+              Alert.alert(t('successUpdate'), t('updateSuccessMessage'));
+            } catch (error) {
+              console.log('Error updating category event:', error);
+              Alert.alert(t('errorUpdate'), t('updateErrorMessage'));
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+   const handleDeleteCategoryEvent = async (id: number) => {
+    Alert.alert(
+      t('confirmDelete'),
+      t('confirmDeleteMessage'),
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: t('delete'),
+          onPress: async () => {
+            try {
+              await CalendarServices.deleteCategoryEvent(id, family.id_family);
+              fetchData();
+              Alert.alert(t('successDelete'), t('deleteSuccessMessage'));
             } catch (error) {
               console.log('Error deleting category event:', error);
-              Alert.alert('Error', 'An error occurred while deleting the category event.');
+              Alert.alert(t('errorDelete'), t('deleteErrorMessage'));
             }
           },
           style: 'destructive',
@@ -134,7 +136,7 @@ const CreateCategoryEventScreen: React.FC<CreateCategoryEventScreenProps> = ({ r
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Category Events</Text>
+      <Text style={styles.header}>{t('Category Events')}</Text>
       <FlatList
         data={categoryEvents}
         keyExtractor={(item) => item.id_category_event.toString()}
@@ -152,14 +154,14 @@ const CreateCategoryEventScreen: React.FC<CreateCategoryEventScreenProps> = ({ r
       >
         <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setIsModalVisible(false)}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Create Category Event</Text>
+            <Text style={styles.modalTitle}>{t('create')}</Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter Event Name (Hashtag)"
+              placeholder={t('enterEventName')}
               value={eventName}
               onChangeText={setEventName}
             />
-            <Text style={styles.colorLabel}>Choose Color:</Text>
+            <Text style={styles.colorLabel}>{t('chooseColor')}</Text>
             <FlatList
               data={colorPalette}
               horizontal
@@ -177,7 +179,7 @@ const CreateCategoryEventScreen: React.FC<CreateCategoryEventScreenProps> = ({ r
               onPress={handleCreateCategoryEvent}
               disabled={!eventName || !selectedColor}
             >
-              <Text style={styles.createButtonText}>Create</Text>
+              <Text style={styles.createButtonText}>{t('create')}</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
@@ -191,18 +193,17 @@ const CreateCategoryEventScreen: React.FC<CreateCategoryEventScreenProps> = ({ r
       >
         <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setIsUpdateModalVisible(false)}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Update Category Event</Text>
+            <Text style={styles.modalTitle}>{t('update')}</Text>
             <TextInput
               style={styles.input}
               value={selectedEventName}
               onChangeText={setSelectedEventName}
             />
-            <Text style={styles.colorLabel}>Choose Color:</Text>
+            <Text style={styles.colorLabel}>{t('chooseColor')}</Text>
             <FlatList
               data={colorPalette}
               horizontal
               keyExtractor={(item) => item}
-             
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[styles.colorItem, { backgroundColor: item, borderColor: selectedColor === item ? '#000' : '#fff' }]}
@@ -216,7 +217,7 @@ const CreateCategoryEventScreen: React.FC<CreateCategoryEventScreenProps> = ({ r
               onPress={handleConfirmUpdateCategoryEvent}
               disabled={!selectedEventName || !selectedColor}
             >
-              <Text style={styles.createButtonText}>Update</Text>
+              <Text style={styles.createButtonText}>{t('update')}</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>

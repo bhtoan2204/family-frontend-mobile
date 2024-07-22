@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, Dimensions, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useDispatch, useSelector } from 'react-redux';
 import {  getDate, selectExpenses, setExpenses, setSelectedExpense } from 'src/redux/slices/ExpenseAnalysis';
@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import { COLORS } from 'src/constants';
 import { DailyExpense } from 'src/interface/expense/DailyExpense';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 const screenHeight = Dimensions.get('screen').height;
 
 interface BarChartScreenProps {
@@ -21,14 +22,14 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }
   const [selectedDate, setSelectedDate] = useState<string>(date);
   const barChartData = useSelector(selectExpenses);
   const dispatch = useDispatch();
-
+  const translate = useSelector(getTranslate);
+  
   useEffect(() => {
     fetchData(selectedDate, id_family);
   }, [selectedDate]);
 
   const fetchData = async (date: string, id_family: number) => {
     try {
-      console.log(selectedDate)
       const response = await ExpenseServices.getExpenseByDate(selectedDate, id_family);
       if (response) {
         dispatch(setExpenses(response));
@@ -66,10 +67,15 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }
       <View style={styles.itemContainer}>
         <View style={styles.expenseContent}>
           <View>
-            {/* <Text style={styles.expenseCategory}>{item.financeExpenditureType.expense_type_name}</Text> */}
+          {item.financeExpenditureType ? 
+              <Text style={styles.expenseCategory}>{item.financeExpenditureType.expense_type_name}</Text> : 
+              <Text style={styles.expenseCategory}>Other</Text>
+            }
             <View style={styles.row}>
-              <Text style={{ color: 'gray' }}>By: </Text>
+              <Text style={{ color: 'gray' }}>{translate('Create by')}: </Text>
+              {item.users && (
               <Text style={styles.expenseName}>{item.users.firstname} {item.users.lastname}</Text>
+              )}
             </View>
             <Text style={styles.expenseDescription}>{item.description}</Text>
           </View>
@@ -94,7 +100,9 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }
           value={new Date(selectedDate)}
           mode="date"
           display="default"
+          textColor="white" 
           onChange={handleDateChange}
+          style={{ backgroundColor: COLORS.DenimBlue,  borderRadius: 10,}}
         />
       </View>
       {barChartData.length > 0 ? (
@@ -173,12 +181,12 @@ const styles = StyleSheet.create({
   },
   datePickerContainer: {
     top: 10,
-    paddingHorizontal: 0,
+    paddingHorizontal: 10,
     fontSize: 20,
     alignSelf: 'center',
     zIndex: 1,
-    backgroundColor: 'white',
-    borderRadius: 20,
+    borderRadius: 10,
+    backgroundColor: COLORS.DenimBlue,
     width: '30%',
     height: 40,
     shadowColor: '#000',
@@ -211,6 +219,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 50,
+    bottom: 10,
+    padding: 10,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    alignSelf: 'center',
+    flexDirection: 'column',
+    paddingTop: 40,
   },
   noDataImage: {
     width: 100,

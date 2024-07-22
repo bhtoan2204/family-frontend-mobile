@@ -1,59 +1,47 @@
-import {
-  BottomTabBarButtonProps,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
-import {StyleSheet} from 'react-native';
+import React from 'react';
+import { BottomTabBarButtonProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { StyleSheet } from 'react-native';
 import TabButton from 'src/components/TabButton';
-import {TEXTS} from 'src/constants';
+import { TEXTS } from 'src/constants';
 import HomeScreen from 'src/screens/HomeScreen';
-import ReportScreen from 'src/screens/Report';
-import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
-import ExpenditureScreen from 'src/screens/ExpenseScreen/CreateExpense';
-import BottomSheetChild from 'src/screens/HomeScreen/BottomSheetContent';
-import CategoryExpenseScreen from 'src/screens/ExpenseScreen/CategoryScreen';
-import WalletScreen from 'src/screens/ExpenseScreen/WalletScreen';
-import FamilyScreen from 'src/screens/ExpenseScreen/FamilyScreen';
+import NotificationScreen from 'src/screens/Notifications/NotificationScreen';
 import ProfileScreen from 'src/screens/ProfileScreen';
 import ChangePassword from 'src/screens/ProfileScreen/ChangePassword/ChangePassword';
 import EditProfileScreen from 'src/screens/ProfileScreen/EditProfileScreen/EditProfileScreen';
-import ChatListScreen from 'src/screens/Chat/ChatList/ChatListScreen';
-import MessageTab from './MessageTab';
 import { useNavigation } from '@react-navigation/native';
-import NotificationScreen from 'src/screens/Notifications/NotificationScreen';
+import { useSelector } from 'react-redux';
+import i18n from 'src/components/i18next/i18n';
 
 const Tab = createBottomTabNavigator();
+
 const TabList = [
   {
     id: TEXTS.HOME_TAB,
-    title: TEXTS.HOME_TAB,
+    title: 'homeTab',
     component: HomeScreen,
     screen: 'HomeScreen',
     icon: 'home',
     visible: true,
   },
-
   {
     id: 'ChatList',
-    title: 'Chat',
+    title: 'chatTab',
     component: HomeScreen, 
-    screen: 'ChatList', 
+    screen: 'ChatList',
     icon: 'chat',
     visible: true,
   },
-
-
   {
     id: 'Notification',
-    title: 'Notification',
+    title: 'notificationTab',
     component: NotificationScreen,
     screen: 'Notification',
     icon: 'bell',
     visible: true,
   },
-
   {
     id: TEXTS.MORE_TAB,
-    title: TEXTS.MORE_TAB,
+    title: 'profileTab',
     component: ProfileScreen,
     screen: 'ProfileScreen',
     icon: 'account-circle',
@@ -61,14 +49,14 @@ const TabList = [
   },
   {
     id: 'ChangePassword',
-    title: 'ChangePassword',
+    title: 'changePassword',
     component: ChangePassword,
     screen: 'ChangePassword',
     visible: false,
   },
   {
     id: 'EditProfile',
-    title: 'EditProfile',
+    title: 'editProfile',
     component: EditProfileScreen,
     screen: 'EditProfile',
   },
@@ -79,7 +67,7 @@ const TabBarButton = (props: BottomTabBarButtonProps, tab: any) => {
 
   const handlePress = () => {
     if (tab.id === 'ChatList') {
-      navigation.navigate('MessageTab', {screen: 'MessageTab'});
+      navigation.navigate('MessageTab', { screen: 'MessageTab' });
     } else {
       props.onPress();
     }
@@ -95,27 +83,24 @@ const TabBarButton = (props: BottomTabBarButtonProps, tab: any) => {
 };
 
 const HomeTab = () => {
+
   return (
     <Tab.Navigator
       screenOptions={{
         header: () => null,
         tabBarStyle: styles.tabBar,
       }}>
-      {TabList.map((tab, index) => {
-        return (
-          <Tab.Screen
-            key={tab.id}
-            name={tab.screen}
-            component={tab.component}
-            options={{
-              tabBarShowLabel: true,
-              tabBarButton: props =>
-                tab.visible ? TabBarButton(props, tab) : null,
-              tabBarLabel: tab.title,
-            }}
-          />
-        );
-      })}
+      {TabList.map((tab) => (
+        <Tab.Screen
+          key={tab.id}
+          name={tab.screen}
+          component={tab.component}
+          options={{
+            tabBarShowLabel: true,
+            tabBarButton: (props) => (tab.visible ? TabBarButton(props, tab) : null),
+          }}
+        />
+      ))}
     </Tab.Navigator>
   );
 };

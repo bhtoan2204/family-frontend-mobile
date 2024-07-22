@@ -214,7 +214,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    height: 80,
+    height: 50,
+  },
+  legendContainerPieChart: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    height: 200,
   },
   legendItem: {
     flexDirection: 'row',
@@ -230,16 +236,17 @@ const styles = StyleSheet.create({
   },
   legendText: {
     fontSize: 16,
-    color:'#fff',
+    color:'black',
   },
   legendLineText: {
     fontSize: 16,
-    color:'#000',
+    color:'white',
   },
+
   selectedLegendItem: {
     backgroundColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 5,
     borderColor: '#ccc',
   },
   chartContainer: {
@@ -320,8 +327,8 @@ const styles = StyleSheet.create({
   monthContainer: {
     borderRadius: 10,
     alignItems: 'center',
-    borderColor: '#ccc',
-    backgroundColor: COLORS.DenimBlue,
+    borderColor: '#7CE2B3',
+    backgroundColor: '#7CE2B3',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

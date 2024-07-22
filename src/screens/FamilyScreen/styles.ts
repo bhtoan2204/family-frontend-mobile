@@ -11,6 +11,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 26,
   },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   backButton: {
     color: 'white',
   },
@@ -136,6 +142,30 @@ const styles = StyleSheet.create({
     top: 40,
     left: 15,
     right: 15,
+  },
+  fullScreenImage: {
+    height: 461,
+    width: 357,
+    alignSelf: 'center',
+    top: Dimensions.get('window').height / 2 - 250,
+  },
+  cancelImage: {
+    height: 40,
+    width: 40,
+  },
+  cancel: {
+    position: 'absolute',
+    top: 200,
+    right: 20,
+  },
+  explore: {
+    position: 'absolute',
+    bottom: 160,
+    alignSelf: 'center',
+  },
+  exploreImage: {
+    width: 161,
+    height: 36,
   },
 });
 

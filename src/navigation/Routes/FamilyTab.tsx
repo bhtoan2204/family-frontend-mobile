@@ -12,6 +12,8 @@ import CategoryExpenseScreen from 'src/screens/ExpenseScreen/CategoryScreen/Cate
 import ChatFamilyScreen from 'src/screens/Chat/ChatFamily';
 import HomeScreen from 'src/screens/HomeScreen';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const Tab = createBottomTabNavigator();
   const FamilyList = [
@@ -86,6 +88,8 @@ const Tab = createBottomTabNavigator();
   };
   
   const FamilyTab = () => {
+    const translations = useSelector(getTranslate);
+
     return (
       <Tab.Navigator
         screenOptions={{
@@ -100,9 +104,8 @@ const Tab = createBottomTabNavigator();
               component={tab.component}
               options={{
                 tabBarShowLabel: true,
-                tabBarButton: props =>
-                  tab.visible ? TabBarButton(props, tab) : null,
-                tabBarLabel: tab.title,
+                tabBarButton: (props) => (tab.visible ? TabBarButton(props, tab) : null),
+                tabBarLabel: translations[tab.title], 
               }}
             />
           );

@@ -6,7 +6,7 @@ import { deleteExpense, selectSelectedExpense, updateExpense } from 'src/redux/s
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ExpenseServices } from 'src/services/apiclient';
 import { ExpenseType } from 'src/interface/expense/ExpenseType';
-import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { selectSelectedFamily, setSelectedMemberById } from 'src/redux/slices/FamilySlice';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
@@ -22,7 +22,9 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
   const expense: DailyExpense | null = useSelector(selectSelectedExpense);
   const [isEditing, setIsEditing] = useState(false);
   const [expenseType, setExpenseType] = useState<ExpenseType[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(expense?.financeExpenditureType.expense_type_name);
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
+    expense?.financeExpenditureType?.expense_type_name ?? undefined
+  );
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [chosenDate, setChosenDate] = useState(new Date());
   const [editedDescription, setEditedDescription] = useState(expense?.description || '');
@@ -55,17 +57,39 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
   };
   const handleCancel = () => {
     setIsEditing(false);
-    setCurrentImageUri('');
+    setCurrentImageUri(expense?.image_url);
   };
 
   const handleEdit = () => {
     setIsEditing(true);
   };
-
-  const handleSave = () => {
+  const handleSave = async () => {
     try {
-    } catch (error) {
+      const response = await ExpenseServices.updateExpense(
+        expense?.id_expenditure,
+        expense?.id_family,
+        expense?.id_created_by,
+        expense?.id_expenditure_type,
+        expense?.amount,
+        expense?.expenditure_date,
+        expense?.description,
+        currentImageUri ? currentImageUri : expense?.image_url,
+      );
+      
 
+      if (response) {
+        Alert.alert('Success', 'Expense updated successfully');
+        
+        dispatch(updateExpense(response))
+        setCurrentImageUri(response.image_url);
+        navigation.goBack();
+
+      } else {
+        Alert.alert('Error', 'Failed to update expense');
+      }
+    } catch (error) {
+      console.error('Error updating expense:', error);
+      Alert.alert('Error', 'An error occurred while updating expense');
     }
   };
 
@@ -153,6 +177,12 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
       setLoading(false);
     }
   };
+
+  const pressMember = (id_user?: string) => {
+    dispatch(setSelectedMemberById(id_user));
+    navigation.navigate('FamilyStack', {screen: 'MemberDetails'});
+ }
+ 
   const handleCloseModal = () => {
     setSelectedImageIndex(null);
   };
@@ -217,13 +247,16 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
           <View style={styles.detailRow}>
             <Text style={styles.label}>Category:</Text>
             <View style={styles.valueContainer}>
-              {!isEditing ? (
-                <Text style={styles.value}>{expense?.financeExpenditureType.expense_type_name}</Text>
+            {!isEditing ? (
+                expense?.financeExpenditureType ? 
+                  <Text style={styles.value}>{expense.financeExpenditureType.expense_type_name}</Text> : 
+                  <Text style={styles.value}>Other</Text>
               ) : (
                 <TouchableOpacity onPress={() => setShowCategoryPicker(!showCategoryPicker)}>
                   <Text style={styles.value}>{selectedCategory}</Text>
                 </TouchableOpacity>
               )}
+
               {showCategoryPicker && (
                 <Picker
                   selectedValue={selectedCategory}
@@ -255,7 +288,11 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
           </View>
           <View style={styles.detailRow}>
             <Text style={styles.label}>Created By:</Text>
-            <Text style={styles.ValueName}>{expense?.users.firstname} {expense?.users.lastname}</Text>
+            <TouchableOpacity onPress={()=> pressMember(expense?.users.id_user)}> 
+
+              <Text style={styles.ValueName}>{expense?.users.firstname} {expense?.users.lastname}</Text>
+            </TouchableOpacity>
+
           </View>
           <View style={styles.detailRow}>
             <Text style={styles.label}>Date:</Text>

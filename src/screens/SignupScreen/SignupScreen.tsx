@@ -24,7 +24,8 @@ import * as WebBrowser from 'expo-web-browser';
 import {makeRedirectUri, useAuthRequest} from 'expo-auth-session';
 import FacebookImage from 'src/assets/images/facebook.png';
 import GoogleImage from 'src/assets/images/google.png';
-
+import DateTimePicker from '@react-native-community/datetimepicker';
+import {Picker} from '@react-native-picker/picker';
 interface FormValues {
   firstName: string;
   lastName: string;
@@ -32,8 +33,11 @@ interface FormValues {
   phoneNumber: string;
   password: string;
   termsAndConditions: boolean;
+  birthdate: Date | null;
+  gender: string;
   submit: null;
 }
+
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -46,6 +50,7 @@ const discovery = {
 
 const SignupScreen = ({navigation}: LoginScreenProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [request, response, promptAsync] = useAuthRequest(
     {
@@ -130,6 +135,8 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                   phoneNumber: '',
                   password: '',
                   termsAndConditions: false,
+                  birthdate: null,
+                  gender: '',
                   submit: null,
                 }}
                 onSubmit={handleSignup}
@@ -218,6 +225,63 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                       </View>
                       {errors.lastName && touched.lastName && (
                         <Text style={styles.errorText}>{errors.lastName}</Text>
+                      )}
+                    </View>
+                    <View style={styles.marginBottom}>
+                      <View
+                        style={{
+                          ...styles.placeholder,
+                          borderColor: errors.birthdate ? COLORS.red : '#2A475E',
+                        }}>
+                        <MaterialCommunityIcons
+                          name="calendar"
+                          style={styles.Icon}
+                        />
+                        <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                          <Text style={{ marginLeft: 10, color: '#2A475E' }}>
+                            {values.birthdate ? values.birthdate.toLocaleDateString() : ''}
+                          </Text>
+                        </TouchableOpacity>
+                        {showDatePicker && (
+                          <DateTimePicker
+                            value={values.birthdate || new Date()}
+                            mode="date"
+                            display="default"
+                            onChange={(event, date) => {
+                              setShowDatePicker(false);
+                              if (date) {
+                                setFieldValue('birthdate', date);
+                              }
+                            }}
+                          />
+                        )}
+                      </View>
+                      {errors.birthdate && touched.birthdate && (
+                        <Text style={styles.errorText}>{errors.birthdate}</Text>
+                      )}
+                    </View>
+                    
+                    <View style={styles.marginBottom}>
+                      <View
+                        style={{
+                          ...styles.placeholder,
+                          borderColor: errors.gender ? COLORS.red : '#2A475E',
+                        }}>
+                        <MaterialCommunityIcons
+                          name="gender-male-female"
+                          style={styles.Icon}
+                        />
+                        <Picker
+                          selectedValue={values.gender}
+                          style={{ marginLeft: 10, color: '#2A475E' }}
+                          onValueChange={(itemValue) => setFieldValue('gender', itemValue)}
+                        >
+                          <Picker.Item label={"Male"} value="male" />
+                          <Picker.Item label={"Female"} value="female" />
+                        </Picker>
+                      </View>
+                      {errors.gender && touched.gender && (
+                        <Text style={styles.errorText}>{errors.gender}</Text>
                       )}
                     </View>
                     <View style={styles.marginBottom}>
@@ -324,7 +388,11 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                       {errors.password && touched.password && (
                         <Text style={styles.errorText}>{errors.password}</Text>
                       )}
+
                     </View>
+
+                   
+
                     {errors.submit && (
                       <View>
                         <Text style={styles.errorText}>{errors.submit}</Text>

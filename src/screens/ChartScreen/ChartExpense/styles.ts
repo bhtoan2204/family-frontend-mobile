@@ -54,8 +54,12 @@ const styles = StyleSheet.create({
   },
   categoryName: {
     fontSize: 16,
+    color: 'gray',
   },
-
+  categoryAmount: {
+    fontSize: 16,
+    color: 'red',
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -129,18 +133,19 @@ const styles = StyleSheet.create({
   tabButton: {
     paddingVertical: 10,
     alignItems: 'center',
-    width: '30%',
-    height: '70%',
-    marginBottom: 15,
-    backgroundColor: '#fff',
-    borderRadius: 20,
+    width: '50%',
+
+    marginBottom: 0,
+    backgroundColor: 'white',
+
   },
+  
   tabButtonContent: {
     paddingVertical: 10,
     alignItems: 'center',
   },
   selectedTabButton: {
-    backgroundColor: '#CCEAFB',
+    backgroundColor: COLORS.gray,
   },
   selectedTabButtonText: {
     color: '#2a475e',
@@ -148,10 +153,12 @@ const styles = StyleSheet.create({
   },
 
   tabButtonText: {
-    color: '#696969',
-    fontSize: 16,
+    color: '#ccc',
+    fontSize: 18,
     alignSelf: 'center',
+    fontWeight: '600',
   },
+  
   containerTab: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -162,9 +169,9 @@ const styles = StyleSheet.create({
   bottomLine: {
     position: 'absolute',
     bottom: 0,
-    height: 2,
-    backgroundColor: 'gray',
-    width: '30%',
+    height: 1,
+    backgroundColor: 'lightblue',
+    width: '50%',
   },
   datePickerText: {
     marginBottom: 10,
@@ -181,7 +188,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     backgroundColor: 'white',
     borderRadius: 20,
-    width: '30%',
+    width: '100%',
     height: 40,
     shadowColor: '#000',
     shadowOffset: {
@@ -190,6 +197,29 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
+    marginRight: 20,
+  },
+  expenseItem: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    elevation: 2,
+  },
+
+  dateText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  expenseCategoryList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
   },
 
   titleText: {
@@ -213,7 +243,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    height: 80,
+    height: 50,
+  },
+  legendContainerPieChart: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    height: 200,
   },
   legendItem: {
     flexDirection: 'row',
@@ -229,7 +265,11 @@ const styles = StyleSheet.create({
   },
   legendText: {
     fontSize: 16,
-    color:'#fff',
+    color:'black',
+  },
+  legendTextPieChart: {
+    fontSize: 13,
+    color:'white',
   },
   legendLineText: {
     fontSize: 16,
@@ -238,20 +278,20 @@ const styles = StyleSheet.create({
   selectedLegendItem: {
     backgroundColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 5,
     borderColor: '#ccc',
   },
   chartContainer: {
     bottom: 30,
     backgroundColor: 'white',
     padding: 10,
-    paddingTop: 20,
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
     width: '100%',
     alignSelf: 'center',
     flexDirection: 'column',
-    height: '34%',
+    height: '36%',
+    //marginBottom : 100
   },
   chartBarContainer: {
     bottom: 30,
@@ -284,16 +324,21 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: '#ccc',
     // borderRadius: 20,
-    marginBottom: 50,
+    marginBottom: 0,
+    
   },
   expenseItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 15,
+    alignContent: 'center',
+
   },
   expenseDetails: {
     flexDirection: 'row',
     alignItems: 'center',
+    alignSelf: 'center',
+
   },
   expenseText: {
     fontSize: 16,
@@ -312,9 +357,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   monthPickerContainer: {
-    width: '100%',
     alignItems: 'center',
-    paddingVertical: 10,
+    //paddingVertical: 10,
+    //paddingBottom : 10,
+
+
+  },
+  selectedTabText: {
+    color: 'white'
+  },
+  totalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   monthContainer: {
     borderRadius: 10,
@@ -328,6 +383,14 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
+    flexDirection: 'row',
+  },
+   
+  CategoryColorBox: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    marginRight: 10,
   },
   yearPickerContainer: {
     alignItems: 'center',
@@ -356,9 +419,10 @@ const styles = StyleSheet.create({
   categoryItem: {
     padding: 10,
     margin: 5,
-    borderWidth: 1,
     borderColor: 'black',
     borderRadius: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   selectedCategoryItem: {
     backgroundColor: 'lightblue',

@@ -214,7 +214,22 @@ const ChatServices = {
       console.error('Error in getAllUser:', error.message);
     }
   },
-
+  removeMessage: async (receiver_id : string, id_message : string) => {
+    try {
+      const response: AxiosResponse = await instance.get(
+        `${baseUrl}/api/v1/chat/removeMessage`,{
+          params: {
+            receiver_id, id_message
+          }
+        }
+      );
+      if ( response) {
+        return response.data; 
+      }
+    } catch (error: any) {
+      console.error('Error in removeMessage:', error.message);
+    }
+  },
   sendVideoMessage: async ( id_user: string | undefined, uri: string) => {
     try {
       const createFormData = (uri: string, id_user:  string | undefined): FormData => {

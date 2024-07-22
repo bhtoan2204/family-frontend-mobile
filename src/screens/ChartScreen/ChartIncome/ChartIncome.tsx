@@ -16,13 +16,15 @@ import LineChartScreen from './LineChart';
 import { DailyIncome } from 'src/interface/income/IncomeDaily';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const ChartIncomeScreen = ({ navigation }: ChartIncomeScreenProps) => {
   const [selectedCategoryType, setSelectedCategoryType] = useState<string>('');
   let option = useSelector(getSelectedOption);
   const profile = useSelector(selectProfile);
   let family =useSelector(selectSelectedFamily);
-  
+  const translate = useSelector(getTranslate);
+
   useEffect(() => {
       setSelectedCategoryType(option);
     
@@ -33,9 +35,10 @@ const ChartIncomeScreen = ({ navigation }: ChartIncomeScreenProps) => {
 
   return (
     <ImageBackground
-      source={require('../../../assets/images/background-expense-chart1.png')}
+      source={require('../../../assets/images/income-detail-bg.png')}
       style={{flex: 1}}
-      resizeMode="stretch">
+       resizeMode="cover"
+    >
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.container}>
         <View style={styles.headerContainer}>
@@ -65,22 +68,20 @@ const ChartIncomeScreen = ({ navigation }: ChartIncomeScreenProps) => {
                 marginBottom: 5,
                 color: 'white',
               }}>
-              Hello, {profile.firstname} {profile.lastname}
+              {translate('Hello')}, {profile.firstname} {profile.lastname}
             </Text>
             {selectedCategoryType === 'Year' && (
-            <Text style={{fontSize: 16, color: '#ccc'}}>
-              Here you can view a brief overview of your income for the year.
+              <Text style={{fontSize: 16, color: 'white'}}>
+              {translate('overviewYearIncome')}
             </Text>
             )}
             {selectedCategoryType === 'Month' && (
-              <Text style={{fontSize: 16, color: '#ccc'}}>
-               For each month, you can see a summary of your income.
-              </Text>
+              <Text style={{fontSize: 16, color: 'white'}}>
+                {translate('overviewMonthIncome')}              </Text>
             )}
             {selectedCategoryType === 'Day' && (
-                <Text style={{fontSize: 16, color: '#ccc'}}>
-                  Here you can view detailed incomes for each day.
-                </Text>
+              <Text style={{fontSize: 16, color: 'white'}}>
+                {translate('detailDayIncome')}                  </Text>
               )}
           </View>
 

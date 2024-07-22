@@ -11,23 +11,27 @@ import { COLORS } from 'src/constants';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { DailyIncome } from 'src/interface/income/IncomeDaily';
+import { getIncomeList, getSumIncome, setIncomeList, setSelectedIncome, setSumIncome } from 'src/redux/slices/IncomeAnalysis';
 
 const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
-  const [income, setIncome] = useState<DailyIncome[]>([]);
+  const income = useSelector(getIncomeList);
+
   const [currentPageIncome, setCurrentPageIncome] = useState<number>(1);
 
   const [totalPageIncome, setTotalPageIncome] = useState<number>(1);
-  const [selectedFilter, setSelectedFilter] = useState<number>(30);
   const [selectedCategoryType, setSelectedCategoryType] = useState<string>('Income');
-  const [sumIncome, setSumIncome] = useState<number>(0);
+  const sumIncome = useSelector(getSumIncome);
   const family = useSelector(selectSelectedFamily);
   const itemsPerPage = 10;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   let profile = useSelector(selectProfile);
   const dispatch = useDispatch();
-  const [dateFrom, setDateFrom] = useState(new Date());
   const [dateTo, setDateTo] = useState(new Date());
-
+  const [dateFrom, setDateFrom] = useState(() => {
+    const date = new Date(dateTo);
+    date.setDate(date.getDate() - 30);
+    return date;
+  });
  
 
   const fetchDataIncome = async (page: number, reset: boolean = false) => {
@@ -35,9 +39,12 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
     try {
         const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
         const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
-      const response = await IncomeServices.getIncomeByDateRange(page, itemsPerPage, selectedFilter, family.id_family,formattedDateFrom, formattedDateTo );
-      setTotalPageIncome(Math.ceil(response.total / itemsPerPage));
-      setIncome(prevIncome => reset ? response.data : [...prevIncome, ...response.data]);
+      const response = await IncomeServices.getIncomeByDateRange(page, itemsPerPage, family.id_family,formattedDateFrom, formattedDateTo );
+      if (response){
+        setTotalPageIncome(Math.ceil(response.total / itemsPerPage));
+        dispatch(setIncomeList(reset ? response.data : [...income, ...response.data]));
+        dispatch(setSumIncome(response.sum))
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -71,7 +78,7 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
 
 
   const handlePressIncomeItem = async (item: DailyIncome)=> {
-    await dispatch(setIncomeDetails(item));
+    await dispatch(setSelectedIncome(item));
     navigation.navigate('IncomeStack', {screen: 'IncomeDetailScreen'});
   }
   
@@ -80,11 +87,17 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
       <View style={styles.itemContainer}>
         <View style={styles.expenseContent}>
           <View>
-            <Text style={styles.expenseCategory}>{item.financeIncomeSource.income_source_name}</Text>
+          <Text style={styles.expenseCategory}>
+            {item.financeIncomeSource && item.financeIncomeSource.income_source_name
+              ? item.financeIncomeSource.income_source_name
+              : 'Other'}
+          </Text>
             <View style={styles.row}>
               
               <Text style={{color: 'gray', }}>By: </Text>
-              <Text style={styles.expenseName}>{item.users.firstname} {item.users.lastname}</Text>
+              <Text style={styles.expenseName}>    {item.users && item.users.firstname && item.users.lastname
+                ? `${item.users.firstname} ${item.users.lastname}`
+                : ''}</Text>
 
             </View>
             <Text style={styles.expenseDescription}>{item.description}</Text>
@@ -134,7 +147,7 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
 
   return (
     <ImageBackground
-      source={require('../../../assets/images/background-expense-chart1.png')}
+      source={require('../../../assets/images/income-detail-bg.png')}
       style={{ flex: 1 }}
       resizeMode="stretch">
       <SafeAreaView style={{ flex: 1 }}>
@@ -167,10 +180,10 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
                 marginBottom: 5,
                 color: 'white',
               }}>
-              Hello, {profile.firstname}
+              Hello, {profile.firstname} {profile.lastname}
             </Text>
             <Text style={{fontSize: 15, color: 'white'}}>
-            Manage your finances efficiently with a clear view of your income and expenses.
+            Below is a detailed list of your incomes for the selected date range.
 
             </Text>
           </View>
@@ -187,9 +200,9 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
                 setDateFrom(currentDate);
                 }}
             />
-            <Text style={{ fontSize: 15, marginLeft: 20, marginRight: 20 }}>To: </Text>
+            <Text style={{ fontSize: 15, marginLeft: 20 }}>To: </Text>
             <DateTimePicker
-                style={{ flex: 1 }}
+                style={{ flex: 1, marginRight: 20}}
                 value={dateTo}
                 mode="date"
                 display="default"
@@ -243,3 +256,5 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
 };
 
 export default IncomeScreen;
+
+

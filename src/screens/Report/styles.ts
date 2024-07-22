@@ -59,6 +59,30 @@ const styles = StyleSheet.create({
     activeStep: {
       backgroundColor: COLORS.primary,
     },
-  
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    animatedTextIncome: {
+      position: 'absolute',
+      fontSize: 20,
+      fontWeight: '500',
+      color: 'green',
+      paddingHorizontal: 10,
+      textShadowColor: '#ccc', 
+      textShadowOffset: { width: -1, height: 1 },
+      textShadowRadius: 10,
+    },
+    animatedTextExpense: {
+      position: 'absolute',
+      fontSize: 20,
+      fontWeight: '500',
+      color: 'red',
+      paddingHorizontal: 10,
+      textShadowColor: '#ccc', 
+      textShadowOffset: { width: -1, height: 1 },
+      textShadowRadius: 10,
+    },
   });
 export default styles;

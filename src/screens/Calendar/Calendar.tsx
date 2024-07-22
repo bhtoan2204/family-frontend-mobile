@@ -4,9 +4,8 @@ import { Agenda, AgendaSchedule } from 'react-native-calendars';
 import { CalendarScreenProps } from 'src/navigation/NavigationTypes';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { format, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFamily, setDate, getDate, setEvent } from 'src/redux/slices/CalendarSlice';
+import {  selectAllEvent, selectEvents, selectSelectedDate, setEvents, setSelectedDate, setSelectedEvent } from 'src/redux/slices/CalendarSlice';
 import styles from './style';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import BottomSheet from './BottomSheet';
@@ -16,7 +15,11 @@ import { RRule, rrulestr } from 'rrule';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import type { Event } from 'src/interface/calendar/Event';
+import type { Event, EventDetail } from 'src/interface/calendar/Event';
+import moment from 'moment';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { format, isSameDay as isSameDayFn, isSameMonth, isSameYear } from 'date-fns';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   const { id_family } = route.params || {};
@@ -27,19 +30,20 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   const [allEvent, setAllEvent] = useState<Event[] | null>(null);
   const [selectDate, setSelectDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
   const profile = useSelector(selectProfile);
-  const date = useSelector(getDate);
-  dispatch(setFamily(id_family));
-  const [events, setEvents] = useState<AgendaSchedule>({});
+  const date = useSelector(selectSelectedDate);
+  const events = useSelector(selectAllEvent);
   const [currentEvents, setCurrentEvents] = useState<Event[]>([]);
+  const family = useSelector(selectSelectedFamily);
+  const translate = useSelector(getTranslate);
 
   useEffect(() => {
     fetchEvent();
-    handleGetCalendarForMonth(new Date(selectDate));
+    
   }, []);
 
   useEffect(() => {
     setSelectDate(format(new Date(date), 'yyyy-MM-dd'));
-    handleGetCalendarForMonth(new Date(selectDate));
+    
   }, [selectDate, allEvent]);
 
   const cleanRecurrenceRule = (rule: string) => {
@@ -48,79 +52,22 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
 
   const fetchEvent = async () => {
     try {
-      const response = await CalendarServices.getCalendar({ id_family });
+      const response = await CalendarServices.getCalendar({ id_family: family.id_family });
+
       if (Array.isArray(response)) {
         const formattedEvents: Event[] = response.map(item => ({
           ...item,
           time_start: new Date(item.time_start),
           time_end: new Date(item.time_end),
         }));
-        setAllEvent(formattedEvents);
+        dispatch(setEvents(formattedEvents));
       }
     } catch (error) {
       console.error('Error fetching calendar data:', error);
     }
   };
 
-  const handleGetCalendarForMonth = useCallback(
-    async (date: Date) => {
-      const start = startOfMonth(subMonths(date, 1));
-      const end = endOfMonth(addMonths(date, 3));
-
-      try {
-        if (allEvent) {
-          const groupedEvents = {};
-
-          allEvent.forEach(event => {
-            const dateKey = format(event.time_start, 'yyyy-MM-dd');
-            if (!groupedEvents[dateKey]) {
-              groupedEvents[dateKey] = [];
-            }
-            groupedEvents[dateKey].push({
-              ...event,
-              name: event.title,
-              height: 50,
-              day: dateKey,
-            });
-
-            if (event.recurrence_rule) {
-              const cleanedRecurrenceRule = cleanRecurrenceRule(event.recurrence_rule);
-              try {
-                const rule = rrulestr(cleanedRecurrenceRule);
-                const dates = rule.between(start, end);
-                dates.forEach(date => {
-                  if (!isNaN(date.getTime())) {
-                    const recurrenceDateKey = format(date, 'yyyy-MM-dd');
-                    if (!groupedEvents[recurrenceDateKey]) {
-                      groupedEvents[recurrenceDateKey] = [];
-                    }
-                    groupedEvents[recurrenceDateKey].push({
-                      ...event,
-                      time_start: date,
-                      time_end: new Date(date.getTime() + (event.time_end.getTime() - event.time_start.getTime())),
-                      name: event.title,
-                      height: 50,
-                      day: recurrenceDateKey,
-                    });
-                  } else {
-                    console.error('Invalid date:', date);
-                  }
-                });
-              } catch (recurrenceError) {
-                console.error('Error parsing cleaned recurrence rule:', recurrenceError, cleanedRecurrenceRule);
-              }
-            }
-          });
-
-          setEvents(prevEvents => ({ ...prevEvents, ...groupedEvents }));
-        }
-      } catch (error) {
-        console.error('Error getting calendar for month:', error);
-      }
-    },
-    [allEvent, selectDate],
-  );
-
+  
   const onDelete = async (event: Event) => {
     Alert.alert(
       'Confirm Delete',
@@ -136,7 +83,7 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
             try {
               await CalendarServices.DeleteEvent(event.id_calendar);
               Alert.alert('Success', 'Event has been deleted successfully.');
-              await handleGetCalendarForMonth(new Date());
+              //await handleGetCalendarForMonth(new Date());
             } catch (error) {
               console.error('Error deleting event:', error);
               Alert.alert('Error', 'An error occurred while deleting the event.');
@@ -163,41 +110,70 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
 
   const loadItemsForMonth = async (data: any) => {
     const selectedMonth = new Date(data.year, data.month - 1);
-    await handleGetCalendarForMonth(selectedMonth);
+    dispatch(setSelectedDate(selectedMonth))
+
   };
 
-  const handlePressEvent = async (event: any) => {
-    await dispatch(setEvent(event));
+  const handlePressEvent = async (event: EventDetail) => {
+    dispatch(setSelectedEvent(event));
     navigation.navigate('EventDetailsScreen', {
       id_family: id_family,
       id_calendar: event.id_calendar,
     });
   };
+  
+  const renderItem = (item: EventDetail) => {
+    const startDate = format(new Date(item.time_start), 'yyyy-MM-dd HH:mm:ss');
+    const endDate = format(new Date(item.time_end), 'yyyy-MM-dd HH:mm:ss');
+    const isAllDay = item.is_all_day;
+    
+    const isSameDay = isSameDayFn(startDate, endDate);
+    const isSameMonthYear = isSameMonth(startDate, endDate) && isSameYear(startDate, endDate);
 
-  const renderItem = (item: any) => (
-    <TouchableOpacity onPress={() => handlePressEvent(item)}>
-      <View style={[styles.agendaItem, { backgroundColor: item.color }]}>
-        <Text style={[styles.agendaItemText, { color: item.color !== 'white' ? 'white' : 'black' }]}>
-          {item.title}
-        </Text>
-        {!item.is_all_day && (
-          <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
-            {format(new Date(item.time_start), 'HH:mm')} - {format(new Date(item.time_end), 'HH:mm')}
+    return (
+      <TouchableOpacity onPress={() => handlePressEvent(item)}>
+        <View style={[styles.agendaItem, { backgroundColor: `${item.color}90` }]}>
+          <Text style={[styles.agendaItemText, { color: item.color !== 'white' ? 'white' : 'black' }]}>
+            {item.title}
           </Text>
-        )}
-        {item.is_all_day && (
-          <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
-            {format(new Date(item.time_start), 'yyyy/MM/dd')} - {format(new Date(item.time_end), 'yyyy/MM/dd')}
+          {isAllDay ? (
+            isSameDay ? (
+              <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
+                {translate('All day')}
+              </Text>
+            ) : (
+              isSameMonthYear ? (
+                <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
+                  {translate('All day')} {format(startDate, 'MM/dd')} - {format(endDate, 'MM/dd')}
+                </Text>
+              ) : (
+                <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
+                  {translate('All day')} {format(startDate, 'yyyy/MM/dd')} - {format(endDate, 'yyyy/MM/dd')}
+                </Text>
+              )
+            )
+          ) : (
+            isSameDay ? (
+              <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
+                {format(startDate, 'HH:mm')} - {format(endDate, 'HH:mm')}
+              </Text>
+            ) : (
+              <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
+                {format(startDate, 'yyyy/MM/dd HH:mm')} - {format(endDate, isSameMonthYear ? 'dd HH:mm' : 'yyyy/MM/dd HH:mm')}
+              </Text>
+            )
+          )}
+          <Text style={[{ color: item.color !== 'white' ? 'white' : 'black', fontWeight: '800' }]}>
+            {translate('Location')}: {item.location}
           </Text>
-        )}
-      </View>
-    </TouchableOpacity>
-  );
-
+        </View>
+      </TouchableOpacity>
+    );
+  };
   const renderEmptyDate = () => {
     return (
       <View style={styles.emptyDate}>
-        <Text>No events for this day</Text>
+        <Text>{translate('No events for this day')}</Text>
       </View>
     );
   };
@@ -208,10 +184,10 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
 
   const handleDayPress = (date: any) => {
     setSelectDate(date.dateString);
-    dispatch(setDate(date.dateString));
+    dispatch(setSelectedDate(moment(new Date(date.dateString)).format('YYYY-MM-DD')));
 
-    const eventsForSelectedDay = events[date.dateString] || [];
-    setCurrentEvents(eventsForSelectedDay);
+    // const eventsForSelectedDay = events[date.dateString] || [];
+    // setCurrentEvents(eventsForSelectedDay);
   };
 
   function formatDate(dateStr: string | number | Date) {
@@ -228,7 +204,7 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
             <Ionicons name="chevron-back" size={30} color="black" />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => pressSchedule()}>
-            <Icon name="list" size={20} color="black" />
+          <Ionicons name="list" size={30} color="black" />
           </TouchableOpacity>
         </View>
         <View
@@ -243,7 +219,7 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
               {formatDate(selectDate)}
             </Text>
             <Text style={{ fontSize: 14, fontWeight: '300' }}>
-              Welcome, {profile.firstname} {profile.lastname}
+              {translate('Welcome')}, {profile.firstname} {profile.lastname}
             </Text>
           </View>
           <TouchableOpacity
@@ -262,7 +238,7 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
             }}>
             <Feather name="plus" size={20} color="white" />
             <Text style={{ marginLeft: 10, fontWeight: '700', color: 'white' }}>
-              Add Task
+              {translate('Add Event')}
             </Text>
           </TouchableOpacity>
         </View>

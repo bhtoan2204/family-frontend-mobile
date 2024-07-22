@@ -5,6 +5,8 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import styles from './styles';
 import { UtilitiesType } from 'src/interface/income/getIncome';
 import { IncomeServices } from 'src/services/apiclient';
+import { useSelector } from 'react-redux';
+import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
 
 
 
@@ -12,7 +14,8 @@ const CategoryUtilities =({widthOfYourPage, utilitiesSelect, handleUtilitieTypeP
     const [currentPage, setCurrentPage] = useState(0);
     const [utilities, setUtilities] = useState<UtilitiesType[]>([])
     const scrollViewRef = useRef(null);
-
+    const translate = useSelector(getTranslate);
+    const local = useSelector(selectLocale)
     const urlCatetory = 'https://png.pngtree.com/element_our/20190530/ourmid/pngtree-correct-icon-image_1267804.jpg';
 
     const fetchCategoryUtilities = async () => {
@@ -39,7 +42,7 @@ const CategoryUtilities =({widthOfYourPage, utilitiesSelect, handleUtilitieTypeP
               { color: '#1b2838' },
             ]}
           >
-            {utilitiesSelect?.name_vn || 'Select category'}
+            {utilitiesSelect?.name_vn || translate('Select category')}
           </Text>
   
      
@@ -97,7 +100,7 @@ const CategoryUtilities =({widthOfYourPage, utilitiesSelect, handleUtilitieTypeP
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {item.name_en}
+                        {local === 'vi' ? item.name_vn : item.name_en}
                       </Text>
                     </View>
                   </TouchableOpacity>

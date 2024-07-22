@@ -6,14 +6,17 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { AuthServices } from 'src/services/apiclient';
 import styles from './styles';
 import { ForgotPasswordScreenProps } from 'src/navigation/NavigationTypes';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setEmail, setPhone } from 'src/redux/slices/ForgotPassword';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const ForgotPassword = ({ navigation }: ForgotPasswordScreenProps) => {
   const [inputEmail, setInputEmail] = useState<string>('');
   const [inputPhone, setInputPhone] = useState<string>('');
   const [selectedOption, setSelectedOption] = useState<'email' | 'phone'>('email');
   const dispatch = useDispatch(); 
+  const t  = useSelector(getTranslate);
+
 
   const handleSendSubmit = async () => {
     try {
@@ -46,18 +49,15 @@ const ForgotPassword = ({ navigation }: ForgotPasswordScreenProps) => {
           <View style={styles.progressStep}></View>
         </View>
         <View style={styles.container}>
-
-      
-
           <Image
             source={{ uri: 'https://static.vecteezy.com/system/resources/previews/008/483/414/non_2x/the-concept-of-an-african-american-man-thinking-behind-a-laptop-vector.jpg' }}
             style={styles.image}
           />
           <Text style={styles.forgotPasswordTitle}>
-            Forgot Your Password?
+            {t('forgotPasswordTitle')}
           </Text>
           <Text style={styles.accountTitle}>
-            Please select an option and enter your email or phone number to reset your password.
+            {t('accountTitle')}
           </Text>
 
           <View style={styles.optionContainer}>
@@ -68,7 +68,7 @@ const ForgotPassword = ({ navigation }: ForgotPasswordScreenProps) => {
               ]}
               onPress={() => setSelectedOption('email')}
             >
-              <Text style={selectedOption === 'email' ? styles.selectedOptionText : styles.optionText}>Email</Text>
+              <Text style={selectedOption === 'email' ? styles.selectedOptionText : styles.optionText}>{t('email')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -77,19 +77,19 @@ const ForgotPassword = ({ navigation }: ForgotPasswordScreenProps) => {
               ]}
               onPress={() => setSelectedOption('phone')}
             >
-              <Text style={selectedOption === 'phone' ? styles.selectedOptionText : styles.optionText}>Phone</Text>
+              <Text style={selectedOption === 'phone' ? styles.selectedOptionText : styles.optionText}>{t('phone')}</Text>
             </TouchableOpacity>
           </View>
 
           {selectedOption === 'email' && (
             <View style={styles.inputContainer}>
-              <Text style={styles.title}>Email</Text>
+              <Text style={styles.title}>{t('email')}</Text>
               <View style={[styles.placeholder]}>
                 <View style={styles.inputContainerFlex}>
                   <Icon name="email" size={24} color="black" style={styles.icon} />
                   <TextInput
                     style={styles.textInput}
-                    placeholder="Enter your email"
+                    placeholder={t('enterEmail')}
                     placeholderTextColor="gray"
                     keyboardType="email-address"
                     onChangeText={text => setInputEmail(text)}
@@ -102,14 +102,14 @@ const ForgotPassword = ({ navigation }: ForgotPasswordScreenProps) => {
 
           {selectedOption === 'phone' && (
             <View style={styles.inputContainer}>
-              <Text style={styles.title}>Phone</Text>
+              <Text style={styles.title}>{t('phone')}</Text>
               <View style={[styles.placeholder]}>
                 <View style={styles.inputContainerFlex}>
                   <Icon name="phone" size={24} color="black" style={styles.icon} />
                   <Text style={styles.countryCode}>+84</Text>
                   <TextInput
                     style={styles.textInput}
-                    placeholder="Enter your phone"
+                    placeholder={t('enterPhone')}
                     placeholderTextColor="gray"
                     keyboardType="phone-pad"
                     onChangeText={text => setInputPhone(text)}
@@ -120,11 +120,9 @@ const ForgotPassword = ({ navigation }: ForgotPasswordScreenProps) => {
             </View>
           )}
 
-          
-
           <View style={styles.arrowContainer}>
             <TouchableOpacity style={styles.enterCodeButton} onPress={handleSendSubmit}>
-              <Text style={styles.enterCodeButtonText}>Enter Code</Text>
+              <Text style={styles.enterCodeButtonText}>{t('enterCode')}</Text>
               <Icon name="arrow-forward" size={24} color="white" style={styles.enterCodeButtonIcon} />
             </TouchableOpacity>
           </View>

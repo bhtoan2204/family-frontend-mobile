@@ -7,6 +7,7 @@ import { AuthServices } from 'src/services/apiclient';
 import { getPhone, getEmail, getCode } from 'src/redux/slices/ForgotPassword';
 import { ResetPasswordScreenProps } from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const ResetPasswordScreen = ({ navigation }: ResetPasswordScreenProps) => {
   const [newPassword, setNewPassword] = useState<string>('');
@@ -19,6 +20,7 @@ const ResetPasswordScreen = ({ navigation }: ResetPasswordScreenProps) => {
   const phone = useSelector(getPhone);
   const email = useSelector(getEmail);
   const code = useSelector(getCode);
+  const t  = useSelector(getTranslate);
 
   const handleChangePassword = async () => {
     try {
@@ -26,14 +28,14 @@ const ResetPasswordScreen = ({ navigation }: ResetPasswordScreenProps) => {
       const response = await AuthServices.resetPassword({ email, phone, code, password: newPassword });
       console.log(response);
       if (response.message === 'Password has not been reset') {
-        Alert.alert('Error', 'Password reset failed.');
+        Alert.alert(t('error'), t('passwordResetFailed'));
         navigation.navigate('LoginScreen');
       } else {
-        Alert.alert('Success', 'Password has been reset successfully.');
+        Alert.alert(t('success'), t('passwordResetSuccess'));
         navigation.navigate('LoginScreen');
       }
     } catch (error) {
-      Alert.alert('Error', 'An error occurred while resetting the password.');
+      Alert.alert(t('error'), 'An error occurred while resetting the password.');
       console.log(error);
     }
   };
@@ -49,7 +51,7 @@ const ResetPasswordScreen = ({ navigation }: ResetPasswordScreenProps) => {
           <TouchableOpacity style={styles.arrowButton} onPress={() => navigation.navigate('ForgotPassword')}>
             <Icon name="arrow-back" size={30} style={styles.backButton} />
           </TouchableOpacity>
-          <Text style={styles.headerText}>Change Password</Text>
+          <Text style={styles.headerText}>{t('changePassword')}</Text>
         </View>
 
         <View style={styles.imageContainer}>
@@ -60,12 +62,12 @@ const ResetPasswordScreen = ({ navigation }: ResetPasswordScreenProps) => {
           />
         </View>
 
-        <Text style={styles.label}>New Password</Text>
+        <Text style={styles.label}>{t('newPassword')}</Text>
         <View style={styles.inputContainer}>
           <AntDesign name="lock" size={24} color="black" style={styles.icon} />
           <TextInput
             style={styles.input}
-            placeholder="Enter new password"
+            placeholder={t('enterNewPassword')}
             secureTextEntry={!showNewPassword}
             value={newPassword}
             onChangeText={setNewPassword}
@@ -75,12 +77,12 @@ const ResetPasswordScreen = ({ navigation }: ResetPasswordScreenProps) => {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.label}>Confirm New Password</Text>
+        <Text style={styles.label}>{t('confirmNewPassword')}</Text>
         <View style={styles.inputContainer}>
           <AntDesign name="lock" size={24} color="black" style={styles.icon} />
           <TextInput
             style={styles.input}
-            placeholder="Confirm new password"
+            placeholder={t('confirmPassword')}
             secureTextEntry={!showConfirmPassword}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
@@ -91,7 +93,7 @@ const ResetPasswordScreen = ({ navigation }: ResetPasswordScreenProps) => {
         </View>
 
         <TouchableOpacity style={styles.changePasswordButton} onPress={handleChangePassword}>
-          <Text style={styles.buttonText}>Change Password</Text>
+          <Text style={styles.buttonText}>{t('changePasswordButton')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>

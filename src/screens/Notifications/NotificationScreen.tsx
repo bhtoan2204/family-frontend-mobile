@@ -7,8 +7,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { markAsRead, selectNotifications, setNotificationSlice } from 'src/redux/slices/NotificationSlice';
 import { ProfileServices } from 'src/services/apiclient';
 import { Notification } from 'src/interface/notification/getNoti';
+import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
+import { setSelectedFamilyById } from 'src/redux/slices/FamilySlice';
+import { setSelectedDate } from 'src/redux/slices/ExpenseAnalysis';
 
-const NotificationScreen = () => {
+const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
   let notifications = useSelector(selectNotifications);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -23,6 +26,9 @@ const NotificationScreen = () => {
 
     setLoading(true);
     try {
+      if (index==0){
+        dispatch(setNotificationSlice([]));
+      }
       const response = await ProfileServices.getNotification(index);
       if (response) {
         setIndex(index + 1);
@@ -72,24 +78,76 @@ const NotificationScreen = () => {
       return `${diffYears} ${diffYears > 1 ? 'years' : 'year'} ago`;
     }
   };
+  const formatDate = (timestamp: string | number | Date) => {
+    const date = new Date(timestamp);
+    return date.toISOString().split('T')[0];
+  };
   
   const handlePressNoti = async (item: Notification) => {
-    try {
-      await ProfileServices.markRead(item._id);
-      dispatch(markAsRead(item._id));
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
+    switch (item.type) {
+      case 'CHECKLIST':
+        navigation.navigate('TodoListStack', {
+          screen: 'TodoList',
+          params: { id_family: item.id_family },
+        });
+        
+        break;
+
+      case 'EXPENSE':
+        dispatch(setSelectedFamilyById(item.id_family));
+        navigation.navigate('ExpenseStack', { screen: 'ExpenseScreen' });
+        break;
+      case 'INCOME':
+        
+        dispatch(setSelectedFamilyById(item.id_family));
+        navigation.navigate('IncomeStack', { screen: 'IncomeScreen' });
+        break;  
+      case 'ASSET':
+        dispatch(setSelectedFamilyById(item.id_family));
+        navigation.navigate('ExpenseStack', { screen: 'AssetScreen' });
+        break;    
+      case 'SHOPPING_LIST':
+        dispatch(setSelectedFamilyById(item.id_family));
+        navigation.navigate('ShoppingListStack', { screen: 'ShoppingList', params: item.id_family });
+        break; 
+      case 'CALENDAR':
+        dispatch(setSelectedDate(formatDate(item.timestamp)));
+        dispatch(setSelectedFamilyById(item.id_family));
+        navigation.navigate('CalendarStack', { screen: 'CalendarScreen', params: item.id_family });
+        break;   
+      case 'EDUCATION':
+
+        break;   
+      case 'GUIDELINE':
+
+        break;  
+        case 'CHAT':
+
+        break;     
+      default:
+        console.log(`Unhandled notification type: ${item.type}`);
     }
   };
+  
 
   const renderItem = ({ item }: { item: Notification }) => (
     <TouchableOpacity onPress={() => handlePressNoti(item)} style={[item.isRead ? {backgroundColor: '#fff'} : {backgroundColor: COLORS.AliceBlue}]}>
       <View style={styles.notificationItem}>
+      {/* { item.familyInfo.avatar ? (
         <Image
-          source={require('../../assets/images/avatar.png')}
+          source={{uri: item.familyInfo.avatar}}
           style={styles.avatar}
           resizeMode="cover"
         />
+      ):(
+        <Image
+        source={require('../../assets/images/avatar.png')}
+
+        style={styles.avatar}
+        resizeMode="cover"
+      />
+      )
+    } */}
         <View style={styles.notificationContent}>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.content}>{item.content}</Text>
@@ -102,6 +160,7 @@ const NotificationScreen = () => {
   const renderFooter = () => {
     return loading ? <ActivityIndicator size="large" color="#0000ff" /> : null;
   };
+  
 
   return (
     <SafeAreaView style={styles.safeArea}>

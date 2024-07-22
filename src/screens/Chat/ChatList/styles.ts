@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'blue',
     marginRight: 10,
   },
   avatar: {
@@ -148,7 +147,6 @@ const styles = StyleSheet.create({
     height: 15,
     width: 15,
     borderRadius: 7.5,
-    backgroundColor: 'green',
     borderWidth: 2,
     borderColor: 'white',
     zIndex: 1,

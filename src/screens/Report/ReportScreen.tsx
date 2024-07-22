@@ -1,63 +1,120 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, Animated } from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {View, Text, TouchableOpacity, Image, Animated, ActivityIndicator} from 'react-native';
 import styles from './styles';
-import { ExpenditureScreenProps } from 'src/navigation/NavigationTypes';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS } from 'src/constants';
+import {ExpenditureScreenProps} from 'src/navigation/NavigationTypes';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {COLORS} from 'src/constants';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useDispatch } from 'react-redux';
-import { setSelectedOption } from 'src/redux/slices/ExpenseAnalysis';
-import { setSelectedOptionIncome } from 'src/redux/slices/IncomeAnalysis';
+import {useDispatch, useSelector} from 'react-redux';
+import {getSumExpense, setExpenses, setSelectedOption, setSumExpense} from 'src/redux/slices/ExpenseAnalysis';
+import {getSumIncome, setSelectedOptionIncome, setSumIncome} from 'src/redux/slices/IncomeAnalysis';
+import moment from 'moment';
+import { ExpenseServices, IncomeServices } from 'src/services/apiclient';
+import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
-const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
+const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
   const dispatch = useDispatch();
+  const family = useSelector(selectSelectedFamily);
+  const sumExpense = useSelector(getSumExpense);
+  const sumIncome = useSelector(getSumIncome);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [dateTo, setDateTo] = useState(new Date());
+  const translate = useSelector(getTranslate);
+  const [dateFrom, setDateFrom] = useState(() => {
+    const date = new Date(dateTo);
+    date.setDate(date.getDate() - 30);
+    return date;
+  });
+  useEffect(()=>{
+    fetchDataExpense();
+    fetchDataIncome();
+  },[])
+
+  const fetchDataExpense = async () => {
+    setIsLoading(true);
+    try {
+      
+        const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
+        const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
+        const response = await ExpenseServices.getExpenseByDateRange(1, 10, family.id_family, formattedDateFrom, formattedDateTo )
+        if(response){
+          dispatch(setSumExpense(response.sum));
+        }
+
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const fetchDataIncome = async () => {
+    setIsLoading(true);
+    try {
+        const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
+        const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
+      const response = await IncomeServices.getIncomeByDateRange(1, 10, family.id_family,formattedDateFrom, formattedDateTo );
+      if (response){
+        dispatch(setSumIncome(response.sum))
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const pressExpenseDay = () => {
     dispatch(setSelectedOption('Day'));
-    navigation.navigate('ExpenseStack', { screen: 'ChartExpense' });
+    navigation.navigate('ExpenseStack', {screen: 'ChartExpense'});
   };
   const pressExpenseMonth = () => {
     dispatch(setSelectedOption('Month'));
-    navigation.navigate('ExpenseStack', { screen: 'ChartExpense' });
+    navigation.navigate('ExpenseStack', {screen: 'ChartExpense'});
   };
 
   const pressExpenseYear = () => {
     dispatch(setSelectedOption('Year'));
-    navigation.navigate('ExpenseStack', { screen: 'ChartExpense' });
+    navigation.navigate('ExpenseStack', {screen: 'ChartExpense'});
   };
 
   const pressIncomeDay = () => {
     dispatch(setSelectedOptionIncome('Day'));
-    navigation.navigate('IncomeStack', { screen: 'ChartIncomeScreen' });
+    navigation.navigate('IncomeStack', {screen: 'ChartIncomeScreen'});
   };
   const pressIncomeMonth = () => {
     dispatch(setSelectedOptionIncome('Month'));
-    navigation.navigate('IncomeStack', { screen: 'ChartIncomeScreen' });
+    navigation.navigate('IncomeStack', {screen: 'ChartIncomeScreen'});
   };
 
   const pressIncomeYear = () => {
     dispatch(setSelectedOptionIncome('Year'));
-    navigation.navigate('IncomeStack', { screen: 'ChartIncomeScreen' });
+    navigation.navigate('IncomeStack', {screen: 'ChartIncomeScreen'});
   };
 
   const scaleAnim = new Animated.Value(1);
+  const scaleAnimation = useRef(new Animated.ValueXY({x: 1, y: 1})).current;
 
   const [selectedButton, setSelectedButton] = useState('expenseAnalysis');
   const [currentScreen, setCurrentScreen] = useState('expenseAnalysis');
 
   const handleButtonPress = (
-    buttonName: 'expenseAnalysis' | 'incomeAnalysis' | 'expenseIncome' | 'asset',
+    buttonName:
+      | 'expenseAnalysis'
+      | 'incomeAnalysis'
+      | 'expenseIncome'
+      | 'asset',
   ) => {
     setSelectedButton(buttonName);
     setCurrentScreen(buttonName);
   };
 
   const renderExpenseAnalysisScreen = () => (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1}}>
       <Image
         source={require('../../assets/images/expense-bg.png')}
-        style={{ flex: 1, width: '100%', height: '100%' }}
+        style={{flex: 1, width: '100%', height: '100%'}}
         resizeMode="contain"
       />
       <TouchableOpacity
@@ -70,14 +127,13 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
           height: 150,
           alignItems: 'center',
           justifyContent: 'center',
-        }}
-      >
+        }}>
         <Animated.Image
           source={require('../../assets/images/bar-chart.png')}
           style={{
             width: '100%',
             height: '100%',
-            transform: [{ scale: scaleAnim }],
+            transform: [{scale: scaleAnim}],
           }}
           resizeMode="contain"
         />
@@ -92,14 +148,13 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
           height: 210,
           alignItems: 'center',
           justifyContent: 'center',
-        }}
-      >
+        }}>
         <Animated.Image
           source={require('../../assets/images/pie-chart.png')}
           style={{
             width: '100%',
             height: '100%',
-            transform: [{ scale: scaleAnim }],
+            transform: [{scale: scaleAnim}],
           }}
           resizeMode="contain"
         />
@@ -114,14 +169,13 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
           height: 150,
           alignItems: 'center',
           justifyContent: 'center',
-        }}
-      >
+        }}>
         <Animated.Image
           source={require('../../assets/images/line-chart.png')}
           style={{
             width: '100%',
             height: '100%',
-            transform: [{ scale: scaleAnim }],
+            transform: [{scale: scaleAnim}],
           }}
           resizeMode="contain"
         />
@@ -130,10 +184,10 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
   );
 
   const renderIncomeAnalysisScreen = () => (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1}}>
       <Image
         source={require('../../assets/images/income-bg.png')}
-        style={{ flex: 1, width: '100%', height: '100%' }}
+        style={{flex: 1, width: '100%', height: '100%'}}
         resizeMode="contain"
       />
       <TouchableOpacity
@@ -146,14 +200,13 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
           height: 145,
           alignItems: 'center',
           justifyContent: 'center',
-        }}
-      >
+        }}>
         <Animated.Image
           source={require('../../assets/images/income-bar-chart.png')}
           style={{
             width: '100%',
             height: '100%',
-            transform: [{ scale: scaleAnim }],
+            transform: [{scale: scaleAnim}],
           }}
           resizeMode="contain"
         />
@@ -168,14 +221,13 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
           height: 210,
           alignItems: 'center',
           justifyContent: 'center',
-        }}
-      >
+        }}>
         <Animated.Image
           source={require('../../assets/images/income-month-chart.png')}
           style={{
             width: '100%',
             height: '100%',
-            transform: [{ scale: scaleAnim }],
+            transform: [{scale: scaleAnim}],
           }}
           resizeMode="contain"
         />
@@ -190,10 +242,87 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
           height: 150,
           alignItems: 'center',
           justifyContent: 'center',
-        }}
-      >
+        }}>
         <Animated.Image
           source={require('../../assets/images/income-line-chart.png')}
+          style={{
+            width: '100%',
+            height: '100%',
+            transform: [{scale: scaleAnim}],
+          }}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+    </View>
+  );
+  const formatCurrency = (amount: any) => {
+    return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  };
+  useEffect(() => {
+    Animated.timing(scaleAnim, {
+      toValue: 1.2,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => {
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    });
+  }, [sumIncome, sumExpense]);
+
+  const renderExVsInScreen = () => (
+    //navigation.navigate('ExpenseStack', {screen: 'ExpenseScreen'});
+    <View style={{flex: 1}}>
+      <Image
+        source={require('../../assets/images/expense_income.png')}
+        style={{flex: 1, width: '100%', height: '100%'}}
+        resizeMode="contain"
+      />
+      <TouchableOpacity
+        onPress={() => navigation.navigate('ExpenseStack', {screen: 'ExpenseScreen' })}
+        style={{
+          position: 'absolute',
+          right: 160,
+          bottom: 130,
+          width: 210,
+          height: 210,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Animated.Image
+          source={require('../../assets/images/expense.png')}
+          style={{
+            width: '100%',
+            height: '100%',
+            transform: [{scale: scaleAnim}],
+          }}
+          resizeMode="contain"
+        />
+          <Animated.Text
+        style={[
+        styles.animatedTextExpense,
+        {
+          transform: [{ scale: scaleAnim }],
+        },
+      ]}>
+      + {formatCurrency(sumExpense)}
+    </Animated.Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('IncomeStack', { screen: 'IncomeScreen' })}
+        style={{
+          position: 'absolute',
+          right: 140,
+          bottom: 380,
+          width: 210,
+          height: 210,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Animated.Image
+          source={require('../../assets/images/income.png')}
           style={{
             width: '100%',
             height: '100%',
@@ -201,14 +330,75 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
           }}
           resizeMode="contain"
         />
+         <Animated.Text
+        style={[
+        styles.animatedTextIncome,
+        {
+          transform: [{ scale: scaleAnim }],
+        },
+      ]}>
+      + {formatCurrency(sumIncome)}
+    </Animated.Text>
+      </TouchableOpacity>
+
+          </View>
+        );
+
+  const renderAsset = () => (
+    // navigation.navigate('ExpenseStack', {screen: 'AssetScreen'});
+    <View style={{flex: 1}}>
+      <View style={{marginTop: 35, marginLeft: 15}}>
+        <Text
+          style={{
+            color: '#BD9BCD',
+            fontWeight: 'bold',
+            fontSize: 40,
+            width: '80%',
+            marginBottom: 15,
+          }}>
+          
+          {translate('AssetDetail1')}
+        </Text>
+
+      </View>
+      <Image
+        source={require('../../assets/images/asset-bg.png')}
+        style={{
+          position: 'absolute',
+          width: 350,
+          height: 500,
+          left: 20,
+          top: 65,
+        }}
+        resizeMode="contain"
+      />
+      <TouchableOpacity
+        onPress={() => navigation.navigate('ExpenseStack', {screen: 'AssetScreen' })}
+        style={{
+          position: 'absolute',
+          right: 160,
+          bottom: 130,
+          width: 210,
+          height: 210,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+      <Animated.Image
+        source={require('../../assets/images/asset-car.png')}
+        style={{
+          position: 'absolute',
+          top: 60,
+          width: '100%',
+          height: '100%',
+          right: 30,
+          transform: [{scale: scaleAnim}],
+        }}
+        resizeMode="contain"
+      />
       </TouchableOpacity>
     </View>
+
   );
-
-  const renderExVsInScreen = () => navigation.navigate('ExpenseStack', { screen: 'ExpenseScreen' });
-
-  const renderAsset = () => navigation.navigate('ExpenseStack', { screen: 'AssetScreen' });
-
   const renderScreen = () => {
     switch (currentScreen) {
       case 'expenseAnalysis':
@@ -222,8 +412,34 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
     }
   };
 
+  // useEffect(() => {
+  //   Animated.loop(
+  //     Animated.sequence([
+  //       Animated.timing(scaleAnim, {
+  //         toValue: 1.1,
+  //         duration: 1000,
+  //         useNativeDriver: true,
+  //       }),
+  //       Animated.timing(scaleAnim, {
+  //         toValue: 1,
+  //         duration: 1000,
+  //         useNativeDriver: true,
+  //       }),
+  //     ]),
+  //   ).start();
+  // }, [scaleAnim]);
+
+  // useEffect(() => {
+  //   Animated.timing(scaleAnimation, {
+  //     toValue: {x: -100, y: 100},
+  //     duration: 1000,
+  //     useNativeDriver: true,
+  //   }).start();
+  // }, [scaleAnimation]);
+
   useEffect(() => {
-    Animated.loop(
+    // Animation for scaleAnim remains the same
+    const loopAnimation = Animated.loop(
       Animated.sequence([
         Animated.timing(scaleAnim, {
           toValue: 1.1,
@@ -236,30 +452,63 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
           useNativeDriver: true,
         }),
       ]),
-    ).start();
-  }, [scaleAnim]);
+    );
 
+    // Adjusted Animation for scaleAnimation
+    const movingAnimationX = Animated.timing(scaleAnimation.x, {
+      toValue: -100,
+      duration: 1000,
+      useNativeDriver: true,
+    });
+
+    const movingAnimationY = Animated.timing(scaleAnimation.y, {
+      toValue: 100,
+      duration: 1000,
+      useNativeDriver: true,
+    });
+
+    // Run both animations for X and Y together, along with the loop animation
+    Animated.parallel([
+      loopAnimation,
+      movingAnimationX,
+      movingAnimationY,
+    ]).start();
+  }, [scaleAnim, scaleAnimation]);
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.container}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 20 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginTop: 20,
+          }}>
           <TouchableOpacity
             onPress={() => handleButtonPress('expenseAnalysis')}
             style={{
               flex: 1,
               alignItems: 'center',
-              backgroundColor: selectedButton === 'expenseAnalysis' ? '#4480A2' : '#FFFFFF',
+              backgroundColor:
+                selectedButton === 'expenseAnalysis' ? '#4480A2' : '#FFFFFF',
               padding: 18,
               borderRadius: 30,
               paddingHorizontal: 30,
-              shadowColor: selectedButton === 'expenseAnalysis' ? '#4480A2' : 'transparent',
-              shadowOffset: { width: 0, height: 4 },
+              shadowColor:
+                selectedButton === 'expenseAnalysis'
+                  ? '#4480A2'
+                  : 'transparent',
+              shadowOffset: {width: 0, height: 4},
               shadowOpacity: 0.35,
               shadowRadius: 3.84,
-            }}
-          >
-            <Text style={{ color: selectedButton === 'expenseAnalysis' ? '#FFFFFF' : '#ccc', fontWeight: '700', fontSize: 14 }}>
-              Expense Analysis
+            }}>
+            <Text
+              style={{
+                color:
+                  selectedButton === 'expenseAnalysis' ? '#FFFFFF' : '#ccc',
+                fontWeight: '700',
+                fontSize: 14,
+              }}>
+              {translate('ExpenseAnalysis')}
             </Text>
           </TouchableOpacity>
 
@@ -268,39 +517,56 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
             style={{
               flex: 1,
               alignItems: 'center',
-              backgroundColor: selectedButton === 'incomeAnalysis' ? '#E77F27' : '#FFFFFF',
+              backgroundColor:
+                selectedButton === 'incomeAnalysis' ? '#80C694' : '#FFFFFF',
               padding: 18,
               borderRadius: 30,
               paddingHorizontal: 30,
-              shadowColor: selectedButton === 'incomeAnalysis' ? '#E77F27' : 'transparent',
-              shadowOffset: { width: 0, height: 4 },
+              shadowColor:
+                selectedButton === 'incomeAnalysis' ? '#80C694' : 'transparent',
+              shadowOffset: {width: 0, height: 4},
               shadowOpacity: 0.35,
               shadowRadius: 3.84,
-            }}
-          >
-            <Text style={{ color: selectedButton === 'incomeAnalysis' ? '#FFFFFF' : '#ccc', fontWeight: '700', fontSize: 14 }}>
-              Income Analysis
+            }}>
+            <Text
+              style={{
+                color: selectedButton === 'incomeAnalysis' ? '#FFFFFF' : '#ccc',
+                fontWeight: '700',
+                fontSize: 14,
+              }}>
+              {translate('IncomeAnalysis')}
             </Text>
           </TouchableOpacity>
         </View>
 
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 20 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginTop: 20,
+          }}>
           <TouchableOpacity
             onPress={() => handleButtonPress('expenseIncome')}
             style={{
               flex: 1,
               alignItems: 'center',
-              backgroundColor: selectedButton === 'expenseIncome' ? '#80C694' : '#FFFFFF',
+              backgroundColor:
+                selectedButton === 'expenseIncome' ? '#E77F27' : '#FFFFFF',
               padding: 18,
               borderRadius: 30,
-              shadowColor: selectedButton === 'expenseIncome' ? '#80C694' : 'transparent',
-              shadowOffset: { width: 0, height: 4 },
+              shadowColor:
+                selectedButton === 'expenseIncome' ? '#E77F27' : 'transparent',
+              shadowOffset: {width: 0, height: 4},
               shadowOpacity: 0.35,
               shadowRadius: 3.84,
-            }}
-          >
-            <Text style={{ color: selectedButton === 'expenseIncome' ? '#FFFFFF' : '#ccc', fontWeight: '700', fontSize: 14 }}>
-              Expense & Income
+            }}>
+            <Text
+              style={{
+                color: selectedButton === 'expenseIncome' ? '#FFFFFF' : '#ccc',
+                fontWeight: '700',
+                fontSize: 14,
+              }}>
+              {translate('ExpensevsIncome')}
             </Text>
           </TouchableOpacity>
 
@@ -309,27 +575,36 @@ const ReportScreen = ({ navigation }: ExpenditureScreenProps) => {
             style={{
               flex: 1,
               alignItems: 'center',
-              backgroundColor: selectedButton === 'asset' ? '#80C694' : '#FFFFFF',
+              backgroundColor:
+                selectedButton === 'asset' ? '#BD9BCD' : '#FFFFFF',
               padding: 18,
               borderRadius: 30,
-              shadowColor: selectedButton === 'asset' ? '#80C694' : 'transparent',
-              shadowOffset: { width: 0, height: 4 },
+              shadowColor:
+                selectedButton === 'asset' ? '#BD9BCD' : 'transparent',
+              shadowOffset: {width: 0, height: 4},
               shadowOpacity: 0.35,
               shadowRadius: 3.84,
-            }}
-          >
-            <Text style={{ color: selectedButton === 'asset' ? '#FFFFFF' : '#ccc', fontWeight: '700', fontSize: 14 }}>
-              Asset
+            }}>
+            <Text
+              style={{
+                color: selectedButton === 'asset' ? '#FFFFFF' : '#ccc',
+                fontWeight: '700',
+                fontSize: 14,
+              }}>
+              {translate('Asset')}
             </Text>
           </TouchableOpacity>
         </View>
 
-        {renderScreen()}
+        {isLoading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color={COLORS.primary} />
+            </View>
+        ):
+         ( renderScreen() )}
       </View>
     </SafeAreaView>
   );
 };
 
 export default ReportScreen;
-
-
