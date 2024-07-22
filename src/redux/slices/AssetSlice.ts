@@ -25,7 +25,7 @@ const initialState: AssetState = {
       id_family: 96,
       name: 'Xe hơi',
       description: 'xe mua cho thằng con',
-      value: '10000000000',
+      value: 10000000000,
       purchase_date: '2023-01-15',
       image_url: 'https://storage.googleapis.com/famfund-bucket/expense/asset_bd94ba3a-b046-4a05-a260-890913e09df9_1720341189027_2024-lamborghini-revuelto-exterior.jpg',
       created_at: '2024-07-07T08:33:10.265Z',

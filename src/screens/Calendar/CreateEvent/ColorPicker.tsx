@@ -6,6 +6,7 @@ import CalendarServices from 'src/services/apiclient/CalendarService';
 import Navigation from 'src/navigation/NavigationContainer';
 import { CategoryEvent } from 'src/interface/calendar/CategoryEvent';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('window').width;
@@ -13,6 +14,7 @@ const screenWidth = Dimensions.get('window').width;
 const ColorPicker = ({ navigation, id_Family, setSelectedColorIndex, selectedColorIndex, setEventCategory }) => {
   const [availableColors, setAvailableColors] = useState<CategoryEvent[]>([]);
   const dispatch = useDispatch();
+  const translate= useSelector(getTranslate);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -57,7 +59,7 @@ const ColorPicker = ({ navigation, id_Family, setSelectedColorIndex, selectedCol
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Category</Text>
+      <Text style={styles.title}>{translate('Category')}</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.colorList}>
         {renderColorCircles()}
         <TouchableOpacity style={styles.colorCircle} onPress={handleCreateCategory}>

@@ -11,6 +11,7 @@ import { AddAssetScreenProps } from 'src/navigation/NavigationTypes';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker'; 
 import { ExpenseServices } from 'src/services/apiclient';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const AddAssetScreen = ({ navigation }: AddAssetScreenProps) => {
   const dispatch = useDispatch();
@@ -22,10 +23,11 @@ const AddAssetScreen = ({ navigation }: AddAssetScreenProps) => {
   const [purchaseDate, setPurchaseDate] = useState(new Date());
   const [image, setImage] = useState<string | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false); 
+  const translate = useSelector(getTranslate);
 
   const handleSave = async () => {
     if (!family?.id_family || !name || !value || !purchaseDate) {
-      Alert.alert('Error', 'Please fill in all required fields');
+      Alert.alert(translate('Error'), translate('Please fill in all required fields'));
       return;
     }
   
@@ -51,11 +53,11 @@ const AddAssetScreen = ({ navigation }: AddAssetScreenProps) => {
       if (data) {
         console.log(data);
         dispatch(addAsset(data));
-        Alert.alert('Success', 'Asset saved successfully');
+        Alert.alert(translate('Success'), translate('Asset saved successfully'));
         navigation.goBack();
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to save asset');
+      Alert.alert(translate('Error'), translate('Failed to save asset'));
     }
   };
   
@@ -64,7 +66,7 @@ const AddAssetScreen = ({ navigation }: AddAssetScreenProps) => {
     if (Constants.platform.ios) {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== 'granted') {
-        alert('Sorry, we need camera roll permissions to make this work!');
+        alert(translate('Sorry, we need camera roll permissions to make this work!'));
         return;
       }
     }
@@ -96,7 +98,7 @@ const AddAssetScreen = ({ navigation }: AddAssetScreenProps) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={30} color="#000" />
         </TouchableOpacity>
-        <Text style={styles.title}>Add Asset</Text>
+        <Text style={styles.title}>{translate('Add Asset')}</Text>
       </View>
       <TouchableOpacity onPress={handleImagePicker}>
         {image ? (
@@ -109,19 +111,19 @@ const AddAssetScreen = ({ navigation }: AddAssetScreenProps) => {
       </TouchableOpacity>
       <View style={styles.form}>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Asset Name</Text>
+          <Text style={styles.label}>{translate('Asset Name')}</Text>
           <TextInput
             style={styles.input}
-            placeholder="Enter Asset Name"
+            placeholder={translate('Enter Asset Name')}
             value={name}
             onChangeText={setName}
           />
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Description</Text>
+          <Text style={styles.label}>{translate('Description')}</Text>
           <TextInput
             style={[styles.input, { height: 100 }]}
-            placeholder="Enter Description"
+            placeholder={translate('Enter Description')}
             value={description}
             onChangeText={setDescription}
             multiline
@@ -129,17 +131,17 @@ const AddAssetScreen = ({ navigation }: AddAssetScreenProps) => {
           />
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Value</Text>
+          <Text style={styles.label}>{translate('Value')}</Text>
           <TextInput
             style={styles.input}
-            placeholder="Enter Value"
+            placeholder={translate('Enter Value')}
             value={value}
             onChangeText={setValue}
             keyboardType="numeric"
           />
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Purchase Date</Text>
+          <Text style={styles.label}>{translate('Purchase Date')}</Text>
         
             <DateTimePicker
               value={purchaseDate}

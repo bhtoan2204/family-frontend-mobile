@@ -14,6 +14,7 @@ import { selectAllEvent, selectEvents, selectSelectedDate, setSelectedDate, setS
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PackedEvent } from 'react-native-calendars/src/timeline/EventBlock';
 import { Ionicons } from '@expo/vector-icons';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const EVENT_COLOR = 'white';
 
@@ -26,7 +27,7 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
   const INITIAL_TIME = { hour: 9, minutes: 0 };
   const [eventTL, setEventTL] = useState<Event[]>([]);
   let date = useSelector(selectSelectedDate);
-
+  const translate = useSelector(getTranslate);
   const dispatch = useDispatch();
   const allEvent = useSelector(selectEvents);
 
@@ -324,7 +325,7 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons name="chevron-back" size={30} color="black" />
             </TouchableOpacity>
-            <Text style={styles.headerText}>Schedule</Text>
+            <Text style={styles.headerText}>{translate('Schedule')}</Text>
           </View>
 
           <View style={styles.headerp}>

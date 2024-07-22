@@ -7,6 +7,7 @@ import { EnterCodeScreenProps } from 'src/navigation/NavigationTypes';
 import { AuthServices } from 'src/services/apiclient';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPhone, getEmail, setCode } from 'src/redux/slices/ForgotPassword';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => { 
   const [code, setCodeState] = useState(['', '', '', '', '', '']);
@@ -15,6 +16,7 @@ const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => {
   const phone = useSelector(getPhone);
   const email = useSelector(getEmail);
   const dispatch = useDispatch(); 
+  const t= useSelector(getTranslate);
 
   useEffect(() => {
     if (code.join('').length === 6) {
@@ -36,7 +38,7 @@ const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => {
     return () => clearInterval(timer);
   }, []);
 
-  const handleCheckCode = async () => {
+   const handleCheckCode = async () => {
     try {
       let response = '';
       if (phone) {
@@ -46,16 +48,16 @@ const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => {
       }
       if (response.message === 'OTP is valid') {
         await dispatch(setCode(code.join('')));
-        navigation.navigate('ResetPasswordScreen')
+        navigation.navigate('ResetPasswordScreen');
       } else {
-        Alert.alert('Error', 'Invalid OTP');
+        Alert.alert(t('error'), t('invalidOTP'));
       }
     } catch (error) {
       console.error(error);
-      Alert.alert('Error', 'An error occurred while verifying the OTP');
+      Alert.alert(t('error'), t('otpVerificationError'));
     }
   };
-
+  
   const handleChange = (text, index) => {
     const newCode = [...code];
     newCode[index] = text;
@@ -85,10 +87,10 @@ const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => {
 
           <View style={styles.container}>
          
-            <Text style={styles.title}>Enter Verification Code</Text> 
-            <Text style={styles.subtitle}>Please enter the 6-digit code sent to your email or phone.</Text> 
-            <Text style={styles.countdown}>{`Time remaining: ${countdown}s`}</Text>
-            <View style={styles.inputContainer}>
+          <Text style={styles.title}>{t('enterVerificationCode')}</Text> 
+          <Text style={styles.subtitle}>{t('pleaseEnterCode')}</Text> 
+          <Text style={styles.countdown}>{t('timeRemaining', { countdown })}</Text>
+          <View style={styles.inputContainer}>
               {code.map((digit, index) => (
                 <TextInput
                   key={index}

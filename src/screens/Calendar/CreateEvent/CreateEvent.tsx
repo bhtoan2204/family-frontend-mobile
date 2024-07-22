@@ -15,6 +15,7 @@ import { differenceInDays, differenceInWeeks, differenceInMonths, differenceInYe
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import { CategoryEvent } from 'src/interface/calendar/CategoryEvent';
 import { TEXTS } from 'src/constants';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   navigation,
@@ -40,6 +41,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   const [count, setCount] = useState(1);
   const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(null);
   const [eventCategory, setEventCategory] = useState<CategoryEvent | null> (null)
+  const translate = useSelector(getTranslate);
   
   const handleDecrease = () => {
     setCount(prevCount => Math.max(1, prevCount - 1));
@@ -248,16 +250,16 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
     <View style={styles.modalContainer}>
     <View style={{ backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
         <View style={styles.row}>
-          <Text style={styles.headerTitle}>Add New Event</Text>
+          <Text style={styles.headerTitle}>{translate('add_new_event')}</Text>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Icon name="close" size={30} style={styles.backButton} />
           </TouchableOpacity>
         </View>
         <View>
-          <Text style={{ color: 'gray', fontSize: 16 }}>Title</Text>
+          <Text style={{ color: 'gray', fontSize: 16 }}>{translate('title')}</Text>
           <TextInput
             style={styles.input1}
-            placeholder="Enter title"
+            placeholder={translate('enter_title')}
             value={title}
             onChangeText={setTitle}
           />
@@ -270,7 +272,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
           </View>
           <TextInput
             style={styles.input2}
-            placeholder="Enter location"
+            placeholder={translate('enter_location')}
             value={location}
             onChangeText={setLocation}
           />
@@ -285,7 +287,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
           </View>
           <TextInput
             style={styles.input2}
-            placeholder="Enter description"
+            placeholder={translate('Enter Description')}
             value={description}
             onChangeText={setDescription}
           />
@@ -293,7 +295,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       </View>
       <View style={styles.datetimeContainer}>
         <View style={styles.allDayConTainer}>
-          <Text style={styles.text}>All day</Text>
+          <Text style={styles.text}>{translate('all_day')}</Text>
           <View style={styles.switches}>
             <Switch
               value={isAllDay}
@@ -310,7 +312,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
                 style={{ color: 'gray' }}
               />
               <Text style={{ fontSize: 16, color: 'gray' }}>
-                Start
+              {translate('start')}
               </Text>
             </View>
             <DateTimePicker
@@ -328,7 +330,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
                 style={{ color: 'gray' }}
               />
               <Text style={{ fontSize: 16, color: 'gray' }}>
-                End
+              {translate('end')}
               </Text>
             </View>
             <DateTimePicker
@@ -347,7 +349,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
           style={{ color: 'gray' }}
         />
         <Text style={{ right: 30, fontSize: 16, color: 'gray' }}>
-          Repeat
+        {translate('repeat')}
         </Text>
         <DropDownPicker
           open={isPickerRepeatOpen}
@@ -371,7 +373,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
             style={{ color: 'gray' }}
           />
           <Text style={{ right: 30, fontSize: 16, color: 'gray' }}>
-            End Repeat
+          {translate('end_repeat')}
           </Text>
           <DropDownPicker
             open={isPickerEndRepeatOpen}
@@ -442,7 +444,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       <View style={[styles.formAction, { paddingVertical: 10 }]}>
         <TouchableOpacity onPress={handleSubmit}>
           <View style={styles.btn}>
-            <Text style={styles.btnText}>Submit</Text>
+            <Text style={styles.btnText}>{translate('submit')}</Text>
           </View>
         </TouchableOpacity>
       </View>

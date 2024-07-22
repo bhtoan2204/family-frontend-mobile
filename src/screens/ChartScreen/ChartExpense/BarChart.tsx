@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import { COLORS } from 'src/constants';
 import { DailyExpense } from 'src/interface/expense/DailyExpense';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 const screenHeight = Dimensions.get('screen').height;
 
 interface BarChartScreenProps {
@@ -21,7 +22,8 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }
   const [selectedDate, setSelectedDate] = useState<string>(date);
   const barChartData = useSelector(selectExpenses);
   const dispatch = useDispatch();
-
+  const translate = useSelector(getTranslate);
+  
   useEffect(() => {
     fetchData(selectedDate, id_family);
   }, [selectedDate]);
@@ -70,7 +72,7 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }
               <Text style={styles.expenseCategory}>Other</Text>
             }
             <View style={styles.row}>
-              <Text style={{ color: 'gray' }}>By: </Text>
+              <Text style={{ color: 'gray' }}>{translate('Create by')}: </Text>
               {item.users && (
               <Text style={styles.expenseName}>{item.users.firstname} {item.users.lastname}</Text>
               )}

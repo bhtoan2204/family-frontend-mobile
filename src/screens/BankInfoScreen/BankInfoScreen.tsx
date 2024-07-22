@@ -15,6 +15,8 @@ import {BankInfoScreenProps} from 'src/navigation/NavigationTypes';
 import baseUrl from 'src/services/urls/baseUrl';
 
 import {Linking} from 'react-native';
+import { useSelector } from 'react-redux';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 type Bank = {
   id: number;
@@ -30,7 +32,8 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
   const [banks, setBanks] = useState<Bank[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const { id_family, id_package, amount} = route.params;
-
+  const translate = useSelector(getTranslate);
+  
   const handleSearchChange = (text: string) => {
     setSearchValue(text);
   };
@@ -90,16 +93,13 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
   const handleReturnURL = async (url: string) => {
     console.log('URL đươc truyền vào hàm handleReturnURL:', url);
     try {
-      // Phân tích URL để trích xuất dữ liệu
       const params = new URLSearchParams(url.split('?')[1]);
       const orderId = params.get('order_id');
       const amount = params.get('vnp_Amount');
       const bankCode = params.get('vnp_BankCode');
-      // Ví dụ: In ra thông tin đã trích xuất được
       console.log('Order ID:', orderId);
       console.log('Amount:', amount);
       console.log('Bank Code:', bankCode);
-      // Tiếp tục xử lý dữ liệu...
     } catch (error) {
       console.error('Error parsing URL:', error);
     }
@@ -109,9 +109,8 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
     const {url} = event;
     console.log('URL được truyền vào trong hàm handleOpenURL:', url);
 
-    // Kiểm tra xem URL có phải là URL trả về từ thanh toán không
     if (url.startsWith(`${baseUrl}/payment/vnpay_return`)) {
-      await handleReturnURL(url); // Xử lý URL trả về từ thanh toán
+      await handleReturnURL(url); 
     } else {
       console.log('URL không phải là URL trả về từ thanh toán');
     }
@@ -121,20 +120,16 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
     handleBankInfo();
 
     const initPaymentListener = () => {
-      // Đăng ký bộ lắng nghe sự kiện mở URL
       console.log('Listener đang được bật.....');
       let subcription = Linking.addEventListener('url', handleOpenURL);
 
-      // Hủy đăng ký bộ lắng nghe khi không cần thiết nữa
       return () => {
         subcription.remove();
         console.log('Listener đã tắt.....');
       };
     };
-    // Gọi hàm khởi tạo bộ lắng nghe khi component được mount
     const cleanup = initPaymentListener();
 
-    // Hủy bỏ bộ lắng nghe khi component bị unmount
     return cleanup;
   }, []);
 
@@ -146,7 +141,7 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
             <Icon name="arrow-back" size={24} style={styles.backButton} />
           </TouchableOpacity>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>Ngân hàng</Text>
+            <Text style={styles.title}>{translate('bank')}</Text>
           </View>
         </View>
       </SafeAreaView>
@@ -154,7 +149,7 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
         <View style={styles.searchview}>
           <View>
             <TextInput
-              placeholder="Search for bank"
+              placeholder={translate('search_placeholder')}
               placeholderTextColor="gray"
               style={styles.input}
               onChangeText={handleSearchChange}
@@ -163,13 +158,13 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
             <View style={styles.inputIcon}>
               <FeatherIcon color="gray" name="search" size={16} />
             </View>
-            <Text style={styles.text1}>Hỗ trợ chuyển tiền nhanh NAPAS 247</Text>
+            <Text style={styles.text1}>{translate('support_text')}</Text>
           </View>
         </View>
       </View>
       <FlatList
         data={filteredBanks}
-        numColumns={3} // Adjust as needed
+        numColumns={3} 
         keyExtractor={item => item.id.toString()}
         renderItem={({item: bank, index}) => (
           <TouchableOpacity

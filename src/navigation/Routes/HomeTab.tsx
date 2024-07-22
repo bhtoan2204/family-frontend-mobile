@@ -9,7 +9,6 @@ import ProfileScreen from 'src/screens/ProfileScreen';
 import ChangePassword from 'src/screens/ProfileScreen/ChangePassword/ChangePassword';
 import EditProfileScreen from 'src/screens/ProfileScreen/EditProfileScreen/EditProfileScreen';
 import { useNavigation } from '@react-navigation/native';
-import { getTranslate } from 'src/redux/slices/languageSlice';
 import { useSelector } from 'react-redux';
 import i18n from 'src/components/i18next/i18n';
 

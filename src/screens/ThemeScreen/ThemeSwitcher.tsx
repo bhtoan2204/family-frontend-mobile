@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { ThemeSwitcherProps } from 'src/navigation/NavigationTypes';
 import { selectDarkMode, toggleDarkMode } from 'src/redux/slices/ThemeSlice';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Import thư viện icon
+import Icon from 'react-native-vector-icons/FontAwesome'; 
 
 const ThemeSwitcher = ({ navigation }: ThemeSwitcherProps) => {
   const isDarkMode = useSelector(selectDarkMode);

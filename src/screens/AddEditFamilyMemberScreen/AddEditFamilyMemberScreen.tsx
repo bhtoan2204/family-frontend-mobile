@@ -22,6 +22,7 @@ import CustomButton from 'src/components/Button';
 import { useSelector } from 'react-redux';
 import Invite from './Invite';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
   navigation,
@@ -31,15 +32,15 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
   const [email, setEmail] = useState('');
   const [p_phone, setPhone] = useState(phone);
   const profile = useSelector(selectProfile);
+  const  t  = useSelector(getTranslate); 
 
   const openContacts = () => {
     navigation.navigate('Contact', { id_family });
   };
 
-
-  useEffect(()=> {
+  useEffect(() => {
     setPhone(formatPhoneNumber(phone));
-  },[phone])
+  }, [phone]);
 
   const formatPhoneNumber = (phoneNumber?: string) => {
     const cleaned = ('' + phoneNumber).replace(/\D/g, '');
@@ -49,21 +50,17 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
     if (match) {
       return `+84${match[2]}${match[3]}${match[4]}`;
     }
-    console.log(phoneNumber)
+    console.log(phoneNumber);
 
     return phoneNumber;
   };
-  
-
-
-  
 
   const handleAddMember = async () => {
     try {
       if (!p_phone && !email) {
         Alert.alert(
-          'Missing Information',
-          'Please enter either phone number or email.',
+          t('missingInformation'),
+          t('missingInformationMessage'),
           [
             {
               text: 'OK',
@@ -78,8 +75,8 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
   
       if (p_phone && p_phone.replace(/\D/g, '').length !== 10) {
         Alert.alert(
-          'Invalid Phone Number',
-          'Please enter a valid 10-digit phone number.',
+          t('invalidPhoneNumber'),
+          t('invalidPhoneNumberMessage'),
           [
             {
               text: 'OK',
@@ -104,12 +101,13 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
         role: 'Member',
       });
   
-      if  (result.data === "Successfully added a member to the family") {
+      if (result.data === t('successMessage')) {
         Alert.alert(
-          'Inform', result.data );
+          t('inform'), result.data
+        );
       } else {
         Alert.alert(
-          'Inform',
+          t('inform'),
           result.data,
           [
             {
@@ -118,7 +116,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
               style: 'cancel',
             },
             {
-              text: 'Invite',
+              text: t('invite'),
               onPress: () => Invite(id_family, email, profile),
             },
           ],
@@ -129,7 +127,6 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
       console.log('FamilyServices.addMember result:', error);
     }
   };
-  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -143,7 +140,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                 style={styles.backButton}
               />
             </TouchableOpacity>
-            <Text style={styles.title}>{TEXTS.ADD_FAMILY_MEMBER_TITLE}</Text>
+            <Text style={styles.title}>{t('addFamilyMemberTitle')}</Text>
           </View>
           <Image
             source={require('src/assets/images/add-family-member.png')}
@@ -172,7 +169,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                   autoCapitalize="none"
                   autoCorrect={false}
                   keyboardType="phone-pad"
-                  placeholder={p_phone ? p_phone : 'Enter phone number'}
+                  placeholder={p_phone ? p_phone : t('enterPhoneNumber')}
                   placeholderTextColor={p_phone ? 'black' : '#A6A6A6'}
                   style={[
                     styles.inputPhone,
@@ -204,7 +201,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                 autoCapitalize="none"
                 autoCorrect={false}
                 keyboardType="email-address"
-                placeholder={TEXTS.FAMILY_MEMBER_EMAIL_PLACEHOLDER}
+                placeholder={t('familyMemberEmailPlaceholder')}
                 placeholderTextColor="#A6A6A6"
                 style={[
                   styles.inputControl,

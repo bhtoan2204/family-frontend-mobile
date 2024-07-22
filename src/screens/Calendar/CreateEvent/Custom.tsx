@@ -3,9 +3,10 @@ import { View, Text, TouchableOpacity, Modal } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { RRule } from 'rrule';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './StyleCustom';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
   const [number, setNumber] = useState<number>(1);
@@ -17,6 +18,7 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
   const [selectedYears, setSelectedYears] = useState<string[]>([]);
   const dispatch = useDispatch();
   const [isNumberPickerVisible, setIsNumberPickerVisible] = useState(false);
+  const translate = useSelector(getTranslate);
 
   const numbers = Array.from({ length: 999 }, (_, i) => i + 1);
 
@@ -33,18 +35,18 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
         setCustomOptions([]);
         break;
       case 'weekly':
-        setCustomOptions(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
+        setCustomOptions([translate('Sunday'), translate('Monday'), translate('Tuesday'), translate('Wednesday'), translate('Thursday'), translate('Friday'), translate('Saturday')]);
         break;
       case 'monthly':
         setCustomOptions(Array.from({ length: 31 }, (_, i) => (i + 1).toString()));
         break;
       case 'yearly':
-        setCustomOptions(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
+        setCustomOptions([translate('Jan'), translate('Feb'), translate('Mar'), translate('Apr'), translate('May'), translate('Jun'), translate('Jul'), translate('Aug'), translate('Sep'), translate('Oct'), translate('Nov'), translate('Dec')]);
         break;
       default:
         setCustomOptions([]);
     }
-  }, [unit]);
+  }, [unit, translate]);
 
   const renderCustomOptions = () => {
     if (unit === 'weekly') {
@@ -183,13 +185,13 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
   const getUnitLabel = () => {
     switch (unit) {
       case 'daily':
-        return number > 1 ? 'days' : 'day';
+        return number > 1 ? translate('days') : translate('day');
       case 'weekly':
-        return number > 1 ? 'weeks' : 'week';
+        return number > 1 ? translate('weeks') : translate('week');
       case 'monthly':
-        return number > 1 ? 'months' : 'month';
+        return number > 1 ? translate('months') : translate('month');
       case 'yearly':
-        return number > 1 ? 'years' : 'year';
+        return number > 1 ? translate('years') : translate('year');
       default:
         return '';
     }
@@ -199,19 +201,19 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
     <Modal visible={isVisible} transparent={true} animationType="slide">
       <View style={styles.modalOverlay}>
         <View style={styles.customModalContainer}>
-          <Text style={styles.modalTitle}>Custom Repeat</Text>
+          <Text style={styles.modalTitle}>{translate('Custom Repeat')}</Text>
 
           <View style={styles.container1}>
 
             <View style={[styles.row, { zIndex: 3000, borderBottomWidth: 1, borderColor: '#ccc' }]}>
-              <Text style={styles.label}>Frequency</Text>
+              <Text style={styles.label}>{translate('Frequency')}</Text>
               <DropDownPicker
                 open={isPickerRepeatOpen}
                 setOpen={setIsPickerRepeatOpen}
                 value={unit}
                 items={optionRepeat}
                 setValue={setUnit}
-                placeholder="Daily"
+                placeholder={translate('Daily')}
                 containerStyle={styles.dropDownContainer}
                 style={styles.dropDown}
                 dropDownContainerStyle={styles.dropDownPicker}
@@ -224,8 +226,8 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
               style={[styles.row, { zIndex: 0 }]}
               onPress={() => setIsNumberPickerVisible(!isNumberPickerVisible)}
             >
-              <Text style={styles.label}>Every</Text>
-              <Text style={styles.label}>{number} {getUnitLabel()}</Text>
+              <Text style={styles.label}>{translate('Every')}</Text>
+              <Text style={styles.label}>{number} {translate(getUnitLabel())}</Text>
             </TouchableOpacity>
 
             {isNumberPickerVisible && (
@@ -239,7 +241,7 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
                     <Picker.Item key={num} label={num.toString()} value={num} />
                   ))}
                 </Picker>
-                <Text style={styles.unitLabel}>{getUnitLabel()}</Text>
+                <Text style={styles.unitLabel}>{translate(getUnitLabel())}</Text>
               </View>
             )}
           </View>
@@ -248,10 +250,10 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
 
           <View style={styles.modalButtonContainer}>
             <TouchableOpacity onPress={onClose}>
-              <Text style={styles.modalCancelButton}>Cancel</Text>
+              <Text style={styles.modalCancelButton}>{translate('Cancel')}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleSave}>
-              <Text style={styles.modalSubmitButton}>Save</Text>
+              <Text style={styles.modalSubmitButton}>{translate('Save')}</Text>
             </TouchableOpacity>
           </View>
         </View>

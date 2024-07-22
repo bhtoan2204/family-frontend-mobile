@@ -86,9 +86,9 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
   const handlePressNoti = async (item: Notification) => {
     switch (item.type) {
       case 'CHECKLIST':
-        navigation.navigate('FamilyStack', {
-          screen: 'CheckList',
-          params: { id_family: item.id_family }
+        navigation.navigate('TodoListStack', {
+          screen: 'TodoList',
+          params: { id_family: item.id_family },
         });
         
         break;

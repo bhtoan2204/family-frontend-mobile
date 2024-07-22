@@ -73,6 +73,8 @@ const PackageServices = {
     }
   },
 
+
+
   getAllPackage: async () => {
     try {
       const response: AxiosResponse = await instance.get(
@@ -121,6 +123,7 @@ const PackageServices = {
       throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
     }
   },
+  
   getAvailableFunction: async (id_family?: number) => {
     try {
       const response: AxiosResponse = await instance.get(

@@ -19,6 +19,7 @@ import type { Event, EventDetail } from 'src/interface/calendar/Event';
 import moment from 'moment';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import { format, isSameDay as isSameDayFn, isSameMonth, isSameYear } from 'date-fns';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   const { id_family } = route.params || {};
@@ -33,6 +34,8 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   const events = useSelector(selectAllEvent);
   const [currentEvents, setCurrentEvents] = useState<Event[]>([]);
   const family = useSelector(selectSelectedFamily);
+  const translate = useSelector(getTranslate);
+
   useEffect(() => {
     fetchEvent();
     
@@ -120,7 +123,7 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   };
   
   const renderItem = (item: EventDetail) => {
-    const startDate =format(new Date(item.time_start), 'yyyy-MM-dd HH:mm:ss');
+    const startDate = format(new Date(item.time_start), 'yyyy-MM-dd HH:mm:ss');
     const endDate = format(new Date(item.time_end), 'yyyy-MM-dd HH:mm:ss');
     const isAllDay = item.is_all_day;
     
@@ -129,27 +132,25 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
 
     return (
       <TouchableOpacity onPress={() => handlePressEvent(item)}>
-  
-    <View style={[styles.agendaItem, { backgroundColor: `${item.color}90` }]}>
-    <Text style={[styles.agendaItemText, { color: item.color !== 'white' ? 'white' : 'black' }]}>
+        <View style={[styles.agendaItem, { backgroundColor: `${item.color}90` }]}>
+          <Text style={[styles.agendaItemText, { color: item.color !== 'white' ? 'white' : 'black' }]}>
             {item.title}
           </Text>
           {isAllDay ? (
             isSameDay ? (
               <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
-                All day
+                {translate('All day')}
               </Text>
             ) : (
               isSameMonthYear ? (
                 <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
-                All day {format(startDate, 'MM/dd')} - {format(endDate, 'MM/dd')}
-              </Text>
+                  {translate('All day')} {format(startDate, 'MM/dd')} - {format(endDate, 'MM/dd')}
+                </Text>
               ) : (
                 <Text style={[styles.agendaItemTime, { color: item.color !== 'white' ? 'white' : 'black' }]}>
-                All day {format(startDate, 'yyyy/MM/dd')} - { format(endDate, 'yyyy/MM/dd')}
-              </Text>
+                  {translate('All day')} {format(startDate, 'yyyy/MM/dd')} - {format(endDate, 'yyyy/MM/dd')}
+                </Text>
               )
-             
             )
           ) : (
             isSameDay ? (
@@ -162,19 +163,17 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
               </Text>
             )
           )}
-          <Text style={[ { color: item.color !== 'white' ? 'white' : 'black', fontWeight: '800' }]}>
-            Location: {item.location }
+          <Text style={[{ color: item.color !== 'white' ? 'white' : 'black', fontWeight: '800' }]}>
+            {translate('Location')}: {item.location}
           </Text>
-       
         </View>
       </TouchableOpacity>
     );
   };
-
   const renderEmptyDate = () => {
     return (
       <View style={styles.emptyDate}>
-        <Text>No events for this day</Text>
+        <Text>{translate('No events for this day')}</Text>
       </View>
     );
   };
@@ -220,7 +219,7 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
               {formatDate(selectDate)}
             </Text>
             <Text style={{ fontSize: 14, fontWeight: '300' }}>
-              Welcome, {profile.firstname} {profile.lastname}
+              {translate('Welcome')}, {profile.firstname} {profile.lastname}
             </Text>
           </View>
           <TouchableOpacity
@@ -239,7 +238,7 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
             }}>
             <Feather name="plus" size={20} color="white" />
             <Text style={{ marginLeft: 10, fontWeight: '700', color: 'white' }}>
-              Add Task
+              {translate('Add Event')}
             </Text>
           </TouchableOpacity>
         </View>

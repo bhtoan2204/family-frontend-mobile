@@ -17,12 +17,15 @@ import styles from './styles';
 import { Member } from 'src/interface/member/member';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
 
 const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
   const { id_family } = route.params || {};
   const members = useSelector(selectFamilyMembers);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const dispatch = useDispatch();
+  const translate = useSelector(getTranslate);
+  const local = useSelector(selectLocale);
 
   const handleAddMember = () => {
     const phone = undefined;
@@ -59,7 +62,7 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
                 <TextInput
                   autoCapitalize="none"
                   autoComplete="off"
-                  placeholder="Search..."
+                  placeholder={translate('SEARCH')}
                   placeholderTextColor="gray"
                   style={styles.headerSearchInput}
                   onChangeText={(text) => setSearchQuery(text)}
@@ -83,7 +86,7 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
                           <Image source={{ uri: member.user.avatar }} style={styles.avatar} />
                         </View>
                         <View style={styles.InforContainer}>
-                          <Text style={styles.RoleText}>{member.familyRoles.role_name_en}</Text>
+                          <Text style={styles.RoleText}>{ local=='vi' ? member.familyRoles.role_name_vn:  member.familyRoles.role_name_en}</Text>
                           <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'center', width: '70%' }}>
                             <MaterialIcons name="person" style={{ fontSize: 20, color: 'black', marginRight: 5 }} />
                             <Text style={styles.nameText}>{member.user.firstname} {member.user.lastname}</Text>
