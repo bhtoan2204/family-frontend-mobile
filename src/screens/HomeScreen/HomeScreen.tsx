@@ -38,7 +38,6 @@ import {
   setSelectedFamily,
 } from 'src/redux/slices/FamilySlice';
 import {Family} from 'src/interface/family/family';
-import {selectDarkMode} from 'src/redux/slices/ThemeSlice';
 import {setFamilyServices} from 'src/redux/slices/ServiceSlice';
 import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
 
@@ -81,7 +80,6 @@ const HomeScreen = ({
   const dispatch = useDispatch();
   const [isLightMode, setIsLightMode] = useState(true);
   const profile = useSelector((state: RootState) => state.profile.profile);
-  const isDarkMode = useSelector(selectDarkMode);
   const screenWidth = Dimensions.get('screen').width;
   const locale = useSelector(selectLocale);
 

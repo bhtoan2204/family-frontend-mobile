@@ -28,11 +28,13 @@ import categorySlice from './slices/CategorySlice';
 import HouseHoldRefSlice from './slices/HouseHoldRefSlice';
 import TodoListSlice from './slices/TodoListSlice';
 import DarkModeSlice from './slices/DarkModeSlice';
-
+import localizationReducer from './slices/languageSlice'
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
     family: familyReducer,
+    localization: localizationReducer,
+
     // checklist: checkListReducer,
     shoppinglist: shoppingListSlice,
     todoList: TodoListSlice,

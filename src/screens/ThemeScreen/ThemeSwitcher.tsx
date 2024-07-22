@@ -2,15 +2,15 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { ThemeSwitcherProps } from 'src/navigation/NavigationTypes';
-import { selectDarkMode, toggleDarkMode } from 'src/redux/slices/ThemeSlice';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
+import { getIsDarkMode, setDarkMode } from 'src/redux/slices/DarkModeSlice';
 
 const ThemeSwitcher = ({ navigation }: ThemeSwitcherProps) => {
-  const isDarkMode = useSelector(selectDarkMode);
   const dispatch = useDispatch();
-
+  const isDarkMode = useSelector(getIsDarkMode);
+  
   const handleToggle = () => {
-    dispatch(toggleDarkMode());
+    dispatch(setDarkMode());
   };
 
   return (
@@ -50,3 +50,7 @@ const styles = StyleSheet.create({
 });
 
 export default ThemeSwitcher;
+function toggleDarkMode(): boolean {
+  throw new Error('Function not implemented.');
+}
+
