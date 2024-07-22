@@ -16,6 +16,8 @@ import { setExpense } from 'src/redux/slices/ExpenseAnalysis';
 import { setIncomeDetails } from 'src/redux/slices/IncomeAnalysis';
 const screenWidth = Dimensions.get('window').width;
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
   const [expenses, setExpenses] = useState<Expenditure[]>([]);
@@ -40,6 +42,9 @@ const IncomeExpenseScreen = ({ navigation }: IncomeExpenseScreenProps) => {
   let profile = useSelector(selectProfile);
   const dispatch = useDispatch();
   const [selectDate, setSelectDate] =  useState(new Date());
+  const translate = useSelector(getTranslate);
+  const color = useThemeColors();  
+  
   const fetchDataExpense = async (page: number, reset: boolean = false) => {
     // setIsLoading(true);
     // try {

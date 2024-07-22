@@ -13,6 +13,8 @@ import { Feather } from '@expo/vector-icons';
 import moment from 'moment';
 import { getSelectedIncome, updateIncome } from 'src/redux/slices/IncomeAnalysis';
 import { Member } from 'src/interface/member/member';
+import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
   const dispatch = useDispatch();
@@ -33,7 +35,9 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
   let family = useSelector(selectSelectedFamily);
   const [loading, setLoading] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
-
+  const translate = useSelector(getTranslate);
+  const color = useThemeColors();  
+  
   useEffect(() => {
     fetchincomeType(family?.id_family);
   }, []);
@@ -138,7 +142,7 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
 
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerButton}>
             <Icon name="close-outline" size={30} style={styles.backButton} />
-            <Text style={styles.headerText}>Income Details</Text>
+            <Text style={styles.headerText}>{translate('Income Details')}</Text>
         </TouchableOpacity>
           {!isEditing && (
            <TouchableOpacity
@@ -157,7 +161,7 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
            }}>
            <Feather name="edit" size={20} color="white" />
            <Text style={{marginLeft: 10, fontWeight: '700', color: 'white'}}>
-             Edit
+             {translate('Edit')}
            </Text>
          </TouchableOpacity>
          )}
@@ -182,7 +186,7 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
               {!isEditing ? (
                 <Text style={styles.value}> {income?.financeIncomeSource && income.financeIncomeSource.income_source_name
                   ? income.financeIncomeSource.income_source_name
-                  : 'Other'}</Text>
+                  : translate('Other')}</Text>
               ) : (
                 <TouchableOpacity onPress={() => setShowCategoryPicker(!showCategoryPicker)}>
                   <Text style={styles.value}>
@@ -208,9 +212,9 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
             </View>
           </View>
           <View style={styles.detailRow}>
-            <Text style={styles.label}>Description:</Text>
+            <Text style={[styles.label, {color: color.text}]}>{translate('Description')}:</Text>
             {!isEditing ? (
-              <Text style={styles.value}>{income?.description}</Text>
+              <Text style={[styles.value, {color: color.text}]}>{income?.description}</Text>
             ) : (
               <TextInput
                 style={styles.input}
@@ -220,13 +224,13 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
             )}
           </View>
             <View style={styles.detailRow}>
-              <Text style={styles.label}>Created By:</Text>
+            <Text style={[styles.label, {color: color.text}]}>{translate('Created by')}:</Text>
               <TouchableOpacity onPress={()=> pressMember(income?.users.id_user)}> 
                 <Text style={styles.ValueName}>{income?.users.firstname} {income?.users.lastname}</Text>
               </TouchableOpacity>
             </View>
           <View style={styles.detailRow}>
-            <Text style={styles.label}>Date:</Text>
+            <Text style={styles.label}>{translate('Date')}:</Text>
             {!isEditing ? (
              <Text style={styles.value}>{income ? moment(income.income_date).format('MMMM DD YYYY, HH:mm') : ''}</Text>
 
@@ -256,11 +260,11 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
           <View style={{flexDirection: 'row'}}> 
 
             <TouchableOpacity style={[styles.button, ]} onPress={handleCancel}>
-              <Text style={styles.buttonText}>Cancel</Text>
+              <Text style={styles.buttonText}>{translate('Cancel')}</Text>
             </TouchableOpacity>
 
               <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSave}>
-                <Text style={styles.buttonTextSave}>Save</Text>
+              <Text style={[styles.buttonText,{ color: 'white'}]}>{translate('Save')}</Text>
               </TouchableOpacity>
           </View>
 
@@ -269,7 +273,7 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
 
        {!isEditing && (
           <TouchableOpacity style={[styles.button, styles.deleteButton]} onPress={handleDelete}>
-          <Text style={styles.deleteText}> Delete</Text>
+          <Text style={styles.deleteText}>{translate('Delete')}</Text>
           {/* <Icon name="trash-outline" size={24} style={styles.editIcon} /> */}
         </TouchableOpacity>
         )}

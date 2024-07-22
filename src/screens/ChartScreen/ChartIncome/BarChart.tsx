@@ -9,6 +9,8 @@ import { IncomeServices } from "src/services/apiclient";
 import { DailyIncome } from "src/interface/income/IncomeDaily";
 import moment from "moment";
 import { COLORS } from "src/constants";
+import { useThemeColors } from "src/hooks/useThemeColor";
+import { getTranslate } from "src/redux/slices/languageSlice";
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -23,6 +25,8 @@ const BarChartScreen : React.FC<BarChartScreenProps> = ({ id_family, navigation 
   const [selectedDate, setSelectedDate] = useState<string>(date);
   const barChartData = useSelector(getIncomeList);
   const dispatch = useDispatch();
+  const color = useThemeColors();  
+  const translate = useSelector(getTranslate);
 
   useEffect(() => {
     fetchData(selectedDate, id_family);
@@ -63,32 +67,29 @@ const BarChartScreen : React.FC<BarChartScreenProps> = ({ id_family, navigation 
   };
 
   const renderItem = ({ item, index }: { item: DailyIncome; index: number }) => (
-    <TouchableOpacity onPress={() => handlePressExpenseItem(item)} style={styles.expenseItem}>
-      <View style={styles.itemContainer}>
+    <TouchableOpacity onPress={() => handlePressExpenseItem(item)} style={[styles.expenseItem,{backgroundColor: color.white}]}>
+      <View style={[styles.itemContainer, {backgroundColor: color.white}]}>
         <View style={styles.expenseContent}>
           <View>
-          <Text style={styles.expenseCategory}>
-              {item.financeIncomeSource && item.financeIncomeSource.income_source_name
-                ? item.financeIncomeSource.income_source_name
-                : 'Other'}
-            </Text>
+          {item.financeIncomeSource ? 
+              <Text style={[styles.expenseCategory, {color: color.text}]}>{item.financeExpenditureType.expense_type_name}</Text> : 
+              <Text style={[styles.expenseCategory, {color: color.text}]}>Other</Text>
+            }
             <View style={styles.row}>
-              <Text style={{ color: 'gray' }}>By: </Text>
-              <Text style={styles.expenseName}>
-              {item.users && item.users.firstname && item.users.lastname
-                ? `${item.users.firstname} ${item.users.lastname}`
-                : ''}
-            </Text>
+              <Text style={{ color: color.textSubdued }}>{translate('Create by')}: </Text>
+              {item.users && (
+              <Text style={[styles.expenseName, ]}>{item.users.firstname} {item.users.lastname}</Text>
+              )}
             </View>
-            <Text style={styles.expenseDescription}>{item.description}</Text>
+            <Text style={[styles.expenseDescription, {color: color.textSubdued}]}>{item.description}</Text>
           </View>
           <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
             <View style={styles.rowInfo}>
-              <Text style={styles.incomeAmount}>+{formatCurrency(item.amount)}</Text>
-              <Text style={styles.expenseDate}>{formatDate(item.income_date)}</Text>
+              <Text style={styles.expenseAmount}>-{formatCurrency(item.amount)}</Text>
+              <Text style={[styles.expenseDate, {color: color.textSubdued}]}>{formatDate(item.expenditure_date)}</Text>
             </View>
             <View style={{ justifyContent: 'center' }}>
-              <Icon name="chevron-forward" size={20} style={styles.forwardIcon} />
+              <Icon name="chevron-forward" size={20} color={color.text} />
             </View>
           </View>
         </View>

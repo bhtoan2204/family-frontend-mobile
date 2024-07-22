@@ -34,6 +34,7 @@ const COLORS = {
       background: '#f0f0f0',
       text: 'black',
       textSubdued: '#000',
+      
     },
     dark: {
       text: 'white',

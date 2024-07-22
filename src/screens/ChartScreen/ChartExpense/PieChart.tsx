@@ -21,6 +21,7 @@ import {
 } from 'src/redux/slices/ExpenseAnalysis';
 import {ExpenseServices} from 'src/services/apiclient';
 import {Ionicons} from '@expo/vector-icons';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 interface PieChartScreenProps {
   id_family: number;
@@ -66,6 +67,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
   const dispatch = useDispatch();
   const date = useSelector(getDate);
   const [selectedCategoryType, setSelectedCategoryType] = useState<string>('Total');
+  const color = useThemeColors();  
 
   useEffect(() => {
     console.log(date);
@@ -299,8 +301,8 @@ const categoryTotalExpenses: { [key: string]: number } = dailyData.reduce(
           />
         </View>
       )}
-      <View style={styles.chartContainer}>
-      <View style={styles.containerTab}>
+      <View style={[styles.chartContainer, {backgroundColor: color.background}]}>
+        <View style={styles.containerTab}>
             <TouchableOpacity
               onPress={() => selectOption('Total')}
               style={[
@@ -308,7 +310,7 @@ const categoryTotalExpenses: { [key: string]: number } = dailyData.reduce(
                 selectedCategoryType === 'Total' && styles.selectedTabButton,
                 { borderTopLeftRadius: 20, borderBottomLeftRadius:20 ,  }
               ]}>
-              <Text style={[styles.tabButtonText, selectedCategoryType === 'Total' && styles.selectedTabText]}>Total</Text>
+              <Text style={[styles.tabButtonText,{color: color.text}, selectedCategoryType === 'Total' && styles.selectedTabText]}>Total</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => selectOption('Detail')}
@@ -317,7 +319,7 @@ const categoryTotalExpenses: { [key: string]: number } = dailyData.reduce(
                 selectedCategoryType === 'Detail' && styles.selectedTabButton,
                 { borderTopRightRadius: 20, borderBottomRightRadius:20 ,  }
               ]}>
-              <Text style={[styles.tabButtonText, selectedCategoryType === 'Detail' && styles.selectedTabText]}>Detail</Text>
+              <Text style={[styles.tabButtonText, {color: color.text}, selectedCategoryType === 'Detail' && styles.selectedTabText]}>Detail</Text>
             </TouchableOpacity>
             {/* <View
               style={[
@@ -335,13 +337,13 @@ const categoryTotalExpenses: { [key: string]: number } = dailyData.reduce(
                 style={styles.expenseItem}
                 onPress={() => handlePressDate(detail.day)}>
                 <View style={styles.expenseDetails}>
-                  <Image
+                  {/* <Image
                     source={{
                       uri: `https://via.placeholder.com/40?text=${('0' + detail.day).slice(-2)}`,
                     }}
                     style={styles.avatar}
-                  />
-                  <Text style={styles.expenseText}>{('0' + detail.day).slice(-2)}/{('0' + (selectedMonth.getMonth() + 1)).slice(-2)}</Text>
+                  /> */}
+                  <Text style={[styles.expenseText, {color: color.text}]}>{('0' + detail.day).slice(-2)}/{('0' + (selectedMonth.getMonth() + 1)).slice(-2)}</Text>
                 </View>
                 <View style={styles.expenseDetails}>
                   <Text style={styles.expenseAmount}>- {formatCurrency(detail.total)}</Text>
@@ -354,7 +356,7 @@ const categoryTotalExpenses: { [key: string]: number } = dailyData.reduce(
 
         {selectedCategoryType === 'Total' && (
           <View style={styles.ContainerCategory}>
-              <Text style={{textAlign: 'center', fontSize: 18, paddingTop: 20, color: 'gray', paddingBottom: 10}}>
+              <Text style={{textAlign: 'center', fontSize: 18, paddingTop: 20, color: color.text, paddingBottom: 10}}>
                      Total Expense for {formatMonthYear(selectedMonth)}:  
                      <Text style={{color:'red'}}> - {formatCurrency(totalExpense)}
                      </Text>
@@ -371,7 +373,7 @@ const categoryTotalExpenses: { [key: string]: number } = dailyData.reduce(
                       { backgroundColor: categoryColors[index + 1] },
                     ]}
                   />
-                  <Text style={styles.expenseText}>
+                  <Text style={[styles.expenseText, {color: color.text}]}>
                     {name === 'null' ? 'Other' : name}
                   </Text>
                 </View>
