@@ -17,6 +17,7 @@ import NewsImage from 'src/assets/images/news.png';
 import NewsService from 'src/services/apiclient/NewsService';
 import { Linking } from 'react-native';
 import { Article, ArticleCategory } from 'src/interface/news/news';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 
 const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
@@ -30,7 +31,7 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const ITEMS_PER_PAGE = 10;
   const [totalItems, setTotalItems] = React.useState<number>(0);
-
+  const color = useThemeColors();
   useEffect(()=>{
     const fetchCategoryNews = async () => {
       try {

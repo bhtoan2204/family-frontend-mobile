@@ -15,6 +15,7 @@ import { getTranslate } from 'src/redux/slices/languageSlice';
 import { useThemeColors } from 'src/hooks/useThemeColor';
 import { Feather } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
+import { COLORS } from 'src/constants';
 
 const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
   const asset = useSelector(selectSelectedAsset);
@@ -250,7 +251,7 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
               <Text style={styles.buttonText}>{translate('Edit')}</Text>
             </TouchableOpacity> */}
             
-            <TouchableOpacity style={[styles.button, styles.deleteButton]} onPress={handleDeletePress}>
+            <TouchableOpacity style={[styles.button, {backgroundColor: 'red'}]} onPress={handleDeletePress}>
               <Text style={styles.buttonText}>{translate('Delete')}</Text>
             </TouchableOpacity>
           </>
@@ -363,9 +364,12 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
     padding: 12,
-    borderRadius: 40,
+    borderRadius: 10,
     marginHorizontal: 4,
     alignItems: 'center',
+    backgroundColor: COLORS.Rhino,
+    paddingVertical: 15,
+
   },
   saveButton: {
     backgroundColor: '#00adf5',
@@ -380,8 +384,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#f44336',
   },
   buttonText: {
-    color: '#fff',
+    color: 'white',
     fontSize: 16,
+    fontWeight:'bold'
   },
   modal: {
     justifyContent: 'center',

@@ -1,8 +1,10 @@
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Linking, Modal, FlatList, Button, Dimensions, ActivityIndicator, Alert } from 'react-native';
 import { Avatar, Header, Icon } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 import { COLORS } from 'src/constants';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 import { Role } from 'src/interface/member/member';
 import { MemberDetailsScreenProps } from 'src/navigation/NavigationTypes';
 import { selectSelectedMember } from 'src/redux/slices/FamilySlice';
@@ -24,6 +26,7 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
+  const color = useThemeColors();
 
   useEffect(()=>{
     console.log(member);
@@ -32,11 +35,7 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
     Linking.openURL(`tel:${member?.user.phone}`); 
   };
 
-  const formattedCreatedAt = new Date(member?.user.created_at).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
+
   const handleEmailPress = () => {
     Linking.openURL(`mailto:${member?.user.phone}`); 
   };
@@ -91,17 +90,17 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
     };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: color.background}]}>
     <Header
         leftComponent={{
-          icon: 'arrow-back',
-          color: 'black',
+          icon: 'close',
+          color: color.text,
           size: 30,
           onPress: () => navigation.goBack(),
         }}
         centerComponent={{ }}
         containerStyle={{
-          backgroundColor: '#fff',
+          backgroundColor:  color.background,
           justifyContent: 'space-around',
           borderBottomWidth: 0,
         }}
@@ -117,7 +116,7 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
             />
         </View>
         <View style={styles.nameContainer}>
-          <Text style={styles.name}>{member.user.firstname} {member.user.lastname}</Text>
+          <Text style={[styles.name, {color: color.text}]}>{member.user.firstname} {member.user.lastname}</Text>
           <TouchableOpacity style={styles.roleContainer} onPress={handleChangeRole}>
             <Text style={styles.role}>{newRole}</Text>
             <Icon name="edit" type="feather" color={COLORS.DenimBlue} size={20} />
@@ -127,17 +126,17 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button,{ backgroundColor: COLORS.DenimBlue, }]} onPress={handlePressMessage}>
+        <TouchableOpacity style={[styles.button,{ backgroundColor: COLORS.DenimBlue, borderColor: color.background}]} onPress={handlePressMessage}>
           <Text style={styles.buttonText}>{translate('chatTab')}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, { backgroundColor: '#ff6347' }]} onPress={handleRemoveMember}>
+        <TouchableOpacity style={[styles.button, { backgroundColor: '#ff6347' ,borderColor: color.background}]} onPress={handleRemoveMember}>
           <Text style={styles.buttonText}>{translate('Remove')}</Text>
         </TouchableOpacity>
       </View>
 
 
 
-      <View style={styles.contactContainer}>
+      <View style={[styles.contactContainer, {backgroundColor: color.white}]}>
         <Text style={styles.contactTitle}>{translate('Contact')}</Text>
         <TouchableOpacity onPress={handlePhonePress}>
           <View style={styles.row}>
@@ -153,12 +152,12 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.infoContainer}>
+      <View style={[styles.infoContainer,{backgroundColor: color.white}]}>
       <Text style={styles.contactTitle}>{translate('Information')}</Text>
 
-        <Text style={[styles.infoText, { textAlign: 'left' }]}>{translate('Gender')}: {translate(member.user.genre)} </Text>
-        <Text style={[styles.infoText, { textAlign: 'left' }]}>{translate('Date of Birth')}: {member.user.birthdate}</Text>
-        <Text style={[styles.infoText, { textAlign: 'left' }]}>{translate('Joined')}: {formattedCreatedAt}</Text>
+        <Text style={[styles.infoText, { textAlign: 'left', color: color.text}]}>{translate('Gender')}: {translate(member.user.genre)} </Text>
+        <Text style={[styles.infoText, { textAlign: 'left', color: color.text }]}>{translate('Date of Birth')}: {member.user.birthdate}</Text>
+        <Text style={[styles.infoText, { textAlign: 'left' , color: color.text}]}>{translate('Joined')}: {moment(new Date(member?.user.created_at)).format('yyyy-MM-DD hh:MM')}</Text>
 
       </View>
       <Modal
@@ -200,7 +199,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 20,
+    padding: 10,
   },
   avatarContainer: {
     flexDirection: 'column',
