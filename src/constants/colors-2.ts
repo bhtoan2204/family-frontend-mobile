@@ -40,13 +40,19 @@ const COLORS = {
       TaButtonText: '#2A475E',
       inputChat: '#f2f2f2',
       darkPressedBackground: '#555555',
-
+      icon: '#2A475E',
+      backgroundHomeTab: '#fff',
+      backgroundTabChoose: '#2a475e',
+      iconChoose: '#fff',
     },
-    dark: {
+  dark: {
+      icon: '#fff',
+      iconChoose: '#0A1220',
+      backgroundHomeTab: '#0A1220',
+      backgroundTabChoose: '#fff',
       darkPressedBackground: '#DDDDDD',
-
       inputChat: '#ACACAC',
-      TaButtonText: '#2A475E',
+      TaButtonText: '#fff',
       TabButton: 'white',
       text: '#EEEEEE',
       textSubdued: '#B2C2CE',
