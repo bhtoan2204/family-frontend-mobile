@@ -10,6 +10,7 @@ import styles from './styles';
 import { COLORS } from 'src/constants';
 import { useSelector } from 'react-redux';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 interface TabButtonProps {
   item: {
@@ -25,7 +26,7 @@ interface TabButtonProps {
 
 const TabButton = ({ item, accessibilityState, onPress }: TabButtonProps) => {
   const translation = useSelector(getTranslate);
-
+  const color = useThemeColors();
   const animatedValues = {
     translate: useRef(new Animated.Value(0)).current,
     scale: useRef(new Animated.Value(0)).current,
@@ -78,16 +79,16 @@ const TabButton = ({ item, accessibilityState, onPress }: TabButtonProps) => {
   };
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.container}>
-      <Animated.View style={[styles.button, translateStyles]}>
-        <Animated.View style={[styles.animated, scaleStyles]} />
+    <TouchableOpacity onPress={onPress} style={[styles.container, {backgroundColor: color.background}]}>
+      <Animated.View style={[styles.button, translateStyles, {borderColor: color.TaButtonText, backgroundColor: color.TaButtonText}]}>
+        <Animated.View style={[styles.animated, scaleStyles, {borderColor: color.background}]} />
         <Material
           name={item.icon}
-          color={accessibilityState!.selected ? COLORS.white : '#2a475e'}
+          color={color.white}
           size={30}
         />
       </Animated.View>
-      <Animated.Text style={[styles.title, { opacity: scale }]}>
+      <Animated.Text style={[styles.title, { opacity: scale, color: color.text}]}>
         {translation(item.title)}
       </Animated.Text>
     </TouchableOpacity>

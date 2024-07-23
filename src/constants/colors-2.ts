@@ -1,3 +1,5 @@
+import TabButton from "src/components/TabButton";
+
 const COLORS = {
     light: {
       Mirage: '#171A21',
@@ -34,9 +36,12 @@ const COLORS = {
       background: '#F7F7F7',
       text: 'black',
       textSubdued: '#000',
-      
+      TabButton: '#2a475e',
+      TaButtonText: '#2A475E',
     },
     dark: {
+      TaButtonText: '#2A475E',
+      TabButton: 'white',
       text: '#EEEEEE',
       textSubdued: '#B2C2CE',
       background: '#0A1220',
@@ -47,7 +52,7 @@ const COLORS = {
       PaleAqua: '#A3B3C1',
       login: '#4B3E80',
       tertiary: '#0000CC',
-      white: '#252D3B',
+      white: 'white',
       black: '#101010',
       gray: '#333333',
       red: '#CC0000',
