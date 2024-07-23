@@ -24,6 +24,7 @@ import {Service} from 'src/interface/package/mainPackage';
 import {TEXTS} from 'src/constants';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
   const [selectedService, setSelectedService] = useState<null | Service>(null);
@@ -37,6 +38,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
   const [serviceFamily, setServiceFamily] = useState<Service[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const translate = useSelector(getTranslate);
+  const color = useThemeColors();
 
   const handleGetService = async () => {
     try {
@@ -120,16 +122,20 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {backgroundColor: color.background}]}>
       <ScrollView>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" size={24} style={styles.backButton} />
+            <Icon name="arrow-back" size={24} color={color.text}/>
           </TouchableOpacity>
         </View>
-        <View style={styles.searchContainer}>
-          <Icon name="search" size={20} color="#ccc" style={{marginRight: 5}} />
-          <TextInput style={styles.headerSearchInput} placeholder={translate('SEARCH')}/>
+        <View style={[styles.searchContainer,  {backgroundColor: color.white}]}>
+          <Icon name="search" size={20} color={color.text} style={{marginRight: 5}} />
+          <TextInput 
+          style={[styles.headerSearchInput,]} 
+          placeholder={translate('SEARCH')}
+          placeholderTextColor={color.text}
+          />
         </View>
 
         <Text style={styles.yourFamily}>{translate('YOUR_FAMILIES')}</Text>
@@ -143,7 +149,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
             horizontal
             data={family}
             renderItem={({item}) => (
-              <View style={styles.familyContainer}>
+              <View style={[styles.familyContainer]}>
                 <TouchableOpacity
                   style={[
                     styles.familyCard,
@@ -172,14 +178,14 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
           />
         </View>
 
-        <View style={styles.serviceList}>
+        <View style={[styles.serviceList]}>
           <Text style={styles.title}>{translate('SERVICE_TITLE')}</Text>
           {service.map((pkg, index) => (
             <TouchableOpacity
               key={pkg.id_extra_package}
               onPress={() => handleSelectService(pkg)}
               style={[
-                styles.serviceItem,
+                styles.serviceItem ,  {backgroundColor: color.white},
                 selectedService?.id_extra_package === pkg.id_extra_package &&
                   styles.serviceItemActive,
               ]}>
@@ -187,7 +193,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
                 style={[
                   purchasedServices.includes(pkg.id_extra_package) &&
                     styles.serviceNamePur,
-                  styles.serviceName,
+                  styles.serviceName, {color: color.text}
                 ]}>
                 {pkg.name}
               </Text>
@@ -197,16 +203,16 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
                   currency: 'VND',
                 })}
               </Text>
-              <Text style={styles.serviceDescription}>{pkg.description}</Text>
+              <Text style={[styles.serviceDescription, {color: color.textSubdued}]}>{pkg.description}</Text>
 
               <View style={styles.serviceActions}>
                 {purchasedServices &&
                 purchasedServices.includes(pkg.id_extra_package) ? (
                   <TouchableOpacity
-                    style={styles.purchaseButton}
+                    style={[styles.purchaseButton,{backgroundColor: color.white}]}
                     onPress={() => setSelectedService(pkg)}>
-                    <Text style={styles.purchaseButtonText}>{translate('BUY_NOW')}</Text>
-                    <FeatherIcon color="white" name="shopping-cart" size={17} />
+                    <Text style={[styles.purchaseButtonText, {color: color.text}]}>{translate('purchased')}</Text>
+                    {/* <FeatherIcon color="white" name="shopping-cart" size={17} /> */}
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity

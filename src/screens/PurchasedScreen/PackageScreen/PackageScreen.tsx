@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Package } from 'src/interface/package/mainPackage';
 import { setPackage } from 'src/redux/slices/PackageSlice';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 
 const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
@@ -26,6 +27,8 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
   const profile = useSelector(selectProfile);
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
+  const color = useThemeColors();
+
   const handleSelectPackage = (pkg: Package) => {
     dispatch(setPackage(pkg));
     navigation.navigate('OrderDetailScreen', {id_family});
@@ -45,16 +48,16 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
   }, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: color.background, height: '100%'}}>
       <ScrollView>
         <View style={styles.headerfile}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" size={24} style={styles.backButton} />
+            <Icon name="close" size={30} color={color.text} />
           </TouchableOpacity>
         </View>
 
-        <View style={styles.container}>
-          <Text style={styles.title}>{translate('PACKAGE_TITLE')}</Text>
+        <View style={[styles.container]}>
+          <Text style={[styles.title, {color: color.text}]}>{translate('PACKAGE_TITLE')}</Text>
           {packages.map((pkg, index) => {
             const isActive = value === index;
             return (
@@ -64,11 +67,13 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
                   setValue(index);
                   setSelectedPackage(pkg); 
                   setSelectedMount(pkg.price);
-                }}>
-                <View style={[styles.radio, isActive && styles.radioActive]}>
-                  <Text style={styles.radioLabel}>{pkg.name}</Text>
+                }}
+     
+                >
+                <View style={[styles.radio, {backgroundColor: color.white}, isActive && styles.radioActive]}>
+                  <Text style={[styles.radioLabel, ]}>{pkg.name}</Text>
 
-                  <Text style={styles.radioPrice}>{pkg.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Text>
+                  <Text style={[styles.radioPrice, {color: color.text}]}>{pkg.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Text>
 
                   <View style={styles.radioBadge}>
                     <Text style={styles.radioBadgeText}>
@@ -76,7 +81,7 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
                     </Text>
                   </View>
 
-                  <Text style={styles.radioDescription}>{pkg.description}</Text>
+                  <Text style={[styles.radioDescription, {color: color.textSubdued}]}>{pkg.description}</Text>
 
                   <View
                     style={[
