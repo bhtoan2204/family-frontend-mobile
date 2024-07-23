@@ -10,7 +10,7 @@ const COLORS = {
       login: '#6756AA',
       tertiary: '#0000FF',
       white: '#FFFFFF',
-      black: '#000000',
+      black: '#2A475E',
       gray: '#CCCCCC',
       red: '#FF0000',
       AliceBlue: '#F0F8FF',
@@ -39,9 +39,12 @@ const COLORS = {
       TabButton: '#2a475e',
       TaButtonText: '#2A475E',
       inputChat: '#f2f2f2',
+      darkPressedBackground: '#555555',
 
     },
     dark: {
+      darkPressedBackground: '#DDDDDD',
+
       inputChat: '#ACACAC',
       TaButtonText: '#2A475E',
       TabButton: 'white',
@@ -55,8 +58,8 @@ const COLORS = {
       PaleAqua: '#A3B3C1',
       login: '#4B3E80',
       tertiary: '#0000CC',
-      white: 'white',
-      black: '#101010',
+      white: '#252D3B',
+      black: 'white',
       gray: '#333333',
       red: '#CC0000',
       AliceBlue: '#E6F1FF',

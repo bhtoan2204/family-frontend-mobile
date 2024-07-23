@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Platform, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Platform, Alert, ScrollView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { TextInput } from 'react-native-paper';
@@ -10,6 +10,8 @@ import { AppDispatch, RootState } from 'src/redux/store';
 import { updateProfileSlice } from 'src/redux/slices/ProfileSclice';
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
+import { useThemeColors } from 'src/hooks/useThemeColor';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const EditProfileScreen = () => {
   const profile = useSelector((state: RootState) => state.profile.profile);
@@ -20,6 +22,8 @@ const EditProfileScreen = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
+  const color = useThemeColors();
+  const translate = useSelector(getTranslate);
 
   const formatDate = (date: Date) => {
     return date.toISOString().split('T')[0];
@@ -33,7 +37,7 @@ const EditProfileScreen = () => {
       gender: gender,
       birthDate: formatDate(birthDate),
     };
-    console.log(formatDate(birthDate))
+    console.log(formatDate(birthDate));
     try {
       await ProfileServices.updateProfile({ firstname: firstName, lastname: lastName, genre: gender, birthdate: formatDate(birthDate) });
       dispatch(updateProfileSlice(updatedProfile));
@@ -42,7 +46,7 @@ const EditProfileScreen = () => {
       Alert.alert('Error', 'Failed to update profile');
     }
   };
-  
+
   const handleChangeAvatar = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -68,25 +72,30 @@ const EditProfileScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.scrollViewContent}
+      showsVerticalScrollIndicator={false}
+      style={[styles.container, { backgroundColor: color.background }]}
+    >
       <View style={styles.header}>
-        <Text style={styles.headerText}>Edit Profile</Text>
+        <Text style={[styles.headerText, { color: color.text }]}>{translate('editProfile')}</Text>
       </View>
       <View style={styles.avatarContainer}>
         <TouchableOpacity style={styles.avatarButton} onPress={handleChangeAvatar}>
           <Image
             source={profile?.avatar !== "[NULL]" ? { uri: profile?.avatar } : require('../../../assets/images/avatar_default.jpg')}
-            style={styles.avatarImage} />
-          <View style={styles.editContainer}>
-            <Icon name="add" size={30} style={styles.editIcon} />
+            style={styles.avatarImage}
+          />
+          <View style={[styles.editContainer, {backgroundColor: color.white}]}>
+            <Icon name="add" size={30} color={color.black} />
           </View>
         </TouchableOpacity>
       </View>
       <View style={styles.inputContainer}>
         <TextInput
           mode="outlined"
-          label="First Name"
-          style={styles.input}
+          label={translate('First Name')}
+          style={[styles.input, { backgroundColor: color.white }]}
           value={firstName}
           onChangeText={setFirstName}
         />
@@ -94,54 +103,50 @@ const EditProfileScreen = () => {
       <View style={styles.inputContainer}>
         <TextInput
           mode="outlined"
-          label="Last Name"
-          style={styles.input}
+          label={translate('Last Name')}
+          style={[styles.input, { backgroundColor: color.white }]}
           value={lastName}
           onChangeText={setLastName}
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Gender</Text>
+        <Text style={[styles.label, { color: color.text }]}>{translate('Gender')}</Text>
         <View style={styles.genderContainer}>
           <TouchableOpacity
             style={styles.radioContainer}
             onPress={() => setGender('male')}
           >
-            <View style={styles.radioCircle}>
-              {gender === 'male' && <View style={styles.selectedRb} />}
+            <View style={[styles.radioCircle, { borderColor: color.text }]}>
+              {gender === 'male' && <View style={[styles.selectedRb, { backgroundColor: color.black }]} />}
             </View>
-            <Text style={styles.radioText}>Male</Text>
+            <Text style={[styles.radioText, { color: color.text }]}>{translate('male')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.radioContainer}
             onPress={() => setGender('female')}
           >
-            <View style={styles.radioCircle}>
-              {gender === 'female' && <View style={styles.selectedRb} />}
+            <View style={[styles.radioCircle, { borderColor: color.text }]}>
+              {gender === 'female' && <View style={[styles.selectedRb, { backgroundColor: color.black }]} />}
             </View>
-            <Text style={styles.radioText}>Female</Text>
+            <Text style={[styles.radioText, { color: color.text }]}>{translate('female')}</Text>
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Birth Date</Text>
-        <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
-          <Text style={styles.datePickerText}>{birthDate.toDateString()}</Text>
-          <AntDesign name="calendar" size={24} color="black" />
-        </TouchableOpacity>
-        {showDatePicker && (
+      <View style={[styles.inputContainer, { flexDirection: 'row', justifyContent: 'space-between' }]}>
+        <Text style={[styles.label, { color: color.text }]}>{translate('Birth Date')}</Text>
+   
           <DateTimePicker
             value={birthDate}
             mode="date"
             display="default"
             onChange={handleDateChange}
           />
-        )}
+  
       </View>
       <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
-        <Text style={styles.saveButtonText}>Save Changes</Text>
+        <Text style={styles.saveButtonText}>{translate('Save Changes')}</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 

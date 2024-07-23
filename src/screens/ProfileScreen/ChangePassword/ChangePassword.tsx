@@ -4,6 +4,7 @@ import { AntDesign } from '@expo/vector-icons';
 import styles from './styles';
 import {ProfileServices} from 'src/services/apiclient';
 import { ProfileScreenProps } from 'src/navigation/NavigationTypes';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -16,6 +17,7 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
   const toggleShowCurrentPassword = () => setShowCurrentPassword(prevState => !prevState);
   const toggleShowNewPassword = () => setShowNewPassword(prevState => !prevState);
   const toggleShowConfirmPassword = () => setShowConfirmPassword(prevState => !prevState);
+  const color = useThemeColors();
 
   const handleChangePassword = async () => {
     try {
@@ -30,12 +32,12 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, {backgroundColor: color.background}]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -100}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>Change Password</Text>
+          <Text style={[styles.headerText, {color: color.text}]}>Change Password</Text>
         </View>
 
         <View style={styles.imageContainer}>
@@ -46,9 +48,9 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
           />
         </View>
 
-        <Text style={styles.label}>Current Password</Text>
+        <Text style={[styles.label, {color: color.text}]}>Current Password</Text>
         <View style={styles.inputContainer}>
-          <AntDesign name="lock" size={24} color="black" style={styles.icon} />
+          <AntDesign name="lock" size={24} color={color.text} style={styles.icon} />
           <TextInput
             style={styles.input}
             placeholder="Enter current password"
@@ -57,13 +59,13 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
             onChangeText={setCurrentPassword}
           />
           <TouchableOpacity onPress={toggleShowCurrentPassword}>
-            <AntDesign name={showCurrentPassword ? 'eye' : 'eyeo'} size={24} color="black" style={styles.icon} />
+            <AntDesign name={showCurrentPassword ? 'eye' : 'eyeo'} size={24} color={color.text} style={styles.icon} />
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.label}>New Password</Text>
+        <Text style={[styles.label, {color: color.text}]}>New Password</Text>
         <View style={styles.inputContainer}>
-          <AntDesign name="lock" size={24} color="black" style={styles.icon} />
+          <AntDesign name="lock" size={24} color={color.text} style={styles.icon} />
           <TextInput
             style={styles.input}
             placeholder="Enter new password"
@@ -72,13 +74,13 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
             onChangeText={setNewPassword}
           />
           <TouchableOpacity onPress={toggleShowNewPassword}>
-            <AntDesign name={showNewPassword ? 'eye' : 'eyeo'} size={24} color="black" style={styles.icon} />
+            <AntDesign name={showNewPassword ? 'eye' : 'eyeo'} size={24} color={color.text} style={styles.icon} />
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.label}>Confirm New Password</Text>
+        <Text style={[styles.label, {color: color.text}]}>Confirm New Password</Text>
         <View style={styles.inputContainer}>
-          <AntDesign name="lock" size={24} color="black" style={styles.icon} />
+          <AntDesign name="lock" size={24} color={color.text} style={styles.icon} />
           <TextInput
             style={styles.input}
             placeholder="Confirm new password"
@@ -87,7 +89,7 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
             onChangeText={setConfirmPassword}
           />
           <TouchableOpacity onPress={toggleShowConfirmPassword}>
-            <AntDesign name={showConfirmPassword ? 'eye' : 'eyeo'} size={24} color="black" style={styles.icon} />
+            <AntDesign name={showConfirmPassword ? 'eye' : 'eyeo'} size={24} color={color.text} style={styles.icon} />
           </TouchableOpacity>
         </View>
 

@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 100,
     alignSelf: 'stretch',
-    //backgroundColor: COLORS.white,
+    
   },
   animated: {
     width: 50,
@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    borderWidth: 2,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',

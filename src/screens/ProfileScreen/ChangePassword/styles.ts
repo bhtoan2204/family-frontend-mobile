@@ -47,15 +47,15 @@ const styles = StyleSheet.create({
     color: COLORS.black,
   },
   changePasswordButton: {
-    backgroundColor: COLORS.AliceBlue,
+    backgroundColor: COLORS.Rhino,
     paddingVertical: 15,
     paddingHorizontal: 30,
-    borderRadius: 25,
+    borderRadius: 10,
     marginTop: 20,
     alignItems: 'center', 
   },
   buttonText: {
-    color: COLORS.black,
+    color: COLORS.white,
     fontSize: 16,
     fontWeight: 'bold',
   },
