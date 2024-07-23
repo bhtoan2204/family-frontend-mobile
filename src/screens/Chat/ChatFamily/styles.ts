@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: 40,
+    height: 35,
     paddingHorizontal: 15,
     borderRadius: 20,
     marginRight: 8,

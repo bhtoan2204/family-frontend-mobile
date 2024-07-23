@@ -38,8 +38,11 @@ const COLORS = {
       textSubdued: '#000',
       TabButton: '#2a475e',
       TaButtonText: '#2A475E',
+      inputChat: '#f2f2f2',
+
     },
     dark: {
+      inputChat: '#ACACAC',
       TaButtonText: '#2A475E',
       TabButton: 'white',
       text: '#EEEEEE',
