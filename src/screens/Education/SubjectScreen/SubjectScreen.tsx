@@ -124,7 +124,7 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
                         </View>
                     </View>
                 </View>
-                <ScrollView className=' '>
+                <ScrollView className=' ' >
                     <View className='my-3'>
                         <Text className='ml-4 mb-3 text-lg font-medium'>Final & Mid</Text>
                         <SubjectItem

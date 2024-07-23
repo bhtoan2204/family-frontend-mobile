@@ -2,6 +2,8 @@ import React, { useCallback, useMemo } from 'react'
 import { View, Text, Keyboard, TouchableOpacity } from 'react-native'
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
+import { useSelector } from 'react-redux';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
 interface GuildlineDetailInfoProps {
     bottomSheetRef: React.RefObject<BottomSheet>;
@@ -19,6 +21,8 @@ const GuildlineDetailInfo = ({
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />,
         []
     );
+    const isDarkMode = useSelector(getIsDarkMode)
+
     return (
         <BottomSheet
             ref={bottomSheetRef}
@@ -27,6 +31,9 @@ const GuildlineDetailInfo = ({
             snapPoints={snapPoints}
             enablePanDownToClose={true}
             handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
+            backgroundStyle={{
+                backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7',
+            }}
             backdropComponent={renderBackdrop}
 
             // onClose={() => {
@@ -39,7 +46,7 @@ const GuildlineDetailInfo = ({
             <View className='flex-1 items-center '>
                 <View className='p-4'>
                     {
-                        type == 1 ? <Text className='text-2xl font-bold '>Title</Text> : <Text className='text-2xl font-bold '>Description</Text>
+                        type == 1 ? <Text className='text-2xl font-bold text-black dark:text-white'>Title</Text> : <Text className='text-2xl font-bold text-black dark:text-white'>Description</Text>
 
                     }
                 </View>

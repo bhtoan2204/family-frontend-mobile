@@ -16,6 +16,7 @@ import AddCourseImage from 'src/assets/images/education_assets/add_course_img.pn
 import { Subject } from 'src/interface/education/education';
 import { GuideLineService } from 'src/services/apiclient';
 import { addGuideline } from 'src/redux/slices/GuidelineSlice';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
 
 interface AddItemSheetProps {
@@ -42,6 +43,7 @@ const AddGuidelineSheet = ({
 
     const [inputName, setInputName] = React.useState('')
     const [inputDescription, setInputDescription] = React.useState('')
+    const isDarkMode = useSelector(getIsDarkMode)
 
 
     useEffect(() => {
@@ -94,9 +96,9 @@ const AddGuidelineSheet = ({
             }}
             // className='rounded-lg'
             style={{
-                backgroundColor: '#f5f5f5',
-                borderWidth: 1,
-                borderColor: '#DEDCDC',
+                backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
+                borderWidth: !isDarkMode ? 1 : 1.5,
+                borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
                 borderRadius: 10,
                 marginVertical: 10,
                 paddingVertical: screenHeight * 0.02,
@@ -104,7 +106,7 @@ const AddGuidelineSheet = ({
                 marginHorizontal: screenWidth * 0.05,
                 // fontWeight: 'bold',
                 fontSize: 15,
-                color: '#b0b0b0'
+                color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
             }}
         />
     }
@@ -118,9 +120,9 @@ const AddGuidelineSheet = ({
             }}
             // className='rounded-lg'
             style={{
-                backgroundColor: '#f5f5f5',
-                borderWidth: 1,
-                borderColor: '#DEDCDC',
+                backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
+                borderWidth: !isDarkMode ? 1 : 1.5,
+                borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
                 borderRadius: 10,
                 marginVertical: 10,
                 paddingVertical: screenHeight * 0.02,
@@ -128,7 +130,7 @@ const AddGuidelineSheet = ({
                 marginHorizontal: screenWidth * 0.05,
                 // fontWeight: 'bold',
                 fontSize: 15,
-                color: '#b0b0b0'
+                color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
             }}
         />
 
@@ -147,6 +149,9 @@ const AddGuidelineSheet = ({
             // snapPoints={snapPoints}
             // handleComponent={null}
             handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
+            backgroundStyle={{
+                backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7',
+            }}
             backdropComponent={renderBackdrop}
             keyboardBehavior='interactive'
             keyboardBlurBehavior='restore'
@@ -159,11 +164,14 @@ const AddGuidelineSheet = ({
 
                 }
             }}
+            style={{
+                zIndex: 100
+            }}
         // keyboardBehavior="extend"
         // keyboardBlurBehavior="restore"
 
         >
-            <View className='flex-1 bg-[#F7F7F7] '>
+            <View className='flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]'>
                 <BottomSheetScrollView className='' showsVerticalScrollIndicator={false} automaticallyAdjustKeyboardInsets style={{}} keyboardShouldPersistTaps='handled'>
 
                     <View className='flex-1  mt-10'>
@@ -171,14 +179,8 @@ const AddGuidelineSheet = ({
                             <Image source={AddCourseImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                         </View>
                         <View className=' items-center'>
-                            <Text className='text-base font-semibold' style={{
-                                color: iOSGrayColors.systemGray6.accessibleDark
-
-                            }}>Add New Guideline</Text>
-                            <Text className='text-sm my-3' style={{
-                                color: iOSGrayColors.systemGray6.accessibleDark
-
-                            }}>Give your guideline a name and a description</Text>
+                            <Text className='text-base font-semibold text-[#2A475E] dark:text-white'>Add New Guideline</Text>
+                            <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >Give your guideline a name and a description</Text>
                         </View>
 
                         {

@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthStack from './Routes/AuthStack';
 import HomeTab from './Routes/HomeTab';
@@ -17,13 +17,21 @@ import ShoppingListCategoryStack from './Routes/ShoppingListCategoryStack';
 import TodoListStack from './Routes/TodoListStack';
 import EducationStack from './Routes/EducationStack';
 import { useGetColorScheme } from 'src/hooks/useColorScheme';
-
+import { useColorScheme } from 'nativewind';
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
   useGetColorScheme();
+  const { colorScheme } = useColorScheme();
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      theme={{
+        dark: colorScheme == 'dark',
+        colors: {
+          ...DefaultTheme.colors,
+        }
+      }}
+    >
       <Stack.Navigator
         screenOptions={{
           headerShown: false,

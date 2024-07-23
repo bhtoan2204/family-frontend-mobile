@@ -27,6 +27,7 @@ import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interf
 import { addShoppingList, addShoppingListItem, updateReminderDateItem } from 'src/redux/slices/ShoppingListSlice';
 import { addMonths, format, subMonths } from 'date-fns';
 import { Calendar } from 'react-native-calendars';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
 
 
@@ -58,7 +59,13 @@ const UpdateExpiredDateItemSheet = ({
     const [showError, setShowError] = React.useState(false)
 
     const [selectDate, setSelectDate] = useState<string>(format(new Date(initialDate), 'yyyy-MM-dd'));
+    const [key, setKey] = useState(false)
     console.log('hello dcmm', format(new Date('2024-07-05T19:26:03.642Z'), 'yyyy-MM-dd'))
+    const isDarkMode = useSelector(getIsDarkMode)
+
+    useEffect(() => {
+        setKey((prev) => !prev)
+    }, [isDarkMode])
 
     const buildDate = (dateString: string) => {
         const date: Date = new Date(dateString);
@@ -85,6 +92,8 @@ const UpdateExpiredDateItemSheet = ({
         []
     );
 
+    
+
     useEffect(() => {
         if (showError) {
             setTimeout(() => {
@@ -101,7 +110,7 @@ const UpdateExpiredDateItemSheet = ({
         } else {
             console.log(date.dateString)
             setSelectDate(date.dateString);
-            
+
         }
     };
 
@@ -113,8 +122,8 @@ const UpdateExpiredDateItemSheet = ({
             }}>
 
                 <View className=''>
-                    <Text className='flex-1 text-center text-base'
-                        style={{ color: '#2A475E', fontWeight: 'bold' }}
+                    <Text className='flex-1 text-center text-base text-[#2A475E] dark:text-[#fff]'
+                        style={{ fontWeight: 'bold' }}
                     >{buildDate(selectDate)}</Text>
                 </View>
                 <View className='flex-row '>
@@ -148,6 +157,9 @@ const UpdateExpiredDateItemSheet = ({
 
             // snapPoints={snapPoints}
             handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
+            backgroundStyle={{
+                backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7',
+            }}
             backdropComponent={renderBackdrop}
             onClose={() => {
                 Keyboard.dismiss()
@@ -162,26 +174,49 @@ const UpdateExpiredDateItemSheet = ({
             }}
 
         >
-            <BottomSheetView style={{ minHeight: 100, flex: 0, backgroundColor: '#f7f7f7' }}>
-                <View className='my-3'>
+            <BottomSheetView style={{
+                minHeight: 100, flex: 0,
+                backgroundColor: !isDarkMode ? '#f7f7f7' : '#0A1220',
+
+            }}>
+                <View className='my-3 bg-[#F7F7F7] dark:bg-[#252D3B] rounded-lg' style={{
+                    marginHorizontal: 10,
+
+                }}>
                     <Calendar
+                        key={key.toString()}
                         onDayPress={handleDayPress}
                         markedDates={{
                             [selectDate]: { selected: true, selectedColor: COLORS.DenimBlue },
+
                         }}
                         initialDate={selectDate}
                         theme={{
-                            calendarBackground: '#f7f7f7',
+                            // calendarBackground: colorScheme === 'light' ? '#f7f7f7' : '#1A1A1A',
+                            calendarBackground: 'transparent',
+                            dayTextColor: !isDarkMode ? '#000000' : 'white',
+                            textDisabledColor: !isDarkMode ? '#7C7C7C' : '#92969D',
                         }}
-                        minDate={'2020-05-10'}
+                        minDate={'2024-05-10'}
                         maxDate={'2026-06-10'}
                         disableAllTouchEventsForDisabledDays={true}
-                        // hideDayNames={true}
                         style={{
-                            backgroundColor: '#f7f7f7',
-                            marginHorizontal: 10,
+                            // backgroundColor: colorScheme === 'light' ? '#f7f7f7' : COLORS.Rhino,
+
+                            // color: '',
+
+
                         }}
+
+                        // renderHeader={
+                        //     date =>{
+                        //         console.log(date)
+                        //     }
+                        // }
                         customHeader={customCalendarHeader}
+                    // disableArrowLeft={true}
+                    // // Disable right arrow. Default = false
+                    // disableArrowRight={true}
 
                     />
                 </View>

@@ -17,20 +17,20 @@ interface HouseHoldItemInfoBoxProps {
 const HouseHoldItemInfoBox = ({
     title, children, onPress, id, iconImage
 }: HouseHoldItemInfoBoxProps) => {
-    return <TouchableOpacity activeOpacity={0.65} className='w-[80%] border-[1px] mt-3  bg-white rounded-lg'
-        style={{
-            borderColor: iOSGrayColors.systemGray5.defaultLight,
-        }}
+    return <TouchableOpacity activeOpacity={0.65} className='w-[80%]  mt-3  bg-white dark:bg-[#252D3B] rounded-lg'
+        // style={{
+        //     borderColor: iOSGrayColors.systemGray5.defaultLight,
+        // }}
         onPress={onPress}
     >
         <View>
-            <View className='border-b' style={{
-                borderColor: iOSGrayColors.systemGray4.defaultLight,
+            <View className='border-b border-[#DEDCDC] dark:border-[#8D94A5]' style={{
+                
             }}>
                 {
                     id != -1 ? <View className='flex-row items-center py-3 pl-3 '>
                         <Image source={iconImage} style={{ width: 24, height: 24 }} />
-                        <Text className='ml-2'>{title}</Text>
+                        <Text className='ml-2 text-[#2A475E] dark:text-white font-semibold '>{title}</Text>
                     </View> : <>
                         <View className='flex-row items-center py-3 pl-3 '>
                             <Skeleton width={'80%'} height={30} style={{

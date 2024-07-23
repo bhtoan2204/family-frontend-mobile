@@ -24,15 +24,11 @@ const ConsumableInfo = ({ data }: ConsumableInfoProps) => {
         data.consumableItem ? <>
             <View className='py-3 px-3 '>
                 <View className='flex-row justify-between'>
-                    <Text className='font-semibold' style={{
-                        color: iOSGrayColors.systemGray.accessibleDark,
+                    <Text className='font-semibold text-[#959595] dark:text-[#8D94A5]' style={{
+                        // color: iOSGrayColors.systemGray.accessibleDark,
 
                     }}>Quantity</Text>
-                    <Text className='font-semibold'
-                        style={{
-                            color: COLORS.Rhino,
-
-                        }}
+                    <Text className='font-semibold text-[#2A475E] dark:text-white'
                     >
                         {
                             data.consumableItem?.quantity ? data.consumableItem?.quantity : 'No quantity'
@@ -41,31 +37,19 @@ const ConsumableInfo = ({ data }: ConsumableInfoProps) => {
             </View>
             <View className='py-3 px-3 '>
                 <View className='flex-row justify-between'>
-                    <Text className='font-semibold' style={{
-                        color: iOSGrayColors.systemGray.accessibleDark,
-
-                    }}>Threshhold</Text>
-                    <Text className='font-semibold'
-                        style={{
-                            color: COLORS.Rhino,
-
-                        }}
-                    >{
+                    <Text className='font-semibold text-[#959595] dark:text-[#8D94A5]' >Threshhold</Text>
+                    <Text className='font-semibold text-[#2A475E] dark:text-white'>
+                        {
                             data.consumableItem?.threshold ? data.consumableItem?.threshold : 'No threshold'
-                        }</Text>
+                        }
+                    </Text>
                 </View>
             </View>
             <View className='py-3 px-3 '>
                 <View className='flex-row justify-between'>
-                    <Text className='font-semibold' style={{
-                        color: iOSGrayColors.systemGray.accessibleDark,
+                    <Text className='font-semibold text-[#959595] dark:text-[#8D94A5]'>Expired date</Text>
+                    <Text className='font-semibold text-[#2A475E] dark:text-white'
 
-                    }}>Expired date</Text>
-                    <Text className='font-semibold'
-                        style={{
-                            color: COLORS.Rhino,
-
-                        }}
                     >{
                             data.consumableItem?.expired_date ? buildDate(data.consumableItem?.expired_date) : 'No expired date'
                         }</Text>
@@ -79,17 +63,11 @@ const ConsumableInfo = ({ data }: ConsumableInfoProps) => {
                         {/* <Material name='plus' size={24} color={iOSGrayColors.systemGray.accessibleDark} /> */}
                         <Image source={EmptyConsumableIcon} style={{ width: ScreenHeight * 0.08, height: ScreenHeight * 0.08 }} />
                     </View>
-                    <Text className=' text-center text-base pt-5 pb-2 font-semibold '
-                        style={{
-                            color: COLORS.Rhino,
+                    <Text className=' text-center text-base pt-5 pb-2 font-semibold text-[#606060] dark:text-[#8D94A5] '
 
-                        }}
                     >You forgot somthing?</Text>
-                    <Text className=' text-center text-sm pb-5'
-                        style={{
-                            color: COLORS.Rhino,
+                    <Text className=' text-center text-sm pb-5 text-[#606060] dark:text-[#8D94A5]'
 
-                        }}
                     >Add consumable for this item</Text>
                 </View>
             </View>

@@ -21,6 +21,7 @@ export type RootParamList = {
   HouseHoldItemStack: NavigatorScreenParams<HouseHoldItemStackParamList>;
   ShoppingListStack: NavigatorScreenParams<ShoppingListStackParamList>;
   TodoListStack: NavigatorScreenParams<TodoListStackParamList>;
+  EducationStack: NavigatorScreenParams<EducationTabParamList>;
   // ShoppingListCategoryStack: NavigatorScreenParams<ShoppingListCategoryStackParamList>;
 };
 
@@ -407,29 +408,7 @@ type HouseHoldItemStackParamList = {
     id_item: number | undefined;
     id_family: number | undefined;
   };
-  ReceiptInfo: {
-    id_item: number | undefined;
-    id_family: number | undefined;
-  };
-  AddConsumableItem: {
-    id_item: number | undefined;
-    id_family: number | undefined;
-    id_category: number | undefined;
-  };
-  AddDescription: {
-    id_item: number | undefined;
-    id_family: number | undefined;
-  };
-  EditConsumbleItem: {
-    id_item: number | undefined;
-    id_family: number | undefined;
-  };
-  EditDescription: {
-    id_item: number | undefined;
-    id_family: number | undefined;
-    id_category: number | undefined;
-    description: string | undefined;
-  };
+ 
 };
 
 type HouseHoldItemStackNavigationProp = NativeStackNavigationProp<
@@ -449,58 +428,59 @@ type HouseHoldItemNavigationProp = NativeStackNavigationProp<
 export interface HouseHoldItemScreenProps {
   navigation: HouseHoldItemNavigationProp;
   route: RouteProp<HouseHoldItemStackParamList, 'HouseHoldItem'>;
-  addRoomRef: React.RefObject<BottomSheet> | undefined;
+  addEditConsumableItemSheetRef: React.RefObject<BottomSheet> | undefined;
+  addEditDescriptionSheetRef: React.RefObject<BottomSheet> | undefined;
 }
 
-type ReceiptInfoNavigationProp = NativeStackNavigationProp<
-  HouseHoldItemStackParamList,
-  'ReceiptInfo'
->;
+// type ReceiptInfoNavigationProp = NativeStackNavigationProp<
+//   HouseHoldItemStackParamList,
+//   'ReceiptInfo'
+// >;
 
-export interface ReceiptInfoScreenProps {
-  navigation: ReceiptInfoNavigationProp;
-  route: RouteProp<HouseHoldItemStackParamList, 'ReceiptInfo'>;
-}
+// export interface ReceiptInfoScreenProps {
+//   navigation: ReceiptInfoNavigationProp;
+//   route: RouteProp<HouseHoldItemStackParamList, 'ReceiptInfo'>;
+// }
 
-type AddConsumableItemNavigationProp = NativeStackNavigationProp<
-  HouseHoldItemStackParamList,
-  'AddConsumableItem'
->;
+// type AddConsumableItemNavigationProp = NativeStackNavigationProp<
+//   HouseHoldItemStackParamList,
+//   'AddConsumableItem'
+// >;
 
-export interface AddConsumableItemScreenProps {
-  navigation: AddConsumableItemNavigationProp;
-  route: RouteProp<HouseHoldItemStackParamList, 'AddConsumableItem'>;
-}
+// export interface AddConsumableItemScreenProps {
+//   navigation: AddConsumableItemNavigationProp;
+//   route: RouteProp<HouseHoldItemStackParamList, 'AddConsumableItem'>;
+// }
 
-type AddDescriptionNavigationProp = NativeStackNavigationProp<
-  HouseHoldItemStackParamList,
-  'AddDescription'
->;
+// type AddDescriptionNavigationProp = NativeStackNavigationProp<
+//   HouseHoldItemStackParamList,
+//   'AddDescription'
+// >;
 
-export interface AddDescriptionScreenProps {
-  navigation: AddDescriptionNavigationProp;
-  route: RouteProp<HouseHoldItemStackParamList, 'AddDescription'>;
-}
+// export interface AddDescriptionScreenProps {
+//   navigation: AddDescriptionNavigationProp;
+//   route: RouteProp<HouseHoldItemStackParamList, 'AddDescription'>;
+// }
 
-type EditConsumbleItemNavigationProp = NativeStackNavigationProp<
-  HouseHoldItemStackParamList,
-  'EditConsumbleItem'
->;
+// type EditConsumbleItemNavigationProp = NativeStackNavigationProp<
+//   HouseHoldItemStackParamList,
+//   'EditConsumbleItem'
+// >;
 
-export interface EditConsumbleItemScreenProps {
-  navigation: EditConsumbleItemNavigationProp;
-  route: RouteProp<HouseHoldItemStackParamList, 'EditConsumbleItem'>;
-}
+// export interface EditConsumbleItemScreenProps {
+//   navigation: EditConsumbleItemNavigationProp;
+//   route: RouteProp<HouseHoldItemStackParamList, 'EditConsumbleItem'>;
+// }
 
-type EditDescriptionNavigationProp = NativeStackNavigationProp<
-  HouseHoldItemStackParamList,
-  'EditDescription'
->;
+// type EditDescriptionNavigationProp = NativeStackNavigationProp<
+//   HouseHoldItemStackParamList,
+//   'EditDescription'
+// >;
 
-export interface EditDescriptionScreenProps {
-  navigation: EditDescriptionNavigationProp;
-  route: RouteProp<HouseHoldItemStackParamList, 'EditDescription'>;
-}
+// export interface EditDescriptionScreenProps {
+//   navigation: EditDescriptionNavigationProp;
+//   route: RouteProp<HouseHoldItemStackParamList, 'EditDescription'>;
+// }
 
 type HouseHoldScreenNavigationProp = NativeStackNavigationProp<
   HouseHoldStackParamList,
@@ -744,6 +724,67 @@ export interface TodoListItemDetailScreenProps {
 
 
 /////
+
+type EducationTabParamList = {
+  EducationScreen: {
+    id_family: number;
+  };
+  ProgressScreen: {
+    id_family: number;
+    id_progress: number;
+  };
+  SubjectScreen: {
+    id_family: number;
+    id_progress: number;
+    id_subject: number;
+  };
+};
+
+type EducationStackNavigationProp = NativeStackNavigationProp<
+  RootParamList,
+  'EducationStack'
+>;
+
+export interface EducationStackProps {
+  navigation: EducationStackNavigationProp;
+  route: RouteProp<RootParamList, 'EducationStack'>;
+}
+
+type EducationScreenNavigationProp = NativeStackNavigationProp<
+  EducationTabParamList,
+  'EducationScreen'
+>;
+
+export interface EducationScreenProps {
+  navigation: EducationScreenNavigationProp;
+  route: RouteProp<EducationTabParamList, 'EducationScreen'>;
+}
+
+type ProgressScreenNavigationProp = NativeStackNavigationProp<
+  EducationTabParamList,
+  'ProgressScreen'
+>;
+
+export interface ProgressScreenProps {
+  navigation: ProgressScreenNavigationProp;
+  route: RouteProp<EducationTabParamList, 'ProgressScreen'>;
+}
+
+type SubjectScreenNavigationProp = NativeStackNavigationProp<
+  EducationTabParamList,
+  'SubjectScreen'
+>;
+
+export interface SubjectScreenProps {
+  navigation: SubjectScreenNavigationProp;
+  route: RouteProp<EducationTabParamList, 'SubjectScreen'>;
+}
+
+export interface EducationScreenProps {
+  navigation: EducationScreenNavigationProp;
+  route: RouteProp<EducationTabParamList, 'EducationScreen'>;
+}
+
 
 
 type CalendarStackNavigationProp = NativeStackNavigationProp<
@@ -1060,10 +1101,10 @@ export interface SubjectDetailScreenProps {
   route: RouteProp<FamilyStackParamList, 'SubjectDetail'>;
 }
 
-export interface EducationScreenProps {
-  navigation: EducationNavigationprop;
-  route: RouteProp<FamilyStackParamList, 'Education'>;
-}
+// export interface EducationScreenProps {
+//   navigation: EducationNavigationprop;
+//   route: RouteProp<FamilyStackParamList, 'Education'>;
+// }
 
 type EducationDetailNavigationProp = NativeStackNavigationProp<
   FamilyStackParamList,

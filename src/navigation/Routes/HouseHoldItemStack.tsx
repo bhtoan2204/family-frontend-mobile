@@ -1,7 +1,7 @@
 import { Dimensions, SafeAreaView, Text, TouchableOpacity, View, Image, ActivityIndicator } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { AddConsumableItemScreenProps, EditDescriptionScreenProps, HouseHoldItemScreenProps, HouseHoldItemStackProps, } from '../NavigationTypes';
+import { HouseHoldItemScreenProps, HouseHoldItemStackProps, } from '../NavigationTypes';
 
 import React, { useEffect } from 'react';
 
@@ -23,6 +23,7 @@ import AddEditConsumableSheet from 'src/components/user/household/household-item
 import UpdateExpiredDateItemSheet from 'src/components/user/household/household-item-stack/sheet/update-expired-date-sheet';
 import AddEditDescriptionSheet from 'src/components/user/household/household-item-stack/sheet/add-edit-description-sheet';
 import { format } from 'date-fns';
+import EditTitleSheet from 'src/components/user/household/household-item-stack/sheet/edit-title-sheet';
 
 
 
@@ -47,7 +48,7 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
     const addEditConsumableItemSheetRef = React.useRef<BottomSheet>(null)
     const addEditDescriptionSheetRef = React.useRef<BottomSheet>(null)
     const updateExpiredDateSheet = React.useRef<BottomSheet>(null)
-
+    const editTitleSheetRef = React.useRef<BottomSheet>(null)
     const [expired_date, setExpiredDate] = React.useState<string>(new Date().toISOString())
 
     useEffect(() => {
@@ -160,6 +161,9 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
         <View className="flex-1 bg-[#F7F7F7]">
             <HouseHoldItemStackHeader data={houseHoldItemInfo} navigationBack={() => navigation.goBack()}
                 handleEditImage={handlePickEditImage}
+                handleEditTitle={() => {
+                    editTitleSheetRef.current?.expand()
+                }}
             />
             <View className='flex-1 bg-[#f7f7f7] mt-[-3%]  rounded-tl-xl rounded-tr-xl overflow-hidden'>
                 <Stack.Navigator
@@ -171,8 +175,7 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
                         addEditConsumableItemSheetRef={addEditConsumableItemSheetRef}
                         addEditDescriptionSheetRef={addEditDescriptionSheetRef}
                     />}</Stack.Screen>
-                    <Stack.Screen name="AddConsumableItem">{(props: any) => <AddConsumableHouseHoldItemScreen {...props as AddConsumableItemScreenProps} />}</Stack.Screen>
-                    <Stack.Screen name="EditDescription">{(props: any) => <EditHouseHoldDescriptionScreen {...props as EditDescriptionScreenProps} />}</Stack.Screen>
+
 
 
 
@@ -191,6 +194,7 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
                 setExpiredDate(date)
             }} />
             <AddEditDescriptionSheet bottomSheetRef={addEditDescriptionSheetRef} id_family={id_family!} id_item={id_item!} description={houseHoldItemInfo.description || ""} />
+            <EditTitleSheet bottomSheetRef={editTitleSheetRef} id_family={id_family!} id_item={id_item!} title={houseHoldItemInfo.item_name || ""} />
         </View>
 
     );

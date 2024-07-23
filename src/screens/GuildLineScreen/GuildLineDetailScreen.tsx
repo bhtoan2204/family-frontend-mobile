@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Animated, SafeAreaView, TouchableOpacity, ScrollView, Image, StyleSheet, ActivityIndicator, Dimensions, TextInput, KeyboardAvoidingView, Platform, Share } from 'react-native'
+import { View, Text, Animated, SafeAreaView, TouchableOpacity, ScrollView, Image, StyleSheet, ActivityIndicator, Dimensions, TextInput, KeyboardAvoidingView, Platform, Share, StatusBar } from 'react-native'
 import { COLORS } from 'src/constants';
 import Img from 'src/assets/images/guildline.png';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteGuideline } from 'src/redux/slices/GuidelineSlice';
 import { GuildLineDetailScreenProps } from 'src/navigation/NavigationTypes';
 import GuildlineDetailInfo from './GuildlineDetailDescriptionInfo';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 const screenWidth = Dimensions.get('window').width;
 const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps) => {
   const { id_item, id_family } = route.params
@@ -33,7 +34,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
   const [inputDescription, setInputDescription] = useState("");
   const bottomSheetRef = React.useRef<any>(null);
   const detailSheetRef = React.useRef<any>(null);
-
+  const isDarkMode = useSelector(getIsDarkMode)
   // const guidelineInfo = useSelector((state: RootState) => state.guidelines).find(item => item.id_guide_item === id_guide_item)!
   // const stepFromStore = useSelector((state: RootState) => state.guidelines).find(item => item.id_guide_item === id_guide_item)!.steps || [
   //     {
@@ -348,8 +349,9 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
     }
   }
   return (
-    <SafeAreaView className='flex-1'>
-      <View className='flex-1 bg-[#fff] items-center '>
+    <>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <View className='flex-1 bg-[#f7f7f7] dark:bg-[#0A1220] items-center '>
         <GuildLineHeader
           isAdding={isAdding}
           isEditing={isEditing}
@@ -379,7 +381,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
                 isKeyboardVisible={isKeyboardVisible}
                 guildLineSteps={guildLineSteps}
               />
-              <View className='bg-white  w-full'>
+              <View className='bg-[#f7f7f7] dark:bg-[#0A1220]  w-full'>
 
                 <StepIndicator currentStep={currentStep} guildLineSteps={guildLineSteps} />
                 {
@@ -487,7 +489,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
         handleEditGuildline={handleEditGuildline}
 
       />
-    </SafeAreaView>
+    </>
   );
 }
 

@@ -119,7 +119,7 @@ const StepGuideLineImage = ({
                                             bottomSheetRef.current?.open()
                                         }
                                     }}>
-                                        <View className='opacity-80 bg-white h-full w-full flex justify-center items-center rounded'>
+                                        <View className='opacity-80 bg-[#f7f7f7] dark:bg-[#0A1220] h-full w-full flex justify-center items-center rounded'>
 
                                             <Material name="file-image-plus" size={30} style={{ color: "gray" }} />
                                         </View>

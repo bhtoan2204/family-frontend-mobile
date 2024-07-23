@@ -26,20 +26,23 @@ const CategoryItems = ({ data, handleNavigateHouseHoldDetail }: CategoryItemInte
                 <TouchableOpacity onPress={() => {
                     handleNavigateHouseHoldDetail(item.id_household_item_category)
                 }}>
-                    <Image
-                        source={item.category_image ? { uri: item.category_image } : gradients_list[index % gradients_list.length]}
-                        style={{
-                            // width: screenWidth * 0.3,
-                            width: '100%',
-                            height: undefined,
-                            borderRadius: 15,
-                            // height: screenHeight * 0.2,
-                            aspectRatio: 1,
-                        }}
-                    />
-                    <Text style={{
+                    <View className='border-[1px] border-[#DEDCDC] dark:border-[#232A3D]' style={{
+                        borderRadius: 15,
+                    }}>
+                        <Image
+                            source={item.category_image ? { uri: item.category_image } : gradients_list[index % gradients_list.length]}
+                            style={{
+                                // width: screenWidth * 0.3,
+                                width: '100%',
+                                height: undefined,
+                                borderRadius: 15,
+                                // height: screenHeight * 0.2,
+                                aspectRatio: 1,
+                            }}
+                        />
+                    </View>
+                    <Text className='text-[#2A475E] dark:text-white' style={{
                         textAlign: 'center',
-                        color: COLORS.Rhino,
                         fontSize: 16,
                         fontWeight: 500,
                         marginTop: 10,

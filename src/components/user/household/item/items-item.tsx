@@ -27,20 +27,23 @@ const ItemItems = ({ data, handleNavigateHouseHoldDetail }: ItemItemsProps) => {
                 <TouchableOpacity onPress={() => {
                     handleNavigateHouseHoldDetail(item.id_household_item)
                 }}>
-                    <Image
-                        source={item.item_imageurl ? { uri: item.item_imageurl } : item.item_image!}
-                        style={{
-                            // width: screenWidth * 0.3,
-                            width: '100%',
-                            height: undefined,
-                            borderRadius: 15,
-                            // height: screenHeight * 0.2,
-                            aspectRatio: 1,
-                        }}
-                    />
-                    <Text style={{
+                    <View className='border-[1px] border-[#DEDCDC] dark:border-[#232A3D]' style={{
+                        borderRadius: 15,
+                    }}>
+                        <Image
+                            source={item.item_imageurl ? { uri: item.item_imageurl } : item.item_image!}
+                            style={{
+                                // width: screenWidth * 0.3,
+                                width: '100%',
+                                height: undefined,
+                                borderRadius: 15,
+                                // height: screenHeight * 0.2,
+                                aspectRatio: 1,
+                            }}
+                        />
+                    </View>
+                    <Text className='text-[#2A475E] dark:text-white' style={{
                         textAlign: 'center',
-                        color: COLORS.Rhino,
                         fontSize: 16,
                         fontWeight: 500,
                         marginTop: 10,
