@@ -30,6 +30,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLastMessage, setUserMessage } from 'src/redux/slices/MessageUser';
 import { setFamilyLastMessage } from 'src/redux/slices/MessageFamily';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 
 const ChatListScreen = ({
@@ -49,6 +51,8 @@ const ChatListScreen = ({
   let socket = getSocket();
   const dispatch = useDispatch();
   const profile=useSelector(selectProfile);
+  const translate = useSelector(getTranslate);
+  const color = useThemeColors();
 
   const formatDateTime = (dateTime: Date) => {
     if (!dateTime) {
@@ -185,33 +189,30 @@ const ChatListScreen = ({
     setSelectedButton('Channels');
   };
 
-  const onDelete = async (message: LastMessage) => {
+  const onDelete = async (message) => {
     Alert.alert(
-      'Confirm Delete',
-      'Are you sure you want to delete this message?',
+      translate('confirmDelete'),
+      translate('confirmDeleteMessage'),
       [
         {
-          text: 'Cancel',
+          text: translate('cancel'),
           style: 'cancel',
         },
         {
-          text: 'Delete',
+          text: translate('delete'),
           onPress: async () => {
             try {
-              await ChatServices.removeMessage(receiverId, message._id)
-              Alert.alert('Success', 'Message has been deleted successfully.');
+              await ChatServices.removeMessage(receiverId, message._id);
+              Alert.alert(translate('success'), translate('deleteSuccessMessage'));
               //await handleGetCalendar();
             } catch (error) {
               console.error('Error deleting event:', error);
-              Alert.alert(
-                'Error',
-                'An error occurred while deleting the message.',
-              );
+              Alert.alert(translate('error'), translate('deleteErrorMessage'));
             }
           },
         },
       ],
-      {cancelable: true},
+      { cancelable: true },
     );
   };
 
@@ -254,18 +255,18 @@ const ChatListScreen = ({
           </View>
   
           <View style={styles.messageContainer}>
-            <Text style={styles.username}>
+            <Text style={[styles.username, {color: color.text}]}>
               {item.latestMessage.receiver.firstname}{' '}
               {item.latestMessage.receiver.lastname}
             </Text>
             {item.latestMessage.type === 'photo' ? (
-              <Text style={styles.messageText}>Sent image</Text>
+              <Text style={[styles.messageText, {color: color.textSubdued}]}>{translate('Sent image')}</Text>
             ) : item.latestMessage.type === 'video' ? (
-              <Text style={styles.messageText}>Sent video</Text>
+              <Text style={[styles.messageText, {color: color.textSubdued}]}>{translate('Sent video')}</Text>
             ) : (
               <Text
                 style={[
-                  styles.messageText,
+                  styles.messageText, {color: color.textSubdued},
                   !item.latestMessage.isRead && styles.boldText,
                 ]}
               >
@@ -275,7 +276,7 @@ const ChatListScreen = ({
             )}
           </View>
           
-          <Text style={styles.messageTimestamp}>
+          <Text style={[styles.messageTimestamp, {color: color.textSubdued}]}>
             {item.latestMessage.timestamp
               ? formatDateTime(item.latestMessage.timestamp)
               : ''}
@@ -308,18 +309,18 @@ const ChatListScreen = ({
           </View>
   
           <View style={styles.messageContainer}>
-          <Text style={styles.username}>{item.name}</Text>
+          <Text style={[styles.username, {color: color.text}]}>{item.name}</Text>
           {item.lastMessage.type === 'photo' ? (
-            <Text style={styles.messageText}>Sent image</Text>
+            <Text style={styles.messageText}>{translate('Sent image')}</Text>
           ) : item.lastMessage.type === 'video' ? (
-            <Text style={styles.messageText}>Sent video</Text>
+            <Text style={styles.messageText}>{translate('Sent video')}</Text>
           ) : (
-            <Text style={[styles.messageText, !item.lastMessage.isRead && styles.boldText]}>
+            <Text style={[styles.messageText, {color: color.textSubdued}, !item.lastMessage.isRead && styles.boldText]}>
               {item.lastMessage.content}
             </Text>
           )}
         </View>
-          <Text style={styles.messageTimestamp}>
+          <Text style={[styles.messageTimestamp, {color: color.textSubdued}]}>
             {item.lastMessage.timestamp ? formatDateTime(new Date(item.lastMessage.timestamp)) : ''}
           </Text>
         </View>
@@ -329,7 +330,7 @@ const ChatListScreen = ({
   
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {backgroundColor: color.background}]}>
       <View
         style={{
           flexDirection: 'row',
@@ -341,7 +342,7 @@ const ChatListScreen = ({
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={28} style={styles.backButton} />
         </TouchableOpacity>
-        <Text style={{fontSize: 24, fontWeight: '600'}}>Chats</Text>
+        <Text style={{fontSize: 24, fontWeight: '600', color: color.text}}>{translate('Chat')}</Text>
         <TouchableOpacity>
           <MaterialCommunityIcons
             name="chat-plus-outline"
@@ -350,11 +351,11 @@ const ChatListScreen = ({
           />
         </TouchableOpacity>
       </View>
-      <View style={styles.header}>
+      <View style={[styles.header, {backgroundColor: color.background}]}>
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
-            placeholder="Search..."
+            placeholder={translate('SEARCH')}
             placeholderTextColor="#999999"
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -363,7 +364,7 @@ const ChatListScreen = ({
         </View>
       </View>
       {/* {renderAllUser()} */}
-      <View style={styles.buttonContainer}>
+      <View style={[styles.buttonContainer, {backgroundColor: color.background}]}>
         <TouchableOpacity
           style={[
             styles.button,
@@ -375,7 +376,7 @@ const ChatListScreen = ({
               styles.buttonText,
               selectedButton === 'Home' && styles.buttonTextSelected,
             ]}>
-            Home
+            {translate('Home')}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -389,7 +390,7 @@ const ChatListScreen = ({
               styles.buttonText,
               selectedButton === 'Channels' && styles.buttonTextSelected,
             ]}>
-            Channels
+            {translate('Channels')}
           </Text>
         </TouchableOpacity>
       </View>

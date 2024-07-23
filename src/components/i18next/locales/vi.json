@@ -272,5 +272,17 @@
   "TitleIncomeList": "Dưới đây là danh sách chi tiết thu nhập của bạn trong phạm vi ngày đã chọn.",
   "Income Analysis": "Phân tích thu nhập",
   "No data": "Không có dữ liệu",
-
+  "Add New Category": "Thêm danh mục mới",
+  "Enter category name": "Nhập tên danh mục",
+  "Chat": "Nhắn tin",
+  "Channels": "Channels",
+  "Home": "Trang chủ",
+  "Contacts": "Liên hệ",
+  "Sent image": "Gửi hình ảnh",
+  "Sent video": "Gửi video",
+  "cancel": "Hủy",
+  "delete": "Xóa",
+  "success": "Thành công",
+  "People": "Liên hệ",
+  
 }
