@@ -15,12 +15,14 @@ import StepIndicator from './StepIndicator';
 import { AppDispatch, RootState } from 'src/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteGuideline } from 'src/redux/slices/GuidelineSlice';
-import { GuildLineDetailScreenProps } from 'src/navigation/NavigationTypes';
+import { GuildLineDetailScreenProps, SharedGuidelineDetailProps } from 'src/navigation/NavigationTypes';
 import GuildlineDetailInfo from './GuildlineDetailDescriptionInfo';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import SharedGuildLineDetailHeader from 'src/components/user/guideline/shared-guideline-detail/shared-guideline-detail-header';
+import StepSharedGuideLineImage from 'src/components/user/guideline/shared-guideline-detail/step-guideline-img';
 const screenWidth = Dimensions.get('window').width;
-const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps) => {
-  const { id_item, id_family } = route.params
+const SharedGuidelineDetailScreen = ({ navigation, route }: SharedGuidelineDetailProps) => {
+  const { id_guide_item, id_family } = route.params
   const [currentStep, setCurrentStep] = useState(0)
   const [guildLineDetail, setGuildLineDetail] = useState<GuildLineDetail>()
   const [guildLineSteps, setGuildLineSteps] = useState<Step[]>()
@@ -35,14 +37,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
   const bottomSheetRef = React.useRef<any>(null);
   const detailSheetRef = React.useRef<any>(null);
   const isDarkMode = useSelector(getIsDarkMode)
-  // const guidelineInfo = useSelector((state: RootState) => state.guidelines).find(item => item.id_guide_item === id_guide_item)!
-  // const stepFromStore = useSelector((state: RootState) => state.guidelines).find(item => item.id_guide_item === id_guide_item)!.steps || [
-  //     {
-  //         name: "",
-  //         description: "",
-  //         imageUrl: ""
-  //     }
-  // ]
+  const [editable, setEditable] = useState(false)
 
   const [contentSheet, setContentSheet] = useState<{
     text: string;
@@ -58,7 +53,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
   useEffect(() => {
     const fetchGuildLineDetail = async () => {
       try {
-        const response = await GuildLineService.getGuildLineDetail(id_family!, id_item); // API call to fetch guildline detail
+        const response = await GuildLineService.getGuildLineDetail(id_family!, id_guide_item); // API call to fetch guildline detail
         setGuildLineDetail(response);
         console.log(response)
         if (response && response.steps) {
@@ -136,7 +131,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
       }
       console.log(newStep2)
       const a = await GuildLineService.addStepGuildLine(
-        id_item!, id_family!, newStep2
+        id_guide_item!, id_family!, newStep2
       )
       // setGuildLineSteps((prev) => {
       //     return prev?.map((step, index) => {
@@ -186,7 +181,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
       await GuildLineService.updateGuildLineDetail(
         "",
         id_family!,
-        id_item!,
+        id_guide_item!,
         newStep2,
         currentStep
       )
@@ -216,7 +211,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
   }
 
   const handleDeleteCurrentStep = async () => {
-    await GuildLineService.deleteStepGuildLine(id_family!, id_item!, currentStep)
+    await GuildLineService.deleteStepGuildLine(id_family!, id_guide_item!, currentStep)
     const currStep = currentStep
     if (currStep > 0) {
       setCurrentStep(currStep - 1)
@@ -230,12 +225,14 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
   }
 
   const handleDeleteGuideline = async () => {
-    await GuildLineService.deleteGuideline(id_family!, id_item!)
-    dispatch(deleteGuideline(id_item!))
+    await GuildLineService.deleteGuideline(id_family!, id_guide_item!)
+    dispatch(deleteGuideline(id_guide_item!))
     navigation.goBack()
   }
 
-  
+  if (loading) {
+    return <ActivityIndicator style={{ flex: 1, justifyContent: 'center' }} size="small" />;
+  }
 
   const handleTakePhoto = async () => {
     console.log("Take photo")
@@ -254,7 +251,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
           await GuildLineService.updateGuildLineDetail(
             result.assets[0].uri,
             id_family!,
-            id_item!,
+            id_guide_item!,
             guildLineSteps![currentStep],
             currentStep
           )
@@ -294,7 +291,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
           await GuildLineService.updateGuildLineDetail(
             result.assets[0].uri,
             id_family!,
-            id_item!,
+            id_guide_item!,
             guildLineSteps![currentStep],
             currentStep
           )
@@ -346,23 +343,11 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
       setInputDescription(guildLineSteps[currentStep].description)
     }
   }
-  if (loading) {
-    return <View className='flex-1 bg-[#f7f7f7] dark:bg-[#0A1220] items-center justify-center'>
-       <ActivityIndicator style={{ flex: 1, justifyContent: 'center' }} size="small" />
-      
-    </View>;
-  }
-
-  if (!guildLineDetail) {
-    return <View className='flex-1 bg-[#f7f7f7] dark:bg-[#0A1220]  justify-center items-center'>
-      <Text className='text-2xl font-bold mt-5 text-black dark:text-white'>No data found</Text>
-    </View>
-  }
   return (
     <>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <View className='flex-1 bg-[#f7f7f7] dark:bg-[#0A1220] items-center '>
-        <GuildLineHeader
+        <SharedGuildLineDetailHeader
           isAdding={isAdding}
           isEditing={isEditing}
           setIsAdding={setIsAdding}
@@ -375,12 +360,12 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
           // bottomSheetRef={bottomSheetRef}
           handleDeleteCurrentStep={handleDeleteCurrentStep}
           handleDeleteGuideline={handleDeleteGuideline}
-          item={guildLineDetail!}
+          editable={false}
         />
         <KeyboardAvoidingView className=' h-full flex flex-col items-center mt-3  ' behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
           {
             guildLineSteps && <>
-              <StepGuideLineImage
+              <StepSharedGuideLineImage
                 isAdding={isAdding}
                 isEditing={isEditing}
                 setAdding={setIsAdding}
@@ -390,13 +375,14 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
                 currentStep={currentStep}
                 isKeyboardVisible={isKeyboardVisible}
                 guildLineSteps={guildLineSteps}
+                editable={editable}
               />
               <View className='bg-[#f7f7f7] dark:bg-[#0A1220]  w-full'>
 
                 <StepIndicator currentStep={currentStep} guildLineSteps={guildLineSteps} />
                 {
                   !isAdding && !isEditing ?
-                    <TouchableOpacity onPress={() => {
+                    <TouchableOpacity disabled={editable == false} onPress={() => {
                       // setIsEditing(true)
                       // setInputName(guildLineSteps[currentStep].name)
                       // setInputDescription(guildLineSteps[currentStep].description)
@@ -413,7 +399,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
                         guildLineSteps[currentStep].name != null
                         ? guildLineSteps[currentStep].name : "Add name"}</Text>
                     </TouchableOpacity>
-                    : <TextInput className='text-center px-4 text-2xl font-bold mt-5 ' style={{ color: COLORS.AuroMetalSaurus }} placeholder='Enter name of step' autoFocus maxLength={50} onChangeText={(text) => {
+                    : <TextInput className='text-center px-4 text-2xl font-bold mt-5 ' editable={editable == false} style={{ color: COLORS.AuroMetalSaurus }} placeholder='Enter name of step' autoFocus maxLength={50} onChangeText={(text) => {
                       console.log("name step", text)
                       setInputName(text)
                     }
@@ -424,7 +410,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
                 {
                   !isAdding && !isEditing
                     ?
-                    <TouchableOpacity onPress={() => {
+                    <TouchableOpacity disabled={editable == false} onPress={() => {
                       // setIsEditing(true)
                       // setInputName(guildLineSteps[currentStep].name)
                       // setInputDescription(guildLineSteps[currentStep].description)
@@ -438,7 +424,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
                       <Text className='text-center px-4 text-lg mt-5 text-[#a1a1a1]' numberOfLines={2} >{guildLineSteps[currentStep].description != "" && guildLineSteps[currentStep].description != null ? guildLineSteps[currentStep].description : "Add description"}</Text>
                     </TouchableOpacity>
                     :
-                    <TextInput className='text-center px-4 text-lg mt-5 ' maxLength={50} placeholder='Enter description (optional)' onChangeText={(text) => {
+                    <TextInput className='text-center px-4 text-lg mt-5 ' editable={editable == false} maxLength={50} placeholder='Enter description (optional)' onChangeText={(text) => {
                       console.log("desc step", text)
                       setInputDescription(text)
                     }}
@@ -528,4 +514,4 @@ const styles = StyleSheet.create({
   }
 
 });
-export default GuildLineDetailScreen
+export default SharedGuidelineDetailScreen

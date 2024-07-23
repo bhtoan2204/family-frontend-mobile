@@ -5,7 +5,8 @@ export interface Guildline {
   created_at: string;
   updated_at: string;
   id_family: number;
-  steps?: Step[];
+  steps?: Step[] | null;
+  is_shared: boolean;
 }
 
 export interface Step {

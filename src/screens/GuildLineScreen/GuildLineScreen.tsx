@@ -31,8 +31,11 @@ const guildLineData: Guildline = {
     name: 'Shared guideline',
     description: 'This is the shared guideline',
     created_at: '2024-04-30T08:59:03.177Z',
-    updated_at: '2024-04-30T08:59:03.177Z'
+    updated_at: '2024-04-30T08:59:03.177Z',
+    is_shared: false,
 }
+
+
 
 const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
@@ -84,12 +87,32 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
         }
     }, []);
 
-    useEffect(() => {
 
-    }, [])
 
     if (loading) {
-        return <ActivityIndicator style={{ flex: 1, justifyContent: 'center' }} size="small" />;
+        return <View className='flex-1 justify-center items-center bg-[#fff] dark:bg-[#0A1220]'>
+            <ActivityIndicator style={{ justifyContent: 'center' }} size="small" />
+        </View>;
+    }
+
+    const renderEmptyGuideline = () => {
+        const emptyGuidelineName = 'Add a guideline';
+        const emptyGuidelineDescription = 'Tap here to add a guideline';
+        const emptyGuideline: Guildline = {
+            id_guide_item: -1,
+            id_family: -1,
+            name: emptyGuidelineName,
+            description: emptyGuidelineDescription,
+            created_at: '',
+            updated_at: '',
+            is_shared: false,
+        }
+        return <GuildlineItem item={emptyGuideline}
+            onPress={() => {
+                addGuidelineBottomSheetRef.current?.expand()
+            }}
+            onUpdate={() => { }}
+        />
     }
 
     return (
@@ -164,7 +187,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                     {
                         tab == 0 ? <>
                             {
-                                guidelines.map((item, index) => (
+                                guidelines.length > 0 ? guidelines.map((item, index) => (
                                     <React.Fragment key={index}>
                                         <GuildlineItem item={item}
                                             onPress={() => {
@@ -178,21 +201,15 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                                                 updateGuidelineBottomSheetRef.current?.expand()
 
                                             }}
-                                        // onUpdate={() => {
-                                        //     navigation.navigate('UpdateGuildLine', {
-                                        //         id_family: id_family, id_item: item.id_guide_item,
-                                        //         title: item.name, description: item.description
-                                        //     })
-                                        // }}
                                         />
                                     </React.Fragment>
-                                ))
+                                )) : renderEmptyGuideline()
                             }
 
                         </> : <>
                             <GuildlineItem item={guildLineData}
                                 onPress={() => {
-                                    navigation.navigate('SharedGuildLine', { id_family: id_family, id_item: guildLineData.id_guide_item })
+                                    navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: 1 })
                                 }}
                                 onUpdate={() => { }}
                             />

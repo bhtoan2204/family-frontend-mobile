@@ -18,6 +18,9 @@ import TodoListStack from './Routes/TodoListStack';
 import EducationStack from './Routes/EducationStack';
 import { useGetColorScheme } from 'src/hooks/useColorScheme';
 import { useColorScheme } from 'nativewind';
+import { SharedGuidelineDetailProps } from './NavigationTypes';
+import SharedGuidelineDetailScreen from 'src/screens/GuildLineScreen/SharedGuideLineDetailScreen';
+import GuidelineStack from './Routes/GuidelineStack';
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
@@ -51,7 +54,8 @@ const Navigation = () => {
         <Stack.Screen name="ShoppingListStack" component={ShoppingListStack} />
         <Stack.Screen name="TodoListStack" component={TodoListStack} />
         <Stack.Screen name="EducationStack" component={EducationStack} />
-
+        <Stack.Screen name="GuidelineStack" component={GuidelineStack} />
+        <Stack.Screen name="SharedGuidelineDetail" component={SharedGuidelineDetailScreen} />
         {/* <Stack.Screen name="ShoppingListCategoryStack" component={ShoppingListCategoryStack}/> */}
 
       </Stack.Navigator>
