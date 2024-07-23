@@ -17,6 +17,7 @@ import baseUrl from 'src/services/urls/baseUrl';
 import {Linking} from 'react-native';
 import { useSelector } from 'react-redux';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 type Bank = {
   id: number;
@@ -33,6 +34,7 @@ const BankInfoScreen = ({route}: BankInfoScreenProps) => {
   const [searchValue, setSearchValue] = useState('');
   const { id_family, id_package, amount} = route.params;
   const translate = useSelector(getTranslate);
+  const color = useThemeColors();
   
   const handleSearchChange = (text: string) => {
     setSearchValue(text);
