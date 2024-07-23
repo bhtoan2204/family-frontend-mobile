@@ -139,6 +139,7 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
           <Icon name="arrow-back" size={30} color={color.text} />
         </TouchableOpacity>
         <Text style={[styles.title, { color: color.text }]}>{translate('Asset Detail')}</Text>
+        
         <TouchableOpacity
                     onPress={handleEditPress}
                     style={{
@@ -239,7 +240,7 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
             <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSavePress}>
               <Text style={styles.buttonText}>{translate('Save')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={handleCancel}>
+            <TouchableOpacity style={[styles.button]} onPress={handleCancel}>
               <Text style={styles.buttonText}>{translate('Cancel')}</Text>
             </TouchableOpacity>
           </>
@@ -367,7 +368,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   saveButton: {
-    backgroundColor: '#4caf50',
+    backgroundColor: '#00adf5',
   },
   cancelButton: {
     backgroundColor: '#f44336',

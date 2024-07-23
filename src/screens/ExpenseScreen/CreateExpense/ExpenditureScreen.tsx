@@ -52,6 +52,7 @@ import ImagePickerComponent from './ImagePicker';
 import PickerModal from './ModalOption';
 import CategoryUtilities from './CategoryUtilities';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
 
@@ -89,6 +90,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const [memberSelected, setMemberSelected] = useState<Member | null>(null);
   const [utilitiesSelect, setUtilitiesSelect] = useState<UtilitiesType|null>(null)
   const translate = useSelector(getTranslate);
+  const color=useThemeColors();
 
   useEffect(() => {
     fetchExpenseType();
@@ -294,10 +296,10 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
       source={require('../../../assets/images/view-all-family-2.png')}
       style={{flex: 1}}
       resizeMode="stretch">
-      <SafeAreaView style={{flex: 1}}>
-          <View style={styles.header}>
+      <SafeAreaView style={{flex: 1, backgroundColor: color.background}}>
+          <View style={[styles.header, {backgroundColor: color.background}]}>
             <TouchableOpacity style={styles.iconMoney}>
-              <Icon name="list" color="#2a475e" size={25} />
+              {/* <Icon name="list" color={color.text} size={25} /> */}
             </TouchableOpacity>
 
             <LinearGradient
@@ -310,7 +312,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                   <Text style={[styles.headerText, {marginRight: 10}]}>
                     {translate(selectedMenu)}
                   </Text>
-                  <Octicons name="triangle-down" size={35} color="#fff" />
+                  <Octicons name="triangle-down" size={35} color={color.text} />
                 </View>
               </TouchableOpacity>
             </LinearGradient>
@@ -318,14 +320,14 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
             <TouchableOpacity
               style={styles.chevronContainer}
               onPress={handleSubmit}>
-              <Icon name="checkmark-done-sharp" color="#2a475e" size={30} />
+              <Icon name="checkmark-done-sharp" color={color.text} size={30} />
             </TouchableOpacity>
           </View>
           <View style={{ flex: 1}}>
 
-          <ScrollView contentContainerStyle={styles.headcontainer}>
-            <View style={styles.inputContainer}>
-              <Text style={{textAlign: 'left', fontSize: 18, color: '#1b2838'}}>
+          <ScrollView contentContainerStyle={[styles.headcontainer, {backgroundColor: color.background}]}>
+            <View style={[styles.inputContainer, {backgroundColor: color.background}]}>
+              <Text style={{textAlign: 'left', fontSize: 18, color: color.text}}>
                 {translate('Amount')}
               </Text>
               <View style={{flexDirection: 'row'}}>
@@ -338,7 +340,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                     keyboardType="numeric"
                   />
                 </View>
-                <Text style={styles.currency}>VNĐ</Text>
+                <Text style={[styles.currency, {color: color.text}]}>VNĐ</Text>
               </View>
               <View
                 style={{height: 1, backgroundColor: '#F4F4F4', bottom: 5}}

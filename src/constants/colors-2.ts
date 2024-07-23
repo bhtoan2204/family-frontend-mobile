@@ -31,14 +31,14 @@ const COLORS = {
       Azure: '#0095FF',
       BlueLight: '#87CEEB',
       SpringWood: '#FEF5E9',
-      background: '#f0f0f0',
+      background: '#F7F7F7',
       text: 'black',
       textSubdued: '#000',
       
     },
     dark: {
-      text: 'white',
-      textSubdued: '#8D94A5',
+      text: '#EEEEEE',
+      textSubdued: '#B2C2CE',
       background: '#0A1220',
       Mirage: '#0B0C0E',
       DenimBlue: '#1E3A5F',

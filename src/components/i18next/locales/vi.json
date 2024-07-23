@@ -265,6 +265,12 @@
   "Change receipt": "Đổi hóa đơn",
   "Other": "Khác",
   "Expense Details": "Chi tiết chi tiêu",
-  "Income Details": "Chi tiết thu nhập"
+  "Income Details": "Chi tiết thu nhập",
+  "Prev": "Trước",
+  "Next" : "Sau",
+  "Total Income": "Tổng thu nhập",
+  "TitleIncomeList": "Dưới đây là danh sách chi tiết thu nhập của bạn trong phạm vi ngày đã chọn.",
+  "Income Analysis": "Phân tích thu nhập",
+  "No data": "Không có dữ liệu",
 
 }

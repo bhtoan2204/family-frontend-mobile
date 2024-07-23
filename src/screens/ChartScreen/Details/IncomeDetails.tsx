@@ -136,13 +136,13 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
 
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
+    <SafeAreaView style={[styles.safeArea, {backgroundColor: color.background}]}>
+      <View style={[styles.container, {backgroundColor: color.background}]}>
         <View style={styles.headerContainer}>
 
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerButton}>
-            <Icon name="close-outline" size={30} style={styles.backButton} />
-            <Text style={styles.headerText}>{translate('Income Details')}</Text>
+            <Icon name="close-outline" size={30} color={color.text} />
+            <Text style={[styles.headerText, {color: color.text}]}>{translate('Income Details')}</Text>
         </TouchableOpacity>
           {!isEditing && (
            <TouchableOpacity
@@ -167,7 +167,6 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
          )}
 
         </View>
-        <View style={styles.card}>
           <View style={styles.amountContainer}>
             {!isEditing ? (
               <Text style={styles.valueAmount}>+{formatCurrency(income?.amount.toString() || '0')}</Text>
@@ -180,18 +179,25 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
               />
             )}
           </View>
+          <View style={[styles.card, {backgroundColor: color.white}]}>
+
           <View style={styles.detailRow}>
-            <Text style={styles.label}>Category:</Text>
+            <Text style={[styles.label, {color: color.text}]}>{translate('Category')}:</Text>
             <View style={styles.valueContainer}>
               {!isEditing ? (
-                <Text style={styles.value}> {income?.financeIncomeSource && income.financeIncomeSource.income_source_name
+                <Text style={[styles.value, {color: color.text}]}> {income?.financeIncomeSource && income.financeIncomeSource.income_source_name
                   ? income.financeIncomeSource.income_source_name
                   : translate('Other')}</Text>
               ) : (
                 <TouchableOpacity onPress={() => setShowCategoryPicker(!showCategoryPicker)}>
-                  <Text style={styles.value}>
-                    {selectedCategory}
-                  </Text>                
+                 <View style={{flexDirection: 'row'}}>
+                  <Text style={[styles.value,{color: color.text}]}>{selectedCategory}  </Text>     
+                  <Icon 
+                    name={showCategoryPicker ? "chevron-up" : "chevron-down"} 
+                    size={20} 
+                    color={color.text} 
+                  />        
+                  </View>          
               </TouchableOpacity>
               )}
               {showCategoryPicker && (
@@ -205,6 +211,8 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
                       key={item.id_income_source}
                       label={item.income_source_name}
                       value={item.income_source_name}
+                      color={color.text}
+
                     />
                   ))}
                 </Picker>
@@ -217,7 +225,7 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
               <Text style={[styles.value, {color: color.text}]}>{income?.description}</Text>
             ) : (
               <TextInput
-                style={styles.input}
+              style={[styles.input, {color: color.text}]}
                 value={editedDescription}
                 onChangeText={setEditedDescription}
               />
@@ -230,9 +238,9 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
               </TouchableOpacity>
             </View>
           <View style={styles.detailRow}>
-            <Text style={styles.label}>{translate('Date')}:</Text>
+            <Text style={[styles.label, {color: color.text}]}>{translate('Date')}:</Text>
             {!isEditing ? (
-             <Text style={styles.value}>{income ? moment(income.income_date).format('MMMM DD YYYY, HH:mm') : ''}</Text>
+              <Text style={[styles.value, {color: color.text}]}>{income ? moment(income.income_date).format('MM-DD-YYYY, HH:mm') : ''}</Text>
 
             ) : (
               <>
@@ -272,7 +280,7 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
        
 
        {!isEditing && (
-          <TouchableOpacity style={[styles.button, styles.deleteButton]} onPress={handleDelete}>
+          <TouchableOpacity style={[styles.button, styles.deleteButton, {borderColor: color.background}]} onPress={handleDelete}>
           <Text style={styles.deleteText}>{translate('Delete')}</Text>
           {/* <Icon name="trash-outline" size={24} style={styles.editIcon} /> */}
         </TouchableOpacity>
@@ -339,7 +347,7 @@ editContainer: {
   alignItems: 'center',
 },
 deleteButton: {
-  backgroundColor: '#00adf5',
+  backgroundColor: 'red',
   borderWidth: 1,
   borderColor: '#f0f0f0',
   flexDirection: 'row',

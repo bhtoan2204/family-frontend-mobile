@@ -247,7 +247,7 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
             
           </View>
 
-          <View style={styles.card}>
+          <View style={[styles.card, {backgroundColor: color.white}]}>
           <View style={styles.detailRow}>
             <Text style={[styles.label, {color: color.text}]}>{translate('Category')}:</Text>
             <View style={styles.valueContainer}>
@@ -257,14 +257,21 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
                   <Text style={[styles.value,{color: color.text}]}>{translate('Other')}</Text>
               ) : (
                 <TouchableOpacity onPress={() => setShowCategoryPicker(!showCategoryPicker)}>
-                   <Text style={[styles.value,{color: color.text}]}>{selectedCategory}</Text>
+                  <View style={{flexDirection: 'row'}}>
+                   <Text style={[styles.value,{color: color.text}]}>{selectedCategory}  </Text>
+                   <Icon 
+                    name={showCategoryPicker ? "chevron-up" : "chevron-down"} 
+                    size={20} 
+                    color={color.text} 
+                  />                   
+                  </View> 
                 </TouchableOpacity>
               )}
 
               {showCategoryPicker && (
                 <Picker
                   selectedValue={selectedCategory}
-                  style={styles.picker}
+                  style={[styles.picker, {color: color.text}]}
                   onValueChange={(itemValue) => handleCategoryChange(itemValue)}
                 >
                   {expenseType.map((item) => (
@@ -272,6 +279,7 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
                       key={item.id_expenditure_type}
                       label={item.expense_type_name}
                       value={item.expense_type_name}
+                      color={color.text}
                     />
                   ))}
                 </Picker>
@@ -284,7 +292,7 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
               <Text style={[styles.value, {color: color.text}]}>{expense?.description}</Text>
             ) : (
               <TextInput
-                style={styles.input}
+                style={[styles.input, {color: color.text}]}
                 value={editedDescription}
                 onChangeText={setEditedDescription}
               />
@@ -317,8 +325,8 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
 
           
         </View>
-        <View style={styles.card}> 
-          <View style={styles.imageContainer}>
+        <View style={[styles.card, {backgroundColor: color.white}]}>
+        <View style={styles.imageContainer}>
           <Text style={[styles.label, {color: color.text}]}>{translate('Receipt')}:</Text>
             {currentImageUri ? (
   <View>
@@ -371,7 +379,7 @@ const ExpenseDetailScreen = ({ navigation }: ExpenseDetailScreenProps) => {
        
 
       {!isEditing && (
-          <TouchableOpacity style={[styles.button, styles.deleteButton]} onPress={handleDelete}>
+          <TouchableOpacity style={[styles.button, styles.deleteButton, {borderColor: color.background}]} onPress={handleDelete}>
           <Text style={styles.deleteText}>{translate('Delete')}</Text>
           {/* <Icon name="trash-outline" size={24} style={styles.editIcon} /> */}
         </TouchableOpacity>

@@ -72,8 +72,8 @@ const BarChartScreen : React.FC<BarChartScreenProps> = ({ id_family, navigation 
         <View style={styles.expenseContent}>
           <View>
           {item.financeIncomeSource ? 
-              <Text style={[styles.expenseCategory, {color: color.text}]}>{item.financeExpenditureType.expense_type_name}</Text> : 
-              <Text style={[styles.expenseCategory, {color: color.text}]}>Other</Text>
+              <Text style={[styles.expenseCategory, {color: color.text}]}>{item.financeIncomeSource.income_source_name}</Text> : 
+              <Text style={[styles.expenseCategory, {color: color.text}]}>{translate('Other')}</Text>
             }
             <View style={styles.row}>
               <Text style={{ color: color.textSubdued }}>{translate('Create by')}: </Text>
@@ -86,7 +86,7 @@ const BarChartScreen : React.FC<BarChartScreenProps> = ({ id_family, navigation 
           <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
             <View style={styles.rowInfo}>
               <Text style={styles.expenseAmount}>-{formatCurrency(item.amount)}</Text>
-              <Text style={[styles.expenseDate, {color: color.textSubdued}]}>{formatDate(item.expenditure_date)}</Text>
+              <Text style={[styles.expenseDate, {color: color.textSubdued}]}>{formatDate(item.income_date)}</Text>
             </View>
             <View style={{ justifyContent: 'center' }}>
               <Icon name="chevron-forward" size={20} color={color.text} />
@@ -106,11 +106,11 @@ const BarChartScreen : React.FC<BarChartScreenProps> = ({ id_family, navigation 
           display="default"
           textColor="white" 
           onChange={handleDateChange}
-          style={{ backgroundColor: '#7CE2B3',  borderRadius: 10,}}
+          style={{ backgroundColor: 'green',  borderRadius: 10,}}
         />
       </View>
       {barChartData.length > 0 ? (
-        <View style={styles.DataContainer}>
+        <View style={[styles.DataContainer, {backgroundColor: color.background}]}>
         <FlatList
           data={barChartData}
           renderItem={renderItem}
@@ -119,14 +119,14 @@ const BarChartScreen : React.FC<BarChartScreenProps> = ({ id_family, navigation 
         />
         </View>
       ) : (
-        <View style={styles.noDataContainer}>
+        <View style={[styles.noDataContainer,  {backgroundColor: color.background}]}>
           <Image
             source={require('src/assets/icons/search.png')}
             resizeMode="stretch"
             style={styles.noDataImage}
           />
-          <Text style={styles.noDataText}>No data</Text>
-          <Text style={styles.noDataDescription}>No data available</Text>
+          <Text style={[styles.noDataText, {color: color.text}]}>{translate('No data')}</Text>
+          {/* <Text style={styles.noDataDescription}>No data available</Text> */}
         </View>
       )}
     </View>
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: 'center',
     zIndex: 1,
-    backgroundColor: '#7CE2B3',
+    backgroundColor: 'green',
     borderRadius: 10,
     width: '30%',
     height: 40,

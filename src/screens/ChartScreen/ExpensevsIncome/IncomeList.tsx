@@ -12,6 +12,8 @@ import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { DailyIncome } from 'src/interface/income/IncomeDaily';
 import { getIncomeList, getSumIncome, setIncomeList, setSelectedIncome, setSumIncome } from 'src/redux/slices/IncomeAnalysis';
+import { useThemeColors } from 'src/hooks/useThemeColor';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
   const income = useSelector(getIncomeList);
@@ -26,6 +28,8 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   let profile = useSelector(selectProfile);
   const dispatch = useDispatch();
+  const translate = useSelector(getTranslate);
+  const color = useThemeColors();  
   const [dateTo, setDateTo] = useState(new Date());
   const [dateFrom, setDateFrom] = useState(() => {
     const date = new Date(dateTo);
@@ -83,35 +87,35 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
   }
   
   const renderIncomeItem = ({ item }: { item: DailyIncome }) => (
-    <TouchableOpacity onPress={() => {handlePressIncomeItem(item)}} style={styles.expenseItem}>
+    <TouchableOpacity onPress={() => {handlePressIncomeItem(item)}} style={[styles.expenseItem, {backgroundColor: color.white}]}>
       <View style={styles.itemContainer}>
         <View style={styles.expenseContent}>
           <View>
-          <Text style={styles.expenseCategory}>
+          <Text style={[styles.expenseCategory, {color: color.text}]}>
             {item.financeIncomeSource && item.financeIncomeSource.income_source_name
               ? item.financeIncomeSource.income_source_name
               : 'Other'}
           </Text>
             <View style={styles.row}>
               
-              <Text style={{color: 'gray', }}>By: </Text>
-              <Text style={styles.expenseName}>    {item.users && item.users.firstname && item.users.lastname
+              <Text style={{color: 'gray', }}>{translate('Create by')}: </Text>
+              <Text style={styles.expenseName}>{item.users && item.users.firstname && item.users.lastname
                 ? `${item.users.firstname} ${item.users.lastname}`
                 : ''}</Text>
 
             </View>
-            <Text style={styles.expenseDescription}>{item.description}</Text>
+            <Text style={[styles.expenseDescription, {color: color.textSubdued}]}>{item.description}</Text>
           </View>
           <View style={{ justifyContent: 'center', flexDirection: 'row'}}>
 
             <View style={styles.rowInfo}>
 
               <Text style={styles.incomeAmount}>+{formatCurrency(item.amount)}</Text>
-              <Text style={styles.expenseDate}>{formatDate(item.income_date)}</Text>
+              <Text style={[styles.expenseDate, {color: color.textSubdued}]}>{formatDate(item.income_date)}</Text>
 
             </View>
           <View style={{ justifyContent: 'center', }}>
-            <Icon name="chevron-forward" size={20} style={styles.forwardIcon} />
+            <Icon name="chevron-forward" size={20} color={color.text} />
            </View>
           </View>
         </View>
@@ -132,14 +136,14 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
           onPress={() => setCurrentPageIncome(currentPageIncome - 1)}
           disabled={currentPageIncome === 1}
           style={{ paddingHorizontal: 10 }}>
-          <Text style={{ color: currentPageIncome === 1 ? COLORS.gray : COLORS.primary }}>Prev</Text>
+          <Text style={{ color: currentPageIncome === 1 ? COLORS.gray : color.text }}>{translate('Prev')}</Text>
         </TouchableOpacity>
-        <Text>{currentPageIncome} / {totalPages}</Text>
+        <Text style={{color: color.text}}>{currentPageIncome} / {totalPages}</Text>
         <TouchableOpacity
           onPress={() => setCurrentPageIncome(currentPageIncome + 1)}
           disabled={currentPageIncome === totalPages}
           style={{ paddingHorizontal: 10 }}>
-          <Text style={{ color: currentPageIncome === totalPages ? COLORS.gray : COLORS.primary }}>Next</Text>
+          <Text style={{ color: currentPageIncome === totalPages ? COLORS.gray :  color.text }}>{translate('Next')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -162,7 +166,7 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
               <Icon name="arrow-back" size={30} style={styles.backButton} />
             </TouchableOpacity>
             <View style={styles.headerTitleContainer}>
-              <Text style={styles.headerText}>Income Analysis</Text>
+              <Text style={styles.headerText}>{translate('Income Analysis')}</Text>
             </View>
            
           </View>
@@ -180,16 +184,16 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
                 marginBottom: 5,
                 color: 'white',
               }}>
-              Hello, {profile.firstname} {profile.lastname}
+              {translate('Hello')}, {profile.firstname} {profile.lastname}
             </Text>
             <Text style={{fontSize: 15, color: 'white'}}>
-            Below is a detailed list of your incomes for the selected date range.
+            {translate('Below is a detailed list of your incomes for the selected date range.')}
 
             </Text>
           </View>
-        <View style={{backgroundColor: '#f0f0f0', flex: 1,}}>
+        <View style={{backgroundColor: color.background, flex: 1,}}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
-            <Text style={{ fontSize: 15, marginLeft: 20 }}>From: </Text>
+            <Text style={{ fontSize: 15, marginLeft: 20, color: color.text  }}>From: </Text>
             <DateTimePicker
                 style={{ flex: 1 }}
                 value={dateFrom}
@@ -200,7 +204,7 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
                 setDateFrom(currentDate);
                 }}
             />
-            <Text style={{ fontSize: 15, marginLeft: 20 }}>To: </Text>
+            <Text style={{ fontSize: 15, marginLeft: 20, color: color.text }}>To: </Text>
             <DateTimePicker
                 style={{ flex: 1, marginRight: 20}}
                 value={dateTo}
@@ -225,8 +229,8 @@ const IncomeScreen = ({ navigation }: IncomeScreenProps) => {
 
 
 
-            <View style={styles.sumContainer}>
-              <Text style={styles.sumText}>Total Income: </Text>
+            <View style={[styles.sumContainer, {backgroundColor: color.background}]}>
+              <Text style={[styles.sumText, {color: color.text}]}>{translate('Total Income')}: </Text>
               <Text style={[styles.sumText, { color: 'green' }]}> +{formatCurrency(sumIncome)} </Text>
               </View>
           

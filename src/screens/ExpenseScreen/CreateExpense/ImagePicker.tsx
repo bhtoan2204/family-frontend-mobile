@@ -5,6 +5,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from './styles';
 import { useSelector } from 'react-redux';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const ImagePickerComponent = ({
   description,
@@ -19,18 +20,20 @@ const ImagePickerComponent = ({
   selectedMenu
 }) => {
   const translate= useSelector(getTranslate);
+  const color = useThemeColors();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: color.background}]}>
       <View style={styles.datePickerContainer}>
         <View style={styles.itemContainer}>
           <Icon
             name="pencil"
             size={25}
-            color="black"
+            color={color.text}
             style={styles.icon}
           />
           <TextInput
-            style={styles.titleText}
+            style={[styles.titleText, {color: color.text}]}
             placeholder={translate('Description')}
             value={description}
             onChangeText={setDescription}
@@ -44,9 +47,9 @@ const ImagePickerComponent = ({
             name="calendar"
             size={25}
             color="black"
-            style={styles.icon}
+            style={[styles.icon,{color: color.text}]}
           />
-          <Text style={[styles.text, {marginRight: 90, right: 10}]}>
+          <Text style={[styles.text, {marginRight: 90, right: 10, color: color.text}]}>
             {translate('Select Date')}
           </Text>
         </View>
@@ -58,7 +61,7 @@ const ImagePickerComponent = ({
         />
       </View>
     {selectedMenu !='Income' && (
-      <View style={styles.imageContainer}>
+      <View style={[styles.imageContainer, {backgroundColor: color.background}]}>
         <View style={styles.imageContainer1}>
           <TouchableOpacity onPress={() => setShowLargeImage(true)}>
             {uriImage && (
@@ -67,7 +70,7 @@ const ImagePickerComponent = ({
                 <TouchableOpacity
                   style={styles.removeIconContainer}
                   onPress={handleRemoveImage}>
-                  <Icon name="close" size={20} color="white" />
+                  <Icon name="close" size={20} color={color.text} />
                 </TouchableOpacity>
               </View>
             )}
@@ -79,12 +82,12 @@ const ImagePickerComponent = ({
             <Icon
               name="image"
               size={60}
-              color="gray"
+              color={color.text} 
               style={styles.cameraButton}
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handleTakePhoto()}>
-            <Icon name="camera" size={60} color="gray" />
+            <Icon name="camera" size={60} color={color.text}  />
           </TouchableOpacity>
         </View>
       </View>

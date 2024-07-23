@@ -4,7 +4,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import styles from './styles';
 import { useSelector } from 'react-redux';
-import { getTranslate } from 'src/redux/slices/languageSlice';
+import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 
 const CategoryIncome = ({
@@ -21,9 +22,11 @@ const CategoryIncome = ({
     const scrollViewRef = useRef(null);
     const urlCatetory = 'https://png.pngtree.com/element_our/20190530/ourmid/pngtree-correct-icon-image_1267804.jpg';
     const translate = useSelector(getTranslate);
+    const location = useSelector(selectLocale)
+    const color = useThemeColors();
 
     return (
-      <View style={styles.ContainerCategory}>
+      <View style={[styles.ContainerCategory, {backgroundColor: color.background}]}>
         <View style={styles.selectedItemContainer}>
           <Image source={{ uri: urlCatetory }} style={styles.avatar} />
           <Text
@@ -31,7 +34,7 @@ const CategoryIncome = ({
               styles.inputAmount,
               { textAlign: 'left' },
               { fontSize: 18 },
-              { color: '#1b2838' },
+              { color: color.text },
             ]}
           >
             {incomeCategory?.income_source_name || translate('Select category')}
@@ -44,7 +47,7 @@ const CategoryIncome = ({
             <Text
               style={[
                 {
-                  color: '#1b2838',
+                  color: color.text,
                   fontWeight: '600',
                   fontSize: 16,
                   marginRight: 5,
@@ -56,13 +59,13 @@ const CategoryIncome = ({
             <Icon
               name="chevron-forward-outline"
               size={22}
-              color="#1b2838"
+              color={color.text}
             />
           </TouchableOpacity>
         </View>
         <View
-          style={{ height: 1, backgroundColor: '#F4F4F4', bottom: 5 }}
-        />
+          style={{ height: 1, backgroundColor: color.background, bottom: 5 }}
+          />
         <TouchableOpacity
           onPress={handleMostUsedPress}
           style={{
@@ -128,12 +131,12 @@ const CategoryIncome = ({
                         style={styles.avatar}
                       />
                       <Text
-                        style={styles.expenseItem}
+                        style={[styles.expenseItem, {color: color.text}]}
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {item.income_source_name}
-                      </Text>
+                          {location==='vi' ? item.income_source_name_vn : item.income_source_name}
+                          </Text>
                     </View>
                   </TouchableOpacity>
                 )}

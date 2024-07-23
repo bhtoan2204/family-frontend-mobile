@@ -11,12 +11,15 @@ import { selectIncomeTypes, setSelectedIncomeType } from 'src/redux/slices/Incom
 import { IncomeServices } from 'src/services/apiclient';
 import { setType } from 'src/redux/slices/FinanceSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
 
 const CategoryExpenseScreen = ({ navigation }: CategoryExpenseScreenProps) => {
   const expenseType = useSelector(selectExpenseTypes);
   const incomeCategories = useSelector(selectIncomeTypes);
   const family = useSelector(selectSelectedFamily);
   const dispatch = useDispatch();
+  const location = useSelector(selectLocale)
+  const translate = useSelector(getTranslate);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
@@ -114,7 +117,9 @@ const CategoryExpenseScreen = ({ navigation }: CategoryExpenseScreenProps) => {
     <TouchableOpacity style={styles.categoryItemContainer} onPress={() => selectCategory(item)}>
       <Image source={{ uri: urlFood }} style={styles.categoryImage} />
       <Text style={styles.categoryName}>
-        {selectedCategoryType === 'Expense' ? item.expense_type_name : item.income_source_name}
+      {selectedCategoryType === 'Expense' 
+        ? (location === 'vi' ? item.expense_type_name_vn : item.expense_type_name) 
+        : (location === 'vi' ? item.income_source_name_vn : item.income_source_name)}      
       </Text>
       <TouchableOpacity
         onPress={() =>
@@ -133,7 +138,7 @@ const CategoryExpenseScreen = ({ navigation }: CategoryExpenseScreenProps) => {
           <Icon name="arrow-back" size={25} style={styles.backButton} />
         </TouchableOpacity>
         <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerText}>Categories</Text>
+          <Text style={styles.headerText}>{translate('Category')}</Text>
         </View>
         <TouchableOpacity onPress={toggleModal} style={styles.headerButton}>
           <Icon name="add" size={30} style={styles.addImage} />
@@ -180,18 +185,18 @@ const CategoryExpenseScreen = ({ navigation }: CategoryExpenseScreenProps) => {
         onRequestClose={toggleModal}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Add New Category</Text>
+            <Text style={styles.modalTitle}>{translate('Add New Category')}</Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter category name"
+              placeholder={translate('Enter category name')}
               value={newCategoryName}
               onChangeText={setNewCategoryName}
             />
             <TouchableOpacity style={styles.button} onPress={createCategory}>
-              <Text style={styles.buttonText}>Create</Text>
+              <Text style={styles.buttonText}>{translate('Create')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={toggleModal}>
-              <Text style={styles.buttonText}>Cancel</Text>
+              <Text style={styles.buttonText}>{translate('Cancel')}</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -269,6 +269,13 @@
     "Other": "Other",
     "Change receipt":"Change receipt",
     "Expense Details": "Expense Details",
-    
+    "Prev": "Prev",
+    "Next" : "Next",
+    "Total Income": "Total Income",
+    "TitleIncomeList": "Below is a detailed list of your incomes for the selected date range.",
+    "Income Analysis": "Income Analysis",
+    "No data": "No data",
+    "Income Details": "Income Details",
+    "Created by": "Created by",
   }
   

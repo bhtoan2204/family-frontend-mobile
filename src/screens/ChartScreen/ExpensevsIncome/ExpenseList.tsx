@@ -17,6 +17,8 @@ const screenWidth = Dimensions.get('window').width;
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { DailyExpense } from 'src/interface/expense/DailyExpense';
 import { setDate } from 'date-fns';
+import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
   const expenses = useSelector(selectExpenses);
@@ -35,6 +37,9 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   let profile = useSelector(selectProfile);
   const dispatch = useDispatch();
+  const translate = useSelector(getTranslate);
+  const color = useThemeColors(); 
+  
   const [dateTo, setDateTo] = useState(new Date());
   const [dateFrom, setDateFrom] = useState(() => {
     const date = new Date(dateTo);
@@ -94,18 +99,18 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
     navigation.navigate('ExpenseDetailScreen');
   }
   const renderExpenseItem = ({ item }: { item: DailyExpense }) => (
-    <TouchableOpacity onPress={() => {handlePressExpenseItem(item)}} style={styles.expenseItem}>
+    <TouchableOpacity onPress={() => {handlePressExpenseItem(item)}} style={[styles.expenseItem, {backgroundColor: color.white}]}>
       <View style={styles.itemContainer}>
         <View style={styles.expenseContent}>
           <View>
           {item.financeExpenditureType ? 
-              <Text style={styles.expenseCategory}>{item.financeExpenditureType.expense_type_name}</Text> : 
-              <Text style={styles.expenseCategory}>Other</Text>
+              <Text style={[styles.expenseCategory, {color: color.text}]}>{item.financeExpenditureType.expense_type_name}</Text> : 
+              <Text style={[styles.expenseCategory,  {color: color.text}]}>{translate('Other')}</Text>
             }
 
             <View style={styles.row}>
               
-              <Text style={{color: 'gray', }}>By: </Text>
+              <Text style={{color: 'gray', }}>{translate('Create by')}: </Text>
               {item.users && (
               <Text style={styles.expenseName}>{item.users.firstname} {item.users.lastname}</Text>
               )}
@@ -121,7 +126,7 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
 
             </View>
           <View style={{ justifyContent: 'center', }}>
-            <Icon name="chevron-forward" size={20} style={styles.forwardIcon} />
+            <Icon name="chevron-forward" size={20} color={ color.text} />
            </View>
           </View>
         </View>
@@ -144,14 +149,14 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
           onPress={ () => setCurrentPageExpense(currentPageExpense - 1)}
           disabled={currentPageExpense === 1}
           style={{ paddingHorizontal: 10 }}>
-          <Text style={{ color: currentPageExpense === 1 ? COLORS.gray : COLORS.primary }}>Prev</Text>
+          <Text style={{ color: currentPageExpense === 1 ? COLORS.gray : color.text }}>{translate('Prev')}</Text>
         </TouchableOpacity>
-        <Text>{currentPageExpense} / {totalPages}</Text>
+        <Text style={{color : color.text}}>{currentPageExpense} / {totalPages}</Text>
         <TouchableOpacity
           onPress={()=> setCurrentPageExpense(currentPageExpense + 1)}
           disabled={currentPageExpense === totalPages}
           style={{ paddingHorizontal: 10 }}>
-          <Text style={{ color: currentPageExpense === totalPages ? COLORS.gray : COLORS.primary }}>Next</Text>
+          <Text style={{ color: currentPageExpense === totalPages ? COLORS.gray : color.text  }}>{translate('Next')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -202,9 +207,9 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
             </Text>
 
           </View>
-        <View style={{backgroundColor: '#f0f0f0', flex: 1,}}>
+        <View style={{backgroundColor: color.background, flex: 1,}}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
-            <Text style={{ fontSize: 15, marginLeft: 20 }}>From: </Text>
+            <Text style={{ fontSize: 15, marginLeft: 20, color: color.text }}>From: </Text>
             <DateTimePicker
                 style={{ flex: 1 }}
                 value={dateFrom}
@@ -215,7 +220,7 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
                 setDateFrom(currentDate);
                 }}
             />
-            <Text style={{ fontSize: 15, marginLeft: 20}}>To: </Text>
+            <Text style={{ fontSize: 15, marginLeft: 20,color: color.text}}>To: </Text>
             <DateTimePicker
                 style={{ flex: 1 ,  marginRight: 20}}
                 value={dateTo}
@@ -229,9 +234,9 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
             </View>
 
 
-            <View style={styles.sumContainer}>
-              <Text style={styles.sumText}>Total Expense: </Text>
-              <Text style={[styles.sumText, { color: 'red' }]}>-{formatCurrency(sumExpense)} </Text>
+            <View style={[styles.sumContainer, {backgroundColor: color.background}]}>
+              <Text style={[styles.sumText, {color: color.text}]}>Total Expense: </Text>
+              <Text style={[styles.sumText, { color: color.text }]}>-{formatCurrency(sumExpense)} </Text>
               </View>
           
        
