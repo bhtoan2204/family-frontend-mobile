@@ -14,34 +14,36 @@ import { addRoom } from 'src/redux/slices/RoomSlice';
 import NewRoomImageSheet from 'src/assets/images/household_assets/new_room_image_sheet.png'
 import Camera from 'src/assets/images/household_assets/Camera.png'
 import Room2 from 'src/assets/images/household_assets/Room_2.png'
-import EditDescriptionImage from 'src/assets/images/household_assets/edit_description_sheet_img.png'
-import { updateDescription } from 'src/redux/slices/HouseHoldDetailSlice';
+import EditConsumableImage from 'src/assets/images/household_assets/edit_consumable_sheet_img.png'
+import { updateComsumableItem } from 'src/redux/slices/HouseHoldDetailSlice';
 import { handleRestore } from 'src/utils/sheet/func';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
-interface AddEditDescriptionSheetProps {
+interface EditTitleSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
     id_family: number,
     id_item: number,
-    description: string | undefined
+    title:string
 }
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
-const AddEditDescriptionSheet = ({
+const EditTitleSheet = ({
     bottomSheetRef,
     id_family,
     id_item,
-    description
-}: AddEditDescriptionSheetProps) => {
+    title
+}: EditTitleSheetProps) => {
+    const snapPoints = React.useMemo(() => ['95%'], []);
     const [loading, setLoading] = React.useState(false)
     const dispatch = useDispatch<AppDispatch>()
 
     const [errorText, setErrorText] = React.useState('')
     const [showError, setShowError] = React.useState(false)
 
-    const [inputDescription, setInputDescription] = React.useState(description ? description : '')
+    const [inputDescription, setInputDescription] = React.useState(title ? title : '')
     const isDarkMode = useSelector(getIsDarkMode)
+
 
     useEffect(() => {
         if (showError) {
@@ -69,11 +71,13 @@ const AddEditDescriptionSheet = ({
         await handleRestore()
         try {
             setLoading(true)
-            dispatch(updateDescription(
-                inputDescription
-            ))
+            // dispatch(updateComsumableItem({
+            //     id_household_item: id_item,
+            //     quantity: quantity,
+            //     threshold: threshhold,
+            //     expired_date: expired_date
+            // }))
             setLoading(false)
-
             bottomSheetRef.current?.close()
         } catch (error) {
             console.log(error)
@@ -108,14 +112,12 @@ const AddEditDescriptionSheet = ({
         />
     }
 
-
-
     return (
         <BottomSheet
             ref={bottomSheetRef}
             index={-1}
             enableOverDrag={true}
-            enablePanDownToClose={loading ? false : true}
+            // enablePanDownToClose={loading ? false : true}
             enableDynamicSizing={true}
             // snapPoints={snapPoints}
 
@@ -132,7 +134,7 @@ const AddEditDescriptionSheet = ({
                 Keyboard.dismiss()
             }}
             onChange={(index) => {
-                console.log("cc", index)
+                console.log(index)
                 if (index == -1) {
 
                 }
@@ -154,24 +156,23 @@ const AddEditDescriptionSheet = ({
                 }
             </>
 
-            <BottomSheetScrollView className='flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]' automaticallyAdjustKeyboardInsets
+            <BottomSheetScrollView className='flex-1 ' automaticallyAdjustKeyboardInsets
                 keyboardShouldPersistTaps='handled'
                 style={{
                     backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7',
                 }}
             >
-                <View className='flex-1 '>
+                <View className='flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]'>
                     <View className='my-3 items-center'>
-                        <Image source={EditDescriptionImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
+                        <Image source={EditConsumableImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                     </View>
                     <View className=' items-center'>
-                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >Add Description</Text>
-                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >Type in the new description for your item</Text>
+                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >Change title</Text>
+                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >Input your new title for your item</Text>
                     </View>
                     {
                         buildAddDesc()
                     }
-
                     <View>
                         {
                             showError ? <Text className='text-center text-base text-red-500 py-3'>{errorText}</Text> : <></>
@@ -181,14 +182,14 @@ const AddEditDescriptionSheet = ({
                         <TouchableOpacity className='items-center rounded-lg justify-center' style={{
                             width: screenWidth * 0.1,
                             height: screenWidth * 0.1,
-                            backgroundColor: inputDescription != '' ? COLORS.DenimBlue : iOSGrayColors.systemGray6.defaultLight,
+                            backgroundColor: COLORS.DenimBlue,
                         }}
                             onPress={async () => {
                                 await handleSubmit()
                             }}
                         >
                             <Material name='arrow-right' size={24} color={
-                                inputDescription != '' ? 'white' : iOSGrayColors.systemGray.defaultDark
+                                'white'
                             }
                             />
                         </TouchableOpacity>
@@ -201,4 +202,4 @@ const AddEditDescriptionSheet = ({
 }
 
 
-export default AddEditDescriptionSheet
+export default EditTitleSheet

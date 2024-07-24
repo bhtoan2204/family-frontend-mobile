@@ -110,7 +110,7 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
 
     return (
         <>
-            <View className="flex-1 bg-[#F7F7F7]">
+            <View className="flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]">
                 {/* <View style={{ width: screenWidth, height: screenHeight * 0.25 }}>
                     <View className='w-full absolute z-10 flex-row justify-between items-center py-3'>
                         <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
@@ -146,7 +146,7 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
                     imageUrl={familyInfo!.avatar || undefined}
                 />
 
-                <View className='flex-1 bg-[#f7f7f7] mt-[-3%]  rounded-tl-xl rounded-tr-xl '>
+                <View className='flex-1 bg-[#f7f7f7] dark:bg-[#0A1220]  mt-[-3%]  rounded-tl-xl rounded-tr-xl '>
                     <View className='mt-[-3%] bg-transparent '>
                         <HouseHoldTab choosenTab={choosenTab} setChoosenTab={(num) => {
                             // setChoosenTab(num)

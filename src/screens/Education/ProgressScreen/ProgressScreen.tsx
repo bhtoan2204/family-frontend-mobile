@@ -22,7 +22,6 @@ import CourseItem from 'src/components/user/education/progress-screen/course-ite
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import AddCourseSheet from 'src/components/user/education/progress-screen/sheet/add-course-sheet';
 
-
 const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) => {
     const { id_family, id_progress } = route.params
 

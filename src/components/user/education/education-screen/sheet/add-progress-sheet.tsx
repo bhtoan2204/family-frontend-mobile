@@ -90,15 +90,8 @@ const AddProgressSheet = ({
 
     const handleAdd = async () => {
         console.log('add')
-        // const newHouseholdItem: HouseHoldItemInterface = {
-        //     id_family: id_family!,
-        //     item_name: householdName,
-        //     item_description: '',
-        //     item_imageurl: '',
-        //     id_category: householdCategory,
-        //     id_household_item: Math.floor(Math.random() * 1000)
-        // }
-        // dispatch(addHouseholdItem(newHouseholdItem))
+        Keyboard.dismiss()
+        await handleRestore()
         const memberData = members.find(member => member.id_user === pickedIdUser)
         const res = await EducationServices.createEducation(
             id_family!,

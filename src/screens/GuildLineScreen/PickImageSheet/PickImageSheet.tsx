@@ -7,8 +7,6 @@ const PickImageSheet = ({ bottomSheetRef, handleTakePhoto, handlePickImage }: { 
         <RBSheet
             ref={bottomSheetRef}
             closeOnPressMask={true}
-            draggable
-            dragOnContent
             customStyles={{
                 container: {
                     backgroundColor: "white",
@@ -21,19 +19,19 @@ const PickImageSheet = ({ bottomSheetRef, handleTakePhoto, handlePickImage }: { 
                 }
             }}
         >
-            <View className='flex-col p-6  h-full bg-[#fafafa] justify-center'>
+            <View className='flex-col p-6  h-full bg-[#f7f7f7] dark:bg-[#0A1220] justify-center'>
 
-                <TouchableOpacity className='h-16 mb-8 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
+                <TouchableOpacity className='h-16 mb-8 flex-row items-center justify-center border-[1px] border-[#d1d1d1] dark:border-[#8D94A5] rounded-lg shadow-sm bg-white dark:bg-[#171A21]' onPress={async () => {
                     await handleTakePhoto()
 
                 }}>
-                    <Text className='text-lg font-semibold'>Take a photo</Text>
+                    <Text className='text-lg font-semibold text-[#A6A6A6] dark:text-white'>Take a photo</Text>
                 </TouchableOpacity>
-                <TouchableOpacity className='h-16 flex-row items-center justify-center border-[1px] border-[#d1d1d1] rounded-lg shadow-sm bg-white' onPress={async () => {
+                <TouchableOpacity className='h-16 flex-row items-center justify-center border-[1px] border-[#d1d1d1] dark:border-[#8D94A5] rounded-lg shadow-sm bg-white dark:bg-[#171A21]' onPress={async () => {
                     await handlePickImage()
 
                 }}>
-                    <Text className='text-lg font-semibold'>Choose Image from Library</Text>
+                    <Text className='text-lg font-semibold text-[#A6A6A6] dark:text-white'>Choose Image from Library</Text>
                 </TouchableOpacity>
             </View>
         </RBSheet>

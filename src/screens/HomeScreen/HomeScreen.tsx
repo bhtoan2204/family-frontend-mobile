@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Image,
@@ -10,16 +10,16 @@ import {
   FlatList,
 } from 'react-native';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import {FamilyServices, PackageServices} from 'src/services/apiclient';
+import { FamilyServices, PackageServices } from 'src/services/apiclient';
 import styles from './styles';
 import {
   PurchasedScreenProps,
   ViewAllFamilyScreenProps,
 } from 'src/navigation/NavigationTypes';
-import {Profile} from 'src/redux/slices/ProfileSclice';
-import {useDispatch, useSelector} from 'react-redux';
-import {MaterialIcons} from '@expo/vector-icons';
-import {COLORS} from 'src/constants';
+import { Profile } from 'src/redux/slices/ProfileSclice';
+import { useDispatch, useSelector } from 'react-redux';
+import { MaterialIcons } from '@expo/vector-icons';
+import { COLORS } from 'src/constants';
 import chat from 'src/assets/icons/chat.png';
 import feedback from 'src/assets/icons/feedback.png';
 import bundle from 'src/assets/icons/bundles.png';
@@ -28,18 +28,20 @@ import guideline from 'src/assets/icons/guideline.png';
 import family from 'src/assets/icons/family.png';
 import news from 'src/assets/icons/news.png';
 import theme from 'src/assets/icons/theme.png';
-import {ScrollView} from 'react-native-gesture-handler';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {UserProfile} from 'src/interface/user/userProfile';
-import {RootState} from 'src/redux/store';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { UserProfile } from 'src/interface/user/userProfile';
+import { RootState } from 'src/redux/store';
 import {
   setFamilies,
   setFamilyMembers,
   setSelectedFamily,
 } from 'src/redux/slices/FamilySlice';
-import {Family} from 'src/interface/family/family';
-import {setFamilyServices} from 'src/redux/slices/ServiceSlice';
+import { Family } from 'src/interface/family/family';
+import { setFamilyServices } from 'src/redux/slices/ServiceSlice';
 import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
+import SharedGuildlineItem from 'src/components/user/guideline/shared/shared-guideline-item';
+import { Guildline } from 'src/interface/guideline/guideline';
 
 const icons = {
   bundle,
@@ -69,6 +71,52 @@ interface Item {
   onPress: () => void;
 }
 
+const publicGuidelines = {
+  "data": [
+    {
+      "id_guide_item": 13,
+      "id_family": 96,
+      "name": "Test",
+      "description": "Test desc",
+      "steps": null,
+      "is_shared": true,
+      "created_at": "2024-07-17T11:10:55.474Z",
+      "updated_at": "2024-07-21T10:55:50.841Z"
+    },
+    {
+      "id_guide_item": 11,
+      "id_family": 96,
+      "name": "Tivi",
+      "description": "This guide show you how to use your TV",
+      "steps": null,
+      "is_shared": true,
+      "created_at": "2024-07-04T15:23:02.756Z",
+      "updated_at": "2024-07-21T11:00:26.991Z"
+    },
+    {
+      "id_guide_item": 3,
+      "id_family": 96,
+      "name": "Hướng dẫn sử dụng TV",
+      "description": "Mở TV",
+      "steps": null,
+      "is_shared": true,
+      "created_at": "2024-06-18T18:53:23.832Z",
+      "updated_at": "2024-07-21T11:00:36.364Z"
+    },
+    {
+      "id_guide_item": 5,
+      "id_family": 96,
+      "name": "Refrigerator",
+      "description": "This guide shows you how to use your Refrigerator",
+      "steps": null,
+      "is_shared": true,
+      "created_at": "2024-06-25T14:41:53.636Z",
+      "updated_at": "2024-07-21T11:00:38.922Z"
+    }
+  ],
+  "total": 4
+}
+
 const HomeScreen = ({
   navigation,
 }: PurchasedScreenProps & ViewAllFamilyScreenProps) => {
@@ -85,7 +133,7 @@ const HomeScreen = ({
 
   const source =
     profile.avatar && profile.avatar !== '[NULL]'
-      ? {uri: profile.avatar}
+      ? { uri: profile.avatar }
       : require('../../assets/images/default_ava.png');
   const handlePress = () => {
     setIsLightMode(!isLightMode);
@@ -99,9 +147,9 @@ const HomeScreen = ({
   const translate = useSelector(getTranslate);
 
   const handleScroll = (event: {
-    nativeEvent: {layoutMeasurement: any; contentOffset: any};
+    nativeEvent: { layoutMeasurement: any; contentOffset: any };
   }) => {
-    const {layoutMeasurement, contentOffset} = event.nativeEvent;
+    const { layoutMeasurement, contentOffset } = event.nativeEvent;
     const pageNum = Math.floor(contentOffset.x / layoutMeasurement.width);
     setCurrentPage(pageNum);
   };
@@ -126,7 +174,7 @@ const HomeScreen = ({
       const currentDate = new Date();
 
       const validFamilies = allFamilies.filter(
-        (family: {expired_at: string | number | Date}) => {
+        (family: { expired_at: string | number | Date }) => {
           if (!family.expired_at) return false;
           const expiredAtDate = new Date(family.expired_at);
           return expiredAtDate > currentDate;
@@ -161,7 +209,7 @@ const HomeScreen = ({
   };
 
   const handleChat = () => {
-    navigation.navigate('MessageTab', {screen: 'ChatList'});
+    navigation.navigate('MessageTab', { screen: 'ChatList' });
   };
 
   const handleGetProfile = async () => {
@@ -175,8 +223,24 @@ const HomeScreen = ({
     }
   };
 
+  const buildPublicGuidelines = () => {
+    // const dat: Guildline[] = publicGuidelines.data;
+    return <View style={styles.comboContainer}>
+      <Text style={styles.textCombo}>Public guidelines</Text>
+      {
+        publicGuidelines.data.map((item: Guildline, index: number) => {
+          return <SharedGuildlineItem key={index} item={item} index={index}
+            onPress={() => {
+              navigation.navigate('SharedGuidelineDetail', { id: item.id_guide_item, id_family: item.id_family })
+            }}
+          />
+        })
+      }
+    </View>
+  }
+
   const views = [
-    <View style={[styles.pictureBox, {backgroundColor: '#9572A7'}]}>
+    <View style={[styles.pictureBox, { backgroundColor: '#9572A7' }]}>
       <View style={styles.columnStyle}>
         <Text style={styles.text}>Managing anything is now easier</Text>
         <Image
@@ -186,12 +250,12 @@ const HomeScreen = ({
         />
       </View>
     </View>,
-    <View style={[styles.pictureBox2, {backgroundColor: '#84C9FE'}]}>
+    <View style={[styles.pictureBox2, { backgroundColor: '#84C9FE' }]}>
       <View style={styles.rowStyle2}>
-        <Text style={[styles.text2, {maxWidth: '68%'}]}>
+        <Text style={[styles.text2, { maxWidth: '68%' }]}>
           Time managed dreams realized
         </Text>
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <Image
             source={require('../../assets/images/family-picture-3.png')}
             resizeMode="stretch"
@@ -200,7 +264,7 @@ const HomeScreen = ({
         </View>
       </View>
     </View>,
-    <View style={[styles.pictureBox, {backgroundColor: '#FD927B'}]}>
+    <View style={[styles.pictureBox, { backgroundColor: '#FD927B' }]}>
       <View style={styles.columnStyle}>
         <Image
           source={require('../../assets/images/family-picture-2.png')}
@@ -218,14 +282,14 @@ const HomeScreen = ({
     handleGetProfile();
 
     if (scrollViewRef.current) {
-      scrollViewRef.current.scrollTo({x: 0, animated: false});
+      scrollViewRef.current.scrollTo({ x: 0, animated: false });
     }
 
     const interval = setInterval(() => {
       setCurrentPage(prevPage => {
         let nextPage = prevPage + 1;
         if (nextPage === viewsWithFake.length) {
-          scrollViewRef.current?.scrollTo({x: 0, animated: false});
+          scrollViewRef.current?.scrollTo({ x: 0, animated: false });
           nextPage = 0;
         } else {
           scrollViewRef.current?.scrollTo({
@@ -240,7 +304,7 @@ const HomeScreen = ({
     return () => clearInterval(interval);
   }, []);
   const handleNavigateNews = () => {
-    navigation.navigate('FamilyStack', {screen: 'News'});
+    navigation.navigate('FamilyStack', { screen: 'News' });
   };
 
   const data: Item[] = [
@@ -262,7 +326,7 @@ const HomeScreen = ({
       icon: 'feedback',
       label: translate('Feedback'),
       onPress: () => {
-        navigation.navigate('AuthStack', {screen: 'Feedback'});
+        navigation.navigate('AuthStack', { screen: 'Feedback' });
       },
     },
     {
@@ -273,11 +337,11 @@ const HomeScreen = ({
       },
     },
     {
-    
+
       icon: 'guideline',
       label: translate('Guideline'),
       onPress: () => {
-        navigation.navigate('FamilyStack', {screen: 'GuidelinePublic'});
+        navigation.navigate('FamilyStack', { screen: 'GuidelinePublic' });
       },
     },
 
@@ -285,7 +349,7 @@ const HomeScreen = ({
       icon: 'language',
       label: translate('Language'),
       onPress: () => {
-         navigation.navigate('FamilyStack', {screen: 'LanguageSelector'});
+        navigation.navigate('FamilyStack', { screen: 'LanguageSelector' });
       },
     },
     {
@@ -295,7 +359,7 @@ const HomeScreen = ({
       //   console.log('Theme pressed');
       // },
       onPress: () => {
-        navigation.navigate('FamilyStack', {screen: 'ThemeSwitcher'});
+        navigation.navigate('FamilyStack', { screen: 'ThemeSwitcher' });
       },
     },
   ];
@@ -303,10 +367,10 @@ const HomeScreen = ({
   return (
     <ImageBackground
       source={require('../../assets/images/home-screen-light.png')}
-      style={{flex: 1}}
+      style={{ flex: 1 }}
       resizeMode="stretch">
-      <SafeAreaView style={{flex: 1, padding: 10}}>
-        <View style={[styles.container, {marginBottom: 90}]}>
+      <SafeAreaView style={{ flex: 1, padding: 10 }}>
+        <View style={[styles.container, { marginBottom: 90 }]}>
           <View style={styles.circleContainer}></View>
           <View
             style={{
@@ -316,8 +380,8 @@ const HomeScreen = ({
               bottom: 25,
               marginTop: 40,
             }}>
-            <View style={{flexDirection: 'column', paddingLeft: 20}}>
-              <Text style={{color: COLORS.white, fontSize: 30}}>{translate('welcome')}</Text>
+            <View style={{ flexDirection: 'column', paddingLeft: 20 }}>
+              <Text style={{ color: COLORS.white, fontSize: 30 }}>{translate('welcome')}</Text>
               <Text
                 style={{
                   color: COLORS.white,
@@ -328,12 +392,12 @@ const HomeScreen = ({
                 {`${profile?.firstname} ${profile?.lastname}`}
               </Text>
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text
-                  style={{color: COLORS.white, fontSize: 17, right: 30}}></Text>
+                  style={{ color: COLORS.white, fontSize: 17, right: 30 }}></Text>
               </View>
             </View>
-            <View style={{flexDirection: 'row', right: 20}}>
+            <View style={{ flexDirection: 'row', right: 20 }}>
               <Image
                 source={source}
                 resizeMode="contain"
@@ -346,7 +410,7 @@ const HomeScreen = ({
                   alignItems: 'flex-end',
                   justifyContent: 'flex-end',
                   shadowColor: '#000',
-                  shadowOffset: {width: 0, height: 2},
+                  shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 5,
                   shadowRadius: 10,
                   borderWidth: 3,
@@ -366,8 +430,8 @@ const HomeScreen = ({
             </View>
           </View>
 
-          <ScrollView showsVerticalScrollIndicator={false} style={{top: 40}}>
-            <View style={{marginBottom: 40}}>
+          <ScrollView showsVerticalScrollIndicator={false} style={{ top: 40 }}>
+            <View style={{ marginBottom: 40 }}>
               <FlatList
                 data={data}
                 numColumns={4}
@@ -379,9 +443,9 @@ const HomeScreen = ({
                       ref={scrollViewRef}
                       horizontal
                       pagingEnabled
-                      style={{flex: 1}}>
+                      style={{ flex: 1 }}>
                       {viewsWithFake.map((view, index) => (
-                        <View key={index} style={{width, height: 300}}>
+                        <View key={index} style={{ width, height: 300 }}>
                           {view}
                         </View>
                       ))}
@@ -398,13 +462,13 @@ const HomeScreen = ({
                         </Text>
                       ))}
                     </View>
-                    <View style={{flexDirection: 'column'}}>
+                    <View style={{ flexDirection: 'column' }}>
                       <Text style={styles.title}>Let's Start with Service</Text>
-                      <View style={{flexDirection: 'row'}}></View>
+                      <View style={{ flexDirection: 'row' }}></View>
                     </View>
                   </>
                 )}
-                renderItem={({item, index}) => (
+                renderItem={({ item, index }) => (
                   <View
                     style={{
                       width: '23%',
@@ -424,7 +488,7 @@ const HomeScreen = ({
                         alignItems: 'center',
                         justifyContent: 'center',
                         shadowColor: '#000',
-                        shadowOffset: {width: 0, height: 1},
+                        shadowOffset: { width: 0, height: 1 },
                         shadowOpacity: 0.2,
                         shadowRadius: 5,
                         marginTop: 20,
@@ -432,7 +496,7 @@ const HomeScreen = ({
                       }}>
                       <Image
                         source={icons[item.icon]}
-                        style={{width: '60%', height: '60%'}}
+                        style={{ width: '60%', height: '60%' }}
                         resizeMode="stretch"
                       />
                       {(item.icon === 'feedback' || item.icon === 'chat') && (
@@ -487,6 +551,10 @@ const HomeScreen = ({
                 </View>
               </ScrollView>
             </View>
+            {
+              buildPublicGuidelines()
+            }
+
           </ScrollView>
         </View>
       </SafeAreaView>

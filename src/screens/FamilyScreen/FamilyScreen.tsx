@@ -21,7 +21,7 @@ import {
   setSelectedFamily,
   setFamilies,
   setFamilyMembers,
-  
+
 } from 'src/redux/slices/FamilySlice';
 import { AppDispatch } from 'src/redux/store';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -237,7 +237,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
         });
         break;
       case 5:
-        navigation.navigate('FamilyStack', {
+        navigation.navigate('GuidelineStack', {
           screen: 'GuildLine',
           params: { id_family: selectedFamily!.id_family },
         });

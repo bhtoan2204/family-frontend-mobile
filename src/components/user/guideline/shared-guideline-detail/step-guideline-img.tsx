@@ -27,10 +27,11 @@ interface StepGuideLineImageProps {
     currentStep: number;
     isKeyboardVisible: boolean;
     guildLineSteps: Step[];
+    editable: boolean;
 }
 
 
-const StepGuideLineImage = ({
+const StepSharedGuideLineImage = ({
     isAdding,
     isEditing,
     setAdding,
@@ -39,13 +40,11 @@ const StepGuideLineImage = ({
     guideLineStepData,
     currentStep,
     isKeyboardVisible,
-    guildLineSteps
+    guildLineSteps,
+    editable
 }: StepGuideLineImageProps) => {
     const prevStepRef = React.useRef(currentStep);
     const isValid = useImageValid({ imageUrl: guideLineStepData.imageUrl || "" });
-    // const isKeyboardVisible = useKeyboardVisible();
-    // const isInputing = isEditing && isKeyboardVisible
-    // console.log(isInputing, isKeyboardVisible)
     React.useEffect(() => {
         console.log(prevStepRef.current, currentStep)
         prevStepRef.current = currentStep;
@@ -53,44 +52,6 @@ const StepGuideLineImage = ({
 
     return (
         <>
-            {/* <Animatable.View animation={currentStep > prevStepRef.current ? 'bounceInRight' : 'bounceInLeft'} key={currentStep} duration={700} className='h-[50%] w-[90%] flex-col justify-center items-center mb-10  rounded-full mx-4 ' style={{
-
-            }}>
-                <TouchableOpacity onPress={() => {
-                    if (isKeyboardVisible) {
-                        Keyboard.dismiss()
-                    } else {
-                        console.log(currentStep)
-                        bottomSheetRef.current?.open()
-                    }
-                }} activeOpacity={isKeyboardVisible ? 0.8 : 1}>
-                    <ImageComponent defaultImage={Img} imageUrl={guideLineStepData.imageUrl || ""} style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} />
-                    {
-                        isEditing && <View className='opacity-80 bg-white h-full w-full flex justify-center items-center rounded absolute'>
-
-                            <Material name="image-edit-outline" size={30} style={{ color: "gray" }} className='' />
-                        </View>
-                    }
-                </TouchableOpacity>
-                {
-                    !isValid
-                    &&
-                    <TouchableOpacity style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} className='absolute' activeOpacity={isKeyboardVisible ? 0.8 : 1} onPress={() => {
-                        if (isKeyboardVisible) {
-                            Keyboard.dismiss()
-                        } else {
-                            console.log(currentStep)
-                            bottomSheetRef.current?.open()
-                        }
-                    }}>
-                        <View className='opacity-80 bg-white h-full w-full flex justify-center items-center rounded'>
-
-                            <Material name="file-image-plus" size={30} style={{ color: "gray" }} className='' />
-                        </View>
-                    </TouchableOpacity>
-                }
-
-            </Animatable.View > */}
             {
                 guildLineSteps.map((step, index) => {
                     return <React.Fragment key={index}>
@@ -98,7 +59,7 @@ const StepGuideLineImage = ({
                             currentStep === index && <Animatable.View animation={prevStepRef.current <= index ? 'bounceInRight' : 'bounceInLeft'} key={index} duration={700} className='h-[50%] w-[90%] flex-col justify-center items-center mb-10  rounded-full mx-4 ' style={{
 
                             }}>
-                                <TouchableOpacity onPress={() => {
+                                <TouchableOpacity disabled={editable == false} onPress={() => {
                                     if (isKeyboardVisible) {
                                         Keyboard.dismiss()
                                     } else {
@@ -111,7 +72,7 @@ const StepGuideLineImage = ({
                                 {
                                     !isValid
                                     &&
-                                    <TouchableOpacity style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} className='absolute' activeOpacity={isKeyboardVisible ? 0.8 : 1} onPress={() => {
+                                    <TouchableOpacity disabled={editable == false} style={{ height: Dimensions.get("window").height * 0.5, width: Dimensions.get("window").width * 0.9 }} className='absolute' activeOpacity={isKeyboardVisible ? 0.8 : 1} onPress={() => {
                                         if (isKeyboardVisible) {
                                             Keyboard.dismiss()
                                         } else {
@@ -138,4 +99,4 @@ const StepGuideLineImage = ({
     )
 }
 
-export default StepGuideLineImage
+export default StepSharedGuideLineImage

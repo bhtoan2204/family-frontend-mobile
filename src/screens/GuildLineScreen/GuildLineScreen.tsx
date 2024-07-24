@@ -18,6 +18,8 @@ import { clearGuideline, setGuideline } from 'src/redux/slices/GuidelineSlice'
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet'
 import AddGuidelineSheet from 'src/components/user/guideline/sheet/add-guideline-sheet'
 import UpdateGuidelineSheet from 'src/components/user/guideline/sheet/update-guideline-sheet'
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
+import { ScreenHeight } from 'react-native-elements/dist/helpers'
 // id_item: number;
 //   name: string;
 //   description: string;
@@ -29,8 +31,11 @@ const guildLineData: Guildline = {
     name: 'Shared guideline',
     description: 'This is the shared guideline',
     created_at: '2024-04-30T08:59:03.177Z',
-    updated_at: '2024-04-30T08:59:03.177Z'
+    updated_at: '2024-04-30T08:59:03.177Z',
+    is_shared: false,
 }
+
+
 
 const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
@@ -46,6 +51,11 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
     const [pickedIdGuideline, setPickedIdGuideline] = React.useState<number>(-1);
     const [pickedNameGuideline, setPickedNameGuideline] = React.useState<string>('');
     const [pickedDescriptionGuideline, setPickedDescriptionGuideline] = React.useState<string>('');
+
+    const [isScrollDown, setIsScrollDown] = React.useState<boolean>(false)
+    const isDarkMode = useSelector(getIsDarkMode)
+    const scrollYRef = React.useRef<any>(0);
+
 
     useEffect(() => {
         const fetchGuidelines = async () => {
@@ -77,111 +87,159 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
         }
     }, []);
 
+
+
     if (loading) {
-        return <ActivityIndicator style={{ flex: 1, justifyContent: 'center' }} size="small" />;
+        return <View className='flex-1 justify-center items-center bg-[#fff] dark:bg-[#0A1220]'>
+            <ActivityIndicator style={{ justifyContent: 'center' }} size="small" />
+        </View>;
+    }
+
+    const renderEmptyGuideline = () => {
+        const emptyGuidelineName = 'Add a guideline';
+        const emptyGuidelineDescription = 'Tap here to add a guideline';
+        const emptyGuideline: Guildline = {
+            id_guide_item: -1,
+            id_family: -1,
+            name: emptyGuidelineName,
+            description: emptyGuidelineDescription,
+            created_at: '',
+            updated_at: '',
+            is_shared: false,
+        }
+        return <GuildlineItem item={emptyGuideline}
+            onPress={() => {
+                addGuidelineBottomSheetRef.current?.expand()
+            }}
+            onUpdate={() => { }}
+        />
     }
 
     return (
-        <SafeAreaView className="flex-1 bg-[#F7F7F7]">
-            <View className="flex-1 bg-[#F7F7F7]">
-                <View className='w-full  flex-row justify-between items-center py-3 bg-white'>
-                    <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
-                        <Material name="chevron-left" size={30} style={{ color: COLORS.AuroMetalSaurus, fontWeight: "bold" }} />
-                        {/* <Text className='text-lg font-semibold text-gray-600' style={{ color: COLORS.AuroMetalSaurus }}>Back</Text> */}
-                    </TouchableOpacity>
-                    <View className='mr-3'>
+        <View className="flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]">
+            <StatusBar barStyle={
+                isDarkMode ? 'light-content' : 'dark-content'
+            } backgroundColor='transparent' translucent />
+            <View className='w-full  flex-row justify-between items-center py-3 mt-7 '>
+                <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
+                    <Material name="chevron-left" size={30} style={{ color: COLORS.AuroMetalSaurus, fontWeight: "bold" }} />
+                    {/* <Text className='text-lg font-semibold text-gray-600' style={{ color: COLORS.AuroMetalSaurus }}>Back</Text> */}
+                </TouchableOpacity>
+                {/* <View className='mr-3'>
                         <TouchableOpacity onPress={() => {
-                            // refRBSheet.current?.open()
                             addGuidelineBottomSheetRef.current?.expand()
 
                         }} >
-                            {/* <Material name="plus" size={24} style={{ color: COLORS.primary, fontWeight: "bold" }} className='font-semibold' /> */}
                             <Text className='text-lg font-semibold' style={{ color: COLORS.AuroMetalSaurus }}>Add</Text>
                         </TouchableOpacity>
-                    </View>
-                </View>
-                <ScrollView className='pt-2' showsVerticalScrollIndicator={false}>
-                    <View className='flex-row px-3 py-2'>
-                        <TouchableOpacity className='flex-1 py-3 items-center justify-center ' style={{
-                            // backgroundColor: iOSGrayColors.systemGray6.defaultLight
-                            borderBottomColor: tab == 0 ? iOSColors.systemBlue.defaultLight : undefined,
-                            borderBottomWidth: tab == 0 ? 2 : undefined,
+                    </View> */}
+            </View>
 
-                        }} onPress={() => {
-                            setTab(0)
-                        }}>
-                            <Text style={{
-                                color: iOSColors.systemBlue.defaultLight,
-                                fontWeight: 'bold'
-                            }}>Guidelines</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity className='flex-1  py-3 items-center justify-center ' style={{
-                            borderBottomColor: tab == 1 ? 'black' : undefined,
-                            borderBottomWidth: tab == 1 ? 2 : undefined,
-                        }} onPress={() => {
-                            setTab(1)
-                        }}>
-                            <Text style={{
-                                fontWeight: 'bold'
-                            }}>Shared guidelines</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <Animatable.View animation={tab == 0 ? 'slideInLeft' : 'slideInRight'} key={tab} duration={400} className='' style={{
+            <ScrollView className='pt-2' showsVerticalScrollIndicator={false}
+                ref={scrollYRef}
+                onScroll={(event) => {
+                    // 0 means the top of the screen, 100 would be scrolled 100px down
+                    const currentYPosition = event.nativeEvent.contentOffset.y
+                    const oldPosition = scrollYRef.current
 
+                    if (oldPosition < currentYPosition) {
+                        // we scrolled down
+                        // console.log(1)
+                        setIsScrollDown(true)
+                    } else {
+                        // we scrolled up
+                        // console.log(2)
+                        setIsScrollDown(false)
+
+                    }
+                    // save the current position for the next onScroll event
+                    scrollYRef.current = currentYPosition
+                }}
+            >
+                <View className='flex-row px-3 py-2'>
+                    <TouchableOpacity className='flex-1 py-3 items-center justify-center ' style={{
+                        // backgroundColor: iOSGrayColors.systemGray6.defaultLight
+                        borderBottomColor: tab == 0 ? iOSColors.systemBlue.defaultLight : undefined,
+                        borderBottomWidth: tab == 0 ? 2 : undefined,
+
+                    }} onPress={() => {
+                        setTab(0)
                     }}>
-                        {
-                            tab == 0 ? <>
-                                {
-                                    guidelines.map((item, index) => (
-                                        <React.Fragment key={index}>
-                                            <GuildlineItem item={item}
-                                                onPress={() => {
-                                                    navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_guide_item })
-                                                }}
-                                                key={index}
-                                                onUpdate={() => {
-                                                    setPickedIdGuideline(item.id_guide_item);
-                                                    setPickedNameGuideline(item.name);
-                                                    setPickedDescriptionGuideline(item.description);
-                                                    updateGuidelineBottomSheetRef.current?.expand()
+                        <Text style={{
+                            color: iOSColors.systemBlue.defaultLight,
+                            fontWeight: 'bold'
+                        }}>Guidelines</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity className='flex-1  py-3 items-center justify-center ' style={{
+                        borderBottomColor: tab == 1 ? (isDarkMode ? 'white' : 'black') : undefined,
+                        borderBottomWidth: tab == 1 ? 2 : undefined,
+                    }} onPress={() => {
+                        setTab(1)
+                    }}>
+                        <Text className='text-black dark:text-white' style={{
+                            fontWeight: 'bold'
+                        }}>Shared guidelines</Text>
+                    </TouchableOpacity>
+                </View>
+                <Animatable.View animation={tab == 0 ? 'slideInLeft' : 'slideInRight'} key={tab} duration={400} className='' style={{
 
-                                                }}
-                                            // onUpdate={() => {
-                                            //     navigation.navigate('UpdateGuildLine', {
-                                            //         id_family: id_family, id_item: item.id_guide_item,
-                                            //         title: item.name, description: item.description
-                                            //     })
-                                            // }}
-                                            />
-                                        </React.Fragment>
-                                    ))
-                                }
+                }}>
+                    {
+                        tab == 0 ? <>
+                            {
+                                guidelines.length > 0 ? guidelines.map((item, index) => (
+                                    <React.Fragment key={index}>
+                                        <GuildlineItem item={item}
+                                            onPress={() => {
+                                                navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_guide_item })
+                                            }}
+                                            key={index}
+                                            onUpdate={() => {
+                                                setPickedIdGuideline(item.id_guide_item);
+                                                setPickedNameGuideline(item.name);
+                                                setPickedDescriptionGuideline(item.description);
+                                                updateGuidelineBottomSheetRef.current?.expand()
 
-                            </> : <>
-                                <GuildlineItem item={guildLineData}
-                                    onPress={() => {
-                                        navigation.navigate('SharedGuildLine', { id_family: id_family, id_item: guildLineData.id_guide_item })
-                                    }}
-                                    onUpdate={() => { }}
-                                />
-                            </>
-                        }
-                    </Animatable.View>
-                </ScrollView>
-                {/* <GuildlineItem item={guildLineData} onPress={() => {
+                                            }}
+                                        />
+                                    </React.Fragment>
+                                )) : renderEmptyGuideline()
+                            }
+
+                        </> : <>
+                            <GuildlineItem item={guildLineData}
+                                onPress={() => {
+                                    navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: 1 })
+                                }}
+                                onUpdate={() => { }}
+                            />
+                        </>
+                    }
+                </Animatable.View>
+            </ScrollView>
+            <TouchableOpacity className={`absolute rounded-full  bottom-5 right-5  bg-[#66C0F4] items-center justify-center transition ${isScrollDown ? "opacity-30" : ""}`} style={{
+                width: ScreenHeight * 0.085,
+                height: ScreenHeight * 0.085,
+            }}
+                onPress={() => {
+                    addGuidelineBottomSheetRef.current?.expand()
+                }}
+            >
+                <Material name='plus' size={30} color='white' />
+            </TouchableOpacity>
+            {/* <GuildlineItem item={guildLineData} onPress={() => {
                     navigation.navigate('SharedGuildLine', { id_family: id_family, id_item: guildLineData.id_item })
                 }} /> */}
-                {/* <AddGuildLineSheet refRBSheet={refRBSheet} /> */}
-                <AddGuidelineSheet bottomSheetRef={addGuidelineBottomSheetRef} id_family={id_family!}
-                />
-                <UpdateGuidelineSheet bottomSheetRef={updateGuidelineBottomSheetRef} id_family={id_family!}
-                    description={pickedDescriptionGuideline}
-                    id_item={pickedIdGuideline}
-                    name={pickedNameGuideline}
+            {/* <AddGuildLineSheet refRBSheet={refRBSheet} /> */}
+            <AddGuidelineSheet bottomSheetRef={addGuidelineBottomSheetRef} id_family={id_family!}
+            />
+            <UpdateGuidelineSheet bottomSheetRef={updateGuidelineBottomSheetRef} id_family={id_family!}
+                description={pickedDescriptionGuideline}
+                id_item={pickedIdGuideline}
+                name={pickedNameGuideline}
 
-                />
-            </View>
-        </SafeAreaView>
+            />
+        </View>
     )
 }
 

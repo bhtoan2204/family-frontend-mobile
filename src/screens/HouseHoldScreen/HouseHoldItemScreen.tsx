@@ -18,7 +18,7 @@ const HouseHoldItemScreen: React.FC<HouseHoldItemScreenProps> = ({ navigation, r
 
 
     return (
-        <View className='flex-1 pt-5 rounded-tl-lg rounded-tr-lg bg-[#f7f7f7]'>
+        <View className='flex-1 pt-5 rounded-tl-lg rounded-tr-lg bg-[#f7f7f7] dark:bg-[#0A1220]'>
             <ScrollView className='flex-1'>
                 <View className='items-center'>
 

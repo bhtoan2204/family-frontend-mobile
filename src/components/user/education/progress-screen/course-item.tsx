@@ -52,7 +52,8 @@ const CourseItem = ({ data, onPress, index }: CourseItemProps) => {
             data.component_scores.forEach((item) => {
                 if (item.score) total += 1;
             })
-            return (total + isFinalDone + isMidtermDone) * 100 / (data.component_scores.length + i);
+            const fin =  (total + isFinalDone + isMidtermDone) * 100 / (data.component_scores.length + i);
+            return Math.floor(fin)
         }
         return 0;
 

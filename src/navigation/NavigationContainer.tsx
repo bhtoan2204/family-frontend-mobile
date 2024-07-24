@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthStack from './Routes/AuthStack';
 import HomeTab from './Routes/HomeTab';
@@ -17,13 +17,24 @@ import ShoppingListCategoryStack from './Routes/ShoppingListCategoryStack';
 import TodoListStack from './Routes/TodoListStack';
 import EducationStack from './Routes/EducationStack';
 import { useGetColorScheme } from 'src/hooks/useColorScheme';
-
+import { useColorScheme } from 'nativewind';
+import { SharedGuidelineDetailProps } from './NavigationTypes';
+import SharedGuidelineDetailScreen from 'src/screens/GuildLineScreen/SharedGuideLineDetailScreen';
+import GuidelineStack from './Routes/GuidelineStack';
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
   useGetColorScheme();
+  const { colorScheme } = useColorScheme();
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      theme={{
+        dark: colorScheme == 'dark',
+        colors: {
+          ...DefaultTheme.colors,
+        }
+      }}
+    >
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
@@ -43,7 +54,8 @@ const Navigation = () => {
         <Stack.Screen name="ShoppingListStack" component={ShoppingListStack} />
         <Stack.Screen name="TodoListStack" component={TodoListStack} />
         <Stack.Screen name="EducationStack" component={EducationStack} />
-
+        <Stack.Screen name="GuidelineStack" component={GuidelineStack} />
+        <Stack.Screen name="SharedGuidelineDetail" component={SharedGuidelineDetailScreen} />
         {/* <Stack.Screen name="ShoppingListCategoryStack" component={ShoppingListCategoryStack}/> */}
 
       </Stack.Navigator>

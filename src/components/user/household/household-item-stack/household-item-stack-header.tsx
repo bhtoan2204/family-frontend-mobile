@@ -17,6 +17,7 @@ import { iOSColors, iOSGrayColors } from 'src/constants/ios-color'
 import { BlurView } from 'expo-blur'
 import ImageComponent from 'src/components/Image/Image'
 import FamilyImage from 'src/assets/images/household_assets/add_room.png'
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 
 
 interface HouseHoldItemStackHeaderProps {
@@ -41,7 +42,7 @@ const HouseHoldItemStackHeader = ({
 }: HouseHoldItemStackHeaderProps) => {
     // const image = useSelector((state: RootState) => state.householdItems).find(item => item.id_household_item === data.id_household_item)?.item_image!
     // console.log(data.)
-
+    const isDarkMode = useSelector(getIsDarkMode)
     return (
         <>
             <ImageBackground
@@ -49,7 +50,7 @@ const HouseHoldItemStackHeader = ({
                 style={{ width: screenWidth, height: screenHeight * 0.3 }}
             >
                 <View className='w-full absolute z-10 flex-row justify-between items-center py-3 mt-5'>
-                    <BlurView intensity={35} tint='dark' className=' ml-1 rounded-lg overflow-hidden'>
+                    <BlurView intensity={35} tint='dark' className=' ml-1 rounded-lg overflow-hidden '>
                         <TouchableOpacity onPress={navigationBack} className=' flex-row items-center'>
                             <Material name="chevron-left" size={30} style={{ color: "white", fontWeight: "bold" }} />
                             {/* <Text className='text-lg font-semibold text-gray-600' style={{ color: COLORS.AliceBlue }}>Back</Text> */}
@@ -62,7 +63,7 @@ const HouseHoldItemStackHeader = ({
                             <Text className='text-lg font-semibold text-white' >{data.item_name}</Text>
                         </View>
                     </BlurView>
-                    
+
                     <BlurView intensity={35} tint='dark' className='flex-row items-center  mr-1 rounded-lg overflow-hidden'>
                         <Menu >
                             <MenuTrigger>
@@ -70,29 +71,41 @@ const HouseHoldItemStackHeader = ({
                                     <Material name="dots-horizontal" size={29} style={{ color: 'white', fontWeight: "bold" }} />
                                 </View>
                             </MenuTrigger>
-                            <MenuOptions customStyles={optionsStyles} >
+                            <MenuOptions customStyles={{
+                                optionsContainer: {
+                                    borderRadius: 10,
+                                    marginTop: screenHeight * 0.04,
+                                    backgroundColor: isDarkMode ? '#252D3B' : 'white',
+                                    // opacity: 0.9,
+                                },
+                                optionWrapper: {
+                                    padding: 10,
+                                },
+                            }} >
                                 <MenuOption onSelect={() => {
                                     // handleIsAddingStep()
                                     handleEditImage()
                                 }} >
 
                                     <View className='flex-row items-center justify-between'>
-                                        <Text className='text-base' style={{ color: iOSGrayColors.systemGray.defaultLight }}>Edit Image</Text>
-                                        <Material name="pencil" size={20} style={{ color: iOSGrayColors.systemGray.defaultLight, fontWeight: "bold" }} />
+                                        <Text className='text-base text-[#606060] dark:text-[#A6A6A6]' >Edit Image</Text>
+                                        <Material name="image-auto-adjust" size={20} style={{ color: iOSGrayColors.systemGray.defaultLight, fontWeight: "bold" }} />
                                     </View>
                                 </MenuOption>
                                 <Divider />
                                 <MenuOption onSelect={() => {
                                     // setIsEditing(true)
+                                    handleEditTitle!()
                                 }} >
                                     <View className='flex-row items-center justify-between'>
-                                        <Text className='text-base' style={{ color: iOSGrayColors.systemGray.defaultLight }}>Edit title</Text>
+                                        <Text className='text-base text-[#606060] dark:text-[#A6A6A6]' >Edit title</Text>
                                         <Material name="pencil" size={20} style={{ color: iOSGrayColors.systemGray.defaultLight, fontWeight: "bold" }} />
                                     </View>
                                 </MenuOption>
 
                                 <Divider />
                                 <MenuOption onSelect={async () => {
+                                    handleDeleteItem!()
                                 }} >
 
                                     <View className='flex-row items-center justify-between'>

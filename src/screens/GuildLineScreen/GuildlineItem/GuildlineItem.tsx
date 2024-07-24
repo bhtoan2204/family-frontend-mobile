@@ -50,7 +50,7 @@ const GuildlineItem = ({ item, onPress, onUpdate }: GuildlineItemProps) => {
     }
     const renderLeftActions = () => (
         <View className='mb-3 flex-row items-center w-[40%]'>
-            <TouchableOpacity onPress={handleUpdate} style={{ backgroundColor: iOSColors.systemOrange.accessibleDark, width: "auto" }} className='flex-1 flex-row items-center h-full py-6 justify-center border-r-[1px] border-white' >
+            <TouchableOpacity onPress={handleUpdate} style={{ backgroundColor: iOSColors.systemOrange.accessibleDark, width: "auto" }} className='flex-1 flex-row items-center h-full py-6 justify-center border-r-[1px] border-white dark:border-[#0A1220]' >
                 {/* py-6 px-2  mb-3 */}
                 <View className='flex-col items-center'>
                     <Icon name="pencil-outline" size={20} color={"white"} style={{ marginHorizontal: 4 }} />
@@ -58,7 +58,7 @@ const GuildlineItem = ({ item, onPress, onUpdate }: GuildlineItemProps) => {
                 </View>
 
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleDeleteUi} style={{ backgroundColor: '#EF3B4F', width: "auto" }} className='flex-1 flex-row items-center h-full py-6  justify-center border-r-[1px] border-white' >
+            <TouchableOpacity onPress={handleDeleteUi} style={{ backgroundColor: '#EF3B4F', width: "auto" }} className='flex-1 flex-row items-center h-full py-6  justify-center border-r-[1px] border-white dark:border-[#0A1220]' >
                 {/* py-6 px-2  mb-3 */}
                 <View className='flex-col items-center '>
                     <Icon name="trash" size={20} color={"white"} style={{ marginHorizontal: 4 }} />
@@ -76,7 +76,7 @@ const GuildlineItem = ({ item, onPress, onUpdate }: GuildlineItemProps) => {
                 ref={itemRef}
             >
                 <TouchableOpacity
-                    className="flex-row items-center py-6 rounded-lg   bg-white mb-3 "
+                    className="flex-row items-center py-6 rounded-lg   bg-white dark:bg-[#252D3B] mb-3 border-[#DEDCDC] dark:border-[#252D3B]"
                     onPress={() => onPress()}
                     style={{
                         borderWidth: 0.5,
@@ -106,10 +106,10 @@ const GuildlineItem = ({ item, onPress, onUpdate }: GuildlineItemProps) => {
 
                     <View className="flex-grow">
                         <View className='flex-1 flex-row my-2'>
-                            <Text className="text-xl font-bold flex-1 flex-wrap" numberOfLines={1} style={{ color: iOSGrayColors.systemGray.accessibleLight }}>{item.name}</Text>
+                            <Text className="text-xl font-bold flex-1 flex-wrap text-[#2A475E] dark:text-white" numberOfLines={1} >{item.name}</Text>
                         </View>
                         <View className='flex-1 flex-row'>
-                            <Text className="text-sm  flex-1 flex-wrap" numberOfLines={2} style={{ color: iOSGrayColors.systemGray.accessibleLight }} >{item.description}</Text>
+                            <Text className="text-sm  flex-1 flex-wrap text-[#2A475E] dark:text-white" numberOfLines={2} >{item.description}</Text>
                         </View>
                     </View>
                     <Icon name="chevron-forward" size={20} color={"grey"} />

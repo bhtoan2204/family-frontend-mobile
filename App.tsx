@@ -13,7 +13,8 @@ import {
   BottomSheetView,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
-import { useGetColorScheme } from 'src/hooks/useColorScheme';
+import { ToastProvider } from 'react-native-toast-notifications'
+
 const App: React.FC = () => {
 
   useEffect(() => {
@@ -21,22 +22,24 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <Provider store={store}>
-      <SafeAreaProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <PaperProvider>
-            <ActionSheetProvider>
-              <MenuProvider>
-                <BottomSheetModalProvider>
+    <ToastProvider>
+      <Provider store={store}>
+        <SafeAreaProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <PaperProvider>
+              <ActionSheetProvider>
+                <MenuProvider>
+                  <BottomSheetModalProvider>
 
-                  <NavigationContainer />
-                </BottomSheetModalProvider>
-              </MenuProvider>
-            </ActionSheetProvider>
-          </PaperProvider>
-        </GestureHandlerRootView>
-      </SafeAreaProvider>
-    </Provider>
+                    <NavigationContainer />
+                  </BottomSheetModalProvider>
+                </MenuProvider>
+              </ActionSheetProvider>
+            </PaperProvider>
+          </GestureHandlerRootView>
+        </SafeAreaProvider>
+      </Provider>
+    </ToastProvider>
   );
 };
 

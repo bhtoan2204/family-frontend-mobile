@@ -12,6 +12,8 @@ import {
 } from 'react-native-popup-menu';
 import { iOSGrayColors, iOSColors } from 'src/constants/ios-color';
 import { GuildLineDetail } from 'src/interface/guideline/guideline';
+import { useSelector } from 'react-redux';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
 interface GuildLineHeaderProps {
     isAdding: boolean;
@@ -57,8 +59,9 @@ const GuildLineHeader = ({
     // bottomSheetRef
 }: GuildLineHeaderProps
 ) => {
+    const isDarkMode = useSelector(getIsDarkMode)
     return (
-        <View className='w-full  flex-row justify-between items-center py-3 z-10 bg-white' >
+        <View className='w-full  flex-row justify-between items-center py-3 z-10 mt-7 bg-[#f7f7f7] dark:bg-[#0A1220]' >
             {
                 isAdding || isEditing ?
                     <TouchableOpacity
@@ -95,7 +98,17 @@ const GuildLineHeader = ({
                                 <MenuTrigger>
                                     <Material name="dots-horizontal" size={24} style={{ color: COLORS.AuroMetalSaurus, fontWeight: "bold" }} className='font-semibold' />
                                 </MenuTrigger>
-                                <MenuOptions customStyles={optionsStyles} >
+                                <MenuOptions customStyles={{
+                                    optionsContainer: {
+                                        borderRadius: 10,
+                                        marginTop: 24,
+                                        backgroundColor: isDarkMode ? '#0A1220' : '#f7f7f7',
+                                        // opacity: 0.9,
+                                    },
+                                    optionWrapper: {
+                                        padding: 10,
+                                    },
+                                }} >
                                     <MenuOption onSelect={() => {
                                         handleIsAddingStep()
                                     }} >

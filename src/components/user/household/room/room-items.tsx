@@ -5,6 +5,8 @@ import { COLORS } from 'src/constants'
 import { iOSGrayColors } from 'src/constants/ios-color'
 import { gradients_list } from 'src/assets/images/gradients'
 import { RoomInterface } from 'src/interface/household/room'
+import { useSelector } from 'react-redux'
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 interface RoomItemsProps {
     data: RoomInterface[],
     handleNavigateRoomDetail: (id_room: number) => void;
@@ -13,6 +15,8 @@ interface RoomItemsProps {
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const RoomItems = ({ data, handleNavigateRoomDetail }: RoomItemsProps) => {
+    // const isDarkMode = useSelector(getIsDarkMode)
+    // console.log(isDarkMode)
     const renderItem = (item: RoomInterface, index: number) => {
         return (
             <View className='items-center ' style={{
@@ -23,22 +27,28 @@ const RoomItems = ({ data, handleNavigateRoomDetail }: RoomItemsProps) => {
                 borderColor: iOSGrayColors.systemGray5.defaultLight,
             }}>
                 <TouchableOpacity onPress={() => {
-                handleNavigateRoomDetail(item.id_room)
+                    handleNavigateRoomDetail(item.id_room)
                 }}>
-                    <Image
-                        source={item.room_image ? { uri: item.room_image } : gradients_list[index % gradients_list.length]}
+                    <View className={`border-[1px] border-[#DEDCDC] dark:border-[#232A3D] `}
                         style={{
-                            // width: screenWidth * 0.3,
-                            width: '100%',
-                            height: undefined,
                             borderRadius: 15,
-                            // height: screenHeight * 0.2,
-                            aspectRatio: 1,
                         }}
-                    />
-                    <Text style={{
+                    > 
+                        <Image
+                            source={item.room_image ? { uri: item.room_image } : gradients_list[index % gradients_list.length]}
+                            style={{
+                                // width: screenWidth * 0.3,
+                                width: '100%',
+                                height: undefined,
+                                borderRadius: 15,
+                                // height: screenHeight * 0.2,
+                                aspectRatio: 1,
+                            }}
+                        />
+                    </View>
+                    <Text className='text-[#2A475E] dark:text-white' style={{
                         textAlign: 'center',
-                        color: COLORS.Rhino,
+                       
                         fontSize: 16,
                         fontWeight: 500,
                         marginTop: 10,
