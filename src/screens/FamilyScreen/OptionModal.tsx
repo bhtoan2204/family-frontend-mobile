@@ -1,32 +1,67 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal, StyleSheet, TouchableWithoutFeedback } from 'react-native';
-import { Feather } from '@expo/vector-icons'; 
-import { useSelector } from 'react-redux';
-import { getTranslate } from 'src/redux/slices/languageSlice';
-import { useThemeColors } from 'src/hooks/useThemeColor';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import {Feather} from '@expo/vector-icons';
+import {useSelector} from 'react-redux';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
 
-const OptionsModal = ({ visible, onClose, onEditFamily, onLeaveFamily }) => {
+const OptionsModal = ({
+  visible,
+  onClose,
+  onEditFamily,
+  onLeaveFamily,
+  onChangeAvatar,
+}) => {
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
 
   return (
-    <Modal
-      transparent={true}
-      visible={visible}
-      onRequestClose={onClose}
-    >
+    <Modal transparent={true} visible={visible} onRequestClose={onClose}>
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <TouchableOpacity style={styles.optionButton} onPress={onEditFamily}>
-              <Feather name="edit" size={24} color="black" style={styles.icon} />
+            <TouchableOpacity
+              style={styles.optionButton}
+              onPress={onEditFamily}>
+              <Feather
+                name="edit"
+                size={24}
+                color="black"
+                style={styles.icon}
+              />
               <Text style={styles.optionText}>{translate('Edit Family')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.optionButton} onPress={onLeaveFamily}>
-              <Feather name="log-out" size={24} color="black" style={[styles.icon, {color: 'red'}]} />
-              <Text style={[styles.optionText ,{ color: 'red'}]}>{translate('Leave Family')}</Text>
+            <TouchableOpacity
+              style={styles.optionButton}
+              onPress={onChangeAvatar}>
+              <Feather
+                name="image"
+                size={24}
+                color="black"
+                style={styles.icon}
+              />
+              <Text style={styles.optionText}>{translate('Change image')}</Text>
             </TouchableOpacity>
-            
+            <TouchableOpacity
+              style={styles.optionButton}
+              onPress={onLeaveFamily}>
+              <Feather
+                name="log-out"
+                size={24}
+                color="black"
+                style={[styles.icon, {color: 'red'}]}
+              />
+              <Text style={[styles.optionText, {color: 'red'}]}>
+                {translate('Leave Family')}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -48,7 +83,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   optionButton: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     paddingVertical: 10,
     width: '100%',
     alignItems: 'center',
@@ -70,7 +105,7 @@ const styles = StyleSheet.create({
     color: '#007AFF',
   },
   icon: {
-    marginRight: 15, 
+    marginRight: 15,
   },
 });
 

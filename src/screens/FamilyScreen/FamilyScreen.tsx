@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, {useState, useEffect, useRef, useMemo} from 'react';
 import {
   Text,
   View,
@@ -11,9 +11,9 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import {MaterialIcons} from '@expo/vector-icons';
 import Feather from 'react-native-vector-icons/Feather';
-import { useSelector, useDispatch } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {
   selectSelectedFamily,
   selectFamilies,
@@ -22,21 +22,20 @@ import {
   setFamilies,
   setFamilyMembers,
   updateFamily,
-  
 } from 'src/redux/slices/FamilySlice';
-import { AppDispatch } from 'src/redux/store';
+import {AppDispatch} from 'src/redux/store';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import BottomSheet from './BottomSheet';
 import FamilyListModal from './FamilyList';
 import OptionsModal from './OptionModal';
-import { FamilyServices, PackageServices } from 'src/services/apiclient';
-import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
-import { COLORS } from 'src/constants';
+import {FamilyServices, PackageServices} from 'src/services/apiclient';
+import {ViewFamilyScreenProps} from 'src/navigation/NavigationTypes';
+import {COLORS} from 'src/constants';
 import styles from './styles';
-import { Family } from 'src/interface/family/family';
-import { Member } from 'src/interface/member/member';
+import {Family} from 'src/interface/family/family';
+import {Member} from 'src/interface/member/member';
 import * as ImagePicker from 'expo-image-picker';
-import { Service } from 'src/interface/package/mainPackage';
+import {Service} from 'src/interface/package/mainPackage';
 
 const cards = [
   {
@@ -83,7 +82,7 @@ const cards = [
   },
 ];
 
-const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
+const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const bottomSheetRef = useRef<RBSheet>(null);
   const allMemberRef = useRef<RBSheet>(null);
@@ -91,7 +90,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const families = useSelector(selectFamilies);
   const selectedFamily = useSelector(selectSelectedFamily);
-  const [membersMap, setMembersMap] = useState<{ [key: number]: Member[] }>({});
+  const [membersMap, setMembersMap] = useState<{[key: number]: Member[]}>({});
   const shakeAnimation = useRef(new Animated.Value(0)).current;
   const rotateAnimation = useRef(new Animated.Value(0)).current;
   const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
@@ -99,25 +98,28 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const [functions, setFunctions] = useState<Service[]>([]);
   const source =
     selectedFamily?.avatar && selectedFamily.avatar !== '[NULL]'
-      ? { uri: selectedFamily.avatar }
+      ? {uri: selectedFamily.avatar}
       : require('../../assets/images/default_ava.png');
 
+  const fetchFunction = async () => {
+    try {
+      const data = await PackageServices.getAvailableFunction(
+        selectedFamily?.id_family,
+      );
+      setFunctions(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-      const fetchFunction = async () => {
-        try {
-          const data = await PackageServices.getAvailableFunction(selectedFamily?.id_family);
-          setFunctions(data);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      
-      const memoizedFetchFunction = useMemo(() => fetchFunction, [selectedFamily?.id_family]);
-      
-      useEffect(() => {
-        memoizedFetchFunction();
-      }, [memoizedFetchFunction]);
-      
+  const memoizedFetchFunction = useMemo(
+    () => fetchFunction,
+    [selectedFamily?.id_family],
+  );
+
+  useEffect(() => {
+    memoizedFetchFunction();
+  }, [memoizedFetchFunction]);
 
   useEffect(() => {
     fetchFamiliesAndMembers();
@@ -200,7 +202,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
             selectedFamily!.id_family,
             uri,
           );
-          dispatch(updateFamily({ ...selectedFamily!, avatar: fileUrl }));
+          dispatch(updateFamily({...selectedFamily!, avatar: fileUrl}));
         } catch (error) {
           console.error('Error updating avatar:', error);
         } finally {
@@ -234,50 +236,50 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
       case 1:
         navigation.navigate('FamilyStack', {
           screen: 'AllMember',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
       case 2:
         navigation.navigate('ChatStack', {
           screen: 'ChatFamily',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
       case 3:
         navigation.navigate('EducationStack', {
           screen: 'EducationScreen',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
       case 4:
         navigation.navigate('CalendarStack', {
           screen: 'CalendarScreen',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
       case 5:
         navigation.navigate('FamilyStack', {
           screen: 'GuildLine',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
       case 6:
         navigation.navigate('HouseHoldStack', {
           screen: 'HouseHoldScreen',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
       case 7:
         navigation.navigate('TodoListStack', {
           screen: 'TodoList',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
       case 8:
-        console.log(selectedFamily!.id_family)
+        console.log(selectedFamily!.id_family);
         navigation.navigate('ShoppingListStack', {
           screen: 'ShoppingList',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
     }
@@ -308,7 +310,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const leaveFamily = async () => {
     try {
       await FamilyServices.leaveFamily(selectedFamily!.id_family);
-      navigation.navigate('HomeTab', { screen: 'HomeScreen' });
+      navigation.navigate('HomeTab', {screen: 'HomeScreen'});
     } catch (error: any) {
       console.error('Leave family failed:', error);
     }
@@ -329,17 +331,40 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
           onPress: leaveFamily,
         },
       ],
-      { cancelable: true },
+      {cancelable: true},
     );
   };
 
   return (
-    <View style={{ position: 'relative', backgroundColor: '#fdfdfd' }}>
-      <Image
-        source={require('../../assets/images/header-family.png')}
-        resizeMode="stretch"
-        style={{ width: '100%', height: 220, alignSelf: 'center' }}
-      />
+    <View style={{position: 'relative', backgroundColor: '#fdfdfd'}}>
+      <View
+        style={{
+          width: screenHeight,
+          height: 300,
+          alignSelf: 'center',
+          top: 0,
+          position: 'relative',
+        }}>
+        <Image
+          source={source}
+          resizeMode="center"
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+          }}
+        />
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.4)', // Điều chỉnh giá trị alpha (0.5 ở đây) để thay đổi độ tối
+          }}
+        />
+      </View>
       <View
         style={{
           position: 'absolute',
@@ -367,7 +392,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
                 alignItems: 'center',
               }}>
               <Text style={styles.headerText}>{selectedFamily.name}</Text>
-              <Animated.View style={{ transform: [{ rotate }] }}>
+              <Animated.View style={{transform: [{rotate}]}}>
                 <MaterialIcons
                   name="arrow-drop-down"
                   size={30}
@@ -389,55 +414,39 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
           membersMap={membersMap}
           selectedFamily={selectedFamily}
         />
-        <View>
-          <Image
-            source={source}
-            resizeMode="cover"
-            style={{
-              width: 219 + 30,
-              height: 145 + 30,
-              alignSelf: 'center',
-              borderRadius: 20,
-              borderWidth: 3,
-              borderColor: 'white',
-            }}
-          />
-          <TouchableOpacity
-            style={{
-              position: 'absolute',
-              top: 120 + 30,
-              right: 60,
-              backgroundColor: '#2a475ee8',
-              padding: 5,
-              borderRadius: 20,
-            }}
-            onPress={handleChangeAvatar}>
-            <MaterialIcons name="camera-alt" size={25} color="white" />
-          </TouchableOpacity>
-        </View>
       </View>
-      <Text
+      <View
         style={{
-          color: COLORS.Rhino,
-          fontWeight: 'bold',
-          fontSize: 20,
-          alignSelf: 'center',
-          top: 90,
-          paddingVertical: 20,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          backgroundColor: '#f7f7f7',
+          bottom: 20,
         }}>
-        {selectedFamily.description}
-      </Text>
-
-      <ScrollView showsVerticalScrollIndicator={false} style={{ top: 120 }}>
-   
-        <View style={styles.container}>
-        {cards.map(card => {
-              const isFunctionAvailable = functions.some(func => func.name === card.title);
+        <Text
+          style={{
+            color: COLORS.Rhino,
+            fontWeight: 'bold',
+            fontSize: 20,
+            alignSelf: 'center',
+            paddingVertical: 20,
+          }}>
+          {selectedFamily.description}
+        </Text>
+        <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+          <View style={styles.container}>
+            {cards.map(card => {
+              const isFunctionAvailable = functions.some(
+                func => func.name === card.title,
+              );
               const hasShoppingAndChecklist = functions.some(
-                func => func.name === 'Calendar' && card.title === 'Check List'
+                func => func.name === 'Calendar' && card.title === 'Check List',
               );
 
-              if (isFunctionAvailable || card.title === 'Members' || hasShoppingAndChecklist) {
+              if (
+                isFunctionAvailable ||
+                card.title === 'Members' ||
+                hasShoppingAndChecklist
+              ) {
                 return (
                   <TouchableOpacity
                     key={card.id}
@@ -452,16 +461,16 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
 
               return null;
             })}
-
-
-        </View>
-        <View style={{ height: 480 }}></View>
-      </ScrollView>
+          </View>
+          <View style={{height: 600}}></View>
+        </ScrollView>
+      </View>
       <OptionsModal
         visible={isOptionsModalVisible}
         onClose={closeOptionsModal}
         onEditFamily={handleEditFamily}
         onLeaveFamily={handleLeaveFamily}
+        onChangeAvatar={handleChangeAvatar}
       />
       <RBSheet
         ref={bottomSheetRef}

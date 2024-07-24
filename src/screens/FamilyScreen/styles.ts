@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    marginBottom: 26,
+    // marginBottom: 26,
   },
   overlay: {
     flex: 1,
@@ -24,6 +24,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'white',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   headerIcon: {
     flexDirection: 'row',
@@ -98,7 +105,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     padding: 20,
-    
+    marginBottom: 200,
   },
   card: {
     width: '48%', // Giả sử mỗi card chiếm khoảng 48% chiều rộng của container để có chút không gian giữa chúng
