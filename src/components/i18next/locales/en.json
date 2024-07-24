@@ -302,6 +302,9 @@
     "Name is required": "Name is required",
     "Description is required": "Description is required",
     "Name": "Name",
-
+    "Contact List":"Contact List",
+    "No contacts found": "No contacts found",
+    "Already on FamFund as": "Already on FamFund as",
+    
   }
   

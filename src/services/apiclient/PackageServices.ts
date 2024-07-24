@@ -140,19 +140,31 @@ const PackageServices = {
     }
   },
 
-  createPaymentURL: async (id_main_package?: number, bankCode?: string , ) => {
+  createPaymentURL: async (
+    id_main_package?: number | null,
+    id_extra_package?: number | null,
+    id_combo_package?: number | null,
+    id_family?: number | null,
+    bankCode?: string | null,
+    code?: string | null
+  ) => {
     try {
-      console.log( id_main_package, bankCode)
+      const payload = {
+        ...(id_main_package !== null && { id_main_package }),
+        ...(id_extra_package !== null && { id_extra_package }),
+        ...(id_combo_package !== null && { id_combo_package }),
+        ...(id_family !== null && { id_family }),
+        ...(bankCode !== null && { bankCode }),
+        ...(code !== null && { code }),
+      };
+  
+      console.log(payload);
+  
       const response: AxiosResponse = await instance.post(
         PackageUrl.createPaymentURL,
-        {
-          id_main_package,
-          bankCode
-        },
+        payload
       );
-
-
-
+  
       if (response.status === 200) {
         return response.data;
       } else {
@@ -163,6 +175,8 @@ const PackageServices = {
       throw new Error(ERROR_TEXTS.CREATE_ORDER_ERROR);
     }
   },
+  
+  
   //danglam
   getReturnUrl: async () => {
     try {

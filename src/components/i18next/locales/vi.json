@@ -296,5 +296,7 @@
   "Successfully updated family": "Cập nhật thành công",
   "Name is required": "Tên gia đình là bắt buộc",
   "Description is required": "Mô tả gia đình là bắt buộc",
-  
+  "Contact List": "Danh sách liên lạc",
+  "No contacts found": "Không tìm thấy liên lạc",
+  "Already on FamFund as": "Đã có trên FamFund với tên",
 }

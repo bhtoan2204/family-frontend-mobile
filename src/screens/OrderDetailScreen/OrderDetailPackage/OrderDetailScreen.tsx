@@ -9,7 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from 'src/constants';
 
-import styles from '../styles';
+import styles from './styles';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { OrderDetailScreenProps } from 'src/navigation/NavigationTypes';
 import { useSelector } from 'react-redux';
@@ -33,6 +33,8 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
 
+
+  
   const handleSelectMethod = (
     code: string,
     id_family: number,

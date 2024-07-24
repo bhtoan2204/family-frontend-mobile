@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Text,
   View,
@@ -21,6 +21,7 @@ import {
   setSelectedFamily,
   setFamilies,
   setFamilyMembers,
+  updateFamily,
   
 } from 'src/redux/slices/FamilySlice';
 import { AppDispatch } from 'src/redux/store';
@@ -28,13 +29,14 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import BottomSheet from './BottomSheet';
 import FamilyListModal from './FamilyList';
 import OptionsModal from './OptionModal';
-import { FamilyServices } from 'src/services/apiclient';
+import { FamilyServices, PackageServices } from 'src/services/apiclient';
 import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import { COLORS } from 'src/constants';
 import styles from './styles';
 import { Family } from 'src/interface/family/family';
 import { Member } from 'src/interface/member/member';
 import * as ImagePicker from 'expo-image-picker';
+import { Service } from 'src/interface/package/mainPackage';
 
 const cards = [
   {
@@ -75,7 +77,7 @@ const cards = [
   },
   {
     id: 8,
-    title: 'Shopping List',
+    title: 'Shopping',
     detail: 'Organize and track groceries.',
     icon: require('../../assets/icons/shopping-list.png'),
   },
@@ -94,11 +96,28 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
   const rotateAnimation = useRef(new Animated.Value(0)).current;
   const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
   const screenHeight = Dimensions.get('screen').height;
-
+  const [functions, setFunctions] = useState<Service[]>([]);
   const source =
     selectedFamily?.avatar && selectedFamily.avatar !== '[NULL]'
       ? { uri: selectedFamily.avatar }
       : require('../../assets/images/default_ava.png');
+
+
+      const fetchFunction = async () => {
+        try {
+          const data = await PackageServices.getAvailableFunction(selectedFamily?.id_family);
+          setFunctions(data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      
+      const memoizedFetchFunction = useMemo(() => fetchFunction, [selectedFamily?.id_family]);
+      
+      useEffect(() => {
+        memoizedFetchFunction();
+      }, [memoizedFetchFunction]);
+      
 
   useEffect(() => {
     fetchFamiliesAndMembers();
@@ -410,42 +429,31 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
       </Text>
 
       <ScrollView showsVerticalScrollIndicator={false} style={{ top: 120 }}>
-        {/* <Image
-          source={require('../../assets/images/family-today-event.png')}
-          resizeMode="cover"
-          style={{
-            width: 324,
-            height: 217,
-            alignSelf: 'center',
-          }}
-        />
-        <Animated.Image
-          source={require('../../assets/images/clock.png')}
-          resizeMode="cover"
-          style={{
-            width: 62.16,
-            height: 69.88,
-            alignSelf: 'center',
-            marginTop: 80,
-            bottom: 200,
-            left: 15,
-            transform: [
-              {translateY: shakeAnimation},
-              {translateX: shakeAnimationX},
-            ],
-          }}
-        /> */}
+   
         <View style={styles.container}>
-          {cards.map(card => (
-            <TouchableOpacity
-              key={card.id}
-              onPress={() => handlePress(card.id)}
-              style={styles.card}>
-              <Text style={styles.title}>{card.title}</Text>
-              <Text style={styles.detail}>{card.detail}</Text>
-              <Image source={card.icon} style={styles.icon} />
-            </TouchableOpacity>
-          ))}
+        {cards.map(card => {
+              const isFunctionAvailable = functions.some(func => func.name === card.title);
+              const hasShoppingAndChecklist = functions.some(
+                func => func.name === 'Shopping' && card.title === 'Check List'
+              );
+
+              if (isFunctionAvailable || card.title === 'Members' || hasShoppingAndChecklist) {
+                return (
+                  <TouchableOpacity
+                    key={card.id}
+                    onPress={() => handlePress(card.id)}
+                    style={styles.card}>
+                    <Text style={styles.title}>{card.title}</Text>
+                    <Text style={styles.detail}>{card.detail}</Text>
+                    <Image source={card.icon} style={styles.icon} />
+                  </TouchableOpacity>
+                );
+              }
+
+              return null;
+            })}
+
+
         </View>
         <View style={{ height: 480 }}></View>
       </ScrollView>
@@ -461,7 +469,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
         height={screenHeight * 0.5}
         customStyles={{
           container: {
-            borderTopLeftRadius: 10,
+            borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
           },
         }}>

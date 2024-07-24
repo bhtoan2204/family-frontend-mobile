@@ -490,7 +490,9 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
             style={[styles.input, {backgroundColor: color.inputChat}, {flex: 1}]}
             value={message}
             onChangeText={setMessage}
-            placeholder="Aa"></TextInput>
+            placeholder="Aa">
+              
+            </TextInput>
 
               <EmojiPicker onChange={handleEmojiChange} />
         </View>

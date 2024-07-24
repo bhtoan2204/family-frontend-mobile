@@ -20,7 +20,7 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
   const  member =  useSelector((state: RootState) => state.family.selectedMember);
   const local = useSelector(selectLocale);
 
-  const [newRole, setNewRole] = useState(local=='vi' ? member.familyRoles.role_name_vn:  member.familyRoles.role_name_en);
+  const [newRole, setNewRole] = useState(local==='vi' ? member.familyRoles.role_name_vn:  member.familyRoles.role_name_en);
   const [role, setRole] = useState<Role[]>([]);
   const [modalVisible, setModalVisible] = useState(false); 
   const [isLoading, setIsLoading] = useState(false);

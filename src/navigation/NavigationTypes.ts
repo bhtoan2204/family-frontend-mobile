@@ -353,17 +353,15 @@ export type PackStackParamList = {
   
   BankInfoScreen: {
     id_family: number | null;
-    id_package: number | undefined;
-    bankCode: string | undefined;
-    amount: number | undefined;
-    language: 'vn' | undefined;
-    method: string | undefined;
   };
   OrderDetailScreen: {
     id_family: number | null;
   };
   ZaloPayScreen: undefined;
   ComboScreen: undefined;
+  OrderDetailService: {
+    id_family: number;
+  }
 };
 
 //household stack
@@ -834,7 +832,15 @@ export type OrderDetailScreenProps = {
   navigation: OrderDetailScreenNavigationProp;
   route: RouteProp<PackStackParamList, 'OrderDetailScreen'>;
 };
+type OrderDetailServiceNavigationProp = NativeStackNavigationProp<
+  PackStackParamList,
+  'OrderDetailService'
+>;
 
+export type OrderDetailServiceProps = {
+  navigation: OrderDetailServiceNavigationProp;
+  route: RouteProp<PackStackParamList, 'OrderDetailService'>;
+};
 type BankInfoScreenNavigationProp = NativeStackNavigationProp<
   PackStackParamList,
   'BankInfoScreen'

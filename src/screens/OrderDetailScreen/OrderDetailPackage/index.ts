@@ -1,3 +1,3 @@
-import OrderDetailScreen from './OrderDetailPackage/OrderDetailScreen';
+import OrderDetailScreen from './OrderDetailScreen';
 
 export default OrderDetailScreen;

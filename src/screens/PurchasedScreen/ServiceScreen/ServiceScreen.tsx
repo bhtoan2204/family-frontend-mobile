@@ -25,13 +25,14 @@ import {TEXTS} from 'src/constants';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { getTranslate } from 'src/redux/slices/languageSlice';
 import { useThemeColors } from 'src/hooks/useThemeColor';
+import { setServices } from 'src/redux/slices/PackageSlice';
+import { AppDispatch } from 'src/redux/store';
 
 const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
   const [selectedService, setSelectedService] = useState<null | Service>(null);
   const [selectedMount, setSelectedMount] = useState<number>(0);
   const [service, setService] = useState<Service[]>([]);
   const profile = useSelector(selectProfile);
-  const dispatch = useDispatch();
   const [family, setFamily] = useState<Family[]>([]);
   const [familySelected, setFamilySelected] = useState<Family | null>(null);
   const [purchasedServices, setPurchasedServices] = useState<number[]>([]);
@@ -39,6 +40,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleGetService = async () => {
     try {
@@ -123,6 +125,8 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
 
   const handleBuyService = (pkg: Service) => {
     setSelectedService(pkg);
+    dispatch(setServices(pkg));
+    navigation.navigate('OrderDetailService', {id_family: familySelected?.id_family});
 
   }
 
@@ -215,7 +219,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
                 purchasedServices.includes(pkg.id_extra_package) ? (
                   <TouchableOpacity
                     style={[styles.purchaseButton,{backgroundColor: color.white}]}
-                    onPress={() => setSelectedService(pkg)}>
+                    onPress={() => handleBuyService(pkg)}>
                     <Text style={[styles.purchaseButtonText, {color: color.text}]}>{translate('purchased')}</Text>
                     {/* <FeatherIcon color="white" name="shopping-cart" size={17} /> */}
                   </TouchableOpacity>

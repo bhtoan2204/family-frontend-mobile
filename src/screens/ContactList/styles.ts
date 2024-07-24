@@ -32,10 +32,8 @@ const styles = StyleSheet.create({
     color: '#888',
   },
   userContact: {
-    backgroundColor: '#f0f8ff',
   },
   normalContact: {
-    backgroundColor: '#ffffff',
   },
   txt: {
 
@@ -43,7 +41,6 @@ const styles = StyleSheet.create({
   appIndicator: {
     fontSize: 14,
     color: 'gray',
-    marginTop: 4,
   },
   avatarSmall: {
     width: 20,
@@ -61,6 +58,7 @@ const styles = StyleSheet.create({
   appIndicatorContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    alignContent: 'center',
     marginTop: 4,
   },
   headerContainer: {

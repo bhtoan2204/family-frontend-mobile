@@ -11,6 +11,7 @@ import baseUrl from 'src/services/urls/baseUrl';
 import { useSelector } from 'react-redux';
 import { getTranslate } from 'src/redux/slices/languageSlice';
 import { useThemeColors } from 'src/hooks/useThemeColor';
+import { selectOption, selectPackage, selectService } from 'src/redux/slices/PackageSlice';
 
 type Bank = {
   id: number;
@@ -27,9 +28,12 @@ interface Event {
 const BankInfoScreen = ({ route, navigation }: BankInfoScreenProps) => {
   const [banks, setBanks] = useState<Bank[]>([]);
   const [searchValue, setSearchValue] = useState('');
-  const { id_package } = route.params;
+  const { id_family } = route.params;
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
+  const packages = useSelector(selectPackage);
+  const service = useSelector(selectService);
+  const option = useSelector(selectOption);
 
   const handleSearchChange = (text: string) => {
     setSearchValue(text);
@@ -48,33 +52,37 @@ const BankInfoScreen = ({ route, navigation }: BankInfoScreenProps) => {
     }
   };
 
-  const handleSelectBank = async (id_package?: number, bankCode?: string) => {
+  const handleSelectBank = async (bankCode?: string) => {
     try {
-      const paymentURL = await handleCreatePaymentURL(id_package, bankCode);
-      console.log('Payment URL:', paymentURL);
-      if (paymentURL) {
-        Linking.openURL(paymentURL);
-      } else {
-        console.log('Failed to create payment URL');
+
+      if (option === "Package") {
+          const paymentURL = await PackageServices.createPaymentURL(packages?.id_main_package, bankCode);
+          console.log('Payment URL:', paymentURL);
+          if (paymentURL) {
+            Linking.openURL(paymentURL);
+          } else {
+            console.log('Failed to create payment URL');
+          }
+      }
+      else if (option==="Service"){
+        console.log('hi')
+        const paymentURL = await PackageServices.createPaymentURL(null, service?.id_extra_package, null, id_family, bankCode, null);
+          console.log('Payment URL:', paymentURL);
+          if (paymentURL) {
+            Linking.openURL(paymentURL);
+          } else {
+            console.log('Failed to create payment URL');
+          }
       }
     } catch (error: any) {
       console.log('Error selecting bank:', error);
     }
   };
 
-  const handleCreatePaymentURL = async (id_main_package?: number, bankCode?: string) => {
-    try {
-      const response = await PackageServices.createPaymentURL(id_main_package, bankCode);
-      if (response) {
-        console.log('Payment processed successfully');
-        return response;
-      } else {
-        console.log('Failed to process payment');
-      }
-    } catch (error: any) {
-      console.log('Error processing payment:', error);
-    }
-  };
+
+
+
+
 
   const handleReturnURL = async (url: string) => {
     console.log('URL được truyền vào hàm handleReturnURL:', url);
@@ -150,7 +158,7 @@ const BankInfoScreen = ({ route, navigation }: BankInfoScreenProps) => {
         keyExtractor={item => item.id.toString()}
         renderItem={({ item: bank }) => (
           <TouchableOpacity
-            onPress={() => handleSelectBank(id_package, bank.code)}
+            onPress={() => handleSelectBank(bank.code)}
             style={styles.touchable}
           >
             <Image source={{ uri: bank.logo }} style={styles.image} />
