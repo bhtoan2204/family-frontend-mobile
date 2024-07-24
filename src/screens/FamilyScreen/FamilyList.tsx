@@ -9,12 +9,15 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
 import { COLORS } from 'src/constants';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 import { Family } from 'src/interface/family/family';
 import { Member } from 'src/interface/member/member';
 import { selectAllFamilyMembers } from 'src/redux/slices/FamilySlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const FamilyListModal = ({
   visible,
@@ -24,6 +27,8 @@ const FamilyListModal = ({
 }) => {
   const [familySelect, setFamilySelect] = useState<any>(selectedFamily);
   const members = useSelector(selectAllFamilyMembers);
+  const translate = useSelector(getTranslate);
+  const color = useThemeColors();
 
   useEffect(() => {
     setFamilySelect(selectedFamily);
@@ -52,11 +57,11 @@ const FamilyListModal = ({
       <TouchableWithoutFeedback onPress={handleBackdropPress}>
         <View style={modalStyles.modalOverlay}>
           <TouchableWithoutFeedback>
-            <View style={modalStyles.modalContent}>
+            <View style={[modalStyles.modalContent, {backgroundColor: color.background}]}>
               <View style={modalStyles.header}>
-                <Text style={modalStyles.headerText}>Select Family</Text>
+                <Text style={[modalStyles.headerText, {color: color.text}]}>{translate('Select Family')}</Text>
                 <TouchableOpacity onPress={handleBackdropPress} style={modalStyles.closeButton}>
-                  <Icon name="close" size={24} color="black" />
+                  <Icon name="close" size={24} color={color.text}/>
                 </TouchableOpacity>
               </View>
               <ScrollView>
@@ -65,7 +70,7 @@ const FamilyListModal = ({
                     key={family.id_family}
                     onPress={() => handleSelectFamily(family)}
                     style={[
-                      modalStyles.familyItem,
+                      modalStyles.familyItem, {backgroundColor: color.white},
                       familySelect?.id_family === family.id_family
                         ? [
                             modalStyles.selectedFamilyItem,
@@ -74,7 +79,7 @@ const FamilyListModal = ({
                         : {},
                     ]}
                   >
-                    <View style={modalStyles.familyItemContainer}>
+                    <View style={[modalStyles.familyItemContainer,  {backgroundColor: color.white}]}>
                       <View style={modalStyles.familyInfo}>
                         <Image
                           source={
@@ -84,7 +89,7 @@ const FamilyListModal = ({
                           }
                           style={modalStyles.avatarFamily}
                         />
-                        <Text style={modalStyles.familyItemText}>
+                        <Text style={[modalStyles.familyItemText, {color: color.text}]}>
                           {family.name}
                         </Text>
                       </View>
@@ -110,7 +115,7 @@ const FamilyListModal = ({
                             )}
                           </>
                         ) : (
-                          <Text>No members found</Text>
+                          <Text>{translate('No members found')}</Text>
                         )}
 
 
@@ -119,12 +124,12 @@ const FamilyListModal = ({
                   </TouchableOpacity>
                 ))}
               </ScrollView>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={modalStyles.confirmButton}
                 onPress={handleConfirmSelection}
               >
-                <Text style={modalStyles.confirmButtonText}>Select Family</Text>
-              </TouchableOpacity>
+                <Text style={modalStyles.confirmButtonText}>{translate('Select Family')}</Text>
+              </TouchableOpacity> */}
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -143,7 +148,8 @@ const modalStyles = StyleSheet.create({
     backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    maxHeight: '80%',
+    maxHeight: '100%',
+    paddingBottom: 20,
   },
   header: {
     flexDirection: 'row',

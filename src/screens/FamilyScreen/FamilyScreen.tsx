@@ -461,7 +461,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
         height={screenHeight * 0.5}
         customStyles={{
           container: {
-            borderTopLeftRadius: 20,
+            borderTopLeftRadius: 10,
             borderTopRightRadius: 20,
           },
         }}>

@@ -294,5 +294,14 @@
     "Birth Date": "Birth Date",
     "Save Changes": "Save Changes",
     "purchased": "Purchased",
+    "Select Family": "Select family",
+    "No members found": "No members found",
+    "Edit Family": "Edit information",
+    "Leave Family": "Leave family",
+    "Successfully updated family": "Successfully updated family",
+    "Name is required": "Name is required",
+    "Description is required": "Description is required",
+    "Name": "Name",
+
   }
   

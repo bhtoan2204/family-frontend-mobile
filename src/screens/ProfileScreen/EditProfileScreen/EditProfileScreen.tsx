@@ -37,11 +37,12 @@ const EditProfileScreen = () => {
       gender: gender,
       birthDate: formatDate(birthDate),
     };
-    console.log(formatDate(birthDate));
     try {
+      console.log(firstName, lastName, gender, formatDate(birthDate))
       await ProfileServices.updateProfile({ firstname: firstName, lastname: lastName, genre: gender, birthdate: formatDate(birthDate) });
       dispatch(updateProfileSlice(updatedProfile));
       Alert.alert('Success', 'Profile updated successfully');
+
     } catch (error) {
       Alert.alert('Error', 'Failed to update profile');
     }

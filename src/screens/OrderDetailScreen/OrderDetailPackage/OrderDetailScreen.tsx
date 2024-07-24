@@ -9,7 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from 'src/constants';
 
-import styles from './styles';
+import styles from '../styles';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { OrderDetailScreenProps } from 'src/navigation/NavigationTypes';
 import { useSelector } from 'react-redux';
@@ -18,13 +18,7 @@ import { Package } from 'src/interface/package/mainPackage';
 import { selectPackage } from 'src/redux/slices/PackageSlice';
 import { getTranslate } from 'src/redux/slices/languageSlice';
 import { useThemeColors } from 'src/hooks/useThemeColor';
-
-type PaymentMethod = {
-  id: number;
-  name: string;
-  code: string;
-  url_image: string;
-};
+import { PaymentMethod } from 'src/interface/purchased/purchased';
 
 const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
   const [code, setCodeMethod] = useState('vnpay');

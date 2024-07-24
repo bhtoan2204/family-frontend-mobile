@@ -289,5 +289,12 @@
   "Birth Date": "Ngày sinh",
   "Save Changes": "Lưu thay đổi",
   "purchased": "Đã mua",
+  "Select Family": "chọn gia đình",
+  "No members found": "Không có thành viên",
+  "Edit Family": "Sửa thông tin",
+  "Leave Family": "Rời gia đình",
+  "Successfully updated family": "Cập nhật thành công",
+  "Name is required": "Tên gia đình là bắt buộc",
+  "Description is required": "Mô tả gia đình là bắt buộc",
   
 }

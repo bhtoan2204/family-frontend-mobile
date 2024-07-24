@@ -15,8 +15,6 @@ interface BottomSheetProps {
   const BottomSheet: React.FC<BottomSheetProps> = ({ id_family, name, description }) => {
 
   return (
-    <SafeAreaProvider>
-      <PaperProvider>
         <Stack.Navigator>
           <Stack.Screen
             options={{
@@ -30,8 +28,6 @@ interface BottomSheetProps {
    
       
         </Stack.Navigator>
-      </PaperProvider>
-    </SafeAreaProvider>
   );
 };
 

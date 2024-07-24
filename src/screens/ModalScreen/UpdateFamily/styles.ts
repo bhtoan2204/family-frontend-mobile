@@ -14,6 +14,18 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         elevation: 5,
       },
+      saveButton: {
+        marginTop:20,
+        backgroundColor: COLORS.Rhino,
+        paddingVertical: 15,
+        borderRadius: 10,
+        alignItems: 'center',
+      },
+      saveButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+      },
       title: {
         fontSize: 20,
         fontWeight: 'bold',
@@ -28,7 +40,8 @@ const styles = StyleSheet.create({
       },
       button: { 
         width: '100%',
-        marginTop: 20,
+        marginTop: 0,
+        
       },
       buttonText: {
         color: 'white',

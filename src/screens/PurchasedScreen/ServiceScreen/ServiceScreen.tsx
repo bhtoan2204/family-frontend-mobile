@@ -121,6 +121,11 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
     );
   }
 
+  const handleBuyService = (pkg: Service) => {
+    setSelectedService(pkg);
+
+  }
+
   return (
     <SafeAreaView style={[styles.container, {backgroundColor: color.background}]}>
       <ScrollView>
@@ -217,7 +222,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
                 ) : (
                   <TouchableOpacity
                     style={styles.purchaseButton}
-                    onPress={() => setSelectedService(pkg)}>
+                    onPress={() => handleBuyService(pkg)}>
                     <Text style={styles.purchaseButtonText}>{translate('BUY_NOW')}</Text>
                     <FeatherIcon color="white" name="shopping-cart" size={17} />
                   </TouchableOpacity>
