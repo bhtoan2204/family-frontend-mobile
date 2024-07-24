@@ -15,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PackedEvent } from 'react-native-calendars/src/timeline/EventBlock';
 import { Ionicons } from '@expo/vector-icons';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const EVENT_COLOR = 'white';
 
@@ -30,7 +31,7 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
   const translate = useSelector(getTranslate);
   const dispatch = useDispatch();
   const allEvent = useSelector(selectEvents);
-
+  const color = useThemeColors();
 
 
   useEffect(() => {
@@ -47,95 +48,6 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
       .replace(/;$/, '');  
   };
 
-  // const handleGetCalendarForMonth = useCallback(
-  //   async (date: Date) => {
-  //     const start = startOfMonth(subMonths(date, 1));
-  //     const end = endOfMonth(addMonths(date, 3));
-  
-  //     try {
-  //       if (allEvent) {
-  //         const groupedEvents: { [dateKey: string]: Event[] } = {};
-  
-  //         allEvent.forEach((event) => {
-  //           const dateKey = format(event.time_start, 'yyyy-MM-dd');
-  //           if (!groupedEvents[dateKey]) {
-  //             groupedEvents[dateKey] = [];
-  //           }
-  
-  //           // Check recurrence exceptions
-  //           if (event.recurrence_exception && typeof event.recurrence_exception === 'string') {
-  //             const exceptionDates = event.recurrence_exception.split(',').map(dateStr => new Date(dateStr.trim()));
-  
-  //             // Filter out events that fall on exception dates
-  //             if (exceptionDates.some(exceptionDate => {
-  //               return exceptionDate.getFullYear() === date.getFullYear() &&
-  //                      exceptionDate.getMonth() === date.getMonth() &&
-  //                      exceptionDate.getDate() === date.getDate();
-  //             })) {
-  //               return; // Skip this event for the current date
-  //             }
-  //           }
-  
-  //           groupedEvents[dateKey].push({
-  //             ...event,
-  //             name: event.title,
-  //             height: 50,
-  //             day: dateKey,
-  //           });
-  
-  //           if (event.recurrence_rule) {
-  //             const cleanedRecurrenceRule = cleanRecurrenceRule(event.recurrence_rule);
-  //             try {
-  //               const rule = rrulestr(cleanedRecurrenceRule);
-  //               const dates = rule.between(start, end);
-  
-  //               dates.forEach((date) => {
-  //                 if (!isNaN(date.getTime())) {
-  //                   const recurrenceDateKey = format(date, 'yyyy-MM-dd');
-  //                   if (!groupedEvents[recurrenceDateKey]) {
-  //                     groupedEvents[recurrenceDateKey] = [];
-  //                   }
-  
-  //                   // Check recurrence exceptions for each occurrence
-  //                   if (event.recurrence_exception && typeof event.recurrence_exception === 'string') {
-  //                     const exceptionDates = event.recurrence_exception.split(',').map(dateStr => new Date(dateStr.trim()));
-  
-  //                     // Skip occurrence if it falls on an exception date
-  //                     if (exceptionDates.some(exceptionDate => {
-  //                       return exceptionDate.getFullYear() === date.getFullYear() &&
-  //                              exceptionDate.getMonth() === date.getMonth() &&
-  //                              exceptionDate.getDate() === date.getDate();
-  //                     })) {
-  //                       return;
-  //                     }
-  //                   }
-  
-  //                   groupedEvents[recurrenceDateKey].push({
-  //                     ...event,
-  //                     time_start: date,
-  //                     time_end: new Date(date.getTime() + (event.time_end.getTime() - event.time_start.getTime())),
-  //                     name: event.title,
-  //                     height: 50,
-  //                     day: recurrenceDateKey,
-  //                   });
-  //                 } else {
-  //                   console.error('Invalid date:', date);
-  //                 }
-  //               });
-  //             } catch (recurrenceError) {
-  //               console.error('Error parsing cleaned recurrence rule:', recurrenceError, cleanedRecurrenceRule);
-  //             }
-  //           }
-  //         });
-  
-  //         // Update state or dispatch groupedEvents
-  //       }
-  //     } catch (error) {
-  //       console.error('Error getting calendar for month:', error);
-  //     }
-  //   },
-  //   [allEvent, selectedDate],
-  // );
   
   const handleGetCalendarForDay = useCallback(
     async (date: string | number | Date) => {
@@ -279,8 +191,9 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
         end: format(new Date(e.time_end), 'yyyy-MM-dd HH:mm:ss'),
         title: e.title,
         color: e.color,
+       
       }));
-  
+
     const eventsByDate = _.groupBy(allEvents, (e) =>
       CalendarUtils.getCalendarDateString(e.start)
     );
@@ -318,25 +231,25 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
   
   
   return (
-    <View style={styles.calendar}>
-      <View style={styles.header}>
+    <View style={[styles.calendar, {backgroundColor: color.background}]}>
+      <View style={[styles.header, {backgroundColor: color.background}]}>
         <View style={styles.headerContent}>
           <View style={styles.headerp}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Ionicons name="chevron-back" size={30} color="black" />
+              <Ionicons name="chevron-back" size={30} color={ color.text} />
             </TouchableOpacity>
-            <Text style={styles.headerText}>{translate('Schedule')}</Text>
+            <Text style={[styles.headerText, {color: color.text}]}>{translate('Schedule')}</Text>
           </View>
 
           <View style={styles.headerp}>
            
 
             <TouchableOpacity style={[styles.icon , {marginRight: 15}]} onPress={() => pressCalendar()}>
-              <Icon name="calendar" size={25} color="black" />
+              <Icon name="calendar" size={25} color={ color.text}/>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.icon} onPress={() => pressList()}>
-              <Ionicons name="list" size={30} color="black" />
+              <Ionicons name="list" size={30} color={ color.text} />
             </TouchableOpacity>
           </View>
         </View>
@@ -352,41 +265,67 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
           showTodayButton
           todayBottomMargin={38}
           disabledOpacity={0.6}
+          theme ={{
+            backgroundColor: color.background, 
+            calendarBackground: color.white,
+            monthTextColor: color.text,
+            dayTextColor:  color.text,
+        }}
         >
           <ExpandableCalendar
-            firstDay={1}
-            markedDates={formatMarkedDates(events)}
-            onDayPress={(days) => onDayPress(days)}
-            hideExtraDays={true}
-        
+                firstDay={1}
+                markedDates={formatMarkedDates(events)}
+                onDayPress={(days) => onDayPress(days)}
+                hideExtraDays={true}
+                theme ={{
+                    backgroundColor: color.background, 
+                    calendarBackground: color.white,
+                    monthTextColor: color.text,
+                    dayTextColor:  color.text,
+                }}
           />
-          <TimelineList
-          events={formatEvent(eventTL)}
-          timelineProps={{
-            format24h: true,
-            start: 0,
-            end: 24,
-            overlapEventsSpacing: 10,
-            rightEdgeSpacing: 24,
-            layout: "stacked",
-            onEventPress: handlePressEvent,
-            renderEvent: (event: PackedEvent) => {
-              const start = format(new Date(event.start), 'HH:mm');
-              const end = format(new Date(event.end), 'HH:mm');
-              return (
-                <View style={[styles.event]}>
-                  <Text style={{color : 'white', fontWeight: '800'}}>{`${start} - ${end}`}</Text>
-                  <Text style={{color : 'white'}}>{event.title}</Text>
 
-                </View>
-              );
-            },
-          }}
-          scrollToNow
-          initialTime={INITIAL_TIME}
-          onChangeTime={(time: string | number | Date) => handleTimelineScroll(new Date(time))}
-          
-        />
+          <TimelineList
+                events={formatEvent(eventTL)}
+                timelineProps={{
+                        format24h: true,
+                        start: 0,
+                        end: 24,
+                        theme: {
+                          backgroundColor: color.background, 
+                          calendarBackground: color.background,
+                          monthTextColor: color.text,
+                          dayTextColor: color.text,
+                        },
+                        overlapEventsSpacing: 10,
+                        rightEdgeSpacing: 24,
+                        layout: "stacked",
+                        onEventPress: handlePressEvent,
+                        renderEvent: (event: PackedEvent) => {
+                   
+                              const start = format(new Date(event.start), 'HH:mm');
+                              const end = format(new Date(event.end), 'HH:mm');
+                                  return (
+                                    <View style={[styles.event]}>
+                                      <Text style={{color : 'white', fontWeight: '800'}}>{`${start} - ${end}`}</Text>
+                                      <Text style={{color : 'white'}}>{event.title}</Text>
+
+                                    </View>
+                              );
+                        },
+                        
+                }}
+                scrollToNow
+                initialTime={INITIAL_TIME}
+                onChangeTime={(time: string | number | Date) => handleTimelineScroll(new Date(time))}
+                theme ={{
+                  backgroundColor: color.background, 
+                  calendarBackground: color.background,
+                  monthTextColor: color.text,
+                  dayTextColor:  color.text,
+              }}
+    
+          />
         </CalendarProvider>
       ) : (
         <CalendarList
@@ -397,6 +336,12 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
           onDayPress={onDayPress}
           markedDates={formatMarkedDates(events)}
           onVisibleMonthsChange={(months) => loadItemsForMonth(months)}
+          theme ={{
+            backgroundColor: color.background, 
+            calendarBackground: color.background,
+            monthTextColor: color.text,
+            dayTextColor:  color.text,
+        }}
         />
       )}
     </View>

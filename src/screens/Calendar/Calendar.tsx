@@ -20,6 +20,7 @@ import moment from 'moment';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import { format, isSameDay as isSameDayFn, isSameMonth, isSameYear } from 'date-fns';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   const { id_family } = route.params || {};
@@ -35,7 +36,7 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   const [currentEvents, setCurrentEvents] = useState<Event[]>([]);
   const family = useSelector(selectSelectedFamily);
   const translate = useSelector(getTranslate);
-
+  const color = useThemeColors();
   useEffect(() => {
     fetchEvent();
     
@@ -131,7 +132,7 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
     const isSameMonthYear = isSameMonth(startDate, endDate) && isSameYear(startDate, endDate);
 
     return (
-      <TouchableOpacity onPress={() => handlePressEvent(item)}>
+      <TouchableOpacity onPress={() => handlePressEvent(item)} style={{backgroundColor: color.background}} >
         <View style={[styles.agendaItem, { backgroundColor: `${item.color}90` }]}>
           <Text style={[styles.agendaItemText, { color: item.color !== 'white' ? 'white' : 'black' }]}>
             {item.title}
@@ -172,8 +173,8 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   };
   const renderEmptyDate = () => {
     return (
-      <View style={styles.emptyDate}>
-        <Text>{translate('No events for this day')}</Text>
+      <View style={[styles.emptyDate, {backgroundColor: color.background}]}>
+        <Text style={{color: color.text}}>{translate('No events for this day')}</Text>
       </View>
     );
   };
@@ -195,16 +196,17 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
     const options = { year: 'numeric', month: 'short' };
     return date.toLocaleDateString('en-US', options);
   }
+ 
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: color.background }}>
       <View style={styles.calendar}>
-        <View style={styles.header}>
+        <View style={[styles.header, {backgroundColor: color.background}]}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="chevron-back" size={30} color="black" />
+            <Ionicons name="chevron-back" size={30} color={color.text}/>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => pressSchedule()}>
-          <Ionicons name="list" size={30} color="black" />
+            <Ionicons name="list" size={30} color={color.text} />
           </TouchableOpacity>
         </View>
         <View
@@ -215,10 +217,10 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
             alignItems: 'center',
           }}>
           <View style={{ flexDirection: 'column' }}>
-            <Text style={{ fontSize: 40, fontWeight: '400', marginBottom: 5, color: 'gray' }}>
+            <Text style={{ fontSize: 40, fontWeight: '400', marginBottom: 5, color: color.text}}>
               {formatDate(selectDate)}
             </Text>
-            <Text style={{ fontSize: 14, fontWeight: '300' }}>
+            <Text style={{ fontSize: 14, fontWeight: '300',color: color.text }}>
               {translate('Welcome')}, {profile.firstname} {profile.lastname}
             </Text>
           </View>
@@ -242,6 +244,7 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
             </Text>
           </TouchableOpacity>
         </View>
+
         <Agenda
           items={events}
           loadItemsForMonth={loadItemsForMonth}
@@ -250,6 +253,14 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
           rowHasChanged={rowHasChanged}
           onDayPress={(days: any) => handleDayPress(days)}
           selected={selectDate}
+          theme = {{
+                backgroundColor: color.background, 
+                calendarBackground: color.background,
+                monthTextColor: color.text,
+                dayTextColor: color.text,
+                textSectionTitleColor: color.text, 
+                agendaKnobColor: color.background, 
+          }}
         />
       </View>
     </SafeAreaView>

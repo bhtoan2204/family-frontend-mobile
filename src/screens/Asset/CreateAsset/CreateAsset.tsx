@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert, ScrollView, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
@@ -8,10 +8,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addAsset } from 'src/redux/slices/AssetSlice';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import { AddAssetScreenProps } from 'src/navigation/NavigationTypes';
-import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker'; 
 import { ExpenseServices } from 'src/services/apiclient';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const AddAssetScreen = ({ navigation }: AddAssetScreenProps) => {
   const dispatch = useDispatch();
@@ -24,6 +24,7 @@ const AddAssetScreen = ({ navigation }: AddAssetScreenProps) => {
   const [image, setImage] = useState<string | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false); 
   const translate = useSelector(getTranslate);
+  const color = useThemeColors();  
 
   const handleSave = async () => {
     if (!family?.id_family || !name || !value || !purchaseDate) {
@@ -50,9 +51,9 @@ const AddAssetScreen = ({ navigation }: AddAssetScreenProps) => {
         newAsset.image_url
       );
   
-      if (data) {
-        console.log(data);
-        dispatch(addAsset(data));
+      if (data.data){
+        console.log(data.data);
+        dispatch(addAsset(data.data));
         Alert.alert(translate('Success'), translate('Asset saved successfully'));
         navigation.goBack();
       }
@@ -61,7 +62,6 @@ const AddAssetScreen = ({ navigation }: AddAssetScreenProps) => {
     }
   };
   
-
   const handleImagePicker = async () => {
     if (Constants.platform.ios) {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -88,73 +88,81 @@ const AddAssetScreen = ({ navigation }: AddAssetScreenProps) => {
     setPurchaseDate(currentDate);
   };
 
-  const showDatepicker = () => {
-    setShowDatePicker(true);
-  };
+  const { height } = Dimensions.get('window');
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={30} color="#000" />
-        </TouchableOpacity>
-        <Text style={styles.title}>{translate('Add Asset')}</Text>
-      </View>
-      <TouchableOpacity onPress={handleImagePicker}>
-        {image ? (
-          <Image source={{ uri: image }} style={styles.assetImage} />
-        ) : (
-          <View style={styles.placeholderImage}>
-            <Icon name="camera" size={40} color="#ccc" />
+    <SafeAreaView style={[styles.container, {backgroundColor: color.background}]}>
+      <KeyboardAvoidingView
+        style={styles.inner}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
+      >
+           <ScrollView
+          contentContainerStyle={[styles.scrollViewContent, { paddingBottom: 80 }]} 
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+        >
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Icon name="arrow-back" size={30} color={color.text} />
+            </TouchableOpacity>
+            <Text style={[styles.title, {color: color.text}]}>{translate('Add Asset')}</Text>
           </View>
-        )}
-      </TouchableOpacity>
-      <View style={styles.form}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>{translate('Asset Name')}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder={translate('Enter Asset Name')}
-            value={name}
-            onChangeText={setName}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>{translate('Description')}</Text>
-          <TextInput
-            style={[styles.input, { height: 100 }]}
-            placeholder={translate('Enter Description')}
-            value={description}
-            onChangeText={setDescription}
-            multiline
-            numberOfLines={4}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>{translate('Value')}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder={translate('Enter Value')}
-            value={value}
-            onChangeText={setValue}
-            keyboardType="numeric"
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>{translate('Purchase Date')}</Text>
-        
-            <DateTimePicker
-              value={purchaseDate}
-              mode="date"
-              display="default"
-              onChange={handleDateChange}
-            />
-          
-        </View>
-      </View>
-      <TouchableOpacity style={styles.addButton} onPress={handleSave}>
-        <Icon name="save-outline" size={40} color="#fff" />
-      </TouchableOpacity>
+          <TouchableOpacity onPress={handleImagePicker} style={styles.imageContainer}>
+            {image ? (
+              <Image source={{ uri: image }} style={styles.assetImage} />
+            ) : (
+              <View style={styles.placeholderImage}>
+                <Icon name="camera" size={40} color="#ccc" />
+              </View>
+            )}
+          </TouchableOpacity>
+          <View style={styles.form}>
+            <View style={styles.inputContainer}>
+              <Text style={[styles.label, {color: color.text}]}>{translate('Asset Name')}</Text>
+              <TextInput
+                style={[styles.input, {color: color.text}]}
+                placeholder={translate('Enter Asset Name')}
+                value={name}
+                onChangeText={setName}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={[styles.label, {color: color.text}]}>{translate('Description')}</Text>
+              <TextInput
+                style={[styles.input, { height: 100, color: color.text }]}
+                placeholder={translate('Enter Description')}
+                value={description}
+                onChangeText={setDescription}
+                multiline
+                numberOfLines={4}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={[styles.label, {color: color.text}]}>{translate('Value')}</Text>
+              <TextInput
+                style={[styles.input, {color: color.text}]}
+                placeholder={translate('Enter Value')}
+                value={value}
+                onChangeText={setValue}
+                keyboardType="numeric"
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={[styles.label, {color: color.text}]}>{translate('Purchase Date')}</Text>
+              <DateTimePicker
+                value={purchaseDate}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
+              />
+            </View>
+          </View>
+        </ScrollView>
+          <TouchableOpacity onPress={handleSave} style={styles.saveButton} activeOpacity={0.8}>
+            <Text style={styles.saveButtonText}>{translate('Save')}</Text>
+          </TouchableOpacity>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -163,6 +171,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+  },
+  inner: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
   },
   header: {
     flexDirection: 'row',
@@ -174,10 +189,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 10,
   },
+  imageContainer: {
+    marginBottom: 16,
+  },
   assetImage: {
     width: '100%',
     height: 200,
-    marginBottom: 16,
     borderRadius: 8,
   },
   placeholderImage: {
@@ -186,7 +203,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f0f0f0',
-    marginBottom: 16,
     borderRadius: 8,
   },
   form: {
@@ -213,17 +229,26 @@ const styles = StyleSheet.create({
     padding: 12,
     marginTop: 8,
   },
-  addButton: {
-    backgroundColor: '#2196F3',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+  buttonContainer: {
+    padding: 16,
     position: 'absolute',
-    bottom: 16,
-    right: 16,
-    elevation: 3,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderColor: '#ccc',
+  },
+  saveButton: {
+    backgroundColor: '#66C0F4',
+    paddingVertical: 12,
+    borderRadius: 100,
+    alignItems: 'center',
+  },
+  saveButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

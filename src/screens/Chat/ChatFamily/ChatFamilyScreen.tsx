@@ -21,6 +21,7 @@ import { selectFamilyLastMessage } from 'src/redux/slices/MessageFamily';
 import { Message } from 'src/interface/chat/family';
 import { Member } from 'src/interface/member/member';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 
 
@@ -44,7 +45,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
     null,
   );
   let family = useSelector(selectSelectedFamily);
-
+  const color = useThemeColors();
 
   useEffect(() => {
     fetchMember();
@@ -329,8 +330,8 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         left: 0,
         right: 0,
       }}>
-    <View style={styles.header}>
-    <View style={styles.receiverInfo}>
+    <View style={[styles.header, {backgroundColor: color.background}]}>
+    <View style={[styles.receiverInfo,  {backgroundColor: color.background}]}>
           <View
             style={{
               flexDirection: 'row',
@@ -351,8 +352,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
                     source={{uri: family.avatar}}
                     style={styles.avatar}
                   />
-                  <View style={[styles.activeDot, {top: 15, right: 10}]} />
-                  <Text style={styles.avatarText}>
+                  <Text style={[styles.avatarText, {color: color.text}]}>
                     {' '}
                     {family.name}
                   </Text>
@@ -392,7 +392,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
     {messages ? (
       <FlatList
         key={refreshFlatList ? 'refresh' : 'no-refresh'}
-        style={styles.messagesContainer}
+        style={[styles.messagesContainer, {backgroundColor: color.background} ]}
         contentContainerStyle={styles.contentContainer}
         data={messages}
         inverted
@@ -467,10 +467,10 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
                   </View>
                 </>
               )}
-              <Text style={styles.introText}>
+              <Text style={[styles.introText, {color: color.text}]}>
                 You haven't received any message from  {family?.name} yet.
               </Text>
-              <Text style={styles.introText}>
+              <Text style={[styles.introText, {color: color.textSubdued}]}>
                 Start the conversation by sending a message.
               </Text>
               <View style={{backgroundColor: 'white', minHeight: 470}}></View>
@@ -479,7 +479,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         </KeyboardAvoidingView>
       )}
       <View
-        style={[styles.inputContainer, keyboardIsOpen && {paddingBottom: 20}]}>
+        style={[styles.inputContainer, {backgroundColor: color.background}, keyboardIsOpen && {paddingBottom: 20}]}>
         <TouchableOpacity
           onPress={handleOpenImageLibrary}
           style={{marginRight: 15}}>
@@ -487,10 +487,12 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         </TouchableOpacity>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
           <TextInput
-            style={[styles.input, {flex: 1}]}
+            style={[styles.input, {backgroundColor: color.inputChat}, {flex: 1}]}
             value={message}
             onChangeText={setMessage}
-            placeholder="Aa"></TextInput>
+            placeholder="Aa">
+              
+            </TextInput>
 
               <EmojiPicker onChange={handleEmojiChange} />
         </View>

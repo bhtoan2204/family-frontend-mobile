@@ -110,10 +110,8 @@ const styles = StyleSheet.create({
     height: '9%',
     width: '100%',
     position: 'absolute',
-    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: 'rgba(128, 50, 128, 0.5)',
   },
 });
 

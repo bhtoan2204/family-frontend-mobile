@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   purchaseButton: {
-    backgroundColor: COLORS.DarkCharcoal, 
+    backgroundColor: COLORS.Rhino, 
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,

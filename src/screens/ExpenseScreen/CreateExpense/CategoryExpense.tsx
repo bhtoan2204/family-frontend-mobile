@@ -3,20 +3,20 @@ import { View, Text, Image, TouchableOpacity, Animated, FlatList, NativeSyntheti
 import Icon from 'react-native-vector-icons/Ionicons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import styles from './styles';
-import { getTranslate } from 'src/redux/slices/languageSlice';
+import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
 import { useSelector } from 'react-redux';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const CategoryExpense = ({ expenseCategory, pressSelectCategory, handleMostUsedPress, isScrollViewVisible, scrollX, expenseType, dataExpenseTypeToShow, handleExpenseTypePress, widthOfYourPage }) => {
     const [currentPage, setCurrentPage] = useState(0);
     const scrollViewRef = useRef(null);
     const translate = useSelector(getTranslate);
-
+    const location = useSelector(selectLocale)
     const urlCatetory = 'https://png.pngtree.com/element_our/20190530/ourmid/pngtree-correct-icon-image_1267804.jpg';
-    useEffect( () =>{
-        console.log(expenseType)
-    },[])
+    const color = useThemeColors();
+
     return (
-      <View style={styles.ContainerCategory}>
+      <View style={[styles.ContainerCategory, {backgroundColor: color.background}]}>
         <View style={styles.selectedItemContainer}>
           <Image source={{ uri: urlCatetory }} style={styles.avatar} />
           <Text
@@ -24,7 +24,7 @@ const CategoryExpense = ({ expenseCategory, pressSelectCategory, handleMostUsedP
               styles.inputAmount,
               { textAlign: 'left' },
               { fontSize: 18 },
-              { color: '#1b2838' },
+              { color: color.text },
             ]}
           >
             {expenseCategory?.expense_type_name || translate('Select category')}
@@ -37,7 +37,7 @@ const CategoryExpense = ({ expenseCategory, pressSelectCategory, handleMostUsedP
             <Text
               style={[
                 {
-                  color: '#1b2838',
+                  color: color.text,
                   fontWeight: '600',
                   fontSize: 16,
                   marginRight: 5,
@@ -49,12 +49,12 @@ const CategoryExpense = ({ expenseCategory, pressSelectCategory, handleMostUsedP
             <Icon
               name="chevron-forward-outline"
               size={22}
-              color="#1b2838"
+              color={color.text}
             />
           </TouchableOpacity>
         </View>
         <View
-          style={{ height: 1, backgroundColor: '#F4F4F4', bottom: 5 }}
+          style={{ height: 1, backgroundColor: color.background, bottom: 5 }}
         />
         <TouchableOpacity
           onPress={handleMostUsedPress}
@@ -108,13 +108,13 @@ const CategoryExpense = ({ expenseCategory, pressSelectCategory, handleMostUsedP
                   scrollEnabled={false}
                   renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => handleExpenseTypePress(item)}>
-                      <View style={[styles.categoryContainer, { width: 125, height: 80 }]}>
+                      <View style={[styles.categoryContainer, { width: 125, height: 80 },]}>
                       <Image
                         source={{ uri: urlCatetory }}
                         style={styles.avatar}
                       />
-                        <Text style={styles.expenseItem} numberOfLines={1} ellipsizeMode="tail">
-                          {item.expense_type_name}
+                        <Text style={[styles.expenseItem, {color: color.text}]} numberOfLines={1} ellipsizeMode="tail">
+                          {location==='vi' ? item.expense_type_name_vn : item.expense_type_name}
                         </Text>
                       </View>
                     </TouchableOpacity>

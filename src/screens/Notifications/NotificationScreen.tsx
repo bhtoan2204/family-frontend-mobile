@@ -10,12 +10,16 @@ import { Notification } from 'src/interface/notification/getNoti';
 import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import { setSelectedFamilyById } from 'src/redux/slices/FamilySlice';
 import { setSelectedDate } from 'src/redux/slices/ExpenseAnalysis';
+import { useThemeColors } from 'src/hooks/useThemeColor';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
   let notifications = useSelector(selectNotifications);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const color = useThemeColors();
+  const translate = useSelector(getTranslate);
 
   useEffect(() => {
     fetchNotification();
@@ -32,7 +36,7 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
       const response = await ProfileServices.getNotification(index);
       if (response) {
         setIndex(index + 1);
-        dispatch(setNotificationSlice([...notifications, ...response]));
+        dispatch(setNotificationSlice([...notifications, ...response.data]));
       }
     } catch (error) {
       console.error('Error fetchNotification:', error);
@@ -131,8 +135,16 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
   
 
   const renderItem = ({ item }: { item: Notification }) => (
-    <TouchableOpacity onPress={() => handlePressNoti(item)} style={[item.isRead ? {backgroundColor: '#fff'} : {backgroundColor: COLORS.AliceBlue}]}>
+    <TouchableOpacity onPress={() => handlePressNoti(item)} style={[item.isRead ? {backgroundColor: color.white} : {backgroundColor:  color.white}]}>
       <View style={styles.notificationItem}>
+       { item.familyInfo.avatar && (
+        <Image
+          source={{uri: item.familyInfo.avatar}}
+          style={styles.avatar}
+          resizeMode="cover"
+        />
+      ) }
+   
       {/* { item.familyInfo.avatar ? (
         <Image
           source={{uri: item.familyInfo.avatar}}
@@ -149,23 +161,23 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
       )
     } */}
         <View style={styles.notificationContent}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.content}>{item.content}</Text>
-          <Text style={styles.date}>{item.timestamp ? formatDateTime(item.timestamp) : ''}</Text>
+          <Text style={[styles.title, {color: color.text}]}>{item.title}</Text>
+          <Text style={[styles.content, {color: color.textSubdued}]}>{item.content}</Text>
+          <Text style={[styles.date,  {color: color.textSubdued}]}>{item.timestamp ? formatDateTime(item.timestamp) : ''}</Text>
         </View>
       </View>
     </TouchableOpacity>
   );
 
   const renderFooter = () => {
-    return loading ? <ActivityIndicator size="large" color="#0000ff" /> : null;
+    return loading ? <ActivityIndicator size="large" color={color.text} /> : null;
   };
   
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, {backgroundColor: color.background}]}>
       <View style={styles.container}>
-        <Text style={styles.header}>Notifications</Text>
+        <Text style={[styles.header, {color: color.text}]}>{translate('notificationTab')}</Text>
         <FlatList
           data={notifications}
           renderItem={renderItem}
@@ -181,8 +193,7 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    marginTop: 20,
-    backgroundColor: '#f8f8f8',
+    marginBottom: 50,
   },
   container: {
     flex: 1,
@@ -193,6 +204,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#333',
     marginLeft: 20,
+  
+
   },
   notificationItem: {
     padding: 16,
@@ -203,7 +216,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 15,
+
   },
   content: {
     fontSize: 14,

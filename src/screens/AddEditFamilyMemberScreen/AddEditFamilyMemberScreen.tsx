@@ -23,6 +23,7 @@ import { useSelector } from 'react-redux';
 import Invite from './Invite';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
   navigation,
@@ -33,7 +34,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
   const [p_phone, setPhone] = useState(phone);
   const profile = useSelector(selectProfile);
   const  t  = useSelector(getTranslate); 
-
+  const color = useThemeColors();
   const openContacts = () => {
     navigation.navigate('Contact', { id_family });
   };
@@ -73,21 +74,21 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
         return;
       }
   
-      if (p_phone && p_phone.replace(/\D/g, '').length !== 10) {
-        Alert.alert(
-          t('invalidPhoneNumber'),
-          t('invalidPhoneNumberMessage'),
-          [
-            {
-              text: 'OK',
-              onPress: () => console.log('Invalid Phone Number Alert Closed'),
-              style: 'cancel',
-            },
-          ],
-          { cancelable: false }
-        );
-        return;
-      }
+      // if (p_phone && p_phone.replace(/\D/g, '').length !== 10) {
+      //   Alert.alert(
+      //     t('invalidPhoneNumber'),
+      //     t('invalidPhoneNumberMessage'),
+      //     [
+      //       {
+      //         text: 'OK',
+      //         onPress: () => console.log('Invalid Phone Number Alert Closed'),
+      //         style: 'cancel',
+      //       },
+      //     ],
+      //     { cancelable: false }
+      //   );
+      //   return;
+      // }
   
       let formattedPhone = p_phone;
       if (formattedPhone && !formattedPhone.startsWith('+84')) {
@@ -129,18 +130,18 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {backgroundColor:color.background}]}>
       <ScrollView>
         <KeyboardAvoidingView style={styles.keyboardView} behavior="padding">
           <View style={styles.header}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons
-                name="chevron-back-outline"
+                name="close"
                 size={34}
-                style={styles.backButton}
+                color={color.text}
               />
             </TouchableOpacity>
-            <Text style={styles.title}>{t('addFamilyMemberTitle')}</Text>
+            <Text style={[styles.title, {color: color.text}]}>{t('addFamilyMemberTitle')}</Text>
           </View>
           <Image
             source={require('src/assets/images/add-family-member.png')}
@@ -170,10 +171,10 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                   autoCorrect={false}
                   keyboardType="phone-pad"
                   placeholder={p_phone ? p_phone : t('enterPhoneNumber')}
-                  placeholderTextColor={p_phone ? 'black' : '#A6A6A6'}
+                  placeholderTextColor={color.textSubdued}
                   style={[
                     styles.inputPhone,
-                    { color: p_phone ? 'black' : '#A6A6A6' },
+                    { color: p_phone ? color.text : '#A6A6A6' , backgroundColor: color.white},
                   ]}
                   value={p_phone}
                   onChangeText={setPhone}
@@ -202,10 +203,10 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                 autoCorrect={false}
                 keyboardType="email-address"
                 placeholder={t('familyMemberEmailPlaceholder')}
-                placeholderTextColor="#A6A6A6"
+                placeholderTextColor={color.textSubdued}
                 style={[
                   styles.inputControl,
-                  { color: email ? 'black' : '#A6A6A6' },
+                  { color: email ? 'black' : '#A6A6A6' ,backgroundColor: color.white},
                 ]}
                 onChangeText={setEmail}
               />

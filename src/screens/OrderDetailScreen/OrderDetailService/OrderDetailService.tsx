@@ -7,25 +7,20 @@ import {
 } from 'react-native-gesture-handler';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS } from 'src/constants';
 
 import styles from './styles';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { OrderDetailScreenProps } from 'src/navigation/NavigationTypes';
-import { useSelector } from 'react-redux';
+import { OrderDetailScreenProps, OrderDetailServiceProps } from 'src/navigation/NavigationTypes';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { Package } from 'src/interface/package/mainPackage';
-import { selectPackage } from 'src/redux/slices/PackageSlice';
+import { Package, Service } from 'src/interface/package/mainPackage';
+import { selectPackage, selectService, setOption } from 'src/redux/slices/PackageSlice';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
+import { PaymentMethod } from 'src/interface/purchased/purchased';
+import { AppDispatch } from 'src/redux/store';
 
-type PaymentMethod = {
-  id: number;
-  name: string;
-  code: string;
-  url_image: string;
-};
-
-const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
+const OrderDetailService = ({ route, navigation }: OrderDetailServiceProps) => {
   const [code, setCodeMethod] = useState('vnpay');
   const {id_family} = route.params;
   const currentDate = new Date().toLocaleDateString();
@@ -34,14 +29,18 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
     { id: 1, name: 'VNPay', code: 'vnpay', url_image: 'https://cdn-new.topcv.vn/unsafe/150x/https://static.topcv.vn/company_logos/cong-ty-cp-giai-phap-thanh-toan-viet-nam-vnpay-6194ba1fa3d66.jpg' },
   ]);
   let profile = useSelector(selectProfile);
-  let selectedPackage: Package = useSelector(selectPackage);
+  let selectedService: Service = useSelector(selectService);
   const translate = useSelector(getTranslate);
+  const color = useThemeColors();
+  const dispatch = useDispatch<AppDispatch>();
+
   const handleSelectMethod = (
     code: string,
     id_family: number,
     id_package: number,
     amount: number,
   ) => {
+    dispatch(setOption("Service"));
     switch (code) {
       case 'vnpay':
         navigation.navigate('BankInfoScreen', {
@@ -63,19 +62,19 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
     return parseFloat(amount).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   };
   return (
-    <GestureHandlerRootView>
-      <SafeAreaView style={{ backgroundColor: COLORS.white, padding: 20 , marginTop: 20, }}>
+    <GestureHandlerRootView style={{ backgroundColor: color.background, height: '100%'}}>
+      <SafeAreaView style={{ padding: 20 , marginTop: 20, }}>
         <View style={styles.header}>
           <View style={styles.headerAction}>
             <TouchableOpacity
               onPress={() => {
                 navigation.goBack();
               }}>
-              <FeatherIcon color="#0e0e0e" name="x" size={24} />
+              <FeatherIcon color={color.text} name="x" size={24} />
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.headerTitle}>{translate('Receipt')}</Text>
+          <Text style={[styles.headerTitle, {color: color.text}]}>{translate('Receipt')}</Text>
 
           <View style={[styles.headerAction, { alignItems: 'flex-end' }]} />
         </View>
@@ -86,20 +85,20 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
             <FeatherIcon color="#fff" name="codepen" size={32} />
           </View>
 
-          <Text style={styles.receiptTitle}>
-            {selectedPackage.name}
+          <Text style={[styles.receiptTitle, {color: color.text}]}>
+            {selectedService.name}
           </Text>
 
           <View style={styles.receiptPrice}>
             <Text style={styles.receiptPriceText}>
-              {formatCurrency(selectedPackage.price)}
+              {formatCurrency(selectedService.price)}
             </Text>
 
       
           </View>
 
-          <Text style={styles.receiptDescription}>
-            {selectedPackage.description}
+          <Text style={[styles.receiptDescription, {color: color.textSubdued}]}>
+            {selectedService.description}
           </Text>
 
           <View style={styles.divider}>
@@ -109,22 +108,22 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
             <Text style={styles.detailsTitle}>{translate('Transaction details')}</Text>
 
             <View style={styles.detailsRow}>
-              <Text style={styles.detailsField}>{translate('Date')}</Text>
-              <Text style={styles.detailsValue}>{currentDate}</Text>
+              <Text style={[styles.detailsField, {color: color.text}]}>{translate('Date')}</Text>
+              <Text style={[styles.detailsValue, {color: color.text}]}>{currentDate}</Text>
             </View>
             <View style={styles.detailsRow}>
-              <Text style={styles.detailsField}>{translate('Bill owner')}</Text>
-              <Text style={styles.detailsValue}>
+            <Text style={[styles.detailsField, {color: color.text}]}>{translate('Bill owner')}</Text>
+            <Text style={[styles.detailsValue, {color: color.text}]}>
                 {profile.firstname} {profile.lastname}
               </Text>
             </View>
             <View style={styles.detailsRow}>
-              <Text style={styles.detailsField}>{translate('Phone')}</Text>
-              <Text style={styles.detailsValue}>{profile.phone}</Text>
+            <Text style={[styles.detailsField, {color: color.text}]}>{translate('Phone')}</Text>
+            <Text style={[styles.detailsValue, {color: color.text}]}>{profile.phone}</Text>
             </View>
             <View style={styles.detailsRow}>
-              <Text style={styles.detailsField}>Email</Text>
-              <Text style={styles.detailsValue}>{profile.email}</Text>
+            <Text style={[styles.detailsField, {color: color.text}]}>Email</Text>
+            <Text style={[styles.detailsValue, {color: color.text}]}>{profile.email}</Text>
             </View>
             <View style={styles.divider}>
               <View style={styles.dividerInset} />
@@ -141,7 +140,7 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
                   <View
                     key={code}
                     style={[
-                      styles.radioWrapper,
+                      styles.radioWrapper, {backgroundColor: color.white, borderColor: color.background},
                       isActive && styles.radioActive,
                       isFirst && styles.radioFirst,
                       isLast && styles.radioLast,
@@ -151,7 +150,7 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
                         setValue(index);
                         setCodeMethod(code);
                       }}>
-                      <View style={styles.radio}>
+                      <View style={[styles.radio, {backgroundColor: color.white},]}>
                         <View
                           style={[
                             styles.radioInput,
@@ -159,7 +158,7 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
                           ]}
                         />
 
-                        <Text style={styles.radioLabel}>{name}</Text>
+                        <Text style={[styles.radioLabel, {color: color.text}]}>{name}</Text>
                         <Image
                           style={[
                             styles.radioPrice,
@@ -177,11 +176,11 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
         </ScrollView>
       </SafeAreaView>
 
-      <View style={styles.overlay}>
+      <View style={[styles.overlay, {backgroundColor: color.background}]}>
         <TouchableOpacity
           onPress={() => {
             console.log('name_method', code);
-            handleSelectMethod(code, id_family, selectedPackage.id_main_package, selectedPackage.price);
+            handleSelectMethod(code, id_family, selectedService.id_extra_package, selectedService.price);
           }}>
           <View style={styles.btn}>
             <Text style={styles.btnText}>{translate('Payment')}</Text>
@@ -193,4 +192,4 @@ const OrderDetailScreen = ({ route, navigation }: OrderDetailScreenProps) => {
   );
 };
 
-export default OrderDetailScreen;
+export default OrderDetailService;

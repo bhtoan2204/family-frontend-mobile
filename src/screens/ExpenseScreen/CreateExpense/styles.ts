@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   headcontainer: {
-    height: '70%',
+    paddingBottom: 50, 
   },
   pagination: {
     flexDirection: 'row',
@@ -222,6 +222,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#2a475e',
     flexDirection: 'row',
+    padding: 15,
   },
   menuItemLast: {
     borderBottomWidth: 0,

@@ -10,6 +10,7 @@ import moment from 'moment';
 import { ExpenseServices, IncomeServices } from "src/services/apiclient";
 import { Ionicons } from "@expo/vector-icons";
 import { getTranslate } from "src/redux/slices/languageSlice";
+import { useThemeColors } from "src/hooks/useThemeColor";
 
 interface Category {
     name: string;
@@ -28,7 +29,7 @@ interface LineChartScreenProps {
 }
 
 const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
-  const [showDetails, setShowDetails] = useState<boolean>(false);
+  const [showDetails, setShowDetails] = useState<boolean>(true);
   const [selectedLegends, setSelectedLegends] = useState<string[]>(['Total']);
   const [isYearPickerVisible, setYearPickerVisible] = useState<boolean>(false);
   const [selectedYear, setSelectedYear] = useState(moment().year());
@@ -37,6 +38,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({ id_family }) => {
   const dispatch = useDispatch();
   const [allCategories, setAllCategories] = useState<Set<string>>(new Set());
   const translate = useSelector(getTranslate);
+  const color = useThemeColors();  
 
   const labels = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -205,11 +207,11 @@ if (monthlyData.length > 0) {
   return (
     <ScrollView style={{ height: '100%' }}>
       <TouchableOpacity
-        style={[styles.monthPickerContainer, { zIndex: 1 }]}
+        style={[styles.monthPickerContainer, { zIndex: 1, }]}
         onPress={() => setYearPickerVisible(!isYearPickerVisible)}
       >
         <View style={styles.monthContainer}>
-          <Text style={styles.monthText}>{selectedYear}</Text>
+          <Text style={[styles.monthText, {color: color.text}]}>{selectedYear}</Text>
         </View>
       </TouchableOpacity>
       {isYearPickerVisible && (
@@ -225,8 +227,8 @@ if (monthlyData.length > 0) {
           </Picker>
         </View>
       )}
-      <View style={styles.chartLineContainer}>
-        <Text>(Unit: VNĐ)</Text>
+      <View style={[styles.chartLineContainer, {backgroundColor: color.background}]}>
+        <Text style={{color: color.text}}>({translate('Unit')}: VNĐ)</Text>
         {displayedDatasets.length > 0 && (
           <LineChart
           data={{
@@ -237,20 +239,24 @@ if (monthlyData.length > 0) {
           height={220}
           yAxisSuffix="M"
           chartConfig={{
-            backgroundGradientFrom: '#FFFFFF',
-            backgroundGradientTo: '#FFFFFF',
+            backgroundGradientFrom:  color.background, 
+            backgroundGradientTo:  color.background, 
             decimalPlaces: 0,
-            color: (opacity = 1) => `#ccc`,
-            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            color: (opacity = 1) => color.text,
+            labelColor: (opacity = 1) => color.text,
             propsForDots: {
               r: '2',
               strokeWidth: '2',
-              stroke: '#ffa726',
+              stroke: color.text,
             },
             propsForBackgroundLines: {
               strokeWidth: 0.1,
+              stroke: `rgba(255, 255, 255, 0.2)`,
             },
-     
+            propsForHorizontalLabels: {
+              fontSize: 10,
+              color: 'white', 
+            },
           }}
         
            // bezier
@@ -269,7 +275,7 @@ if (monthlyData.length > 0) {
         
             return (
               <View>
-                <Text key={index} style={{ position: 'absolute', left: x - 15, top: y - 20, fontSize: 10, color: 'gray' }}>
+                <Text key={index} style={{ position: 'absolute', left: x - 15, top: y - 20, fontSize: 10, color:'green'}}>
                 {categoryAmount !== 0 ? `${categoryAmount.toFixed(0)}M VNĐ` : ''}
                 </Text>
               </View>
@@ -303,13 +309,13 @@ if (monthlyData.length > 0) {
                   <View
                     style={[styles.legendColor, { backgroundColor: dataset.color() }]}
                   />
-                  <Text style={styles.legendText}>{dataset.name}</Text>
+                  <Text style={[styles.legendText, {color : color.text}]}>{dataset.name}</Text>
                   </View>
 
                 </TouchableOpacity>
           ))}
         </ScrollView>
-        <View style={{ height: 1, backgroundColor: '#F3F1EE', marginTop: 10 }} />
+        <View style={{ height: 1, backgroundColor: color.background, marginTop: 10 }} />
 
         <TouchableOpacity
           style={{
@@ -320,33 +326,33 @@ if (monthlyData.length > 0) {
             marginTop: 10,
           }}
           onPress={() => setShowDetails(!showDetails)}>
-          <Text style={{ fontWeight: '500' }}>
+          <Text style={{ fontWeight: '500', color: color.text }}>
             {showDetails ? translate('Hide details') : translate('View details')}
           </Text>
           <Ionicons
             name={showDetails ? 'chevron-down' : 'chevron-forward'}
             size={20}
-            color="black"
+            color={color.text}
           />
         </TouchableOpacity>
         {showDetails &&
-        <ScrollView style={styles.ContainerCategory}>
+        <ScrollView style={[styles.ContainerCategory, {backgroundColor: color.background}]}>
           {monthlyData.map(monthData => (
             <TouchableOpacity
               key={monthData.month}
               style={styles.incomeItem}
               onPress={() => handlePressMonth(`${monthData.month}`)}>
               <View style={styles.incomeDetails}>
-                <Image
+                {/* <Image
                   source={{uri: `${avatarUrlTemplate}${monthData.month}`}}
                   style={styles.avatar}
-                />
+                /> */}
                 <Text
-                  style={styles.incomeText}>{translate(fullLabels[monthData.month-1])}</Text>
+                  style={[styles.incomeText, {color: color.text}]}>{translate(fullLabels[monthData.month-1])}</Text>
               </View>
               <View style={styles.incomeDetails}>
            
-                <Text style={styles.incomeAmount}>+ {formatCurrency(monthData.total * 1000000)}</Text>
+                <Text style={[styles.incomeAmount]}>+ {formatCurrency(monthData.total * 1000000)}</Text>
 
                 <Icon name="chevron-right" size={20} color="#ccc" />
               </View>
@@ -355,14 +361,7 @@ if (monthlyData.length > 0) {
         </ScrollView>
 }
       </View>
-      <View
-        style={{
-          backgroundColor: 'white',
-          width: '100%',
-          height: 400,
-          marginTop: -30,
-        }}
-      />
+  
     </ScrollView>
   );
 };

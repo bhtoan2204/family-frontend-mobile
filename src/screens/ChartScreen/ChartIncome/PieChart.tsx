@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ExpenseServices, IncomeServices } from 'src/services/apiclient';
 import { getSelectedDate, setSelectedDate, setSelectedOptionIncome } from 'src/redux/slices/IncomeAnalysis';
 import { IncomeMonthly } from 'src/interface/income/IncomeMonthly';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 interface PieChartScreenProps {
   id_family: number;
@@ -40,13 +41,18 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
   const [dailyData, setDailyData] = useState<IncomeMonthly[]>([]);
   const dispatch = useDispatch();
   const date = useSelector(getSelectedDate);
+  const color = useThemeColors();  
+  const [selectedCategoryType, setSelectedCategoryType] = useState<string>('Total');
 
   useEffect(() => {
+    console.log(date);
     const parsedDate = new Date(date);
-    setSelectedMonth(parsedDate);
-    fetchData(parsedDate.getMonth() + 1, parsedDate.getFullYear(), id_family);
+    if (!isNaN(parsedDate.getTime())) { 
+      setSelectedMonth(parsedDate);
+      fetchData(parsedDate.getMonth() + 1, parsedDate.getFullYear(), id_family);
+    }
   }, [date, id_family]);
-
+  
 
   const fetchData = async (month: number, year: number, id_family: number) => {
     try {
@@ -126,7 +132,6 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
   //     label: `${((amount / totalExpense) * 100).toFixed(2)}%`,
   //   }),
   // );
-
   const pieChartData = Object.entries(categoryData)
   .map(([name, amount], index) => {
     const percentage = (amount / totalExpense) * 100;
@@ -135,10 +140,11 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
       value: percentage,
       svg: { fill: categoryColors[index + 1] },
       arc: { outerRadius: '100%', innerRadius: '60%' },
-      label: percentage > 10 ? `${percentage.toFixed(2)}%` : '',
+      label: percentage > 10 ? `${percentage.toFixed(1)}%` : '',
     };
   })
 
+  pieChartData.sort((a, b) => b.value - a.value);
 
   const formatMonthYear = (date: moment.MomentInput) => {
     return moment(date).format('MM/YYYY');
@@ -147,7 +153,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
   const handleMonthPickerConfirm = (newDate: Date) => {
     const year = moment(newDate).year();
     const month = moment(newDate).month() + 1;
-    setSelectedMonth(newDate);
+    setSelectedMonth(new Date(newDate));
     setMonthPickerVisible(false);
     fetchData(month, year, id_family);
   };
@@ -187,7 +193,10 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
       </ScrollView>
     );
   };
-
+  const selectOption = (option: string) => {
+    setSelectedCategoryType(option);
+  };
+  
   const handlePressDate = (day: number) => {
     const formattedDate = moment(selectedMonth).set('date', day).format('YYYY-MM-DD');
     dispatch(setSelectedOptionIncome('Day'));
@@ -197,84 +206,147 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({ id_family }) => {
 const formatCurrency = (amount: string | number | bigint) => {
   return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 };
-  return (
-    // <ScrollView style={{height: '80%'}}>
+return (
+  // <ScrollView style={{height: '80%'}}>
 
-    //   {/* <View style={styles.buttonContainer}>
-    //     <Button
-    //       title={showDetails ? 'Hide Details' : 'View Details'}
-    //       onPress={() => setShowDetails(!showDetails)}
-    //     />
-    //   </View> */}
-    // </ScrollView>
-    <View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', }}>
-        <PieChart
-          style={{height: 250, flex: 40}}
-          data={pieChartData}
-          outerRadius={'80%'}
-          innerRadius={'60%'}
-          labelRadius={120}>
-          <Labels slices={pieChartData} />
-        </PieChart>
-        <Legend data={pieChartData} style={{flex: 1}} />
-      </View>
-      <View style={{flexDirection: 'row', top: 0, zIndex: 1}}>
-        <TouchableOpacity
-          style={styles.monthPickerContainer}
-          onPress={() => setMonthPickerVisible(!isMonthPickerVisible)}>
-          <View style={styles.monthContainer}>
-            <Text style={styles.monthText}>
-              {formatMonthYear(selectedMonth)}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+  //   {/* <View style={styles.buttonContainer}>
+  //     <Button
+  //       title={showDetails ? 'Hide Details' : 'View Details'}
+  //       onPress={() => setShowDetails(!showDetails)}
+  //     />
+  //   </View> */}
+  // </ScrollView>
+  <View>
+    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <PieChart
+        style={{height: 250, flex: 40}}
+        data={pieChartData}
+        outerRadius={'80%'}
+        innerRadius={'60%'}
+        labelRadius={120}>
+        <Labels slices={pieChartData} />
+      </PieChart>
+      <Legend data={pieChartData} style={{flex: 1}} />
+    </View>
+    <View style={{flexDirection: 'row', bottom: 15, zIndex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <TouchableOpacity
+        style={styles.monthPickerContainer}
+        onPress={() => setMonthPickerVisible(!isMonthPickerVisible)}>
+        <View style={styles.monthContainer}>
+          <Text style={styles.monthText}>
+            {formatMonthYear(selectedMonth)}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </View>
 
-      {isMonthPickerVisible && (
-        <View style={{zIndex: 2, marginBottom: 50, padding: 10}}>
-          <MonthPicker
-            selectedDate={selectedMonth}
-            onMonthChange={handleMonthPickerConfirm}
-          />
+    {isMonthPickerVisible && (
+      <View style={{zIndex: 2, marginBottom: 50, padding: 10}}>
+        <MonthPicker
+          selectedDate={selectedMonth}
+          onMonthChange={handleMonthPickerConfirm}
+        />
+      </View>
+    )}
+    <View style={[styles.chartContainer, {backgroundColor: color.background}]}>
+      <View style={styles.containerTab}>
+          <TouchableOpacity
+            onPress={() => selectOption('Total')}
+            style={[
+              styles.tabButton,
+              selectedCategoryType === 'Total' && styles.selectedTabButton,
+              { borderTopLeftRadius: 20, borderBottomLeftRadius:20 ,  }
+            ]}>
+            <Text style={[styles.tabButtonText,{color: color.text}, selectedCategoryType === 'Total' && {color: color.text}]}>Total</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => selectOption('Detail')}
+            style={[
+              styles.tabButton,
+              selectedCategoryType === 'Detail' && styles.selectedTabButton,
+              { borderTopRightRadius: 20, borderBottomRightRadius:20 ,  }
+            ]}>
+            <Text style={[styles.tabButtonText, {color: color.text}, selectedCategoryType === 'Detail' && {color: color.text}]}>Detail</Text>
+          </TouchableOpacity>
+          {/* <View
+            style={[
+              styles.bottomLine,
+              { left: selectedCategoryType === 'Total' ? 0 : '50%', borderRadius: 0 }
+            ]}
+          /> */}
+        </View>
+      <ScrollView style={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
+        {selectedCategoryType === 'Detail' && (
+        <View style={styles.ContainerCategory}>
+          {dailyData.map((detail, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.expenseItem}
+              onPress={() => handlePressDate(detail.day)}>
+              <View style={styles.expenseDetails}>
+                {/* <Image
+                  source={{
+                    uri: `https://via.placeholder.com/40?text=${('0' + detail.day).slice(-2)}`,
+                  }}
+                  style={styles.avatar}
+                /> */}
+                  <Text style={[styles.expenseText, {color: color.text}]}>{('0' + detail.day).slice(-2)}/{('0' + (selectedMonth.getMonth() + 1)).slice(-2)}</Text>
+                  </View>
+              <View style={styles.expenseDetails}>
+                <Text style={styles.expenseAmount}>- {formatCurrency(detail.total)}</Text>
+                <Icon name="chevron-right" size={20} color="#ccc" />
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+        )}
+
+      {selectedCategoryType === 'Total' && (
+        <View style={styles.ContainerCategory}>
+            <Text style={{textAlign: 'center', fontSize: 18, paddingTop: 20, color: color.text, paddingBottom: 10}}>
+                   Total Expense for {formatMonthYear(selectedMonth)}:  
+                   <Text style={{color:'red'}}> - {formatCurrency(totalExpense)}
+                   </Text>
+             </Text>
+          {Object.entries(categoryData).map(([name, amount], index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.expenseItem}
+              onPress={() => setShowDetails(!showDetails)}>
+              <View style={styles.expenseDetails}>
+                <View
+                  style={[
+                    styles.CategoryColorBox,
+                    { backgroundColor: categoryColors[index + 1] },
+                  ]}
+                />
+                <Text style={[styles.expenseText, {color: color.text}]}>
+                  {name === 'null' ? 'Other' : name}
+                </Text>
+              </View>
+              <View style={styles.expenseDetails}>
+                <Text style={styles.expenseAmount}>
+                  - {formatCurrency(amount)}
+                </Text>
+                
+              </View>
+            </TouchableOpacity>
+          ))}
         </View>
       )}
-      <View style={styles.chartContainer}>
-        <ScrollView style={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
-          <View style={styles.ContainerCategory}>
-            {dailyData.map((detail, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.expenseItem}
-                onPress={() => handlePressDate(detail.day)}>
-                <View style={styles.expenseDetails}>
-                  <Image
-                    source={{
-                      uri: `https://via.placeholder.com/40?text=${('0' + detail.day).slice(-2)}`,
-                    }}
-                    style={styles.avatar}
-                  />
-                  <Text style={styles.expenseText}>{('0' + detail.day).slice(-2)}/{('0' + (selectedMonth.getMonth() + 1)).slice(-2)}</Text>
-                  </View>
-                <View style={styles.expenseDetails}>
-                  <Text style={styles.incomeAmount}>+ {formatCurrency(detail.total)}</Text>
-                  <Icon name="chevron-right" size={20} color="#ccc" />
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </ScrollView>
-      </View>
-      <View
-        style={{
-          backgroundColor: 'white',
-          width: '100%',
-          height: 600,
-          marginTop: -30,
-        }}
-      />
+
+      </ScrollView>
     </View>
-  );
+    <View
+      style={{
+        backgroundColor: 'white',
+        width: '100%',
+        height: 500,
+        marginTop: 0,
+      }}
+    />
+  </View>
+);
 };
 
-export default PieChartComponent;      
+export default PieChartComponent;

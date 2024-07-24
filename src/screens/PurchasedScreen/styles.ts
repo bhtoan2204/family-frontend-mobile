@@ -4,7 +4,6 @@ import { COLORS } from 'src/constants';
 
 const styles = StyleSheet.create({
   safeArea: {
-    marginTop: 20,
     flex: 1,
   },
   header: {
@@ -13,8 +12,11 @@ const styles = StyleSheet.create({
     padding: 5,
     marginLeft:10,
     marginTop:20,
+    alignContent: 'center',
+
   },
   backButton: {
+    paddingTop: 30,
   },
   title: {
     fontSize: 20,
@@ -117,6 +119,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf:'center',
     justifyContent: 'center',
+    paddingTop: 30,
+
   },
   
   serviceButton: {

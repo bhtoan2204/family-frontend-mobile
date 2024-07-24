@@ -6,6 +6,10 @@ import styles from './styles';
 import { User } from 'src/interface/member/member';
 import { ProfileServices } from 'src/services/apiclient';
 import { COLORS } from 'src/constants';
+import { useSelector } from 'react-redux';
+import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
+import { SCREEN_HEIGHT } from '@gorhom/bottom-sheet';
 
 interface Contact {
   id?: string;
@@ -21,6 +25,8 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { id_family } = route.params;
+  const t = useSelector(getTranslate);
+  const color= useThemeColors();
 
   const convertPhoneNumber = (phoneNumber: string) => {
     if (phoneNumber.startsWith('0')) {
@@ -95,6 +101,8 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
           borderBottomColor: '#ccc',
           flexDirection: 'row',
           alignItems: 'center',
+          backgroundColor: color.white
+
         },
         styles.userContact,
       ]}>
@@ -103,13 +111,13 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
           <Text style={styles.txt}>{item.name[0]}</Text>
         </View>
       </View>
-      <View style={styles.contactDat}>
-        <Text style={styles.name}>{`${item.name}`}</Text>
-        <Text style={styles.phoneNumber}>
+      <View style={[styles.contactDat, {backgroundColor: color.white}]}>
+        <Text style={[styles.name, {color: color.text}]}>{`${item.name}`}</Text>
+        <Text style={[styles.phoneNumber, {color: color.textSubdued}]}>
           {item.phoneNumbers && item.phoneNumbers.length > 0 ? item.phoneNumbers[0].number : ''}
         </Text>
         <View style={styles.appIndicatorContainer}>
-          <Text style={styles.appIndicator}>Already on FamFund as</Text>
+          <Text style={[styles.appIndicator, {color: color.textSubdued}]}>{t('Already on FamFund as')}</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ color: COLORS.DenimBlue }}> {item.user[0].firstname} {item.user[0].lastname} </Text>
             <Image source={{ uri: item.user[0].avatar }} style={styles.avatar} />
@@ -128,17 +136,18 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
           borderBottomColor: '#ccc',
           flexDirection: 'row',
           alignItems: 'center',
+          backgroundColor: color.white
         },
         styles.normalContact,
       ]}>
       <View style={styles.imgCon}>
         <View style={styles.placeholder}>
-          <Text style={styles.txt}>{item.name[0]}</Text>
+          <Text style={[styles.txt, ]}>{item.name[0]}</Text>
         </View>
       </View>
       <View style={styles.contactDat}>
-        <Text style={styles.txt}>{item.name}</Text>
-        <Text style={styles.phoneNumber}>
+        <Text style={[styles.txt, {color: color.text}]}>{item.name}</Text>
+        <Text style={[styles.phoneNumber, {color: color.textSubdued}]}>
           {item.phoneNumbers && item.phoneNumbers.length > 0 ? item.phoneNumbers[0].number : ''}
         </Text>
       </View>
@@ -147,16 +156,16 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
 
   const renderContactItem = ({ item }: { item: Contact }) => {
     return (
-      <TouchableOpacity onPress={() => handleContactPress(item.phoneNumbers)}>
+      <TouchableOpacity style={{backgroundColor: color.white}} onPress={() => handleContactPress(item.phoneNumbers)} >
         {item.user ? <UserContact item={item} /> : <NormalContact item={item} />}
       </TouchableOpacity>
     );
   };
 
   return (
-    <SafeAreaView >
+    <SafeAreaView style= {{backgroundColor: color.background, marginBottom: SCREEN_HEIGHT*0.05}}>
       <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>Contact List</Text>
+        <Text style={[styles.headerTitle, {color: color.text}]}>{t('Contact List')}</Text>
       </View>
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -167,7 +176,7 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
           data={contacts}
           renderItem={renderContactItem}
           keyExtractor={item => item.id || ''}
-          ListEmptyComponent={() => <Text>No contacts found</Text>}
+          ListEmptyComponent={() => <Text>{t('No contacts found')}</Text>}
         />
       )}
     </SafeAreaView>

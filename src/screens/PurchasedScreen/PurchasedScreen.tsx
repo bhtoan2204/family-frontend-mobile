@@ -23,6 +23,7 @@ import moment from 'moment';
 import { AppDispatch } from 'src/redux/store';
 import { COLORS } from 'src/constants';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
   const profile = useSelector(selectProfile);
@@ -34,6 +35,7 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const [modalVisible, setModalVisible] = useState(false); 
   const translate = useSelector(getTranslate);
+  const color = useThemeColors();
 
   const handleViewAllPackage = () => {
     const id_family = undefined;
@@ -83,7 +85,7 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
       <TouchableOpacity
         key={family.id_family}
         onPress={() => NavigateFamily(family)}
-        style={styles.familyCard}>
+        style={[styles.familyCard, {backgroundColor: color.white}]}>
         <TouchableOpacity 
           style={styles.settingsIconContainer}
           onPress={() => setModalVisible(true)}>
@@ -97,10 +99,10 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
           )}
         </View>
         <View style={styles.familyInfo}>
-          <Text style={styles.familyName}>{family.name}</Text>
-          <Text style={styles.familyQuantity}>{translate('FAMILY_MEMBERS')}: {family.quantity}</Text>
+          <Text style={[styles.familyName, {color: color.text}]}>{family.name}</Text>
+          <Text style={[styles.familyQuantity, {color : color.textSubdued}]}>{translate('FAMILY_MEMBERS')}: {family.quantity}</Text>
           <View style={styles.expiredAtContainer}>
-            <Text style={styles.familyQuantity}>{translate('EXPIRED_AT')}: </Text>
+            <Text style={[styles.familyQuantity, {color : color.textSubdued}]}>{translate('EXPIRED_AT')}: </Text>
             <Text style={[styles.familyQuantity, styles.expiredAtText]}>
               {moment(new Date(family.expired_at)).format('DD/MM/YYYY')}
             </Text>
@@ -123,13 +125,13 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
   };
 
   return (
-    <View style={styles.safeArea}>
+    <View style={[styles.safeArea, {backgroundColor: color.background}]}>
       <ScrollView>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-            <Icon name="arrow-back" size={30} />
+            <Icon name="arrow-back" size={30} color={color.text}/>
           </TouchableOpacity>
-          <Text style={styles.headerText}>{translate('FAMILY_MANAGEMENT')}</Text>
+          <Text style={[styles.headerText, {color: color.text}]}>{translate('FAMILY_MANAGEMENT')}</Text>
           <View style={{ flex: 1 }} />
         </View>
 

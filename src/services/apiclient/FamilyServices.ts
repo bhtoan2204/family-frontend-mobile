@@ -186,7 +186,6 @@ const FamilyServices = {
     }
   },
 
-  //dang lam
   updateFamily: async ({
     id_family,
     description,

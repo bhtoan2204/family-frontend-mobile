@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   detailsTitle: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#222',
+    color: 'gray',
     marginBottom: 16,
   },
   detailsRow: {
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   },
   radioWrapper: {
     backgroundColor: '#fff',
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: '#e5e7e5',
     marginTop: -2,
   },

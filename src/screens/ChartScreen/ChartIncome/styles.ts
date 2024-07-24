@@ -274,7 +274,6 @@ const styles = StyleSheet.create({
   },
   chartLineContainer: {
     bottom: 30,
-    backgroundColor: 'white',
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 30,
@@ -292,7 +291,13 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: '#ccc',
     // borderRadius: 20,
-    marginBottom: 50,
+    marginBottom: 200,
+  },
+  CategoryColorBox: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    marginRight: 10,
   },
   expenseItem: {
     flexDirection: 'row',

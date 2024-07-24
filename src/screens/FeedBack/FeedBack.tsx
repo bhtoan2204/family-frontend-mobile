@@ -7,12 +7,14 @@ import { COLORS } from 'src/constants';
 import { ProfileServices } from 'src/services/apiclient';
 import { useSelector } from 'react-redux';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const FeedbackScreen = () => {
   const [rating, setRating] = useState<number>(0);
   const [feedback, setFeedback] = useState<string>('');
   const navigation = useNavigation();
   const translate = useSelector(getTranslate);
+  const color = useThemeColors();
   const handleRating = (rate: React.SetStateAction<number>) => {
     setRating(rate);
   };
@@ -24,7 +26,6 @@ const FeedbackScreen = () => {
     }
 
     try {
-      console.log(rating, feedback);
       await ProfileServices.createFeedback(rating, feedback);
       Alert.alert('Success', 'Thank you for your feedback!');
       setRating(0);
@@ -37,17 +38,17 @@ const FeedbackScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, {backgroundColor: color.background}]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} 
     >
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('HomeTab', {screen: 'HomeScreen'})}>
-          <Ionicons name="arrow-back" size={32} color={COLORS.black} />
+          <Ionicons name="close" size={32} color={color.text}/>
         </TouchableOpacity>
         <Ionicons name="chatbubble-ellipses-outline" size={64} color={COLORS.BlueLight} />
-        <Text style={styles.title}>{translate('YourFeedback')}</Text>
-        <Text style={styles.subtitle}>{translate('FeedbackQuestion')}</Text>
+        <Text style={[styles.title, {color: color.text}]}>{translate('YourFeedback')}</Text>
+        <Text style={[styles.subtitle, {color: color.text}]}>{translate('FeedbackQuestion')}</Text>
         <View style={styles.ratingContainer}>
           {Array.from({ length: 5 }, (_, index) => (
             <TouchableOpacity key={index} onPress={() => handleRating(index + 1)}>
@@ -60,7 +61,7 @@ const FeedbackScreen = () => {
           ))}
         </View>
         <TextInput
-          style={styles.feedbackInput}
+          style={[styles.feedbackInput, {backgroundColor: color.white}]}
           placeholder={translate('FeedbackInput')}
           multiline
           value={feedback}

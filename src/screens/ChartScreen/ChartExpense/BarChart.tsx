@@ -10,6 +10,7 @@ import moment from 'moment';
 import { COLORS } from 'src/constants';
 import { DailyExpense } from 'src/interface/expense/DailyExpense';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 const screenHeight = Dimensions.get('screen').height;
 
 interface BarChartScreenProps {
@@ -23,7 +24,8 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }
   const barChartData = useSelector(selectExpenses);
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
-  
+  const color = useThemeColors();  
+
   useEffect(() => {
     fetchData(selectedDate, id_family);
   }, [selectedDate]);
@@ -63,29 +65,29 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }
   };
 
   const renderItem = ({ item, index }: { item: DailyExpense; index: number }) => (
-    <TouchableOpacity onPress={() => handlePressExpenseItem(item)} style={styles.expenseItem}>
-      <View style={styles.itemContainer}>
+    <TouchableOpacity onPress={() => handlePressExpenseItem(item)} style={[styles.expenseItem,{backgroundColor: color.white}]}>
+      <View style={[styles.itemContainer, {backgroundColor: color.white}]}>
         <View style={styles.expenseContent}>
           <View>
           {item.financeExpenditureType ? 
-              <Text style={styles.expenseCategory}>{item.financeExpenditureType.expense_type_name}</Text> : 
-              <Text style={styles.expenseCategory}>Other</Text>
+              <Text style={[styles.expenseCategory, {color: color.text}]}>{item.financeExpenditureType.expense_type_name}</Text> : 
+              <Text style={[styles.expenseCategory, {color: color.text}]}>Other</Text>
             }
             <View style={styles.row}>
-              <Text style={{ color: 'gray' }}>{translate('Create by')}: </Text>
+              <Text style={{ color: color.textSubdued }}>{translate('Create by')}: </Text>
               {item.users && (
-              <Text style={styles.expenseName}>{item.users.firstname} {item.users.lastname}</Text>
+              <Text style={[styles.expenseName, ]}>{item.users.firstname} {item.users.lastname}</Text>
               )}
             </View>
-            <Text style={styles.expenseDescription}>{item.description}</Text>
+            <Text style={[styles.expenseDescription, {color: color.textSubdued}]}>{item.description}</Text>
           </View>
           <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
             <View style={styles.rowInfo}>
               <Text style={styles.expenseAmount}>-{formatCurrency(item.amount)}</Text>
-              <Text style={styles.expenseDate}>{formatDate(item.expenditure_date)}</Text>
+              <Text style={[styles.expenseDate, {color: color.textSubdued}]}>{formatDate(item.expenditure_date)}</Text>
             </View>
             <View style={{ justifyContent: 'center' }}>
-              <Icon name="chevron-forward" size={20} style={styles.forwardIcon} />
+              <Icon name="chevron-forward" size={20} color={color.text} />
             </View>
           </View>
         </View>
@@ -106,7 +108,7 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }
         />
       </View>
       {barChartData.length > 0 ? (
-        <View style={styles.DataContainer}>
+        <View style={[styles.DataContainer, {backgroundColor: color.background}]}>
         <FlatList
           data={barChartData}
           renderItem={renderItem}
@@ -115,7 +117,7 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }
         />
         </View>
       ) : (
-        <View style={styles.noDataContainer}>
+        <View style={[styles.noDataContainer, {backgroundColor: color.background}]}>
           <Image
             source={require('src/assets/icons/search.png')}
             resizeMode="stretch"

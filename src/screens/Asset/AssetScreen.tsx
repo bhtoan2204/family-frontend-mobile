@@ -7,16 +7,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ExpenseServices } from 'src/services/apiclient';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import { Asset } from 'src/interface/asset/asset';
-import { selectAsset, setAsset } from 'src/redux/slices/AssetSlice';
+import { selectAsset, selectAssets, setAsset } from 'src/redux/slices/AssetSlice';
 import Feather from 'react-native-vector-icons/Feather';
 import { RootState } from 'src/redux/store';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const AssetScreen = ({ navigation }: AssetScreenProps) => {
   const dispatch = useDispatch();
   const family = useSelector(selectSelectedFamily);
-  const assets = useSelector((state: RootState) => state.asset.assets);
+  const assets = useSelector(selectAssets);
   const translate = useSelector(getTranslate);
+  const color = useThemeColors();  
 
   useEffect(() => {
     fetchData();
@@ -25,37 +27,39 @@ const AssetScreen = ({ navigation }: AssetScreenProps) => {
   const fetchData = async () => {
     try {
       const data = await ExpenseServices.getAsset(family.id_family);
-      console.log(data);
       dispatch(setAsset(data));
     } catch (error) {
       console.log(error);
     }
   };
-
+  const formatCurrency = (amount: string | number | bigint) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+  };
   const handlePressDetail = (item: Asset) => {
     dispatch(selectAsset(item))
     navigation.navigate('AssetDetailScreen', { asset: item });
   };
 
   const renderItem = ({ item }: { item: Asset }) => (
-    <TouchableOpacity onPress={() => handlePressDetail(item)} style={styles.assetContainer}>
+    <TouchableOpacity onPress={() => handlePressDetail(item)} 
+    style={[styles.assetContainer, {backgroundColor: color.white }]}>
       <Image source={{ uri: item.image_url }} style={styles.assetImage} />
       <View style={styles.assetInfo}>
-        <Text style={styles.assetName}>{item.name}</Text>
-        <Text style={styles.assetDescription}>{item.description}</Text>
-        <Text style={styles.assetValue}>{`{translate('Value')}: ${parseInt(item.value).toLocaleString()} VND`}</Text>
-        <Text style={styles.assetDate}>{`{translate('Purchase Date')}: ${item.purchase_date}`}</Text>
+        <Text style={[styles.assetName, {color: color.text}]}>{item.name}</Text>
+        <Text style={[styles.assetDescription, {color: color.text}]}>{item.description}</Text>
+        <Text style={[styles.assetValue, {color: color.text}]}>{`${translate('Value')}: ${formatCurrency(parseInt(item.value))}`}</Text>
+        <Text style={[styles.assetDate, {color: color.text}]}>{`${translate('Purchase Date')}: ${item.purchase_date}`}</Text>
       </View>
     </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, {backgroundColor: color.background}]}>
+      <View style={[styles.header, {backgroundColor: color.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={30} color="#000" />
+          <Icon name="arrow-back" size={30} color={color.text}/>
         </TouchableOpacity>
-        <Text style={styles.title}>{translate('Asset')}</Text>
+        <Text style={[styles.title, {color: color.text}]}>{translate('Asset')}</Text>
       </View>
       <FlatList
         data={assets}
@@ -74,7 +78,7 @@ const AssetScreen = ({ navigation }: AssetScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    //backgroundColor: '#F9FAFB',
   },
   header: {
     flexDirection: 'row',
@@ -82,7 +86,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 20,
     backgroundColor: '#fff',
-    borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
   },
   title: {
@@ -98,7 +101,6 @@ const styles = StyleSheet.create({
   assetContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     marginBottom: 12,
     padding: 16,

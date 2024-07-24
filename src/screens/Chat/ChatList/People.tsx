@@ -13,14 +13,19 @@ import ChatServices from 'src/services/apiclient/ChatServices';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { User } from 'src/interface/chat/chat';
 import { ChatScreenProps } from 'src/navigation/NavigationTypes';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUserMessage } from 'src/redux/slices/MessageUser';
+import { get } from 'lodash';
+import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const PeopleScreen = ( {navigation}: ChatScreenProps) => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState<string>('');
   const dispatch = useDispatch();
+  const translate = useSelector(getTranslate);
+  const color = useThemeColors();
 
   useEffect(() => {
     fetchUser();
@@ -52,18 +57,17 @@ const PeopleScreen = ( {navigation}: ChatScreenProps) => {
           {item.avatar ? (
             <>
               <Image source={{uri: item.avatar}} style={styles.avatar} />
-              <View style={[styles.activeDot, {bottom: 15}]} />
             </>
           ) : (
             <View style={styles.avatarPlaceholder}>
-              <Text style={styles.avatarText}>
+              <Text style={[styles.avatarText, {color: color.text}]}>
                 {`${item.firstname.charAt(0)}${item.lastname.charAt(0)}`}
               </Text>
             </View>
           )}
         </View>
         <View style={styles.userInfo}>
-          <Text style={styles.username}>
+          <Text style={[styles.username, {color: color.text}]}>
             {`${item.firstname} ${item.lastname}`}
           </Text>
         </View>
@@ -73,12 +77,12 @@ const PeopleScreen = ( {navigation}: ChatScreenProps) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => console.log('Back')}>
-          <Icon name="arrow-back" size={24} style={styles.backButton} />
+    <SafeAreaView style={[styles.container, {backgroundColor: color.background}]}>
+      <View style={[styles.header,  {backgroundColor: color.background}]}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={24} color={color.text}/>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Contacts</Text>
+        <Text style={[styles.headerTitle, {color: color.text}]}>{translate('Contacts')}</Text>
       </View>
       {loading ? (
         <ActivityIndicator style={styles.loadingIndicator} />
@@ -127,7 +131,6 @@ const styles = StyleSheet.create({
   },
   userItemBorderShort: {
     borderBottomColor: '#f0f0f0',
-    borderBottomWidth: 1,
     width: '80%',
     alignSelf: 'flex-end',
     marginRight: 15,

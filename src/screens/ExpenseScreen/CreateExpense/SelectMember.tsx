@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 import { Member } from 'src/interface/member/member';
 import { getTranslate } from 'src/redux/slices/languageSlice';
 
@@ -12,14 +13,15 @@ const SelectMember = ({ members, memberSelected, setMemberSelected }) => {
       setMemberSelected(members[0]);
     }
   }, []);
+  const color=useThemeColors();
 
   const handleMemberPress = (member: Member) => {
     setMemberSelected(member);
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{translate('Create by')}</Text>
+    <View style={[styles.container, {backgroundColor: color.background}]}>
+      <Text style={[styles.title, {color: color.text}]}>{translate('Create by')}</Text>
       <FlatList
         data={members}
         keyExtractor={(item, index) => index.toString()} 
@@ -28,15 +30,15 @@ const SelectMember = ({ members, memberSelected, setMemberSelected }) => {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={[
-              styles.memberItem,
-              memberSelected?.id === item.id ? styles.selectedMemberItem : null
+              styles.memberItem, {backgroundColor: color.background} ,
+              memberSelected?.id === item.id ? [styles.selectedMemberItem,{backgroundColor: color.white}] : null
             ]}
             onPress={() => handleMemberPress(item)}
           >
             <Image source={{ uri: item.user.avatar }} style={styles.avatar} />
             <Text style={[
-              styles.memberText,
-              memberSelected?.id === item.id ? styles.selectedMemberText : null
+              styles.memberText, {color: color.text},
+              memberSelected?.id === item.id ? [styles.selectedMemberText, {backgroundColor: color.white} ] : null
             ]}>
               {item.user.firstname} {item.user.lastname}
             </Text>

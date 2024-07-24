@@ -128,6 +128,7 @@ const ProfileServices = {
       throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
+  
   changePassword: async ({
     oldPassword,
     newPassword,

@@ -20,6 +20,7 @@ import moment from 'moment';
 import {ExpenseServices} from 'src/services/apiclient';
 import {Ionicons} from '@expo/vector-icons';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 interface Category {
   name: string;
@@ -48,7 +49,8 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const dispatch = useDispatch();
   const [allCategories, setAllCategories] = useState<Set<string>>(new Set());
-
+  const color = useThemeColors();  
+  
   const labels = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
@@ -220,7 +222,7 @@ if (monthlyData.length > 0) {
         onPress={() => setYearPickerVisible(!isYearPickerVisible)}
       >
         <View style={styles.monthContainer}>
-          <Text style={styles.monthText}>{selectedYear}</Text>
+        <Text style={[styles.monthText, {color: color.text}]}>{selectedYear}</Text>
         </View>
       </TouchableOpacity>
       {isYearPickerVisible && (
@@ -236,9 +238,9 @@ if (monthlyData.length > 0) {
           </Picker>
         </View>
       )}
-      <View style={styles.chartLineContainer}>
-        <Text>({translate('Unit')}: VNĐ)</Text>
-        {displayedDatasets.length > 0 && (
+      <View style={[styles.chartLineContainer, {backgroundColor: color.background}]}>
+      <Text style={{color: color.text}}>({translate('Unit')}: VNĐ)</Text>
+      {displayedDatasets.length > 0 && (
           <LineChart
           data={{
             labels: monthlyData.map(month => labels[month.month - 1]),
@@ -248,18 +250,24 @@ if (monthlyData.length > 0) {
           height={220}
           yAxisSuffix="M"
           chartConfig={{
-            backgroundGradientFrom: '#FFFFFF',
-            backgroundGradientTo: '#FFFFFF',
+            backgroundGradientFrom:  color.background, 
+            backgroundGradientTo:  color.background, 
             decimalPlaces: 0,
-            color: (opacity = 1) => `#ccc`,
-            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            color: (opacity = 1) => color.text,
+            labelColor: (opacity = 1) => color.text,
             propsForDots: {
               r: '2',
               strokeWidth: '2',
-              stroke: '#ffa726',
+              stroke: color.text,
             },
             propsForBackgroundLines: {
               strokeWidth: 0.1,
+              stroke: `rgba(255, 255, 255, 0.2)`,
+
+            },
+            propsForHorizontalLabels: {
+              fontSize: 10,
+              color: 'white', 
             },
      
           }}
@@ -314,7 +322,7 @@ if (monthlyData.length > 0) {
                   <View
                     style={[styles.legendColor, { backgroundColor: dataset.color() }]}
                   />
-                  <Text style={styles.legendText}>{dataset.name}</Text>
+                  <Text style={[styles.legendText, {color : color.text}]}>{dataset.name}</Text>
                   </View>
 
                 </TouchableOpacity>
@@ -330,13 +338,13 @@ if (monthlyData.length > 0) {
             alignItems: 'center',
           }}
           onPress={() => setShowDetails(!showDetails)}>
-          <Text style={{ fontWeight: '500' }}>
+          <Text style={{ fontWeight: '500', color: color.text }}>
             {showDetails ? translate('Hide details') : translate('View details')}
           </Text>
           <Ionicons
             name={showDetails ? 'chevron-down' : 'chevron-forward'}
             size={20}
-            color="black"
+            color={color.text}
           />
         </TouchableOpacity>
         {showDetails &&
@@ -347,12 +355,12 @@ if (monthlyData.length > 0) {
               style={styles.expenseItem}
               onPress={() => handlePressMonth(`${monthData.month}`)}>
               <View style={styles.expenseDetails}>
-                <Image
+                {/* <Image
                   source={{uri: `${avatarUrlTemplate}${monthData.month}`}}
                   style={styles.avatar}
-                />
+                /> */}
                 <Text
-                  style={styles.expenseText}>{translate(fullLabels[monthData.month-1])}</Text>
+                  style={[styles.expenseText, {color: color.text}]}>{translate(fullLabels[monthData.month-1])}</Text>
               </View>
               <View style={styles.expenseDetails}>
            

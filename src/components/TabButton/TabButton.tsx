@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useRef } from 'react';
+import {MouseEvent, useEffect, useRef, useState} from 'react';
 import {
   AccessibilityState,
   Animated,
@@ -7,9 +7,10 @@ import {
 } from 'react-native';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from './styles';
-import { COLORS } from 'src/constants';
-import { useSelector } from 'react-redux';
-import { getTranslate } from 'src/redux/slices/languageSlice';
+import {COLORS} from 'src/constants';
+import {useSelector} from 'react-redux';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
 
 interface TabButtonProps {
   item: {
@@ -23,18 +24,19 @@ interface TabButtonProps {
   onPress: ((e: MouseEvent<any> | GestureResponderEvent) => void) | undefined;
 }
 
-const TabButton = ({ item, accessibilityState, onPress }: TabButtonProps) => {
+const TabButton = ({item, accessibilityState, onPress}: TabButtonProps) => {
+  const [isPressed, setIsPressed] = useState(false);
   const translation = useSelector(getTranslate);
-
+  const color = useThemeColors();
   const animatedValues = {
     translate: useRef(new Animated.Value(0)).current,
     scale: useRef(new Animated.Value(0)).current,
   };
-
-  const { translate, scale } = animatedValues;
+  const {translate, scale} = animatedValues;
 
   useEffect(() => {
     handleAnimated();
+    setIsPressed(!!accessibilityState?.selected);
   }, [accessibilityState!.selected]);
 
   const handleAnimated = () => {
@@ -78,16 +80,37 @@ const TabButton = ({ item, accessibilityState, onPress }: TabButtonProps) => {
   };
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.container}>
-      <Animated.View style={[styles.button, translateStyles]}>
-        <Animated.View style={[styles.animated, scaleStyles]} />
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.container, {backgroundColor: color.backgroundHomeTab}]}>
+      <Animated.View
+        style={[
+          styles.button,
+          translateStyles,
+          {
+            borderColor: color.TaButtonText,
+          },
+        ]}>
+        <Animated.View
+          style={[
+            styles.animated,
+            scaleStyles,
+            // {borderColor: color.backgroundTabChoose},
+            {
+              backgroundColor: isPressed
+                ? color.backgroundTabChoose
+                : 'transparent',
+            },
+          ]}
+        />
         <Material
           name={item.icon}
-          color={accessibilityState!.selected ? COLORS.white : '#2a475e'}
+          color={isPressed ? color.iconChoose : color.icon}
           size={30}
         />
       </Animated.View>
-      <Animated.Text style={[styles.title, { opacity: scale }]}>
+      <Animated.Text
+        style={[styles.title, {opacity: scale, color: color.TaButtonText}]}>
         {translation(item.title)}
       </Animated.Text>
     </TouchableOpacity>

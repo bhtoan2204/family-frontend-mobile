@@ -7,6 +7,7 @@ import { UtilitiesType } from 'src/interface/income/getIncome';
 import { IncomeServices } from 'src/services/apiclient';
 import { useSelector } from 'react-redux';
 import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 
 
@@ -15,8 +16,9 @@ const CategoryUtilities =({widthOfYourPage, utilitiesSelect, handleUtilitieTypeP
     const [utilities, setUtilities] = useState<UtilitiesType[]>([])
     const scrollViewRef = useRef(null);
     const translate = useSelector(getTranslate);
-    const local = useSelector(selectLocale)
     const urlCatetory = 'https://png.pngtree.com/element_our/20190530/ourmid/pngtree-correct-icon-image_1267804.jpg';
+    const location = useSelector(selectLocale)
+    const color = useThemeColors();
 
     const fetchCategoryUtilities = async () => {
         try{
@@ -31,7 +33,7 @@ const CategoryUtilities =({widthOfYourPage, utilitiesSelect, handleUtilitieTypeP
         fetchCategoryUtilities();
     },[])
     return(
-    <View style={styles.ContainerCategory}>
+      <View style={[styles.ContainerCategory, {backgroundColor: color.background}]}>
         <View style={styles.selectedItemContainer}>
           <Image source={{ uri: urlCatetory }} style={styles.avatar} />
           <Text
@@ -39,7 +41,7 @@ const CategoryUtilities =({widthOfYourPage, utilitiesSelect, handleUtilitieTypeP
               styles.inputAmount,
               { textAlign: 'left' },
               { fontSize: 18 },
-              { color: '#1b2838' },
+              { color: color.text },
             ]}
           >
             {utilitiesSelect?.name_vn || translate('Select category')}
@@ -48,7 +50,7 @@ const CategoryUtilities =({widthOfYourPage, utilitiesSelect, handleUtilitieTypeP
      
         </View>
         <View
-          style={{ height: 1, backgroundColor: '#F4F4F4', bottom: 5 }}
+          style={{ height: 1, backgroundColor: color.background, bottom: 5 }}
         />
 
   
@@ -96,11 +98,11 @@ const CategoryUtilities =({widthOfYourPage, utilitiesSelect, handleUtilitieTypeP
                         style={styles.avatar}
                       />
                       <Text
-                        style={styles.expenseItem}
+                        style={[styles.expenseItem, {color: color.text}]}
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {local === 'vi' ? item.name_vn : item.name_en}
+                        {location === 'vi' ? item.name_vn : item.name_en}
                       </Text>
                     </View>
                   </TouchableOpacity>

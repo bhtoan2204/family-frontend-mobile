@@ -6,35 +6,9 @@ import { AxiosResponse } from 'axios';
 import { FamilyServices } from '../../services/apiclient';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProfile } from '../../redux/slices/ProfileSclice';
+import { Message } from 'src/redux/slices/MessageUser';
 
-interface User {
-  avatar: string;
-  birthdate: string;
-  created_at: string;
-  email: string;
-  firstname: string;
-  genre: string;
-  id_user: string;
-  is_banned: boolean;
-  isadmin: boolean;
-  isphoneverified: boolean;
-  lastname: string;
-  login_type: string;
-  phone: string;
-  updated_at: string;
-}
 
-interface Message {
-  _id: string;
-  content: string;
-  isRead: boolean;
-  receiverId: string;
-  receiverInfo: User;
-  senderId: string;
-  senderInfo: User;
-  timestamp: string;
-  type: string;
-}
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

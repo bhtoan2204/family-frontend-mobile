@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, Platform, Alert, Modal as RNModal } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, Platform, Alert, KeyboardAvoidingView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import moment from 'moment';
@@ -12,6 +12,10 @@ import { deleteAsset, selectSelectedAsset, updateAsset } from 'src/redux/slices/
 import { ExpenseServices } from 'src/services/apiclient';
 import Modal from 'react-native-modal';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
+import { Feather } from '@expo/vector-icons';
+import { ScrollView } from 'react-native-gesture-handler';
+import { COLORS } from 'src/constants';
 
 const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
   const asset = useSelector(selectSelectedAsset);
@@ -23,8 +27,10 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
   const [purchaseDate, setPurchaseDate] = useState(new Date(asset?.purchase_date));
   const [image, setImage] = useState(asset?.image_url);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
+  const color = useThemeColors();
 
   const handleEditPress = () => {
     setIsEditing(true);
@@ -98,22 +104,17 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
     }
   };
 
-  const renderDateTimePicker = () => {
-    if (Platform.OS === 'ios' || isEditing) {
-      return (
-        <DateTimePicker
-          value={purchaseDate}
-          mode="date"
-          display="default"
-          onChange={(event, selectedDate) => {
-            const currentDate = selectedDate || purchaseDate;
-            setPurchaseDate(currentDate);
-          }}
-        />
-      );
-    } else {
-      return null;
-    }
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    setPurchaseDate(date);
+    hideDatePicker();
   };
 
   const handleImagePress = () => {
@@ -124,103 +125,149 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
     setIsModalVisible(false);
   };
 
+  const formatCurrency = (amount: string | number | bigint) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: color.background }]}>
+           <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={30} color="#000" />
+          <Icon name="arrow-back" size={30} color={color.text} />
         </TouchableOpacity>
-        <Text style={styles.title}>{translate('Asset Detail')}</Text>
+        <Text style={[styles.title, { color: color.text }]}>{translate('Asset Detail')}</Text>
+        
+        <TouchableOpacity
+                    onPress={handleEditPress}
+                    style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        backgroundColor: '#00adf5',
+                        padding: 15,
+                        borderRadius: 30,
+                        paddingHorizontal: 20,
+                        shadowColor: '#00adf5',
+                        shadowOffset: { width: 0, height: 4 },
+                        shadowOpacity: 0.3,
+                        shadowRadius: 2,
+                    }}>
+                    <Feather name="edit" size={20} color="white" />
+                    <Text style={{ marginLeft: 10, fontWeight: '700', color: 'white' }}>{translate('Edit')}</Text>
+                </TouchableOpacity>
+
       </View>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+
       <View style={styles.imageContainer}>
-        <TouchableOpacity onPress={handleImagePress}>
-          <Image source={{ uri: image }} style={styles.assetImage} />
-        </TouchableOpacity>
-        {isEditing && (
-          <TouchableOpacity onPress={handleImagePicker} style={styles.cameraIconContainer}>
-            <Icon name="camera" size={24} color="#fff" style={styles.cameraIcon} />
-          </TouchableOpacity>
+        {image ? (
+          <>
+            <TouchableOpacity onPress={handleImagePress}>
+              <Image source={{ uri: image }} style={styles.assetImage} />
+            </TouchableOpacity>
+     
+          </>
+        ) : (
+          <View style={styles.noImageContainer}>
+            <Text style={styles.noImageText}>{translate('No Image')}</Text>
+          </View>
         )}
+               {isEditing && (
+              <TouchableOpacity onPress={handleImagePicker} style={styles.cameraIconContainer}>
+                <Icon name="camera" size={24} color="white" style={styles.cameraIcon} />
+              </TouchableOpacity>
+            )}
       </View>
-      <View style={styles.assetInfo}>
-        <Text style={styles.assetDetailLabel}>{translate('Asset Name')}</Text>
+      <View style={[styles.assetInfo, { backgroundColor: color.white }]}>
+        <Text style={[styles.assetDetailLabel, { color: color.text }]}>{translate('Asset Name')}</Text>
         {isEditing ? (
           <TextInput
-            style={styles.input}
-            value={name}
+          style={[styles.input, {color: color.text}]}
+          value={name}
             onChangeText={setName}
             placeholder={translate('Enter Asset Name')}
           />
         ) : (
-          <Text style={styles.assetDetailText}>{asset?.name}</Text>
+          <Text style={[styles.assetDetailText, { color: color.textSubdued }]}>{asset?.name}</Text>
         )}
-        <Text style={styles.assetDetailLabel}>{translate('Description')}</Text>
+        <Text style={[styles.assetDetailLabel, { color: color.text }]}>{translate('Description')}</Text>
         {isEditing ? (
           <TextInput
-            style={[styles.input, styles.multilineInput]}
+            style={[styles.input, styles.multilineInput, {color: color.text}]}
             value={description}
             onChangeText={setDescription}
             placeholder={translate('Enter Description')}
             multiline
           />
         ) : (
-          <Text style={styles.assetDetailText}>{asset?.description}</Text>
+          <Text style={[styles.assetDetailText, { color: color.textSubdued }]}>{asset?.description}</Text>
         )}
-        <Text style={styles.assetDetailLabel}>{translate('Value')}</Text>
+        <Text style={[styles.assetDetailLabel, { color: color.text }]}>{translate('Value')}</Text>
         {isEditing ? (
           <TextInput
-            style={styles.input}
-            value={value}
+          style={[styles.input, {color: color.text}]}
+          value={value}
             onChangeText={setValue}
             keyboardType="numeric"
             placeholder={translate('Enter Value')}
           />
         ) : (
-          <Text style={styles.assetDetailText}>{`${parseInt(asset?.value).toLocaleString()} VND`}</Text>
+          <Text style={[styles.assetDetailText, { color: color.textSubdued }]}>{`${formatCurrency(parseInt(asset?.value))}`}</Text>
         )}
-        <Text style={styles.assetDetailLabel}>{translate('Purchase Date')}</Text>
+        <Text style={[styles.assetDetailLabel, { color: color.text }]}>{translate('Purchase Date')}</Text>
         {isEditing ? (
-          <TouchableOpacity onPress={renderDateTimePicker}>
-            <Text style={styles.input}>{moment(purchaseDate).format('YYYY-MM-DD')}</Text>
-          </TouchableOpacity>
+          <>
+            <TouchableOpacity onPress={showDatePicker}>
+              <Text style={[styles.input,  {color: color.text}]}>{moment(purchaseDate).format('YYYY-MM-DD')}</Text>
+            </TouchableOpacity>
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible}
+              mode="date"
+              date={purchaseDate}
+              onConfirm={handleConfirm}
+              onCancel={hideDatePicker}
+            />
+          </>
         ) : (
-          <Text style={styles.assetDetailText}>{moment(asset?.purchase_date).format('YYYY-MM-DD')}</Text>
+          <Text style={[styles.assetDetailText, { color: color.textSubdued }]}>{moment(asset?.purchase_date).format('YYYY-MM-DD')}</Text>
         )}
-        <View style={styles.buttonContainer}>
-          {isEditing ? (
-            <>
-              <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSavePress}>
-                <Text style={styles.buttonText}>{translate('Save')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={handleCancel}>
-                <Text style={styles.buttonText}>{translate('Cancel')}</Text>
-              </TouchableOpacity>
-            </>
-          ) : (
-            <>
-              <TouchableOpacity style={[styles.button, styles.editButton]} onPress={handleEditPress}>
-                <Text style={styles.buttonText}>{translate('Edit')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.button, styles.deleteButton]} onPress={handleDeletePress}>
-                <Text style={styles.buttonText}>{translate('Delete')}</Text>
-              </TouchableOpacity>
-            </>
-          )}
-        </View>
       </View>
+      <View style={styles.buttonContainer}>
+        {isEditing ? (
+          <>
+            <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSavePress}>
+              <Text style={styles.buttonText}>{translate('Save')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button]} onPress={handleCancel}>
+              <Text style={styles.buttonText}>{translate('Cancel')}</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            {/* <TouchableOpacity style={[styles.button, styles.editButton]} onPress={handleEditPress}>
+              <Text style={styles.buttonText}>{translate('Edit')}</Text>
+            </TouchableOpacity> */}
+            
+            <TouchableOpacity style={[styles.button, {backgroundColor: 'red'}]} onPress={handleDeletePress}>
+              <Text style={styles.buttonText}>{translate('Delete')}</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
+      </ScrollView>
+      </KeyboardAvoidingView>
 
-      <RNModal
-        animationType="slide"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={closeModal}
-      >
-        <TouchableOpacity style={styles.modalOverlay} onPress={closeModal}>
-          <View>
-            <Image source={{ uri: asset?.image_url }} style={styles.modalImage} />
-          </View>
-        </TouchableOpacity>
-      </RNModal>
+      <Modal isVisible={isModalVisible} onBackdropPress={closeModal} style={styles.modal}>
+        <View style={styles.modalContent}>
+          <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+            <Icon name="close" size={30} color="#fff" />
+          </TouchableOpacity>
+          <Image source={{ uri: image }} style={styles.modalImage} />
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -228,73 +275,80 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    padding: 16,
+    justifyContent: 'space-between',  
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 1,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    padding: 16,
+    justifyContent: 'space-between',
   },
   title: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
-    marginLeft: 10,
-    color: '#333',
+    marginLeft: 30,
+
   },
   imageContainer: {
-    position: 'relative',
-    marginBottom: 16,
-    borderRadius: 8,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#ddd',
+    alignItems: 'center',
+    marginVertical: 16,
   },
   assetImage: {
-    width: '100%',
-    height: 200,
+    width: 300,
+    height: 300,
+    borderRadius: 8,
   },
   cameraIconContainer: {
     position: 'absolute',
-    bottom: 8,
-    right: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    padding: 8,
+    bottom: 10,
+    right: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: 20,
+    padding: 8,
   },
   cameraIcon: {
     color: '#fff',
   },
+  noImageContainer: {
+    width: 200,
+    height: 200,
+    backgroundColor: '#f0f0f0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  noImageText: {
+    color: '#a0a0a0',
+    fontSize: 16,
+  },
   assetInfo: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
     padding: 16,
     borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
+    marginHorizontal: 16,
     elevation: 3,
   },
   assetDetailLabel: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 4,
-    color: '#333',
+    marginVertical: 8,
   },
   assetDetailText: {
     fontSize: 16,
-    marginBottom: 16,
-    color: '#666',
   },
   input: {
-    fontSize: 16,
     borderWidth: 1,
     borderColor: '#ccc',
-    padding: 8,
-    marginBottom: 16,
     borderRadius: 8,
-    backgroundColor: '#fff',
+    padding: 8,
+    fontSize: 16,
+    
   },
   multilineInput: {
     height: 80,
@@ -303,48 +357,51 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 16,
+    paddingHorizontal: 14,
+    marginBottom: 20,  
+    marginTop: 10,
   },
   button: {
+    flex: 1,
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 10,
+    marginHorizontal: 4,
     alignItems: 'center',
+    backgroundColor: COLORS.Rhino,
+    paddingVertical: 15,
+
   },
   saveButton: {
-    backgroundColor: '#4CAF50',
-    flex: 1,
-    marginRight: 8,
+    backgroundColor: '#00adf5',
   },
   cancelButton: {
     backgroundColor: '#f44336',
-    flex: 1,
-    marginLeft: 8,
   },
   editButton: {
-    backgroundColor: '#2196F3',
-    flex: 1,
-    marginRight: 8,
+    backgroundColor: '#2196f3',
   },
   deleteButton: {
     backgroundColor: '#f44336',
-    flex: 1,
-    marginLeft: 8,
   },
   buttonText: {
-    color: '#fff',
+    color: 'white',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight:'bold'
   },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  modal: {
     justifyContent: 'center',
     alignItems: 'center',
   },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
   modalImage: {
-    width: '90%',
-    height: '70%',
-    resizeMode: 'contain',
+    width: 400,
+    height: 500,
+    borderRadius: 8,
   },
 });
 

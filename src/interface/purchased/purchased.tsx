@@ -23,3 +23,10 @@ export interface Order {
     created_at: string;
     orders: Order;
   }
+
+  export type PaymentMethod = {
+    id: number;
+    name: string;
+    code: string;
+    url_image: string;
+  };

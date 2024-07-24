@@ -9,16 +9,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   header: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E5E5',
-    paddingBottom: 20,
+   
+    paddingBottom: 60,
     marginBottom: 20,
     alignItems: 'center',
   },
   headerText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333333',
   },
   avatarContainer: {
     alignItems: 'center',
@@ -49,12 +47,16 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginBottom: 20,
   },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: 20,
+  },
   input: {
     backgroundColor: COLORS.white,
     borderRadius: 10,
   },
   saveButton: {
-    backgroundColor: '#0080FF',
+    backgroundColor: COLORS.Rhino,
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
