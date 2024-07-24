@@ -434,7 +434,7 @@ const ViewFamilyScreen = ({ navigation, route }: ViewFamilyScreenProps) => {
         {cards.map(card => {
               const isFunctionAvailable = functions.some(func => func.name === card.title);
               const hasShoppingAndChecklist = functions.some(
-                func => func.name === 'Shopping' && card.title === 'Check List'
+                func => func.name === 'Calendar' && card.title === 'Check List'
               );
 
               if (isFunctionAvailable || card.title === 'Members' || hasShoppingAndChecklist) {
