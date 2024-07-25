@@ -36,6 +36,8 @@ import * as MediaLibrary from 'expo-media-library';
 import { Video } from 'expo-av';
 import MessageItem from './RenderMessage';
 import { selectLastMessage, selectReceiver } from 'src/redux/slices/MessageUser';
+import { useThemeColors } from 'src/hooks/useThemeColor';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 
 
@@ -62,7 +64,9 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   const [selectedEmoji, setSelectedEmoji] = useState('');
   const user = useSelector(selectReceiver);
   let socket = getSocket();
-  
+  const color = useThemeColors();
+  const translate = useSelector(getTranslate);
+
   const markSeenMessage = async (receiverId?: string) => {
     try {
       await ChatServices.markSeenMessage({receiver_id: receiverId});
@@ -366,14 +370,16 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         bottom: 0,
         left: 0,
         right: 0,
+        backgroundColor:color.background
       }}>
-      <View style={styles.header}>
-        <View style={styles.receiverInfo}>
+      <View style={[styles.header, {  backgroundColor:color.background}]}>
+        <View style={[styles.receiverInfo, {backgroundColor:color.background}]}>
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
               marginTop: 10,
+              
             }}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons
@@ -389,8 +395,8 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
                     source={{uri: receiver.avatar}}
                     style={styles.avatar}
                   />
-                  <View style={[styles.activeDot, {top: 15, right: 10}]} />
-                  <Text style={styles.avatarText}>
+                  {/* <View style={[styles.activeDot, {top: 15, right: 10}]} /> */}
+                  <Text style={[styles.avatarText, {color : color.text}]}>
                     {' '}
                     {receiver.firstname} {receiver.lastname}
                   </Text>
@@ -428,7 +434,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
       {hasReceivedMessage ? (
            <FlatList
              style={styles.messagesContainer}
-             contentContainerStyle={styles.contentContainer}
+             contentContainerStyle={[styles.contentContainer, {backgroundColor:color.background}]}
              data={messages}
              inverted
              renderItem={({ item, index }) => (
@@ -456,7 +462,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
             right: 0,
           }}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.introContainer}>
+            <View style={[styles.introContainer, {backgroundColor:  color.background}]}>
               {receiver && (
                 <>
                   <View
@@ -468,9 +474,9 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
                       source={{uri: receiver.avatar}}
                       style={styles.avatarFirst}
                     />
-                    <View
+                    {/* <View
                       style={[styles.activeDotBig, {bottom: 40, left: 55}]}
-                    />
+                    /> */}
                     <Text style={styles.avatarTextFirst}>
                       {' '}
                       {receiver.firstname} {receiver.lastname}
@@ -479,19 +485,19 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
                 </>
               )}
               <Text style={styles.introText}>
-                You haven't received any message from {receiver?.firstname}{' '}
-                {receiver?.lastname} yet.
+              {translate('You havent received any message from')} {receiver?.firstname}{' '}
+                {receiver?.lastname} {translate('yet')}.
               </Text>
               <Text style={styles.introText}>
-                Start the conversation by sending a message.
+              {translate('Start the conversation by sending a message.')}
               </Text>
-              <View style={{backgroundColor: 'white', minHeight: 470}}></View>
+              <View style={{backgroundColor: color.background, minHeight: 470}}></View>
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
       )}
       <View
-        style={[styles.inputContainer, keyboardIsOpen && {paddingBottom: 20}]}>
+        style={[styles.inputContainer,{backgroundColor:color.background}, keyboardIsOpen && {paddingBottom: 20}]}>
         <TouchableOpacity
           onPress={handleOpenImageLibrary}
           style={{marginRight: 15}}>
@@ -499,7 +505,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         </TouchableOpacity>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
           <TextInput
-            style={[styles.input, {flex: 1}]}
+            style={[styles.input, {flex: 1, backgroundColor: color.white}]}
             value={message}
             onChangeText={setMessage}
             placeholder="Aa"></TextInput>

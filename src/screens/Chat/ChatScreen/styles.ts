@@ -4,7 +4,6 @@ import {COLORS} from 'src/constants';
 const styles = StyleSheet.create({
   messagesContainer: {
     flex: 1,
-    backgroundColor: 'white',
   },
   contentContainer: {
     flexGrow: 1,

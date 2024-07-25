@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 16,
     textAlignVertical: 'top',
-    backgroundColor: '#fff',
   },
   submitButton: {
     backgroundColor: COLORS.BlueLight,

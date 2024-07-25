@@ -459,8 +459,8 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
             right: 0,
           }}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.introContainer}>
-              {LastMessageFamily && (
+          <View style={[styles.introContainer, {backgroundColor:  color.background}]}>
+            {LastMessageFamily && (
                 <>
                   <View
                     style={{
@@ -487,7 +487,7 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
               <Text style={styles.introText}>
                 {translate('Start the conversation by sending a message.')}
               </Text>
-              <View style={{backgroundColor: 'white', minHeight: 470}}></View>
+              <View style={{backgroundColor: color.background, minHeight: 470}}></View>
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
@@ -501,7 +501,7 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
         </TouchableOpacity>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
           <TextInput
-            style={[styles.input, {backgroundColor: color.inputChat}, {flex: 1}]}
+            style={[styles.input, {backgroundColor: color.white}, {flex: 1}]}
             value={message}
             onChangeText={setMessage}
             placeholder="Aa"></TextInput>

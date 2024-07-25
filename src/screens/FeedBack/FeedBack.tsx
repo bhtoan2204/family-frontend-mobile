@@ -61,8 +61,9 @@ const FeedbackScreen = () => {
           ))}
         </View>
         <TextInput
-          style={[styles.feedbackInput, {backgroundColor: color.white}]}
+          style={[styles.feedbackInput, {backgroundColor: color.white, color: color.text}]}
           placeholder={translate('FeedbackInput')}
+          placeholderTextColor={color.textSubdued} 
           multiline
           value={feedback}
           onChangeText={setFeedback}

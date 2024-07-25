@@ -487,7 +487,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         </TouchableOpacity>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
           <TextInput
-            style={[styles.input, {backgroundColor: color.inputChat}, {flex: 1}]}
+            style={[styles.input, {backgroundColor: color.white}, {flex: 1}]}
             value={message}
             onChangeText={setMessage}
             placeholder="Aa">
