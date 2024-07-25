@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
   },
   accountTitle: {
     fontSize: screenHeight * 0.018,
-    color: COLORS.Rhino,
   },
   marginBottom: {
     marginBottom: screenHeight * 0.02,
@@ -23,7 +22,7 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     height: screenHeight * 0.05,
-    width: screenWidth * 0.9,
+    width: screenWidth * 0.88,
     borderWidth: 1.5,
     borderRadius: 8,
     alignItems: 'center',
@@ -77,7 +76,6 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     fontSize: screenHeight * 0.05,
-    color: COLORS.Rhino,
     padding: screenHeight * 0.02,
   },
   logo: {

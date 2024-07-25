@@ -26,6 +26,10 @@ import FacebookImage from 'src/assets/images/facebook.png';
 import GoogleImage from 'src/assets/images/google.png';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
+import {getIsDarkMode} from 'src/redux/slices/DarkModeSlice';
+import {useSelector} from 'react-redux';
 interface FormValues {
   firstName: string;
   lastName: string;
@@ -37,7 +41,6 @@ interface FormValues {
   gender: string;
   submit: null;
 }
-
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -51,6 +54,8 @@ const discovery = {
 const SignupScreen = ({navigation}: LoginScreenProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const translate = useSelector(getTranslate);
+  const color = useThemeColors();
 
   const [request, response, promptAsync] = useAuthRequest(
     {
@@ -99,12 +104,12 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
       const {code} = response.params;
     }
   }, [response]);
-
+  const isDarkMode = useSelector(getIsDarkMode);
+  const background = !isDarkMode
+    ? require('../../assets/images/login-wall-light.png')
+    : require('../../assets/images/login-wall-dark.png');
   return (
-    <ImageBackground
-      source={require('../../assets/images/login-wall-light.png')}
-      style={{flex: 1}}
-      resizeMode="stretch">
+    <ImageBackground source={background} style={{flex: 1}} resizeMode="stretch">
       <KeyboardAvoidingView behavior="padding">
         <ScrollView>
           <SafeAreaView>
@@ -115,7 +120,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                 }}>
                 <Ionicons
                   name="chevron-back-circle-outline"
-                  style={styles.backIcon}
+                  style={[styles.backIcon, {color: color.icon}]}
                 />
               </TouchableOpacity>
             </View>
@@ -169,117 +174,125 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                 }) => (
                   <View style={{marginTop: 120}}>
                     <View style={styles.marginBottom}>
-                      <View
-                        style={{
-                          ...styles.placeholder,
-                          borderColor: errors.firstName
-                            ? COLORS.red
-                            : COLORS.Rhino,
-                        }}>
-                        <MaterialCommunityIcons
-                          name="account"
-                          style={styles.Icon}
-                        />
-                        <TextInput
-                          style={[
-                            styles.textInput,
-                            {marginLeft: 10, color: '#2A475E'},
-                          ]}
-                          placeholder={TEXTS.FIRST_NAME_PLACEHOLDER}
-                          placeholderTextColor={
-                            errors.firstName ? COLORS.red : '#A6A6A6'
-                          }
-                          onBlur={handleBlur('firstName')}
-                          onChangeText={handleChange('firstName')}
-                          value={values.firstName}
-                        />
+                      <View style={{flexDirection: 'row'}}>
+                        <View
+                          style={{
+                            ...styles.placeholder,
+                            borderColor: errors.firstName
+                              ? COLORS.red
+                              : COLORS.Rhino,
+                            flex: 1,
+                            marginRight: 10,
+                          }}>
+                          {/* <MaterialCommunityIcons
+                            name="account"
+                            style={styles.Icon}
+                          /> */}
+                          <TextInput
+                            style={[styles.textInput, {color: '#2A475E'}]}
+                            placeholder={TEXTS.FIRST_NAME_PLACEHOLDER}
+                            placeholderTextColor={
+                              errors.firstName ? COLORS.red : '#A6A6A6'
+                            }
+                            onBlur={handleBlur('firstName')}
+                            onChangeText={handleChange('firstName')}
+                            value={values.firstName}
+                          />
+                        </View>
+                        <View
+                          style={{
+                            ...styles.placeholder,
+                            borderColor: errors.lastName
+                              ? COLORS.red
+                              : '#2A475E',
+                            flex: 1,
+                            marginLeft: 5,
+                          }}>
+                          {/* <MaterialCommunityIcons
+                            name="account"
+                            style={styles.Icon}
+                          /> */}
+                          <TextInput
+                            style={[styles.textInput, {color: '#2A475E'}]}
+                            placeholder={TEXTS.LAST_NAME_PLACEHOLDER}
+                            placeholderTextColor={
+                              errors.lastName ? COLORS.red : '#A6A6A6'
+                            }
+                            onBlur={handleBlur('lastName')}
+                            onChangeText={handleChange('lastName')}
+                            value={values.lastName}
+                          />
+                        </View>
                       </View>
                       {errors.firstName && touched.firstName && (
                         <Text style={styles.errorText}>{errors.firstName}</Text>
                       )}
-                    </View>
-                    <View style={styles.marginBottom}>
-                      {/* <Text style={styles.title}>{TEXTS.LAST_NAME}</Text> */}
-                      <View
-                        style={{
-                          ...styles.placeholder,
-                          borderColor: errors.lastName ? COLORS.red : '#2A475E',
-                        }}>
-                        <MaterialCommunityIcons
-                          name="account"
-                          style={styles.Icon}
-                        />
-                        <TextInput
-                          style={[
-                            styles.textInput,
-                            {marginLeft: 10, color: '#2A475E'},
-                          ]}
-                          placeholder={TEXTS.LAST_NAME_PLACEHOLDER}
-                          placeholderTextColor={
-                            errors.lastName ? COLORS.red : '#A6A6A6'
-                          }
-                          onBlur={handleBlur('lastName')}
-                          onChangeText={handleChange('lastName')}
-                          value={values.lastName}
-                        />
-                      </View>
                       {errors.lastName && touched.lastName && (
                         <Text style={styles.errorText}>{errors.lastName}</Text>
                       )}
                     </View>
                     <View style={styles.marginBottom}>
-                      <View
-                        style={{
-                          ...styles.placeholder,
-                          borderColor: errors.birthdate ? COLORS.red : '#2A475E',
-                        }}>
-                        <MaterialCommunityIcons
-                          name="calendar"
-                          style={styles.Icon}
-                        />
-                        <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-                          <Text style={{ marginLeft: 10, color: '#2A475E' }}>
-                            {values.birthdate ? values.birthdate.toLocaleDateString() : ''}
-                          </Text>
-                        </TouchableOpacity>
-                        {showDatePicker && (
-                          <DateTimePicker
-                            value={values.birthdate || new Date()}
-                            mode="date"
-                            display="default"
-                            onChange={(event, date) => {
-                              setShowDatePicker(false);
-                              if (date) {
-                                setFieldValue('birthdate', date);
-                              }
-                            }}
+                      <View style={{flexDirection: 'row'}}>
+                        <View
+                          style={{
+                            ...styles.placeholder,
+                            borderColor: errors.birthdate
+                              ? COLORS.red
+                              : '#2A475E',
+                            flex: 1,
+                            marginRight: 5,
+                          }}>
+                          <MaterialCommunityIcons
+                            name="calendar"
+                            style={styles.Icon}
                           />
-                        )}
+                          <TouchableOpacity
+                            onPress={() => setShowDatePicker(true)}>
+                            <Text style={{marginLeft: 10, color: '#2A475E'}}>
+                              {values.birthdate
+                                ? values.birthdate.toLocaleDateString()
+                                : ''}
+                            </Text>
+                          </TouchableOpacity>
+                          {showDatePicker && (
+                            <DateTimePicker
+                              value={values.birthdate || new Date()}
+                              mode="date"
+                              display="default"
+                              onChange={(event, date) => {
+                                setShowDatePicker(false);
+                                if (date) {
+                                  setFieldValue('birthdate', date);
+                                }
+                              }}
+                            />
+                          )}
+                        </View>
+                        <View
+                          style={{
+                            ...styles.placeholder,
+                            borderColor: errors.gender ? COLORS.red : '#2A475E',
+                            flex: 1,
+                            marginLeft: 5,
+                          }}>
+                          <MaterialCommunityIcons
+                            name="gender-male-female"
+                            style={styles.Icon}
+                          />
+                          <Picker
+                            selectedValue={values.gender}
+                            style={{marginLeft: 10, color: '#2A475E'}}
+                            onValueChange={itemValue =>
+                              setFieldValue('gender', itemValue)
+                            }>
+                            <Picker.Item label={'Male'} value="male" />
+                            <Picker.Item label={'Female'} value="female" />
+                          </Picker>
+                        </View>
                       </View>
                       {errors.birthdate && touched.birthdate && (
                         <Text style={styles.errorText}>{errors.birthdate}</Text>
                       )}
-                    </View>
-                    
-                    <View style={styles.marginBottom}>
-                      <View
-                        style={{
-                          ...styles.placeholder,
-                          borderColor: errors.gender ? COLORS.red : '#2A475E',
-                        }}>
-                        <MaterialCommunityIcons
-                          name="gender-male-female"
-                          style={styles.Icon}
-                        />
-                        <Picker
-                          selectedValue={values.gender}
-                          style={{ marginLeft: 10, color: '#2A475E' }}
-                          onValueChange={(itemValue) => setFieldValue('gender', itemValue)}
-                        >
-                          <Picker.Item label={"Male"} value="male" />
-                          <Picker.Item label={"Female"} value="female" />
-                        </Picker>
-                      </View>
                       {errors.gender && touched.gender && (
                         <Text style={styles.errorText}>{errors.gender}</Text>
                       )}
@@ -388,10 +401,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                       {errors.password && touched.password && (
                         <Text style={styles.errorText}>{errors.password}</Text>
                       )}
-
                     </View>
-
-                   
 
                     {errors.submit && (
                       <View>
@@ -407,7 +417,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           handleChange('termsAndConditions');
                         }}
                       />
-                      <Text style={{color: COLORS.Rhino}}>
+                      <Text style={{color: color.textSubdued}}>
                         {TEXTS.TERMS_AND_CONDITIONS}
                       </Text>
                     </View>
@@ -437,7 +447,11 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                     </View> */}
 
                     <View style={styles.marginVerticalCenter}>
-                      <Text style={styles.accountTitle}>
+                      <Text
+                        style={[
+                          styles.accountTitle,
+                          {color: color.textSubdued},
+                        ]}>
                         {TEXTS.HAVE_ACCOUNT}
                       </Text>
                       <Pressable
