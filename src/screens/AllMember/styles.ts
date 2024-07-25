@@ -50,10 +50,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   container: {
-    padding: 0,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
+    flex: 1,
   },
   head: {
     height: 40,
