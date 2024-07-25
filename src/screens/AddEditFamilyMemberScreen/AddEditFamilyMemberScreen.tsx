@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   Image,
@@ -13,30 +13,34 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { COLORS, TEXTS } from 'src/constants';
+import {COLORS, TEXTS} from 'src/constants';
 import styles from './styles';
-import { FamilyServices } from 'src/services/apiclient';
-import { AddEditFamilyMemberScreenProps } from 'src/navigation/NavigationTypes';
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import {FamilyServices} from 'src/services/apiclient';
+import {AddEditFamilyMemberScreenProps} from 'src/navigation/NavigationTypes';
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from '@expo/vector-icons';
 import CustomButton from 'src/components/Button';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import Invite from './Invite';
-import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { getTranslate } from 'src/redux/slices/languageSlice';
-import { useThemeColors } from 'src/hooks/useThemeColor';
+import {selectProfile} from 'src/redux/slices/ProfileSclice';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
 
 const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
   navigation,
   route,
 }) => {
-  const { id_family, phone } = route.params || {};
+  const {id_family, phone} = route.params || {};
   const [email, setEmail] = useState('');
   const [p_phone, setPhone] = useState(phone);
   const profile = useSelector(selectProfile);
-  const  t  = useSelector(getTranslate); 
+  const t = useSelector(getTranslate);
   const color = useThemeColors();
   const openContacts = () => {
-    navigation.navigate('Contact', { id_family });
+    navigation.navigate('Contact', {id_family});
   };
 
   useEffect(() => {
@@ -45,9 +49,9 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
 
   const formatPhoneNumber = (phoneNumber?: string) => {
     const cleaned = ('' + phoneNumber).replace(/\D/g, '');
-    
+
     const match = cleaned.match(/^(\d{1})(\d{3})(\d{3})(\d{3})$/);
-    
+
     if (match) {
       return `+84${match[2]}${match[3]}${match[4]}`;
     }
@@ -69,43 +73,25 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
               style: 'cancel',
             },
           ],
-          { cancelable: false }
+          {cancelable: false},
         );
         return;
       }
-  
-      // if (p_phone && p_phone.replace(/\D/g, '').length !== 10) {
-      //   Alert.alert(
-      //     t('invalidPhoneNumber'),
-      //     t('invalidPhoneNumberMessage'),
-      //     [
-      //       {
-      //         text: 'OK',
-      //         onPress: () => console.log('Invalid Phone Number Alert Closed'),
-      //         style: 'cancel',
-      //       },
-      //     ],
-      //     { cancelable: false }
-      //   );
-      //   return;
-      // }
-  
+
       let formattedPhone = p_phone;
       if (formattedPhone && !formattedPhone.startsWith('+84')) {
         formattedPhone = `+84${formattedPhone.replace(/\D/g, '')}`;
       }
-  
+
       const result = await FamilyServices.addMember({
         id_family: id_family,
-        gmail: email || "",
-        phone: formattedPhone || "",
+        gmail: email || '',
+        phone: formattedPhone || '',
         role: 'Member',
       });
-  
+
       if (result.data === t('successMessage')) {
-        Alert.alert(
-          t('inform'), result.data
-        );
+        Alert.alert(t('inform'), result.data);
       } else {
         Alert.alert(
           t('inform'),
@@ -121,7 +107,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
               onPress: () => Invite(id_family, email, profile),
             },
           ],
-          { cancelable: false },
+          {cancelable: false},
         );
       }
     } catch (error: any) {
@@ -130,90 +116,96 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
   };
 
   return (
-    <SafeAreaView style={[styles.container, {backgroundColor:color.background}]}>
-      <ScrollView>
-        <KeyboardAvoidingView style={styles.keyboardView} behavior="padding">
-          <View style={styles.header}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Ionicons
-                name="close"
-                size={34}
-                color={color.text}
-              />
-            </TouchableOpacity>
-            <Text style={[styles.title, {color: color.text}]}>{t('addFamilyMemberTitle')}</Text>
-          </View>
-          <Image
-            source={require('src/assets/images/add-family-member.png')}
-            resizeMode="stretch"
-            style={{
-              width: 270,
-              height: 262,
-              alignSelf: 'center',
-              marginVertical: 10,
-            }}
-          />
-          <View style={styles.form}>
-            <View style={styles.input}>
-              <View style={styles.inputContainer}>
-                <MaterialIcons
-                  name="phone-iphone"
-                  size={26}
-                  style={{
-                    position: 'absolute',
-                    zIndex: 1,
-                    marginLeft: 10,
-                    color: COLORS.Rhino,
-                  }}
-                />
-                <TextInput
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardType="phone-pad"
-                  placeholder={p_phone ? p_phone : t('enterPhoneNumber')}
-                  placeholderTextColor={color.textSubdued}
-                  style={[
-                    styles.inputPhone,
-                    { color: p_phone ? color.text : '#A6A6A6' , backgroundColor: color.white},
-                  ]}
-                  value={p_phone}
-                  onChangeText={setPhone}
-                />
-                <TouchableOpacity
-                  onPress={openContacts}
-                  style={{ zIndex: 1, right: 15, position: 'absolute' }}>
-                  <Icon name="person-add" size={24} style={styles.contactIcon} />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={styles.input}>
-              <MaterialCommunityIcons
-                name="email-outline"
+    <SafeAreaView
+      style={[styles.container, {backgroundColor: color.background}]}>
+      <KeyboardAvoidingView style={styles.keyboardView} behavior="padding">
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="close" size={34} color={color.text} />
+          </TouchableOpacity>
+        </View>
+
+        <Text style={[styles.title, {color: color.text}]}>
+          {t('addFamilyMemberTitle')}
+        </Text>
+
+        <Image
+          source={require('src/assets/images/add-family-member.png')}
+          resizeMode="stretch"
+          style={{
+            width: 360,
+            height: 262,
+            alignSelf: 'center',
+            marginVertical: 40,
+          }}
+        />
+        <View style={styles.form}>
+          <View style={styles.input}>
+            <View style={styles.inputContainer}>
+              <MaterialIcons
+                name="phone-iphone"
                 size={26}
                 style={{
                   position: 'absolute',
                   zIndex: 1,
-                  marginLeft: 20,
-                  top: 10,
+                  marginLeft: 10,
                   color: COLORS.Rhino,
                 }}
               />
               <TextInput
                 autoCapitalize="none"
                 autoCorrect={false}
-                keyboardType="email-address"
-                placeholder={t('familyMemberEmailPlaceholder')}
+                keyboardType="phone-pad"
+                placeholder={p_phone ? p_phone : t('enterPhoneNumber')}
                 placeholderTextColor={color.textSubdued}
                 style={[
-                  styles.inputControl,
-                  { color: email ? 'black' : '#A6A6A6' ,backgroundColor: color.white},
+                  styles.inputPhone,
+                  {
+                    color: p_phone ? color.text : '#A6A6A6',
+                    backgroundColor: color.white,
+                  },
                 ]}
-                onChangeText={setEmail}
+                value={p_phone}
+                onChangeText={setPhone}
               />
+              <TouchableOpacity
+                onPress={openContacts}
+                style={{zIndex: 1, right: 15, position: 'absolute'}}>
+                <Icon name="person-add" size={24} style={styles.contactIcon} />
+              </TouchableOpacity>
             </View>
           </View>
-        </KeyboardAvoidingView>
-      </ScrollView>
+          <View style={styles.input}>
+            <MaterialCommunityIcons
+              name="email-outline"
+              size={26}
+              style={{
+                position: 'absolute',
+                zIndex: 1,
+                marginLeft: 20,
+                top: 10,
+                color: COLORS.Rhino,
+              }}
+            />
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="email-address"
+              placeholder={t('familyMemberEmailPlaceholder')}
+              placeholderTextColor={color.textSubdued}
+              style={[
+                styles.inputControl,
+                {
+                  color: email ? 'black' : '#A6A6A6',
+                  backgroundColor: color.white,
+                },
+              ]}
+              onChangeText={setEmail}
+            />
+          </View>
+        </View>
+      </KeyboardAvoidingView>
+
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.addButtonContainer}>
           <CustomButton

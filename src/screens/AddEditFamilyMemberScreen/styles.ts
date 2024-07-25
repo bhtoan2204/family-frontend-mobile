@@ -40,6 +40,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     alignSelf: 'center',
+    marginVertical: 10,
+    marginTop: 20,
   },
   form: {
     marginTop: 20,
