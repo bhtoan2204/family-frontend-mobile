@@ -110,7 +110,7 @@ const MemberDetailsScreen = ({ route, navigation }: MemberDetailsScreenProps) =>
         <View >
             <Avatar
             rounded
-            source={member?.user.avatar ? { uri: member?.user.avatar } : require('../../assets/images/avatar.png')}
+            source={member?.user.avatar ? { uri: member?.user.avatar } : require('../../assets/images/default_ava.png')}
             size={120}
             containerStyle={styles.avatar}
             />

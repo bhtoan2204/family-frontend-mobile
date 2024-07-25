@@ -41,6 +41,7 @@ import * as WebBrowser from 'expo-web-browser';
 import {makeRedirectUri, useAuthRequest} from 'expo-auth-session';
 import * as Notifications from 'expo-notifications';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 interface FormValues {
   email: string;
   password: string;
@@ -65,7 +66,7 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
   const [isChecked, setIsChecked] = useState(false);
   const projectId = "f5584d17-960b-4d2e-9f4d-1a6681f0bbea"; 
   const translate = useSelector(getTranslate);
-
+  const color = useThemeColors();
 
   const handleLogin = async (
     values: FormValues,

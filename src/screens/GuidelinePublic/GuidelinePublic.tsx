@@ -11,19 +11,19 @@ const GuidelineScreen = ({ navigation }: GuidelinePublicScreenProps) => {
       id: '1',
       title: 'Cách sử dụng ứng dụng',
       content: 'Hướng dẫn cách sử dụng các tính năng chính của ứng dụng.',
-      image: require('../../assets/images/avatar.png'),
+      image: require('../../assets/images/default_ava.png'),
     },
     {
       id: '2',
       title: 'Quy trình đăng ký tài khoản',
       content: 'Các bước cần thiết để đăng ký tài khoản mới trên ứng dụng.',
-      image: require('../../assets/images/avatar.png'),
+      image: require('../../assets/images/default_ava.png'),
     },
     {
       id: '3',
       title: 'Bảo mật thông tin cá nhân',
       content: 'Hướng dẫn cách bảo vệ thông tin cá nhân và an toàn khi sử dụng ứng dụng.',
-      image: require('../../assets/images/avatar.png'),
+      image: require('../../assets/images/default_ava.png'),
     },
   ];
 
