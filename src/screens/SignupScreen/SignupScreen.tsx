@@ -183,6 +183,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                               : COLORS.Rhino,
                             flex: 1,
                             marginRight: 10,
+                            backgroundColor: color.white,
                           }}>
                           {/* <MaterialCommunityIcons
                             name="account"
@@ -207,6 +208,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                               : '#2A475E',
                             flex: 1,
                             marginLeft: 5,
+                            backgroundColor: color.white,
                           }}>
                           {/* <MaterialCommunityIcons
                             name="account"
@@ -241,10 +243,11 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                               : '#2A475E',
                             flex: 1,
                             marginRight: 5,
+                            backgroundColor: color.white,
                           }}>
                           <MaterialCommunityIcons
                             name="calendar"
-                            style={styles.Icon}
+                            style={[styles.Icon, {color: color.icon}]}
                           />
                           <TouchableOpacity
                             onPress={() => setShowDatePicker(true)}>
@@ -274,10 +277,11 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                             borderColor: errors.gender ? COLORS.red : '#2A475E',
                             flex: 1,
                             marginLeft: 5,
+                            backgroundColor: color.white,
                           }}>
                           <MaterialCommunityIcons
                             name="gender-male-female"
-                            style={styles.Icon}
+                            style={[styles.Icon, {color: color.icon}]}
                           />
                           <Picker
                             selectedValue={values.gender}
@@ -303,10 +307,11 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                         style={{
                           ...styles.placeholder,
                           borderColor: errors.email ? COLORS.red : '#2A475E',
+                          backgroundColor: color.white,
                         }}>
                         <MaterialCommunityIcons
                           name="email-outline"
-                          style={styles.Icon}
+                          style={[styles.Icon, {color: color.icon}]}
                         />
                         <TextInput
                           style={[
@@ -335,10 +340,11 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           borderColor: errors.phoneNumber
                             ? COLORS.red
                             : '#2A475E',
+                          backgroundColor: color.white,
                         }}>
                         <MaterialCommunityIcons
                           name="phone-outline"
-                          style={styles.Icon}
+                          style={[styles.Icon, {color: color.icon}]}
                         />
                         <TextInput
                           style={[
@@ -366,11 +372,12 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                       <View
                         style={{
                           ...styles.placeholder,
+                          backgroundColor: color.white,
                           borderColor: errors.password ? COLORS.red : '#2A475E',
                         }}>
                         <MaterialCommunityIcons
                           name="lock-outline"
-                          style={styles.Icon}
+                          style={[styles.Icon, {color: color.icon}]}
                         />
                         <TextInput
                           style={[
@@ -392,9 +399,15 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                             setIsPasswordVisible(!isPasswordVisible)
                           }>
                           {isPasswordVisible ? (
-                            <Ionicons name="eye" style={styles.eyeIcon} />
+                            <Ionicons
+                              name="eye"
+                              style={[styles.Icon, {color: color.icon}]}
+                            />
                           ) : (
-                            <Ionicons name="eye-off" style={styles.eyeIcon} />
+                            <Ionicons
+                              name="eye-off"
+                              style={[styles.Icon, {color: color.icon}]}
+                            />
                           )}
                         </TouchableOpacity>
                       </View>

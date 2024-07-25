@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
   },
   Icon: {
     fontSize: screenHeight * 0.03,
-    color: COLORS.Rhino,
   },
   eyeIcon: {
     fontSize: screenHeight * 0.03,
