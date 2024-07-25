@@ -19,8 +19,9 @@ import {
 import moment from 'moment';
 import {ExpenseServices} from 'src/services/apiclient';
 import {Ionicons} from '@expo/vector-icons';
-import { getTranslate } from 'src/redux/slices/languageSlice';
-import { useThemeColors } from 'src/hooks/useThemeColor';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
+import YearPicker from './YearPicker';
 
 interface Category {
   name: string;
@@ -38,8 +39,6 @@ interface LineChartScreenProps {
   id_family: number;
 }
 
-
-
 const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
   const [showDetails, setShowDetails] = useState<boolean>(false);
   const [selectedLegends, setSelectedLegends] = useState<string[]>(['Total']);
@@ -49,15 +48,35 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const dispatch = useDispatch();
   const [allCategories, setAllCategories] = useState<Set<string>>(new Set());
-  const color = useThemeColors();  
-  
+  const color = useThemeColors();
+
   const labels = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
   const fullLabels = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
   const translate = useSelector(getTranslate);
 
@@ -65,7 +84,6 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
     const recentYears = generateRecentYears();
     setYears(recentYears);
     fetchData(selectedYear);
-
   }, [selectedYear, id_family]);
 
   const generateRecentYears = () => {
@@ -140,49 +158,72 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
   };
 
   const categoryColors: string[] = [
-    'rgba(255, 0, 0, 1)',
-    'rgba(0, 255, 0, 1)',
-    'rgba(0, 0, 255, 1)',
-    'rgba(255, 255, 0, 1)',
-    'rgba(255, 0, 255, 1)',
-    'rgba(0, 255, 255, 1)',
-    'rgba(128, 0, 0, 1)',
-    'rgba(0, 128, 0, 1)',
-    'rgba(0, 0, 128, 1)',
-    'rgba(128, 128, 0, 1)',
-    'rgba(128, 0, 128, 1)',
-    'rgba(255, 165, 0, 1)',
-    'rgba(255, 192, 203, 1)',
-    'rgba(0, 255, 127, 1)',
-    'rgba(255, 20, 147, 1)',
-    'rgba(255, 140, 0, 1)',
-    'rgba(0, 255, 255, 0.5)',
-    'rgba(255, 255, 255, 0.5)',
-    'rgba(255, 255, 0, 0.5)',
-    'rgba(128, 0, 128, 0.5)',
+    // 'rgba(255, 0, 0, 1)',
+    // 'rgba(0, 255, 0, 1)',
+    // 'rgba(0, 0, 255, 1)',
+    // 'rgba(255, 255, 0, 1)',
+    // 'rgba(255, 0, 255, 1)',
+    // 'rgba(0, 255, 255, 1)',
+    // 'rgba(128, 0, 0, 1)',
+    // 'rgba(0, 128, 0, 1)',
+    // 'rgba(0, 0, 128, 1)',
+    // 'rgba(128, 128, 0, 1)',
+    // 'rgba(128, 0, 128, 1)',
+    // 'rgba(255, 165, 0, 1)',
+    // 'rgba(255, 192, 203, 1)',
+    // 'rgba(0, 255, 127, 1)',
+    // 'rgba(255, 20, 147, 1)',
+    // 'rgba(255, 140, 0, 1)',
+    // 'rgba(0, 255, 255, 0.5)',
+    // 'rgba(255, 255, 255, 0.5)',
+    // 'rgba(255, 255, 0, 0.5)',
+    // 'rgba(128, 0, 128, 0.5)',
+    `rgba(255, 99, 132, 0.8)`,
+    `rgba(75, 192, 192, 0.8)`,
+    `rgba(54, 162, 235, 0.8)`,
+    `rgba(255, 206, 86, 0.8)`,
+    `rgba(200, 200, 100, 0.8)`,
+    `rgba(255, 159, 64, 0.8)`,
+    `rgba(255, 99, 132, 0.8)`,
+    `rgba(75, 192, 192, 0.8)`,
+    `rgba(54, 162, 235, 0.8)`,
+    `rgba(255, 206, 86, 0.8)`,
+    `rgba(153, 102, 255, 0.8)`,
+    `rgba(255, 159, 64, 0.8)`,
+    `rgba(255, 99, 132, 0.8)`,
+    `rgba(75, 192, 192, 0.8)`,
+    `rgba(54, 162, 235, 0.8)`,
+    `rgba(255, 206, 86, 0.8)`,
+    `rgba(153, 102, 255, 0.8)`,
+    `rgba(255, 159, 64, 0.8)`,
+    `rgba(255, 206, 86, 0.8)`,
+    `rgba(153, 102, 255, 0.8)`,
   ];
-  
 
   const categoryDatasets: any[] = [];
-  
-if (monthlyData.length > 0) {
-  categoryDatasets.push({
-    name: 'Total',
-    data: monthlyTotals,
-    color: () => categoryColors[0], 
-    key: 'Total', 
-  });
-}
+
+  if (monthlyData.length > 0) {
+    categoryDatasets.push({
+      name: 'Total',
+      data: monthlyTotals,
+      color: () => categoryColors[0],
+      key: 'Total',
+    });
+  }
   allCategories.forEach((categoryId, index) => {
     const dataset = {
       name: categoryId,
       data: monthlyData.map(month => {
         let categoryDataAmount = 0;
         if (Array.isArray(month.categories)) {
-          const categoryData = month.categories.find(cat => cat.name === categoryId);
+          const categoryData = month.categories.find(
+            cat => cat.name === categoryId,
+          );
           categoryDataAmount = categoryData ? categoryData.amount : 0;
         } else if (typeof month.categories === 'object') {
-          const categoryData = Object.values(month.categories).find(cat => cat.name === categoryId);
+          const categoryData = Object.values(month.categories).find(
+            cat => cat.name === categoryId,
+          );
           categoryDataAmount = categoryData ? categoryData.amount : 0;
         }
         return categoryDataAmount;
@@ -192,37 +233,38 @@ if (monthlyData.length > 0) {
     categoryDatasets.push(dataset);
   });
 
+  const displayedDatasets =
+    selectedLegends.length > 0
+      ? categoryDatasets.filter(dataset =>
+          selectedLegends.includes(dataset.name),
+        )
+      : [
+          ...categoryDatasets,
+          {
+            data: monthlyTotals,
+            color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
+          },
+        ];
 
-
-
-
-
-
-  const displayedDatasets = selectedLegends.length > 0
-    ? categoryDatasets.filter(dataset => selectedLegends.includes(dataset.name))
-    : [
-        ...categoryDatasets,
-        {
-          data: monthlyTotals,
-          color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-        },
-      ];
-     
   const formatCurrency = (amount: string | number | bigint) => {
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
   };
   const formatCurrency1 = (amount: number) => {
     return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' đ';
   };
-    
+
   return (
-    <ScrollView style={{ height: '100%' }}>
+    <ScrollView style={{height: '100%'}} showsVerticalScrollIndicator={false}>
       <TouchableOpacity
-        style={[styles.monthPickerContainer, { zIndex: 1 }]}
-        onPress={() => setYearPickerVisible(!isYearPickerVisible)}
-      >
+        style={[styles.monthPickerContainer, {zIndex: 1}]}
+        onPress={() => setYearPickerVisible(!isYearPickerVisible)}>
         <View style={styles.monthContainer}>
-        <Text style={[styles.monthText, {color: color.text}]}>{selectedYear}</Text>
+          <Text style={[styles.monthText, {color: color.text}]}>
+            {selectedYear}
+          </Text>
         </View>
       </TouchableOpacity>
       {isYearPickerVisible && (
@@ -230,76 +272,96 @@ if (monthlyData.length > 0) {
           <Picker
             selectedValue={selectedYear}
             style={styles.dropdownYear}
-            onValueChange={itemValue => handleYearChange(itemValue)}
-          >
+            onValueChange={itemValue => handleYearChange(itemValue)}>
             {years.map((year: number) => (
               <Picker.Item key={year} label={year.toString()} value={year} />
             ))}
           </Picker>
         </View>
       )}
-      <View style={[styles.chartLineContainer, {backgroundColor: color.background}]}>
-      <Text style={{color: color.text}}>({translate('Unit')}: VNĐ)</Text>
-      {displayedDatasets.length > 0 && (
-          <LineChart
-          data={{
-            labels: monthlyData.map(month => labels[month.month - 1]),
-            datasets: displayedDatasets,
-          }}
-          width={400}
-          height={220}
-          yAxisSuffix="M"
-          chartConfig={{
-            backgroundGradientFrom:  color.background, 
-            backgroundGradientTo:  color.background, 
-            decimalPlaces: 0,
-            color: (opacity = 1) => color.text,
-            labelColor: (opacity = 1) => color.text,
-            propsForDots: {
-              r: '2',
-              strokeWidth: '2',
-              stroke: color.text,
-            },
-            propsForBackgroundLines: {
-              strokeWidth: 0.1,
-              stroke: `rgba(255, 255, 255, 0.2)`,
 
-            },
-            propsForHorizontalLabels: {
-              fontSize: 10,
-              color: 'white', 
-            },
-     
-          }}
-        
-           // bezier
-           style={styles.linechart}
-           renderDotContent={({ x, y, index }) => {
-            const month = monthlyData[index];
-            let categoryAmount = 0;
-        
-            if (selectedLegends.length === 1 ) {
-              if (selectedLegends.length === 1 && selectedLegends[0] === 'Total') {
-                categoryAmount = month.total;
-              } else if (selectedLegends.length === 1 && month.categories.find(cat => cat.name === selectedLegends[0])) {
-                const selectedCategory = month.categories.find(cat => cat.name === selectedLegends[0]);
-                categoryAmount = selectedCategory ? selectedCategory.amount : 0;
+      <View
+        style={[
+          styles.chartLineContainer,
+          {backgroundColor: color.background},
+        ]}>
+        <Text style={{color: color.text}}>({translate('Unit')}: VNĐ)</Text>
+        {displayedDatasets.length > 0 && (
+          <LineChart
+            data={{
+              labels: monthlyData.map(month => labels[month.month - 1]),
+              datasets: displayedDatasets,
+            }}
+            width={400}
+            height={220}
+            yAxisSuffix="M"
+            chartConfig={{
+              backgroundGradientFrom: color.background,
+              backgroundGradientTo: color.background,
+              decimalPlaces: 0,
+              color: (opacity = 1) => color.text,
+              labelColor: (opacity = 1) => color.text,
+              propsForDots: {
+                r: '2',
+                strokeWidth: '2',
+                stroke: color.text,
+              },
+              propsForBackgroundLines: {
+                strokeWidth: 0.1,
+                stroke: `rgba(255, 255, 255, 0.2)`,
+              },
+              propsForHorizontalLabels: {
+                fontSize: 10,
+                color: 'white',
+              },
+            }}
+            // bezier
+            style={styles.linechart}
+            renderDotContent={({x, y, index}) => {
+              const month = monthlyData[index];
+              let categoryAmount = 0;
+
+              if (selectedLegends.length === 1) {
+                if (
+                  selectedLegends.length === 1 &&
+                  selectedLegends[0] === 'Total'
+                ) {
+                  categoryAmount = month.total;
+                } else if (
+                  selectedLegends.length === 1 &&
+                  month.categories.find(cat => cat.name === selectedLegends[0])
+                ) {
+                  const selectedCategory = month.categories.find(
+                    cat => cat.name === selectedLegends[0],
+                  );
+                  categoryAmount = selectedCategory
+                    ? selectedCategory.amount
+                    : 0;
+                }
+
+                return (
+                  <View>
+                    <Text
+                      key={index}
+                      style={{
+                        position: 'absolute',
+                        left: x - 15,
+                        top: y - 20,
+                        fontSize: 10,
+                        color: 'gray',
+                      }}>
+                      {categoryAmount !== 0
+                        ? `${categoryAmount.toFixed(0)}M VNĐ`
+                        : ''}
+                    </Text>
+                  </View>
+                );
               }
-        
-            return (
-              <View>
-                <Text key={index} style={{ position: 'absolute', left: x - 15, top: y - 20, fontSize: 10, color: 'gray' }}>
-                {categoryAmount !== 0 ? `${categoryAmount.toFixed(0)}M VNĐ` : ''}
-                </Text>
-              </View>
-            );
-          }
-          }}
-        />
- 
+            }}
+          />
         )}
 
-<ScrollView
+        <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainer
@@ -309,26 +371,33 @@ if (monthlyData.length > 0) {
             flexWrap: 'wrap',
           }}>
           {categoryDatasets.map((dataset, index) => (
-          
-                <TouchableOpacity
-                  key={index}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                  onPress={() => toggleLegend(dataset.name)}>
-                    <View style= { [styles.legendItem,
-              selectedLegends.includes(dataset.name) && styles.selectedLegendItem,]}> 
-                  <View
-                    style={[styles.legendColor, { backgroundColor: dataset.color() }]}
-                  />
-                  <Text style={[styles.legendText, {color : color.text}]}>{dataset.name}</Text>
-                  </View>
-
-                </TouchableOpacity>
+            <TouchableOpacity
+              key={index}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+              onPress={() => toggleLegend(dataset.name)}>
+              <View
+                style={[
+                  styles.legendItem,
+                  selectedLegends.includes(dataset.name) &&
+                    styles.selectedLegendItem,
+                ]}>
+                <View
+                  style={[
+                    styles.legendColor,
+                    {backgroundColor: dataset.color()},
+                  ]}
+                />
+                <Text style={[styles.legendText, {color: color.text}]}>
+                  {dataset.name}
+                </Text>
+              </View>
+            </TouchableOpacity>
           ))}
         </ScrollView>
-        <View style={{ height: 1, backgroundColor: '#F3F1EE', marginTop: 10 }} />
+        <View style={{height: 1, backgroundColor: '#F3F1EE', marginTop: 10}} />
 
         <TouchableOpacity
           style={{
@@ -338,8 +407,10 @@ if (monthlyData.length > 0) {
             alignItems: 'center',
           }}
           onPress={() => setShowDetails(!showDetails)}>
-          <Text style={{ fontWeight: '500', color: color.text }}>
-            {showDetails ? translate('Hide details') : translate('View details')}
+          <Text style={{fontWeight: '500', color: color.text}}>
+            {showDetails
+              ? translate('Hide details')
+              : translate('View details')}
           </Text>
           <Ionicons
             name={showDetails ? 'chevron-down' : 'chevron-forward'}
@@ -347,35 +418,37 @@ if (monthlyData.length > 0) {
             color={color.text}
           />
         </TouchableOpacity>
-        {showDetails &&
-        <ScrollView style={styles.ContainerCategory}>
-          {monthlyData.map(monthData => (
-            <TouchableOpacity
-              key={monthData.month}
-              style={styles.expenseItem}
-              onPress={() => handlePressMonth(`${monthData.month}`)}>
-              <View style={styles.expenseDetails}>
-                {/* <Image
+        {showDetails && (
+          <ScrollView style={styles.ContainerCategory}>
+            {monthlyData.map(monthData => (
+              <TouchableOpacity
+                key={monthData.month}
+                style={styles.expenseItem}
+                onPress={() => handlePressMonth(`${monthData.month}`)}>
+                <View style={styles.expenseDetails}>
+                  {/* <Image
                   source={{uri: `${avatarUrlTemplate}${monthData.month}`}}
                   style={styles.avatar}
                 /> */}
-                <Text
-                  style={[styles.expenseText, {color: color.text}]}>{translate(fullLabels[monthData.month-1])}</Text>
-              </View>
-              <View style={styles.expenseDetails}>
-           
-                <Text style={styles.expenseAmount}>- {formatCurrency(monthData.total * 1000000)}</Text>
+                  <Text style={[styles.expenseText, {color: color.text}]}>
+                    {translate(fullLabels[monthData.month - 1])}
+                  </Text>
+                </View>
+                <View style={styles.expenseDetails}>
+                  <Text style={styles.expenseAmount}>
+                    - {formatCurrency(monthData.total * 1000000)}
+                  </Text>
 
-                <Icon name="chevron-right" size={20} color="#ccc" />
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-}
+                  <Icon name="chevron-right" size={20} color="#ccc" />
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        )}
       </View>
       <View
         style={{
-          backgroundColor: 'white',
+          backgroundColor: color.background,
           width: '100%',
           height: 400,
           marginTop: -30,
@@ -384,7 +457,5 @@ if (monthlyData.length > 0) {
     </ScrollView>
   );
 };
-
-
 
 export default LineChartScreen;
