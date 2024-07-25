@@ -238,7 +238,7 @@ const ExpenseScreen = ({navigation}: ExpenseScreenProps) => {
                 marginBottom: 5,
                 color: 'white',
               }}>
-              Hello, {profile.firstname} {profile.lastname}
+              {translate('Hello')}, {profile.firstname} {profile.lastname}
             </Text>
             <Text style={{fontSize: 15, color: '#ccc'}}>
               {translate('ExpensevsIncomeDetail')}
