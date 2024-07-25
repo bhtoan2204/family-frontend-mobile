@@ -134,19 +134,14 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: 'center',
     width: '50%',
-
     marginBottom: 0,
-    backgroundColor: 'white',
-
   },
   
   tabButtonContent: {
     paddingVertical: 10,
     alignItems: 'center',
   },
-  selectedTabButton: {
-    backgroundColor: COLORS.gray,
-  },
+  
   selectedTabButtonText: {
     color: '#2a475e',
     fontWeight: '600',
@@ -165,6 +160,7 @@ const styles = StyleSheet.create({
     width: '95%',
     alignSelf: 'center',
     color: 'transparent',
+    marginTop: 30,
   },
   bottomLine: {
     position: 'absolute',
@@ -247,7 +243,7 @@ const styles = StyleSheet.create({
   },
   legendContainerPieChart: {
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'flex-start',
     height: 200,
   },
@@ -283,15 +279,13 @@ const styles = StyleSheet.create({
   },
   chartContainer: {
     bottom: 30,
-    backgroundColor: 'white',
     padding: 10,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
     width: '100%',
     alignSelf: 'center',
     flexDirection: 'column',
     height: '36%',
-    //marginBottom : 100
   },
   chartBarContainer: {
     bottom: 30,
