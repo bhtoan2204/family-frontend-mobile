@@ -50,18 +50,6 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
   useEffect(() => {
     fetchDataExpense();
     fetchDataIncome();
-    // This is a simplified example. You might have a more complex mechanism for listening to language changes.
-    const handleLanguageChange = () => {
-      setCurrentLocale(i18n.locale);
-    };
-
-    // Assume you have some event emitter or global state that notifies about language changes
-    // languageChangeEventEmitter.on('change', handleLanguageChange);
-
-    return () => {
-      // Cleanup listener
-      // languageChangeEventEmitter.off('change', handleLanguageChange);
-    };
   }, []);
   const fetchDataExpense = async () => {
     setIsLoading(true);
@@ -544,7 +532,6 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
                   : 'transparent',
               padding: 18,
               borderRadius: 30,
-              paddingHorizontal: 30,
               shadowColor:
                 selectedButton === 'expenseAnalysis'
                   ? '#4480A2'
@@ -573,7 +560,6 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
                 selectedButton === 'incomeAnalysis' ? '#80C694' : 'transparent',
               padding: 18,
               borderRadius: 30,
-              paddingHorizontal: 30,
               shadowColor:
                 selectedButton === 'incomeAnalysis' ? '#80C694' : 'transparent',
               shadowOffset: {width: 0, height: 4},
