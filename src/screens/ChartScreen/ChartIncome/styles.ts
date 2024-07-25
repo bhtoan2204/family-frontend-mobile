@@ -130,11 +130,11 @@ const styles = StyleSheet.create({
   tabButton: {
     paddingVertical: 10,
     alignItems: 'center',
-    width: '30%',
-    height: '70%',
-    marginBottom: 15,
-    backgroundColor: '#fff',
-    borderRadius: 20,
+    width: '50%',
+    marginBottom: 0,
+  },
+  selectedTabText: {
+    color: 'white'
   },
   tabButtonContent: {
     paddingVertical: 10,
@@ -144,14 +144,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#CCEAFB',
   },
   selectedTabButtonText: {
-    color: '#2a475e',
+    color: '#ccc',
+    fontSize: 18,
+    alignSelf: 'center',
     fontWeight: '600',
   },
 
   tabButtonText: {
-    color: '#696969',
-    fontSize: 16,
+    color: '#ccc',
+    fontSize: 18,
     alignSelf: 'center',
+    fontWeight: '600',
   },
   containerTab: {
     flexDirection: 'row',
@@ -159,6 +162,7 @@ const styles = StyleSheet.create({
     width: '95%',
     alignSelf: 'center',
     color: 'transparent',
+    marginTop: 30,
   },
   bottomLine: {
     position: 'absolute',
@@ -251,7 +255,6 @@ const styles = StyleSheet.create({
   },
   chartContainer: {
     bottom: 30,
-    backgroundColor: 'white',
     padding: 10,
     paddingTop: 20,
     borderTopLeftRadius: 40,
@@ -259,7 +262,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
     flexDirection: 'column',
-    height: '34%',
+    height: '36%',
   },
   chartBarContainer: {
     bottom: 30,

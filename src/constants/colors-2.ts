@@ -48,11 +48,13 @@ const COLORS = {
       border: '#ccc',
       buttonGroup: '#DCDCDC',
     buttonGroupChoose: '#2A475E',
+    buttonGroupChooseIncome: '#2A475E',
       halfBackground: '#F7F7F7',
     },
   dark: {
     halfBackground: '#0A1220',
     buttonGroupChoose: '#66C0F4',
+    buttonGroupChooseIncome: '#7CE2B3',
       buttonGroup: '#252D3B',
       border: '#8D94A5',
       card: '#252D3B',
