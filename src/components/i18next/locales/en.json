@@ -310,6 +310,10 @@
     "None": "None",
     "Never": "Never",
     "Count": "Count",
-    "PhoneNumber": "Phone Number:"
+    "You havent received any message from": " You haven't received any message from",
+    "yet": "yet",
+    "Start the conversation by sending a message.": "Start the conversation by sending a message.",
+    "Yesterday": "Yesterday",
+    
   }
   

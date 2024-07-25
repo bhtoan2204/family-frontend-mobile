@@ -329,5 +329,10 @@
       "T7"
     ]
   },
-  "PhoneNumber": "Số điện thoại:"
+  "PhoneNumber": "Số điện thoại:",
+  "You havent received any message from": "Bạn chưa nhận được tin nhắn nào từ",
+  "yet": "",
+  "Start the conversation by sending a message.": "Bắt đầu cuộc trò chuyện bằng cách gửi tin nhắn.",
+  "Yesterday": "Hôm qua",
+  
 }

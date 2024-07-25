@@ -77,7 +77,7 @@ const ChatListScreen = ({
       dateTime.getMonth() === yesterday.getMonth() &&
       dateTime.getFullYear() === yesterday.getFullYear()
     ) {
-      return `Yesterday ${dateTime.getHours()}:${dateTime
+      return `${translate('Yesterday')} ${dateTime.getHours()}:${dateTime
         .getMinutes()
         .toString()
         .padStart(2, '0')}`;

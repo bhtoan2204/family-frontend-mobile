@@ -21,6 +21,8 @@ import { selectFamilyLastMessage } from 'src/redux/slices/MessageFamily';
 import { Message } from 'src/interface/chat/family';
 import { Member } from 'src/interface/member/member';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 
 
@@ -44,7 +46,8 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
     null,
   );
   let LastMessageFamily = useSelector(selectFamilyLastMessage);
- 
+  const color = useThemeColors();
+  const translate = useSelector(getTranslate);
 
 
   useEffect(() => {
@@ -341,8 +344,8 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
         left: 0,
         right: 0,
       }}>
-    <View style={styles.header}>
-    <View style={styles.receiverInfo}>
+    <View style={[styles.header, {backgroundColor: color.background}]}>
+    <View style={[styles.receiverInfo,  {backgroundColor: color.background}]}>
           <View
             style={{
               flexDirection: 'row',
@@ -364,7 +367,7 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
                     style={styles.avatar}
                   />
                   <View style={[styles.activeDot, {top: 15, right: 10}]} />
-                  <Text style={styles.avatarText}>
+                  <Text style={[styles.avatarText, {color: color.text}]}>
                     {' '}
                     {LastMessageFamily.name}
                   </Text>
@@ -404,8 +407,7 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
     {messages ? (
       <FlatList
         key={refreshFlatList ? 'refresh' : 'no-refresh'}
-        style={styles.messagesContainer}
-        contentContainerStyle={styles.contentContainer}
+        style={[styles.messagesContainer, {backgroundColor: color.background} ]}
         data={messages}
         inverted
         renderItem={({ item, index }) => (
@@ -480,10 +482,10 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
                 </>
               )}
               <Text style={styles.introText}>
-                You haven't received any message from  {LastMessageFamily?.name} yet.
+                {translate('You havent received any message from')} {LastMessageFamily?.name} {translate('yet')}.
               </Text>
               <Text style={styles.introText}>
-                Start the conversation by sending a message.
+                {translate('Start the conversation by sending a message.')}
               </Text>
               <View style={{backgroundColor: 'white', minHeight: 470}}></View>
             </View>
@@ -491,7 +493,7 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
         </KeyboardAvoidingView>
       )}
       <View
-        style={[styles.inputContainer, keyboardIsOpen && {paddingBottom: 20}]}>
+        style={[styles.inputContainer, {backgroundColor: color.background}, keyboardIsOpen && {paddingBottom: 20}]}>
         <TouchableOpacity
           onPress={handleOpenImageLibrary}
           style={{marginRight: 15}}>
@@ -499,7 +501,7 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
         </TouchableOpacity>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
           <TextInput
-            style={[styles.input, {flex: 1}]}
+            style={[styles.input, {backgroundColor: color.inputChat}, {flex: 1}]}
             value={message}
             onChangeText={setMessage}
             placeholder="Aa"></TextInput>
