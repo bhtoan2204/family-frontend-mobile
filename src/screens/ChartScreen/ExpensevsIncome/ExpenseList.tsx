@@ -1,26 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Dimensions, StyleSheet, FlatList, TouchableOpacity, Modal, Image, ImageBackground, SafeAreaView, ActivityIndicator } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  Dimensions,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Modal,
+  Image,
+  ImageBackground,
+  SafeAreaView,
+  ActivityIndicator,
+} from 'react-native';
 import moment from 'moment';
-import { Expenditure } from 'src/interface/expense/getExpense';
-import { Income } from 'src/interface/income/getIncome';
-import { Family } from 'src/interface/family/family';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
-import { ExpenseServices, IncomeServices } from 'src/services/apiclient';
+import {Expenditure} from 'src/interface/expense/getExpense';
+import {Income} from 'src/interface/income/getIncome';
+import {Family} from 'src/interface/family/family';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectSelectedFamily} from 'src/redux/slices/FamilySlice';
+import {ExpenseServices, IncomeServices} from 'src/services/apiclient';
 import styles from './styles';
-import { ExpenseScreenProps } from 'src/navigation/NavigationTypes';
+import {ExpenseScreenProps} from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { COLORS } from 'src/constants';
-import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import {  getSumExpense, selectExpenses, setExpenses, setSelectedExpense, setSumExpense } from 'src/redux/slices/ExpenseAnalysis';
+import {COLORS} from 'src/constants';
+import {selectProfile} from 'src/redux/slices/ProfileSclice';
+import {
+  getSumExpense,
+  selectExpenses,
+  setExpenses,
+  setSelectedExpense,
+  setSumExpense,
+} from 'src/redux/slices/ExpenseAnalysis';
 const screenWidth = Dimensions.get('window').width;
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { DailyExpense } from 'src/interface/expense/DailyExpense';
-import { setDate } from 'date-fns';
-import { getTranslate } from 'src/redux/slices/languageSlice';
-import { useThemeColors } from 'src/hooks/useThemeColor';
+import {DailyExpense} from 'src/interface/expense/DailyExpense';
+import {setDate} from 'date-fns';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
 
-const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
+const ExpenseScreen = ({navigation}: ExpenseScreenProps) => {
   const expenses = useSelector(selectExpenses);
   const [currentPageExpense, setCurrentPageExpense] = useState<number>(1);
 
@@ -28,18 +46,22 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<number>(30);
   const sumExpense = useSelector(getSumExpense);
-  const [selectedFamily, setSelectedFamily] = useState<number | undefined>(undefined);
+  const [selectedFamily, setSelectedFamily] = useState<number | undefined>(
+    undefined,
+  );
   const [isFamilyModalOpen, setIsFamilyModalOpen] = useState(false);
-  const filterUri = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL0i6wYs08kFWJKDu9843LWdW43Xom8IW89cIZREgBKg&s';
-  const familyUri = 'https://t3.ftcdn.net/jpg/06/75/38/14/360_F_675381468_yjYEK9SvCRYpRUyKNRWsnArIalbMeBU4.jpg';
+  const filterUri =
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL0i6wYs08kFWJKDu9843LWdW43Xom8IW89cIZREgBKg&s';
+  const familyUri =
+    'https://t3.ftcdn.net/jpg/06/75/38/14/360_F_675381468_yjYEK9SvCRYpRUyKNRWsnArIalbMeBU4.jpg';
   const family = useSelector(selectSelectedFamily);
   const itemsPerPage = 10;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   let profile = useSelector(selectProfile);
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
-  const color = useThemeColors(); 
-  
+  const color = useThemeColors();
+
   const [dateTo, setDateTo] = useState(new Date());
   const [dateFrom, setDateFrom] = useState(() => {
     const date = new Date(dateTo);
@@ -47,21 +69,25 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
     return date;
   });
 
-
-
   const fetchDataExpense = async (page: number, reset: boolean = false) => {
     setIsLoading(true);
     try {
-      
-        const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
-        const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
-        const response = await ExpenseServices.getExpenseByDateRange(page, itemsPerPage, family.id_family, formattedDateFrom, formattedDateTo )
-        if(response){
-          dispatch(setExpenses(reset ? response.data : [...expenses, ...response.data]));
-          setTotalPageExpense(Math.ceil(response.total / itemsPerPage));
-          dispatch(setSumExpense(response.sum));
-        }
-
+      const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
+      const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
+      const response = await ExpenseServices.getExpenseByDateRange(
+        page,
+        itemsPerPage,
+        family.id_family,
+        formattedDateFrom,
+        formattedDateTo,
+      );
+      if (response) {
+        dispatch(
+          setExpenses(reset ? response.data : [...expenses, ...response.data]),
+        );
+        setTotalPageExpense(Math.ceil(response.total / itemsPerPage));
+        dispatch(setSumExpense(response.sum));
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -69,109 +95,120 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
     }
   };
 
-
   useEffect(() => {
     setCurrentPageExpense(1);
 
-      fetchDataExpense(currentPageExpense, true);
-    
+    fetchDataExpense(currentPageExpense, true);
   }, [dateFrom, dateTo]);
 
   useEffect(() => {
-
-      fetchDataExpense(currentPageExpense, true);
-    
+    fetchDataExpense(currentPageExpense, true);
   }, [currentPageExpense]);
-
-
-
-
 
   const formatDate = (isoDateTime: string) => {
     return moment(isoDateTime).format('DD/MM/YYYY HH:mm');
   };
 
   const formatCurrency = (amount: any) => {
-    return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
   };
-  const handlePressExpenseItem = async (item: DailyExpense)=> {
+  const handlePressExpenseItem = async (item: DailyExpense) => {
     await dispatch(setSelectedExpense(item));
     navigation.navigate('ExpenseDetailScreen');
-  }
-  const renderExpenseItem = ({ item }: { item: DailyExpense }) => (
-    <TouchableOpacity onPress={() => {handlePressExpenseItem(item)}} style={[styles.expenseItem, {backgroundColor: color.white}]}>
+  };
+  const renderExpenseItem = ({item}: {item: DailyExpense}) => (
+    <TouchableOpacity
+      onPress={() => {
+        handlePressExpenseItem(item);
+      }}
+      style={[styles.expenseItem, {backgroundColor: color.white}]}>
       <View style={styles.itemContainer}>
         <View style={styles.expenseContent}>
           <View>
-          {item.financeExpenditureType ? 
-              <Text style={[styles.expenseCategory, {color: color.text}]}>{item.financeExpenditureType.expense_type_name}</Text> : 
-              <Text style={[styles.expenseCategory,  {color: color.text}]}>{translate('Other')}</Text>
-            }
+            {item.financeExpenditureType ? (
+              <Text style={[styles.expenseCategory, {color: color.text}]}>
+                {item.financeExpenditureType.expense_type_name}
+              </Text>
+            ) : (
+              <Text style={[styles.expenseCategory, {color: color.text}]}>
+                {translate('Other')}
+              </Text>
+            )}
 
             <View style={styles.row}>
-              
-              <Text style={{color: 'gray', }}>{translate('Create by')}: </Text>
+              <Text style={{color: 'gray'}}>{translate('Create by')}: </Text>
               {item.users && (
-              <Text style={styles.expenseName}>{item.users.firstname} {item.users.lastname}</Text>
+                <Text style={styles.expenseName}>
+                  {item.users.firstname} {item.users.lastname}
+                </Text>
               )}
             </View>
             <Text style={styles.expenseDescription}>{item.description}</Text>
           </View>
-          <View style={{ justifyContent: 'center', flexDirection: 'row'}}>
-
+          <View style={{justifyContent: 'center', flexDirection: 'row'}}>
             <View style={styles.rowInfo}>
-
-              <Text style={styles.expenseAmount}>-{formatCurrency(item.amount)}</Text>
-              <Text style={styles.expenseDate}>{formatDate(item.expenditure_date)}</Text>
-
+              <Text style={styles.expenseAmount}>
+                -{formatCurrency(item.amount)}
+              </Text>
+              <Text style={styles.expenseDate}>
+                {formatDate(item.expenditure_date)}
+              </Text>
             </View>
-          <View style={{ justifyContent: 'center', }}>
-            <Icon name="chevron-forward" size={20} color={ color.text} />
-           </View>
+            <View style={{justifyContent: 'center'}}>
+              <Icon name="chevron-forward" size={20} color={color.text} />
+            </View>
           </View>
         </View>
       </View>
     </TouchableOpacity>
   );
 
-  
-
-
-
-
-
-
   const renderPaginationExpense = () => {
     const totalPages = totalPageExpense;
     return (
-      <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 10 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          marginVertical: 10,
+        }}>
         <TouchableOpacity
-          onPress={ () => setCurrentPageExpense(currentPageExpense - 1)}
+          onPress={() => setCurrentPageExpense(currentPageExpense - 1)}
           disabled={currentPageExpense === 1}
-          style={{ paddingHorizontal: 10 }}>
-          <Text style={{ color: currentPageExpense === 1 ? COLORS.gray : color.text }}>{translate('Prev')}</Text>
+          style={{paddingHorizontal: 10}}>
+          <Text
+            style={{
+              color: currentPageExpense === 1 ? COLORS.gray : color.text,
+            }}>
+            {translate('Prev')}
+          </Text>
         </TouchableOpacity>
-        <Text style={{color : color.text}}>{currentPageExpense} / {totalPages}</Text>
+        <Text style={{color: color.text}}>
+          {currentPageExpense} / {totalPages}
+        </Text>
         <TouchableOpacity
-          onPress={()=> setCurrentPageExpense(currentPageExpense + 1)}
+          onPress={() => setCurrentPageExpense(currentPageExpense + 1)}
           disabled={currentPageExpense === totalPages}
-          style={{ paddingHorizontal: 10 }}>
-          <Text style={{ color: currentPageExpense === totalPages ? COLORS.gray : color.text  }}>{translate('Next')}</Text>
+          style={{paddingHorizontal: 10}}>
+          <Text
+            style={{
+              color:
+                currentPageExpense === totalPages ? COLORS.gray : color.text,
+            }}>
+            {translate('Next')}
+          </Text>
         </TouchableOpacity>
       </View>
     );
   };
 
-
-
   return (
     <ImageBackground
       source={require('../../../assets/images/background-expense-chart1.png')}
-      style={{ flex: 1 }}
+      style={{flex: 1}}
       resizeMode="stretch">
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{flex: 1}}>
         <View style={styles.container}>
-
           <View style={styles.headerContainer}>
             <TouchableOpacity
               onPress={() =>
@@ -182,9 +219,10 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
               <Icon name="arrow-back" size={30} style={styles.backButton} />
             </TouchableOpacity>
             <View style={styles.headerTitleContainer}>
-              <Text style={styles.headerText}>Expense Analysis</Text>
+              <Text style={styles.headerText}>
+                {translate('ExpenseAnalysis')}
+              </Text>
             </View>
-        
           </View>
           <View
             style={{
@@ -203,65 +241,83 @@ const ExpenseScreen = ({ navigation }: ExpenseScreenProps) => {
               Hello, {profile.firstname} {profile.lastname}
             </Text>
             <Text style={{fontSize: 15, color: '#ccc'}}>
-            Here is a list of expenses your family has incurred for the selected date range.
+              {translate('ExpensevsIncomeDetail')}
             </Text>
-
           </View>
-        <View style={{backgroundColor: color.background, flex: 1,}}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
-            <Text style={{ fontSize: 15, marginLeft: 20, color: color.text }}>From: </Text>
-            <DateTimePicker
-                style={{ flex: 1 }}
+          <View
+            style={{
+              backgroundColor: color.background,
+              height: 660,
+              borderTopRightRadius: 40,
+              borderTopLeftRadius: 40,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 20,
+              }}>
+              <Text style={{fontSize: 15, marginLeft: 20, color: color.text}}>
+                {translate('From')}{' '}
+              </Text>
+              <DateTimePicker
+                style={{flex: 1}}
                 value={dateFrom}
                 mode="date"
                 display="default"
                 onChange={(event, selectedDate) => {
-                const currentDate = selectedDate || dateFrom;
-                setDateFrom(currentDate);
+                  const currentDate = selectedDate || dateFrom;
+                  setDateFrom(currentDate);
                 }}
-            />
-            <Text style={{ fontSize: 15, marginLeft: 20,color: color.text}}>To: </Text>
-            <DateTimePicker
-                style={{ flex: 1 ,  marginRight: 20}}
+              />
+              <Text style={{fontSize: 15, marginLeft: 20, color: color.text}}>
+                {translate('To')}{' '}
+              </Text>
+              <DateTimePicker
+                style={{flex: 1, marginRight: 20}}
                 value={dateTo}
                 mode="date"
                 display="default"
                 onChange={(event, selectedDate) => {
-                const currentDate = selectedDate || dateTo;
-                setDateTo(currentDate);
+                  const currentDate = selectedDate || dateTo;
+                  setDateTo(currentDate);
                 }}
-            />
+              />
             </View>
 
+            <View
+              style={[
+                styles.sumContainer,
+                {backgroundColor: color.background},
+              ]}>
+              <Text style={[styles.sumText, {color: color.text}]}>
+                Total Expense:{' '}
+              </Text>
+              <Text style={[styles.sumText, {color: color.text}]}>
+                -{formatCurrency(sumExpense)}{' '}
+              </Text>
+            </View>
 
-            <View style={[styles.sumContainer, {backgroundColor: color.background}]}>
-              <Text style={[styles.sumText, {color: color.text}]}>Total Expense: </Text>
-              <Text style={[styles.sumText, { color: color.text }]}>-{formatCurrency(sumExpense)} </Text>
+            {isLoading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={COLORS.primary} />
               </View>
-          
-       
-           {isLoading ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color={COLORS.primary} />
-            </View>
-          ) :  (
-            <FlatList
-              data={expenses}
-              renderItem={renderExpenseItem}
-              keyExtractor={(item, index) => `${item.id_expenditure}_${index}`}
-              onEndReachedThreshold={0.1}
-              ListFooterComponent={renderPaginationExpense}
-            />
-          ) }
-       
-         
+            ) : (
+              <FlatList
+                data={expenses}
+                renderItem={renderExpenseItem}
+                keyExtractor={(item, index) =>
+                  `${item.id_expenditure}_${index}`
+                }
+                onEndReachedThreshold={0.1}
+                ListFooterComponent={renderPaginationExpense}
+              />
+            )}
+          </View>
+          <View style={{backgroundColor: color.background, height: 100}}></View>
         </View>
-        </View>
-
       </SafeAreaView>
-      
     </ImageBackground>
-
   );
 };
 

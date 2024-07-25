@@ -37,7 +37,7 @@
     "Calendar": "Calendar",
     "Checklist": "Checklist",
     "ShoppingList": "ShoppingList",
-    "ExpenseAnalysis": "Expese Analysis",
+    "ExpenseAnalysis": "Expense Analysis",
     "IncomeAnalysis": "Income Analysis",
     "ExpensevsIncome": "Expense & Income",
     "Asset" : "Assets",
@@ -315,5 +315,8 @@
     "Start the conversation by sending a message.": "Start the conversation by sending a message.",
     "Yesterday": "Yesterday",
     "PhoneNumber": "Phone Number:",
+    "From": "From:",
+  "To": "To:",
+    "ExpensevsIncomeDetail": "Here is a list of expenses your family has incurred for the selected date range.",
   }
   
