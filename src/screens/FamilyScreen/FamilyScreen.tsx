@@ -37,50 +37,7 @@ import {Member} from 'src/interface/member/member';
 import * as ImagePicker from 'expo-image-picker';
 import {Service} from 'src/interface/package/mainPackage';
 import {useThemeColors} from 'src/hooks/useThemeColor';
-const cards = [
-  {
-    id: 1,
-    title: 'Members',
-    detail: 'Manage family members.',
-    icon: require('../../assets/icons/family-member.png'),
-  },
-  {
-    id: 3,
-    title: 'Education',
-    detail: 'Monitor educational progress',
-    icon: require('../../assets/icons/manage-eduction.png'),
-  },
-  {
-    id: 4,
-    title: 'Calendar',
-    detail: 'Organize events and activities.',
-    icon: require('../../assets/icons/calendar-scheduling.png'),
-  },
-  {
-    id: 5,
-    title: 'Guideline',
-    detail: 'Provides for family activities.',
-    icon: require('../../assets/icons/guideline-items.png'),
-  },
-  {
-    id: 6,
-    title: 'Household',
-    detail: 'Optimize household devices.',
-    icon: require('../../assets/icons/household-appliances.png'),
-  },
-  {
-    id: 7,
-    title: 'Check List',
-    detail: 'Manage family task lists.',
-    icon: require('../../assets/icons/checklist.png'),
-  },
-  {
-    id: 8,
-    title: 'Shopping',
-    detail: 'Organize and track groceries.',
-    icon: require('../../assets/icons/shopping-list.png'),
-  },
-];
+import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 
 const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const color = useThemeColors();
@@ -97,6 +54,51 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
   const screenHeight = Dimensions.get('screen').height;
   const [functions, setFunctions] = useState<Service[]>([]);
+  const translate = useSelector(getTranslate);
+  const cards = [
+    {
+      id: 1,
+      title: 'Member',
+      detail: 'Manage family members.',
+      icon: require('../../assets/icons/family-member.png'),
+    },
+    {
+      id: 2,
+      title: 'Education',
+      detail: 'Monitor educational progress',
+      icon: require('../../assets/icons/manage-eduction.png'),
+    },
+    {
+      id: 3,
+      title: 'Calendar',
+      detail: 'Organize events an d activities.',
+      icon: require('../../assets/icons/calendar-scheduling.png'),
+    },
+    {
+      id: 4,
+      title: 'Guideline',
+      detail: 'Provides for family activities.',
+      icon: require('../../assets/icons/guideline-items.png'),
+    },
+    {
+      id: 5,
+      title: 'Household',
+      detail: 'Optimize household devices.',
+      icon: require('../../assets/icons/household-appliances.png'),
+    },
+    {
+      id: 6,
+      title: 'Checklist',
+      detail: 'Manage family task lists.',
+      icon: require('../../assets/icons/checklist.png'),
+    },
+    {
+      id: 7,
+      title: 'ShoppingList',
+      detail: 'Organize and track groceries.',
+      icon: require('../../assets/icons/shopping-list.png'),
+    },
+  ];
   const source =
     selectedFamily?.avatar && selectedFamily.avatar !== '[NULL]'
       ? {uri: selectedFamily.avatar}
@@ -241,42 +243,36 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         });
         break;
       case 2:
-        navigation.navigate('ChatStack', {
-          screen: 'ChatFamily',
-          params: {id_family: selectedFamily!.id_family},
-        });
-        break;
-      case 3:
         navigation.navigate('EducationStack', {
           screen: 'EducationScreen',
           params: {id_family: selectedFamily!.id_family},
         });
         break;
-      case 4:
+      case 3:
         navigation.navigate('CalendarStack', {
           screen: 'CalendarScreen',
           params: {id_family: selectedFamily!.id_family},
         });
         break;
-      case 5:
+      case 4:
         navigation.navigate('FamilyStack', {
           screen: 'GuildLine',
           params: {id_family: selectedFamily!.id_family},
         });
         break;
-      case 6:
+      case 5:
         navigation.navigate('HouseHoldStack', {
           screen: 'HouseHoldScreen',
           params: {id_family: selectedFamily!.id_family},
         });
         break;
-      case 7:
+      case 6:
         navigation.navigate('TodoListStack', {
           screen: 'TodoList',
           params: {id_family: selectedFamily!.id_family},
         });
         break;
-      case 8:
+      case 7:
         console.log(selectedFamily!.id_family);
         navigation.navigate('ShoppingListStack', {
           screen: 'ShoppingList',
@@ -433,7 +429,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           }}>
           {selectedFamily.description}
         </Text>
-        <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.container}>
             {cards.map(card => {
               const isFunctionAvailable = functions.some(
@@ -467,6 +463,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
               return null;
             })}
           </View>
+
           <View style={{height: 600}}></View>
         </ScrollView>
       </View>
