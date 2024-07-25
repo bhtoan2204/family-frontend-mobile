@@ -42,6 +42,7 @@ import {makeRedirectUri, useAuthRequest} from 'expo-auth-session';
 import * as Notifications from 'expo-notifications';
 import { getTranslate } from 'src/redux/slices/languageSlice';
 import { useThemeColors } from 'src/hooks/useThemeColor';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 interface FormValues {
   email: string;
   password: string;
@@ -133,10 +134,13 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
       const { code } = response.params;
     }
   }, [response]);
-
+  const isDarkMode = useSelector(getIsDarkMode)
+  const background = !isDarkMode 
+    ? require('../../assets/images/login-wall-light.png')
+    : require('../../assets/images/login-wall-dark.png');
   return (
     <ImageBackground
-      source={require('../../assets/images/login-wall-light.png')}
+      source={background}
       style={{ flex: 1 }}
       resizeMode="stretch">
       <KeyboardAvoidingView behavior="padding">
@@ -193,7 +197,7 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
                         style={[
                           styles.row,
                           styles.TextInput,
-                          { borderColor: errors.email ? 'red' : '#2A475E' },
+                          { borderColor: errors.email ? 'red' : '#2A475E', backgroundColor: color.white},
                         ]}>
                         <MaterialCommunityIcons
                           name="email-outline"
@@ -202,7 +206,7 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
                         <TextInput
                           placeholder={translate('EMAIL_PLACEHOLDER')}
                           placeholderTextColor={
-                            errors.email ? COLORS.red : '#A6A6A6'
+                            errors.email ? COLORS.red : color.textSubdued
                           }
                           keyboardType="email-address"
                           onBlur={handleBlur('email')}
@@ -212,7 +216,7 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
                             {
                               marginLeft: 10,
                               width: '100%',
-                              color: '#2A475E',
+                              color: color.text,
                             },
                           ]}
                         />
@@ -234,7 +238,7 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
                           styles.row,
                           { alignItems: 'center' },
                           styles.TextInput,
-                          { borderColor: errors.email ? 'red' : '#2A475E' },
+                          { borderColor: errors.email ? 'red' : '#2A475E', backgroundColor: color.white },
                         ]}>
                         <MaterialCommunityIcons
                           name="lock-outline"
@@ -244,13 +248,13 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
                           className="w-full"
                           placeholder={translate('PASSWORD_PLACEHOLDER')}
                           placeholderTextColor={
-                            errors.password ? COLORS.red : '#A6A6A6'
+                            errors.password ? COLORS.red :  color.textSubdued
                           }
                           secureTextEntry={!isPasswordVisible}
                           onBlur={handleBlur('password')}
                           onChangeText={handleChange('password')}
                           value={values.password}
-                          style={[{ marginLeft: 10, color: '#2A475E' }]}
+                          style={[{ marginLeft: 10, color: color.text, }]}
                         />
                         <TouchableOpacity
                           className="absolute right-3"
@@ -258,9 +262,9 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
                             setIsPasswordVisible(!isPasswordVisible)
                           }>
                           {isPasswordVisible ? (
-                            <Ionicons name="eye" style={styles.eyeIcon} />
+                            <Ionicons name="eye" style={[styles.eyeIcon, {color: color.text}]} />
                           ) : (
-                            <Ionicons name="eye-off" style={styles.eyeIcon} />
+                            <Ionicons name="eye-off" style={[styles.eyeIcon, {color: color.text}]} />
                           )}
                         </TouchableOpacity>
                       </View>
@@ -320,7 +324,7 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
                   style={[
                     { fontSize: 17 },
                     { marginBottom: -20 },
-                    { color: '#2A475E' },
+                    { color: color.text },
                   ]}>
                   {translate('Login_or')}
                 </Text>
@@ -350,7 +354,7 @@ const LoginScreen = ({ navigation }: CombinedScreenProps) => {
               <View
                 className="flex-row justify-center my-5"
                 style={{ bottom: 40 }}>
-                <Text className="text-base mr-1" style={{ color: '#2A475E' }}>
+                <Text className="text-base mr-1" style={{ color: color.text }}>
                   {translate('DONT_HAVE_ACCOUNT')}
                 </Text>
 
