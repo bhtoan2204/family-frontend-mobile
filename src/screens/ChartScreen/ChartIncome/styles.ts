@@ -328,9 +328,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   monthPickerContainer: {
-    width: '100%',
     alignItems: 'center',
-    paddingVertical: 10,
   },
   monthContainer: {
     borderRadius: 10,

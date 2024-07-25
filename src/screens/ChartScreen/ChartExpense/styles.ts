@@ -300,7 +300,6 @@ const styles = StyleSheet.create({
   },
   chartLineContainer: {
     bottom: 30,
-    backgroundColor: 'white',
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 30,
