@@ -422,6 +422,9 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           }}>
           {translate('AssetDetail1')}
         </Text>
+        <Text style={{color: color.textSubdued, fontSize: 14}}>
+          {translate('AssetDetail')}
+        </Text>
       </View>
       <Image
         source={require('../../assets/images/asset-bg.png')}
@@ -440,8 +443,8 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         }
         style={{
           position: 'absolute',
-          right: 160,
-          bottom: 130,
+          right: 105,
+          bottom: 160,
           width: 210,
           height: 210,
           alignItems: 'center',
@@ -451,10 +454,8 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           source={require('../../assets/images/asset-car.png')}
           style={{
             position: 'absolute',
-            top: 60,
-            width: '100%',
-            height: '100%',
-            right: 30,
+            width: 340,
+            height: 340,
             transform: [{scale: scaleAnim}],
           }}
           resizeMode="contain"
