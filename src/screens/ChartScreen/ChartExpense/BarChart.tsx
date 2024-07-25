@@ -1,16 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, Dimensions, Platform } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  Image,
+  StyleSheet,
+  Dimensions,
+  Platform,
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useDispatch, useSelector } from 'react-redux';
-import {  getDate, selectExpenses, setExpenses, setSelectedExpense } from 'src/redux/slices/ExpenseAnalysis';
-import { ExpenseServices } from 'src/services/apiclient';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  getDate,
+  selectExpenses,
+  setExpenses,
+  setSelectedExpense,
+} from 'src/redux/slices/ExpenseAnalysis';
+import {ExpenseServices} from 'src/services/apiclient';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
-import { COLORS } from 'src/constants';
-import { DailyExpense } from 'src/interface/expense/DailyExpense';
-import { getTranslate } from 'src/redux/slices/languageSlice';
-import { useThemeColors } from 'src/hooks/useThemeColor';
+import {COLORS} from 'src/constants';
+import {DailyExpense} from 'src/interface/expense/DailyExpense';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
 const screenHeight = Dimensions.get('screen').height;
 
 interface BarChartScreenProps {
@@ -18,13 +32,16 @@ interface BarChartScreenProps {
   navigation: any;
 }
 
-const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }) => {
+const BarChartScreen: React.FC<BarChartScreenProps> = ({
+  id_family,
+  navigation,
+}) => {
   const date = useSelector(getDate);
   const [selectedDate, setSelectedDate] = useState<string>(date);
   const barChartData = useSelector(selectExpenses);
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
-  const color = useThemeColors();  
+  const color = useThemeColors();
 
   useEffect(() => {
     fetchData(selectedDate, id_family);
@@ -32,7 +49,10 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }
 
   const fetchData = async (date: string, id_family: number) => {
     try {
-      const response = await ExpenseServices.getExpenseByDate(selectedDate, id_family);
+      const response = await ExpenseServices.getExpenseByDate(
+        selectedDate,
+        id_family,
+      );
       if (response) {
         dispatch(setExpenses(response));
       }
@@ -49,44 +69,60 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }
     fetchData(currentDate, id_family);
   };
 
- 
-
   const handlePressExpenseItem = async (item: DailyExpense) => {
     await dispatch(setSelectedExpense(item));
     navigation.navigate('ExpenseDetailScreen');
   };
 
   const formatCurrency = (amount: any) => {
-    return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
   };
 
   const formatDate = (isoDateTime: string) => {
     return moment(isoDateTime).format('DD/MM/YYYY HH:mm');
   };
 
-  const renderItem = ({ item, index }: { item: DailyExpense; index: number }) => (
-    <TouchableOpacity onPress={() => handlePressExpenseItem(item)} style={[styles.expenseItem,{backgroundColor: color.white}]}>
+  const renderItem = ({item, index}: {item: DailyExpense; index: number}) => (
+    <TouchableOpacity
+      onPress={() => handlePressExpenseItem(item)}
+      style={[styles.expenseItem, {backgroundColor: color.white}]}>
       <View style={[styles.itemContainer, {backgroundColor: color.white}]}>
         <View style={styles.expenseContent}>
           <View>
-          {item.financeExpenditureType ? 
-              <Text style={[styles.expenseCategory, {color: color.text}]}>{item.financeExpenditureType.expense_type_name}</Text> : 
-              <Text style={[styles.expenseCategory, {color: color.text}]}>Other</Text>
-            }
+            {item.financeExpenditureType ? (
+              <Text style={[styles.expenseCategory, {color: color.text}]}>
+                {item.financeExpenditureType.expense_type_name}
+              </Text>
+            ) : (
+              <Text style={[styles.expenseCategory, {color: color.text}]}>
+                Other
+              </Text>
+            )}
             <View style={styles.row}>
-              <Text style={{ color: color.textSubdued }}>{translate('Create by')}: </Text>
+              <Text style={{color: color.textSubdued}}>
+                {translate('Create by')}:{' '}
+              </Text>
               {item.users && (
-              <Text style={[styles.expenseName, ]}>{item.users.firstname} {item.users.lastname}</Text>
+                <Text style={[styles.expenseName]}>
+                  {item.users.firstname} {item.users.lastname}
+                </Text>
               )}
             </View>
-            <Text style={[styles.expenseDescription, {color: color.textSubdued}]}>{item.description}</Text>
+            <Text
+              style={[styles.expenseDescription, {color: color.textSubdued}]}>
+              {item.description}
+            </Text>
           </View>
-          <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
+          <View style={{justifyContent: 'center', flexDirection: 'row'}}>
             <View style={styles.rowInfo}>
-              <Text style={styles.expenseAmount}>-{formatCurrency(item.amount)}</Text>
-              <Text style={[styles.expenseDate, {color: color.textSubdued}]}>{formatDate(item.expenditure_date)}</Text>
+              <Text style={styles.expenseAmount}>
+                -{formatCurrency(item.amount)}
+              </Text>
+              <Text style={[styles.expenseDate, {color: color.textSubdued}]}>
+                {formatDate(item.expenditure_date)}
+              </Text>
             </View>
-            <View style={{ justifyContent: 'center' }}>
+            <View style={{justifyContent: 'center'}}>
               <Icon name="chevron-forward" size={20} color={color.text} />
             </View>
           </View>
@@ -96,35 +132,44 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({ id_family, navigation }
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1}}>
       <View style={styles.datePickerContainer}>
         <DateTimePicker
           value={new Date(selectedDate)}
           mode="date"
           display="default"
-          textColor="white" 
+          textColor="white"
           onChange={handleDateChange}
-          style={{ backgroundColor: COLORS.DenimBlue,  borderRadius: 10,}}
+          style={{
+            borderRadius: 10,
+            alignSelf: 'center',
+            right: 5,
+            top: 1,
+          }}
         />
       </View>
       {barChartData.length > 0 ? (
-        <View style={[styles.DataContainer, {backgroundColor: color.background}]}>
-        <FlatList
-          data={barChartData}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={{ paddingBottom: 700 }}
-        />
+        <View
+          style={[styles.DataContainer, {backgroundColor: color.background}]}>
+          <FlatList
+            data={barChartData}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={{paddingBottom: 700}}
+          />
         </View>
       ) : (
-        <View style={[styles.noDataContainer, {backgroundColor: color.background}]}>
+        <View
+          style={[styles.noDataContainer, {backgroundColor: color.background}]}>
           <Image
             source={require('src/assets/icons/search.png')}
             resizeMode="stretch"
             style={styles.noDataImage}
           />
-          <Text style={styles.noDataText}>No data</Text>
-          <Text style={styles.noDataDescription}>No data available</Text>
+          <Text style={[styles.noDataText, {color: color.text}]}>No data</Text>
+          <Text style={[styles.noDataDescription, {color: color.textSubdued}]}>
+            No data available
+          </Text>
         </View>
       )}
     </View>
@@ -189,7 +234,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     borderRadius: 10,
     backgroundColor: COLORS.DenimBlue,
-    width: '30%',
+    width: '25%',
     height: 40,
     shadowColor: '#000',
     shadowOffset: {
@@ -251,9 +296,9 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
     flexDirection: 'column',
-    height: screenHeight*0.8,
+    height: screenHeight * 0.8,
     paddingTop: 40,
-  }
+  },
 });
 
 export default BarChartScreen;

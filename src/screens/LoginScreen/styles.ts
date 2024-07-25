@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
   },
   Icon: {
     fontSize: screenHeight * 0.03,
-    color: COLORS.Rhino,
   },
   button: {
     marginTop: screenHeight * 0.02,
@@ -83,7 +82,6 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     fontSize: screenHeight * 0.05,
-    color: COLORS.Rhino,
     padding: screenHeight * 0.02,
   },
 });
