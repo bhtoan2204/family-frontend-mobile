@@ -42,6 +42,8 @@ import { setFamilyServices } from 'src/redux/slices/ServiceSlice';
 import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
 import SharedGuildlineItem from 'src/components/user/guideline/shared/shared-guideline-item';
 import { Guildline } from 'src/interface/guideline/guideline';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const icons = {
   bundle,
@@ -363,10 +365,15 @@ const HomeScreen = ({
       },
     },
   ];
+  const isDarkMode = useSelector(getIsDarkMode)
+  const color = useThemeColors();
+  const background = !isDarkMode 
+    ? require('../../assets/images/home-screen-light.png') 
+    : require('../../assets/images/home-screen-dark.png') 
 
   return (
     <ImageBackground
-      source={require('../../assets/images/home-screen-light.png')}
+      source={background}
       style={{ flex: 1 }}
       resizeMode="stretch">
       <SafeAreaView style={{ flex: 1, padding: 10 }}>
@@ -381,10 +388,10 @@ const HomeScreen = ({
               marginTop: 40,
             }}>
             <View style={{ flexDirection: 'column', paddingLeft: 20 }}>
-              <Text style={{ color: COLORS.white, fontSize: 30 }}>{translate('welcome')}</Text>
+              <Text style={{ color: color.text, fontSize: 30 }}>{translate('welcome')}</Text>
               <Text
                 style={{
-                  color: COLORS.white,
+                  color: color.text,
                   fontSize: 38,
                   fontWeight: 'bold',
                   marginBottom: 8,
@@ -463,7 +470,7 @@ const HomeScreen = ({
                       ))}
                     </View>
                     <View style={{ flexDirection: 'column' }}>
-                      <Text style={styles.title}>Let's Start with Service</Text>
+                      <Text style={[styles.title, {color: color.text}]}>Let's Start with Service</Text>
                       <View style={{ flexDirection: 'row' }}></View>
                     </View>
                   </>
@@ -484,7 +491,7 @@ const HomeScreen = ({
                         aspectRatio: 1,
                         padding: 10,
                         borderRadius: 20,
-                        backgroundColor: '#fff',
+                        backgroundColor: color.white,
                         alignItems: 'center',
                         justifyContent: 'center',
                         shadowColor: '#000',
@@ -496,7 +503,7 @@ const HomeScreen = ({
                       }}>
                       <Image
                         source={icons[item.icon]}
-                        style={{ width: '60%', height: '60%' }}
+                        style={{ width: '60%', height: '60%', }}
                         resizeMode="stretch"
                       />
                       {(item.icon === 'feedback' || item.icon === 'chat') && (
@@ -515,7 +522,7 @@ const HomeScreen = ({
                     <Text
                       style={{
                         marginVertical: 10,
-                        color: '#1b2838',
+                        color: color.text,
                         fontWeight: 600,
                       }}>
                       {item.label}
