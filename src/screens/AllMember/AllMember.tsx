@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,19 +9,23 @@ import {
   FlatList,
   Image,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { AllMemberScreenProps } from 'src/navigation/NavigationTypes';
-import { selectFamilyMembers, setSelectedFamilyById, setSelectedMemberById } from 'src/redux/slices/FamilySlice';
+import {AllMemberScreenProps} from 'src/navigation/NavigationTypes';
+import {
+  selectFamilyMembers,
+  setSelectedFamilyById,
+  setSelectedMemberById,
+} from 'src/redux/slices/FamilySlice';
 import styles from './styles';
-import { Member } from 'src/interface/member/member';
+import {Member} from 'src/interface/member/member';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
-import { useThemeColors } from 'src/hooks/useThemeColor';
+import {MaterialCommunityIcons} from '@expo/vector-icons';
+import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
 
-const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
-  const { id_family } = route.params || {};
+const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
+  const {id_family} = route.params || {};
   const members = useSelector(selectFamilyMembers);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const dispatch = useDispatch();
@@ -31,7 +35,7 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
 
   const handleAddMember = () => {
     const phone = undefined;
-    navigation.navigate('AddEditFamilyMember', { id_family, phone });
+    navigation.navigate('AddEditFamilyMember', {id_family, phone});
   };
 
   const handlePressMember = async (member: Member) => {
@@ -39,67 +43,180 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
     navigation.navigate('MemberDetails');
   };
 
-
-  // const filteredMembers = members
-  //   ? members.filter(
-  //       (member) =>
-  //         member.user.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //         member.user.lastname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //         member.user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //         member.user.phone.includes(searchQuery)
-  //     )
-  //   : [];
-
   return (
     <ImageBackground
       source={require('../../assets/images/view-all-member.png')}
-      style={{ flex: 1 }}
+      style={{flex: 1}}
       resizeMode="stretch">
-      <SafeAreaView style={{ flex: 1}}>
-        <View style={{ flex: 1 }}>
-          <View style={{ top: 250, backgroundColor: color.background, padding: 20, borderTopLeftRadius: 60, borderTopRightRadius: 60, width: '100%', alignSelf: 'center', flexDirection: 'column' }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', zIndex: 1, alignItems: 'center', marginBottom: -10 }}>
-              <View style={[styles.headerSearch, { bottom: 40, backgroundColor: 'white', width: '60%', alignSelf: 'center', borderRadius: 12, padding: 3, height: 40, marginLeft: 40 }]}>
-                <FeatherIcon color="black" name="search" size={17} style={{ padding: 10 }} />
+      <SafeAreaView style={{flex: 1}}>
+        <View style={{flex: 1}}>
+          <View
+            style={{
+              top: 250,
+              backgroundColor: color.background,
+              padding: 20,
+              borderTopLeftRadius: 40,
+              borderTopRightRadius: 40,
+              width: '100%',
+              height: '100%',
+              alignSelf: 'center',
+              flexDirection: 'column',
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                zIndex: 1,
+                alignItems: 'center',
+                marginBottom: -10,
+              }}>
+              <View
+                style={[
+                  styles.headerSearch,
+                  {
+                    bottom: 40,
+                    backgroundColor: color.card,
+                    width: '60%',
+                    alignSelf: 'center',
+                    borderRadius: 12,
+                    padding: 3,
+                    height: 40,
+                    marginLeft: 40,
+                  },
+                ]}>
+                <FeatherIcon
+                  color={color.textSubdued}
+                  name="search"
+                  size={17}
+                  style={{padding: 10}}
+                />
                 <TextInput
                   autoCapitalize="none"
                   autoComplete="off"
                   placeholder={translate('SEARCH')}
                   placeholderTextColor="gray"
-                  style={styles.headerSearchInput}
-                  onChangeText={(text) => setSearchQuery(text)}
+                  style={[styles.headerSearchInput, {color: color.textSubdued}]}
+                  onChangeText={text => setSearchQuery(text)}
                   value={searchQuery}
                 />
               </View>
-              <View style={{ bottom: 40, backgroundColor: 'white', height: 40, width: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 12, padding: 3, marginRight: 40 }}>
+              <View
+                style={{
+                  bottom: 40,
+                  backgroundColor: color.card,
+                  height: 40,
+                  width: 40,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 12,
+                  padding: 3,
+                  marginRight: 40,
+                }}>
                 <TouchableOpacity onPress={handleAddMember}>
-                  <FeatherIcon name="plus" size={24} style={{ color: 'black' }} />
+                  <FeatherIcon
+                    name="plus"
+                    size={24}
+                    style={{color: color.icon}}
+                  />
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={{ backgroundColor: color.background }}>
+            <View style={{backgroundColor: color.background}}>
               <FlatList
                 data={members}
-                renderItem={({ item: member }) => (
-                  <View style={{ padding: 11, paddingHorizontal: 0 }}>
-                    <TouchableOpacity onPress={() => handlePressMember(member)} style={[styles.card, {backgroundColor: color.white}]}>
+                renderItem={({item: member}) => (
+                  <View style={{padding: 11, paddingHorizontal: 0}}>
+                    <TouchableOpacity
+                      onPress={() => handlePressMember(member)}
+                      style={[styles.card, {backgroundColor: color.white}]}>
                       <View style={styles.iconContainer}>
-                        <View style={{ justifyContent: 'space-between', alignSelf: 'center', padding: 10, marginHorizontal: 5 }}>
-                          <Image source={{ uri: member.user.avatar }} style={styles.avatar} />
+                        <View
+                          style={{
+                            justifyContent: 'space-between',
+                            alignSelf: 'center',
+                            padding: 10,
+                            marginHorizontal: 5,
+                          }}>
+                          <Image
+                            source={{uri: member.user.avatar}}
+                            style={styles.avatar}
+                          />
                         </View>
                         <View style={styles.InforContainer}>
-                          <Text style={styles.RoleText}>{ local=='vi' ? member.familyRoles.role_name_vn:  member.familyRoles.role_name_en}</Text>
-                          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'center', width: '70%' }}>
-                            <MaterialIcons name="person" style={{ fontSize: 20, color:color.text , marginRight: 5 }} />
-                            <Text style={[styles.nameText, {color: color.text}]}>{member.user.firstname} {member.user.lastname}</Text>
+                          <Text style={styles.RoleText}>
+                            {local == 'vi'
+                              ? member.familyRoles.role_name_vn
+                              : member.familyRoles.role_name_en}
+                          </Text>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              justifyContent: 'flex-start',
+                              alignContent: 'center',
+                              width: '70%',
+                            }}>
+                            <MaterialIcons
+                              name="person"
+                              style={{
+                                fontSize: 20,
+                                color: color.text,
+                                marginRight: 5,
+                              }}
+                            />
+                            <Text
+                              style={[styles.nameText, {color: color.text}]}>
+                              {member.user.firstname} {member.user.lastname}
+                            </Text>
                           </View>
-                          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', width: '70%' }}>
-                            <MaterialCommunityIcons name="email-outline" style={{ fontSize: 16, color:color.text , marginRight: 5 }} />
-                            <Text style={[styles.cardText, {color: color.textSubdued}]} numberOfLines={1} ellipsizeMode="tail">{member.user.email}</Text>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                              alignContent: 'center',
+                              width: '70%',
+                            }}>
+                            <MaterialCommunityIcons
+                              name="email-outline"
+                              style={{
+                                fontSize: 16,
+                                color: color.text,
+                                marginRight: 5,
+                              }}
+                            />
+                            <Text
+                              style={[
+                                styles.cardText,
+                                {color: color.textSubdued},
+                              ]}
+                              numberOfLines={1}
+                              ellipsizeMode="tail">
+                              {member.user.email}
+                            </Text>
                           </View>
-                          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', width: '70%' }}>
-                            <MaterialCommunityIcons name="phone-outline" style={{ fontSize: 16, color:color.text , marginRight: 5 }} />
-                            <Text style={[styles.cardText, {color: color.textSubdued}]} numberOfLines={1} ellipsizeMode="tail">{member.user.phone}</Text>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                              alignContent: 'center',
+                              width: '70%',
+                            }}>
+                            <MaterialCommunityIcons
+                              name="phone-outline"
+                              style={{
+                                fontSize: 16,
+                                color: color.text,
+                                marginRight: 5,
+                              }}
+                            />
+                            <Text
+                              style={[
+                                styles.cardText,
+                                {color: color.textSubdued},
+                              ]}
+                              numberOfLines={1}
+                              ellipsizeMode="tail">
+                              {member.user.phone}
+                            </Text>
                           </View>
                         </View>
                       </View>
@@ -107,7 +224,7 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
                   </View>
                 )}
                 keyExtractor={(item, index) => index.toString()}
-                ListFooterComponent={<View style={{ height: 250 }} />}
+                ListFooterComponent={<View style={{height: 250}} />}
                 showsVerticalScrollIndicator={false}
               />
             </View>
@@ -119,5 +236,3 @@ const ViewAllMemberScreen = ({ navigation, route }: AllMemberScreenProps) => {
 };
 
 export default ViewAllMemberScreen;
-
-

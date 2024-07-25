@@ -48,7 +48,6 @@ const styles = StyleSheet.create({
     width: '100%',
     fontSize: 16,
     fontWeight: '500',
-    color: 'white',
   },
   container: {
     padding: 0,
@@ -94,9 +93,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 10,
     marginHorizontal: 10,
-    shadowColor: 'gray',
-    shadowOffset: {width: 1, height: 2},
-    shadowOpacity: 0.25,
+    // shadowColor: 'gray',
+    // shadowOffset: {width: 1, height: 2},
+    // shadowOpacity: 0.25,
   },
   nameText: {
     color: '#1b2838',

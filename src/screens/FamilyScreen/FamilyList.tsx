@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Modal,
   Text,
@@ -9,22 +9,17 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
-import { COLORS } from 'src/constants';
-import { useThemeColors } from 'src/hooks/useThemeColor';
-import { Family } from 'src/interface/family/family';
-import { Member } from 'src/interface/member/member';
-import { selectAllFamilyMembers } from 'src/redux/slices/FamilySlice';
-import { getTranslate } from 'src/redux/slices/languageSlice';
+import {useSelector} from 'react-redux';
+import {COLORS} from 'src/constants';
+import {useThemeColors} from 'src/hooks/useThemeColor';
+import {Family} from 'src/interface/family/family';
+import {Member} from 'src/interface/member/member';
+import {selectAllFamilyMembers} from 'src/redux/slices/FamilySlice';
+import {getTranslate} from 'src/redux/slices/languageSlice';
 
-const FamilyListModal = ({
-  visible,
-  onClose,
-  families,
-  selectedFamily,
-}) => {
+const FamilyListModal = ({visible, onClose, families, selectedFamily}) => {
   const [familySelect, setFamilySelect] = useState<any>(selectedFamily);
   const members = useSelector(selectAllFamilyMembers);
   const translate = useSelector(getTranslate);
@@ -52,16 +47,23 @@ const FamilyListModal = ({
       animationType="fade"
       transparent={true}
       visible={visible}
-      onRequestClose={handleBackdropPress}
-    >
+      onRequestClose={handleBackdropPress}>
       <TouchableWithoutFeedback onPress={handleBackdropPress}>
         <View style={modalStyles.modalOverlay}>
           <TouchableWithoutFeedback>
-            <View style={[modalStyles.modalContent, {backgroundColor: color.background}]}>
+            <View
+              style={[
+                modalStyles.modalContent,
+                {backgroundColor: color.background},
+              ]}>
               <View style={modalStyles.header}>
-                <Text style={[modalStyles.headerText, {color: color.text}]}>{translate('Select Family')}</Text>
-                <TouchableOpacity onPress={handleBackdropPress} style={modalStyles.closeButton}>
-                  <Icon name="close" size={24} color={color.text}/>
+                <Text style={[modalStyles.headerText, {color: color.text}]}>
+                  {translate('Select Family')}
+                </Text>
+                <TouchableOpacity
+                  onPress={handleBackdropPress}
+                  style={modalStyles.closeButton}>
+                  <Icon name="close" size={24} color={color.text} />
                 </TouchableOpacity>
               </View>
               <ScrollView>
@@ -70,41 +72,53 @@ const FamilyListModal = ({
                     key={family.id_family}
                     onPress={() => handleSelectFamily(family)}
                     style={[
-                      modalStyles.familyItem, {backgroundColor: color.white},
+                      modalStyles.familyItem,
+                      {backgroundColor: color.white},
                       familySelect?.id_family === family.id_family
                         ? [
                             modalStyles.selectedFamilyItem,
                             index === 0 ? modalStyles.firstItemSelected : {},
                           ]
                         : {},
-                    ]}
-                  >
-                    <View style={[modalStyles.familyItemContainer,  {backgroundColor: color.white}]}>
+                    ]}>
+                    <View
+                      style={[
+                        modalStyles.familyItemContainer,
+                        {backgroundColor: color.background},
+                      ]}>
                       <View style={modalStyles.familyInfo}>
                         <Image
                           source={
                             family.avatar
-                              ? { uri: family.avatar }
+                              ? {uri: family.avatar}
                               : require('../../assets/images/big-family_4441180.png')
                           }
                           style={modalStyles.avatarFamily}
                         />
-                        <Text style={[modalStyles.familyItemText, {color: color.text}]}>
+                        <Text
+                          style={[
+                            modalStyles.familyItemText,
+                            {color: color.text},
+                          ]}>
                           {family.name}
                         </Text>
                       </View>
                       <View style={modalStyles.membersList}>
-                      {members[family.id_family] ? (
+                        {members[family.id_family] ? (
                           <>
                             <View style={modalStyles.membersList}>
-                              {members[family.id_family].slice(0, 3).map((member: any) => (
-                                <View key={member.id_user} style={modalStyles.memberItemContainer}>
-                                  <Image
-                                    source={{ uri: member.user.avatar }}
-                                    style={modalStyles.avatar}
-                                  />
-                                </View>
-                              ))}
+                              {members[family.id_family]
+                                .slice(0, 3)
+                                .map((member: any) => (
+                                  <View
+                                    key={member.id_user}
+                                    style={modalStyles.memberItemContainer}>
+                                    <Image
+                                      source={{uri: member.user.avatar}}
+                                      style={modalStyles.avatar}
+                                    />
+                                  </View>
+                                ))}
                             </View>
                             {members[family.id_family].length > 3 && (
                               <View style={modalStyles.extraMembers}>
@@ -117,19 +131,11 @@ const FamilyListModal = ({
                         ) : (
                           <Text>{translate('No members found')}</Text>
                         )}
-
-
                       </View>
                     </View>
                   </TouchableOpacity>
                 ))}
               </ScrollView>
-              {/* <TouchableOpacity
-                style={modalStyles.confirmButton}
-                onPress={handleConfirmSelection}
-              >
-                <Text style={modalStyles.confirmButtonText}>{translate('Select Family')}</Text>
-              </TouchableOpacity> */}
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -170,7 +176,7 @@ const modalStyles = StyleSheet.create({
   },
   familyItem: {
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: '#8d94a5',
   },
   familyItemContainer: {
     flexDirection: 'column',
