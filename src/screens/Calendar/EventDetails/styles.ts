@@ -5,7 +5,6 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       paddingHorizontal: 20,
-      paddingTop: 20,
       backgroundColor: '#fff',
     },
     scrollContainer: {
@@ -55,6 +54,7 @@ const styles = StyleSheet.create({
     textDelete: {
         color: 'red',
         fontSize: 17,
+        fontWeight: 'bold'
     },
     headerText: {
         fontSize: 18,

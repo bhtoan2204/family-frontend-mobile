@@ -7,6 +7,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './StyleCustom';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { TEXTS } from 'src/constants';
 
 const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
   const [number, setNumber] = useState<number>(1);
@@ -19,7 +22,7 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
   const dispatch = useDispatch();
   const [isNumberPickerVisible, setIsNumberPickerVisible] = useState(false);
   const translate = useSelector(getTranslate);
-
+  const color = useThemeColors();
   const numbers = Array.from({ length: 999 }, (_, i) => i + 1);
 
   const optionRepeat = [
@@ -51,7 +54,7 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
   const renderCustomOptions = () => {
     if (unit === 'weekly') {
       return (
-        <View style={styles.weeklyContainer}>
+        <View style={[styles.weeklyContainer, {backgroundColor: color.white}]}>
           {customOptions.map((option, index) => (
             <TouchableOpacity
               key={index}
@@ -59,7 +62,7 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
               style={styles.weeklyDay}
             >
               <View style={styles.checkContainer}>
-                <Text style={styles.weeklyDayText}>{option}</Text>
+                <Text style={[styles.weeklyDayText, {color: color.text}]}>{option}</Text>
                 {selectedDays.includes(option) && (
                   <Icon name="check" size={20} color="green" style={styles.checkIcon} />
                 )}
@@ -70,7 +73,7 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
       );
     } else if (unit === 'monthly') {
       return (
-        <View style={styles.monthlyContainer}>
+        <View style={[styles.monthlyContainer,{backgroundColor: color.white} ]}>
           {customOptions.map((option, index) => (
             <TouchableOpacity
               key={index}
@@ -80,14 +83,14 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
                 selectedMonths.includes(option) && styles.selectedDay,
               ]}
             >
-              <Text style={styles.monthlyDay}>{option}</Text>
+              <Text style={[styles.monthlyDay, {color: color.text}]}>{option}</Text>
             </TouchableOpacity>
           ))}
         </View>
       );
     } else if (unit === 'yearly') {
       return (
-        <View style={styles.yearlyContainer}>
+        <View style={[styles.yearlyContainer, {backgroundColor: color.white}]}>
           <View style={styles.yearlyRow}>
             {customOptions.slice(0, 4).map((option, index) => (
               <TouchableOpacity
@@ -98,7 +101,7 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
                   selectedYears.includes(option) && styles.selectedMonth,
                 ]}
               >
-                <Text style={styles.yearlyMonthText}>{option}</Text>
+                <Text style={[styles.yearlyMonthText, {color: color.text}]}>{option}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -112,8 +115,8 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
                   selectedYears.includes(option) && styles.selectedMonth,
                 ]}
               >
-                <Text style={styles.yearlyMonthText}>{option}</Text>
-              </TouchableOpacity>
+                <Text style={[styles.yearlyMonthText, {color: color.text}]}>{option}</Text>
+                </TouchableOpacity>
             ))}
           </View>
           <View style={styles.yearlyRow}>
@@ -126,8 +129,8 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
                   selectedYears.includes(option) && styles.selectedMonth,
                 ]}
               >
-                <Text style={styles.yearlyMonthText}>{option}</Text>
-              </TouchableOpacity>
+                <Text style={[styles.yearlyMonthText, {color: color.text}]}>{option}</Text>
+                </TouchableOpacity>
             ))}
           </View>
         </View>
@@ -199,24 +202,50 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
 
   return (
     <Modal visible={isVisible} transparent={true} animationType="slide">
-      <View style={styles.modalOverlay}>
-        <View style={styles.customModalContainer}>
-          <Text style={styles.modalTitle}>{translate('Custom Repeat')}</Text>
+      <View style={[styles.modalOverlay, {backgroundColor: color.background}]}>
+        <View style={[styles.customModalContainer,{backgroundColor: color.background}]}>
+          <Text style={[styles.modalTitle, {color: color.text}]}>Custom Repeat</Text>
 
-          <View style={styles.container1}>
+          <View style={[styles.container1, {backgroundColor: color.white}]}> 
 
             <View style={[styles.row, { zIndex: 3000, borderBottomWidth: 1, borderColor: '#ccc' }]}>
-              <Text style={styles.label}>{translate('Frequency')}</Text>
+              <Text style={[styles.label, {color: color.text}]}>{translate('Frequency')}</Text>
               <DropDownPicker
                 open={isPickerRepeatOpen}
                 setOpen={setIsPickerRepeatOpen}
                 value={unit}
-                items={optionRepeat}
+                items={optionRepeat.map(item => ({
+                  ...item,
+                  label: translate(item.label),
+                  labelStyle: { color: color.text}
+                }))}
                 setValue={setUnit}
                 placeholder={translate('Daily')}
-                containerStyle={styles.dropDownContainer}
-                style={styles.dropDown}
-                dropDownContainerStyle={styles.dropDownPicker}
+                placeholderStyle={{ color: color.text}}
+                containerStyle={{
+                  height: TEXTS.SCEEN_HEIGHT * 0.05,
+                  width: TEXTS.SCREEN_WIDTH * 0.35,
+                  borderBottomWidth: 1,
+                  borderColor: color.white
+                }}
+                style={{
+                  borderColor: color.white,
+                  borderWidth: 1,
+                  width: TEXTS.SCREEN_WIDTH * 0.35,
+                  backgroundColor: color.white
+                }}
+                dropDownContainerStyle={{
+                  width: TEXTS.SCREEN_WIDTH * 0.35,
+                  borderColor: color.white,
+                  borderWidth: 1,
+                  backgroundColor: color.white,
+                  zIndex: 1000
+                }}
+                ArrowUpIconComponent={({style}) => <Ionicons name="chevron-up" size={24} color={color.text} />}
+                ArrowDownIconComponent={({style}) => <Ionicons name="chevron-down" size={24} color={color.text} />}
+                TickIconComponent={({style}) => <AntDesign name="check" size={24} color={color.text} />}
+                textStyle={{ color: color.text }}
+
                 zIndex={3000}
                 zIndexInverse={3000}
               />
@@ -226,22 +255,22 @@ const CustomRepeatScreen = ({ isVisible, onClose, onSave }) => {
               style={[styles.row, { zIndex: 0 }]}
               onPress={() => setIsNumberPickerVisible(!isNumberPickerVisible)}
             >
-              <Text style={styles.label}>{translate('Every')}</Text>
-              <Text style={styles.label}>{number} {translate(getUnitLabel())}</Text>
+              <Text style={[styles.label, {color: color.text}]}>{translate('Every')}</Text>
+              <Text style={[styles.label, {color: color.text}]}>{number} {translate(getUnitLabel())}</Text>
             </TouchableOpacity>
 
             {isNumberPickerVisible && (
               <View style={styles.pickerContainer}>
                 <Picker
                   selectedValue={number}
-                  style={styles.picker}
+                  style={[styles.picker, {color: color.text}]}
                   onValueChange={(itemValue) => setNumber(itemValue)}
                 >
                   {numbers.map((num) => (
-                    <Picker.Item key={num} label={num.toString()} value={num} />
+                    <Picker.Item key={num} label={num.toString()} value={num} color={color.text}/>
                   ))}
                 </Picker>
-                <Text style={styles.unitLabel}>{translate(getUnitLabel())}</Text>
+                <Text style={[styles.unitLabel, {color: color.textSubdued}]}>{translate(getUnitLabel())}</Text>
               </View>
             )}
           </View>

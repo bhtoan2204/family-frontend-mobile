@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
-    marginTop: 30, 
   },
   headerfile: {
     flexDirection: 'row',
@@ -66,6 +65,7 @@ const styles = StyleSheet.create({
   containerBtn: {
     flexDirection: 'row',
     padding: 10,
+
   },
   label: {
     fontSize: 17,
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10
+    marginTop: 20,
   },
   column: {
     flexDirection: 'column',
@@ -126,12 +126,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 30,
+    borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderWidth: 1,
-    backgroundColor: '#66c0f4',
-    borderColor: '#66c0f4',
+    backgroundColor: COLORS.Rhino,
+    borderColor: COLORS.Rhino
   },
   btnText: {
     fontSize: 18,

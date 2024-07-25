@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Dimensions, Alert } from 'react-native';
-import { Agenda, AgendaSchedule } from 'react-native-calendars';
+import { Agenda, AgendaSchedule, LocaleConfig} from 'react-native-calendars';
 import { CalendarScreenProps } from 'src/navigation/NavigationTypes';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -19,8 +19,10 @@ import type { Event, EventDetail } from 'src/interface/calendar/Event';
 import moment from 'moment';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import { format, isSameDay as isSameDayFn, isSameMonth, isSameYear } from 'date-fns';
-import { getTranslate } from 'src/redux/slices/languageSlice';
+import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
 import { useThemeColors } from 'src/hooks/useThemeColor';
+import './localeConfig'
+
 
 const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   const { id_family } = route.params || {};
@@ -37,19 +39,28 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   const family = useSelector(selectSelectedFamily);
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
+  const location = useSelector(selectLocale);
+  const [key, setKey] = useState(Date.now());
+
   useEffect(() => {
     fetchEvent();
-    
+
+
   }, []);
 
-  useEffect(() => {
-    setSelectDate(format(new Date(date), 'yyyy-MM-dd'));
+    useEffect(() => { 
+      LocaleConfig.defaultLocale = location;
+      setKey(Date.now());
+    },[location])
     
-  }, [selectDate, allEvent]);
+    useEffect(() => {
+      setSelectDate(format(new Date(date), 'yyyy-MM-dd'));
+      
+    }, [selectDate, allEvent]);
 
-  const cleanRecurrenceRule = (rule: string) => {
-    return rule.replace(/\s+/g, '').replace(/;$/, '');
-  };
+    const cleanRecurrenceRule = (rule: string) => {
+      return rule.replace(/\s+/g, '').replace(/;$/, '');
+    };
 
   const fetchEvent = async () => {
     try {
@@ -194,9 +205,8 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   function formatDate(dateStr: string | number | Date) {
     const date = new Date(dateStr);
     const options = { year: 'numeric', month: 'short' };
-    return date.toLocaleDateString('en-US', options);
+    return date.toLocaleDateString(location==='vi'? 'vi': 'en-US', options);
   }
- 
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.background }}>
@@ -244,8 +254,10 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
             </Text>
           </TouchableOpacity>
         </View>
+        <View style={{flex: 1,backgroundColor: color.background}}>
 
         <Agenda
+          key={key} 
           items={events}
           loadItemsForMonth={loadItemsForMonth}
           renderItem={renderItem}
@@ -259,10 +271,15 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
                 monthTextColor: color.text,
                 dayTextColor: color.text,
                 textSectionTitleColor: color.text, 
-                agendaKnobColor: color.background, 
+                agendaKnobColor: color.white,
+                reservationsBackgroundColor:  color.background,
           }}
+          dayNamesShort={LocaleConfig.locales[location]?.dayNamesShort || []}
+          monthNames={LocaleConfig.locales[location]?.monthNames || []}
         />
       </View>
+      </View>
+
     </SafeAreaView>
   );
 };

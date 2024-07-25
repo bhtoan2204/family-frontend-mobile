@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { EventListScreenProps } from 'src/navigation/NavigationTypes';
 import CalendarServices from 'src/services/apiclient/CalendarService';
-import { AgendaSchedule, CalendarList, CalendarProvider, ExpandableCalendar, TimelineList, CalendarUtils, AgendaEntry } from 'react-native-calendars';
+import { AgendaSchedule, CalendarList, CalendarProvider, ExpandableCalendar, TimelineList, CalendarUtils, AgendaEntry, LocaleConfig } from 'react-native-calendars';
 import { format, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
 import { rrulestr } from 'rrule';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -14,9 +14,9 @@ import { selectAllEvent, selectEvents, selectSelectedDate, setSelectedDate, setS
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PackedEvent } from 'react-native-calendars/src/timeline/EventBlock';
 import { Ionicons } from '@expo/vector-icons';
-import { getTranslate } from 'src/redux/slices/languageSlice';
+import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
 import { useThemeColors } from 'src/hooks/useThemeColor';
-
+import '../localeConfig'
 const EVENT_COLOR = 'white';
 
 const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
@@ -32,6 +32,7 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
   const dispatch = useDispatch();
   const allEvent = useSelector(selectEvents);
   const color = useThemeColors();
+  const location = useSelector(selectLocale);
 
 
   useEffect(() => {
@@ -270,7 +271,8 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
             calendarBackground: color.white,
             monthTextColor: color.text,
             dayTextColor:  color.text,
-        }}
+          }}
+      
         >
           <ExpandableCalendar
                 firstDay={1}
@@ -283,6 +285,8 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
                     monthTextColor: color.text,
                     dayTextColor:  color.text,
                 }}
+                 dayNamesShort={LocaleConfig.locales[location].dayNamesShort}
+                 monthNames={LocaleConfig.locales[location].monthNames}
           />
 
           <TimelineList
@@ -342,6 +346,8 @@ const EventListScreen = ({ route, navigation }: EventListScreenProps) => {
             monthTextColor: color.text,
             dayTextColor:  color.text,
         }}
+        dayNamesShort={LocaleConfig.locales[location].dayNamesShort}
+        monthNames={LocaleConfig.locales[location].monthNames}
         />
       )}
     </View>

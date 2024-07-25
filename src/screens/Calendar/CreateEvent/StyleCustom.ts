@@ -104,7 +104,6 @@ const styles = StyleSheet.create({
       borderColor: '#ccc',
       borderRadius: 10,
       marginTop: 20,
-      backgroundColor: COLORS.white,
     },
     monthlyDay: {
       fontSize: 16,
@@ -113,7 +112,7 @@ const styles = StyleSheet.create({
       marginTop: screenWidth*0.025,
       marginBottom: screenWidth*0.025,
       marginLeft:  screenWidth*0.02,
-
+      
     },
     yearlyContainer: {
       flexDirection: 'column',

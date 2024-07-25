@@ -90,6 +90,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  monthContainer: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+  },
+  monthText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  dayContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+  },
+  dayText: {
+    fontSize: 14,
+    textAlign: 'center',
+    flex: 1,
+  },
 });
 
 export default styles;

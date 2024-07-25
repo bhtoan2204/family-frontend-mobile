@@ -11,12 +11,14 @@ import styles from './styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
     const { id_family } = route.params;
     const event = useSelector(selectSelectedEvent);
     const dispatch = useDispatch();
     const translate = useSelector(getTranslate);
+    const color = useThemeColors();
 
     const onUpdate = () => {
         if (event?.recurrence_rule) {
@@ -140,12 +142,12 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
+        <SafeAreaView style={[styles.container, {backgroundColor: color.background}]}>
+            <View style={[styles.header,  {backgroundColor: color.background}]}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Feather name="arrow-left" size={20} color="black" />
+                    <Feather name="arrow-left" size={20} color={color.text} />
                 </TouchableOpacity>
-                <Text style={styles.headerText}>{translate('Event Detail')}</Text>
+                <Text style={[styles.headerText, {color: color.text}]}>{translate('Event Detail')}</Text>
                 <TouchableOpacity
                     onPress={onUpdate}
                     style={{
@@ -164,20 +166,20 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
                     <Text style={{ marginLeft: 10, fontWeight: '700', color: 'white' }}>{translate('Edit')}</Text>
                 </TouchableOpacity>
             </View>
-            <View style={styles.card}>
-                <Text style={styles.title}>{event.title}</Text>
-                <Text style={styles.description}>{translate('Description')}: {event.description}</Text>
+            <View style={[styles.card, {backgroundColor: color.white}]}>
+                <Text style={[styles.title, {color: color.text}]}>{event.title}</Text>
+                <Text style={[styles.description, {color: color.textSubdued}]}>{translate('Description')}: {event.description}</Text>
                 <View style={styles.locationContainer}>
-                    <Text style={styles.location}>{translate('Location')}:</Text>
-                    <Text style={[styles.description, { fontSize: 16 }]}> {event.location}</Text>
+                    <Text style={[styles.location, {color: color.textSubdued}]}>{translate('Location')}:</Text>
+                    <Text style={[styles.description, { fontSize: 16, color: color.textSubdued }]}> {event.location}</Text>
                 </View>
                 <View style={styles.locationContainer}>
-                    <Text style={styles.location}>{translate('Category')}:</Text>
+                    <Text style={[styles.location, {color: color.textSubdued}]}>{translate('Category')}:</Text>
                     <Text style={{ color: event.color, fontSize: 16 }}> {event.categoryEvent.title}</Text>
                 </View>
             </View>
-            <View style={styles.containerBtnDelete}>
-                <TouchableOpacity style={styles.button} onPress={onDelete}>
+            <View style={[styles.containerBtnDelete, {backgroundColor: color.background}]}>
+                <TouchableOpacity style={[styles.button, {backgroundColor: color.background}]} onPress={onDelete}>
                     <Text style={styles.textDelete}>{translate('Delete event')}</Text>
                 </TouchableOpacity>
             </View>

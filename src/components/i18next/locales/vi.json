@@ -138,7 +138,7 @@
   "An error occurred while deleting the event.": "Đã xảy ra lỗi khi xóa sự kiện.",
   "All day": "Cả ngày",
   "Location": "Địa điểm",
-  "No events for this day": "Không có sự kiện nào cho ngày này",
+  "No events for this day": "Không có sự kiện nào.",
   "Welcome": "Chào mừng",
   "Add event": "Thêm sự kiện",
   "Start time": "Thời gian bắt đầu",
@@ -299,5 +299,34 @@
   "Contact List": "Danh sách liên lạc",
   "No contacts found": "Không tìm thấy liên lạc",
   "Already on FamFund as": "Đã có trên FamFund với tên",
-  "Change image": "Đổi ảnh gia đình"
+  "Change image": "Đổi ảnh gia đình",
+  "None": "Không",
+  "Never": "Không",
+  "Count": "Đếm",
+  "Add Event": "Thêm sự kiện",
+  "calendar": {
+    "months": [
+      "Tháng 1",
+      "Tháng 2",
+      "Tháng 3",
+      "Tháng 4",
+      "Tháng 5",
+      "Tháng 6",
+      "Tháng 7",
+      "Tháng 8",
+      "Tháng 9",
+      "Tháng 10",
+      "Tháng 11",
+      "Tháng 12"
+    ],
+    "weekdays": [
+      "CN",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7"
+    ]
+  }
 }

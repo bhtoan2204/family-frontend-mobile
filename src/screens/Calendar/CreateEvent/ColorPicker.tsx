@@ -7,6 +7,7 @@ import Navigation from 'src/navigation/NavigationContainer';
 import { CategoryEvent } from 'src/interface/calendar/CategoryEvent';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('window').width;
@@ -15,7 +16,8 @@ const ColorPicker = ({ navigation, id_Family, setSelectedColorIndex, selectedCol
   const [availableColors, setAvailableColors] = useState<CategoryEvent[]>([]);
   const dispatch = useDispatch();
   const translate= useSelector(getTranslate);
-  
+  const color = useThemeColors();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -41,25 +43,25 @@ const ColorPicker = ({ navigation, id_Family, setSelectedColorIndex, selectedCol
   const renderColorCircles = () => {
     return availableColors.map((item, index) => (
       <View key={item.id_category_event} style={styles.containerColor}>
-        <TouchableOpacity
-          style={[
-            styles.colorCircle,
-            {
-              backgroundColor: item.color,
-            }
-          ]}
-          onPress={() => handleColorSelect(index, item)}
-        >
-          {selectedColorIndex === index && <View style={styles.selected} />}
-        </TouchableOpacity>
-        <Text style={styles.textHashtag}>#{item.title}</Text>
+          <TouchableOpacity
+            style={[
+              styles.colorCircle,
+              {
+                backgroundColor: item.color,
+              }
+            ]}
+            onPress={() => handleColorSelect(index, item)}
+          >
+            {selectedColorIndex === index && <View style={styles.selected} />}
+          </TouchableOpacity>
+        <Text style={[styles.textHashtag, {color: item.color}]}>#{item.title}</Text>
       </View>
     ));
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{translate('Category')}</Text>
+      <Text style={[styles.title, {color: color.text}]}>{translate('Category')}</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.colorList}>
         {renderColorCircles()}
         <TouchableOpacity style={styles.colorCircle} onPress={handleCreateCategory}>
@@ -73,7 +75,6 @@ const ColorPicker = ({ navigation, id_Family, setSelectedColorIndex, selectedCol
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    marginTop: 20,
   },
   title: {
     fontSize: 18,
@@ -85,11 +86,16 @@ const styles = StyleSheet.create({
   },
   containerColor: {
     paddingRight: 10,
+    alignContent: 'center',
+    alignSelf: 'center',
+    alignItems: 'center'
   },
   textHashtag: {
     marginTop: 5,
     fontSize: 12,
     fontFamily: 'Arial',
+    marginRight: 20,
+
   },
   colorCircle: {
     width: screenWidth * 0.2,

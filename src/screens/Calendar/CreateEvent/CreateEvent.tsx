@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, Alert, Switch, ScrollView  } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Alert, Switch, ScrollView, KeyboardAvoidingView, Platform  } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import { CreateEventScreenProps } from 'src/navigation/NavigationTypes';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ColorPicker from './ColorPicker';
 import { useSelector } from 'react-redux';
@@ -16,6 +16,7 @@ import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import { CategoryEvent } from 'src/interface/calendar/CategoryEvent';
 import { TEXTS } from 'src/constants';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   navigation,
@@ -42,7 +43,8 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(null);
   const [eventCategory, setEventCategory] = useState<CategoryEvent | null> (null)
   const translate = useSelector(getTranslate);
-  
+  const color = useThemeColors();
+
   const handleDecrease = () => {
     setCount(prevCount => Math.max(1, prevCount - 1));
   };
@@ -247,18 +249,26 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   }, [selectedOptionRepeat]);
 
   return (
-    <View style={styles.modalContainer}>
-    <View style={{ backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: color.background }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 60}
+    >
+
+
+    <View style={[styles.modalContainer, {backgroundColor: color.background}]}>
+
+    <View style={{ backgroundColor: color.background, borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
         <View style={styles.row}>
-          <Text style={styles.headerTitle}>{translate('add_new_event')}</Text>
+          <Text style={[styles.headerTitle, {color: color.text}]}>{translate('add_new_event')}</Text>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="close" size={30} style={styles.backButton} />
+            <Icon name="close" size={30} color={color.text} />
           </TouchableOpacity>
         </View>
+
         <View>
-          <Text style={{ color: 'gray', fontSize: 16 }}>{translate('title')}</Text>
+          <Text style={{ color: color.textSubdued, fontSize: 16 }}>{translate('title')}</Text>
           <TextInput
-            style={styles.input1}
+            style={[styles.input1, {backgroundColor: color.background}]}
             placeholder={translate('enter_title')}
             value={title}
             onChangeText={setTitle}
@@ -266,27 +276,27 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
         </View>
       </View>
       <View style={styles.containerEnter}>
-        <View style={{ ...styles.column, backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
+        <View style={{ ...styles.column, backgroundColor: color.background, borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
           <View style={[styles.row, { alignItems: 'center' }]}>
-            <Icon name="location" size={28} color="gray" />
+            <Icon name="location" size={28} color={ color.text } />
           </View>
           <TextInput
-            style={styles.input2}
+            style={[styles.input2, {backgroundColor: color.background}]}
             placeholder={translate('enter_location')}
             value={location}
             onChangeText={setLocation}
           />
         </View>
-        <View style={{ ...styles.column, backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
+        <View style={{ ...styles.column, backgroundColor: color.background, borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
           <View style={[styles.row, { alignItems: 'center' }]}>
             <MaterialCommunityIcons
               name="playlist-edit"
               size={30}
-              style={{ color: 'gray' }}
+              style={{ color: color.text }}
             />
           </View>
           <TextInput
-            style={styles.input2}
+            style={[styles.input2, {backgroundColor: color.background}]}
             placeholder={translate('Enter Description')}
             value={description}
             onChangeText={setDescription}
@@ -295,7 +305,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       </View>
       <View style={styles.datetimeContainer}>
         <View style={styles.allDayConTainer}>
-          <Text style={styles.text}>{translate('all_day')}</Text>
+          <Text style={[styles.text, {color: color.text}]}>{translate('all_day')}</Text>
           <View style={styles.switches}>
             <Switch
               value={isAllDay}
@@ -304,14 +314,14 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
           </View>
         </View>
         <View>
-          <View style={[styles.row, { backgroundColor: '#ffffff', alignItems: 'center' }]}>
+          <View style={[styles.row, { backgroundColor: color.background, alignItems: 'center' }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <MaterialCommunityIcons
                 name="clock-time-four-outline"
                 size={30}
-                style={{ color: 'gray' }}
+                style={{ color:color.text }}
               />
-              <Text style={{ fontSize: 16, color: 'gray' }}>
+              <Text style={{ fontSize: 16, color: color.text}}>
               {translate('start')}
               </Text>
             </View>
@@ -322,14 +332,14 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
               onChange={handleDateChangeStart}
             />
           </View>
-          <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomColor: '#ccc', paddingVertical: 10, alignItems: 'center' }]}>
+          <View style={[styles.row, {  backgroundColor: color.background, borderBottomColor: '#ccc', paddingVertical: 10, alignItems: 'center' }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <MaterialCommunityIcons
                 name="clock-time-four-outline"
                 size={30}
-                style={{ color: 'gray' }}
+                style={{ color:color.text }}
               />
-              <Text style={{ fontSize: 16, color: 'gray' }}>
+              <Text style={{ fontSize: 16, color:color.text }}>
               {translate('end')}
               </Text>
             </View>
@@ -342,62 +352,115 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
           </View>
         </View>
       </View>
-      <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center', zIndex: isPickerRepeatOpen ? 1000 : 1 }]}>
+      <View style={[styles.row, { backgroundColor: color.background, borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center', zIndex: isPickerRepeatOpen ? 1000 : 1 }]}>
         <MaterialCommunityIcons
           name="repeat"
           size={30}
-          style={{ color: 'gray' }}
+          style={{ color: color.text}}
         />
-        <Text style={{ right: 30, fontSize: 16, color: 'gray' }}>
+        <Text style={{ right: 30, fontSize: 16, color: color.text }}>
         {translate('repeat')}
         </Text>
         <DropDownPicker
           open={isPickerRepeatOpen}
           setOpen={setIsPickerRepeatOpen}
           value={selectedOptionRepeat}
-          items={optionRepeat}
+          items={optionRepeat.map(item => ({
+              ...item,
+              labelStyle: { color: color.text},
+              label: translate(item.label),
+            }))}
           setValue={setSelectedOptionRepeat}
-          placeholder="None"
-          containerStyle={{ height: TEXTS.SCEEN_HEIGHT*0.05, width: TEXTS.SCREEN_WIDTH*0.35 ,borderBottomWidth: 1}}
-          style={{ borderColor: 'white', borderWidth: 1, width: TEXTS.SCREEN_WIDTH*0.35 }}
-          dropDownContainerStyle={{width: TEXTS.SCREEN_WIDTH*0.35, borderColor: '#ccc', borderWidth: 1, zIndex: 1000, }}
+          placeholder={translate('None')}
+          placeholderStyle={{ color: color.text}}
+           containerStyle={{
+            height: TEXTS.SCEEN_HEIGHT * 0.05,
+            width: TEXTS.SCREEN_WIDTH * 0.35,
+            borderBottomWidth: 1,
+            borderColor: color.textSubdued
+          }}
+          style={{
+            borderColor: color.background,
+            borderWidth: 1,
+            width: TEXTS.SCREEN_WIDTH * 0.35,
+            backgroundColor: color.background
+          }}
+          dropDownContainerStyle={{
+            width: TEXTS.SCREEN_WIDTH * 0.35,
+            borderColor: color.background,
+            borderWidth: 1,
+            backgroundColor: color.background,
+            zIndex: 1000
+          }}
+           ArrowUpIconComponent={({style}) => <Ionicons name="chevron-up" size={24} color={color.text} />}
+           ArrowDownIconComponent={({style}) => <Ionicons name="chevron-down" size={24} color={color.text} />}
+           TickIconComponent={({style}) => <AntDesign name="check" size={24} color={color.text} />}
+
+          textStyle={{ color: color.text }}
           zIndex={1000}
           zIndexInverse={1000}
-        />
+                />
       </View>
       {selectedOptionRepeat !== 'none' && (
-        <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center', zIndex: isPickerEndRepeatOpen ? 1000 : 1 }]}>
+        <View style={[styles.row, { backgroundColor: color.background, borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center', zIndex: isPickerEndRepeatOpen ? 1000 : 1 }]}>
           <MaterialCommunityIcons
             name="calendar-end"
             size={30}
-            style={{ color: 'gray' }}
+            style={{ color: color.text }}
           />
-          <Text style={{ right: 30, fontSize: 16, color: 'gray' }}>
+          <Text style={{ right: 30, fontSize: 16, color: color.text }}>
           {translate('end_repeat')}
           </Text>
           <DropDownPicker
             open={isPickerEndRepeatOpen}
             setOpen={setIsPickerEndRepeatOpen}
             value={selectedOptionEndRepeat}
-            items={optionEndRepeat}
+            items={optionEndRepeat.map(item => ({
+              ...item,
+              labelStyle: { color: color.text},
+              label: translate(item.label),
+
+            }))}
             setValue={setSelectedOptionEndRepeat}
-            placeholder="Never"
-            containerStyle={{ height: TEXTS.SCEEN_HEIGHT*0.05,  width: TEXTS.SCREEN_WIDTH*0.35 }}
-            style={{ borderColor: 'white', borderWidth: 1 }}
-            dropDownContainerStyle={{ borderColor: '#ccc', borderWidth: 1, zIndex: 1000, width: TEXTS.SCREEN_WIDTH*0.35 }}
+            placeholder={translate('Never')}
+            placeholderStyle={{ color: color.text}}
+            containerStyle={{
+              height: TEXTS.SCEEN_HEIGHT * 0.05,
+              width: TEXTS.SCREEN_WIDTH * 0.35,
+              borderBottomWidth: 1,
+              borderColor: color.background
+            }}
+            style={{
+              borderColor: color.background,
+              borderWidth: 1,
+              width: TEXTS.SCREEN_WIDTH * 0.35,
+              backgroundColor: color.background
+            }}
+            dropDownContainerStyle={{
+              width: TEXTS.SCREEN_WIDTH * 0.35,
+              borderColor: color.background,
+              borderWidth: 1,
+              backgroundColor: color.background,
+              zIndex: 1000
+            }}
+            ArrowUpIconComponent={({style}) => <Ionicons name="chevron-up" size={24} color={color.text} />}
+            ArrowDownIconComponent={({style}) => <Ionicons name="chevron-down" size={24} color={color.text} />}
+            TickIconComponent={({style}) => <AntDesign name="check" size={24} color={color.text} />}
             zIndex={1000}
             zIndexInverse={1000}
+            textStyle={{ color: color.text }}
+
           />
         </View>
       )}
       {selectedOptionEndRepeat === 'date' && (
-        <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center' }]}>
+        <View style={[styles.row, { backgroundColor: color.background, borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center' }]}>
           <MaterialCommunityIcons
             name="calendar-end"
             size={30}
-            style={styles.icon}
+            color = {color.text}
           />
-          <Text style={{ right: 30, fontSize: 16, color: 'gray' }}>End Date</Text>
+          <Text style={{ right: 30, fontSize: 16, color: color.text }}>{translate('End Date')}</Text>
           <DateTimePicker
             value={repeatEndDate}
             mode="date"
@@ -407,13 +470,13 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
         </View>
       )}
      {selectedOptionEndRepeat === 'count' && (
-        <View style={[styles.row, { backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center' }]}>
+        <View style={[styles.row, { backgroundColor: color.background, borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center' }]}>
           <MaterialCommunityIcons
             name="calendar-end"
             size={30}
-            style={styles.icon}
+            color = {color.text}
           />
-          <Text style={{ right: 30, fontSize: 16, color: 'gray' }}>End Count</Text>
+          <Text style={{ right: 30, fontSize: 16, color: color.text }}>{translate('End Count')}</Text>
           <TouchableOpacity onPress={handleDecrease}>
             <MaterialCommunityIcons
               name="minus-circle"
@@ -421,7 +484,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
               style={[styles.icon, { marginRight: 5 }]}
             />
           </TouchableOpacity>
-          <Text>{count}</Text>
+          <Text style={{color: color.text}}>{count}</Text>
           <TouchableOpacity onPress={handleIncrease}>
             <MaterialCommunityIcons
               name="plus-circle"
@@ -444,7 +507,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       <View style={[styles.formAction, { paddingVertical: 10 }]}>
         <TouchableOpacity onPress={handleSubmit}>
           <View style={styles.btn}>
-            <Text style={styles.btnText}>{translate('submit')}</Text>
+            <Text style={styles.btnText}>{translate('add_new_event')}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -456,6 +519,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
         />
       )}
     </View>
+    </KeyboardAvoidingView>
   );
 };
 
