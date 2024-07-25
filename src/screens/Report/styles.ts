@@ -5,7 +5,6 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       padding: 20,
-      backgroundColor: '#fff',
     },
     heading: {
       fontSize: 20,
@@ -70,9 +69,7 @@ const styles = StyleSheet.create({
       fontWeight: '500',
       color: 'green',
       paddingHorizontal: 10,
-      textShadowColor: '#ccc', 
-      textShadowOffset: { width: -1, height: 1 },
-      textShadowRadius: 10,
+      
     },
     animatedTextExpense: {
       position: 'absolute',

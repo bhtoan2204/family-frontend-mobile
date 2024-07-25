@@ -1,19 +1,39 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, Text, TouchableOpacity, Image, Animated, ActivityIndicator} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Animated,
+  ActivityIndicator,
+} from 'react-native';
 import styles from './styles';
 import {ExpenditureScreenProps} from 'src/navigation/NavigationTypes';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS} from 'src/constants';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
-import {getSumExpense, setExpenses, setSelectedOption, setSumExpense} from 'src/redux/slices/ExpenseAnalysis';
-import {getSumIncome, setSelectedOptionIncome, setSumIncome} from 'src/redux/slices/IncomeAnalysis';
+import {
+  getSumExpense,
+  setExpenses,
+  setSelectedOption,
+  setSumExpense,
+} from 'src/redux/slices/ExpenseAnalysis';
+import {
+  getSumIncome,
+  setSelectedOptionIncome,
+  setSumIncome,
+} from 'src/redux/slices/IncomeAnalysis';
 import moment from 'moment';
-import { ExpenseServices, IncomeServices } from 'src/services/apiclient';
-import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
-import { getTranslate } from 'src/redux/slices/languageSlice';
+import {ExpenseServices, IncomeServices} from 'src/services/apiclient';
+import {selectSelectedFamily} from 'src/redux/slices/FamilySlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
+import i18n from 'src/components/i18next/i18n';
+import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 
 const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
+  const appCurrentLocale = useSelector(selectLocale); // Make sure to create and export getLocale selector from your languageSlice
+  const color = useThemeColors();
   const dispatch = useDispatch();
   const family = useSelector(selectSelectedFamily);
   const sumExpense = useSelector(getSumExpense);
@@ -27,22 +47,37 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     date.setDate(date.getDate() - 30);
     return date;
   });
-  useEffect(()=>{
+  useEffect(() => {
     fetchDataExpense();
     fetchDataIncome();
-  },[])
+    // This is a simplified example. You might have a more complex mechanism for listening to language changes.
+    const handleLanguageChange = () => {
+      setCurrentLocale(i18n.locale);
+    };
 
+    // Assume you have some event emitter or global state that notifies about language changes
+    // languageChangeEventEmitter.on('change', handleLanguageChange);
+
+    return () => {
+      // Cleanup listener
+      // languageChangeEventEmitter.off('change', handleLanguageChange);
+    };
+  }, []);
   const fetchDataExpense = async () => {
     setIsLoading(true);
     try {
-      
-        const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
-        const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
-        const response = await ExpenseServices.getExpenseByDateRange(1, 10, family.id_family, formattedDateFrom, formattedDateTo )
-        if(response){
-          dispatch(setSumExpense(response.sum));
-        }
-
+      const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
+      const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
+      const response = await ExpenseServices.getExpenseByDateRange(
+        1,
+        10,
+        family.id_family,
+        formattedDateFrom,
+        formattedDateTo,
+      );
+      if (response) {
+        dispatch(setSumExpense(response.sum));
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -52,11 +87,17 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
   const fetchDataIncome = async () => {
     setIsLoading(true);
     try {
-        const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
-        const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
-      const response = await IncomeServices.getIncomeByDateRange(1, 10, family.id_family,formattedDateFrom, formattedDateTo );
-      if (response){
-        dispatch(setSumIncome(response.sum))
+      const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
+      const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
+      const response = await IncomeServices.getIncomeByDateRange(
+        1,
+        10,
+        family.id_family,
+        formattedDateFrom,
+        formattedDateTo,
+      );
+      if (response) {
+        dispatch(setSumIncome(response.sum));
       }
     } catch (error) {
       console.log(error);
@@ -98,7 +139,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
 
   const [selectedButton, setSelectedButton] = useState('expenseAnalysis');
   const [currentScreen, setCurrentScreen] = useState('expenseAnalysis');
-
+  const [currentLocale, setCurrentLocale] = useState(i18n.locale);
   const handleButtonPress = (
     buttonName:
       | 'expenseAnalysis'
@@ -129,7 +170,11 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           justifyContent: 'center',
         }}>
         <Animated.Image
-          source={require('../../assets/images/bar-chart.png')}
+          source={
+            appCurrentLocale === 'en'
+              ? require('../../assets/images/bar-chart.png')
+              : require('../../assets/images/bar-chart-vn.png') // Assuming you have a Vietnamese version of the image
+          }
           style={{
             width: '100%',
             height: '100%',
@@ -150,7 +195,11 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           justifyContent: 'center',
         }}>
         <Animated.Image
-          source={require('../../assets/images/pie-chart.png')}
+          source={
+            appCurrentLocale === 'en'
+              ? require('../../assets/images/pie-chart.png')
+              : require('../../assets/images/pie-chart-vn.png') // Assuming you have a Vietnamese version of the image
+          }
           style={{
             width: '100%',
             height: '100%',
@@ -171,7 +220,11 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           justifyContent: 'center',
         }}>
         <Animated.Image
-          source={require('../../assets/images/line-chart.png')}
+          source={
+            appCurrentLocale === 'en'
+              ? require('../../assets/images/line-chart.png')
+              : require('../../assets/images/line-chart-vn.png') // Assuming you have a Vietnamese version of the image
+          }
           style={{
             width: '100%',
             height: '100%',
@@ -202,7 +255,11 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           justifyContent: 'center',
         }}>
         <Animated.Image
-          source={require('../../assets/images/income-bar-chart.png')}
+          source={
+            appCurrentLocale === 'en'
+              ? require('../../assets/images/income-bar-chart.png')
+              : require('../../assets/images/income-bar-chart-vn.png') // Assuming you have a Vietnamese version of the image
+          }
           style={{
             width: '100%',
             height: '100%',
@@ -223,7 +280,11 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           justifyContent: 'center',
         }}>
         <Animated.Image
-          source={require('../../assets/images/income-month-chart.png')}
+          source={
+            appCurrentLocale === 'en'
+              ? require('../../assets/images/income-month-chart.png')
+              : require('../../assets/images/income-month-chart-vn.png') // Assuming you have a Vietnamese version of the image
+          }
           style={{
             width: '100%',
             height: '100%',
@@ -244,7 +305,11 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           justifyContent: 'center',
         }}>
         <Animated.Image
-          source={require('../../assets/images/income-line-chart.png')}
+          source={
+            appCurrentLocale === 'en'
+              ? require('../../assets/images/income-line-chart.png')
+              : require('../../assets/images/income-line-chart-vn.png') // Assuming you have a Vietnamese version of the image
+          }
           style={{
             width: '100%',
             height: '100%',
@@ -256,7 +321,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     </View>
   );
   const formatCurrency = (amount: any) => {
-    return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
   };
   useEffect(() => {
     Animated.timing(scaleAnim, {
@@ -281,7 +346,9 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         resizeMode="contain"
       />
       <TouchableOpacity
-        onPress={() => navigation.navigate('ExpenseStack', {screen: 'ExpenseScreen' })}
+        onPress={() =>
+          navigation.navigate('ExpenseStack', {screen: 'ExpenseScreen'})
+        }
         style={{
           position: 'absolute',
           right: 160,
@@ -292,7 +359,11 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           justifyContent: 'center',
         }}>
         <Animated.Image
-          source={require('../../assets/images/expense.png')}
+          source={
+            appCurrentLocale === 'en'
+              ? require('../../assets/images/expense.png')
+              : require('../../assets/images/expense-vn.png') // Assuming you have a Vietnamese version of the image
+          }
           style={{
             width: '100%',
             height: '100%',
@@ -300,18 +371,20 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           }}
           resizeMode="contain"
         />
-          <Animated.Text
-        style={[
-        styles.animatedTextExpense,
-        {
-          transform: [{ scale: scaleAnim }],
-        },
-      ]}>
-      + {formatCurrency(sumExpense)}
-    </Animated.Text>
+        <Animated.Text
+          style={[
+            styles.animatedTextExpense,
+            {
+              transform: [{scale: scaleAnim}],
+            },
+          ]}>
+          - {formatCurrency(sumExpense)}
+        </Animated.Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => navigation.navigate('IncomeStack', { screen: 'IncomeScreen' })}
+        onPress={() =>
+          navigation.navigate('IncomeStack', {screen: 'IncomeScreen'})
+        }
         style={{
           position: 'absolute',
           right: 140,
@@ -322,27 +395,30 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           alignItems: 'center',
         }}>
         <Animated.Image
-          source={require('../../assets/images/income.png')}
+          source={
+            appCurrentLocale === 'en'
+              ? require('../../assets/images/income.png')
+              : require('../../assets/images/income-vn.png') // Assuming you have a Vietnamese version of the image
+          }
           style={{
             width: '100%',
             height: '100%',
-            transform: [{ scale: scaleAnim }],
+            transform: [{scale: scaleAnim}],
           }}
           resizeMode="contain"
         />
-         <Animated.Text
-        style={[
-        styles.animatedTextIncome,
-        {
-          transform: [{ scale: scaleAnim }],
-        },
-      ]}>
-      + {formatCurrency(sumIncome)}
-    </Animated.Text>
+        <Animated.Text
+          style={[
+            styles.animatedTextIncome,
+            {
+              transform: [{scale: scaleAnim}],
+            },
+          ]}>
+          + {formatCurrency(sumIncome)}
+        </Animated.Text>
       </TouchableOpacity>
-
-          </View>
-        );
+    </View>
+  );
 
   const renderAsset = () => (
     // navigation.navigate('ExpenseStack', {screen: 'AssetScreen'});
@@ -356,10 +432,8 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
             width: '80%',
             marginBottom: 15,
           }}>
-          
           {translate('AssetDetail1')}
         </Text>
-
       </View>
       <Image
         source={require('../../assets/images/asset-bg.png')}
@@ -373,7 +447,9 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         resizeMode="contain"
       />
       <TouchableOpacity
-        onPress={() => navigation.navigate('ExpenseStack', {screen: 'AssetScreen' })}
+        onPress={() =>
+          navigation.navigate('ExpenseStack', {screen: 'AssetScreen'})
+        }
         style={{
           position: 'absolute',
           right: 160,
@@ -383,21 +459,20 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-      <Animated.Image
-        source={require('../../assets/images/asset-car.png')}
-        style={{
-          position: 'absolute',
-          top: 60,
-          width: '100%',
-          height: '100%',
-          right: 30,
-          transform: [{scale: scaleAnim}],
-        }}
-        resizeMode="contain"
-      />
+        <Animated.Image
+          source={require('../../assets/images/asset-car.png')}
+          style={{
+            position: 'absolute',
+            top: 60,
+            width: '100%',
+            height: '100%',
+            right: 30,
+            transform: [{scale: scaleAnim}],
+          }}
+          resizeMode="contain"
+        />
       </TouchableOpacity>
     </View>
-
   );
   const renderScreen = () => {
     switch (currentScreen) {
@@ -411,31 +486,6 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         return renderAsset();
     }
   };
-
-  // useEffect(() => {
-  //   Animated.loop(
-  //     Animated.sequence([
-  //       Animated.timing(scaleAnim, {
-  //         toValue: 1.1,
-  //         duration: 1000,
-  //         useNativeDriver: true,
-  //       }),
-  //       Animated.timing(scaleAnim, {
-  //         toValue: 1,
-  //         duration: 1000,
-  //         useNativeDriver: true,
-  //       }),
-  //     ]),
-  //   ).start();
-  // }, [scaleAnim]);
-
-  // useEffect(() => {
-  //   Animated.timing(scaleAnimation, {
-  //     toValue: {x: -100, y: 100},
-  //     duration: 1000,
-  //     useNativeDriver: true,
-  //   }).start();
-  // }, [scaleAnimation]);
 
   useEffect(() => {
     // Animation for scaleAnim remains the same
@@ -475,7 +525,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     ]).start();
   }, [scaleAnim, scaleAnimation]);
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: color.background}}>
       <View style={styles.container}>
         <View
           style={{
@@ -489,7 +539,9 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
               flex: 1,
               alignItems: 'center',
               backgroundColor:
-                selectedButton === 'expenseAnalysis' ? '#4480A2' : '#FFFFFF',
+                selectedButton === 'expenseAnalysis'
+                  ? '#4480A2'
+                  : 'transparent',
               padding: 18,
               borderRadius: 30,
               paddingHorizontal: 30,
@@ -518,7 +570,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
               flex: 1,
               alignItems: 'center',
               backgroundColor:
-                selectedButton === 'incomeAnalysis' ? '#80C694' : '#FFFFFF',
+                selectedButton === 'incomeAnalysis' ? '#80C694' : 'transparent',
               padding: 18,
               borderRadius: 30,
               paddingHorizontal: 30,
@@ -551,7 +603,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
               flex: 1,
               alignItems: 'center',
               backgroundColor:
-                selectedButton === 'expenseIncome' ? '#E77F27' : '#FFFFFF',
+                selectedButton === 'expenseIncome' ? '#E77F27' : 'transparent',
               padding: 18,
               borderRadius: 30,
               shadowColor:
@@ -576,7 +628,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
               flex: 1,
               alignItems: 'center',
               backgroundColor:
-                selectedButton === 'asset' ? '#BD9BCD' : '#FFFFFF',
+                selectedButton === 'asset' ? '#BD9BCD' : 'transparent',
               padding: 18,
               borderRadius: 30,
               shadowColor:
@@ -597,11 +649,12 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         </View>
 
         {isLoading ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color={COLORS.primary} />
-            </View>
-        ):
-         ( renderScreen() )}
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={COLORS.primary} />
+          </View>
+        ) : (
+          renderScreen()
+        )}
       </View>
     </SafeAreaView>
   );
