@@ -36,7 +36,7 @@ import {Family} from 'src/interface/family/family';
 import {Member} from 'src/interface/member/member';
 import * as ImagePicker from 'expo-image-picker';
 import {Service} from 'src/interface/package/mainPackage';
-
+import {useThemeColors} from 'src/hooks/useThemeColor';
 const cards = [
   {
     id: 1,
@@ -83,6 +83,7 @@ const cards = [
 ];
 
 const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
+  const color = useThemeColors();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const bottomSheetRef = useRef<RBSheet>(null);
   const allMemberRef = useRef<RBSheet>(null);
@@ -361,7 +362,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.4)', // Điều chỉnh giá trị alpha (0.5 ở đây) để thay đổi độ tối
+            backgroundColor: 'rgba(0, 0, 0, 0.3)',
           }}
         />
       </View>
@@ -419,12 +420,12 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         style={{
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
-          backgroundColor: '#f7f7f7',
+          backgroundColor: color.background,
           bottom: 20,
         }}>
         <Text
           style={{
-            color: COLORS.Rhino,
+            color: color.text,
             fontWeight: 'bold',
             fontSize: 20,
             alignSelf: 'center',
@@ -451,9 +452,13 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                   <TouchableOpacity
                     key={card.id}
                     onPress={() => handlePress(card.id)}
-                    style={styles.card}>
-                    <Text style={styles.title}>{card.title}</Text>
-                    <Text style={styles.detail}>{card.detail}</Text>
+                    style={[styles.card, {backgroundColor: color.card}]}>
+                    <Text style={[styles.title, {color: color.text}]}>
+                      {card.title}
+                    </Text>
+                    <Text style={[styles.detail, {color: color.textSubdued}]}>
+                      {card.detail}
+                    </Text>
                     <Image source={card.icon} style={styles.icon} />
                   </TouchableOpacity>
                 );

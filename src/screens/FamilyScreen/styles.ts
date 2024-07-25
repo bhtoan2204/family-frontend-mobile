@@ -1,5 +1,5 @@
 import {Dimensions, StyleSheet} from 'react-native';
-import {COLORS} from 'src/constants';
+import { COLORS } from 'src/constants';
 const halfScreenHeight = Dimensions.get('window').height / 1.8;
 
 
@@ -110,7 +110,6 @@ const styles = StyleSheet.create({
   card: {
     width: '48%', // Giả sử mỗi card chiếm khoảng 48% chiều rộng của container để có chút không gian giữa chúng
     height: 130, // Đặt chiều cao cố định cho mỗi card
-    backgroundColor: '#fff',
     marginBottom: 15, // Khoảng cách giữa các hàng
     alignItems: 'flex-start',
     justifyContent: 'center',
@@ -133,7 +132,6 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     marginBottom: 5,
-    color: COLORS.Rhino,
     fontSize: 20,
     position: 'absolute',
     top: 10,
@@ -142,7 +140,6 @@ const styles = StyleSheet.create({
   },
   detail: {
     textAlign: 'left',
-    color: '#B2C2CE', 
     fontSize: 13,
     width: '70%',
     position: 'absolute',
