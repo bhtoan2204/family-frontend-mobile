@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, Image, View } from 'react-native';
+import { Text, Image, View, TextInput } from 'react-native';
 import {
   GestureHandlerRootView,
   ScrollView,
@@ -10,11 +10,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import styles from './styles';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { OrderDetailScreenProps, OrderDetailServiceProps } from 'src/navigation/NavigationTypes';
+import { OrderDetailServiceProps } from 'src/navigation/NavigationTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { Package, Service } from 'src/interface/package/mainPackage';
-import { selectPackage, selectService, setOption } from 'src/redux/slices/PackageSlice';
+import { Service, Package } from 'src/interface/package/mainPackage';
+import { selectCombo, selectOption, selectPackage, selectService, setOption } from 'src/redux/slices/PackageSlice';
 import { getTranslate } from 'src/redux/slices/languageSlice';
 import { useThemeColors } from 'src/hooks/useThemeColor';
 import { PaymentMethod } from 'src/interface/purchased/purchased';
@@ -29,10 +29,14 @@ const OrderDetailService = ({ route, navigation }: OrderDetailServiceProps) => {
     { id: 1, name: 'VNPay', code: 'vnpay', url_image: 'https://cdn-new.topcv.vn/unsafe/150x/https://static.topcv.vn/company_logos/cong-ty-cp-giai-phap-thanh-toan-viet-nam-vnpay-6194ba1fa3d66.jpg' },
   ]);
   let profile = useSelector(selectProfile);
-  let selectedService: Service = useSelector(selectService);
+  const selectedService = useSelector(selectService);
+  const selectedPackage = useSelector(selectPackage);
+  const option = useSelector(selectOption);
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
   const dispatch = useDispatch<AppDispatch>();
+  const Combo = useSelector(selectCombo);
+  const [discountCode, setDiscountCode] = useState(null);
 
   const handleSelectMethod = (
     code: string,
@@ -40,14 +44,11 @@ const OrderDetailService = ({ route, navigation }: OrderDetailServiceProps) => {
     id_package: number,
     amount: number,
   ) => {
-    dispatch(setOption("Service"));
     switch (code) {
       case 'vnpay':
         navigation.navigate('BankInfoScreen', {
-          code,
           id_family,
-          id_package,
-          amount,
+          discountCode
         });
         break;
       case 'zalopay':
@@ -60,6 +61,79 @@ const OrderDetailService = ({ route, navigation }: OrderDetailServiceProps) => {
 
   const formatCurrency = (amount: string) => {
     return parseFloat(amount).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  };
+
+  const renderDetails = () => {
+    switch (option) {
+      case 'Service':
+        return (
+          <>
+            <Text style={[styles.receiptTitle, {color: color.text}]}>
+              {selectedService.name}
+            </Text>
+            <View style={styles.receiptPrice}>
+              <Text style={styles.receiptPriceText}>
+                {formatCurrency(selectedService.price)}
+              </Text>
+            </View>
+            <Text style={[styles.receiptDescription, {color: color.textSubdued}]}>
+              {selectedService.description}
+            </Text>
+          </>
+        );
+      case 'Combo':
+        return (
+          <>
+            <Text style={[styles.receiptTitle, {color: color.text}]}>
+              {Combo?.name}
+            </Text>
+            <View style={styles.receiptPrice}>
+              <Text style={styles.receiptPriceText}>
+                {formatCurrency(Combo.price)}
+              </Text>
+            </View>
+            <Text style={[styles.receiptDescription, {color: color.textSubdued}]}>
+              {Combo?.description}
+            </Text>
+          </>
+        );
+        case 'Packge':
+          return (
+            <>
+              <Text style={[styles.receiptTitle, {color: color.text}]}>
+                {selectedPackage?.name}
+              </Text>
+              <View style={styles.receiptPrice}>
+                <Text style={styles.receiptPriceText}>
+                  {formatCurrency(selectedPackage.price)}
+                </Text>
+              </View>
+              <Text style={[styles.receiptDescription, {color: color.textSubdued}]}>
+                {selectedPackage?.description}
+              </Text>
+            </>
+          );
+      default:
+        return null;
+    }
+  };
+
+  const getSelectedIdAndPrice = () => {
+    if (option === 'Service') {
+      return { id: selectedService.id_extra_package, price: selectedService.price };
+    }
+    if (option === 'Package') {
+      return { id: selectedPackage.id_main_package, price: selectedPackage.price };
+    }
+    if (option === 'Combo') {
+      return { id: Combo?.id_combo_package, price: Combo.price };
+    }
+    return { id: 0, price: 0 };
+  };
+
+  const { id, price } = getSelectedIdAndPrice();
+  const handleApplyDiscount = () => {
+    console.log('Applied discount code:', discountCode);
   };
   return (
     <GestureHandlerRootView style={{ backgroundColor: color.background, height: '100%'}}>
@@ -85,21 +159,7 @@ const OrderDetailService = ({ route, navigation }: OrderDetailServiceProps) => {
             <FeatherIcon color="#fff" name="codepen" size={32} />
           </View>
 
-          <Text style={[styles.receiptTitle, {color: color.text}]}>
-            {selectedService.name}
-          </Text>
-
-          <View style={styles.receiptPrice}>
-            <Text style={styles.receiptPriceText}>
-              {formatCurrency(selectedService.price)}
-            </Text>
-
-      
-          </View>
-
-          <Text style={[styles.receiptDescription, {color: color.textSubdued}]}>
-            {selectedService.description}
-          </Text>
+          {renderDetails()}
 
           <View style={styles.divider}>
             <View style={styles.dividerInset} />
@@ -173,21 +233,34 @@ const OrderDetailService = ({ route, navigation }: OrderDetailServiceProps) => {
               })}
             </View>
           </View>
-        </ScrollView>
-      </SafeAreaView>
+ 
 
-      <View style={[styles.overlay, {backgroundColor: color.background}]}>
+        <View style={styles.divider}>
+              <View style={styles.dividerInset} />
+            </View>
+              <TextInput
+                style={styles.discountInput}
+                placeholder="Enter discount code"
+                value={discountCode}
+                onChangeText={setDiscountCode}
+              />
+
+          <View style={styles.detailsRow}>
+            <Text style={[styles.detailsField, { color: color.text }]}>{translate('Total')}: </Text>
+            <Text style={[styles.detailsValue, { color: color.text }]}>{formatCurrency(price)}</Text>
+          </View>
+        
         <TouchableOpacity
           onPress={() => {
-            console.log('name_method', code);
-            handleSelectMethod(code, id_family, selectedService.id_extra_package, selectedService.price);
+            handleSelectMethod(code, id_family, id, price);
           }}>
           <View style={styles.btn}>
             <Text style={styles.btnText}>{translate('Payment')}</Text>
           </View>
         </TouchableOpacity>
-   
-      </View>
+
+        </ScrollView>
+    </SafeAreaView>
     </GestureHandlerRootView>
   );
 };

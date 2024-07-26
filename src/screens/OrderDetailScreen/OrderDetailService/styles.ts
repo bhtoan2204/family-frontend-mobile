@@ -121,7 +121,20 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     marginTop: -2,
   },
-  /** Details */
+  detailsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', // Đặt khoảng cách giữa các phần tử con
+    alignItems: 'center', // Căn giữa theo chiều dọc
+    marginVertical: 5, // Khoảng cách giữa các hàng
+  },
+  detailsField: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  detailsValue: {
+    fontSize: 16,
+    fontWeight: 'normal',
+  },
   details: {
     width: '100%',
     flexDirection: 'column',
@@ -133,33 +146,7 @@ const styles = StyleSheet.create({
     color: 'gray',
     marginBottom: 16,
   },
-  detailsRow: {
-    marginBottom: 14,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    flexWrap: 'nowrap',
-  },
-  detailsField: {
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: '500',
-    color: '#8c8c8c',
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-  },
-  detailsValue: {
-    fontSize: 15,
-    lineHeight: 20,
-    fontWeight: '600',
-    color: '#444',
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    textAlign: 'right',
-  },
-  /** Button */
+  
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -171,6 +158,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.DenimBlue,
     borderColor: COLORS.DenimBlue,
     marginBottom: 12,
+    width: '100%'
   },
   btnText: {
     fontSize: 18,
@@ -252,6 +240,43 @@ const styles = StyleSheet.create({
   },
   radioPriceActive: {
     color: '#3f63ff',
+  },
+  discountSection: {
+    marginTop: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    elevation: 1, // Để tạo hiệu ứng bóng cho Android
+    shadowColor: '#000', // Để tạo hiệu ứng bóng cho iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  discountInput: {
+    height: 40,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
+    fontSize: 16,
+    width: '100%'
+  },
+  discountButton: {
+    marginTop: 10,
+    backgroundColor: '#007bff',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  discountButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

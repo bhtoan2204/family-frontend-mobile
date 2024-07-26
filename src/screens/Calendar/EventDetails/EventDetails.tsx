@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import { getTranslate } from 'src/redux/slices/languageSlice';
 import { useThemeColors } from 'src/hooks/useThemeColor';
+import { Toast } from 'react-native-toast-notifications';
 
 const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
     const { id_family } = route.params;
@@ -68,11 +69,15 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
                             try {
                                 await CalendarServices.DeleteEvent(event?.id_family, event?.id_calendar);
                                 await dispatch(deleteEvent(event?.id_calendar));
-                                Alert.alert(translate('Success'), translate('Event has been deleted successfully.'));
+                                Toast.show(translate('Event has been deleted successfully.'), {
+                                    type: 'success',
+                                  });
                                 navigation.goBack();
                             } catch (error) {
                                 console.error('Error deleting event:', error);
-                                Alert.alert(translate('Error'), translate('An error occurred while deleting the event.'));
+                                Toast.show( translate('An error occurred while deleting the event.'), {
+                                    type: 'danger',
+                                  });
                             }
                         },
                     },
@@ -110,12 +115,15 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
                                     event.end_timezone
                                 );
                                 dispatch(deleteEventOnly({ id_calendar: event.id_calendar, time_start: event.time_start }));
-                                Alert.alert(translate('Success'), translate('Event has been deleted successfully.'));
+                                Toast.show(translate('Event has been deleted successfully.'), {
+                                    type: 'success',
+                                  });                                
                                 navigation.goBack();
                             } catch (error) {
                                 console.error('Error deleting event:', error);
-                                Alert.alert(translate('Error'), translate('An error occurred while deleting the event.'));
-                            }
+                                Toast.show(translate('An error occurred while deleting the event.'), {
+                                    type: 'danger',
+                                });                            }
                         },
                     },
                     {
@@ -123,12 +131,15 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
                         onPress: async () => {
                             try {
                                 await dispatch(deleteEvent(event.id_calendar));
-                                Alert.alert(translate('Success'), translate('Event has been deleted successfully.'));
+                                Toast.show(translate('Event has been deleted successfully.'), {
+                                    type: 'success',
+                                  });                                     
                                 navigation.goBack();
                             } catch (error) {
                                 console.error('Error deleting event:', error);
-                                Alert.alert(translate('Error'), translate('An error occurred while deleting the event.'));
-                            }
+                                Toast.show(translate('An error occurred while deleting the event.'), {
+                                    type: 'danger',
+                                  });                              }
                         },
                     },
                 ],

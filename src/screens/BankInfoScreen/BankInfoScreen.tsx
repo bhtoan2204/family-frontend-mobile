@@ -11,7 +11,7 @@ import baseUrl from 'src/services/urls/baseUrl';
 import { useSelector } from 'react-redux';
 import { getTranslate } from 'src/redux/slices/languageSlice';
 import { useThemeColors } from 'src/hooks/useThemeColor';
-import { selectOption, selectPackage, selectService } from 'src/redux/slices/PackageSlice';
+import { selectCombo, selectOption, selectPackage, selectService } from 'src/redux/slices/PackageSlice';
 
 type Bank = {
   id: number;
@@ -28,12 +28,13 @@ interface Event {
 const BankInfoScreen = ({ route, navigation }: BankInfoScreenProps) => {
   const [banks, setBanks] = useState<Bank[]>([]);
   const [searchValue, setSearchValue] = useState('');
-  const { id_family } = route.params;
+  const { id_family, discountCode } = route.params;
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
   const packages = useSelector(selectPackage);
   const service = useSelector(selectService);
   const option = useSelector(selectOption);
+  const Combo = useSelector(selectCombo);
 
   const handleSearchChange = (text: string) => {
     setSearchValue(text);
@@ -56,7 +57,7 @@ const BankInfoScreen = ({ route, navigation }: BankInfoScreenProps) => {
     try {
 
       if (option === "Package") {
-          const paymentURL = await PackageServices.createPaymentURL(packages?.id_main_package, bankCode);
+          const paymentURL = await PackageServices.createPaymentURL(packages?.id_main_package,null, null, id_family, bankCode, discountCode);
           console.log('Payment URL:', paymentURL);
           if (paymentURL) {
             Linking.openURL(paymentURL);
@@ -65,8 +66,16 @@ const BankInfoScreen = ({ route, navigation }: BankInfoScreenProps) => {
           }
       }
       else if (option==="Service"){
-        console.log('hi')
-        const paymentURL = await PackageServices.createPaymentURL(null, service?.id_extra_package, null, id_family, bankCode, null);
+        const paymentURL = await PackageServices.createPaymentURL(null, service?.id_extra_package, null, id_family, bankCode, discountCode);
+          console.log('Payment URL:', paymentURL);
+          if (paymentURL) {
+            Linking.openURL(paymentURL);
+          } else {
+            console.log('Failed to create payment URL');
+          }
+      }
+      else if (option==="Combo"){
+        const paymentURL = await PackageServices.createPaymentURL(null, null, Combo?.id_combo_package, id_family, bankCode, discountCode);
           console.log('Payment URL:', paymentURL);
           if (paymentURL) {
             Linking.openURL(paymentURL);

@@ -353,6 +353,7 @@ export type PackStackParamList = {
 
   BankInfoScreen: {
     id_family: number | null;
+    discountCode: string | null;
   };
   OrderDetailScreen: {
     id_family: number | null;
