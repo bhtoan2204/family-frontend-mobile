@@ -242,10 +242,10 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           borderColor: errors.email ? COLORS.red : '#2A475E',
                           backgroundColor: color.white,
                         }}>
-                        <MaterialCommunityIcons
+                        {/* <MaterialCommunityIcons
                           name="email-outline"
                           style={[styles.Icon, {color: color.icon}]}
-                        />
+                        /> */}
                         <TextInput
                           style={[
                             styles.textInput,
@@ -275,10 +275,10 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                             : '#2A475E',
                           backgroundColor: color.white,
                         }}>
-                        <MaterialCommunityIcons
+                        {/* <MaterialCommunityIcons
                           name="phone-outline"
                           style={[styles.Icon, {color: color.icon}]}
-                        />
+                        /> */}
                         <TextInput
                           style={[
                             styles.textInput,
@@ -307,10 +307,10 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           backgroundColor: color.white,
                           borderColor: errors.password ? COLORS.red : '#2A475E',
                         }}>
-                        <MaterialCommunityIcons
+                        {/* <MaterialCommunityIcons
                           name="lock-outline"
                           style={[styles.Icon, {color: color.icon}]}
-                        />
+                        /> */}
                         <TextInput
                           style={[
                             styles.textInput,
