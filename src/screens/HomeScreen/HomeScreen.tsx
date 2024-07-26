@@ -392,12 +392,12 @@ const HomeScreen = ({
               marginTop: 40,
             }}>
             <View style={{flexDirection: 'column', paddingLeft: 20}}>
-              <Text style={{color: color.text, fontSize: 30}}>
+              <Text style={{color: color.textWelcome, fontSize: 30}}>
                 {translate('welcome')}
               </Text>
               <Text
                 style={{
-                  color: color.text,
+                  color: color.textWelcome,
                   fontSize: 38,
                   fontWeight: 'bold',
                   marginBottom: 8,

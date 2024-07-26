@@ -54,8 +54,10 @@ const COLORS = {
     chatdetail: '#8D94A5',
     chatBackground: '#fff',
     searchChat: '#f2f2f2',
+    textWelcome: '#fff',
     },
   dark: {
+    textWelcome: '#fff',
     searchChat: '#252D3B',
     chatBackground: '#0A1220',
     chatdetail: '#B2C2CE',
