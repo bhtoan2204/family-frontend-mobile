@@ -1,125 +1,61 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, Alert } from 'react-native';
-import { Camera } from 'expo-camera';
-import { Audio } from 'expo-av';
-import StringeeClient from 'stringee-react-native'; // Đảm bảo tên và đường dẫn đúng
-import StringeeVideoView from 'stringee-react-native'; // Đảm bảo tên và đường dẫn đúng
-import LocalStorage from 'src/store/localstorage';
-import { ChatServices } from 'src/services/apiclient';
+import React, { useState } from 'react';
+import { View, Button, StyleSheet } from 'react-native';
+import { WebView } from 'react-native-webview';
 
 const VideoCallScreen = () => {
-  const [callStarted, setCallStarted] = useState(false);
-  const [roomUrl, setRoomUrl] = useState('');
-  const [token, setToken] = useState('');
-  const [cameraPermission, setCameraPermission] = useState(false);
-  const [audioPermission, setAudioPermission] = useState(false);
-  const [call, setCall] = useState(null); // State để lưu thông tin cuộc gọi
-
-  const stringeeClient = new StringeeClient();
-
-  const requestPermissions = async () => {
-    const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
-    const { status: audioStatus } = await Audio.requestPermissionsAsync();
-    
-    setCameraPermission(cameraStatus === 'granted');
-    setAudioPermission(audioStatus === 'granted');
-
-    if (!cameraStatus === 'granted' || !audioStatus === 'granted') {
-      Alert.alert('Permission required', 'Camera and microphone permissions are required.');
-    }
-  };
-
-  const fetchToken = async () => {
-    try {
-      const accessToken = await LocalStorage.GetAccessToken();
-      if (accessToken) {
-        setToken(accessToken);
-      } else {
-        Alert.alert('Error', 'Failed to retrieve access token.');
-      }
-    } catch (error) {
-      console.error('Error fetching token:', error);
-      Alert.alert('Error', 'Failed to fetch token.');
-    }
-  };
-
-  useEffect(() => {
-    requestPermissions();
-    fetchToken();
-
-    if (token) {
-      // Khởi tạo StringeeClient
-      stringeeClient.connect(token);
-
-      // Đăng ký các sự kiện cuộc gọi
-      stringeeClient.on('onCallIncoming', (incomingCall) => {
-        console.log('Incoming call:', incomingCall);
-        setCall(incomingCall);
-        // Xử lý cuộc gọi đến, bạn có thể chấp nhận hoặc từ chối cuộc gọi
-      });
-
-      stringeeClient.on('onCallEnd', () => {
-        console.log('Call ended');
-        setCall(null);
-        setRoomUrl('');
-        setCallStarted(false);
-      });
-
-      return () => {
-        stringeeClient.disconnect();
-      };
-    }
-  }, [token]);
-
-  const startCall = async () => {
-    if (!cameraPermission || !audioPermission) {
-      Alert.alert('Permissions error', 'Please grant camera and microphone permissions to make a call.');
-      return;
-    }
-
-    try {
-      const room = await ChatServices.createRoom();
-      if (room) {
-        setRoomUrl(room);
-        setCallStarted(true);
-
-        // Bắt đầu cuộc gọi
-        const call = stringeeClient.call(room);
-        setCall(call);
-      } else {
-        Alert.alert('Error', 'Failed to create or join the room.');
-      }
-    } catch (error) {
-      console.error('Error starting call:', error);
-      Alert.alert('Error', 'An error occurred while starting the call.');
-    }
-  };
-
-  const endCall = () => {
-    if (call) {
-      call.hangup(); // Kết thúc cuộc gọi
-      setCall(null);
-      setRoomUrl('');
-      setCallStarted(false);
-    }
-  };
+  const [showWebView, setShowWebView] = useState(false);
+  const [token] = useState('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTS3h4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4LTE0NTA0NzExNDciLCJpc3MiOiJTS3h4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4Iiwic3ViIjoiQUN4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCIsIm5iZiI6MTQ1MDQ3MTE0NywiZXhwIjoxNDUwNDc0NzQ3LCJncmFudHMiOnsiaWRlbnRpdHkiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaXBfbWVzc2FnaW5nIjp7InNlcnZpY2Vfc2lkIjoiSVN4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCIsImVuZHBvaW50X2lkIjoiSGlwRmxvd1NsYWNrRG9ja1JDOnVzZXJAZXhhbXBsZS5jb206c29tZWlvc2RldmljZSJ9fX0.IHx8KeH1acIfwnd8EIin3QBGPbfnF-yVnSFp5NpQJi0');
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Video Call</Text>
-      <Button title="Start Call" onPress={startCall} disabled={callStarted} />
-      {callStarted && (
-        <>
-          <StringeeVideoView
-            style={styles.videoView}
-            streamId={roomUrl} // ID của stream từ cuộc gọi
-            onError={(e) => {
-              console.error('Video view error:', e.nativeEvent);
-              Alert.alert('Error', 'Unable to display video.');
-            }}
-          />
-          <Button title="End Call" onPress={endCall} />
-        </>
+      <Button title="Start Video Call" onPress={() => setShowWebView(true)} />
+      {showWebView && token && (
+        <WebView
+          source={{ html: `
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <title>Twilio Video</title>
+              <script src="https://sdk.twilio.com/js/video/releases/2.28.1/twilio-video.min.js"></script>
+              <style>
+                body {
+                  margin: 0;
+                  padding: 0;
+                  overflow: hidden;
+                  backgroundColor: 'black';
+                }
+                #local-media, #remote-media {
+                  width: 100%;
+                  height: 50%;
+                }
+              </style>
+            </head>
+            <body>
+              <div id="local-media"></div>
+              <div id="remote-media"></div>
+              <script>
+                const token = '${token}';
+                Twilio.Video.connect(token, { name: 'my-room' }).then(room => {
+                  room.on('participantConnected', participant => {
+                    const remoteMediaDiv = document.getElementById('remote-media');
+                    participant.tracks.forEach(track => {
+                      remoteMediaDiv.appendChild(track.attach());
+                    });
+                  });
+                  room.localParticipant.tracks.forEach(track => {
+                    document.getElementById('local-media').appendChild(track.attach());
+                  });
+                }).catch(error => {
+                  console.error('Unable to connect to Room: ', error.message);
+                });
+              </script>
+            </body>
+            </html>` }}
+          style={styles.webview}
+          javaScriptEnabled
+          domStorageEnabled={true}
+          originWhitelist={['*']}
+        />
       )}
     </View>
   );
@@ -131,13 +67,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-  videoView: {
+  webview: {
     width: '100%',
-    height: '100%',
+    height: '80%',
   },
 });
 
