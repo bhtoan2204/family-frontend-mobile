@@ -9,8 +9,10 @@ import {
   Alert,
   ScrollView,
   SafeAreaView,
+  ImageBackground,
 } from 'react-native';
-import {AntDesign} from '@expo/vector-icons';
+import {AntDesign, Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
+import {Avatar} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import {TextInput} from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -22,8 +24,10 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate} from 'src/redux/slices/languageSlice';
+import {ProfileScreenProps} from 'src/navigation/NavigationTypes';
+import {COLORS} from 'src/constants';
 
-const EditProfileScreen = () => {
+const EditProfileScreen = ({navigation}: ProfileScreenProps) => {
   const profile = useSelector((state: RootState) => state.profile.profile);
   const [firstName, setFirstName] = useState(profile?.firstname || '');
   const [lastName, setLastName] = useState(profile?.lastname || '');
@@ -89,107 +93,174 @@ const EditProfileScreen = () => {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.scrollViewContent}
-      showsVerticalScrollIndicator={false}
-      style={[styles.container, {backgroundColor: color.background}]}>
-      <SafeAreaView>
-        <View style={styles.header}>
-          <Text style={[styles.headerText, {color: color.text}]}>
-            {translate('editProfile')}
-          </Text>
-        </View>
-        <View style={styles.avatarContainer}>
+    <ImageBackground
+      source={
+        profile?.avatar !== '[NULL]'
+          ? {uri: profile?.avatar}
+          : require('../../../assets/images/avatar_default.jpg')
+      }
+      style={styles.backgroundImage}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+        style={styles.container}>
+        <SafeAreaView>
           <TouchableOpacity
-            style={styles.avatarButton}
-            onPress={handleChangeAvatar}>
-            <Image
-              source={
-                profile?.avatar !== '[NULL]'
-                  ? {uri: profile?.avatar}
-                  : require('../../../assets/images/avatar_default.jpg')
-              }
-              style={styles.avatarImage}
+            style={styles.backButton}
+            onPress={() =>
+              navigation.navigate('HomeTab', {screen: 'ProfileScreen'})
+            }>
+            <Ionicons
+              name="close"
+              size={32}
+              color={COLORS.white}
+              style={{marginLeft: 10, marginTop: 20}}
             />
-            <View
-              style={[styles.editContainer, {backgroundColor: color.white}]}>
-              <Icon name="add" size={30} color={color.black} />
-            </View>
           </TouchableOpacity>
-        </View>
-        <View style={styles.inputContainer}>
-          <TextInput
-            mode="outlined"
-            label={translate('First Name')}
-            style={[styles.input, {backgroundColor: color.white}]}
-            value={firstName}
-            onChangeText={setFirstName}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <TextInput
-            mode="outlined"
-            label={translate('Last Name')}
-            style={[styles.input, {backgroundColor: color.white}]}
-            value={lastName}
-            onChangeText={setLastName}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={[styles.label, {color: color.text}]}>
-            {translate('Gender')}
-          </Text>
-          <View style={styles.genderContainer}>
-            <TouchableOpacity
-              style={styles.radioContainer}
-              onPress={() => setGender('male')}>
-              <View style={[styles.radioCircle, {borderColor: color.text}]}>
-                {gender === 'male' && (
-                  <View
-                    style={[styles.selectedRb, {backgroundColor: color.black}]}
-                  />
-                )}
+          <View style={{top: 70}}>
+            <View style={styles.avatarContainer}>
+              <TouchableOpacity
+                style={styles.avatarButton}
+                onPress={handleChangeAvatar}>
+                {/* <Image
+                source={
+                  profile?.avatar !== '[NULL]'
+                    ? {uri: profile?.avatar}
+                    : require('../../../assets/images/avatar_default.jpg')
+                }
+                style={styles.avatarImage}
+              /> */}
+                <Avatar
+                  rounded
+                  source={
+                    profile?.avatar !== '[NULL]'
+                      ? {uri: profile?.avatar}
+                      : require('../../../assets/images/avatar_default.jpg')
+                  }
+                  size={150}
+                  containerStyle={styles.avatarImage}
+                />
+                <View
+                  style={[
+                    styles.editContainer,
+                    {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
+                  ]}>
+                  <Icon name="camera" size={18} color={COLORS.white} />
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                backgroundColor: color.card,
+                padding: 20,
+                borderRadius: 10,
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingBottom: 15,
+                  borderBottomColor: color.border,
+                  borderBottomWidth: 1,
+                  marginBottom: 15,
+                }}>
+                <MaterialCommunityIcons
+                  name="information"
+                  color="#66C0F4"
+                  size={28}
+                  style={{marginRight: 10}}
+                />
+                <Text
+                  style={{fontSize: 18, fontWeight: 'bold', color: color.text}}>
+                  {translate('Information')}
+                </Text>
               </View>
-              <Text style={[styles.radioText, {color: color.text}]}>
-                {translate('male')}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.radioContainer}
-              onPress={() => setGender('female')}>
-              <View style={[styles.radioCircle, {borderColor: color.text}]}>
-                {gender === 'female' && (
-                  <View
-                    style={[styles.selectedRb, {backgroundColor: color.black}]}
-                  />
-                )}
+              <View style={styles.inputContainer}>
+                <TextInput
+                  label={translate('First Name')}
+                  style={[styles.input, {backgroundColor: 'transparent'}]}
+                  value={firstName}
+                  onChangeText={setFirstName}
+                />
               </View>
-              <Text style={[styles.radioText, {color: color.text}]}>
-                {translate('female')}
-              </Text>
-            </TouchableOpacity>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  label={translate('Last Name')}
+                  style={[styles.input, {backgroundColor: 'transparent'}]}
+                  value={lastName}
+                  onChangeText={setLastName}
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={[styles.label, {color: color.text}]}>
+                  {translate('Gender')}
+                </Text>
+                <View style={styles.genderContainer}>
+                  <TouchableOpacity
+                    style={styles.radioContainer}
+                    onPress={() => setGender('male')}>
+                    <View
+                      style={[styles.radioCircle, {borderColor: color.text}]}>
+                      {gender === 'male' && (
+                        <View
+                          style={[
+                            styles.selectedRb,
+                            {backgroundColor: color.text},
+                          ]}
+                        />
+                      )}
+                    </View>
+                    <Text style={[styles.radioText, {color: color.text}]}>
+                      {translate('male')}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.radioContainer}
+                    onPress={() => setGender('female')}>
+                    <View
+                      style={[styles.radioCircle, {borderColor: color.text}]}>
+                      {gender === 'female' && (
+                        <View
+                          style={[
+                            styles.selectedRb,
+                            {backgroundColor: color.text},
+                          ]}
+                        />
+                      )}
+                    </View>
+                    <Text style={[styles.radioText, {color: color.text}]}>
+                      {translate('female')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View
+                style={[
+                  styles.inputContainer,
+                  {flexDirection: 'row', justifyContent: 'space-between'},
+                ]}>
+                <Text style={[styles.label, {color: color.text}]}>
+                  {translate('Birth Date')}
+                </Text>
+                <DateTimePicker
+                  value={birthDate}
+                  mode="date"
+                  display="default"
+                  onChange={handleDateChange}
+                />
+              </View>
+              <TouchableOpacity
+                style={styles.saveButton}
+                onPress={handleSaveChanges}>
+                <Text style={styles.saveButtonText}>
+                  {translate('Save Changes')}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-        <View
-          style={[
-            styles.inputContainer,
-            {flexDirection: 'row', justifyContent: 'space-between'},
-          ]}>
-          <Text style={[styles.label, {color: color.text}]}>
-            {translate('Birth Date')}
-          </Text>
-          <DateTimePicker
-            value={birthDate}
-            mode="date"
-            display="default"
-            onChange={handleDateChange}
-          />
-        </View>
-        <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
-          <Text style={styles.saveButtonText}>{translate('Save Changes')}</Text>
-        </TouchableOpacity>
-      </SafeAreaView>
-    </ScrollView>
+        </SafeAreaView>
+      </ScrollView>
+    </ImageBackground>
   );
 };
 

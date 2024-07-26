@@ -4,9 +4,12 @@ import { COLORS } from 'src/constants';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    backgroundColor: COLORS.white,
+    width: 415,
+          height: 900,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          alignSelf: 'center',
+          bottom: 10,
+          paddingHorizontal: 20,
   },
   header: {
    
@@ -22,22 +25,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
+  backgroundImage:{flex: 1,
+    backgroundColor: '#fff',
+    padding: 10,},
+  backButton: {
+    position: 'absolute',
+    top: 40,
+    left: 5,
+    zIndex: 1,
+  },
   avatarButton: {
     position: 'relative',
   },
   avatarImage: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
+    alignSelf: 'center',
+    marginBottom: 10,
   },
   editContainer: {
     position: 'absolute',
-    bottom: 0,
-    right: 20,
-    width: 40,
-    height: 40,
+    bottom: 10,
+    right: 5,
+    width: 35,
+    height: 35,
     borderRadius: 100,
-    backgroundColor: COLORS.black,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -107,7 +117,6 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: COLORS.black,
   },
   radioText: {
     fontSize: 16,
