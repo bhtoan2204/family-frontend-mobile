@@ -243,7 +243,8 @@
   "passwordResetSuccess": "Mật khẩu đã được đặt lại thành công.",
   "enterVerificationCode": "Nhập Mã Xác Thực",
   "pleaseEnterCode": "Vui lòng nhập mã 6 chữ số đã được gửi đến email hoặc số điện thoại của bạn.",
-  "timeRemaining": "Thời gian còn lại: {{countdown}}s",
+  "timeRemaining": "Time remaining: ",
+  "s": "s",
   "invalidOTP": "Mã OTP không hợp lệ",
   "otpVerificationError": "Đã xảy ra lỗi trong quá trình xác thực mã OTP",
   "addFamilyMemberTitle": "Thêm Thành Viên Gia Đình",
@@ -342,4 +343,18 @@
   "ExpensevsIncomeDetail": "Dưới đây là chi tiết chi phí và thu nhập của bạn trong phạm vi ngày đã chọn.",
   "COMBO_TITLE": "Chọn combo",
   "Total": "Tổng cộng",
+  
+  "Current Password": "Mật Khẩu Hiện Tại",
+  "Enter current password": "Nhập mật khẩu hiện tại",
+  "New Password": "Mật Khẩu Mới",
+  "Enter new password": "Nhập mật khẩu mới",
+  "Confirm New Password": "Xác Nhận Mật Khẩu Mới",
+  "Confirm new password": "Xác nhận mật khẩu mới",
+  "Change Password": "Đổi Mật Khẩu",
+  
+  "timeExpired": "Hết Thời Gian",
+  "codeExpiredMessage": "Mã xác thực đã hết hạn. Vui lòng yêu cầu mã mới.",
+  "ok": "OK"
+  
+  
 }

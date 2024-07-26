@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   },
   header: {
    
-    paddingBottom: 60,
+    paddingBottom: 0,
     marginBottom: 20,
     alignItems: 'center',
   },

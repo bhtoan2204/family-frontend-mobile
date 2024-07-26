@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Platform, Alert, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Platform, Alert, ScrollView, SafeAreaView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { TextInput } from 'react-native-paper';
@@ -78,6 +78,8 @@ const EditProfileScreen = () => {
       showsVerticalScrollIndicator={false}
       style={[styles.container, { backgroundColor: color.background }]}
     >
+          <SafeAreaView>
+
       <View style={styles.header}>
         <Text style={[styles.headerText, { color: color.text }]}>{translate('editProfile')}</Text>
       </View>
@@ -147,6 +149,8 @@ const EditProfileScreen = () => {
       <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
         <Text style={styles.saveButtonText}>{translate('Save Changes')}</Text>
       </TouchableOpacity>
+      </SafeAreaView>
+
     </ScrollView>
   );
 };

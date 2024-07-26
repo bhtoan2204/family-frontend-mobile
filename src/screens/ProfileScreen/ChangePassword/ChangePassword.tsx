@@ -5,6 +5,8 @@ import styles from './styles';
 import {ProfileServices} from 'src/services/apiclient';
 import { ProfileScreenProps } from 'src/navigation/NavigationTypes';
 import { useThemeColors } from 'src/hooks/useThemeColor';
+import { useSelector } from 'react-redux';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -18,6 +20,7 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
   const toggleShowNewPassword = () => setShowNewPassword(prevState => !prevState);
   const toggleShowConfirmPassword = () => setShowConfirmPassword(prevState => !prevState);
   const color = useThemeColors();
+  const translate = useSelector(getTranslate);
 
   const handleChangePassword = async () => {
     try {
@@ -37,7 +40,7 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -100}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.header}>
-          <Text style={[styles.headerText, {color: color.text}]}>Change Password</Text>
+          <Text style={[styles.headerText, {color: color.text}]}>{translate('Change Password')}</Text>
         </View>
 
         <View style={styles.imageContainer}>
@@ -48,12 +51,12 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
           />
         </View>
 
-        <Text style={[styles.label, {color: color.text}]}>Current Password</Text>
+        <Text style={[styles.label, {color: color.text}]}>{translate('Current Password')}</Text>
         <View style={styles.inputContainer}>
           <AntDesign name="lock" size={24} color={color.text} style={styles.icon} />
           <TextInput
-            style={styles.input}
-            placeholder="Enter current password"
+            style={[styles.input, {color: color.text}]}
+            placeholder={translate('Enter current password')}
             secureTextEntry={!showCurrentPassword}
             value={currentPassword}
             onChangeText={setCurrentPassword}
@@ -63,12 +66,12 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
           </TouchableOpacity>
         </View>
 
-        <Text style={[styles.label, {color: color.text}]}>New Password</Text>
+        <Text style={[styles.label, {color: color.text}]}>{translate('New Password')}</Text>
         <View style={styles.inputContainer}>
           <AntDesign name="lock" size={24} color={color.text} style={styles.icon} />
           <TextInput
-            style={styles.input}
-            placeholder="Enter new password"
+            style={[styles.input, {color: color.text}]}
+            placeholder={translate('Enter new password')}
             secureTextEntry={!showNewPassword}
             value={newPassword}
             onChangeText={setNewPassword}
@@ -78,12 +81,12 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
           </TouchableOpacity>
         </View>
 
-        <Text style={[styles.label, {color: color.text}]}>Confirm New Password</Text>
+        <Text style={[styles.label, {color: color.text}]}>{translate('Confirm New Password')}</Text>
         <View style={styles.inputContainer}>
           <AntDesign name="lock" size={24} color={color.text} style={styles.icon} />
           <TextInput
-            style={styles.input}
-            placeholder="Confirm new password"
+            style={[styles.input, {color: color.text}]}
+            placeholder={translate('Confirm new password')}
             secureTextEntry={!showConfirmPassword}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
@@ -94,7 +97,7 @@ const ChangePasswordScreen = ({ navigation }: ProfileScreenProps) => {
         </View>
 
         <TouchableOpacity style={styles.changePasswordButton} onPress={handleChangePassword}>
-          <Text style={styles.buttonText}>Change Password</Text>
+          <Text style={styles.buttonText}>{translate('Change Password')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>

@@ -245,8 +245,8 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
           color: color.text,
           paddingBottom: 10,
         }}>
-        Total Expense for {formatMonthYear(selectedMonth)}:
-        <Text style={{color: 'red'}}> - {formatCurrency(totalExpense)}</Text>
+        Total income for {formatMonthYear(selectedMonth)}:
+        <Text style={{color: 'green', fontWeight: 'bold'}}> + {formatCurrency(totalExpense)}</Text>
       </Text>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <PieChart

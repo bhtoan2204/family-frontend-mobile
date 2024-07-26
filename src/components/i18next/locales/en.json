@@ -247,7 +247,8 @@
     "passwordResetSuccess": "Password has been reset successfully.",
     "enterVerificationCode": "Enter Verification Code",
     "pleaseEnterCode": "Please enter the 6-digit code sent to your email or phone.",
-    "timeRemaining": "Time remaining: {{countdown}}s",
+    "timeRemaining": "Thời gian còn lại: ",
+    "s": "giây",
     "invalidOTP": "Invalid OTP",
     "otpVerificationError": "An error occurred while verifying the OTP",
     "addFamilyMemberTitle": "Add Family Member",
@@ -322,5 +323,18 @@
     "ExpensevsIncomeDetail": "Here is a list of expenses your family has incurred for the selected date range.",
     "COMBO_TITLE": "Choose the combo",
     "Total": "Total",
+    "Change Password": "Change Password",
+    "Current Password": "Current Password",
+    "Enter current password": "Enter current password",
+    "New Password": "New Password",
+    "Enter new password": "Enter new password",
+    "Confirm New Password": "Confirm New Password",
+    "Confirm new password": "Confirm new password",
+    
+    "timeExpired": "Time Expired",
+    "codeExpiredMessage": "The verification code has expired. Please request a new one.",
+    "ok": "OK"
+    
+    
   }
   

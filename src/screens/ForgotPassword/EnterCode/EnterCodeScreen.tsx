@@ -8,6 +8,7 @@ import { AuthServices } from 'src/services/apiclient';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPhone, getEmail, setCode } from 'src/redux/slices/ForgotPassword';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => { 
   const [code, setCodeState] = useState(['', '', '', '', '', '']);
@@ -17,7 +18,7 @@ const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => {
   const email = useSelector(getEmail);
   const dispatch = useDispatch(); 
   const t= useSelector(getTranslate);
-
+  const color = useThemeColors();
   useEffect(() => {
     if (code.join('').length === 6) {
       handleCheckCode();
@@ -29,6 +30,9 @@ const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => {
       setCountdown(prevCountdown => {
         if (prevCountdown <= 1) {
           clearInterval(timer);
+          Alert.alert(t('timeExpired'), t('codeExpiredMessage'), [
+            { text: t('ok'), onPress: () => navigation.goBack() },
+          ]);
           return 0;
         }
         return prevCountdown - 1;
@@ -80,21 +84,21 @@ const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => {
       style={styles.keyboardView}
     >
       <KeyboardAvoidingView style={styles.keyboardView} behavior="padding">
-        <SafeAreaView style={styles.safeAreaStyle}>
+        <SafeAreaView style={[styles.safeAreaStyle, {backgroundColor:color.background}]}>
           <TouchableOpacity style={styles.arrowButton} onPress={() => { navigation.navigate('ForgotPassword') }}>
             <Icon name="arrow-back" size={30} style={styles.backButton} />
           </TouchableOpacity>
 
           <View style={styles.container}>
          
-          <Text style={styles.title}>{t('enterVerificationCode')}</Text> 
-          <Text style={styles.subtitle}>{t('pleaseEnterCode')}</Text> 
-          <Text style={styles.countdown}>{t('timeRemaining', { countdown })}</Text>
+          <Text style={[styles.title, {color:color.text}]}>{t('enterVerificationCode')}</Text> 
+          <Text style={[styles.subtitle, {color:color.text}]}>{t('pleaseEnterCode')}</Text> 
+          <Text style={[styles.countdown, ]}>{t('timeRemaining')}{countdown} {t('s')}</Text>
           <View style={styles.inputContainer}>
               {code.map((digit, index) => (
                 <TextInput
                   key={index}
-                  style={styles.input}
+                  style={[styles.input, {color: color.text}]}
                   keyboardType="numeric"
                   maxLength={1}
                   value={digit}
