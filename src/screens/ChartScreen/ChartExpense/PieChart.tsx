@@ -22,6 +22,7 @@ import {
 import {ExpenseServices} from 'src/services/apiclient';
 import {Ionicons} from '@expo/vector-icons';
 import {useThemeColors} from 'src/hooks/useThemeColor';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface PieChartScreenProps {
   id_family: number;
@@ -68,7 +69,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
   const [selectedCategoryType, setSelectedCategoryType] =
     useState<string>('Total');
   const color = useThemeColors();
-
+  const translate = useSelector(getTranslate);
   useEffect(() => {
     console.log(date);
     const parsedDate = new Date(date);
@@ -295,7 +296,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
           color: '#DEDCDC',
           paddingBottom: 10,
         }}>
-        Total expense for {formatMonthYear(selectedMonth)}:
+        {translate('Total expense for')} {formatMonthYear(selectedMonth)}:
         <Text style={{color: 'red', fontWeight: 'bold'}}>
           {' '}
           - {formatCurrency(totalExpense)}

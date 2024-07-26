@@ -172,6 +172,20 @@ const ChatServices = {
       console.error('Error in getUsersChat:', error.message);
     }
   },
+
+  createRoom: async () => {
+    try {
+      const response: AxiosResponse = await instance.post(
+        `${baseUrl}/api/v1/chat/createRoom`
+      );
+      
+      if ( response.status===201) {
+        return response.data.roomId; 
+      }
+    } catch (error: any) {
+      console.error('Error in createRoom:', error.message);
+    }
+  },
   getFamilyChats: async () => {
     try {
       const response: AxiosResponse = await instance.get(
