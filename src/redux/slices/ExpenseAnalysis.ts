@@ -57,9 +57,11 @@ const expenseSlice = createSlice({
       }
     },
     
-    setSelectedExpense: (state, action: PayloadAction<DailyExpense | null>) => {
-      state.selectedExpense = action.payload;
+    setSelectedExpense: (state, action: PayloadAction<DailyExpense>) => {
+        state.selectedExpense = action.payload;
+  
     },
+
     setSelectedOption(state, action: PayloadAction<'Day' | 'Month' | 'Year'>) {
       state.selectedOption = action.payload;
     },

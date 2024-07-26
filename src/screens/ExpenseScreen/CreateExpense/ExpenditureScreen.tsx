@@ -147,6 +147,8 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
     }
 
     try {
+      console.log(expenseCategory)
+
       switch (selectedMenu) {
         case 'Expense':
           if (!expenseCategory || !expenseCategory.id_expenditure_type || !memberSelected?.id_user) {
@@ -155,7 +157,6 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
             });
             return;
           }
-
           await ExpenseServices.createExpense(
             family?.id_family,
             amount,

@@ -10,6 +10,9 @@ import {
   Alert,
   Platform,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {ExpenseDetailScreenProps} from 'src/navigation/NavigationTypes';
@@ -70,13 +73,19 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   const [page, setPage] = useState(1);
   const color = useThemeColors();
   const translate = useSelector(getTranslate);
-  const [formattedAmount, setFormattedAmount] = useState('');
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(expense?.financeExpenditureType.id_expenditure_type);
+  const [formattedAmount, setFormattedAmount] = useState(expense?.amount.toString() || '');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     fetchExpenseType(family.id_family);
   }, []);
   const itemsPerPage = 10;
+  
+  useEffect(() => {
+    if (expense?.amount) {
+      handleAmountChange(expense.amount.toString());
+    }
+  }, [expense?.amount]);
 
   const fetchExpenseType = async (id_family: number) => {
     try {
@@ -109,36 +118,47 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   const handleSave = async () => {
     setLoading(true);
     try {
-      const amount = parseFloat(editedAmount);
-      console.log(expense?.id_expenditure)
+      const amount = parseFloat(editedAmount || '0');
+      if (isNaN(amount)) {
+        Toast.show('Invalid amount format', { type: 'danger', duration: 3000 });
+        setLoading(false);
+        return;
+      }
       if (selectedCategoryId !== undefined) {
         const response = await ExpenseServices.updateExpense(
-            expense?.id_expenditure,
-            family?.id_family,
-            expense?.id_created_by,
-            selectedCategoryId,
-            amount,        
-            chosenDate.toISOString(),
-            editedDescription,
-            currentImageUri ? currentImageUri : expense?.image_url,
-          );
-        console.log('update: ', response)
+          expense?.id_expenditure,
+          family?.id_family,
+          expense?.id_created_by,
+          selectedCategoryId,
+          amount,        
+          chosenDate.toISOString(),
+          editedDescription,
+          currentImageUri ? currentImageUri : expense?.image_url,
+        );
         if (response) {
-        dispatch(updateExpense(response));
-        Toast.show('Expense updated successfully', { type: 'success', duration: 3000 });
-        setIsEditing(false);
+          dispatch(updateExpense(response));
+          Toast.show('Expense updated successfully', { type: 'success', duration: 3000 });
+          setIsEditing(false);
         }
       } else {
         Toast.show('Selected category not found', { type: 'danger', duration: 3000 });
       }
       setLoading(false);
-
     } catch (error) {
-      console.error('Error updating income:', error);
+      console.error('Error updating expense:', error);
       Toast.show('An error occurred while updating expense', { type: 'danger', duration: 3000 });
       setLoading(false);
     }
   };
+  
+  const handleAmountChange = (text: string) => {
+    const formatted = formatNumberWithDots(text);
+    const rawValue = formatted.replace(/\./g, '');
+    const numericValue = parseFloat(rawValue);
+    setEditedAmount(numericValue.toString());
+    setFormattedAmount(formatted);
+  };
+  
 
   const handleDelete = () => {
     Alert.alert(
@@ -157,6 +177,8 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
                   expense.id_expenditure,
                 );
                 dispatch(deleteExpense(expense.id_expenditure));
+                Toast.show('Expense delete successfully', { type: 'success', duration: 3000 });
+
                 navigation.goBack();
               } catch (error) {
                 console.error(error);
@@ -173,12 +195,7 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
     );
   };
 
-  const formatCurrency = (amount: string) => {
-    return parseFloat(amount).toLocaleString('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-    });
-  };
+
 
   const onChangeDate = (event: any, selectedDate: Date | undefined) => {
     const currentDate = selectedDate || chosenDate;
@@ -215,6 +232,7 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
           dispatch(
             updateExpense({...expense, image_url: result.assets[0].uri}),
           );
+          Toast.show('Add receipt successfully', { type: 'success', duration: 3000 });
         }
         setCurrentImageUri(result.assets[0].uri);
         setLoading(false);
@@ -246,6 +264,7 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   };
 
   const pressMember = (id_user?: string) => {
+    
     dispatch(setSelectedMemberById(id_user));
     navigation.navigate('FamilyStack', {screen: 'MemberDetails'});
   };
@@ -278,18 +297,19 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   };
   
 
-    const handleAmountChange = (text) => {
-      const formatted = formatNumberWithDots(text);
-      
-      const rawValue = formatted.replace(/\./g, '');
-      const numericValue = parseFloat(rawValue);
-  
-      setEditedAmount(numericValue.toString());
-      setFormattedAmount(formatted);
-    };
+  const formatCurrency = (amount: string) => {
+    return parseFloat(amount).toLocaleString('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    });
+  };
   return (
     <SafeAreaView
       style={[styles.safeArea, {backgroundColor: color.background}]}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
+         <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+
       <View style={[styles.container, {backgroundColor: color.background}]}>
         <View
           style={[styles.headerContainer, {backgroundColor: color.background}]}>
@@ -330,17 +350,15 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
         </View>
         <View style={styles.amountContainer}>
           {!isEditing ? (
-            <Text style={styles.valueAmount}>
-              {formatCurrency(expense?.amount.toString() || '0')}
-            </Text>
+            <Text style={styles.valueAmount}>-{formatCurrency(expense?.amount.toString() || '0')}</Text>
+
           ) : (
             <View style={{flexDirection: 'row'}}>
               <TextInput
                 style={styles.valueAmount}
                 keyboardType="numeric"
-                value={formattedAmount ? formattedAmount: editedAmount}
+                value={formattedAmount}
                 onChangeText={handleAmountChange}
-                placeholder={editedAmount}
 
                 />
               <Text style={styles.valueAmount}> đ</Text>
@@ -418,10 +436,15 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
               {translate('Create by')}:
             </Text>
             <TouchableOpacity
-              onPress={() => pressMember(expense?.users.id_user)}>
+              onPress={() => pressMember(expense?.id_created_by)}>
               <Text style={styles.ValueName}>
-                {expense?.users.firstname} {expense?.users.lastname}
-              </Text>
+                  {expense?.users?.firstname ? (
+                    `${expense.users.firstname} ${expense.users?.lastname || ''}`.trim()
+                  ) : (
+                    'No user data available'
+                  )}
+                </Text>
+
             </TouchableOpacity>
           </View>
           <View style={styles.detailRow}>
@@ -542,6 +565,9 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
         onRequestClose={handleCloseModal}
         backgroundColor="rgba(0, 0, 0, 0.8)"
       />
+    </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
+
     </SafeAreaView>
   );
 };
@@ -555,7 +581,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 20,
   },
-
+  inner: {
+    flex: 1,
+  },
   editIcon: {
     color: 'gray',
     marginRight: 5,

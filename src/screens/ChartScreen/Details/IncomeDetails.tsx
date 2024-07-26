@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, SafeAreaView, TouchableOpacity, TextInput, Alert, Platform, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Image, SafeAreaView, TouchableOpacity, TextInput, Alert, Platform, ActivityIndicator, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { IncomeDetailScreenProps } from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -42,7 +42,13 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
   const translate = useSelector(getTranslate);
   const color = useThemeColors();  
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(income?.financeIncomeSource.id_income_source);
+  const [formattedAmount, setFormattedAmount] = useState(income?.amount.toString() || '');
 
+  useEffect(() => {
+    if (income?.amount) {
+      handleAmountChange(income.amount.toString());
+    }
+  }, [income?.amount]);
 
   useEffect(() => {
     fetchincomeType(family?.id_family);
@@ -151,11 +157,38 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
     dispatch(setSelectedMemberById(id_user));
     navigation.navigate('FamilyStack', {screen: 'MemberDetails'});
  }
+ const formatNumberWithDots = (value: any) => {
+  if (value === '') return '';
+  
+  const rawValue = value.replace(/[^\d]/g, '');
+  
+  const parts = rawValue.split('').reverse();
+  const formattedValue = parts.reduce((acc, digit, index) => {
+    if (index > 0 && index % 3 === 0) {
+      acc.push('.');
+    }
+    acc.push(digit);
+    return acc;
+  }, []).reverse().join('');
 
+  return formattedValue;
+};
 
+ const handleAmountChange = (text: string) => {
+  const formatted = formatNumberWithDots(text);
+  const rawValue = formatted.replace(/\./g, '');
+  const numericValue = parseFloat(rawValue);
+  setEditedAmount(numericValue.toString());
+  setFormattedAmount(formatted);
+};
 
   return (
     <SafeAreaView style={[styles.safeArea, {backgroundColor: color.background}]}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
+        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+
+      
       <View style={[styles.container, {backgroundColor: color.background}]}>
         <View style={styles.headerContainer}>
 
@@ -193,8 +226,8 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
               <TextInput
                 style={styles.valueAmount}
                 keyboardType="numeric"
-                value={editedAmount}
-                onChangeText={setEditedAmount}
+                value={formattedAmount}
+                onChangeText={handleAmountChange}
               />
             )}
           </View>
@@ -297,7 +330,8 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
 
         )}
 
-     
+      </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };

@@ -293,7 +293,7 @@ const ExpenseScreen = ({navigation}: ExpenseScreenProps) => {
               <Text style={[styles.sumText, {color: color.text}]}>
                 Total Expense:{' '}
               </Text>
-              <Text style={[styles.sumText, {color: color.text}]}>
+              <Text style={[styles.sumText, {color: 'red'}]}>
                 -{formatCurrency(sumExpense)}{' '}
               </Text>
             </View>

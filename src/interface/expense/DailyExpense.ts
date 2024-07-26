@@ -1,11 +1,11 @@
 export interface DailyExpense {
     id_expenditure: number;
     id_family: number;
-    id_expenditure_type: number;
-    id_created_by: string;
+    id_expenditure_type: number | null;
+    id_created_by: string | null;
     amount: number;
-    expenditure_date: string;
-    description: string;
+    expenditure_date: string | null;
+    description: string | null;
     image_url: string | null;
     created_at: string;
     updated_at: string;
@@ -21,10 +21,10 @@ export interface DailyExpense {
         updated_at: string;
     };
     financeExpenditureType: {
-        id_expenditure_type: number;
-        expense_type_name: string;
-        id_family: number;
-    };
+        id_expenditure_type: number | null;
+        expense_type_name: string| null;
+        id_family: number| null;
+    } | null;
     users: {
         id_user: string;
         email: string;

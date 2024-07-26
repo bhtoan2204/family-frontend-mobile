@@ -71,6 +71,7 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({
 
   const handlePressExpenseItem = async (item: DailyExpense) => {
     await dispatch(setSelectedExpense(item));
+    console.log(item);
     navigation.navigate('ExpenseDetailScreen');
   };
 
@@ -95,7 +96,7 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({
               </Text>
             ) : (
               <Text style={[styles.expenseCategory, {color: color.text}]}>
-                Other
+                {translate('Other')}
               </Text>
             )}
             <View style={styles.row}>
