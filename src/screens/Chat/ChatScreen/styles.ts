@@ -86,9 +86,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  backButton: {
-    color: COLORS.DenimBlue,
-  },
   imageMessage: {
     width: 200,
     height: 200,
@@ -160,7 +157,6 @@ const styles = StyleSheet.create({
   },
   introText: {
     fontSize: 14,
-    color: '#8E8E8E',
     width: '80%',
     textAlign: 'center',
   },

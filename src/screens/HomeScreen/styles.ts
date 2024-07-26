@@ -387,7 +387,6 @@ const styles = StyleSheet.create({
   textCombo: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: COLORS.Rhino,
     marginLeft: 20,
     marginBottom: 20,
   },

@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import { Icon } from 'react-native-elements';
+import React, {useState} from 'react';
+import {View, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
+import {Icon} from 'react-native-elements';
 import EmojiSelector from 'react-native-emoji-selector';
 import Popover from 'react-native-popover-view';
-import { COLORS } from 'src/constants';
+import {COLORS} from 'src/constants';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
-const EmojiPicker = ({ onChange }) => {
+const EmojiPicker = ({onChange}) => {
   const [showPopover, setShowPopover] = useState(false);
 
   return (
@@ -16,7 +16,7 @@ const EmojiPicker = ({ onChange }) => {
         isVisible={showPopover}
         onRequestClose={() => setShowPopover(false)}
         from={
-          <TouchableOpacity style={{}} onPress={() => setShowPopover(true) }>
+          <TouchableOpacity style={{}} onPress={() => setShowPopover(true)}>
             <Icon
               name="emoji-emotions"
               type="material"
@@ -25,8 +25,7 @@ const EmojiPicker = ({ onChange }) => {
               containerStyle={styles.icon}
             />
           </TouchableOpacity>
-        }
-      >
+        }>
         <View style={styles.emojiPickerContainer}>
           <EmojiSelector
             onEmojiSelected={emoji => {
@@ -34,7 +33,8 @@ const EmojiPicker = ({ onChange }) => {
             }}
             columns={8}
             showSearchBar={true}
-            showSectionHeaders={true}
+            showSectionHeaders={false}
+            headerIconStyle={{fontSize: 30}}
             categoryLabelStyle={styles.categoryLabel}
           />
         </View>
@@ -48,14 +48,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   icon: {
-
+    fontSize: 40,
   },
   emojiPickerContainer: {
     backgroundColor: '#fff',
     width: width * 0.9,
     height: height * 0.5,
     borderRadius: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 10,
   },
   categoryLabel: {
     fontSize: 18,

@@ -15,9 +15,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: '#fff',
   },
-  backButton: {
-    color: COLORS.Rhino,
-  },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
