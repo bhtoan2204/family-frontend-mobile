@@ -351,8 +351,8 @@
   "Enter new password": "Nhập mật khẩu mới",
   "Confirm New Password": "Xác Nhận Mật Khẩu Mới",
   "Confirm new password": "Xác nhận mật khẩu mới",
-  "Change Password": "Đổi Mật Khẩu",
-  
+  "YourPassword": "Mật Khẩu",
+  "Reset": "Đặt Lại",
   "timeExpired": "Hết Thời Gian",
   "codeExpiredMessage": "Mã xác thực đã hết hạn. Vui lòng yêu cầu mã mới.",
   "ok": "OK"

@@ -9,24 +9,31 @@ const styles = StyleSheet.create({
   scrollView: {
     flexGrow: 1,
     paddingHorizontal: 20,
-    paddingTop: 40,
+    top: 50,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 40,
+    left: 16,
+    zIndex: 1,
   },
   header: {
     marginBottom: 30,
     alignItems: 'center', // Center header text
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     color: COLORS.black,
   },
   imageContainer: {
     alignItems: 'center',
-    marginBottom: 20,
+    top: 80,
+    zIndex: 1,
   },
   image: {
-    width: 150,
-    height: 150,
+    width: 180,
+    height: 180,
   },
   inputContainer: {
     flexDirection: 'row',
