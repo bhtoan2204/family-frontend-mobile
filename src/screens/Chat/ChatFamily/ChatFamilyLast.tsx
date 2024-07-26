@@ -61,18 +61,9 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
       setKeyboardIsOpen(false);
     });
-    if (socket) {
-    socket.on('onNewFamilyMessage', fetchNewMessages);
-    socket.on('onNewFamilyImageMessage', fetchNewMessages);
-
-    }
-
+    
     return () => {
-      if (socket) {
-      socket.off('onNewFamilyMessage', fetchNewMessages);
-      socket.off('onNewFamilyImageMessage', fetchNewMessages);
-
-    }
+    
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
@@ -86,6 +77,17 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
     setMemberLookup(lookup);
   }, [members]);
 
+  useEffect(() => {
+    if (socket) {
+      socket.on('onNewFamilyMessage', fetchNewMessages);
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('onNewFamilyMessage', fetchNewMessages);
+      }
+    };
+  }, [socket]);
 
   const fetchMember = async () => {
     try {
@@ -125,7 +127,6 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
   }, [currentIndex]);
 
   const fetchNewMessages = (newMessage: Message) => {
-    console.log(newMessage)
     setMessages(prevMessages => [newMessage, ...prevMessages]);
   };
   
@@ -140,7 +141,6 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
         uri: uri,
         familyId: LastMessageFamily.familyId,
       });
-      fetchNewMessages(response);
     } catch (error) {
       console.error('Error sendImage:', error);
     }
@@ -153,7 +153,6 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
         message: message,
         familyId: LastMessageFamily.familyId,
       });
-      fetchNewMessages(response);
     } catch (error) {
       console.error('Error sending messages:', error);
     }
@@ -213,13 +212,8 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const asset = result.assets[0];
         const uri = asset.uri;
-        console.log('Selected URI:', uri);
   
-        if (!uri) {
-          console.error('No URI returned from ImagePicker');
-          Alert.alert('Error', 'Failed to pick an image or video.');
-          return;
-        }
+    
   
         if (asset.type === 'image') {
           const compressedImage = await ImageManipulator.manipulateAsync(
@@ -240,41 +234,18 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
             Alert.alert('Selected file size exceeds the limit or could not determine file size');
           }
         } else if (asset.type === 'video') {
-          const savedAsset = await MediaLibrary.createAssetAsync(uri);
-          console.log('Created Asset info:', savedAsset);
+
+              await sendVideoMessage(uri);
   
-          if (!savedAsset) {
-            console.error('No asset information returned from MediaLibrary');
-            Alert.alert('Error', 'Failed to save video to media library.');
-            return;
-          }
-  
-          const assetInfo = await MediaLibrary.getAssetInfoAsync(savedAsset.id);
-          console.log('Asset Info:', assetInfo);
-  
-          if (assetInfo && assetInfo.localUri) {
-            const fileInfo = await FileSystem.getInfoAsync(assetInfo.localUri);
-            console.log('File info:', fileInfo);
-  
-            if (fileInfo.exists && fileInfo.size && fileInfo.size < MAX_FILE_SIZE) {
-              await sendVideoMessage(assetInfo.localUri);
-            } else {
-              Alert.alert('Selected file size exceeds the limit or could not determine file size');
-            }
           } else {
-            console.error('Could not retrieve local URI for the video');
             Alert.alert('Error', 'Failed to retrieve local URI for the video.');
           }
         } else {
           Alert.alert('Unsupported file type');
         }
-      } else {
-        console.error('No valid assets returned from ImagePicker');
-        Alert.alert('Error', 'No valid assets returned from ImagePicker');
-      }
+
     } catch (error) {
-      console.error('Error opening image library:', error);
-      Alert.alert('Error opening image library. Please try again.');
+      Alert.alert('Error. Please try again.');
     }
   };
 
@@ -334,6 +305,8 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
 
 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
 <KeyboardAvoidingView
       behavior="padding"
       style={{
@@ -501,10 +474,12 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
         </TouchableOpacity>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
           <TextInput
-            style={[styles.input, {backgroundColor: color.white}, {flex: 1}]}
+            style={[styles.input, {backgroundColor: color.white, color:color.text}, {flex: 1}]}
             value={message}
             onChangeText={setMessage}
-            placeholder="Aa"></TextInput>
+            placeholder="Aa">
+          
+            </TextInput>
 
               <EmojiPicker onChange={handleEmojiChange} />
         </View>
@@ -525,6 +500,8 @@ const ChatFamilyLastScreen = ({ navigation, route }: ChatFamilyLastScreenProps) 
       />
 
     </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
+
   );
 };
 

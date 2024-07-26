@@ -22,6 +22,7 @@ import { Message } from 'src/interface/chat/family';
 import { Member } from 'src/interface/member/member';
 import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
 import { useThemeColors } from 'src/hooks/useThemeColor';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 
 
@@ -46,6 +47,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   );
   let family = useSelector(selectSelectedFamily);
   const color = useThemeColors();
+  const translate = useSelector(getTranslate);
 
   useEffect(() => {
     fetchMember();
@@ -58,22 +60,26 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
       setKeyboardIsOpen(false);
     });
-    // if (socket) {
-    // socket.on('onNewFamilyMessage', fetchNewMessages);
-    // socket.on('onNewFamilyImageMessage', fetchNewMessages);
-
-    // }
 
     return () => {
-    //   if (socket) {
-    //   socket.off('onNewFamilyMessage', fetchNewMessages);
-    //   socket.off('onNewFamilyImageMessage', fetchNewMessages);
 
-    // }
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
   }, [ message]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('onNewFamilyMessage', fetchNewMessages);
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('onNewFamilyMessage', fetchNewMessages);
+      }
+    };
+  }, [socket]);
+
 
   useEffect(() => {
     const lookup: { [key: string]: Member } = {};
@@ -127,7 +133,6 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         uri: uri,
         familyId:  family.id_family,
       });
-      fetchNewMessages(response);
     } catch (error) {
       console.error('Error sendImage:', error);
     }
@@ -140,7 +145,6 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         message: message,
         familyId:  family.id_family,
       });
-      fetchNewMessages(response);
     } catch (error) {
       console.error('Error sending messages:', error);
     }
@@ -161,20 +165,15 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
 
   const sendVideoMessage = async (uri: any) => {
     try {
-      
       const response = await ChatServices.sendFamilyVideo( family.id_family, uri)
-      const data = await response.json();
-      if (response) {
 
-      } else {
-        throw new Error('Failed to send video');
-      }
     } catch (error) {
       throw new Error('API request failed');
     }
   };
 
-  const MAX_FILE_SIZE = 10 * 1024 * 1024; 
+
+   const MAX_FILE_SIZE = 10 * 1024 * 1024; 
 
   const handleOpenImageLibrary = async () => {
     try {
@@ -200,13 +199,8 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const asset = result.assets[0];
         const uri = asset.uri;
-        console.log('Selected URI:', uri);
   
-        if (!uri) {
-          console.error('No URI returned from ImagePicker');
-          Alert.alert('Error', 'Failed to pick an image or video.');
-          return;
-        }
+    
   
         if (asset.type === 'image') {
           const compressedImage = await ImageManipulator.manipulateAsync(
@@ -227,41 +221,18 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
             Alert.alert('Selected file size exceeds the limit or could not determine file size');
           }
         } else if (asset.type === 'video') {
-          const savedAsset = await MediaLibrary.createAssetAsync(uri);
-          console.log('Created Asset info:', savedAsset);
+
+              await sendVideoMessage(uri);
   
-          if (!savedAsset) {
-            console.error('No asset information returned from MediaLibrary');
-            Alert.alert('Error', 'Failed to save video to media library.');
-            return;
-          }
-  
-          const assetInfo = await MediaLibrary.getAssetInfoAsync(savedAsset.id);
-          console.log('Asset Info:', assetInfo);
-  
-          if (assetInfo && assetInfo.localUri) {
-            const fileInfo = await FileSystem.getInfoAsync(assetInfo.localUri);
-            console.log('File info:', fileInfo);
-  
-            if (fileInfo.exists && fileInfo.size && fileInfo.size < MAX_FILE_SIZE) {
-              await sendVideoMessage(assetInfo.localUri);
-            } else {
-              Alert.alert('Selected file size exceeds the limit or could not determine file size');
-            }
           } else {
-            console.error('Could not retrieve local URI for the video');
             Alert.alert('Error', 'Failed to retrieve local URI for the video.');
           }
         } else {
           Alert.alert('Unsupported file type');
         }
-      } else {
-        console.error('No valid assets returned from ImagePicker');
-        Alert.alert('Error', 'No valid assets returned from ImagePicker');
-      }
+
     } catch (error) {
-      console.error('Error opening image library:', error);
-      Alert.alert('Error opening image library. Please try again.');
+      Alert.alert('Error. Please try again.');
     }
   };
 
@@ -457,9 +428,9 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
                       source={{uri: family.avatar}}
                       style={styles.avatarFirst}
                     />
-                    <View
+                    {/* <View
                       style={[styles.activeDotBig, {bottom: 40, left: 55}]}
-                    />
+                    /> */}
                     <Text style={styles.avatarTextFirst}>
                       {' '}
                       {family.name}
@@ -468,10 +439,10 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
                 </>
               )}
               <Text style={[styles.introText, {color: color.text}]}>
-                You haven't received any message from  {family?.name} yet.
+                {translate('You havent received any message from')}  {family?.name} {translate('yet')}.
               </Text>
               <Text style={[styles.introText, {color: color.textSubdued}]}>
-                Start the conversation by sending a message.
+                {translate('Start the conversation by sending a message.')}
               </Text>
               <View style={{backgroundColor: 'white', minHeight: 470}}></View>
             </View>
@@ -487,7 +458,7 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         </TouchableOpacity>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
           <TextInput
-            style={[styles.input, {backgroundColor: color.white}, {flex: 1}]}
+            style={[styles.input, {backgroundColor: color.white, color:color.text}, {flex: 1}]}
             value={message}
             onChangeText={setMessage}
             placeholder="Aa">

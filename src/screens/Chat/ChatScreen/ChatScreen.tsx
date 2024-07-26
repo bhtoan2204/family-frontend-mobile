@@ -13,6 +13,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import styles from './styles';
 import {ChatScreenProps} from 'src/navigation/NavigationTypes';
@@ -66,6 +67,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   let socket = getSocket();
   const color = useThemeColors();
   const translate = useSelector(getTranslate);
+  const [loading, setLoading] = useState(false);
 
   const markSeenMessage = async (receiverId?: string) => {
     try {
@@ -77,9 +79,11 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   };
 
 
+  
   const fetchMessages = useCallback(async () => {
     setReceiver(user);
-  
+    setLoading(true); 
+
     try {
       const response = await ChatServices.GetMessages({
         id_user: receiverId,
@@ -92,21 +96,21 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
             setImages(prevImages => [...prevImages, message.content]);
           }
           return { ...message, timestamp: new Date(message.timestamp) };
-         
         });
-        
+
         if (currentIndex === 0) {
           setMessages(newMessages);
         } else {
           setMessages((prevMessages) => [...prevMessages, ...newMessages]);
         }
-        
+
         setHasReceivedMessage(true);
         setCurrentIndex(currentIndex + 1);
-        console.log(currentIndex)
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
+    } finally {
+      setLoading(false); 
     }
   }, [receiverId, currentIndex]);
   
@@ -122,7 +126,6 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         message: message,
         receiverId: receiverId,
       });
-      //fetchNewMessages(response);
     } catch (error) {
       console.error('Error sending messages:', error);
     }
@@ -134,27 +137,26 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         uri: uri,
         receiverId: receiverId,
       });
-      //fetchNewMessages(response);
     } catch (error) {
       console.error('Error sendImage:', error);
     }
   };
 
   const fetchNewMessages = (newMessage: Message) => {
-    console.log(newMessage)
     setMessages(prevMessages => [newMessage, ...prevMessages]);
   };
 
   const sendVideoMessage = async (uri: any) => {
+    setLoading(true);
     try {
-      
-      const response = await ChatServices.sendVideoMessage(receiverId, uri)
-      const data: Message = response;
-      if (response) {
-        fetchNewMessages(data);
-      } 
+      const response = await ChatServices.sendVideoMessage(receiverId, uri);
+      setLoading(false);
+
     } catch (error) {
-      throw new Error('API request failed');
+      setLoading(false);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -197,11 +199,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         const uri = asset.uri;
         console.log('Selected URI:', uri);
   
-        if (!uri) {
-          console.error('No URI returned from ImagePicker');
-          Alert.alert('Error', 'Failed to pick an image or video.');
-          return;
-        }
+  
   
         if (asset.type === 'image') {
           const compressedImage = await ImageManipulator.manipulateAsync(
@@ -249,7 +247,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         Alert.alert('Error', 'No valid assets returned from ImagePicker');
       }
     } catch (error) {
-      Alert.alert('Error opening image library. Please try again.');
+      Alert.alert('Error. Please try again.');
     }
   };
 
@@ -299,7 +297,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
 
 
 
-  useEffect(() => {
+    useEffect(() => {
     if (socket) {
       socket.on('onNewMessage', fetchNewMessages);
     }
@@ -309,7 +307,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         socket.off('onNewMessage', fetchNewMessages);
       }
     };
-  }, [socket]);
+  }, [socket, fetchNewMessages]);
 
   
   const handleVideoCall = (receiverId?: string) => {
@@ -325,11 +323,15 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   };
 
   
-  const formatDateTime = (dateTime: Date) => {
+  const formatDateTime = (dateTime: Date | null | undefined) => {
+    if (!(dateTime instanceof Date) || isNaN(dateTime.getTime())) {
+      return 'Invalid date';
+    }
+  
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-
+  
     if (
       dateTime.getDate() === today.getDate() &&
       dateTime.getMonth() === today.getMonth() &&
@@ -344,7 +346,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
       dateTime.getMonth() === yesterday.getMonth() &&
       dateTime.getFullYear() === yesterday.getFullYear()
     ) {
-      return `Yesterday ${dateTime.getHours()}:${dateTime
+      return `${translate('Yesterday')} ${dateTime.getHours()}:${dateTime
         .getMinutes()
         .toString()
         .padStart(2, '0')}`;
@@ -357,8 +359,9 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   };
 
   const  loadMoreMessages = () => {
-
   }
+
+  {loading && <ActivityIndicator size="large" color={color.text} style={{backgroundColor: color.text}} />} 
 
   return (
     <KeyboardAvoidingView
