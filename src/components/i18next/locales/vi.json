@@ -229,6 +229,7 @@
   "forgotPasswordTitle": "Quên Mật Khẩu?",
   "accountTitle": "Vui lòng chọn một tùy chọn và nhập email hoặc số điện thoại của bạn để đặt lại mật khẩu.",
   "email": "Email",
+  "EmailAddress": "Địa chỉ email",
   "phone": "Điện thoại",
   "enterEmail": "Nhập email của bạn",
   "enterPhone": "Nhập số điện thoại của bạn",

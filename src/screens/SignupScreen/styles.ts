@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: screenWidth * 0.07,
+    paddingHorizontal: screenWidth * 0.03,
     backgroundColor: COLORS.PaleAqua,
     flexDirection: 'row',
     alignSelf: 'center',

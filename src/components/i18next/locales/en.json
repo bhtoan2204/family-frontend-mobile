@@ -233,7 +233,7 @@
     "forgotPasswordTitle": "Forgot Your Password?",
     "accountTitle": "Please select an option and enter your email or phone number to reset your password.",
     "email": "Email",
-    "phone": "Phone",
+    "phone": "Phone Number",
     "enterEmail": "Enter your email",
     "enterPhone": "Enter your phone",
     "enterCode": "Enter Code",
@@ -330,7 +330,7 @@
     "Enter new password": "Enter new password",
     "Confirm New Password": "Confirm New Password",
     "Confirm new password": "Confirm new password",
-    
+    "EmailAddress": "Email Address",
     "timeExpired": "Time Expired",
     "codeExpiredMessage": "The verification code has expired. Please request a new one.",
     "ok": "OK"

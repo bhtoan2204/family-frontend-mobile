@@ -9,7 +9,6 @@ const progressBarHeight = 10;
 const styles = StyleSheet.create({
   keyboardView: {
     flex: 1,
-    backgroundColor: COLORS.white,
   },
   safeAreaStyle: {
     flex: 1,
@@ -18,6 +17,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
     justifyContent: 'center',
+    alignSelf: 'center',
+    width: '90%',
+    
   },
   image: {
     width: '100%',
@@ -25,42 +27,57 @@ const styles = StyleSheet.create({
     marginBottom: 60,    
   },
   forgotPasswordTitle: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
-    color: COLORS.black,
     textAlign: 'center',
     marginBottom: 16,
+    marginTop: 16,
   },
   accountTitle: {
-    fontSize: 16,
-    color: COLORS.gray,
+    fontSize: 15,
     textAlign: 'center',
     marginBottom: 32,
+    fontWeight: 'semibold',
+    
   },
   optionContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
     marginBottom: 4,
   },
-  optionButton: {
+  optionEmailButton: {
+    marginBottom: 20,
+    padding: 10,
+  },
+  optionEmailButton1: {
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
-    borderWidth: 1,
+    marginBottom: 20,
+  },
+  optionPhoneButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    borderWidth: 0.5,
     borderColor: '#f0f0f0',
   },
   selectedOption: {
-    backgroundColor: COLORS.Rhino,
     borderColor: '#f0f0f0',
   },
   optionText: {
     fontSize: 16,
     color: COLORS.gray,
+    padding: 5,
+    alignSelf: 'center',
+    fontWeight: 'bold',
   },
   selectedOptionText: {
     fontSize: 16,
     color: COLORS.white,
     fontWeight: 'bold',
+    padding: 5,
+    alignSelf: 'center',
   },
   inputContainer: {
     marginBottom: 16,
@@ -113,7 +130,7 @@ const styles = StyleSheet.create({
   arrowButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 50,
+    marginBottom: 20,
   },
   arrowText: {
     fontSize: 16,
@@ -122,8 +139,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   backButton: {
-    color: COLORS.black,
-    marginLeft: 10,
+    marginLeft: 30,
+    marginTop: 20,
   },
   enterCodeButton: {
     flexDirection: 'row',
