@@ -84,6 +84,49 @@ const styles = StyleSheet.create({
     marginTop: screenHeight * 0.09,
     alignSelf: 'center',
   },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  datePickerContainer: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+label: {
+    fontSize: 16,
+    color: COLORS.black,
+  },
+genderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  radioContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  radioCircle: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: COLORS.black,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  selectedRb: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: COLORS.black,
+  },
+  radioText: {
+    fontSize: 16,
+    color: COLORS.black,
+  },
+
 });
 
 export default styles;

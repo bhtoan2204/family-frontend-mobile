@@ -233,74 +233,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                         <Text style={styles.errorText}>{errors.lastName}</Text>
                       )}
                     </View>
-                    <View style={styles.marginBottom}>
-                      <View style={{flexDirection: 'row'}}>
-                        <View
-                          style={{
-                            ...styles.placeholder,
-                            borderColor: errors.birthdate
-                              ? COLORS.red
-                              : '#2A475E',
-                            flex: 1,
-                            marginRight: 5,
-                            backgroundColor: color.white,
-                          }}>
-                          <MaterialCommunityIcons
-                            name="calendar"
-                            style={[styles.Icon, {color: color.icon}]}
-                          />
-                          <TouchableOpacity
-                            onPress={() => setShowDatePicker(true)}>
-                            <Text style={{marginLeft: 10, color: '#2A475E'}}>
-                              {values.birthdate
-                                ? values.birthdate.toLocaleDateString()
-                                : ''}
-                            </Text>
-                          </TouchableOpacity>
-                          {showDatePicker && (
-                            <DateTimePicker
-                              value={values.birthdate || new Date()}
-                              mode="date"
-                              display="default"
-                              onChange={(event, date) => {
-                                setShowDatePicker(false);
-                                if (date) {
-                                  setFieldValue('birthdate', date);
-                                }
-                              }}
-                            />
-                          )}
-                        </View>
-                        <View
-                          style={{
-                            ...styles.placeholder,
-                            borderColor: errors.gender ? COLORS.red : '#2A475E',
-                            flex: 1,
-                            marginLeft: 5,
-                            backgroundColor: color.white,
-                          }}>
-                          <MaterialCommunityIcons
-                            name="gender-male-female"
-                            style={[styles.Icon, {color: color.icon}]}
-                          />
-                          <Picker
-                            selectedValue={values.gender}
-                            style={{marginLeft: 10, color: '#2A475E'}}
-                            onValueChange={itemValue =>
-                              setFieldValue('gender', itemValue)
-                            }>
-                            <Picker.Item label={'Male'} value="male" />
-                            <Picker.Item label={'Female'} value="female" />
-                          </Picker>
-                        </View>
-                      </View>
-                      {errors.birthdate && touched.birthdate && (
-                        <Text style={styles.errorText}>{errors.birthdate}</Text>
-                      )}
-                      {errors.gender && touched.gender && (
-                        <Text style={styles.errorText}>{errors.gender}</Text>
-                      )}
-                    </View>
+
                     <View style={styles.marginBottom}>
                       {/* <Text style={styles.title}>{TEXTS.EMAIL}</Text> */}
                       <View
@@ -368,7 +301,6 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                       )}
                     </View>
                     <View style={styles.marginBottom}>
-                      {/* <Text style={styles.title}>{TEXTS.PASSWORD}</Text> */}
                       <View
                         style={{
                           ...styles.placeholder,
@@ -421,6 +353,86 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                         <Text style={styles.errorText}>{errors.submit}</Text>
                       </View>
                     )}
+
+                    <View style={styles.marginBottom}>
+                      <View style={styles.inputContainer}>
+                        <Text style={[styles.label, {color: color.text}]}>
+                          {translate('Gender')}
+                        </Text>
+                        <View style={styles.genderContainer}>
+                          <TouchableOpacity
+                            style={styles.radioContainer}
+                            onPress={() => setFieldValue('gender', 'male')}>
+                            <View
+                              style={[
+                                styles.radioCircle,
+                                {borderColor: color.text},
+                              ]}>
+                              {values.gender === 'male' && (
+                                <View
+                                  style={[
+                                    styles.selectedRb,
+                                    {backgroundColor: color.black},
+                                  ]}
+                                />
+                              )}
+                            </View>
+                            <Text
+                              style={[styles.radioText, {color: color.text}]}>
+                              {translate('male')}
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={styles.radioContainer}
+                            onPress={() => setFieldValue('gender', 'female')}>
+                            <View
+                              style={[
+                                styles.radioCircle,
+                                {borderColor: color.text},
+                              ]}>
+                              {values.gender === 'female' && (
+                                <View
+                                  style={[
+                                    styles.selectedRb,
+                                    {backgroundColor: color.black},
+                                  ]}
+                                />
+                              )}
+                            </View>
+                            <Text
+                              style={[styles.radioText, {color: color.text}]}>
+                              {translate('female')}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+
+                      {errors.gender && touched.gender && (
+                        <Text style={styles.errorText}>{errors.gender}</Text>
+                      )}
+
+                      <View style={styles.inputContainer}>
+                        <View style={styles.datePickerContainer}>
+                          <Text style={[styles.label, {color: color.text}]}>
+                            {translate('Birth Date')}
+                          </Text>
+                          <DateTimePicker
+                            value={values.birthdate || new Date()}
+                            mode="date"
+                            display="default"
+                            onChange={(event, date) => {
+                              if (date) {
+                                setFieldValue('birthdate', date);
+                              }
+                            }}
+                          />
+                        </View>
+                      </View>
+
+                      {errors.birthdate && touched.birthdate && (
+                        <Text style={styles.errorText}>{errors.birthdate}</Text>
+                      )}
+                    </View>
                     <View style={styles.marginVerticalFlex}>
                       <Checkbox
                         style={styles.checkbox}
