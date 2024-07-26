@@ -1,13 +1,22 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
+import {Ionicons} from '@expo/vector-icons';
+import {useNavigation} from '@react-navigation/native';
 import styles from './styles';
-import { COLORS } from 'src/constants';
-import { ProfileServices } from 'src/services/apiclient';
-import { useSelector } from 'react-redux';
-import { getTranslate } from 'src/redux/slices/languageSlice';
-import { useThemeColors } from 'src/hooks/useThemeColor';
+import {COLORS} from 'src/constants';
+import {ProfileServices} from 'src/services/apiclient';
+import {useSelector} from 'react-redux';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
 
 const FeedbackScreen = () => {
   const [rating, setRating] = useState<number>(0);
@@ -31,7 +40,10 @@ const FeedbackScreen = () => {
       setRating(0);
       setFeedback('');
     } catch (error) {
-      Alert.alert('Error', 'An error occurred while submitting your feedback. Please try again later.');
+      Alert.alert(
+        'Error',
+        'An error occurred while submitting your feedback. Please try again later.',
+      );
       console.error('Error submitting feedback:', error);
     }
   };
@@ -40,18 +52,24 @@ const FeedbackScreen = () => {
     <KeyboardAvoidingView
       style={[styles.container, {backgroundColor: color.background}]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} 
-    >
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.navigate('HomeTab', {screen: 'HomeScreen'})}>
+        <Ionicons name="close" size={32} color={color.text} />
+      </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('HomeTab', {screen: 'HomeScreen'})}>
-          <Ionicons name="close" size={32} color={color.text}/>
-        </TouchableOpacity>
-        <Ionicons name="chatbubble-ellipses-outline" size={64} color={COLORS.BlueLight} />
-        <Text style={[styles.title, {color: color.text}]}>{translate('YourFeedback')}</Text>
-        <Text style={[styles.subtitle, {color: color.text}]}>{translate('FeedbackQuestion')}</Text>
+        <Text style={[styles.title, {color: color.text}]}>
+          {translate('YourFeedback')}
+        </Text>
+        <Text style={[styles.subtitle, {color: color.text}]}>
+          {translate('FeedbackQuestion')}
+        </Text>
         <View style={styles.ratingContainer}>
-          {Array.from({ length: 5 }, (_, index) => (
-            <TouchableOpacity key={index} onPress={() => handleRating(index + 1)}>
+          {Array.from({length: 5}, (_, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => handleRating(index + 1)}>
               <Ionicons
                 name={index < rating ? 'star' : 'star-outline'}
                 size={32}
@@ -61,15 +79,20 @@ const FeedbackScreen = () => {
           ))}
         </View>
         <TextInput
-          style={[styles.feedbackInput, {backgroundColor: color.white, color: color.text}]}
+          style={[
+            styles.feedbackInput,
+            {backgroundColor: color.white, color: color.text},
+          ]}
           placeholder={translate('FeedbackInput')}
-          placeholderTextColor={color.textSubdued} 
+          placeholderTextColor={color.textSubdued}
           multiline
           value={feedback}
           onChangeText={setFeedback}
         />
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>{translate('SubmitFeedback')}</Text>
+          <Text style={styles.submitButtonText}>
+            {translate('SubmitFeedback')}
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
