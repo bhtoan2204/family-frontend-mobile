@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -36,6 +36,10 @@ import moment from 'moment';
 import {DailyExpense} from 'src/interface/expense/DailyExpense';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate} from 'src/redux/slices/languageSlice';
+import { Toast } from 'react-native-toast-notifications';
+import DeleteButton from 'src/components/Button/DeleteButton';
+import SaveButton from 'src/components/Button/SaveButton';
+import CancelButton from 'src/components/Button/CancelButton';
 
 const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   const dispatch = useDispatch();
@@ -58,7 +62,6 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   const [currentImageUri, setCurrentImageUri] = useState<string | undefined>(
     expense?.image_url,
   );
-  const [uriImage, setUriImage] = useState<string | null>(null);
   const family = useSelector(selectSelectedFamily);
   const [loading, setLoading] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
@@ -67,6 +70,8 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   const [page, setPage] = useState(1);
   const color = useThemeColors();
   const translate = useSelector(getTranslate);
+  const [formattedAmount, setFormattedAmount] = useState('');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(expense?.financeExpenditureType.id_expenditure_type);
 
   useEffect(() => {
     fetchExpenseType(family.id_family);
@@ -96,31 +101,42 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   const handleEdit = () => {
     setIsEditing(true);
   };
+  useEffect(() => {
+    const id = expenseType.find(item => item.expense_type_name === selectedCategory)?.id_expenditure_type;
+    setSelectedCategoryId(id);
+  }, [selectedCategory, expenseType]);
+  
   const handleSave = async () => {
+    setLoading(true);
     try {
-      const response = await ExpenseServices.updateExpense(
-        expense?.id_expenditure,
-        expense?.id_family,
-        expense?.id_created_by,
-        expense?.id_expenditure_type,
-        expense?.amount,
-        expense?.expenditure_date,
-        expense?.description,
-        currentImageUri ? currentImageUri : expense?.image_url,
-      );
-
-      if (response) {
-        Alert.alert('Success', 'Expense updated successfully');
-
+      const amount = parseFloat(editedAmount);
+      console.log(expense?.id_expenditure)
+      if (selectedCategoryId !== undefined) {
+        const response = await ExpenseServices.updateExpense(
+            expense?.id_expenditure,
+            family?.id_family,
+            expense?.id_created_by,
+            selectedCategoryId,
+            amount,        
+            chosenDate.toISOString(),
+            editedDescription,
+            currentImageUri ? currentImageUri : expense?.image_url,
+          );
+        console.log('update: ', response)
+        if (response) {
         dispatch(updateExpense(response));
-        setCurrentImageUri(response.image_url);
-        navigation.goBack();
+        Toast.show('Expense updated successfully', { type: 'success', duration: 3000 });
+        setIsEditing(false);
+        }
       } else {
-        Alert.alert('Error', 'Failed to update expense');
+        Toast.show('Selected category not found', { type: 'danger', duration: 3000 });
       }
+      setLoading(false);
+
     } catch (error) {
-      console.error('Error updating expense:', error);
-      Alert.alert('Error', 'An error occurred while updating expense');
+      console.error('Error updating income:', error);
+      Toast.show('An error occurred while updating expense', { type: 'danger', duration: 3000 });
+      setLoading(false);
     }
   };
 
@@ -208,6 +224,7 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
       setLoading(false);
     }
   };
+
   const handleSelectImageEdit = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -243,6 +260,33 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
     }
   };
 
+  const formatNumberWithDots = (value) => {
+    if (value === '') return '';
+    
+    const rawValue = value.replace(/[^\d]/g, '');
+    
+    const parts = rawValue.split('').reverse();
+    const formattedValue = parts.reduce((acc, digit, index) => {
+      if (index > 0 && index % 3 === 0) {
+        acc.push('.');
+      }
+      acc.push(digit);
+      return acc;
+    }, []).reverse().join('');
+  
+    return formattedValue;
+  };
+  
+
+    const handleAmountChange = (text) => {
+      const formatted = formatNumberWithDots(text);
+      
+      const rawValue = formatted.replace(/\./g, '');
+      const numericValue = parseFloat(rawValue);
+  
+      setEditedAmount(numericValue.toString());
+      setFormattedAmount(formatted);
+    };
   return (
     <SafeAreaView
       style={[styles.safeArea, {backgroundColor: color.background}]}>
@@ -294,9 +338,11 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
               <TextInput
                 style={styles.valueAmount}
                 keyboardType="numeric"
-                value={editedAmount}
-                onChangeText={setEditedAmount}
-              />
+                value={formattedAmount ? formattedAmount: editedAmount}
+                onChangeText={handleAmountChange}
+                placeholder={editedAmount}
+
+                />
               <Text style={styles.valueAmount}> đ</Text>
             </View>
           )}
@@ -477,32 +523,16 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
       </View>
 
       {isEditing && (
-        <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity style={[styles.button]} onPress={handleCancel}>
-            <Text style={styles.buttonText}>{translate('Cancel')}</Text>
-          </TouchableOpacity>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal:10 }}>
+          <CancelButton onPress={handleCancel} />
+          <SaveButton onPress={handleSave} />
 
-          <TouchableOpacity
-            style={[styles.button, styles.saveButton]}
-            onPress={handleSave}>
-            <Text style={[styles.buttonText, {color: 'white'}]}>
-              {translate('Save')}
-            </Text>
-          </TouchableOpacity>
         </View>
       )}
 
       {!isEditing && (
-        <TouchableOpacity
-          style={[
-            styles.button,
-            styles.deleteButton,
-            {borderColor: color.background},
-          ]}
-          onPress={handleDelete}>
-          <Text style={styles.deleteText}>{translate('Delete')}</Text>
-          {/* <Icon name="trash-outline" size={24} style={styles.editIcon} /> */}
-        </TouchableOpacity>
+          <DeleteButton onPress={handleDelete} />
+
       )}
 
       <ImageView
@@ -576,9 +606,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#f0f0f0',
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 50,
+    alignItems: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 100,
+    borderRadius: 10,
+    marginTop: 10,
+    alignSelf: 'center',
   },
   buttonText: {
     fontSize: 18,
@@ -673,7 +707,8 @@ const styles = StyleSheet.create({
   deleteText: {
     color: 'white',
     fontSize: 17,
-    fontFamily: 'System',
+    borderRadius: 10,
+
   },
   button: {
     alignItems: 'center',

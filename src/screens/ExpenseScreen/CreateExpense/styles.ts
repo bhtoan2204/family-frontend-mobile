@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   currency: {
     fontSize: 16,
     justifyContent: 'center',
-    padding: screenWidth * 0.03,
+    padding: screenWidth * 0.04,
   },
   inputWrapper: {
     flex: 1,

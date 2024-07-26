@@ -63,9 +63,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
     marginBottom: 15,
-    color: '#333',
   },
   memberItem: {
     padding: 10,

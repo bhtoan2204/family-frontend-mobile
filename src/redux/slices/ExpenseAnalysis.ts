@@ -29,15 +29,32 @@ const expenseSlice = createSlice({
     addExpense: (state, action: PayloadAction<DailyExpense>) => {
       state.expenses.push(action.payload);
     },
-    updateExpense: (state, action: PayloadAction<DailyExpense>) => {
+    updateExpense: (state, action: PayloadAction<Partial<DailyExpense>>) => {
       const index = state.expenses.findIndex(expense => expense.id_expenditure === action.payload.id_expenditure);
+      const payload = action.payload;
+
       if (index !== -1) {
-        state.expenses[index] = action.payload;
+        const oldAmount = state.expenses[index].amount;
+
+        state.expenses[index] = { ...state.expenses[index], ...payload };
+        const newAmount = state.expenses[index].amount;
+        state.sumExpense = state.sumExpense - oldAmount + newAmount;
+
+      }
+      if (state.selectedExpense && state.selectedExpense.id_expenditure === payload.id_expenditure) {
+        state.selectedExpense = { ...state.selectedExpense, ...payload };
       }
     },
     deleteExpense: (state, action: PayloadAction<number>) => {
+      const expenseToRemove = state.expenses.find(expense => expense.id_expenditure === action.payload);
+      if (expenseToRemove) {
+        state.sumExpense -= expenseToRemove.amount;
+      }
+      
       state.expenses = state.expenses.filter(expense => expense.id_expenditure !== action.payload);
-      state.selectedExpense = null; 
+      if (state.selectedExpense && state.selectedExpense.id_expenditure === action.payload) {
+        state.selectedExpense = null;
+      }
     },
     
     setSelectedExpense: (state, action: PayloadAction<DailyExpense | null>) => {

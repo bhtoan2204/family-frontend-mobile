@@ -53,6 +53,7 @@ import PickerModal from './ModalOption';
 import CategoryUtilities from './CategoryUtilities';
 import { getTranslate } from 'src/redux/slices/languageSlice';
 import { useThemeColors } from 'src/hooks/useThemeColor';
+import { Toast } from 'react-native-toast-notifications';
 
 const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
 
@@ -60,7 +61,6 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const [description, setDescription] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date());
   const [image, setImage] = useState<string>('');
-
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<string>('');
@@ -68,7 +68,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   let state = useSelector(getType);
   const expenseCategory = useSelector(selectSelectedExpenseType);
   const incomeCategory = useSelector(selectSelectedIncomeType);
-
+  const [formattedAmount, setFormattedAmount] = useState('');
   const [amount, setAmount] = useState<number | null>(null);
   const [uriImage, setUriImage] = useState<string | null>(null);
   const [showLargeImage, setShowLargeImage] = useState(false);
@@ -78,10 +78,8 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
   const expenseType = useSelector(selectExpenseTypes);
   const incomeType=useSelector(selectIncomeTypes);
   const scrollX = useRef(new Animated.Value(0)).current;
-
   const [currentPage, setCurrentPage] = useState(0);
   const widthOfYourPage = Dimensions.get('window').width;
-
   const [isScrollViewVisible, setScrollViewVisible] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
   const dataExpenseTypeToShow = Object.values(expenseType).slice(0, 6);
@@ -138,20 +136,25 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
 
  
 
+
+
   const handleSubmit = async () => {
     if (!amount || !date) {
-      Alert.alert('Error', 'Please fill in all required fields');
+      Toast.show('Please fill in all required fields', {
+        type: 'danger',
+      });
       return;
     }
-  
+
     try {
       switch (selectedMenu) {
         case 'Expense':
-          if (!expenseCategory || !expenseCategory.id_expenditure_type || !memberSelected.user.id_user) {
-            Alert.alert('Error', 'Please select an expense category');
+          if (!expenseCategory || !expenseCategory.id_expenditure_type || !memberSelected?.id_user) {
+            Toast.show('Please select an expense category', {
+              type: 'danger',
+            });
             return;
           }
- 
 
           await ExpenseServices.createExpense(
             family?.id_family,
@@ -163,13 +166,15 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
             uriImage
           );
           break;
-  
+
         case 'Income':
           if (!incomeCategory || !incomeCategory.id_income_source) {
-            Alert.alert('Error', 'Please select an income category');
+            Toast.show('Please select an income category', {
+              type: 'danger',
+            });
             return;
           }
-   
+
           await IncomeServices.createIncome(
             family?.id_family,
             amount,
@@ -179,13 +184,15 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
             description
           );
           break;
-  
+
         case 'Utilities':
           if (!utilitiesSelect || !utilitiesSelect.id_utilities_type) {
-            Alert.alert('Error', 'Please select a utility category');
+            Toast.show('Please select a utility category', {
+              type: 'danger',
+            });
             return;
           }
-  
+
           await IncomeServices.createUtility(
             family?.id_family,
             utilitiesSelect.id_utilities_type,
@@ -194,21 +201,29 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
             uriImage
           );
           break;
-  
+
         default:
-          Alert.alert('Error', 'Invalid menu selection');
+          Toast.show('Invalid menu selection', {
+            type: 'danger',
+          });
           return;
       }
-  
-      Alert.alert('Success', 'Transaction created successfully');
+
+      Toast.show('Transaction recorded', {
+        type: 'success',
+      });
       setAmount(null);
       setDescription('');
       setUriImage(null);
-  
-    } catch(error) {
-      Alert.alert('Error', 'Failed to create transaction');
+
+    } catch (error) {
+      Toast.show('Failed to create transaction', {
+        type: 'danger',
+      });
     }
   };
+
+
   
   
   const handleDateChange = (event: any, selectedDate?: Date) => {
@@ -291,6 +306,33 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
     }
   };
 
+  const formatNumberWithDots = (value) => {
+    if (value === '') return '';
+    
+    const rawValue = value.replace(/[^\d]/g, '');
+    
+    const parts = rawValue.split('').reverse();
+    const formattedValue = parts.reduce((acc, digit, index) => {
+      if (index > 0 && index % 3 === 0) {
+        acc.push('.');
+      }
+      acc.push(digit);
+      return acc;
+    }, []).reverse().join('');
+  
+    return formattedValue;
+  };
+  
+
+    const handleAmountChange = (text) => {
+      const formatted = formatNumberWithDots(text);
+      
+      const rawValue = formatted.replace(/\./g, '');
+      const numericValue = parseFloat(rawValue);
+  
+      setAmount(numericValue.toString());
+      setFormattedAmount(formatted);
+    };
   return (
     <ImageBackground
       source={require('../../../assets/images/view-all-family-2.png')}
@@ -332,11 +374,11 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
               </Text>
               <View style={{flexDirection: 'row'}}>
                 <View style={styles.inputWrapper}>
-                  <TextInput
-                    style={[styles.inputAmount, {color: 'red', fontSize: 20}]}
+                <TextInput
+                    style={[styles.inputAmount, {color: selectedMenu == 'Income' ? 'green' : 'red', fontSize: 24, fontWeight: 'bold'}]}
                     placeholder={translate('Enter amount')}
-                    value={amount !== null ? amount.toString() : ''}
-                    onChangeText={text => setAmount(text ? Number(text) : null)}
+                    value={formattedAmount}
+                    onChangeText={handleAmountChange}
                     keyboardType="numeric"
                   />
                 </View>

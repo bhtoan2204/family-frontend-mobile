@@ -231,7 +231,7 @@ const IncomeServices = {
         const response: AxiosResponse = await instance.put(
           `${baseUrl}/api/v1/finance/income/updateIncome`,
           {
-            id_income,
+              id_income,
               id_family,
               id_created_by,
               id_income_source,

@@ -11,10 +11,14 @@ import { IncomeServices } from 'src/services/apiclient';
 import { COLORS } from 'src/constants';
 import { Feather } from '@expo/vector-icons';
 import moment from 'moment';
-import { getSelectedIncome, updateIncome } from 'src/redux/slices/IncomeAnalysis';
+import { deleteIncome, getSelectedIncome, updateIncome } from 'src/redux/slices/IncomeAnalysis';
 import { Member } from 'src/interface/member/member';
 import { getTranslate } from 'src/redux/slices/languageSlice';
 import { useThemeColors } from 'src/hooks/useThemeColor';
+import DeleteButton from 'src/components/Button/DeleteButton';
+import CancelButton from 'src/components/Button/CancelButton';
+import SaveButton from 'src/components/Button/SaveButton';
+import { Toast } from 'react-native-toast-notifications';
 
 const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
   const dispatch = useDispatch();
@@ -22,7 +26,7 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [incomeType, setincomeType] = useState<IncomeType[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(income?.financeIncomeSource.income_source_name);
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(income?.financeIncomeSource?.income_source_name || ''); 
 
 
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -37,36 +41,46 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const translate = useSelector(getTranslate);
   const color = useThemeColors();  
-  
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(income?.financeIncomeSource.id_income_source);
+
+
   useEffect(() => {
     fetchincomeType(family?.id_family);
-  }, []);
+  }, [family?.id_family]);
+  
+  useEffect(() => {
+    console.log('Selected Category:', selectedCategory);
+    const id = incomeType.find(item => item.income_source_name === selectedCategory)?.id_income_source;
+    setSelectedCategoryId(id);
+    console.log('Selected Category ID:', id);
+  }, [selectedCategory, incomeType]);
+  
 
   const fetchincomeType = async (id_family: any) => {
     try {
       const response = await IncomeServices.getIncomeType(id_family);
+      console.log('Fetched income types:', response);
       setincomeType(response);
     } catch (error: any) {
       console.error('Error in getincomeType:', error.message);
     }
   };
+  
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleSave = async () => {
+    setLoading(true);
+
     try {
       const amount = parseFloat(editedAmount);
-      const selectedCategoryId = incomeType.find(item => item.income_source_name === selectedCategory)?.id_income_source;
-      console.log(income?.id_income,
-        family?.id_family,
-        editedAmount,
-        income?.id_created_by,
-        selectedCategoryId,
-        chosenDate,
-        editedDescription)
-
+      if (!selectedCategoryId) {
+        Toast.show('Invalid amount format', { type: 'danger', duration: 3000 });
+        return;
+      }
+  
       if (selectedCategoryId !== undefined) {
         const data = await IncomeServices.updateIncome(
           income?.id_income,
@@ -77,14 +91,18 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
           chosenDate.toISOString(),
           editedDescription
         );
-
         dispatch(updateIncome(data));
-        //navigation.goBack();
+
+        Toast.show('Income updated successfully', { type: 'success', duration: 3000 });
       } else {
-        console.error('Selected category ID not found');
+        Toast.show('Selected category not found', { type: 'danger', duration: 3000 });
       }
+      setLoading(false);
+
     } catch (error) {
       console.error('Error updating income:', error);
+      Toast.show('An error occurred while updating income', { type: 'danger', duration: 3000 });
+      setLoading(false);
     }
   };
   
@@ -103,7 +121,8 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
           style: 'destructive',
           onPress: () => {
             if (income?.id_income) {
-              // dispatch(deleteincome(income.id));
+              dispatch(deleteIncome(income.id_income));
+              Toast.show('Income delete successfully', { type: 'success', duration: 3000 });
               navigation.goBack();
             }
           },
@@ -212,8 +231,7 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
                       label={item.income_source_name}
                       value={item.income_source_name}
                       color={color.text}
-
-                    />
+                  />
                   ))}
                 </Picker>
               )}
@@ -265,25 +283,18 @@ const IncomeDetailScreen = ({ navigation }: IncomeDetailScreenProps) => {
      </View>
      
         {isEditing && (
-          <View style={{flexDirection: 'row'}}> 
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal:10 }}>
+            <CancelButton onPress={handleCancel} />
+            <SaveButton onPress={handleSave} />
 
-            <TouchableOpacity style={[styles.button, ]} onPress={handleCancel}>
-              <Text style={styles.buttonText}>{translate('Cancel')}</Text>
-            </TouchableOpacity>
-
-              <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSave}>
-              <Text style={[styles.buttonText,{ color: 'white'}]}>{translate('Save')}</Text>
-              </TouchableOpacity>
           </View>
 
         )}
        
 
        {!isEditing && (
-          <TouchableOpacity style={[styles.button, styles.deleteButton, {borderColor: color.background}]} onPress={handleDelete}>
-          <Text style={styles.deleteText}>{translate('Delete')}</Text>
-          {/* <Icon name="trash-outline" size={24} style={styles.editIcon} /> */}
-        </TouchableOpacity>
+                    <DeleteButton onPress={handleDelete} />
+
         )}
 
      
@@ -475,6 +486,7 @@ saveButton: {
 
 
 export default IncomeDetailScreen;
+
 
 
 

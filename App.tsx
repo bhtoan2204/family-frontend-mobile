@@ -14,6 +14,7 @@ import {
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
 import { ToastProvider } from 'react-native-toast-notifications'
+import CustomToast from 'src/components/Toast/Toast';
 
 const App: React.FC = () => {
 
@@ -22,7 +23,12 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <ToastProvider>
+    <ToastProvider
+      placement="top" 
+      duration={3000}
+      animationType="slide-in"
+      renderToast={({ message, type }) => <CustomToast message={message} type={type} />}
+    >
       <Provider store={store}>
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
@@ -30,7 +36,6 @@ const App: React.FC = () => {
               <ActionSheetProvider>
                 <MenuProvider>
                   <BottomSheetModalProvider>
-
                     <NavigationContainer />
                   </BottomSheetModalProvider>
                 </MenuProvider>

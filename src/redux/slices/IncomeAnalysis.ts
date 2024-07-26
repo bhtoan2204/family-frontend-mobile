@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { DailyIncome } from 'src/interface/income/IncomeDaily';
-import moment from 'moment';
 
 interface IncomeSliceState {
   incomeList: DailyIncome[];
@@ -25,6 +24,7 @@ const incomeSlice = createSlice({
   reducers: {
     setIncomeList: (state, action: PayloadAction<DailyIncome[]>) => {
       state.incomeList = action.payload;
+      state.sumIncome = action.payload.reduce((sum, income) => sum + income.amount, 0);
     },
     setSelectedIncome: (state, action: PayloadAction<DailyIncome | null>) => {
       state.selectedIncome = action.payload;
@@ -36,18 +36,30 @@ const incomeSlice = createSlice({
       state.selectedDateIncome = action.payload;
     },
     deleteIncome: (state, action: PayloadAction<number>) => {
+      const incomeToRemove = state.incomeList.find(income => income.id_income === action.payload);
+      if (incomeToRemove) {
+        state.sumIncome -= incomeToRemove.amount;
+      }
       state.incomeList = state.incomeList.filter(income => income.id_income !== action.payload);
       if (state.selectedIncome && state.selectedIncome.id_income === action.payload) {
         state.selectedIncome = null;
       }
     },
-    updateIncome: (state, action: PayloadAction<DailyIncome>) => {
-      const index = state.incomeList.findIndex(income => income.id_income === action.payload.id_income);
+    updateIncome: (state, action: PayloadAction<Partial<DailyIncome>>) => {
+      const payload = action.payload;
+      
+      const index = state.incomeList.findIndex(income => income.id_income === payload.id_income);
+      
       if (index !== -1) {
-        state.incomeList[index] = action.payload;
+        const oldAmount = state.incomeList[index].amount;
+        state.incomeList[index] = { ...state.incomeList[index], ...payload };
+
+        const newAmount = state.incomeList[index].amount;
+        state.sumIncome = state.sumIncome - oldAmount + newAmount;
       }
-      if (state.selectedIncome && state.selectedIncome.id_income === action.payload.id_income) {
-        state.selectedIncome = action.payload;
+      
+      if (state.selectedIncome && state.selectedIncome.id_income === payload.id_income) {
+        state.selectedIncome = { ...state.selectedIncome, ...payload };
       }
     },
     setSumIncome(state, action: PayloadAction<number>) {
