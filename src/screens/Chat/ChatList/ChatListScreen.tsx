@@ -352,11 +352,11 @@ const ChatListScreen = ({
         </TouchableOpacity>
       </View>
       <View style={[styles.header, {backgroundColor: color.background}]}>
-        <View style={styles.searchContainer}>
+        <View style={[styles.searchContainer, {backgroundColor:color.white}]}>
           <TextInput
-            style={styles.searchInput}
+            style={[styles.searchInput, {backgroundColor:color.white}]}
             placeholder={translate('SEARCH')}
-            placeholderTextColor="#999999"
+            placeholderTextColor={color.text}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
@@ -367,8 +367,8 @@ const ChatListScreen = ({
       <View style={[styles.buttonContainer, {backgroundColor: color.background}]}>
         <TouchableOpacity
           style={[
-            styles.button,
-            selectedButton === 'Home' && styles.buttonSelected,
+            styles.button, 
+            selectedButton === 'Home' && [styles.buttonSelected],
           ]}
           onPress={handlePressHome}>
           <Text
