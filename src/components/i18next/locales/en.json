@@ -248,7 +248,7 @@
     "enterVerificationCode": "Enter Verification Code",
     "pleaseEnterCode": "Please enter the 6-digit code sent to your email or phone.",
     "timeRemaining": "Time remaining",
-    "s": "giây",
+    "s": "s",
     "invalidOTP": "Invalid OTP",
     "otpVerificationError": "An error occurred while verifying the OTP",
     "addFamilyMemberTitle": "Add Family Member",
@@ -344,5 +344,10 @@
     "InvalidEmailMessage": "Invalid Email Message",
     "VerificationCodeEntry": "Verification Code Entry",
   "VerificationCodeEntryDetail": "Please enter the verification code sent to you",
+  "CreateNewPassword": "Create New Password",
+  "CreateNewPasswordDetail": "Please enter and confirm your new password",
+"SavePassword": "Save Password",
+"SendCode": "Send Code",
+"Back":"Back",
   }
   
