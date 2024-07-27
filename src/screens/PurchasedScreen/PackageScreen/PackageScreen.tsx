@@ -8,15 +8,14 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
 import {PackageServices} from 'src/services/apiclient';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import { ViewAllPackageScreenProps } from 'src/navigation/NavigationTypes';
+import {ViewAllPackageScreenProps} from 'src/navigation/NavigationTypes';
 import {RouteProp} from '@react-navigation/native';
-import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { useDispatch, useSelector } from 'react-redux';
-import { Package } from 'src/interface/package/mainPackage';
-import { setPackage } from 'src/redux/slices/PackageSlice';
-import { getTranslate } from 'src/redux/slices/languageSlice';
-import { useThemeColors } from 'src/hooks/useThemeColor';
-
+import {selectProfile} from 'src/redux/slices/ProfileSclice';
+import {useDispatch, useSelector} from 'react-redux';
+import {Package} from 'src/interface/package/mainPackage';
+import {setPackage} from 'src/redux/slices/PackageSlice';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
 
 const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
   const [value, setValue] = React.useState(0);
@@ -57,7 +56,9 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
         </View>
 
         <View style={[styles.container]}>
-          <Text style={[styles.title, {color: color.text}]}>{translate('PACKAGE_TITLE')}</Text>
+          <Text style={[styles.title, {color: color.text}]}>
+            {translate('PACKAGE_TITLE')}
+          </Text>
           {packages.map((pkg, index) => {
             const isActive = value === index;
             return (
@@ -65,15 +66,23 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
                 key={pkg.id_main_package}
                 onPress={() => {
                   setValue(index);
-                  setSelectedPackage(pkg); 
+                  setSelectedPackage(pkg);
                   setSelectedMount(pkg.price);
-                }}
-     
-                >
-                <View style={[styles.radio, {backgroundColor: color.white}, isActive && styles.radioActive]}>
-                  <Text style={[styles.radioLabel, ]}>{pkg.name}</Text>
+                }}>
+                <View
+                  style={[
+                    styles.radio,
+                    {backgroundColor: color.white},
+                    isActive && styles.radioActive,
+                  ]}>
+                  <Text style={[styles.radioLabel]}>{pkg.name}</Text>
 
-                  <Text style={[styles.radioPrice, {color: color.text}]}>{pkg.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Text>
+                  <Text style={[styles.radioPrice, {color: color.text}]}>
+                    {pkg.price.toLocaleString('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND',
+                    })}
+                  </Text>
 
                   <View style={styles.radioBadge}>
                     <Text style={styles.radioBadgeText}>
@@ -81,7 +90,13 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
                     </Text>
                   </View>
 
-                  <Text style={[styles.radioDescription, {color: color.textSubdued}]}>{pkg.description}</Text>
+                  <Text
+                    style={[
+                      styles.radioDescription,
+                      {color: color.textSubdued},
+                    ]}>
+                    {pkg.description}
+                  </Text>
 
                   <View
                     style={[
@@ -94,12 +109,15 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
             );
           })}
           <TouchableOpacity
-          style={styles.registerButton}
-          disabled={!selectedPackage}
-          onPress={() => selectedPackage && handleSelectPackage(selectedPackage)}
-        >
-          <Text style={styles.registerButtonText}>{translate('PACKAGE_REGISTER')}</Text>
-        </TouchableOpacity>
+            style={styles.registerButton}
+            disabled={!selectedPackage}
+            onPress={() =>
+              selectedPackage && handleSelectPackage(selectedPackage)
+            }>
+            <Text style={styles.registerButtonText}>
+              {translate('PACKAGE_REGISTER')}
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ScrollView,
   Text,
@@ -9,23 +9,23 @@ import {
   Image,
   Modal,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { FamilyServices, PackageServices } from 'src/services/apiclient';
-import { PurchasedScreenProps } from 'src/navigation/NavigationTypes';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { Purchased } from 'src/interface/purchased/purchased';
+import {FamilyServices, PackageServices} from 'src/services/apiclient';
+import {PurchasedScreenProps} from 'src/navigation/NavigationTypes';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectProfile} from 'src/redux/slices/ProfileSclice';
+import {Purchased} from 'src/interface/purchased/purchased';
 import styles from './styles';
-import { Family } from 'src/interface/family/family';
-import { selectFamilies, setSelectedFamily } from 'src/redux/slices/FamilySlice';
+import {Family} from 'src/interface/family/family';
+import {selectFamilies, setSelectedFamily} from 'src/redux/slices/FamilySlice';
 import moment from 'moment';
-import { AppDispatch } from 'src/redux/store';
-import { COLORS } from 'src/constants';
-import { getTranslate } from 'src/redux/slices/languageSlice';
-import { useThemeColors } from 'src/hooks/useThemeColor';
+import {AppDispatch} from 'src/redux/store';
+import {COLORS} from 'src/constants';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
 
-const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
+const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
   const profile = useSelector(selectProfile);
   const [purchasedItems, setPurchasedItems] = useState<Purchased[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -33,7 +33,7 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
   const itemsPerPage = 10;
   const families = useSelector(selectFamilies);
   const dispatch = useDispatch<AppDispatch>();
-  const [modalVisible, setModalVisible] = useState(false); 
+  const [modalVisible, setModalVisible] = useState(false);
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
 
@@ -41,12 +41,15 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
     const id_family = undefined;
     navigation.navigate('PackStack', {
       screen: 'ViewAllPackage',
-      params: { id_family: id_family },
+      params: {id_family: id_family},
     });
   };
 
   const handleViewService = () => {
-    navigation.navigate('PackStack', { screen: 'ViewAllService' });
+    navigation.navigate('PackStack', {screen: 'ViewAllService'});
+  };
+  const handleViewCombo = () => {
+    navigation.navigate('PackStack', {screen: 'ComboScreen'});
   };
 
   useEffect(() => {
@@ -67,7 +70,7 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
   const onRenewPress = (family: Family) => {
     navigation.navigate('PackStack', {
       screen: 'ViewAllPackage',
-      params: { id_family: family.id_family },
+      params: {id_family: family.id_family},
     });
   };
 
@@ -76,33 +79,43 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
 
     navigation.navigate('FamilyStack', {
       screen: 'ViewFamily',
-      params: { id_family: family.id_family },
+      params: {id_family: family.id_family},
     });
   };
 
   const renderFamilyCards = () => {
-    return families.map((family) => (
+    return families.map(family => (
       <TouchableOpacity
         key={family.id_family}
         onPress={() => NavigateFamily(family)}
         style={[styles.familyCard, {backgroundColor: color.white}]}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.settingsIconContainer}
           onPress={() => setModalVisible(true)}>
-          <Icon name="ellipsis-vertical" size={24} style={styles.settingsIcon} />
+          <Icon
+            name="ellipsis-vertical"
+            size={24}
+            style={styles.settingsIcon}
+          />
         </TouchableOpacity>
         <View style={styles.familyAvatarContainer}>
           {family.avatar ? (
-            <Image source={{ uri: family.avatar }} style={styles.familyAvatar} />
+            <Image source={{uri: family.avatar}} style={styles.familyAvatar} />
           ) : (
             <View style={styles.defaultAvatar} />
           )}
         </View>
         <View style={styles.familyInfo}>
-          <Text style={[styles.familyName, {color: color.text}]}>{family.name}</Text>
-          <Text style={[styles.familyQuantity, {color : color.textSubdued}]}>{translate('FAMILY_MEMBERS')}: {family.quantity}</Text>
+          <Text style={[styles.familyName, {color: color.text}]}>
+            {family.name}
+          </Text>
+          <Text style={[styles.familyQuantity, {color: color.textSubdued}]}>
+            {translate('FAMILY_MEMBERS')}: {family.quantity}
+          </Text>
           <View style={styles.expiredAtContainer}>
-            <Text style={[styles.familyQuantity, {color : color.textSubdued}]}>{translate('EXPIRED_AT')}: </Text>
+            <Text style={[styles.familyQuantity, {color: color.textSubdued}]}>
+              {translate('EXPIRED_AT')}:{' '}
+            </Text>
             <Text style={[styles.familyQuantity, styles.expiredAtText]}>
               {moment(new Date(family.expired_at)).format('DD/MM/YYYY')}
             </Text>
@@ -115,8 +128,11 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
             </TouchableOpacity> */}
             <TouchableOpacity
               style={[styles.buyServiceButton, styles.button]}
-              onPress={() => handleViewService()}>
-              <Text style={styles.buyServiceButtonText}>{translate('BUY_SERVICE')}</Text>
+              //onPress={() => handleViewService()}
+              onPress={() => handleViewCombo()}>
+              <Text style={styles.buyServiceButtonText}>
+                {translate('BUY_SERVICE')}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -128,37 +144,44 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
     <View style={[styles.safeArea, {backgroundColor: color.background}]}>
       <ScrollView>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-            <Icon name="arrow-back" size={30} color={color.text}/>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}>
+            <Icon name="arrow-back" size={30} color={color.text} />
           </TouchableOpacity>
-          <Text style={[styles.headerText, {color: color.text}]}>{translate('FAMILY_MANAGEMENT')}</Text>
-          <View style={{ flex: 1 }} />
+          <Text style={[styles.headerText, {color: color.text}]}>
+            {translate('FAMILY_MANAGEMENT')}
+          </Text>
+          <View style={{flex: 1}} />
         </View>
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={handleViewAllPackage} style={styles.button}>
-              <Image
-                source={require('../../assets/images/image-purchase.png')}
-                style={styles.buttonImage}
-              />
-              <Image
-                source={require('../../assets/images/new-family-button.png')}
-                style={styles.buttonAddFamily}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.container}>
-
-          <Text style={styles.familyListTitle}>{translate('YOUR_FAMILIES')}</Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={handleViewAllPackage}
+            style={styles.button}>
+            <Image
+              source={require('../../assets/images/image-purchase.png')}
+              style={styles.buttonImage}
+            />
+            <Image
+              source={require('../../assets/images/new-family-button.png')}
+              style={styles.buttonAddFamily}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.container}>
+          <Text style={styles.familyListTitle}>
+            {translate('YOUR_FAMILIES')}
+          </Text>
           {renderFamilyCards()}
         </View>
       </ScrollView>
 
       <Modal
-        animationType="slide" 
+        animationType="slide"
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.modalBackground}
           activeOpacity={1}
           onPress={() => setModalVisible(false)}>
@@ -192,5 +215,3 @@ const PurchasedScreen = ({ navigation }: PurchasedScreenProps) => {
 };
 
 export default PurchasedScreen;
-
-

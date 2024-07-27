@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         color: COLORS.Rhino,
         width: '80%',
+        marginBottom: 60,
     },
     comboButton: {
         bottom: 400,

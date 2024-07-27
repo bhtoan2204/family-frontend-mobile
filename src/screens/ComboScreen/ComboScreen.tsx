@@ -15,8 +15,12 @@ import stylesHousehold from './styles/stylesHousehold';
 import styles from './styles';
 import CustomButton from 'src/components/Button';
 import {TouchableOpacity} from '@gorhom/bottom-sheet';
+import {PurchasedScreenProps} from 'src/navigation/NavigationTypes';
 
-const ComboScreen = () => {
+const ComboScreen = ({navigation}: PurchasedScreenProps) => {
+  const handleViewService = () => {
+    navigation.navigate('PackStack', {screen: 'ViewAllService'});
+  };
   return (
     <ScrollView>
       <View style={stylesAnalysis.container}>
@@ -374,14 +378,11 @@ const ComboScreen = () => {
           </Text>
           <CustomButton
             style={styles.comboButton}
-            title={'Combo'}
+            title={'Discovery Now'}
             filled
-            // onPress={{}}
+            onPress={() => handleViewService()}
             backgroundImage={require('../../assets/images/button.png')}
           />
-          <TouchableOpacity style={styles.packageButton}>
-            <Text style={styles.packageText}>Extra</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
