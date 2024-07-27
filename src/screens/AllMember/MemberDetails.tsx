@@ -132,8 +132,8 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
         }}>
         <Header
           leftComponent={{
-            icon: 'close',
-            color: color.text,
+            icon: 'arrow-back',
+            color: 'white',
             size: 30,
             onPress: () => navigation.goBack(),
           }}
@@ -159,7 +159,7 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
             />
           </View>
           <View style={styles.nameContainer}>
-            <Text style={[styles.name, {color: color.text}]}>
+            <Text style={[styles.name, {color: 'white'}]}>
               {member.user.firstname} {member.user.lastname}
             </Text>
             <TouchableOpacity
@@ -221,7 +221,9 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
               size={28}
               style={{marginRight: 10}}
             />
-            <Text style={styles.contactTitle}>{translate('Information')}</Text>
+            <Text style={[styles.contactTitle, {color: color.text}]}>
+              {translate('Information')}
+            </Text>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text
@@ -294,7 +296,9 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
               size={25}
               style={{marginRight: 10}}
             />
-            <Text style={styles.contactTitle}>{translate('Contact')}</Text>
+            <Text style={[styles.contactTitle, {color: color.text}]}>
+              {translate('Contact')}
+            </Text>
           </View>
           <TouchableOpacity onPress={handlePhonePress}>
             <View style={styles.row}>
@@ -416,7 +420,6 @@ const styles = StyleSheet.create({
   contactTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#ccc',
   },
   role: {
     fontSize: 18,
