@@ -1,19 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, Image } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS } from 'src/constants';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
-import { markAsRead, selectNotifications, setNotificationSlice } from 'src/redux/slices/NotificationSlice';
-import { ProfileServices } from 'src/services/apiclient';
-import { Noti} from 'src/interface/notification/getNoti';
-import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
-import { setSelectedFamilyById } from 'src/redux/slices/FamilySlice';
-import { setSelectedDate } from 'src/redux/slices/ExpenseAnalysis';
-import { useThemeColors } from 'src/hooks/useThemeColor';
-import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+  Image,
+} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {COLORS} from 'src/constants';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  markAsRead,
+  selectNotifications,
+  setNotificationSlice,
+} from 'src/redux/slices/NotificationSlice';
+import {ProfileServices} from 'src/services/apiclient';
+import {Noti} from 'src/interface/notification/getNoti';
+import {ViewFamilyScreenProps} from 'src/navigation/NavigationTypes';
+import {setSelectedFamilyById} from 'src/redux/slices/FamilySlice';
+import {setSelectedDate} from 'src/redux/slices/ExpenseAnalysis';
+import {useThemeColors} from 'src/hooks/useThemeColor';
+import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 
-const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
+const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
   let notifications = useSelector(selectNotifications);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -31,7 +42,7 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
 
     setLoading(true);
     try {
-      if (index==0){
+      if (index == 0) {
         dispatch(setNotificationSlice([]));
       }
       const response = await ProfileServices.getNotification(index);
@@ -49,14 +60,15 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
     if (!dateTime) {
       return '';
     }
-  
-    const dateObj = typeof dateTime === 'string' ? new Date(dateTime) : dateTime;
-  
+
+    const dateObj =
+      typeof dateTime === 'string' ? new Date(dateTime) : dateTime;
+
     if (!(dateObj instanceof Date && !isNaN(dateObj.getTime()))) {
       console.error('Invalid dateTime:', dateTime);
       return '';
     }
-  
+
     const now = new Date();
     const diffMs = now.getTime() - dateObj.getTime();
     const diffSeconds = Math.floor(diffMs / 1000);
@@ -66,7 +78,7 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
     const diffWeeks = Math.floor(diffDays / 7);
     const diffMonths = Math.floor(diffDays / 30);
     const diffYears = Math.floor(diffDays / 365);
-  
+
     if (diffSeconds < 60) {
       return 'Just now';
     } else if (diffMinutes < 60) {
@@ -87,113 +99,159 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
     const date = new Date(timestamp);
     return date.toISOString().split('T')[0];
   };
-  
+
   const handlePressNoti = async (item: Noti) => {
     switch (item.type) {
       case 'CHECKLIST':
         navigation.navigate('TodoListStack', {
           screen: 'TodoList',
-          params: { id_family: item.id_family },
+          params: {id_family: item.id_family},
         });
-        
+
         break;
 
       case 'EXPENSE':
         dispatch(setSelectedFamilyById(item.id_family));
-        navigation.navigate('ExpenseStack', { screen: 'ExpenseScreen' });
+        navigation.navigate('ExpenseStack', {screen: 'ExpenseScreen'});
         break;
       case 'INCOME':
-        
         dispatch(setSelectedFamilyById(item.id_family));
-        navigation.navigate('IncomeStack', { screen: 'IncomeScreen' });
-        break;  
+        navigation.navigate('IncomeStack', {screen: 'IncomeScreen'});
+        break;
       case 'ASSET':
         dispatch(setSelectedFamilyById(item.id_family));
-        navigation.navigate('ExpenseStack', { screen: 'AssetScreen' });
-        break;    
+        navigation.navigate('ExpenseStack', {screen: 'AssetScreen'});
+        break;
       case 'SHOPPING_LIST':
         dispatch(setSelectedFamilyById(item.id_family));
-        navigation.navigate('ShoppingListStack', { screen: 'ShoppingList', params: item.id_family });
-        break; 
+        navigation.navigate('ShoppingListStack', {
+          screen: 'ShoppingList',
+          params: item.id_family,
+        });
+        break;
       case 'CALENDAR':
         dispatch(setSelectedDate(formatDate(item.timestamp)));
         dispatch(setSelectedFamilyById(item.id_family));
-        navigation.navigate('CalendarStack', { screen: 'CalendarScreen', params: item.id_family });
-        break;   
+        navigation.navigate('CalendarStack', {
+          screen: 'CalendarScreen',
+          params: item.id_family,
+        });
+        break;
       case 'EDUCATION':
-          navigation.navigate('EducationStack', {
+        navigation.navigate('EducationStack', {
           screen: 'EducationScreen',
           params: {id_family: item!.id_family},
         });
-        break;   
+        break;
       case 'GUIDELINE':
         navigation.navigate('FamilyStack', {
           screen: 'GuildLine',
           params: {id_family: item!.id_family},
         });
-        break;  
-        case 'CHAT':
-        
-        break;     
+        break;
+      case 'CHAT':
+        break;
       default:
         console.log(`Unhandled notification type: ${item.type}`);
     }
   };
-  
 
-  const renderItem = ({ item }: { item: Noti }) => (
-    <TouchableOpacity onPress={() => handlePressNoti(item)} style={[item.isRead ? {backgroundColor: color.white} : {backgroundColor:  color.white}]}>
+  const renderItem = ({item}: {item: Noti}) => (
+    // <TouchableOpacity
+    //   onPress={() => handlePressNoti(item)}
+    //   style={[
+    //     item.isRead
+    //       ? {backgroundColor: color.background}
+    //       : {backgroundColor: color.white},
+    //   ]}>
+    //   <View style={styles.notificationItem}>
+    //     {item.familyInfo.avatar && (
+    //       <Image
+    //         source={{uri: item.familyInfo.avatar}}
+    //         style={styles.avatar}
+    //         resizeMode="cover"
+    //       />
+    //     )}
+
+    //     {/* { item.familyInfo.avatar ? (
+    //     <Image
+    //       source={{uri: item.familyInfo.avatar}}
+    //       style={styles.avatar}
+    //       resizeMode="cover"
+    //     />
+    //   ):(
+    //     <Image
+    //     source={require('../../assets/images/avatar.png')}
+
+    //     style={styles.avatar}
+    //     resizeMode="cover"
+    //   />
+    //   )
+    // } */}
+    //     <View style={styles.notificationContent}>
+    //       <Text style={[styles.title, {color: color.text}]}>
+    //         {language === 'vi' ? item.title_vn : item.title}
+    //       </Text>
+    //       <Text style={[styles.content, {color: color.textSubdued}]}>
+    //         {language === 'vi' ? item.content_vn : item.content}
+    //       </Text>
+
+    //       <Text style={[styles.date, {color: color.textSubdued}]}>
+    //         {item.timestamp ? formatDateTime(item.timestamp) : ''}
+    //       </Text>
+    //     </View>
+    //   </View>
+    // </TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => handlePressNoti(item)}
+      style={[
+        item.isRead
+          ? {backgroundColor: color.background}
+          : {backgroundColor: color.white},
+      ]}>
       <View style={styles.notificationItem}>
-       { item.familyInfo.avatar && (
-        <Image
-          source={{uri: item.familyInfo.avatar}}
-          style={styles.avatar}
-          resizeMode="cover"
-        />
-      ) }
-   
-      {/* { item.familyInfo.avatar ? (
-        <Image
-          source={{uri: item.familyInfo.avatar}}
-          style={styles.avatar}
-          resizeMode="cover"
-        />
-      ):(
-        <Image
-        source={require('../../assets/images/avatar.png')}
-
-        style={styles.avatar}
-        resizeMode="cover"
-      />
-      )
-    } */}
+        {item.familyInfo.avatar && (
+          <Image
+            source={{uri: item.familyInfo.avatar}}
+            style={styles.avatar}
+            resizeMode="cover"
+          />
+        )}
         <View style={styles.notificationContent}>
-        <Text style={[styles.title, { color: color.text }]}>
+          <Text style={[styles.title, {color: color.text}]}>
             {language === 'vi' ? item.title_vn : item.title}
           </Text>
-          <Text style={[styles.content, { color: color.textSubdued }]}>
+          <Text style={[styles.content, {color: color.textSubdued}]}>
             {language === 'vi' ? item.content_vn : item.content}
           </Text>
 
-          <Text style={[styles.date,  {color: color.textSubdued}]}>{item.timestamp ? formatDateTime(item.timestamp) : ''}</Text>
+          <Text style={[styles.date, {color: color.textSubdued}]}>
+            {item.timestamp ? formatDateTime(item.timestamp) : ''}
+          </Text>
         </View>
+        {!item.isRead && <View style={styles.unreadIndicator} />}
+        {/* Hình tròn đỏ */}
       </View>
     </TouchableOpacity>
   );
 
   const renderFooter = () => {
-    return loading ? <ActivityIndicator size="large" color={color.text} /> : null;
+    return loading ? (
+      <ActivityIndicator size="large" color={color.text} />
+    ) : null;
   };
-  
 
   return (
-    <SafeAreaView style={[styles.safeArea, {backgroundColor: color.background}]}>
+    <SafeAreaView
+      style={[styles.safeArea, {backgroundColor: color.background}]}>
       <View style={styles.container}>
-        <Text style={[styles.header, {color: color.text}]}>{translate('notificationTab')}</Text>
+        <Text style={[styles.header, {color: color.text}]}>
+          {translate('notificationTab')}
+        </Text>
         <FlatList
           data={notifications}
           renderItem={renderItem}
-          keyExtractor={(item) => item._id}
+          keyExtractor={item => item._id}
           onEndReachedThreshold={0.5}
           ListFooterComponent={renderFooter}
         />
@@ -216,20 +274,27 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#333',
     marginLeft: 20,
-  
-
   },
   notificationItem: {
+    position: 'relative',
     padding: 16,
     shadowRadius: 8,
     elevation: 4,
     flexDirection: 'row',
   },
+  unreadIndicator: {
+    position: 'absolute',
+    right: 20, // Hoặc điều chỉnh tùy theo bố cục của bạn
+    top: 50, // Hoặc điều chỉnh tùy theo bố cục của bạn
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'red',
+  },
   title: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 15,
-
   },
   content: {
     fontSize: 14,
