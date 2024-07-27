@@ -35,7 +35,7 @@ const MessageItem: React.FC<Props> = ({
             <View style={[styles.messageContentContainer]}>
               <Image source={{ uri: item.content }} style={styles.imageMessage} />
             </View>
-          ) : item.type == 'video' ? (
+          ) : item.type === 'video' ? (
             <View style={styles.messageContentContainer}>
               <Video
                 source={{ uri: item.content }}

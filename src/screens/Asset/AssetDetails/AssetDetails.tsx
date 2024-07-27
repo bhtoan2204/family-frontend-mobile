@@ -16,6 +16,7 @@ import { useThemeColors } from 'src/hooks/useThemeColor';
 import { Feather } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { COLORS } from 'src/constants';
+import { Toast } from 'react-native-toast-notifications';
 
 const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
   const asset = useSelector(selectSelectedAsset);
@@ -64,22 +65,26 @@ const AssetDetailScreen = ({ route, navigation }: AssetDetailScreenProps) => {
         updatedAsset.purchase_date,
         updatedAsset.image_url
       );
+      console.log(data);
       dispatch(updateAsset(data));
       setIsEditing(false);
-      Alert.alert('Success', 'Asset updated successfully');
+      Toast.show('Asset updated successfully', { type: 'success', duration: 3000 });
     } catch (error) {
-      Alert.alert('Error', 'Failed to update asset');
+      Toast.show('Failed to update asset', { type: 'danger', duration: 3000 });
+
     }
   };
 
   const handleDeletePress = async () => {
     try {
       await ExpenseServices.deleteAsset(asset?.id_family, asset?.id_asset);
-      Alert.alert('Success', 'Asset deleted successfully');
+      Toast.show('Asset deleted successfully', { type: 'success', duration: 3000 });
+
       dispatch(deleteAsset(asset?.id_asset));
       navigation.navigate('AssetScreen');
     } catch (error) {
-      Alert.alert('Error', 'Failed to delete asset');
+      Toast.show('Failed to delete asset', { type: 'danger', duration: 3000 });
+
     }
   };
 

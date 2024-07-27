@@ -10557,7 +10557,7 @@ react-native-webrtc@^124.0.3:
     debug "4.3.4"
     event-target-shim "6.0.2"
 
-react-native-webview@13.8.6:
+react-native-webview@^13.8.6:
   version "13.8.6"
   resolved "https://registry.npmjs.org/react-native-webview/-/react-native-webview-13.8.6.tgz"
   integrity sha512-jtZ9OgB2AN6rhDwto6dNL3PtOtl/SI4VN93pZEPbMLvRjqHfxiUrilGllL5fKAXq5Ry5FJyfUi82A4Ii8olZ7A==

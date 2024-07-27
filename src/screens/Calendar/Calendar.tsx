@@ -80,37 +80,37 @@ const CalendarScreen = ({ route, navigation }: CalendarScreenProps) => {
   };
 
   
-  const onDelete = async (event: Event) => {
-    Alert.alert(
-      'Confirm Delete',
-      'Are you sure you want to delete this event?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          onPress: async () => {
-            try {
-              await CalendarServices.DeleteEvent(event.id_calendar);
-              Alert.alert('Success', 'Event has been deleted successfully.');
-              //await handleGetCalendarForMonth(new Date());
-            } catch (error) {
-              console.error('Error deleting event:', error);
-              Alert.alert('Error', 'An error occurred while deleting the event.');
-            }
-          },
-        },
-      ],
-      { cancelable: true },
-    );
-  };
+  // const onDelete = async (event: Event) => {
+  //   Alert.alert(
+  //     'Confirm Delete',
+  //     'Are you sure you want to delete this event?',
+  //     [
+  //       {
+  //         text: 'Cancel',
+  //         style: 'cancel',
+  //       },
+  //       {
+  //         text: 'Delete',
+  //         onPress: async () => {
+  //           try {
+  //             await CalendarServices.DeleteEvent(event.id_calendar);
+  //             Alert.alert('Success', 'Event has been deleted successfully.');
+  //             //await handleGetCalendarForMonth(new Date());
+  //           } catch (error) {
+  //             console.error('Error deleting event:', error);
+  //             Alert.alert('Error', 'An error occurred while deleting the event.');
+  //           }
+  //         },
+  //       },
+  //     ],
+  //     { cancelable: true },
+  //   );
+  // };
 
-  const onUpdate = (event: Event) => {
-    setEventDetails(event);
-    bottomSheetRef.current?.open();
-  };
+  // const onUpdate = (event: Event) => {
+  //   setEventDetails(event);
+  //   bottomSheetRef.current?.open();
+  // };
 
   const handleAddEvent = () => {
     navigation.navigate('CreateEvent', { id_family });

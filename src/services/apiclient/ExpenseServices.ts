@@ -104,7 +104,7 @@ const ExpenseServices = {
           type,
         };
 
-        formData.append(file);
+        formData.append('image', file);
       }
   
       formData.append('id_asset', id_asset?.toString() || '');

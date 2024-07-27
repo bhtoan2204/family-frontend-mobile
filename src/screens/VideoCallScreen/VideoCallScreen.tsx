@@ -1,63 +1,109 @@
-import React, { useState } from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Button, StyleSheet, Alert } from 'react-native';
+import { Camera } from 'expo-camera';
+import { Audio } from 'expo-av';
 import { WebView } from 'react-native-webview';
+import { ChatServices } from 'src/services/apiclient';
+import LocalStorage from 'src/store/localstorage';
 
 const VideoCallScreen = () => {
   const [showWebView, setShowWebView] = useState(false);
-  const [token] = useState('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTS3h4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4LTE0NTA0NzExNDciLCJpc3MiOiJTS3h4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4Iiwic3ViIjoiQUN4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCIsIm5iZiI6MTQ1MDQ3MTE0NywiZXhwIjoxNDUwNDc0NzQ3LCJncmFudHMiOnsiaWRlbnRpdHkiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaXBfbWVzc2FnaW5nIjp7InNlcnZpY2Vfc2lkIjoiSVN4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCIsImVuZHBvaW50X2lkIjoiSGlwRmxvd1NsYWNrRG9ja1JDOnVzZXJAZXhhbXBsZS5jb206c29tZWlvc2RldmljZSJ9fX0.IHx8KeH1acIfwnd8EIin3QBGPbfnF-yVnSFp5NpQJi0');
+  const [cameraPermission, setCameraPermission] = useState(false);
+  const [audioPermission, setAudioPermission] = useState(false);
+  const [roomUrl, setRoomUrl] = useState('');
+  const [cameraVisible, setCameraVisible] = useState(true); // State to control camera visibility
+
+  const requestPermissions = async () => {
+    const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
+    const { status: audioStatus } = await Audio.requestPermissionsAsync();
+
+    setCameraPermission(cameraStatus === 'granted');
+    setAudioPermission(audioStatus === 'granted');
+
+    if (!cameraStatus === 'granted' || !audioStatus === 'granted') {
+      Alert.alert('Permission required', 'Camera and microphone permissions are required.');
+    }
+  };
+
+  const startCall = async () => {
+    if (!cameraPermission || !audioPermission) {
+      Alert.alert('Permissions error', 'Please grant camera and microphone permissions to make a call.');
+      return;
+    }
+
+    try {
+      const room = await ChatServices.createRoom();
+      if (room) {
+        setRoomUrl(room);
+        setCameraVisible(false); // Hide camera preview before showing WebView
+        setShowWebView(true);
+      } else {
+        Alert.alert('Error', 'Failed to create or join the room.');
+      }
+    } catch (error) {
+      console.error('Error starting call:', error);
+      Alert.alert('Error', 'An error occurred while starting the call.');
+    }
+  };
+
+  useEffect(() => {
+    requestPermissions();
+  }, []);
+
+  const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Video Call</title>
+  <script src="https://sdk.stringee.com/web-sdk/1.0.22/stringee.js"></script>
+  <style>
+    #video-container {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="video-container"></div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const token = "${LocalStorage.GetAccessToken()}"; // Chèn token vào đây
+      const room = "${roomUrl}"; // Chèn room ID vào đây
+
+      const stringeeClient = new StringeeClient();
+      stringeeClient.connect(token);
+
+      stringeeClient.on('connect', function (status) {
+        if (status) {
+          stringeeClient.joinRoom(room);
+        }
+      });
+
+      stringeeClient.on('createRoom', function (room) {
+        const videoContainer = document.getElementById('video-container');
+        room.remoteStreams.forEach(stream => {
+          stream.play('video-container');
+        });
+      });
+
+      stringeeClient.on('onAddRemoteStream', function(stream) {
+        stream.play('video-container');
+      });
+    });
+  </script>
+</body>
+</html>
+`;
 
   return (
-    <View style={styles.container}>
-      <Button title="Start Video Call" onPress={() => setShowWebView(true)} />
-      {showWebView && token && (
+
+
         <WebView
-          source={{ html: `
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <title>Twilio Video</title>
-              <script src="https://sdk.twilio.com/js/video/releases/2.28.1/twilio-video.min.js"></script>
-              <style>
-                body {
-                  margin: 0;
-                  padding: 0;
-                  overflow: hidden;
-                  backgroundColor: 'black';
-                }
-                #local-media, #remote-media {
-                  width: 100%;
-                  height: 50%;
-                }
-              </style>
-            </head>
-            <body>
-              <div id="local-media"></div>
-              <div id="remote-media"></div>
-              <script>
-                const token = '${token}';
-                Twilio.Video.connect(token, { name: 'my-room' }).then(room => {
-                  room.on('participantConnected', participant => {
-                    const remoteMediaDiv = document.getElementById('remote-media');
-                    participant.tracks.forEach(track => {
-                      remoteMediaDiv.appendChild(track.attach());
-                    });
-                  });
-                  room.localParticipant.tracks.forEach(track => {
-                    document.getElementById('local-media').appendChild(track.attach());
-                  });
-                }).catch(error => {
-                  console.error('Unable to connect to Room: ', error.message);
-                });
-              </script>
-            </body>
-            </html>` }}
-          style={styles.webview}
-          javaScriptEnabled
-          domStorageEnabled={true}
           originWhitelist={['*']}
+          source={{ html: htmlContent }}
+          style={styles.webview}
         />
-      )}
-    </View>
+      
   );
 };
 
@@ -66,10 +112,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  camera: {
+    width: '100%',
+    height: '50%', // Adjust height as needed
+    position: 'absolute',
+    top: 0,
   },
   webview: {
     width: '100%',
-    height: '80%',
+    height: '100%',
   },
 });
 
