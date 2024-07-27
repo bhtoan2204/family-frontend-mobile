@@ -10,6 +10,7 @@ import LandingPage3 from 'src/screens/LandingPage/LandingPage3/LandingPage3';
 import Notification from 'src/screens/Notifications';
 import WelcomeScreen from 'src/screens/WelcomeScreen';
 import EnterCodeScreen from 'src/screens/ForgotPassword/EnterCode';
+import EnterEmailScreen from 'src/screens/ForgotPassword/EnterEmail';
 import ResetPassword from 'src/screens/ForgotPassword/ResetPassword/ResetPassword';
 import FeedbackScreen from 'src/screens/FeedBack/FeedBack';
 import LanguageSelector from 'src/screens/Language/LanguageSelector';
@@ -30,6 +31,7 @@ const AuthStack = () => {
       <Stack.Screen name="LandingPage2" component={LandingPage2} />
       <Stack.Screen name="LandingPage3" component={LandingPage3} />
       <Stack.Screen name="EnterCodeScreen" component={EnterCodeScreen} />
+      <Stack.Screen name="EnterEmailScreen" component={EnterEmailScreen}/>
       <Stack.Screen name="ResetPasswordScreen" component={ResetPassword} />
       <Stack.Screen name="Feedback" component={FeedbackScreen} />
 

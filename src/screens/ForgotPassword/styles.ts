@@ -36,9 +36,8 @@ const styles = StyleSheet.create({
   accountTitle: {
     fontSize: 15,
     textAlign: 'center',
-    marginBottom: 32,
+    marginBottom: 82,
     fontWeight: 'semibold',
-    
   },
   optionContainer: {
     flexDirection: 'column',

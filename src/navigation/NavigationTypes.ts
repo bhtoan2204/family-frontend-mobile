@@ -250,6 +250,7 @@ export type AuthStackParamList = {
   Notification: undefined;
   WelcomeScreen: undefined;
   EnterCodeScreen: undefined;
+  EnterEmailScreen: undefined;
   ResetPasswordScreen: undefined;
   Feedback: undefined;
 };
@@ -917,7 +918,7 @@ type SignupScreenNavigationProp = NativeStackNavigationProp<
   'SignupScreen'
 >;
 
-export interface SignupScreenProps {
+export interface SignupScreenProps {<i class="fa fa-address-card-o" aria-hidden="true"></i>
   navigation: SignupScreenNavigationProp;
 }
 
@@ -933,6 +934,10 @@ export interface LoginScreenProps {
 type EnterCodeScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
   'EnterCodeScreen'
+>;
+type EnterEmailScreenNavigationProp = NativeStackNavigationProp<
+AuthStackParamList,
+'EnterEmailScreen'
 >;
 
 export interface ResetPasswordScreenProps {
@@ -961,6 +966,10 @@ type ResetPasswordScreenNavigationProp = NativeStackNavigationProp<
 >;
 export interface EnterCodeScreenProps {
   navigation: EnterCodeScreenNavigationProp;
+}
+
+export interface EnterEmailScreenProps {
+  navigation: EnterEmailScreenProps
 }
 type WelcomeScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,

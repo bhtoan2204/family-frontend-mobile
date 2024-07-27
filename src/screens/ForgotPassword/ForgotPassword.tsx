@@ -30,20 +30,20 @@ const ForgotPassword = ({navigation}: ForgotPasswordScreenProps) => {
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
 
-  const handleSendSubmit = async () => {
-    try {
-      if (selectedOption === 'email') {
-        dispatch(setEmail(inputEmail));
-        await AuthServices.forgotPassword({email: inputEmail, phone: ''});
-      } else if (selectedOption === 'phone') {
-        dispatch(setPhone(inputPhone));
-        await AuthServices.forgotPassword({email: '', phone: inputPhone});
-      }
-      navigateToEnterCodeScreen();
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const handleSendSubmit = async () => {
+  //   try {
+  //     if (selectedOption === 'email') {
+  //       dispatch(setEmail(inputEmail));
+  //       await AuthServices.forgotPassword({email: inputEmail, phone: ''});
+  //     } else if (selectedOption === 'phone') {
+  //       dispatch(setPhone(inputPhone));
+  //       await AuthServices.forgotPassword({email: '', phone: inputPhone});
+  //     }
+  //     navigateToEnterCodeScreen();
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const navigateToEnterCodeScreen = () => {
     navigation.navigate('EnterCodeScreen');
@@ -55,8 +55,8 @@ const ForgotPassword = ({navigation}: ForgotPasswordScreenProps) => {
     : require('../../assets/images/forgot-password-dark.png');
 
   const button = !isDarkMode
-    ? require('../../assets/images/button-blue-demin.png')
-    : require('../../assets/images/button-rhino.png');
+    ? require('../../assets/images/button-rhino.png')
+    : require('../../assets/images/button-blue-demin.png');
   return (
     <KeyboardAvoidingView
       style={[styles.keyboardView, {backgroundColor: color.background}]}
@@ -98,32 +98,19 @@ const ForgotPassword = ({navigation}: ForgotPasswordScreenProps) => {
               resizeMode="stretch">
               <TouchableOpacity
                 style={[selectedOption === 'email' && styles.selectedOption]}
-                onPress={() => setSelectedOption('email')}>
+                onPress={navigateToEnterCodeScreen}>
                 <Text
                   style={
                     selectedOption === 'email'
                       ? styles.selectedOptionText
                       : styles.optionText
-                  }>
+                  }
+                  >
                   {translate('EmailAddress')}
                 </Text>
               </TouchableOpacity>
             </ImageBackground>
-            <TouchableOpacity
-              style={[
-                styles.optionPhoneButton,
-                selectedOption === 'phone' && styles.selectedOption,
-              ]}
-              onPress={() => setSelectedOption('phone')}>
-              <Text
-                style={
-                  selectedOption === 'phone'
-                    ? styles.selectedOptionText
-                    : styles.optionText
-                }>
-                {translate('phone')}
-              </Text>
-            </TouchableOpacity>
+            
           </View>
 
           {/* {selectedOption === 'email' && (
