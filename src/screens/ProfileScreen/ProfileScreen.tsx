@@ -66,14 +66,17 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
             resizeMode="cover"
             style={styles.profileImage}
           />
-          <View>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('HomeTab', {screen: 'ProfileDetail'});
+            }}>
             <Text style={[styles.nameText, {color: color.text}]}>
               {profile?.firstname} {profile?.lastname}
             </Text>
             <Text style={[styles.emailText, {color: color.text}]}>
               {profile?.email}
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
         <View
           style={[

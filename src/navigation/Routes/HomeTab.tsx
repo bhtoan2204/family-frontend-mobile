@@ -1,16 +1,20 @@
 import React from 'react';
-import { BottomTabBarButtonProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StyleSheet } from 'react-native';
+import {
+  BottomTabBarButtonProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
+import {StyleSheet} from 'react-native';
 import TabButton from 'src/components/TabButton';
-import { TEXTS } from 'src/constants';
+import {TEXTS} from 'src/constants';
 import HomeScreen from 'src/screens/HomeScreen';
 import NotificationScreen from 'src/screens/Notifications/NotificationScreen';
 import ProfileScreen from 'src/screens/ProfileScreen';
 import ChangePassword from 'src/screens/ProfileScreen/ChangePassword/ChangePassword';
 import EditProfileScreen from 'src/screens/ProfileScreen/EditProfileScreen/EditProfileScreen';
-import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 import i18n from 'src/components/i18next/i18n';
+import ProfileDetail from 'src/screens/ProfileScreen/ProfileDetail/ProfileDetail';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,7 +30,7 @@ const TabList = [
   {
     id: 'ChatList',
     title: 'chatTab',
-    component: HomeScreen, 
+    component: HomeScreen,
     screen: 'ChatList',
     icon: 'chat',
     visible: true,
@@ -60,6 +64,12 @@ const TabList = [
     component: EditProfileScreen,
     screen: 'EditProfile',
   },
+  {
+    id: 'ProfileDetail',
+    title: 'ProfileDetail',
+    component: ProfileDetail,
+    screen: 'ProfileDetail',
+  },
 ];
 
 const TabBarButton = (props: BottomTabBarButtonProps, tab: any) => {
@@ -67,7 +77,7 @@ const TabBarButton = (props: BottomTabBarButtonProps, tab: any) => {
 
   const handlePress = () => {
     if (tab.id === 'ChatList') {
-      navigation.navigate('MessageTab', { screen: 'MessageTab' });
+      navigation.navigate('MessageTab', {screen: 'MessageTab'});
     } else {
       props.onPress();
     }
@@ -83,21 +93,21 @@ const TabBarButton = (props: BottomTabBarButtonProps, tab: any) => {
 };
 
 const HomeTab = () => {
-
   return (
     <Tab.Navigator
       screenOptions={{
         header: () => null,
         tabBarStyle: styles.tabBar,
       }}>
-      {TabList.map((tab) => (
+      {TabList.map(tab => (
         <Tab.Screen
           key={tab.id}
           name={tab.screen}
           component={tab.component}
           options={{
             tabBarShowLabel: true,
-            tabBarButton: (props) => (tab.visible ? TabBarButton(props, tab) : null),
+            tabBarButton: props =>
+              tab.visible ? TabBarButton(props, tab) : null,
           }}
         />
       ))}

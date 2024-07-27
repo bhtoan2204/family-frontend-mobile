@@ -1,4 +1,4 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import CreateFamilyScreen from 'src/screens/CreateFamilyScreen';
 import InviteNewMemberScreen from 'src/screens/InviteNewMemberScreen';
 import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
@@ -65,9 +65,7 @@ const FamilyStack = () => {
       </Stack.Screen>
 
       <Stack.Screen name="AllMember">
-        {props => (
-          <ViewAllMemberScreen {...(props as AllMemberScreenProps)} />
-        )}
+        {props => <ViewAllMemberScreen {...(props as AllMemberScreenProps)} />}
       </Stack.Screen>
 
       <Stack.Screen name="InviteNewMember" component={InviteNewMemberScreen} />
@@ -82,7 +80,6 @@ const FamilyStack = () => {
       <Stack.Screen name="ViewFamily">
         {props => <ViewFamilyScreen {...(props as ViewFamilyScreenProps)} />}
       </Stack.Screen>
- 
 
       <Stack.Screen name="ThemeSwitcher">
         {props => <ThemeSwitcher {...(props as ThemeSwitcherProps)} />}
@@ -137,10 +134,14 @@ const FamilyStack = () => {
         {props => <UpcomingEvents {...(props as UpcomingEventsScreenProps)} />}
       </Stack.Screen>
       <Stack.Screen name="MemberDetails">
-        {props => <MemberDetailsScreen {...(props as MemberDetailsScreenProps)} />}
+        {props => (
+          <MemberDetailsScreen {...(props as MemberDetailsScreenProps)} />
+        )}
       </Stack.Screen>
       <Stack.Screen name="GuidelinePublic">
-        {props => <GuidelinePublicScreen {...(props as GuidelinePublicScreenProps)} />}
+        {props => (
+          <GuidelinePublicScreen {...(props as GuidelinePublicScreenProps)} />
+        )}
       </Stack.Screen>
     </Stack.Navigator>
   );
