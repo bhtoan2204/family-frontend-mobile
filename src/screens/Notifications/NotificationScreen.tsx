@@ -120,10 +120,16 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
         navigation.navigate('CalendarStack', { screen: 'CalendarScreen', params: item.id_family });
         break;   
       case 'EDUCATION':
-
+          navigation.navigate('EducationStack', {
+          screen: 'EducationScreen',
+          params: {id_family: item!.id_family},
+        });
         break;   
       case 'GUIDELINE':
-
+        navigation.navigate('FamilyStack', {
+          screen: 'GuildLine',
+          params: {id_family: item!.id_family},
+        });
         break;  
         case 'CHAT':
 

@@ -39,6 +39,6 @@ export interface Member {
     createdAt: string; 
     updatedAt: string; 
     timestamp: string; 
-    familyInfo: FamilyInfo;
+    familyInfo: FamilyInfo | null;
   }
   

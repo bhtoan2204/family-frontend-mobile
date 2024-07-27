@@ -7,6 +7,9 @@ import { FamilyServices } from '../../services/apiclient';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProfile } from '../../redux/slices/ProfileSclice';
 import { Message } from 'src/redux/slices/MessageUser';
+import { Notification } from 'src/interface/notification/getNoti';
+import { setSelectedFamilyById } from 'src/redux/slices/FamilySlice';
+import { setSelectedDate } from 'src/redux/slices/CalendarSlice';
 
 
 
@@ -24,102 +27,83 @@ const Notification = ({navigation}) => {
   const [notificationQueue, setNotificationQueue] = useState<Message[]>([]);
   const socket = getSocket();
   const notificationListener = useRef<Notifications.Subscription | undefined>();
+  const dispatch = useDispatch();
 
-  // const fetchMember = async (receiverId?: string) => {
-  //   try {
-  //     const response: AxiosResponse<Member[]> = await FamilyServices.getMember({ id_user: receiverId });
-  //     if (response && response.data.length > 0) {
-  //       return response.data[0];
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching member:', error);
-  //   }
-  // };
-
-//   const fetchFamily = async (id_family?: number) => {
-//     try {
-//         const familyInfo: AxiosResponse<Family[]> = await FamilyServices.getFamily({ id_family });
-//         //console.log(familyInfo[0])
-//         return familyInfo[0];
-//     } catch (error) {
-//         console.error('Error fetching family:', error);
-//     }
-// };
-
-
-  const handleNewImage = async (message: Message) => {
-    //console.log('hi')
-    //if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
-      //const sender: Member | undefined = await fetchMember(message.senderId);
-     
-        await Notifications.scheduleNotificationAsync({
-          content: {
-            title: `${message.senderInfo.firstname} ${message.senderInfo.lastname}`,
-            body: 'Sent image',
-            data: {
-              screen: 'ChatUser',
-              id_user: message.receiverId,
-              receiverId: message.senderId,
-            },
-          },
-          trigger: { seconds: 1 },
-        });
-        setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'User' }]);
-      
-   //}
-  };
 
   const handleNewMessage = async (message: Message) => {
-    console.log(message);
     if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
-      //const sender: Member | undefined = await fetchMember(message.senderId);
-      //if (sender) {
-        await Notifications.scheduleNotificationAsync({
-          content: {
-            title: `${message.senderInfo.firstname} ${message.senderInfo.lastname}`,
-            body: message.content,
-            data: {
-              screen: 'ChatUser',
-              id_user: message.receiverId,
-              receiverId: message.senderId,
-            },
+      let notificationBody = message.content;
+      switch (message.type) {
+        case 'photo':
+          notificationBody = 'Sent image';
+          break;
+        case 'video':
+          notificationBody = 'Sent video';
+          break;
+        case 'text':
+          notificationBody = message.content;
+          break;
+        default:
+          notificationBody = 'New message';
+          break;
+      }
+  
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: `${message.senderInfo.firstname} ${message.senderInfo.lastname}`,
+          body: notificationBody,
+          data: {
+            screen: 'ChatUser',
+            id_user: message.receiverId,
+            receiverId: message.senderId,
           },
-          trigger: { seconds: 1 },
-        });
-        setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'User' }]);
-      //}
-   }
+        },
+        trigger: { seconds: 1 },
+      });
+      setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'User' }]);
+    }
   };
-  const handleNewNotification = async (message: any) => {
-    console.log(message);
-      //const sender: Member | undefined = await fetchMember(message.senderId);
-      //if (sender) {
-        await Notifications.scheduleNotificationAsync({
-          content: {
-            title: `${message.familyInfo.name} `,
-            body: message.content,
-            // data: {
-            //   screen: 'ChatUser',
-            //   id_user: message.receiverId,
-            //   receiverId: message.senderId,
-            // },
+  
+  const handleNewNotification = async (message: Notification) => {
+    if (message.familyInfo) {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: `${message.familyInfo.name}`,
+          body: message.content,
+          data: {
+            type: message.type,
+            id_family: message.id_family,
+            timestamp: message.timestamp,
           },
-          trigger: { seconds: 1 },
-        });
-      //}
-   
+        },
+        trigger: { seconds: 1 },
+      });
+    } 
   };
+  
 
   const handleNewMessageFamily = async (message: any) => {
-    console.log(message)
-    // const sender: Member | undefined = await fetchMember(message.senderId);
-    // const family: Family | undefined = await fetchFamily(message.familyId);
-    //if (sender && family) {
+      let notificationBody = '';
+      switch (message.type) {
+        case 'photo':
+          notificationBody = 'Sent image';
+          break;
+        case 'video':
+          notificationBody = 'Sent video';
+          break;
+        case 'text':
+          notificationBody = message.content;
+          break;
+        default:
+          notificationBody = 'New message';
+          break;
+      }
+
       await Notifications.scheduleNotificationAsync({
         content: {
           title: `${message.senderInfo.firstname} ${message.senderInfo.lastname}`,
           subtitle: `${message.senderInfo.firstname}`,
-          body: message.content,
+          body: notificationBody,
           data: {
             screen: 'ChatFamily',
             familyId: message.familyId,
@@ -128,30 +112,10 @@ const Notification = ({navigation}) => {
         trigger: { seconds: 1 },
       });
       setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'Family' }]);
-    //}
+
   };
 
-  // const handleNewImageFamily = async (message: Message) => {
-  //   if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
-  //     const sender: Member | undefined = await fetchMember(message.senderId);
-  //     const family: Family | undefined = await fetchFamily(message.familyId);
-  //     if (sender && family) {
-  //       await Notifications.scheduleNotificationAsync({
-  //         content: {
-  //           title: `${sender.firstname} ${sender.lastname}`,
-  //           subtitle: `${family.name}`,
-  //           body: 'Sent image',
-  //           data: {
-  //             screen: 'ChatFamily',
-  //             familyId: message.familyId,
-  //           },
-  //           },
-  //         trigger: { seconds: 1 },
-  //       });
-  //       setNotificationQueue((prevQueue) => [...prevQueue, { ...message, isRead: false, category: 'Family' }]);
-  //     }
-  //   }
-  // };
+
   const checkNotificationPermission = async () => {
     const { status } = await Notifications.getPermissionsAsync();
     if (status !== 'granted') {
@@ -167,28 +131,23 @@ useEffect(() => {
     checkNotificationPermission();
       if (socket) {
         socket.on('onNewMessage', handleNewMessage);
-        socket.on('onNewImageMessage', handleNewImage);
         socket.on('onNewFamilyMessage', handleNewMessageFamily);
-        // socket.on('onNewFamilyImageMessage', handleNewImageFamily);
         socket.on('onNewNotification', handleNewNotification);
 
       }
 
   return () => {
     if (socket) {
-      socket.off('onNewMessage', handleNewMessage);
-      socket.off('onNewNotification', handleNewNotification);
+       socket.off('onNewMessage', handleNewMessage);
+       socket.off('onNewFamilyMessage', handleNewMessageFamily);
+       socket.off('onNewNotification', handleNewNotification);
 
-      socket.off('onNewImageMessage', handleNewImage);
-      // socket.off('onNewFamilyMessage', handleNewMessageFamily);
-      // socket.off('onNewFamilyImageMessage', handleNewImageFamily);
     }
   };
 }, []);
 
 
   useEffect(() => {
-    //console.log(navigation)
     const notificationResponseListener = Notifications.addNotificationResponseReceivedListener(response => {
       const screen = response.notification.request.content.data.screen;
       let id_user = response.notification.request.content.data.id_user;
@@ -207,6 +166,56 @@ useEffect(() => {
       Notifications.removeNotificationSubscription(notificationResponseListener);
     };
   }, [navigation]);
+
+  const formatDate = (timestamp: string | number | Date) => {
+    const date = new Date(timestamp);
+    return date.toISOString().split('T')[0];
+  };
+
+  useEffect(() => {
+    const notificationResponseListener = Notifications.addNotificationResponseReceivedListener(response => {
+      const { screen, id_user, receiverId, familyId, type, id_family } = response.notification.request.content.data;
+      switch (type) {
+        case 'CHECKLIST':
+          navigation.navigate('TodoListStack', { screen: 'TodoList', params: { id_family } });
+          break;
+        case 'EXPENSE':
+          dispatch(setSelectedFamilyById(id_family));
+          navigation.navigate('ExpenseStack', { screen: 'ExpenseScreen' });
+          break;
+        case 'INCOME':
+          dispatch(setSelectedFamilyById(id_family));
+          navigation.navigate('IncomeStack', { screen: 'IncomeScreen' });
+          break;
+        case 'ASSET':
+          dispatch(setSelectedFamilyById(id_family));
+          navigation.navigate('ExpenseStack', { screen: 'AssetScreen' });
+          break;
+        case 'SHOPPING_LIST':
+          dispatch(setSelectedFamilyById(id_family));
+          navigation.navigate('ShoppingListStack', { screen: 'ShoppingList', params: id_family });
+          break;
+        case 'CALENDAR':
+          dispatch(setSelectedDate(formatDate(response.notification.request.content.data.timestamp)));
+          dispatch(setSelectedFamilyById(id_family));
+          navigation.navigate('CalendarStack', { screen: 'CalendarScreen', params: id_family });
+          break;
+        case 'EDUCATION':
+          navigation.navigate('EducationStack', { screen: 'EducationScreen', params: { id_family } });
+          break;
+        case 'GUIDELINE':
+          navigation.navigate('FamilyStack', { screen: 'GuildLine', params: { id_family } });
+          break;
+        default:
+          console.log('Unknown notification type:', type);
+      }
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationResponseListener);
+    };
+  }, [navigation, profile]);
+
 
   return (
     <View>
