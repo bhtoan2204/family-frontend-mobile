@@ -6,12 +6,12 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { markAsRead, selectNotifications, setNotificationSlice } from 'src/redux/slices/NotificationSlice';
 import { ProfileServices } from 'src/services/apiclient';
-import { Notification } from 'src/interface/notification/getNoti';
+import { Noti} from 'src/interface/notification/getNoti';
 import { ViewFamilyScreenProps } from 'src/navigation/NavigationTypes';
 import { setSelectedFamilyById } from 'src/redux/slices/FamilySlice';
 import { setSelectedDate } from 'src/redux/slices/ExpenseAnalysis';
 import { useThemeColors } from 'src/hooks/useThemeColor';
-import { getTranslate } from 'src/redux/slices/languageSlice';
+import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
 
 const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
   let notifications = useSelector(selectNotifications);
@@ -20,6 +20,7 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
   const dispatch = useDispatch();
   const color = useThemeColors();
   const translate = useSelector(getTranslate);
+  const language = useSelector(selectLocale);
 
   useEffect(() => {
     fetchNotification();
@@ -87,7 +88,7 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
     return date.toISOString().split('T')[0];
   };
   
-  const handlePressNoti = async (item: Notification) => {
+  const handlePressNoti = async (item: Noti) => {
     switch (item.type) {
       case 'CHECKLIST':
         navigation.navigate('TodoListStack', {
@@ -132,7 +133,7 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
         });
         break;  
         case 'CHAT':
-
+        
         break;     
       default:
         console.log(`Unhandled notification type: ${item.type}`);
@@ -140,7 +141,7 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
   };
   
 
-  const renderItem = ({ item }: { item: Notification }) => (
+  const renderItem = ({ item }: { item: Noti }) => (
     <TouchableOpacity onPress={() => handlePressNoti(item)} style={[item.isRead ? {backgroundColor: color.white} : {backgroundColor:  color.white}]}>
       <View style={styles.notificationItem}>
        { item.familyInfo.avatar && (
@@ -167,8 +168,13 @@ const NotificationScreen = ({navigation} : ViewFamilyScreenProps) => {
       )
     } */}
         <View style={styles.notificationContent}>
-          <Text style={[styles.title, {color: color.text}]}>{item.title}</Text>
-          <Text style={[styles.content, {color: color.textSubdued}]}>{item.content}</Text>
+        <Text style={[styles.title, { color: color.text }]}>
+            {language === 'vi' ? item.title_vn : item.title}
+          </Text>
+          <Text style={[styles.content, { color: color.textSubdued }]}>
+            {language === 'vi' ? item.content_vn : item.content}
+          </Text>
+
           <Text style={[styles.date,  {color: color.textSubdued}]}>{item.timestamp ? formatDateTime(item.timestamp) : ''}</Text>
         </View>
       </View>

@@ -7,9 +7,10 @@ import { FamilyServices } from '../../services/apiclient';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProfile } from '../../redux/slices/ProfileSclice';
 import { Message } from 'src/redux/slices/MessageUser';
-import { Notification } from 'src/interface/notification/getNoti';
+import { Noti} from 'src/interface/notification/getNoti';
 import { setSelectedFamilyById } from 'src/redux/slices/FamilySlice';
 import { setSelectedDate } from 'src/redux/slices/CalendarSlice';
+import { selectLocale } from 'src/redux/slices/languageSlice';
 
 
 
@@ -28,7 +29,7 @@ const Notification = ({navigation}) => {
   const socket = getSocket();
   const notificationListener = useRef<Notifications.Subscription | undefined>();
   const dispatch = useDispatch();
-
+  const language = useSelector(selectLocale);
 
   const handleNewMessage = async (message: Message) => {
     if (!notificationQueue.some((queuedMessage) => queuedMessage._id === message._id)) {
@@ -64,7 +65,7 @@ const Notification = ({navigation}) => {
     }
   };
   
-  const handleNewNotification = async (message: Notification) => {
+  const handleNewNotification = async (message: Noti) => {
     if (message.familyInfo) {
       await Notifications.scheduleNotificationAsync({
         content: {

@@ -28,10 +28,12 @@ export interface Member {
     avatar: string;
   }
   
-  export  interface Notification {
+  export  interface Noti {
     _id: string;
     title: string;
+    title_vn: string;
     content: string;
+    content_vn: string;
     type: string;
     id_family: number;
     id_target: number;
