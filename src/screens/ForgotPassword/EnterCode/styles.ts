@@ -11,12 +11,33 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: COLORS.white,
     },
+    countdownText: {
+      fontSize: 16,
+      marginBottom:10
+    },
+    countdownTime: {
+      fontSize: 16,
+    },
+    TextContainer:{
+      flexDirection: 'column',
+      marginBottom: 30,
+      width:'90%',
+      alignSelf:'center',
+    },
+    emailTitle:{
+      fontSize: 30,
+      fontWeight: 'bold',
+      marginBottom: 10,
+    },
+    emailDetail:{
+      fontSize: 15,
+      fontWeight: 'semibold',
+    },
     safeAreaStyle: {
       flex: 1,
     },
     container: {
       flex: 1,
-      justifyContent: 'center',
       alignItems: 'center',
       paddingHorizontal: 16,
     },
@@ -26,9 +47,18 @@ const styles = StyleSheet.create({
       left: 20,
     },
     backButton: {
-      color: COLORS.black,
-      marginLeft: 0,
-      marginTop: 30,
+      flexDirection: 'row',
+      alignItems: 'center',
+      position: 'absolute',
+      bottom: 20,
+      left: 20,
+      padding: 10,
+      backgroundColor: 'transparent',
+    },
+    backButtonText: {
+      marginLeft: 10,
+      fontSize: 16,
+      fontWeight: 'bold',
     },
     title: {
       fontSize: 24,
@@ -46,16 +76,18 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: 32,
+      marginVertical:20,
     },
     input: {
-      width: 40,
-      height: 40,
-      borderWidth: 1,
+      width: 48,
+      height: 72,
+      borderWidth: 2,
       borderColor: COLORS.gray,
       borderRadius: 8,
       textAlign: 'center',
-      fontSize: 18,
+      fontSize: 30,
       marginHorizontal: 5,
+
     },
     submitButton: {
       backgroundColor: COLORS.blue,
@@ -78,14 +110,21 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       width: progressBarWidth,
       height: progressBarHeight,
-      backgroundColor: '#ddd', 
       borderRadius: 5, 
       overflow: 'hidden', 
       marginLeft: 20,
+      marginTop: 20,
+      marginBottom: 20,
     },
     progressStep: {
       flex: 1,
-      height: '100%', 
+      borderRadius: 5, 
+      height: '50%',
+      marginHorizontal: 3, // Thêm khoảng cách giữa các bước
+      backgroundColor: 'grey', // Màu nền cho các bước chưa hoàn thành
+    },
+    progressStepActive: {
+      borderRadius: 5,
     },
     activeStep: {
       backgroundColor: COLORS.Rhino,

@@ -244,7 +244,7 @@
   "passwordResetSuccess": "Mật khẩu đã được đặt lại thành công.",
   "enterVerificationCode": "Nhập Mã Xác Thực",
   "pleaseEnterCode": "Vui lòng nhập mã 6 chữ số đã được gửi đến email hoặc số điện thoại của bạn.",
-  "timeRemaining": "Time remaining: ",
+  "timeRemaining": "Thời gian còn lại",
   "s": "s",
   "invalidOTP": "Mã OTP không hợp lệ",
   "otpVerificationError": "Đã xảy ra lỗi trong quá trình xác thực mã OTP",
@@ -355,7 +355,14 @@
   "Reset": "Đặt Lại",
   "timeExpired": "Hết Thời Gian",
   "codeExpiredMessage": "Mã xác thực đã hết hạn. Vui lòng yêu cầu mã mới.",
-  "ok": "OK"
-  
-  
+  "ok": "OK",
+  "ForgotYourPassword": "Bạn đã quên mật khẩu?",
+  "ForgotYourPasswordDetail": "Nếu bạn muốn yêu cầu người dùng nhập địa chỉ email của họ để mã được gửi đến.",
+  "ValidationError": "Lỗi xác thực",
+  "EmailNotFoundMessage": "Địa chỉ Email không được tìm thấy",
+  "NetworkErrorMessage": "Lỗi mạng",
+  "EnterEmailMessage" : "Chưa điền địa chỉ Email",
+  "InvalidEmailMessage": "Sai địa chỉ Email",
+  "VerificationCodeEntry": "Nhập Mã Xác Minh",
+  "VerificationCodeEntryDetail": "Vui lòng nhập mã xác minh được gửi cho bạn",
 }

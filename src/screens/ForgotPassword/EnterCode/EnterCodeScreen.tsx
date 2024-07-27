@@ -17,7 +17,7 @@ const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => {
   const phone = useSelector(getPhone);
   const email = useSelector(getEmail);
   const dispatch = useDispatch(); 
-  const t= useSelector(getTranslate);
+  const translate = useSelector(getTranslate);
   const color = useThemeColors();
   useEffect(() => {
     if (code.join('').length === 6) {
@@ -25,22 +25,22 @@ const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => {
     }
   }, [code]);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown(prevCountdown => {
-        if (prevCountdown <= 1) {
-          clearInterval(timer);
-          Alert.alert(t('timeExpired'), t('codeExpiredMessage'), [
-            { text: t('ok'), onPress: () => navigation.goBack() },
-          ]);
-          return 0;
-        }
-        return prevCountdown - 1;
-      });
-    }, 1000);
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setCountdown(prevCountdown => {
+  //       if (prevCountdown <= 1) {
+  //         clearInterval(timer);
+  //         Alert.alert(t('timeExpired'), t('codeExpiredMessage'), [
+  //           { text: t('ok'), onPress: () => navigation.goBack() },
+  //         ]);
+  //         return 0;
+  //       }
+  //       return prevCountdown - 1;
+  //     });
+  //   }, 1000);
 
-    return () => clearInterval(timer);
-  }, []);
+  //   return () => clearInterval(timer);
+  // }, []);
 
    const handleCheckCode = async () => {
     try {
@@ -54,11 +54,11 @@ const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => {
         await dispatch(setCode(code.join('')));
         navigation.navigate('ResetPasswordScreen');
       } else {
-        Alert.alert(t('error'), t('invalidOTP'));
+        Alert.alert(translate('error'), translate('invalidOTP'));
       }
     } catch (error) {
       console.error(error);
-      Alert.alert(t('error'), t('otpVerificationError'));
+      Alert.alert(translate('error'), translate('otpVerificationError'));
     }
   };
   
@@ -77,7 +77,9 @@ const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => {
       inputs.current[index - 1].focus();
     }
   };
-
+  const handleBackPress = () => {
+    navigation.goBack();
+  };
   return (
     <ImageBackground 
       source={{ uri: 'https://static.vecteezy.com/system/resources/previews/008/483/414/non_2x/the-concept-of-an-african-american-man-thinking-behind-a-laptop-vector.jpg' }} 
@@ -85,16 +87,23 @@ const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => {
     >
       <KeyboardAvoidingView style={styles.keyboardView} behavior="padding">
         <SafeAreaView style={[styles.safeAreaStyle, {backgroundColor:color.background}]}>
-          <TouchableOpacity style={styles.arrowButton} onPress={() => { navigation.navigate('ForgotPassword') }}>
-            <Icon name="arrow-back" size={30} style={styles.backButton} />
-          </TouchableOpacity>
-
+          <View style={styles.progressBar}>
+            <View style={styles.progressStep}></View>
+            <View style={[
+              styles.progressStep,
+              styles.progressStepActive, 
+              {backgroundColor: color.progressBarActive}
+            ]}></View>
+            <View style={styles.progressStep}></View>
+          </View>
           <View style={styles.container}>
-         
-          <Text style={[styles.title, {color:color.text}]}>{t('enterVerificationCode')}</Text> 
-          <Text style={[styles.subtitle, {color:color.text}]}>{t('pleaseEnterCode')}</Text> 
-          <Text style={[styles.countdown, ]}>{t('timeRemaining')}{countdown} {t('s')}</Text>
-          <View style={styles.inputContainer}>
+            <View style={styles.TextContainer}>
+              <Text style={[styles.emailTitle,{color: color.text}]}>{translate('ForgotYourPassword')}</Text>
+              <Text style={[styles.emailDetail, {color: color.textSubdued}]}>{translate('ForgotYourPasswordDetail')}</Text>
+            </View>
+            <Text style={[styles.countdownText,{color: color.text}]}>{translate('timeRemaining')}</Text>
+            <Text style={[styles.countdownTime, {color: color.red}]}>{countdown} {translate('s')}</Text>
+            <View style={styles.inputContainer}>
               {code.map((digit, index) => (
                 <TextInput
                   key={index}
@@ -108,6 +117,13 @@ const EnterCodeScreen = ({ navigation }: EnterCodeScreenProps) => {
                 />
               ))}
             </View>
+            <TouchableOpacity 
+              style={styles.backButton} 
+              onPress={handleBackPress}
+            >
+              <Icon name="arrow-back" size={24} color={color.icon} />
+              <Text style={[styles.backButtonText, {color: color.text}]}>Back</Text>
+            </TouchableOpacity>
           </View>
         </SafeAreaView>
       </KeyboardAvoidingView>

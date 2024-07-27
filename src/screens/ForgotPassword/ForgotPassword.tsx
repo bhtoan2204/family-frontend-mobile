@@ -45,8 +45,8 @@ const ForgotPassword = ({navigation}: ForgotPasswordScreenProps) => {
   //   }
   // };
 
-  const navigateToEnterCodeScreen = () => {
-    navigation.navigate('EnterCodeScreen');
+  const navigateToEnterEmailScreen = () => {
+    navigation.navigate('EnterEmailScreen');
   };
 
   const isDarkMode = useSelector(getIsDarkMode);
@@ -98,7 +98,7 @@ const ForgotPassword = ({navigation}: ForgotPasswordScreenProps) => {
               resizeMode="stretch">
               <TouchableOpacity
                 style={[selectedOption === 'email' && styles.selectedOption]}
-                onPress={navigateToEnterCodeScreen}>
+                onPress={navigateToEnterEmailScreen}>
                 <Text
                   style={
                     selectedOption === 'email'
@@ -110,7 +110,6 @@ const ForgotPassword = ({navigation}: ForgotPasswordScreenProps) => {
                 </Text>
               </TouchableOpacity>
             </ImageBackground>
-            
           </View>
 
           {/* {selectedOption === 'email' && (

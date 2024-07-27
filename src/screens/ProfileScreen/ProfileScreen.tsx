@@ -67,10 +67,10 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
             style={styles.profileImage}
           />
           <View>
-            <Text style={[styles.nameText, {color: color.text}]}>
+            <Text style={[styles.nameText, {color: "#fff"}]}>
               {profile?.firstname} {profile?.lastname}
             </Text>
-            <Text style={[styles.emailText, {color: color.text}]}>
+            <Text style={[styles.emailText, {color: "#fff"}]}>
               {profile?.email}
             </Text>
           </View>

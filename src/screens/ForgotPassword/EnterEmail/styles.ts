@@ -14,6 +14,12 @@ const styles = StyleSheet.create({
     safeAreaStyle: {
       flex: 1,
     },
+    TextContainer:{
+      flexDirection: 'column',
+      marginBottom: 30,
+      width:'90%',
+      alignSelf:'center',
+    },
     container: {
       flex: 1,
       justifyContent: 'center',
@@ -26,9 +32,18 @@ const styles = StyleSheet.create({
       left: 20,
     },
     backButton: {
-      color: COLORS.black,
-      marginLeft: 0,
-      marginTop: 30,
+      flexDirection: 'row',
+      alignItems: 'center',
+      position: 'absolute',
+      bottom: 20,
+      left: 20,
+      padding: 10,
+      backgroundColor: 'transparent',
+    },
+    backButtonText: {
+      marginLeft: 10,
+      fontSize: 16,
+      fontWeight: 'bold',
     },
     title: {
       fontSize: 24,
@@ -78,17 +93,76 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       width: progressBarWidth,
       height: progressBarHeight,
-      backgroundColor: '#ddd', 
       borderRadius: 5, 
       overflow: 'hidden', 
       marginLeft: 20,
+      marginTop: 20,
+      marginBottom: 20,
     },
     progressStep: {
       flex: 1,
-      height: '100%', 
+      borderRadius: 5, 
+      height: '50%',
+      marginHorizontal: 3, // Thêm khoảng cách giữa các bước
+      backgroundColor: 'grey', // Màu nền cho các bước chưa hoàn thành
     },
-    activeStep: {
-      backgroundColor: COLORS.Rhino,
+    progressStepActive: {
+      borderRadius: 5,
     },
-  });
+    emailTitle:{
+      fontSize: 30,
+      fontWeight: 'bold',
+      marginBottom: 10,
+    },
+    emailDetail:{
+      fontSize: 15,
+      fontWeight: 'semibold',
+    },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    optionContainer: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      marginBottom: 4,
+    },
+    optionEmailButton: {
+      marginBottom: 20,
+      padding: 10,
+      width: screenWidth*0.9,
+      alignSelf: 'center',
+    },
+    selectedOption: {
+      borderColor: '#f0f0f0',
+    },
+    optionText: {
+      fontSize: 16,
+      color: COLORS.gray,
+      padding: 5,
+      alignSelf: 'center',
+      fontWeight: 'bold',
+    },
+    selectedOptionText: {
+      fontSize: 16,
+      color: COLORS.white,
+      fontWeight: 'bold',
+      padding: 5,
+      alignSelf: 'center',
+    },
+    TextInput: {
+      height: screenHeight * 0.06,
+      width: screenWidth * 0.9,
+      borderWidth: 1.5,
+      borderRadius: 8,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: screenWidth * 0.07,
+      backgroundColor: COLORS.PaleAqua,
+      color: COLORS.Rhino,
+      alignSelf: 'center',
+    },
+    Icon: {
+      fontSize: screenHeight * 0.03,
+    },  });
 export default styles;

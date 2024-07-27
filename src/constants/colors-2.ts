@@ -55,8 +55,12 @@ const COLORS = {
     chatBackground: '#fff',
     searchChat: '#f2f2f2',
     textWelcome: '#fff',
+    progressBar: "#DDDFE0",
+    progressBarActive: '#2A475E'
     },
   dark: {
+    progressBar: "#232A3D",
+    progressBarActive: '#66C0F4',
     textWelcome: '#fff',
     searchChat: '#252D3B',
     chatBackground: '#0A1220',

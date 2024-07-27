@@ -3,80 +3,75 @@ import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Alert, I
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles'; 
-import { EnterEmailScreenProps } from 'src/navigation/NavigationTypes';
-import { AuthServices } from 'src/services/apiclient';
+import { ForgotPasswordScreenProps } from 'src/navigation/NavigationTypes';
+import { AuthServices, ProfileServices } from 'src/services/apiclient';
 import { useDispatch, useSelector } from 'react-redux';
-import { getPhone, getEmail, setCode } from 'src/redux/slices/ForgotPassword';
+import {setEmail} from 'src/redux/slices/ForgotPassword';
+import {getEmail, setCode } from 'src/redux/slices/ForgotPassword';
 import { getTranslate } from 'src/redux/slices/languageSlice';
 import { useThemeColors } from 'src/hooks/useThemeColor';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {getIsDarkMode} from 'src/redux/slices/DarkModeSlice';
 
-const EnterEmailScreen = ({ navigation }: EnterEmailScreenProps) => { 
+const EnterEmailScreen = ({ navigation }: ForgotPasswordScreenProps) => { 
   const [code, setCodeState] = useState(['', '', '', '', '', '']);
   const [countdown, setCountdown] = useState(60);
   const inputs = useRef([]);
-  const phone = useSelector(getPhone);
   const email = useSelector(getEmail);
   const dispatch = useDispatch(); 
-  const t= useSelector(getTranslate);
+  const translate = useSelector(getTranslate);
   const color = useThemeColors();
-  useEffect(() => {
-    if (code.join('').length === 6) {
-      handleCheckCode();
+  const [inputEmail, setInputEmail] = useState<string>('');
+  const navigateToEnterCodeScreen = () => {
+    navigation.navigate('EnterCodeScreen');
+  };
+  // const handleSendSubmit = async () => {
+  //   try {
+  //     dispatch(setEmail(inputEmail));
+  //     await AuthServices.forgotPassword({ email: inputEmail, phone: '' });
+  //     navigateToEnterCodeScreen();
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const handleSendSubmit = async () => {
+    if (!inputEmail) {
+      Alert.alert(translate('ValidationError'), translate('EnterEmailMessage'));
+      return;
     }
-  }, [code]);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown(prevCountdown => {
-        if (prevCountdown <= 1) {
-          clearInterval(timer);
-          Alert.alert(t('timeExpired'), t('codeExpiredMessage'), [
-            { text: t('ok'), onPress: () => navigation.goBack() },
-          ]);
-          return 0;
-        }
-        return prevCountdown - 1;
-      });
-    }, 1000);
+    if (!validateEmail(inputEmail)) {
+      Alert.alert(translate('ValidationError'), translate('InvalidEmailMessage'));
+      return;
+    }
 
-    return () => clearInterval(timer);
-  }, []);
-
-   const handleCheckCode = async () => {
     try {
-      let response = '';
-      if (phone) {
-        response = await AuthServices.checkOTP({ email: '', phone, code: code.join('') });
-      } else if (email) {
-        response = await AuthServices.checkOTP({ email, phone: '', code: code.join('') });
-      }
-      if (response.message === 'OTP is valid') {
-        await dispatch(setCode(code.join('')));
-        navigation.navigate('ResetPasswordScreen');
+      const userInfo = await ProfileServices.getUserInfoByEmail(inputEmail);
+      if (userInfo) {
+        dispatch(setEmail(inputEmail));
+        await AuthServices.forgotPassword({ email: inputEmail, phone: '' });
+        navigateToEnterCodeScreen();
       } else {
-        Alert.alert(t('error'), t('invalidOTP'));
+        Alert.alert(translate('ValidationError'), translate('EmailNotFoundMessage'));
       }
     } catch (error) {
       console.error(error);
-      Alert.alert(t('error'), t('otpVerificationError'));
+      Alert.alert(translate('Error'), translate('NetworkErrorMessage'));
     }
   };
-  
-  const handleChange = (text, index) => {
-    const newCode = [...code];
-    newCode[index] = text;
-    setCodeState(newCode);
-
-    if (text && index < 5) {
-      inputs.current[index + 1].focus();
-    }
+  const handleBackPress = () => {
+    navigation.goBack();
   };
-
-  const handleKeyPress = ({ nativeEvent: { key } }, index) => {
-    if (key === 'Backspace' && !code[index] && index > 0) {
-      inputs.current[index - 1].focus();
-    }
-  };
+  const isDarkMode = useSelector(getIsDarkMode);
+  const button = !isDarkMode
+    ? require('../../../assets/images/button-rhino.png')
+    : require('../../../assets/images/button-blue-demin.png');
 
   return (
     <ImageBackground 
@@ -85,30 +80,75 @@ const EnterEmailScreen = ({ navigation }: EnterEmailScreenProps) => {
     >
       <KeyboardAvoidingView style={styles.keyboardView} behavior="padding">
         <SafeAreaView style={[styles.safeAreaStyle, {backgroundColor:color.background}]}>
-          <TouchableOpacity style={styles.arrowButton} onPress={() => { navigation.navigate('ForgotPassword') }}>
-            <Icon name="arrow-back" size={30} style={styles.backButton} />
-          </TouchableOpacity>
-
-          <View style={styles.container}>
-         
-          <Text style={[styles.title, {color:color.text}]}>{t('enterVerificationCode')}</Text> 
-          <Text style={[styles.subtitle, {color:color.text}]}>{t('pleaseEnterCode')}</Text> 
-          <Text style={[styles.countdown, ]}>{t('timeRemaining')}{countdown} {t('s')}</Text>
-          <View style={styles.inputContainer}>
-              {code.map((digit, index) => (
-                <TextInput
-                  key={index}
-                  style={[styles.input, {color: color.text}]}
-                  keyboardType="numeric"
-                  maxLength={1}
-                  value={digit}
-                  onChangeText={text => handleChange(text, index)}
-                  onKeyPress={e => handleKeyPress(e, index)}
-                  ref={ref => (inputs.current[index] = ref)}
-                />
-              ))}
-            </View>
+        <View style={styles.progressBar}>
+          <View style={[
+            styles.progressStep,
+            styles.progressStepActive, 
+            {backgroundColor: color.progressBarActive}
+          ]}>
           </View>
+          <View style={styles.progressStep}></View>
+          <View style={styles.progressStep}></View>
+        </View>
+          <View style={styles.TextContainer}>
+            <Text style={[styles.emailTitle,{color: color.text}]}>{translate('ForgotYourPassword')}</Text>
+            <Text style={[styles.emailDetail, {color: color.textSubdued}]}>{translate('ForgotYourPasswordDetail')}</Text>
+          </View>
+          <View
+            style={[
+              styles.row,
+              styles.TextInput,
+              {
+                borderColor: '#2A475E',
+                backgroundColor: color.white,
+                marginBottom:20,
+              },
+            ]}>
+            <MaterialCommunityIcons
+              name="email-outline"
+              style={[styles.Icon, {color: color.icon}]}
+            />
+            <TextInput
+              placeholder={translate('enterEmail')}
+              placeholderTextColor={
+                color.textSubdued
+              }
+              keyboardType="email-address"
+              onChangeText={text => setInputEmail(text)}
+              value={inputEmail}
+              style={[
+                {
+                  marginLeft: 10,
+                  width: '100%',
+                  color: color.text,
+                },
+              ]}
+            />
+          </View>
+          <ImageBackground
+            source={button}
+            style={styles.optionEmailButton}
+            resizeMode="stretch">
+            <TouchableOpacity
+              style={styles.selectedOption}
+              onPress={handleSendSubmit}
+              >
+              <Text
+                style={
+                  styles.selectedOptionText
+                }
+                >
+                {translate('EmailAddress')}
+              </Text>
+            </TouchableOpacity>
+          </ImageBackground>
+          <TouchableOpacity 
+              style={styles.backButton} 
+              onPress={handleBackPress}
+            >
+              <Icon name="arrow-back" size={24} color={color.icon} />
+              <Text style={[styles.backButtonText, {color: color.text}]}>Back</Text>
+            </TouchableOpacity>
         </SafeAreaView>
       </KeyboardAvoidingView>
     </ImageBackground>

@@ -247,7 +247,7 @@
     "passwordResetSuccess": "Password has been reset successfully.",
     "enterVerificationCode": "Enter Verification Code",
     "pleaseEnterCode": "Please enter the 6-digit code sent to your email or phone.",
-    "timeRemaining": "Thời gian còn lại: ",
+    "timeRemaining": "Time remaining",
     "s": "giây",
     "invalidOTP": "Invalid OTP",
     "otpVerificationError": "An error occurred while verifying the OTP",
@@ -334,8 +334,15 @@
     "EmailAddress": "Email Address",
     "timeExpired": "Time Expired",
     "codeExpiredMessage": "The verification code has expired. Please request a new one.",
-    "ok": "OK"
-    
-    
+    "ok": "OK",
+    "ForgotYourPassword": "Forgot Your Password?",
+  "ForgotYourPasswordDetail": "If your want to ask the user to enter their email address for the code to be sent.",
+  "ValidationError": "Validation Error",
+  "EmailNotFoundMessage": "Email Not Found Message",
+  "NetworkErrorMessage": "Network Error Message",
+    "EnterEmailMessage" : "Please, Enter Email Message",
+    "InvalidEmailMessage": "Invalid Email Message",
+    "VerificationCodeEntry": "Verification Code Entry",
+  "VerificationCodeEntryDetail": "Please enter the verification code sent to you",
   }
   
