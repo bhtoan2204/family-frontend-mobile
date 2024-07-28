@@ -253,6 +253,7 @@ export type AuthStackParamList = {
   EnterEmailScreen: undefined;
   ResetPasswordScreen: undefined;
   Feedback: undefined;
+  VerifyCode: { email: string; phone: string };
 };
 
 export type CalendarStackParamList = {
@@ -918,7 +919,7 @@ type SignupScreenNavigationProp = NativeStackNavigationProp<
   'SignupScreen'
 >;
 
-export interface SignupScreenProps {<i class="fa fa-address-card-o" aria-hidden="true"></i>
+export interface SignupScreenProps {
   navigation: SignupScreenNavigationProp;
 }
 
@@ -950,6 +951,15 @@ type FeedBackNavigationProp = NativeStackNavigationProp<
 >;
 export interface FeedbackProps {
   navigation: FeedBackNavigationProp;
+}
+
+type VerifyCodeNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'VerifyCode'
+>;
+
+export interface VerifyCodeProps { 
+  navigation: VerifyCodeNavigationProp;
 }
 
 type LanguageSelectorNavigationProp = NativeStackNavigationProp<

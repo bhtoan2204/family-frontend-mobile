@@ -31,14 +31,14 @@ import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getIsDarkMode} from 'src/redux/slices/DarkModeSlice';
 import {useSelector} from 'react-redux';
 interface FormValues {
+  email: string;
+  phone: string;
+  password: string;
   firstName: string;
   lastName: string;
-  email: string;
-  phoneNumber: string;
-  password: string;
-  termsAndConditions: boolean;
+  genre: string;
   birthdate: Date | null;
-  gender: string;
+  termsAndConditions: boolean;
   submit: null;
 }
 
@@ -74,30 +74,62 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
     actions: FormikHelpers<FormValues>,
   ) => {
     try {
+      console.log('Signup initiated with values:', values);
+
       if (values.termsAndConditions === false) {
+        console.log('Terms and Conditions not accepted');
         actions.setStatus({
           success: false,
         });
         actions.setErrors({submit: TEXTS.TERMS_AND_CONDITIONS_REQUIRED});
       } else {
+        console.log('Calling AuthServices.signup');
         await AuthServices.signup({
           email: values.email,
+          phone: values.phone,
           password: values.password,
           firstname: values.firstName,
           lastname: values.lastName,
-          phone: values.phoneNumber,
+          genre: values.genre,
+          birthdate: values.birthdate
+            ? values.birthdate.toISOString().split('T')[0]
+            : '',
         });
 
-        navigation.navigate('LoginScreen');
+        console.log('Calling AuthServices.sendOTPVerify');
+        await AuthServices.sendOTPVerify({
+          email: values.email,
+          phone: values.phone,
+        });
+
+        console.log('Navigating to VerifyCode');
+        navigation.navigate('VerifyCode', {
+          email: values.email,
+          phone: values.phone,
+        });
         actions.setStatus({success: true});
       }
     } catch (error: any) {
+      console.error('Signup error:', error);
       actions.setStatus({
         success: false,
       });
-      actions.setErrors({submit: error.message});
+      actions.setFieldError('submit', error.message);
+    } finally {
+      console.log('Signup process completed');
+      actions.setSubmitting(false);
     }
   };
+
+  const SignupSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Required'),
+    phone: Yup.string().required('Required'),
+    password: Yup.string().required('Required'),
+    firstname: Yup.string().required('Required'),
+    lastname: Yup.string().required('Required'),
+    genre: Yup.string().required('Required'),
+    birthdate: Yup.date().required('Required'),
+  });
 
   useEffect(() => {
     if (response?.type === 'success') {
@@ -134,34 +166,23 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
               </View>
               <Formik
                 initialValues={{
+                  email: '',
+                  phone: '',
+                  password: '',
                   firstName: '',
                   lastName: '',
-                  email: '',
-                  phoneNumber: '',
-                  password: '',
-                  termsAndConditions: false,
+                  genre: '',
                   birthdate: null,
-                  gender: '',
+                  termsAndConditions: false,
                   submit: null,
                 }}
-                onSubmit={handleSignup}
-                validationSchema={Yup.object().shape({
-                  firstName: Yup.string().required(TEXTS.FIRST_NAME_REQUIRED),
-                  lastName: Yup.string().required(TEXTS.LAST_NAME_REQUIRED),
-                  email: Yup.string()
-                    .email(TEXTS.INVALID_EMAIL)
-                    .required(TEXTS.EMAIL_REQUIRED),
-                  phoneNumber: Yup.string()
-                    .min(10, TEXTS.INVALID_PHONE_NUMBER)
-                    .required(TEXTS.PHONE_NUMBER_REQUIRED),
-                  password: Yup.string()
-                    .max(255)
-                    .min(6, TEXTS.INVALID_PASSWORD)
-                    .required(TEXTS.PASSWORD_REQUIRED),
-                  termsAndConditions: Yup.boolean()
-                    .oneOf([true], TEXTS.TERMS_AND_CONDITIONS_REQUIRED)
-                    .required(TEXTS.TERMS_AND_CONDITIONS_REQUIRED),
-                })}>
+                // onSubmit={(values, actions) =>
+                //   handleSignup(values, actions as FormikHelpers<FormValues>)
+                // }
+                onSubmit={(values, actions) =>
+                  handleSignup(values, actions as FormikHelpers<FormValues>)
+                }
+                validationSchema={SignupSchema}>
                 {({
                   errors,
                   handleBlur,
@@ -270,9 +291,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                       <View
                         style={{
                           ...styles.placeholder,
-                          borderColor: errors.phoneNumber
-                            ? COLORS.red
-                            : '#2A475E',
+                          borderColor: errors.phone ? COLORS.red : '#2A475E',
                           backgroundColor: color.white,
                         }}>
                         {/* <MaterialCommunityIcons
@@ -286,18 +305,16 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           ]}
                           placeholder={TEXTS.PHONE_NUMBER_PLACEHOLDER}
                           placeholderTextColor={
-                            errors.phoneNumber ? COLORS.red : '#A6A6A6'
+                            errors.phone ? COLORS.red : '#A6A6A6'
                           }
                           keyboardType="phone-pad"
                           onBlur={handleBlur('phoneNumber')}
                           onChangeText={handleChange('phoneNumber')}
-                          value={values.phoneNumber}
+                          value={values.phone}
                         />
                       </View>
-                      {errors.phoneNumber && touched.phoneNumber && (
-                        <Text style={styles.errorText}>
-                          {errors.phoneNumber}
-                        </Text>
+                      {errors.phone && touched.phone && (
+                        <Text style={styles.errorText}>{errors.phone}</Text>
                       )}
                     </View>
                     <View style={styles.marginBottom}>
@@ -362,13 +379,13 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                         <View style={styles.genderContainer}>
                           <TouchableOpacity
                             style={styles.radioContainer}
-                            onPress={() => setFieldValue('gender', 'male')}>
+                            onPress={() => setFieldValue('genre', 'male')}>
                             <View
                               style={[
                                 styles.radioCircle,
                                 {borderColor: color.text},
                               ]}>
-                              {values.gender === 'male' && (
+                              {values.genre === 'male' && (
                                 <View
                                   style={[
                                     styles.selectedRb,
@@ -384,13 +401,13 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                           </TouchableOpacity>
                           <TouchableOpacity
                             style={styles.radioContainer}
-                            onPress={() => setFieldValue('gender', 'female')}>
+                            onPress={() => setFieldValue('genre', 'female')}>
                             <View
                               style={[
                                 styles.radioCircle,
                                 {borderColor: color.text},
                               ]}>
-                              {values.gender === 'female' && (
+                              {values.genre === 'female' && (
                                 <View
                                   style={[
                                     styles.selectedRb,
@@ -407,8 +424,8 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                         </View>
                       </View>
 
-                      {errors.gender && touched.gender && (
-                        <Text style={styles.errorText}>{errors.gender}</Text>
+                      {errors.genre && touched.genre && (
+                        <Text style={styles.errorText}>{errors.genre}</Text>
                       )}
 
                       <View style={styles.inputContainer}>

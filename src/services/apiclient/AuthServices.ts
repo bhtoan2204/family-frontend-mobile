@@ -47,16 +47,68 @@ const AuthServices = {
         firstname,
         lastname,
         genre,
-        birthdate
+        birthdate: new Date(birthdate), // Convert string to Date
       });
+  
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        throw new Error(`Signup error: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Signup API error:', error);
+      throw new Error(ERROR_TEXTS.SIGNUP_ERROR);
+    }
+  },
+  
+
+  sendOTPVerify: async ({
+    email,
+    phone,
+  }: {
+    email?: string;
+    phone?: string;
+  }) => {
+    try {
+      const payload: { email?: string; phone?: string } = {};
+      if (email) payload.email = email;
+      if (phone) payload.phone = phone;
+
+      const response: AxiosResponse = await axios.post(AuthUrl.sendOTPVerify, payload);
 
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.SIGNUP_ERROR);
+        throw new Error(ERROR_TEXTS.SEND_OTP_ERROR);
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.SIGNUP_ERROR);
+      throw new Error(ERROR_TEXTS.SEND_OTP_ERROR);
+    }
+  },
+
+  verifyOTP: async ({
+    email,
+    phone,
+    otp,
+  }: {
+    email?: string;
+    phone?: string;
+    otp: string;
+  }) => {
+    try {
+      const payload: { email?: string; phone?: string; otp: string } = { otp };
+      if (email) payload.email = email;
+      if (phone) payload.phone = phone;
+
+      const response: AxiosResponse = await axios.post(AuthUrl.verifyAccount, payload);
+
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        throw new Error(ERROR_TEXTS.VERIFY_OTP_ERROR);
+      }
+    } catch (error) {
+      throw new Error(ERROR_TEXTS.VERIFY_OTP_ERROR);
     }
   },
 

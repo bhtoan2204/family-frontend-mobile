@@ -23,6 +23,8 @@ const ERROR_TEXTS = {
   PACKAGE_NOT_FOUND: 'Package not found',
   CREATE_ORDER_ERROR: 'Create order error',
   BANK_INFO_NOT_FOUND: 'Bank info not found',
+  VERIFY_OTP_ERROR: 'An error occurred while trying to verify OTP. Please try again',
+  SEND_OTP_ERROR: 'An error occurred while trying to send OTP. Please try again',
 };
 
 export default ERROR_TEXTS;

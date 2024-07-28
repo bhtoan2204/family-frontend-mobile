@@ -14,6 +14,7 @@ import EnterEmailScreen from 'src/screens/ForgotPassword/EnterEmail';
 import ResetPassword from 'src/screens/ForgotPassword/ResetPassword/ResetPassword';
 import FeedbackScreen from 'src/screens/FeedBack/FeedBack';
 import LanguageSelector from 'src/screens/Language/LanguageSelector';
+import VerifyCode from 'src/screens/VerifyCode';
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 const AuthStack = () => {
@@ -23,6 +24,7 @@ const AuthStack = () => {
         header: () => null,
       }}>
       <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
+      <Stack.Screen name="VerifyCode" component={VerifyCode} />
       <Stack.Screen name="Notification" component={Notification} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="SignupScreen" component={SignupScreen} />
@@ -31,10 +33,9 @@ const AuthStack = () => {
       <Stack.Screen name="LandingPage2" component={LandingPage2} />
       <Stack.Screen name="LandingPage3" component={LandingPage3} />
       <Stack.Screen name="EnterCodeScreen" component={EnterCodeScreen} />
-      <Stack.Screen name="EnterEmailScreen" component={EnterEmailScreen}/>
+      <Stack.Screen name="EnterEmailScreen" component={EnterEmailScreen} />
       <Stack.Screen name="ResetPasswordScreen" component={ResetPassword} />
       <Stack.Screen name="Feedback" component={FeedbackScreen} />
-
     </Stack.Navigator>
   );
 };

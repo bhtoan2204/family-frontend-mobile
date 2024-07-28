@@ -2,7 +2,7 @@ import baseUrl from './baseUrl';
 
 const AuthUrl = {
   login: `${baseUrl}/api/v1/auth/local/login`,
-  signup: `${baseUrl}/api/v1/user/register/createAccountForTest`,
+  signup: `${baseUrl}/api/v1/user/register/createAccount`,
   googleLogin: `${baseUrl}/api/v1/auth/google/login`,
   googleCallback: `${baseUrl}/api/v1/auth/google/callback`,
   facebookLogin: `${baseUrl}/api/v1/auth/facebook/login`,
@@ -12,7 +12,8 @@ const AuthUrl = {
   logout: `${baseUrl}/api/v1/auth/logout`,
   checkOTPForgotPassword: `${baseUrl}/api/v1/user/checkOTPForgotPassword`,
   resetPassword: `${baseUrl}/api/v1/user/resetPassword`,
-
+  sendOTPVerify: `${baseUrl}/api/v1/user/register/sendOtpVerifyAccount`,
+  verifyAccount: `${baseUrl}/api/v1/user/register/verifyAccount`,
 };
 
 export default AuthUrl;

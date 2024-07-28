@@ -104,7 +104,9 @@ const TEXTS = {
   CHANGE_PASSWORD: 'Change Password',
   LOGOUT: 'Logout',
   SCEEN_HEIGHT : Dimensions.get('screen').height,
-  SCREEN_WIDTH : Dimensions.get('window').width,
+  SCREEN_WIDTH: Dimensions.get('window').width,
+  TERMS_REQUIRED: 'You must agree to the terms and conditions',
+  GENRE_REQUIRED: 'Genre is required',
 };
 
 export default TEXTS;
