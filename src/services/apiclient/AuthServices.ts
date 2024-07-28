@@ -37,7 +37,7 @@ const AuthServices = {
     lastname: string;
     phone: string;
     genre: string;
-    birthdate: string;
+    birthdate: string; // Giữ dưới dạng chuỗi
   }) => {
     try {
       const response: AxiosResponse = await axios.post(AuthUrl.signup, {
@@ -47,11 +47,11 @@ const AuthServices = {
         firstname,
         lastname,
         genre,
-        birthdate: new Date(birthdate), // Convert string to Date
+        birthdate, // Gửi dưới dạng chuỗi
       });
-  
+      const userData = response.data;
       if (response.status === 200) {
-        return response.data;
+        return userData;
       } else {
         throw new Error(`Signup error: ${response.statusText}`);
       }
@@ -60,6 +60,7 @@ const AuthServices = {
       throw new Error(ERROR_TEXTS.SIGNUP_ERROR);
     }
   },
+  
   
 
   sendOTPVerify: async ({
