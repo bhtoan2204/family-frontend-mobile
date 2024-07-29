@@ -84,6 +84,7 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
       );
       console.log(data);
       dispatch(updateAsset(data));
+      setImage(data?.image_url);
       setIsEditing(false);
       Toast.show('Asset updated successfully', {
         type: 'success',
@@ -93,8 +94,7 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
       Toast.show('Failed to update asset', {type: 'danger', duration: 3000});
     }
   };
-
-  const handleDeletePress = async () => {
+  const confirmDelete = async () => {
     try {
       await ExpenseServices.deleteAsset(asset?.id_family, asset?.id_asset);
       Toast.show('Asset deleted successfully', {
@@ -107,6 +107,23 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
     } catch (error) {
       Toast.show('Failed to delete asset', {type: 'danger', duration: 3000});
     }
+  };
+  const handleDeletePress = async () => {
+    Alert.alert(
+      'Confirm Deletion',
+      'Are you sure you want to delete this asset?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => confirmDelete(),
+        },
+      ],
+      {cancelable: true},
+    );
   };
 
   const handleImagePicker = async () => {
