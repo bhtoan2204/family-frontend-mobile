@@ -141,20 +141,19 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
         birthdate: values.birthdate,
       });
 
-      console.log('Calling AuthServices.sendOTPVerify');
-      await AuthServices.sendOTPVerify({
-        email: values.email,
-        phone: values.phone,
-      });
-
-      console.log('Navigating to VerifyCode');
+      console.log('Navigating to VerifySelectionScreen');
       navigation.navigate('VerifyCode', {
         email: values.email,
         phone: values.phone,
       });
-    } catch (error: any) {
-      console.error('Signup error:', error);
-      setErrors({submit: error.message});
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Signup error:', error.message);
+        setErrors({submit: error.message});
+      } else {
+        console.error('Signup error:', error);
+        setErrors({submit: 'An unknown error occurred'});
+      }
     }
   };
 

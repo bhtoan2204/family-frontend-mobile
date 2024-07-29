@@ -921,6 +921,7 @@ type SignupScreenNavigationProp = NativeStackNavigationProp<
 
 export interface SignupScreenProps {
   navigation: SignupScreenNavigationProp;
+  route: RouteProp<AuthStackParamList, 'SignupScreen'>;
 }
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<
@@ -960,6 +961,7 @@ type VerifyCodeNavigationProp = NativeStackNavigationProp<
 
 export interface VerifyCodeProps { 
   navigation: VerifyCodeNavigationProp;
+  route: RouteProp<AuthStackParamList, 'VerifyCode'>;
 }
 
 type LanguageSelectorNavigationProp = NativeStackNavigationProp<

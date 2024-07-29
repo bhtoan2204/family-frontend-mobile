@@ -76,13 +76,20 @@ const AuthServices = {
       if (phone) payload.phone = phone;
 
       const response: AxiosResponse = await axios.post(AuthUrl.sendOTPVerify, payload);
-
+      const userData = response.data;
       if (response.status === 200) {
-        return response.data;
+        return userData;
       } else {
         throw new Error(ERROR_TEXTS.SEND_OTP_ERROR);
       }
-    } catch (error) {
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error('sendOTPVerify API error:', error.response?.data || error.message);
+      } else if (error instanceof Error) {
+        console.error('sendOTPVerify API error:', error.message);
+      } else {
+        console.error('sendOTPVerify API error:', error);
+      }
       throw new Error(ERROR_TEXTS.SEND_OTP_ERROR);
     }
   },
@@ -97,19 +104,36 @@ const AuthServices = {
     otp: string;
   }) => {
     try {
+      console.log('verifyOTP params:', { email, phone, otp });
       const payload: { email?: string; phone?: string; otp: string } = { otp };
-      if (email) payload.email = email;
-      if (phone) payload.phone = phone;
-
+      if (email) {
+        payload.email = email;
+      } else if (phone) {
+        payload.phone = phone;
+      }
+  
+      // Remove undefined properties from payload
+      Object.keys(payload).forEach(key => {
+        if (payload[key as keyof typeof payload] === undefined) {
+          delete payload[key as keyof typeof payload];
+        }
+      });
+  
       const response: AxiosResponse = await axios.post(AuthUrl.verifyAccount, payload);
-
+      const userData = response.data;
       if (response.status === 200) {
-        return response.data;
+        return userData;
       } else {
         throw new Error(ERROR_TEXTS.VERIFY_OTP_ERROR);
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.VERIFY_OTP_ERROR);
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error:', error.response?.data);
+        throw new Error(error.response?.data?.message || ERROR_TEXTS.VERIFY_OTP_ERROR);
+      } else {
+        console.error('Unexpected error:', error);
+        throw new Error(ERROR_TEXTS.VERIFY_OTP_ERROR);
+      }
     }
   },
 
