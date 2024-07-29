@@ -6,6 +6,8 @@ import instance from '../httpInterceptor';
 const AuthServices = {
   login: async ({email, password}: {email: string; password: string}) => {
     try {
+      const url = AuthUrl.login;
+      console.log('Login URL:', url);
       const response: AxiosResponse = await axios.post(AuthUrl.login, {
         email,
         password,
@@ -21,7 +23,7 @@ const AuthServices = {
       throw new Error(ERROR_TEXTS.USER_NOT_FOUND);
     }
   },
-  
+
   signup: async ({
     email,
     password,
@@ -60,22 +62,17 @@ const AuthServices = {
       throw new Error(ERROR_TEXTS.SIGNUP_ERROR);
     }
   },
-  
-  
 
-  sendOTPVerify: async ({
-    email,
-    phone,
-  }: {
-    email?: string;
-    phone?: string;
-  }) => {
+  sendOTPVerify: async ({email, phone}: {email?: string; phone?: string}) => {
     try {
-      const payload: { email?: string; phone?: string } = {};
+      const payload: {email?: string; phone?: string} = {};
       if (email) payload.email = email;
       if (phone) payload.phone = phone;
 
-      const response: AxiosResponse = await axios.post(AuthUrl.sendOTPVerify, payload);
+      const response: AxiosResponse = await axios.post(
+        AuthUrl.sendOTPVerify,
+        payload,
+      );
       const userData = response.data;
       if (response.status === 200) {
         return userData;
@@ -84,7 +81,10 @@ const AuthServices = {
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        console.error('sendOTPVerify API error:', error.response?.data || error.message);
+        console.error(
+          'sendOTPVerify API error:',
+          error.response?.data || error.message,
+        );
       } else if (error instanceof Error) {
         console.error('sendOTPVerify API error:', error.message);
       } else {
@@ -104,18 +104,25 @@ const AuthServices = {
     code: string;
   }) => {
     try {
-      const payload: { email?: string; phone?: string; code: string } = { email, phone, code };
-  
+      const payload: {email?: string; phone?: string; code: string} = {
+        email,
+        phone,
+        code,
+      };
+
       // Remove undefined properties from payload
       Object.keys(payload).forEach(key => {
         if (payload[key as keyof typeof payload] === undefined) {
           delete payload[key as keyof typeof payload];
         }
       });
-  
+
       console.log('verifyOTP params:', payload);
-  
-      const response: AxiosResponse = await axios.post(AuthUrl.verifyOTP, payload);
+
+      const response: AxiosResponse = await axios.post(
+        AuthUrl.verifyOTP,
+        payload,
+      );
       const userData = response.data;
       if (response.status === 200) {
         return userData;
@@ -125,7 +132,9 @@ const AuthServices = {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Axios error:', error.response?.data);
-        throw new Error(error.response?.data?.message || ERROR_TEXTS.VERIFY_OTP_ERROR);
+        throw new Error(
+          error.response?.data?.message || ERROR_TEXTS.VERIFY_OTP_ERROR,
+        );
       } else {
         console.error('Unexpected error:', error);
         throw new Error(ERROR_TEXTS.VERIFY_OTP_ERROR);
@@ -133,77 +142,113 @@ const AuthServices = {
     }
   },
 
-  resetPassword: async ({email, phone, code, password}: {email: string, phone: string, code: string, password: string}) => {
+  resetPassword: async ({
+    email,
+    phone,
+    code,
+    password,
+  }: {
+    email: string;
+    phone: string;
+    code: string;
+    password: string;
+  }) => {
     try {
-      if (email){
-      const response: AxiosResponse = await axios.post(AuthUrl.resetPassword, {
-        email: email, code: code, password: password
-      });
-      if (response.status === 200) {
-        return response.data;
-    }
-    else if(phone){
-      const response: AxiosResponse = await axios.post(AuthUrl.resetPassword, {
-        phone: phone, code: code, password: password
-      });
-      if (response.status === 200) {
-        return response.data;
-      } 
-    }
-
-  }
+      if (email) {
+        const response: AxiosResponse = await axios.post(
+          AuthUrl.resetPassword,
+          {
+            email: email,
+            code: code,
+            password: password,
+          },
+        );
+        if (response.status === 200) {
+          return response.data;
+        } else if (phone) {
+          const response: AxiosResponse = await axios.post(
+            AuthUrl.resetPassword,
+            {
+              phone: phone,
+              code: code,
+              password: password,
+            },
+          );
+          if (response.status === 200) {
+            return response.data;
+          }
+        }
+      }
     } catch (error) {
       throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
-  checkOTP: async ({email, phone, code}: {email: string, phone: string, code: string}) => {
+  checkOTP: async ({
+    email,
+    phone,
+    code,
+  }: {
+    email: string;
+    phone: string;
+    code: string;
+  }) => {
     try {
-      if (email){
-      const response: AxiosResponse = await axios.post(AuthUrl.checkOTPForgotPassword, {
-        email: email, code: code
-      });
-      if (response.status === 200) {
-        return response.data;
-    }
-    else if(phone){
-      const response: AxiosResponse = await axios.post(AuthUrl.forgotPassword, {
-        phone: phone, code: code
-      });
-      if (response.status === 200) {
-        return response.data;
-      } 
-    }
-
-  }
+      if (email) {
+        const response: AxiosResponse = await axios.post(
+          AuthUrl.checkOTPForgotPassword,
+          {
+            email: email,
+            code: code,
+          },
+        );
+        if (response.status === 200) {
+          return response.data;
+        } else if (phone) {
+          const response: AxiosResponse = await axios.post(
+            AuthUrl.forgotPassword,
+            {
+              phone: phone,
+              code: code,
+            },
+          );
+          if (response.status === 200) {
+            return response.data;
+          }
+        }
+      }
     } catch (error) {
       throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
 
-  forgotPassword: async ({email, phone}: {email: string, phone: string}) => {
+  forgotPassword: async ({email, phone}: {email: string; phone: string}) => {
     try {
-      if (email){
-      const response: AxiosResponse = await axios.post(AuthUrl.forgotPassword, {
-        email: email,
-      });
-      if (response.status === 200) {
-        return response.data;
-    }
-    else if(phone){
-      const response: AxiosResponse = await axios.post(AuthUrl.forgotPassword, {
-        phone: phone,
-      });
-      if (response.status === 200) {
-        return response.data;
-      } 
-    }
-
-  }
+      if (email) {
+        const response: AxiosResponse = await axios.post(
+          AuthUrl.forgotPassword,
+          {
+            email: email,
+          },
+        );
+        if (response.status === 200) {
+          return response.data;
+        } else if (phone) {
+          const response: AxiosResponse = await axios.post(
+            AuthUrl.forgotPassword,
+            {
+              phone: phone,
+            },
+          );
+          if (response.status === 200) {
+            return response.data;
+          }
+        }
+      }
     } catch (error) {
       throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
-  
+
   refreshToken: async () => {
     try {
       const response: AxiosResponse = await axios.post(AuthUrl.refreshToken);
@@ -242,7 +287,7 @@ const AuthServices = {
       } else {
         throw new Error(ERROR_TEXTS.API_ERROR);
       }
-    } catch (error:any) {
+    } catch (error: any) {
       console.log(error);
       throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
     }
@@ -250,7 +295,6 @@ const AuthServices = {
   Logout: async () => {
     try {
       const response: AxiosResponse = await instance.get(AuthUrl.logout);
-       
     } catch (error: any) {
       console.error('Error in Logout', error.message);
     }
