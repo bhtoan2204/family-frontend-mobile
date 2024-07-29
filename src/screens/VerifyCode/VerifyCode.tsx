@@ -3,7 +3,6 @@ import Checkbox from 'expo-checkbox';
 import {Formik, FormikHelpers} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {
-  StyleSheet,
   Alert,
   SafeAreaView,
   Text,
@@ -14,6 +13,7 @@ import {
 import {COLORS, TEXTS} from 'src/constants';
 import {VerifyCodeProps} from 'src/navigation/NavigationTypes';
 import {AuthServices} from 'src/services/apiclient';
+import styles from './styles';
 
 const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
   const {email, phone} = route.params;
@@ -113,45 +113,5 @@ const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  subtitle: {
-    fontSize: 16,
-    marginBottom: 32,
-    textAlign: 'center',
-  },
-  button: {
-    backgroundColor: '#007BFF',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 16,
-    width: '80%',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#CCCCCC',
-    padding: 8,
-    borderRadius: 8,
-    marginBottom: 16,
-    width: '80%',
-    textAlign: 'center',
-  },
-});
 
 export default VerifyCode;

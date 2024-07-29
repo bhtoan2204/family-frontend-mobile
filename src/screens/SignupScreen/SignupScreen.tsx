@@ -54,12 +54,9 @@ const discovery = {
 
 const SignupScreen = ({navigation}: LoginScreenProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [errors, setErrors] = useState<any>({});
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
-  const [birthdate, setBirthdate] = useState<Date | undefined>(undefined);
-  const [birthdateString, setBirthdateString] = useState<string>('');
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
     const currentDate = selectedDate || new Date();
@@ -171,23 +168,28 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
   return (
     <ImageBackground source={background} style={{flex: 1}} resizeMode="stretch">
       <KeyboardAvoidingView behavior="padding">
-        <ScrollView>
+        <View style={{paddingTop: 50}}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('WelcomeScreen');
+            }}>
+            <Ionicons
+              name="chevron-back-circle-outline"
+              style={[styles.backIcon, {color: color.icon}]}
+            />
+          </TouchableOpacity>
+          <Image
+            source={require('../../assets/images/logo-app-1.png')}
+            resizeMode="stretch"
+            style={styles.logo}
+          />
+        </View>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <SafeAreaView>
-            <View>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('WelcomeScreen');
-                }}>
-                <Ionicons
-                  name="chevron-back-circle-outline"
-                  style={[styles.backIcon, {color: color.icon}]}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={[styles.marginHorizontal, {bottom: 190}]}>
+            <View style={[styles.marginHorizontal, {bottom: 150}]}>
               <View style={[styles.marginVertical]}>
                 <View style={{marginTop: 120}}>
-                  <View style={styles.marginBottom}>
+                  <View style={[styles.marginBottom, styles.row]}>
                     <View
                       style={{
                         ...styles.placeholder,
@@ -199,8 +201,8 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                         backgroundColor: color.white,
                       }}>
                       <TextInput
-                        style={[styles.textInput, {color: '#2A475E'}]}
-                        placeholder={TEXTS.FIRST_NAME_PLACEHOLDER}
+                        style={[styles.textInput, {color: color.text}]}
+                        placeholder={translate('firstname')}
                         placeholderTextColor={
                           errors.firstName ? COLORS.red : '#A6A6A6'
                         }
@@ -221,8 +223,8 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                         backgroundColor: color.white,
                       }}>
                       <TextInput
-                        style={[styles.textInput, {color: '#2A475E'}]}
-                        placeholder={TEXTS.LAST_NAME_PLACEHOLDER}
+                        style={[styles.textInput, {color: color.text}]}
+                        placeholder={translate('lastname')}
                         placeholderTextColor={
                           errors.lastName ? COLORS.red : '#A6A6A6'
                         }
@@ -252,9 +254,9 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                     <TextInput
                       style={[
                         styles.textInput,
-                        {marginLeft: 10, color: '#2A475E'},
+                        {marginLeft: 10, color: color.text},
                       ]}
-                      placeholder={TEXTS.EMAIL_PLACEHOLDER}
+                      placeholder={translate('emailaddress')}
                       placeholderTextColor={
                         errors.email ? COLORS.red : '#A6A6A6'
                       }
@@ -278,9 +280,9 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                     <TextInput
                       style={[
                         styles.textInput,
-                        {marginLeft: 10, color: '#2A475E'},
+                        {marginLeft: 10, color: color.text},
                       ]}
-                      placeholder={TEXTS.PHONE_PLACEHOLDER}
+                      placeholder={translate('phonenumber')}
                       placeholderTextColor={
                         errors.phone ? COLORS.red : '#A6A6A6'
                       }
@@ -304,9 +306,9 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                     <TextInput
                       style={[
                         styles.textInput,
-                        {marginLeft: 10, color: '#2A475E'},
+                        {marginLeft: 10, color: color.text},
                       ]}
-                      placeholder={TEXTS.PASSWORD_PLACEHOLDER}
+                      placeholder={translate('password')}
                       placeholderTextColor={
                         errors.password ? COLORS.red : '#A6A6A6'
                       }
@@ -318,11 +320,12 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                       value={values.password}
                     />
                     <Pressable
-                      onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+                      onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                      style={{position: 'absolute', right: 10, top: 10}}>
                       <MaterialCommunityIcons
                         name={isPasswordVisible ? 'eye' : 'eye-off'}
                         size={20}
-                        style={{position: 'absolute', right: 10, top: 10}}
+                        color={color.icon}
                       />
                     </Pressable>
                   </View>
@@ -330,56 +333,7 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                     <Text style={styles.errorText}>{errors.password}</Text>
                   )}
                 </View>
-                {/* <View style={styles.marginBottom}>
-                  <View
-                    style={{
-                      ...styles.placeholder,
-                      borderColor: errors.genre ? COLORS.red : '#2A475E',
-                      backgroundColor: color.white,
-                    }}>
-                    <Picker
-                      selectedValue={values.genre}
-                      onValueChange={(itemValue, itemIndex) =>
-                        setValues({...values, genre: itemValue})
-                      }
-                      style={{height: 50}}>
-                      <Picker.Item label={TEXTS.GENDER_PLACEHOLDER} value="" />
-                      <Picker.Item label={TEXTS.MALE} value="male" />
-                      <Picker.Item label={TEXTS.FEMALE} value="female" />
-                    </Picker>
-                  </View>
-                  {errors.genre && (
-                    <Text style={styles.errorText}>{errors.genre}</Text>
-                  )}
-                </View>
-                <View style={styles.marginBottom}>
-                  <Pressable
-                    style={styles.datePicker}
-                    onPress={() => setShowDatePicker(true)}>
-                    <Text style={{color: '#2A475E'}}>
-                      {values.birthdate
-                        ? values.birthdate.toDateString()
-                        : TEXTS.BIRTHDATE_PLACEHOLDER}
-                    </Text>
-                  </Pressable>
-                  {showDatePicker && (
-                    <DateTimePicker
-                      value={values.birthdate || new Date()}
-                      mode="date"
-                      display="default"
-                      onChange={(event, date) => {
-                        setShowDatePicker(false);
-                        if (date) {
-                          setValues({...values, birthdate: date});
-                        }
-                      }}
-                    />
-                  )}
-                  {errors.birthdate && (
-                    <Text style={styles.errorText}>{errors.birthdate}</Text>
-                  )}
-                </View> */}
-                <View style={styles.marginBottom}>
+                <View>
                   <View style={styles.inputContainer}>
                     <Text style={[styles.label, {color: color.text}]}>
                       {translate('Gender')}
@@ -458,12 +412,6 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                   {errors.birthdate && (
                     <Text style={styles.errorText}>{errors.birthdate}</Text>
                   )}
-                  <Text>
-                    Selected Date:{' '}
-                    {values.birthdate
-                      ? new Date(values.birthdate).toLocaleDateString()
-                      : ''}
-                  </Text>
                 </View>
 
                 <View style={styles.marginBottom}>
@@ -474,8 +422,8 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                         setValues({...values, termsAndConditions: newValue})
                       }
                     />
-                    <Text style={styles.checkboxLabel}>
-                      {TEXTS.TERMS_AND_CONDITIONS}
+                    <Text style={[styles.checkboxLabel, {color: color.text}]}>
+                      {translate('terms')}
                     </Text>
                   </View>
                   {errors.termsAndConditions && (
@@ -485,39 +433,77 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
                   )}
                 </View>
               </View>
-              <View style={styles.marginHorizontal}>
-                {/* <CustomButton onPress={handleSignup} text={TEXTS.SIGNUP} /> */}
-                <TouchableOpacity onPress={handleSignup}>
-                  <Text>Sign up</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={[styles.marginHorizontal, {marginTop: 10}]}>
-                <Pressable onPress={() => navigation.navigate('LoginScreen')}>
-                  <Text style={{color: color.primary}}>
-                    {TEXTS.ALREADY_HAVE_ACCOUNT}
-                  </Text>
-                </Pressable>
-              </View>
-              <View style={styles.marginHorizontal}>
-                <View style={styles.orContainer}>
-                  <Text style={styles.orText}>{TEXTS.OR}</Text>
+              <View style={{bottom: 50}}>
+                <View style={styles.marginHorizontal}>
+                  <CustomButton
+                    style={styles.button}
+                    title={translate('Sign up')}
+                    filled
+                    onPress={handleSignup}
+                    backgroundImage={require('../../assets/images/button.png')}
+                  />
                 </View>
-              </View>
-              <View style={styles.socialContainer}>
-                <Pressable
-                  onPress={() => promptAsync()}
-                  style={styles.socialButton}>
-                  <Image source={GoogleImage} style={styles.socialIcon} />
-                  <Text style={styles.socialText}>
-                    {TEXTS.SIGNUP_WITH_GOOGLE}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginVertical: 13,
+                  }}>
+                  <Text
+                    style={[
+                      {fontSize: 17},
+                      {marginBottom: -20},
+                      {color: color.text},
+                    ]}>
+                    {translate('Login_or')}
                   </Text>
-                </Pressable>
-                <Pressable onPress={() => {}} style={styles.socialButton}>
-                  <Image source={FacebookImage} style={styles.socialIcon} />
-                  <Text style={styles.socialText}>
-                    {TEXTS.SIGNUP_WITH_FACEBOOK}
+                </View>
+                <View style={[styles.container, {bottom: 20}]}>
+                  <TouchableOpacity
+                    style={[styles.button, {right: 20}]}
+                    onPress={() => {
+                      promptAsync();
+                    }}>
+                    <Image
+                      style={styles.image}
+                      source={GoogleImage}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.button, {left: 20}]}
+                    // onPress={handleFacebookLogin}
+                  >
+                    <Image
+                      style={styles.image}
+                      source={FacebookImage}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View
+                  className="flex-row justify-center my-5"
+                  style={{bottom: 40}}>
+                  <Text className="text-base mr-1" style={{color: color.text}}>
+                    {translate('ALREADY_HAVE_ACCOUNT')}
                   </Text>
-                </Pressable>
+
+                  <TouchableOpacity
+                    style={{top: 2}}
+                    onPress={() => {
+                      navigation.navigate('LoginScreen');
+                    }}>
+                    <Text
+                      style={[
+                        {color: '#66C0F4'},
+                        {fontSize: 16},
+                        {fontWeight: 'bold'},
+                      ]}>
+                      {translate('Login')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </SafeAreaView>

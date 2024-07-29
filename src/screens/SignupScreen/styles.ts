@@ -57,9 +57,17 @@ const styles = StyleSheet.create({
     marginRight: screenHeight * 0.01,
     color: COLORS.Rhino,
   },
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
   button: {
     marginTop: screenHeight * 0.02,
     marginBottom: screenHeight * 0.01,
+  },
+  image: {
+    height: screenHeight * 0.08,
+    width: screenWidth * 0.08,
   },
   loginText: {
     fontSize: screenHeight * 0.018,
@@ -80,8 +88,6 @@ const styles = StyleSheet.create({
   logo: {
     height: screenHeight * 0.1,
     width: screenHeight * 0.1,
-    top: screenHeight * 0.12,
-    marginTop: screenHeight * 0.09,
     alignSelf: 'center',
   },
   inputContainer: {
@@ -126,7 +132,20 @@ genderContainer: {
     fontSize: 16,
     color: COLORS.black,
   },
-
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  checkboxLabel: {
+    marginLeft: 10,
+    fontSize: 14,
+  },
 });
 
 export default styles;
