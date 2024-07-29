@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -26,14 +26,21 @@ const AssetScreen = ({navigation}: AssetScreenProps) => {
   const assets = useSelector(selectAssets);
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
-
+  const [page, setPage] = useState(1);
+  const [keySearch, setKeySearch] = useState('created_at');
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
     try {
-      const data = await ExpenseServices.getAsset(family.id_family);
+      const data = await ExpenseServices.getAsset(
+        family.id_family,
+        page,
+        10,
+        'created_at',
+        'DESC',
+      );
       dispatch(setAsset(data));
     } catch (error) {
       console.log(error);

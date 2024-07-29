@@ -359,5 +359,7 @@
   "VerifyYourAccount": "Verify Your Account",
   "VerifyYourAccountDetail": "Please select an option to verify your account",
   "VerifyByEmail": "Verify By Email",
-  "VerifyByPhone": "Verify By Phone"
+  "VerifyByPhone": "Verify By Phone",
+  "Total expense for": "Total expense for",
+  "Total income for": "Total income for"
 }

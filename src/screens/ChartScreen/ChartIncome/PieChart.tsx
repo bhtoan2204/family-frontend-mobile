@@ -22,6 +22,7 @@ import {
 } from 'src/redux/slices/IncomeAnalysis';
 import {IncomeMonthly} from 'src/interface/income/IncomeMonthly';
 import {useThemeColors} from 'src/hooks/useThemeColor';
+import {getTranslate} from 'src/redux/slices/languageSlice';
 
 interface PieChartScreenProps {
   id_family: number;
@@ -54,6 +55,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
   const color = useThemeColors();
   const [selectedCategoryType, setSelectedCategoryType] =
     useState<string>('Total');
+  const translate = useSelector(getTranslate);
 
   useEffect(() => {
     console.log(date);
@@ -245,8 +247,11 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
           color: color.text,
           paddingBottom: 10,
         }}>
-        Total income for {formatMonthYear(selectedMonth)}:
-        <Text style={{color: 'green', fontWeight: 'bold'}}> + {formatCurrency(totalExpense)}</Text>
+        {translate('Total income for')} {formatMonthYear(selectedMonth)}:
+        <Text style={{color: 'green', fontWeight: 'bold'}}>
+          {' '}
+          + {formatCurrency(totalExpense)}
+        </Text>
       </Text>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <PieChart
@@ -363,8 +368,8 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
                     </Text>
                   </View>
                   <View style={styles.expenseDetails}>
-                    <Text style={styles.expenseAmount}>
-                      - {formatCurrency(detail.total)}
+                    <Text style={{color: 'green'}}>
+                      + {formatCurrency(detail.total)}
                     </Text>
                     <Icon name="chevron-right" size={20} color="#ccc" />
                   </View>
@@ -406,7 +411,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
                     </Text>
                   </View>
                   <View style={styles.expenseDetails}>
-                    <Text style={styles.expenseAmount}>
+                    <Text style={{color: 'green'}}>
                       - {formatCurrency(amount)}
                     </Text>
                   </View>

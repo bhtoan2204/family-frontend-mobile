@@ -16,6 +16,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import {Avatar, Header, Icon} from 'react-native-elements';
+import {Toast} from 'react-native-toast-notifications';
 import {useDispatch, useSelector} from 'react-redux';
 import {COLORS} from 'src/constants';
 import {useThemeColors} from 'src/hooks/useThemeColor';
@@ -78,8 +79,16 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
       );
       setNewRole(local == 'vi' ? roleName.role_name_vn : roleName.role_name_en);
       setModalVisible(false);
+      Toast.show('Assign role successfully', {
+        type: 'success',
+        duration: 3000,
+      });
     } catch (error) {
       console.log(error);
+      Toast.show('Fail to assign role', {
+        type: 'danger',
+        duration: 3000,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -88,7 +97,7 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
     <TouchableOpacity
       style={styles.roleItem}
       onPress={() => handleRoleSelect(item)}>
-      <Text style={styles.roleItem}>
+      <Text style={[styles.roleItem, {color: color.text}]}>
         {local == 'vi' ? item.role_name_vn : item.role_name_en}
       </Text>
     </TouchableOpacity>
@@ -104,10 +113,17 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
     setIsLoading(true);
     try {
       await FamilyServices.kickMember(member.id_user, member?.id_family);
-      Alert.alert('Success', 'Member removed successfully');
+      Toast.show('Member removed successfully', {
+        type: 'success',
+        duration: 3000,
+      });
     } catch (error) {
       console.log(error);
-      Alert.alert('Inform', 'Only owner can remove member');
+
+      Toast.show('Only owner can remove member', {
+        type: 'danger',
+        duration: 3000,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -340,8 +356,11 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
             style={styles.centeredView}
             activeOpacity={1}
             onPressOut={() => setModalVisible(false)}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalTitle}>{translate('Select Role')}</Text>
+            <View
+              style={[styles.modalView, {backgroundColor: color.background}]}>
+              <Text style={[styles.modalTitle, {color: color.text}]}>
+                {translate('Select Role')}
+              </Text>
               {isLoading ? (
                 <ActivityIndicator size="large" color="#ccc" />
               ) : (

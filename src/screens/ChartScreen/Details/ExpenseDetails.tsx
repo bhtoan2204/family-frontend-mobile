@@ -39,7 +39,7 @@ import moment from 'moment';
 import {DailyExpense} from 'src/interface/expense/DailyExpense';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate} from 'src/redux/slices/languageSlice';
-import { Toast } from 'react-native-toast-notifications';
+import {Toast} from 'react-native-toast-notifications';
 import DeleteButton from 'src/components/Button/DeleteButton';
 import SaveButton from 'src/components/Button/SaveButton';
 import CancelButton from 'src/components/Button/CancelButton';
@@ -73,14 +73,18 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   const [page, setPage] = useState(1);
   const color = useThemeColors();
   const translate = useSelector(getTranslate);
-  const [formattedAmount, setFormattedAmount] = useState(expense?.amount.toString() || '');
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
+  const [formattedAmount, setFormattedAmount] = useState(
+    expense?.amount.toString() || '',
+  );
+  const [selectedCategoryId, setSelectedCategoryId] = useState<
+    number | undefined
+  >(undefined);
 
   useEffect(() => {
     fetchExpenseType(family.id_family);
   }, []);
   const itemsPerPage = 10;
-  
+
   useEffect(() => {
     if (expense?.amount) {
       handleAmountChange(expense.amount.toString());
@@ -111,16 +115,18 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
     setIsEditing(true);
   };
   useEffect(() => {
-    const id = expenseType.find(item => item.expense_type_name === selectedCategory)?.id_expenditure_type;
+    const id = expenseType.find(
+      item => item.expense_type_name === selectedCategory,
+    )?.id_expenditure_type;
     setSelectedCategoryId(id);
   }, [selectedCategory, expenseType]);
-  
+
   const handleSave = async () => {
     setLoading(true);
     try {
       const amount = parseFloat(editedAmount || '0');
       if (isNaN(amount)) {
-        Toast.show('Invalid amount format', { type: 'danger', duration: 3000 });
+        Toast.show('Invalid amount format', {type: 'danger', duration: 3000});
         setLoading(false);
         return;
       }
@@ -130,27 +136,36 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
           family?.id_family,
           expense?.id_created_by,
           selectedCategoryId,
-          amount,        
+          amount,
           chosenDate.toISOString(),
           editedDescription,
           currentImageUri ? currentImageUri : expense?.image_url,
         );
         if (response) {
           dispatch(updateExpense(response));
-          Toast.show('Expense updated successfully', { type: 'success', duration: 3000 });
+          Toast.show('Expense updated successfully', {
+            type: 'success',
+            duration: 3000,
+          });
           setIsEditing(false);
         }
       } else {
-        Toast.show('Selected category not found', { type: 'danger', duration: 3000 });
+        Toast.show('Selected category not found', {
+          type: 'danger',
+          duration: 3000,
+        });
       }
       setLoading(false);
     } catch (error) {
       console.error('Error updating expense:', error);
-      Toast.show('An error occurred while updating expense', { type: 'danger', duration: 3000 });
+      Toast.show('An error occurred while updating expense', {
+        type: 'danger',
+        duration: 3000,
+      });
       setLoading(false);
     }
   };
-  
+
   const handleAmountChange = (text: string) => {
     const formatted = formatNumberWithDots(text);
     const rawValue = formatted.replace(/\./g, '');
@@ -158,7 +173,6 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
     setEditedAmount(numericValue.toString());
     setFormattedAmount(formatted);
   };
-  
 
   const handleDelete = () => {
     Alert.alert(
@@ -177,7 +191,10 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
                   expense.id_expenditure,
                 );
                 dispatch(deleteExpense(expense.id_expenditure));
-                Toast.show('Expense delete successfully', { type: 'success', duration: 3000 });
+                Toast.show('Expense delete successfully', {
+                  type: 'success',
+                  duration: 3000,
+                });
 
                 navigation.goBack();
               } catch (error) {
@@ -194,8 +211,6 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
       {cancelable: true},
     );
   };
-
-
 
   const onChangeDate = (event: any, selectedDate: Date | undefined) => {
     const currentDate = selectedDate || chosenDate;
@@ -232,7 +247,10 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
           dispatch(
             updateExpense({...expense, image_url: result.assets[0].uri}),
           );
-          Toast.show('Add receipt successfully', { type: 'success', duration: 3000 });
+          Toast.show('Add receipt successfully', {
+            type: 'success',
+            duration: 3000,
+          });
         }
         setCurrentImageUri(result.assets[0].uri);
         setLoading(false);
@@ -264,7 +282,6 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   };
 
   const pressMember = (id_user?: string) => {
-    
     dispatch(setSelectedMemberById(id_user));
     navigation.navigate('FamilyStack', {screen: 'MemberDetails'});
   };
@@ -279,23 +296,25 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
     }
   };
 
-  const formatNumberWithDots = (value) => {
+  const formatNumberWithDots = value => {
     if (value === '') return '';
-    
+
     const rawValue = value.replace(/[^\d]/g, '');
-    
+
     const parts = rawValue.split('').reverse();
-    const formattedValue = parts.reduce((acc, digit, index) => {
-      if (index > 0 && index % 3 === 0) {
-        acc.push('.');
-      }
-      acc.push(digit);
-      return acc;
-    }, []).reverse().join('');
-  
+    const formattedValue = parts
+      .reduce((acc, digit, index) => {
+        if (index > 0 && index % 3 === 0) {
+          acc.push('.');
+        }
+        acc.push(digit);
+        return acc;
+      }, [])
+      .reverse()
+      .join('');
+
     return formattedValue;
   };
-  
 
   const formatCurrency = (amount: string) => {
     return parseFloat(amount).toLocaleString('vi-VN', {
@@ -307,267 +326,272 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
     <SafeAreaView
       style={[styles.safeArea, {backgroundColor: color.background}]}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-
-         <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-
-      <View style={[styles.container, {backgroundColor: color.background}]}>
-        <View
-          style={[styles.headerContainer, {backgroundColor: color.background}]}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.headerButton}>
-            <Icon
-              name="close-outline"
-              size={30}
-              style={[styles.backButton, {color: color.text}]}
-            />
-            <Text style={[styles.headerText, {color: color.text}]}>
-              {translate('Expense Details')}
-            </Text>
-          </TouchableOpacity>
-
-          {!isEditing && (
-            <TouchableOpacity
-              onPress={handleEdit}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                backgroundColor: '#00adf5',
-                padding: 15,
-                borderRadius: 30,
-                paddingHorizontal: 20,
-                shadowColor: '#00adf5',
-                shadowOffset: {width: 0, height: 4},
-                shadowOpacity: 0.3,
-                shadowRadius: 2,
-              }}>
-              <Feather name="edit" size={20} color="white" />
-              <Text style={{marginLeft: 10, fontWeight: '700', color: 'white'}}>
-                {translate('Edit')}
-              </Text>
-            </TouchableOpacity>
-          )}
-        </View>
-        <View style={styles.amountContainer}>
-          {!isEditing ? (
-            <Text style={styles.valueAmount}>-{formatCurrency(expense?.amount.toString() || '0')}</Text>
-
-          ) : (
-            <View style={{flexDirection: 'row'}}>
-              <TextInput
-                style={styles.valueAmount}
-                keyboardType="numeric"
-                value={formattedAmount}
-                onChangeText={handleAmountChange}
-
+        <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
+          <View style={[styles.container, {backgroundColor: color.background}]}>
+            <View
+              style={[
+                styles.headerContainer,
+                {backgroundColor: color.background},
+              ]}>
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={styles.headerButton}>
+                <Icon
+                  name="close-outline"
+                  size={30}
+                  style={[styles.backButton, {color: color.text}]}
                 />
-              <Text style={styles.valueAmount}> đ</Text>
-            </View>
-          )}
-        </View>
+                <Text style={[styles.headerText, {color: color.text}]}>
+                  {translate('Expense Details')}
+                </Text>
+              </TouchableOpacity>
 
-        <View style={[styles.card, {backgroundColor: color.white}]}>
-          <View style={styles.detailRow}>
-            <Text style={[styles.label, {color: color.text}]}>
-              {translate('Category')}:
-            </Text>
-            <View style={styles.valueContainer}>
+              {!isEditing && (
+                <TouchableOpacity
+                  onPress={handleEdit}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    backgroundColor: '#00adf5',
+                    padding: 15,
+                    borderRadius: 30,
+                    paddingHorizontal: 20,
+                    shadowColor: '#00adf5',
+                    shadowOffset: {width: 0, height: 4},
+                    shadowOpacity: 0.3,
+                    shadowRadius: 2,
+                  }}>
+                  <Feather name="edit" size={20} color="white" />
+                  <Text
+                    style={{marginLeft: 10, fontWeight: '700', color: 'white'}}>
+                    {translate('Edit')}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+            <View style={styles.amountContainer}>
               {!isEditing ? (
-                expense?.financeExpenditureType ? (
+                <Text style={styles.valueAmount}>
+                  -{formatCurrency(expense?.amount.toString() || '0')}
+                </Text>
+              ) : (
+                <View style={{flexDirection: 'row'}}>
+                  <TextInput
+                    style={styles.valueAmount}
+                    keyboardType="numeric"
+                    value={formattedAmount}
+                    onChangeText={handleAmountChange}
+                  />
+                  <Text style={styles.valueAmount}> đ</Text>
+                </View>
+              )}
+            </View>
+
+            <View style={[styles.card, {backgroundColor: color.white}]}>
+              <View style={styles.detailRow}>
+                <Text style={[styles.label, {color: color.text}]}>
+                  {translate('Category')}:
+                </Text>
+                <View style={styles.valueContainer}>
+                  {!isEditing ? (
+                    expense?.financeExpenditureType ? (
+                      <Text style={[styles.value, {color: color.text}]}>
+                        {expense.financeExpenditureType.expense_type_name}
+                      </Text>
+                    ) : (
+                      <Text style={[styles.value, {color: color.text}]}>
+                        {translate('Other')}
+                      </Text>
+                    )
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() =>
+                        setShowCategoryPicker(!showCategoryPicker)
+                      }>
+                      <View style={{flexDirection: 'row'}}>
+                        <Text style={[styles.value, {color: color.text}]}>
+                          {selectedCategory}{' '}
+                        </Text>
+                        <Icon
+                          name={
+                            showCategoryPicker ? 'chevron-up' : 'chevron-down'
+                          }
+                          size={20}
+                          color={color.text}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  )}
+
+                  {showCategoryPicker && (
+                    <Picker
+                      selectedValue={selectedCategory}
+                      style={[styles.picker, {color: color.text}]}
+                      onValueChange={itemValue =>
+                        handleCategoryChange(itemValue)
+                      }>
+                      {expenseType.map(item => (
+                        <Picker.Item
+                          key={item.id_expenditure_type}
+                          label={item.expense_type_name}
+                          value={item.expense_type_name}
+                          color={color.text}
+                        />
+                      ))}
+                    </Picker>
+                  )}
+                </View>
+              </View>
+              <View style={styles.detailRow}>
+                <Text style={[styles.label, {color: color.text}]}>
+                  {translate('Description')}:
+                </Text>
+                {!isEditing ? (
                   <Text style={[styles.value, {color: color.text}]}>
-                    {expense.financeExpenditureType.expense_type_name}
+                    {expense?.description}
                   </Text>
                 ) : (
-                  <Text style={[styles.value, {color: color.text}]}>
-                    {translate('Other')}
-                  </Text>
-                )
-              ) : (
+                  <TextInput
+                    style={[styles.input, {color: color.text}]}
+                    value={editedDescription}
+                    onChangeText={setEditedDescription}
+                  />
+                )}
+              </View>
+              <View style={styles.detailRow}>
+                <Text style={[styles.label, {color: color.text}]}>
+                  {translate('Create by')}:
+                </Text>
                 <TouchableOpacity
-                  onPress={() => setShowCategoryPicker(!showCategoryPicker)}>
-                  <View style={{flexDirection: 'row'}}>
-                    <Text style={[styles.value, {color: color.text}]}>
-                      {selectedCategory}{' '}
+                  onPress={() => pressMember(expense?.id_created_by)}>
+                  <Text style={styles.ValueName}>
+                    {expense?.users?.firstname
+                      ? `${expense.users.firstname} ${expense.users?.lastname || ''}`.trim()
+                      : 'No user data available'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.detailRow}>
+                <Text style={[styles.label, {color: color.text}]}>
+                  {translate('Date')}:
+                </Text>
+                {!isEditing ? (
+                  <Text style={[styles.value, {color: color.text}]}>
+                    {expense
+                      ? moment(expense.expenditure_date).format(
+                          'MMMM DD YYYY, HH:mm',
+                        )
+                      : ''}
+                  </Text>
+                ) : (
+                  <>
+                    <DateTimePicker
+                      testID="dateTimePicker"
+                      value={chosenDate}
+                      mode="datetime"
+                      display="default"
+                      onChange={onChangeDate}
+                    />
+                  </>
+                )}
+              </View>
+            </View>
+            <View style={[styles.card, {backgroundColor: color.white}]}>
+              <View style={styles.imageContainer}>
+                <Text style={[styles.label, {color: color.text}]}>
+                  {translate('Receipt')}:
+                </Text>
+                {currentImageUri ? (
+                  <View>
+                    <TouchableOpacity
+                      style={styles.imageWrapper}
+                      onPress={handleImagePress}>
+                      <Image
+                        source={{
+                          uri: isEditing ? currentImageUri : expense?.image_url,
+                        }}
+                        style={styles.image}
+                        resizeMode="contain"
+                      />
+                    </TouchableOpacity>
+                    {isEditing && (
+                      <TouchableOpacity
+                        style={styles.changeImageButton}
+                        onPress={handleSelectImageEdit}>
+                        <Text style={styles.changeImageText}>
+                          {translate('Change receipt')}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                ) : isEditing ? (
+                  <TouchableOpacity
+                    onPress={handleSelectImageEdit}
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={{color: COLORS.Azure, fontSize: 16}}>
+                      {translate('Add receipt')}
                     </Text>
                     <Icon
-                      name={showCategoryPicker ? 'chevron-up' : 'chevron-down'}
-                      size={20}
-                      color={color.text}
+                      name="add-circle-sharp"
+                      size={36}
+                      style={{color: COLORS.Azure}}
                     />
-                  </View>
-                </TouchableOpacity>
-              )}
-
-              {showCategoryPicker && (
-                <Picker
-                  selectedValue={selectedCategory}
-                  style={[styles.picker, {color: color.text}]}
-                  onValueChange={itemValue => handleCategoryChange(itemValue)}>
-                  {expenseType.map(item => (
-                    <Picker.Item
-                      key={item.id_expenditure_type}
-                      label={item.expense_type_name}
-                      value={item.expense_type_name}
-                      color={color.text}
-                    />
-                  ))}
-                </Picker>
-              )}
-            </View>
-          </View>
-          <View style={styles.detailRow}>
-            <Text style={[styles.label, {color: color.text}]}>
-              {translate('Description')}:
-            </Text>
-            {!isEditing ? (
-              <Text style={[styles.value, {color: color.text}]}>
-                {expense?.description}
-              </Text>
-            ) : (
-              <TextInput
-                style={[styles.input, {color: color.text}]}
-                value={editedDescription}
-                onChangeText={setEditedDescription}
-              />
-            )}
-          </View>
-          <View style={styles.detailRow}>
-            <Text style={[styles.label, {color: color.text}]}>
-              {translate('Create by')}:
-            </Text>
-            <TouchableOpacity
-              onPress={() => pressMember(expense?.id_created_by)}>
-              <Text style={styles.ValueName}>
-                  {expense?.users?.firstname ? (
-                    `${expense.users.firstname} ${expense.users?.lastname || ''}`.trim()
-                  ) : (
-                    'No user data available'
-                  )}
-                </Text>
-
-            </TouchableOpacity>
-          </View>
-          <View style={styles.detailRow}>
-            <Text style={[styles.label, {color: color.text}]}>
-              {translate('Date')}:
-            </Text>
-            {!isEditing ? (
-              <Text style={[styles.value, {color: color.text}]}>
-                {expense
-                  ? moment(expense.expenditure_date).format(
-                      'MMMM DD YYYY, HH:mm',
-                    )
-                  : ''}
-              </Text>
-            ) : (
-              <>
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={chosenDate}
-                  mode="datetime"
-                  display="default"
-                  onChange={onChangeDate}
-                />
-              </>
-            )}
-          </View>
-        </View>
-        <View style={[styles.card, {backgroundColor: color.white}]}>
-          <View style={styles.imageContainer}>
-            <Text style={[styles.label, {color: color.text}]}>
-              {translate('Receipt')}:
-            </Text>
-            {currentImageUri ? (
-              <View>
-                <TouchableOpacity
-                  style={styles.imageWrapper}
-                  onPress={handleImagePress}>
-                  <Image
-                    source={{
-                      uri: isEditing ? currentImageUri : expense?.image_url,
-                    }}
-                    style={styles.image}
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
-                {isEditing && (
+                  </TouchableOpacity>
+                ) : (
                   <TouchableOpacity
-                    style={styles.changeImageButton}
-                    onPress={handleSelectImageEdit}>
-                    <Text style={styles.changeImageText}>
-                      {translate('Change receipt')}
+                    onPress={handleSelectImage}
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={{color: COLORS.Azure, fontSize: 16}}>
+                      {translate('Add receipt')}
                     </Text>
+                    <Icon
+                      name="add-circle-sharp"
+                      size={36}
+                      style={{color: COLORS.Azure}}
+                    />
                   </TouchableOpacity>
                 )}
               </View>
-            ) : isEditing ? (
-              <TouchableOpacity
-                onPress={handleSelectImageEdit}
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={{color: COLORS.Azure, fontSize: 16}}>
-                  {translate('Add receipt')}
-                </Text>
-                <Icon
-                  name="add-circle-sharp"
-                  size={36}
-                  style={{color: COLORS.Azure}}
-                />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                onPress={handleSelectImage}
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={{color: COLORS.Azure, fontSize: 16}}>
-                  {translate('Add receipt')}
-                </Text>
-                <Icon
-                  name="add-circle-sharp"
-                  size={36}
-                  style={{color: COLORS.Azure}}
-                />
-              </TouchableOpacity>
+            </View>
+
+            {loading && (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#007BFF" />
+              </View>
             )}
           </View>
-        </View>
 
-        {loading && (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#007BFF" />
-          </View>
-        )}
-      </View>
+          {isEditing && (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingHorizontal: 10,
+              }}>
+              <CancelButton onPress={handleCancel} />
+              <SaveButton onPress={handleSave} />
+            </View>
+          )}
 
-      {isEditing && (
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal:10 }}>
-          <CancelButton onPress={handleCancel} />
-          <SaveButton onPress={handleSave} />
+          {!isEditing && <DeleteButton onPress={handleDelete} />}
 
-        </View>
-      )}
-
-      {!isEditing && (
-          <DeleteButton onPress={handleDelete} />
-
-      )}
-
-      <ImageView
-        images={[{uri: currentImageUri}]}
-        imageIndex={selectedImageIndex || 0}
-        visible={selectedImageIndex !== null}
-        onRequestClose={handleCloseModal}
-        backgroundColor="rgba(0, 0, 0, 0.8)"
-      />
-    </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
-
+          <ImageView
+            images={[{uri: currentImageUri}]}
+            imageIndex={selectedImageIndex || 0}
+            visible={selectedImageIndex !== null}
+            onRequestClose={handleCloseModal}
+            backgroundColor="rgba(0, 0, 0, 0.8)"
+          />
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };
@@ -736,7 +760,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 17,
     borderRadius: 10,
-
   },
   button: {
     alignItems: 'center',

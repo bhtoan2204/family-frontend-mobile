@@ -22,7 +22,7 @@ import {
 import {ExpenseServices} from 'src/services/apiclient';
 import {Ionicons} from '@expo/vector-icons';
 import {useThemeColors} from 'src/hooks/useThemeColor';
-import { getTranslate } from 'src/redux/slices/languageSlice';
+import {getTranslate} from 'src/redux/slices/languageSlice';
 
 interface PieChartScreenProps {
   id_family: number;
@@ -400,31 +400,27 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
         <ScrollView style={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
           {selectedCategoryType === 'Detail' && (
             <View style={styles.ContainerCategory}>
-              {dailyData.map((detail, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.expenseItem}
-                  onPress={() => handlePressDate(detail.day)}>
-                  <View style={styles.expenseDetails}>
-                    {/* <Image
-                    source={{
-                      uri: `https://via.placeholder.com/40?text=${('0' + detail.day).slice(-2)}`,
-                    }}
-                    style={styles.avatar}
-                  /> */}
-                    <Text style={[styles.expenseText, {color: color.text}]}>
-                      {('0' + detail.day).slice(-2)}/
-                      {('0' + (selectedMonth.getMonth() + 1)).slice(-2)}
-                    </Text>
-                  </View>
-                  <View style={styles.expenseDetails}>
-                    <Text style={styles.expenseAmount}>
-                      - {formatCurrency(detail.total)}
-                    </Text>
-                    <Icon name="chevron-right" size={20} color="#ccc" />
-                  </View>
-                </TouchableOpacity>
-              ))}
+              {dailyData
+                .filter(detail => detail.total !== 0)
+                .map((detail, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.expenseItem}
+                    onPress={() => handlePressDate(detail.day)}>
+                    <View style={styles.expenseDetails}>
+                      <Text style={[styles.expenseText, {color: color.text}]}>
+                        {('0' + detail.day).slice(-2)}/
+                        {('0' + (selectedMonth.getMonth() + 1)).slice(-2)}
+                      </Text>
+                    </View>
+                    <View style={styles.expenseDetails}>
+                      <Text style={styles.expenseAmount}>
+                        - {formatCurrency(detail.total)}
+                      </Text>
+                      <Icon name="chevron-right" size={20} color="#ccc" />
+                    </View>
+                  </TouchableOpacity>
+                ))}
             </View>
           )}
 
