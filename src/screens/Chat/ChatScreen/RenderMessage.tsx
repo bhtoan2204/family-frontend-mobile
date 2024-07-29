@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { Video } from 'expo-av';
-import { Message } from 'src/interface/chat/chat';
-import styles from './styles'; 
-import { COLORS } from 'src/constants';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {Video} from 'expo-av';
+import {Message} from 'src/interface/chat/chat';
+import styles from './styles';
+import {COLORS} from 'src/constants';
 
 interface Props {
   item: Message;
@@ -21,27 +21,29 @@ const MessageItem: React.FC<Props> = ({
   formatDateTime,
 }) => {
   return (
-    <View
-      >
+    <View>
       <TouchableOpacity
         onPress={() => onMessagePress(item)}
         style={[
           item.senderId === profileId
-          ? [styles.senderMessageContainer, item.type === 'text' && { backgroundColor: COLORS.DenimBlue }]
-          : styles.receiverMessageContainer,
+            ? [
+                styles.senderMessageContainer,
+                item.type === 'text' && {backgroundColor: COLORS.DenimBlue},
+              ]
+            : styles.receiverMessageContainer,
         ]}>
-        <View style={[styles.messageContainer ]}>
+        <View style={[styles.messageContainer]}>
           {item.type === 'photo' ? (
             <View style={[styles.messageContentContainer]}>
-              <Image source={{ uri: item.content }} style={styles.imageMessage} />
+              <Image source={{uri: item.content}} style={styles.imageMessage} />
             </View>
           ) : item.type === 'video' ? (
             <View style={styles.messageContentContainer}>
               <Video
-                source={{ uri: item.content }}
+                source={{uri: item.content}}
                 useNativeControls
-                resizeMode='contain'
-                style={{ width: 300, height: 200 }}
+                resizeMode="contain"
+                style={{width: 300, height: 200}}
               />
             </View>
           ) : (
@@ -51,8 +53,7 @@ const MessageItem: React.FC<Props> = ({
                 {
                   color: item.senderId === profileId ? 'white' : 'black',
                 },
-              ]}
-            >
+              ]}>
               {item.content}
             </Text>
           )}
@@ -65,9 +66,7 @@ const MessageItem: React.FC<Props> = ({
           alignItems: item.senderId === profileId ? 'flex-end' : 'flex-start',
         }}>
         {isSelected && (
-          <Text style={styles.timestamp}>
-            {formatDateTime(item.timestamp )}
-          </Text>
+          <Text style={styles.timestamp}>{formatDateTime(item.timestamp)}</Text>
         )}
       </View>
     </View>

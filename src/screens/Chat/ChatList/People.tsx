@@ -8,36 +8,36 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StyleSheet,
+  TextInput,
 } from 'react-native';
 import ChatServices from 'src/services/apiclient/ChatServices';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { User } from 'src/interface/chat/chat';
-import { ChatScreenProps } from 'src/navigation/NavigationTypes';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUserMessage } from 'src/redux/slices/MessageUser';
-import { get } from 'lodash';
-import { getTranslate } from 'src/redux/slices/languageSlice';
-import { useThemeColors } from 'src/hooks/useThemeColor';
+import {User} from 'src/interface/chat/chat';
+import {ChatScreenProps} from 'src/navigation/NavigationTypes';
+import {useDispatch, useSelector} from 'react-redux';
+import {setUserMessage} from 'src/redux/slices/MessageUser';
+import {get} from 'lodash';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
 
-const PeopleScreen = ( {navigation}: ChatScreenProps) => {
+const PeopleScreen = ({navigation}: ChatScreenProps) => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
-  const [search, setSearch] = useState<string>('');
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [searchQuery]);
 
   const fetchUser = async () => {
     try {
       setLoading(true);
-      const response = await ChatServices.GetAllUser({search});
+      const response = await ChatServices.GetAllUser({search: searchQuery});
       setUsers(response);
     } catch (error) {
-      
     } finally {
       setLoading(false);
     }
@@ -52,7 +52,7 @@ const PeopleScreen = ( {navigation}: ChatScreenProps) => {
 
   const renderUserItem = ({item}: {item: User}) => (
     <View>
-      <TouchableOpacity onPress={()=> pressChat(item)} style={styles.userItem}>
+      <TouchableOpacity onPress={() => pressChat(item)} style={styles.userItem}>
         <View style={styles.avatarContainer}>
           {item.avatar ? (
             <>
@@ -77,12 +77,31 @@ const PeopleScreen = ( {navigation}: ChatScreenProps) => {
   );
 
   return (
-    <SafeAreaView style={[styles.container, {backgroundColor: color.background}]}>
-      <View style={[styles.header,  {backgroundColor: color.background}]}>
+    <SafeAreaView
+      style={[styles.container, {backgroundColor: color.background}]}>
+      <View style={[styles.header, {backgroundColor: color.background}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={24} color={color.text}/>
+          <Icon name="arrow-back" size={24} color={color.text} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, {color: color.text}]}>{translate('Contacts')}</Text>
+        <Text style={[styles.headerTitle, {color: color.text}]}>
+          {translate('Contacts')}
+        </Text>
+      </View>
+      <View style={[styles.header, {backgroundColor: color.chatBackground}]}>
+        <View
+          style={[styles.searchContainer, {backgroundColor: color.searchChat}]}>
+          <TextInput
+            style={[
+              styles.searchInput,
+              {backgroundColor: color.searchChat, color: color.text},
+            ]}
+            placeholder={translate('SEARCH')}
+            placeholderTextColor={color.text}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          <Icon name="search" size={20} style={styles.searchIcon} />
+        </View>
       </View>
       {loading ? (
         <ActivityIndicator style={styles.loadingIndicator} />
@@ -112,6 +131,24 @@ const styles = StyleSheet.create({
   },
   backButton: {
     marginRight: 10,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f2f2f2',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    flex: 1,
+    padding: 1,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+  },
+  searchIcon: {
+    color: '#999',
   },
   headerTitle: {
     fontSize: 25,

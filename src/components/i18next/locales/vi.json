@@ -377,5 +377,11 @@
   "Total income for": "Chi tiêu của",
   "EnterOTP": "Nhập Mã OTP",
   "Submit OTP": "Xác nhận",
-  "AssetDetail2": "Theo dõi tài sản của bạn một cách dễ dàng và an toàn."
+  "AssetDetail2": "Theo dõi tài sản của bạn một cách dễ dàng và an toàn.",
+  "Just now": "Gần đây",
+  "minutes": "phút",
+  "minute": "phút",
+  "hours": "giờ",
+  "hour": "giờ",
+  "ago": "trước"
 }

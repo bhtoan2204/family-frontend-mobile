@@ -1,45 +1,57 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, FlatList, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Alert } from 'react-native';
+import React, {useState, useEffect, useCallback} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Alert,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useSelector, useDispatch } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
 import ImageView from 'react-native-image-viewing';
-import { FamilyServices, ChatServices } from 'src/services/apiclient';
-import { ChatFamilyScreenProps } from 'src/navigation/NavigationTypes';
+import {FamilyServices, ChatServices} from 'src/services/apiclient';
+import {ChatFamilyScreenProps} from 'src/navigation/NavigationTypes';
 import styles from './styles';
-import { Keyboard } from 'react-native';
-import { getSocket } from '../../../services/apiclient/Socket';
-import { selectProfile } from 'src/redux/slices/ProfileSclice';
+import {Keyboard} from 'react-native';
+import {getSocket} from '../../../services/apiclient/Socket';
+import {selectProfile} from 'src/redux/slices/ProfileSclice';
 import EmojiPicker from '../EmojiPicker';
-import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from 'src/constants';
+import {Ionicons} from '@expo/vector-icons';
+import {COLORS} from 'src/constants';
 import * as MediaLibrary from 'expo-media-library';
-import { Video } from 'expo-av';
-import { selectFamilyLastMessage } from 'src/redux/slices/MessageFamily';
-import { Message } from 'src/interface/chat/family';
-import { Member } from 'src/interface/member/member';
-import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
-import { useThemeColors } from 'src/hooks/useThemeColor';
-import { getTranslate } from 'src/redux/slices/languageSlice';
+import {Video} from 'expo-av';
+import {selectFamilyLastMessage} from 'src/redux/slices/MessageFamily';
+import {Message} from 'src/interface/chat/family';
+import {Member} from 'src/interface/member/member';
+import {selectSelectedFamily} from 'src/redux/slices/FamilySlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
+import {getTranslate} from 'src/redux/slices/languageSlice';
 
-
-
-const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
+const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
   const profile = useSelector(selectProfile);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [members, setMembers] = useState<Member[]>([]);
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
+    null,
+  );
   const [images, setImages] = useState<string[]>([]);
   const [isTextInputEmpty, setIsTextInputEmpty] = useState(true);
   const dispatch = useDispatch();
 
-  const [memberLookup, setMemberLookup] = useState<{ [key: string]: Member }>({});
-  const [refreshFlatList, setRefreshFlatList] = useState(false); 
-  const [keyboardIsOpen, setKeyboardIsOpen] = useState(false); 
+  const [memberLookup, setMemberLookup] = useState<{[key: string]: Member}>({});
+  const [refreshFlatList, setRefreshFlatList] = useState(false);
+  const [keyboardIsOpen, setKeyboardIsOpen] = useState(false);
   let socket = getSocket();
   const [selectedEmoji, setSelectedEmoji] = useState('');
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
@@ -54,19 +66,24 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
     fetchMessages();
 
     setIsTextInputEmpty(message.trim() === '');
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboardIsOpen(true);
-    });
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboardIsOpen(false);
-    });
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardIsOpen(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardIsOpen(false);
+      },
+    );
 
     return () => {
-
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-  }, [ message]);
+  }, [message]);
 
   useEffect(() => {
     if (socket) {
@@ -80,19 +97,19 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
     };
   }, [socket]);
 
-
   useEffect(() => {
-    const lookup: { [key: string]: Member } = {};
+    const lookup: {[key: string]: Member} = {};
     members.forEach(member => {
       lookup[member.id_user] = member;
     });
     setMemberLookup(lookup);
   }, [members]);
 
-
   const fetchMember = async () => {
     try {
-      const response = await FamilyServices.getAllMembers({ id_family: family.id_family });
+      const response = await FamilyServices.getAllMembers({
+        id_family: family.id_family,
+      });
       if (Array.isArray(response)) {
         setMembers(response);
       }
@@ -103,7 +120,10 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
 
   const fetchMessages = useCallback(async () => {
     try {
-      const response = await ChatServices.GetFamilyMessages({ id_family:  family.id_family, index: currentIndex });
+      const response = await ChatServices.GetFamilyMessages({
+        id_family: family.id_family,
+        index: currentIndex,
+      });
       if (response) {
         const newMessages = response.map((message: any) => {
           if (message.type === 'photo') {
@@ -121,35 +141,32 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
   const fetchNewMessages = (newMessage: Message) => {
     setMessages(prevMessages => [newMessage, ...prevMessages]);
   };
-  
-  
+
   const loadMoreMessages = () => {
     setCurrentIndex(currentIndex + 1);
   };
-  
+
   const sendImage = async (uri: string) => {
     try {
       const response = await ChatServices.sendFamilyImage({
         uri: uri,
-        familyId:  family.id_family,
+        familyId: family.id_family,
       });
     } catch (error) {
       console.error('Error sendImage:', error);
     }
   };
 
-
   const sendMessage = async () => {
     try {
       const response = await ChatServices.sendFamilyMessage({
         message: message,
-        familyId:  family.id_family,
+        familyId: family.id_family,
       });
     } catch (error) {
       console.error('Error sending messages:', error);
     }
   };
-
 
   const handleSendMessage = async () => {
     await sendMessage();
@@ -158,79 +175,80 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
 
   const handleSendImage = async (uri: string) => {
     await sendImage(uri);
-
   };
-  
-
 
   const sendVideoMessage = async (uri: any) => {
     try {
-      const response = await ChatServices.sendFamilyVideo( family.id_family, uri)
-
+      const response = await ChatServices.sendFamilyVideo(
+        family.id_family,
+        uri,
+      );
     } catch (error) {
       throw new Error('API request failed');
     }
   };
 
-
-   const MAX_FILE_SIZE = 10 * 1024 * 1024; 
+  const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
   const handleOpenImageLibrary = async () => {
     try {
-      const { status: mediaLibraryStatus } = await MediaLibrary.requestPermissionsAsync();
+      const {status: mediaLibraryStatus} =
+        await MediaLibrary.requestPermissionsAsync();
       if (mediaLibraryStatus !== 'granted') {
-        Alert.alert('Permission required', 'Permission to access media library is required.');
+        Alert.alert(
+          'Permission required',
+          'Permission to access media library is required.',
+        );
         return;
       }
-  
-      const { status: imagePickerStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      const {status: imagePickerStatus} =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (imagePickerStatus !== 'granted') {
-        Alert.alert('Permission required', 'Permission to access image library is required.');
+        Alert.alert(
+          'Permission required',
+          'Permission to access image library is required.',
+        );
         return;
       }
-  
+
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         aspect: [4, 3],
         quality: 1,
       });
-  
-  
+
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const asset = result.assets[0];
         const uri = asset.uri;
-  
-    
-  
+
         if (asset.type === 'image') {
           const compressedImage = await ImageManipulator.manipulateAsync(
             uri,
             [],
-            { compress: 0.5 },
+            {compress: 0.5},
           );
-  
+
           console.log('Compressed Image URI:', compressedImage.uri);
-  
+
           const fileInfo = await FileSystem.getInfoAsync(compressedImage.uri);
           console.log('File info:', fileInfo);
-  
-          if (fileInfo.exists && fileInfo.size && fileInfo.size < MAX_FILE_SIZE) {
-            
+
+          if (
+            fileInfo.exists &&
+            fileInfo.size &&
+            fileInfo.size < MAX_FILE_SIZE
+          ) {
             await handleSendImage(compressedImage.uri);
           } else {
-            Alert.alert('Selected file size exceeds the limit or could not determine file size');
+            Alert.alert(
+              'Selected file size exceeds the limit or could not determine file size',
+            );
           }
         } else if (asset.type === 'video') {
-
-              await sendVideoMessage(uri);
-  
-          } else {
-            Alert.alert('Error', 'Failed to retrieve local URI for the video.');
-          }
-        } else {
-          Alert.alert('Unsupported file type');
+          await sendVideoMessage(uri);
         }
-
+      }
     } catch (error) {
       Alert.alert('Error. Please try again.');
     }
@@ -242,24 +260,35 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
       return (
         <View>
           <View style={styles.container}>
-          <View style={styles.avatarContainer}>
-            <Image source={{ uri: member.user.avatar }} style={styles.avatar} />
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={{color: 'gray', fontSize: 14, marginLeft: 5,}}>{member.user.firstname}</Text>
-            <View style={[styles.messageContainer, styles.receiverMessageContainer]}>
-              {item.type === 'photo' ? (
-                <TouchableOpacity onPress={() => onMessagePress(item)}>
-                  <View style={styles.messageContentContainer}>
-                    <Image source={{ uri: item.content }} style={styles.imageMessage} />
-                  </View>
-                </TouchableOpacity>
-              ) : (
-                <Text style={styles.senderMessageContent}>{item.content}</Text>
-              )}
+            <View style={styles.avatarContainer}>
+              <Image source={{uri: member.user.avatar}} style={styles.avatar} />
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={{color: 'gray', fontSize: 14, marginLeft: 5}}>
+                {member.user.firstname}
+              </Text>
+              <View
+                style={[
+                  styles.messageContainer,
+                  styles.receiverMessageContainer,
+                ]}>
+                {item.type === 'photo' ? (
+                  <TouchableOpacity onPress={() => onMessagePress(item)}>
+                    <View style={styles.messageContentContainer}>
+                      <Image
+                        source={{uri: item.content}}
+                        style={styles.imageMessage}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <Text style={styles.senderMessageContent}>
+                    {item.content}
+                  </Text>
+                )}
+              </View>
             </View>
           </View>
-        </View>
         </View>
       );
     }
@@ -272,26 +301,22 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
 
   const handleVideoCall = (familyId: number) => {};
 
-  const handleEmojiChange = (emoji) => {
+  const handleEmojiChange = emoji => {
     setSelectedEmoji(emoji);
-    setMessage((prevMessage) => prevMessage + emoji);
+    setMessage(prevMessage => prevMessage + emoji);
   };
 
   const onMessagePress = (item: Message) => {
-    if( item.type === 'photo'){
-
-    const itemIndex = images.findIndex(
-      iamge =>
-        iamge === item.content,
-    );
-    console.log(itemIndex)
-    setSelectedImageIndex(itemIndex);
-  }
+    if (item.type === 'photo') {
+      const itemIndex = images.findIndex(iamge => iamge === item.content);
+      console.log(itemIndex);
+      setSelectedImageIndex(itemIndex);
+    }
     setSelectedMessageId(prevId => (prevId === item._id ? null : item._id));
   };
 
   return (
-<KeyboardAvoidingView
+    <KeyboardAvoidingView
       behavior="padding"
       style={{
         flex: 1,
@@ -301,8 +326,9 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         left: 0,
         right: 0,
       }}>
-    <View style={[styles.header, {backgroundColor: color.background}]}>
-    <View style={[styles.receiverInfo,  {backgroundColor: color.background}]}>
+      <View style={[styles.header, {backgroundColor: color.background}]}>
+        <View
+          style={[styles.receiverInfo, {backgroundColor: color.background}]}>
           <View
             style={{
               flexDirection: 'row',
@@ -319,22 +345,17 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
             {family && (
               <>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Image
-                    source={{uri: family.avatar}}
-                    style={styles.avatar}
-                  />
+                  <Image source={{uri: family.avatar}} style={styles.avatar} />
                   <Text style={[styles.avatarText, {color: color.text}]}>
                     {' '}
                     {family.name}
                   </Text>
                 </View>
               </>
-            )
-            }
+            )}
           </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-
-        <TouchableOpacity
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <TouchableOpacity
               onPress={() => handleVideoCall(family.id_family)}
               style={{
                 marginTop: 10,
@@ -360,51 +381,60 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
           </View>
         </View>
       </View>
-    {messages ? (
-      <FlatList
-        key={refreshFlatList ? 'refresh' : 'no-refresh'}
-        style={[styles.messagesContainer, {backgroundColor: color.background} ]}
-        contentContainerStyle={styles.contentContainer}
-        data={messages}
-        inverted
-        renderItem={({ item, index }) => (
-          <TouchableOpacity         onPress={() => onMessagePress(item)}
-> 
-
-          <View>
-            {item.senderId !== profile.id_user ? renderMemberMessage(item) : (
-              <View style={[styles.messageContainer, styles.senderMessageContainer]}>
-                {item.type === 'photo' ? (
-                  <TouchableOpacity onPress={() => onMessagePress(item)}>
-                    <View style={styles.messageContentContainer}>
-                      <Image source={{ uri: item.content }} style={styles.imageMessage} />
-                    </View>
-                  </TouchableOpacity>
-                ) : item.type === 'video' ? (
-                  <View style={styles.messageContentContainer}>
-                    <Video
-                      source={{ uri: item.content }}
-                      useNativeControls
-                      resizeMode='contain'
-                      style={{ width: 300, height: 200 }}
-                    />
-                  </View>
+      {messages ? (
+        <FlatList
+          key={refreshFlatList ? 'refresh' : 'no-refresh'}
+          style={[
+            styles.messagesContainer,
+            {backgroundColor: color.background},
+          ]}
+          contentContainerStyle={styles.contentContainer}
+          data={messages}
+          inverted
+          renderItem={({item, index}) => (
+            <TouchableOpacity onPress={() => onMessagePress(item)}>
+              <View>
+                {item.senderId !== profile.id_user ? (
+                  renderMemberMessage(item)
                 ) : (
-                  <Text style={styles.senderMessageContent}>{item.content}</Text>
+                  <View
+                    style={[
+                      styles.messageContainer,
+                      styles.senderMessageContainer,
+                    ]}>
+                    {item.type === 'photo' ? (
+                      <TouchableOpacity onPress={() => onMessagePress(item)}>
+                        <View style={styles.messageContentContainer}>
+                          <Image
+                            source={{uri: item.content}}
+                            style={styles.imageMessage}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    ) : item.type === 'video' ? (
+                      <View style={styles.messageContentContainer}>
+                        <Video
+                          source={{uri: item.content}}
+                          useNativeControls
+                          resizeMode="contain"
+                          style={{width: 300, height: 200}}
+                        />
+                      </View>
+                    ) : (
+                      <Text style={styles.senderMessageContent}>
+                        {item.content}
+                      </Text>
+                    )}
+                  </View>
                 )}
               </View>
-
-            )}
-          </View>
-        </TouchableOpacity>
-
-        )}
-        
-        keyExtractor={(item, index) => index.toString()}
-        keyboardShouldPersistTaps="handled"
-        onEndReached={loadMoreMessages}
-        onEndReachedThreshold={0.1}
-      />
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          keyboardShouldPersistTaps="handled"
+          onEndReached={loadMoreMessages}
+          onEndReachedThreshold={0.1}
+        />
       ) : (
         <KeyboardAvoidingView
           behavior="padding"
@@ -431,15 +461,13 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
                     {/* <View
                       style={[styles.activeDotBig, {bottom: 40, left: 55}]}
                     /> */}
-                    <Text style={styles.avatarTextFirst}>
-                      {' '}
-                      {family.name}
-                    </Text>
+                    <Text style={styles.avatarTextFirst}> {family.name}</Text>
                   </View>
                 </>
               )}
               <Text style={[styles.introText, {color: color.text}]}>
-                {translate('You havent received any message from')}  {family?.name} {translate('yet')}.
+                {translate('You havent received any message from')}{' '}
+                {family?.name} {translate('yet')}.
               </Text>
               <Text style={[styles.introText, {color: color.textSubdued}]}>
                 {translate('Start the conversation by sending a message.')}
@@ -450,7 +478,11 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         </KeyboardAvoidingView>
       )}
       <View
-        style={[styles.inputContainer, {backgroundColor: color.background}, keyboardIsOpen && {paddingBottom: 20}]}>
+        style={[
+          styles.inputContainer,
+          {backgroundColor: color.background},
+          keyboardIsOpen && {paddingBottom: 20},
+        ]}>
         <TouchableOpacity
           onPress={handleOpenImageLibrary}
           style={{marginRight: 15}}>
@@ -458,16 +490,18 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         </TouchableOpacity>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
           <TextInput
-            style={[styles.input, {backgroundColor: color.white, color:color.text}, {flex: 1}]}
+            style={[
+              styles.input,
+              {backgroundColor: color.white, color: color.text},
+              {flex: 1},
+            ]}
             value={message}
             onChangeText={setMessage}
-            placeholder="Aa">
-              
-            </TextInput>
+            placeholder="Aa"></TextInput>
 
-              <EmojiPicker onChange={handleEmojiChange} />
+          <EmojiPicker onChange={handleEmojiChange} />
         </View>
-    
+
         <TouchableOpacity
           onPress={handleSendMessage}
           disabled={isTextInputEmpty}>
@@ -482,7 +516,6 @@ const ChatFamilyScreen = ({ navigation, route }: ChatFamilyScreenProps) => {
         onRequestClose={handleCloseModal}
         backgroundColor="rgba(0, 0, 0, 0.8)"
       />
-
     </KeyboardAvoidingView>
   );
 };

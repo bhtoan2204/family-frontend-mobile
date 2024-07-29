@@ -38,7 +38,12 @@ const AddAssetScreen = ({navigation}: AddAssetScreenProps) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
+  const [formattedValue, setFormattedValue] = useState('');
 
+  const handleValueChange = input => {
+    setValue(parseCurrency(input));
+    setFormattedValue(formatCurrency(input));
+  };
   const handleSave = async () => {
     if (!family?.id_family || !name || !value || !purchaseDate) {
       Toast.show(translate('Please fill in all required fields'), {
@@ -115,6 +120,15 @@ const AddAssetScreen = ({navigation}: AddAssetScreenProps) => {
   };
 
   const {height} = Dimensions.get('window');
+  const formatCurrency = value => {
+    if (!value) return '';
+    return value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.') + '₫';
+  };
+
+  const parseCurrency = value => {
+    if (!value) return '';
+    return value.replace(/\D/g, '');
+  };
 
   return (
     <SafeAreaView
@@ -152,6 +166,18 @@ const AddAssetScreen = ({navigation}: AddAssetScreenProps) => {
           <View style={styles.form}>
             <View style={styles.inputContainer}>
               <Text style={[styles.label, {color: color.text}]}>
+                {translate('Value')}
+              </Text>
+              <TextInput
+                style={[styles.input, {color: color.text, fontWeight: 'bold'}]}
+                placeholder={translate('Enter Value')}
+                value={formattedValue}
+                onChangeText={handleValueChange}
+                keyboardType="numeric"
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={[styles.label, {color: color.text}]}>
                 {translate('Asset Name')}
               </Text>
               <TextInput
@@ -174,18 +200,7 @@ const AddAssetScreen = ({navigation}: AddAssetScreenProps) => {
                 numberOfLines={4}
               />
             </View>
-            <View style={styles.inputContainer}>
-              <Text style={[styles.label, {color: color.text}]}>
-                {translate('Value')}
-              </Text>
-              <TextInput
-                style={[styles.input, {color: color.text}]}
-                placeholder={translate('Enter Value')}
-                value={value}
-                onChangeText={setValue}
-                keyboardType="numeric"
-              />
-            </View>
+
             <View style={styles.inputContainer}>
               <Text style={[styles.label, {color: color.text}]}>
                 {translate('Purchase Date')}

@@ -22,7 +22,7 @@ import {
 import {ExpenseServices} from 'src/services/apiclient';
 import {Ionicons} from '@expo/vector-icons';
 import {useThemeColors} from 'src/hooks/useThemeColor';
-import {getTranslate} from 'src/redux/slices/languageSlice';
+import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 
 interface PieChartScreenProps {
   id_family: number;
@@ -70,6 +70,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
     useState<string>('Total');
   const color = useThemeColors();
   const translate = useSelector(getTranslate);
+  const location = useSelector(selectLocale);
   useEffect(() => {
     console.log(date);
     const parsedDate = new Date(date);
@@ -333,13 +334,32 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
       </View>
 
       {isMonthPickerVisible && (
-        <View style={{zIndex: 2, marginBottom: 50, padding: 10}}>
+        <View
+          style={{
+            zIndex: 2,
+            marginBottom: 50,
+            padding: 10,
+          }}>
           <MonthPicker
             selectedDate={selectedMonth}
             onMonthChange={handleMonthPickerConfirm}
+            containerStyle={{
+              backgroundColor: color.background,
+              color: color.text,
+            }}
+            yearTextStyle={{color: color.text}}
+            monthTextStyle={{color: color.text}}
+            selectedBackgroundColor={color.white}
+            seperatorColor={color.textSubdued}
+            currentMonthTextStyle={{color: 'green'}}
+            yearDisabledStyle={{color: color.text}}
+            localeLanguage={location}
+            monthDisabledStyle={{color: color.textSubdued}}
+            swipable={true}
           />
         </View>
       )}
+
       <View
         style={[
           styles.chartContainer,

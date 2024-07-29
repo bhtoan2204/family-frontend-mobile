@@ -35,20 +35,19 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
 
   useEffect(() => {
     fetchNotification();
-  }, []);
+  }, [index]);
 
   const fetchNotification = async () => {
-    if (loading) return;
-
     setLoading(true);
     try {
       if (index == 0) {
         dispatch(setNotificationSlice([]));
       }
       const response = await ProfileServices.getNotification(index);
-      if (response) {
+      if (response && response.data.length > 0) {
         setIndex(index + 1);
         dispatch(setNotificationSlice([...notifications, ...response.data]));
+        setLoading(false);
       }
     } catch (error) {
       console.error('Error fetchNotification:', error);
@@ -80,19 +79,19 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
     const diffYears = Math.floor(diffDays / 365);
 
     if (diffSeconds < 60) {
-      return 'Just now';
+      return translate('Just now');
     } else if (diffMinutes < 60) {
-      return `${diffMinutes} ${diffMinutes > 1 ? 'minutes' : 'minute'} ago`;
+      return `${diffMinutes} ${diffMinutes > 1 ? translate('minutes') : translate('')} ${translate('ago')}`;
     } else if (diffHours < 24) {
-      return `${diffHours} ${diffHours > 1 ? 'hours' : 'hour'} ago`;
+      return `${diffHours} ${diffHours > 1 ? translate('hours') : translate('hour')} ${translate('ago')}`;
     } else if (diffDays < 7) {
-      return `${diffDays} ${diffDays > 1 ? 'days' : 'day'} ago`;
+      return `${diffDays} ${diffDays > 1 ? translate('days') : translate('day')} ${translate('ago')}`;
     } else if (diffWeeks < 4) {
-      return `${diffWeeks} ${diffWeeks > 1 ? 'weeks' : 'week'} ago`;
+      return `${diffWeeks} ${diffWeeks > 1 ? translate('weeks') : translate('week')} ${translate('ago')}`;
     } else if (diffMonths < 12) {
-      return `${diffMonths} ${diffMonths > 1 ? 'months' : 'month'} ago`;
+      return `${diffMonths} ${diffMonths > 1 ? translate('months') : translate('month')} ${translate('ago')}`;
     } else {
-      return `${diffYears} ${diffYears > 1 ? 'years' : 'year'} ago`;
+      return `${diffYears} ${diffYears > 1 ? translate('years') : translate('year')} ${translate('ago')}`;
     }
   };
   const formatDate = (timestamp: string | number | Date) => {

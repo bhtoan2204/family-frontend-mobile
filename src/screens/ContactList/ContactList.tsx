@@ -1,15 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, Text, View, TouchableOpacity, Image, ActivityIndicator, SafeAreaView } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  FlatList,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+  SafeAreaView,
+} from 'react-native';
 import * as Contacts from 'expo-contacts';
-import { ContactScreenProps } from 'src/navigation/NavigationTypes';
+import {ContactScreenProps} from 'src/navigation/NavigationTypes';
 import styles from './styles';
-import { User } from 'src/interface/member/member';
-import { ProfileServices } from 'src/services/apiclient';
-import { COLORS } from 'src/constants';
-import { useSelector } from 'react-redux';
-import { getTranslate } from 'src/redux/slices/languageSlice';
-import { useThemeColors } from 'src/hooks/useThemeColor';
-import { SCREEN_HEIGHT } from '@gorhom/bottom-sheet';
+import {User} from 'src/interface/member/member';
+import {ProfileServices} from 'src/services/apiclient';
+import {COLORS} from 'src/constants';
+import {useSelector} from 'react-redux';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
+import {SCREEN_HEIGHT} from '@gorhom/bottom-sheet';
 
 interface Contact {
   id?: string;
@@ -24,9 +32,9 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
 }) => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { id_family } = route.params;
+  const {id_family} = route.params;
   const t = useSelector(getTranslate);
-  const color= useThemeColors();
+  const color = useThemeColors();
 
   const convertPhoneNumber = (phoneNumber: string) => {
     if (phoneNumber.startsWith('0')) {
@@ -38,13 +46,15 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
   useEffect(() => {
     (async () => {
       try {
-        const { status } = await Contacts.requestPermissionsAsync();
+        const {status} = await Contacts.requestPermissionsAsync();
         if (status === 'granted') {
-          const { data } = await Contacts.getContactsAsync({
+          const {data} = await Contacts.getContactsAsync({
             fields: [Contacts.Fields.Name, Contacts.Fields.PhoneNumbers],
           });
 
-          const filteredContacts = data.filter(contact => contact.id !== undefined);
+          const filteredContacts = data.filter(
+            contact => contact.id !== undefined,
+          );
           setContacts(filteredContacts);
 
           for (const contact of filteredContacts) {
@@ -52,13 +62,14 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
               const rawPhoneNumber = contact.phoneNumbers[0].number;
               const phoneNumber = convertPhoneNumber(rawPhoneNumber);
               try {
-                const user = await ProfileServices.getUserInfoByPhone(phoneNumber);
+                const user =
+                  await ProfileServices.getUserInfoByPhone(phoneNumber);
                 if (user) {
                   setContacts(prevContacts => {
                     return prevContacts.map(prevContact =>
                       prevContact.id === contact.id
-                        ? { ...prevContact, user }
-                        : prevContact
+                        ? {...prevContact, user}
+                        : prevContact,
                     );
                   });
                 }
@@ -92,7 +103,7 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
     }
   };
 
-  const UserContact: React.FC<{ item: Contact }> = ({ item }) => (
+  const UserContact: React.FC<{item: Contact}> = ({item}) => (
     <View
       style={[
         {
@@ -101,8 +112,7 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
           borderBottomColor: '#ccc',
           flexDirection: 'row',
           alignItems: 'center',
-          backgroundColor: color.white
-
+          backgroundColor: color.white,
         },
         styles.userContact,
       ]}>
@@ -114,20 +124,27 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
       <View style={[styles.contactDat, {backgroundColor: color.white}]}>
         <Text style={[styles.name, {color: color.text}]}>{`${item.name}`}</Text>
         <Text style={[styles.phoneNumber, {color: color.textSubdued}]}>
-          {item.phoneNumbers && item.phoneNumbers.length > 0 ? item.phoneNumbers[0].number : ''}
+          {item.phoneNumbers && item.phoneNumbers.length > 0
+            ? item.phoneNumbers[0].number
+            : ''}
         </Text>
         <View style={styles.appIndicatorContainer}>
-          <Text style={[styles.appIndicator, {color: color.textSubdued}]}>{t('Already on FamFund as')}</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ color: COLORS.DenimBlue }}> {item.user[0].firstname} {item.user[0].lastname} </Text>
-            <Image source={{ uri: item.user[0].avatar }} style={styles.avatar} />
+          <Text style={[styles.appIndicator, {color: color.textSubdued}]}>
+            {t('Already on FamFund as')}
+          </Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={{color: COLORS.DenimBlue}}>
+              {' '}
+              {item.user[0].firstname} {item.user[0].lastname}{' '}
+            </Text>
+            <Image source={{uri: item.user[0].avatar}} style={styles.avatar} />
           </View>
         </View>
       </View>
     </View>
   );
 
-  const NormalContact: React.FC<{ item: Contact }> = ({ item }) => (
+  const NormalContact: React.FC<{item: Contact}> = ({item}) => (
     <View
       style={[
         {
@@ -136,39 +153,53 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
           borderBottomColor: '#ccc',
           flexDirection: 'row',
           alignItems: 'center',
-          backgroundColor: color.white
+          backgroundColor: color.white,
         },
         styles.normalContact,
       ]}>
       <View style={styles.imgCon}>
         <View style={styles.placeholder}>
-          <Text style={[styles.txt, ]}>{item.name[0]}</Text>
+          <Text style={[styles.txt]}>{item.name[0]}</Text>
         </View>
       </View>
       <View style={styles.contactDat}>
         <Text style={[styles.txt, {color: color.text}]}>{item.name}</Text>
         <Text style={[styles.phoneNumber, {color: color.textSubdued}]}>
-          {item.phoneNumbers && item.phoneNumbers.length > 0 ? item.phoneNumbers[0].number : ''}
+          {item.phoneNumbers && item.phoneNumbers.length > 0
+            ? item.phoneNumbers[0].number
+            : ''}
         </Text>
       </View>
     </View>
   );
 
-  const renderContactItem = ({ item }: { item: Contact }) => {
+  const renderContactItem = ({item}: {item: Contact}) => {
     return (
-      <TouchableOpacity style={{backgroundColor: color.white}} onPress={() => handleContactPress(item.phoneNumbers)} >
-        {item.user ? <UserContact item={item} /> : <NormalContact item={item} />}
+      <TouchableOpacity
+        style={{backgroundColor: color.white}}
+        onPress={() => handleContactPress(item.phoneNumbers)}>
+        {item.user ? (
+          <UserContact item={item} />
+        ) : (
+          <NormalContact item={item} />
+        )}
       </TouchableOpacity>
     );
   };
 
   return (
-    <SafeAreaView style= {{backgroundColor: color.background, marginBottom: SCREEN_HEIGHT*0.05}}>
+    <SafeAreaView
+      style={{
+        backgroundColor: color.background,
+        marginBottom: SCREEN_HEIGHT * 0.05,
+      }}>
       <View style={styles.headerContainer}>
-        <Text style={[styles.headerTitle, {color: color.text}]}>{t('Contact List')}</Text>
+        <Text style={[styles.headerTitle, {color: color.text}]}>
+          {t('Contact List')}
+        </Text>
       </View>
       {isLoading ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <ActivityIndicator size="large" color={COLORS.Primary} />
         </View>
       ) : (

@@ -22,7 +22,7 @@ import {
 } from 'src/redux/slices/IncomeAnalysis';
 import {IncomeMonthly} from 'src/interface/income/IncomeMonthly';
 import {useThemeColors} from 'src/hooks/useThemeColor';
-import {getTranslate} from 'src/redux/slices/languageSlice';
+import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 
 interface PieChartScreenProps {
   id_family: number;
@@ -56,6 +56,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
   const [selectedCategoryType, setSelectedCategoryType] =
     useState<string>('Total');
   const translate = useSelector(getTranslate);
+  const location = useSelector(selectLocale);
 
   useEffect(() => {
     console.log(date);
@@ -287,6 +288,19 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
           <MonthPicker
             selectedDate={selectedMonth}
             onMonthChange={handleMonthPickerConfirm}
+            containerStyle={{
+              backgroundColor: color.background,
+              color: color.text,
+            }}
+            yearTextStyle={{color: color.text}}
+            monthTextStyle={{color: color.text}}
+            selectedBackgroundColor={color.white}
+            seperatorColor={color.textSubdued}
+            currentMonthTextStyle={{color: 'green'}}
+            yearDisabledStyle={{color: color.text}}
+            localeLanguage={location}
+            monthDisabledStyle={{color: color.textSubdued}}
+            swipable={true}
           />
         </View>
       )}
@@ -350,31 +364,33 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
         <ScrollView style={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
           {selectedCategoryType === 'Detail' && (
             <View style={styles.ContainerCategory}>
-              {dailyData.map((detail, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.expenseItem}
-                  onPress={() => handlePressDate(detail.day)}>
-                  <View style={styles.expenseDetails}>
-                    {/* <Image
+              {dailyData
+                .filter(detail => detail.total !== 0)
+                .map((detail, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.expenseItem}
+                    onPress={() => handlePressDate(detail.day)}>
+                    <View style={styles.expenseDetails}>
+                      {/* <Image
                   source={{
                     uri: `https://via.placeholder.com/40?text=${('0' + detail.day).slice(-2)}`,
                   }}
                   style={styles.avatar}
                 /> */}
-                    <Text style={[styles.expenseText, {color: color.text}]}>
-                      {('0' + detail.day).slice(-2)}/
-                      {('0' + (selectedMonth.getMonth() + 1)).slice(-2)}
-                    </Text>
-                  </View>
-                  <View style={styles.expenseDetails}>
-                    <Text style={{color: 'green'}}>
-                      + {formatCurrency(detail.total)}
-                    </Text>
-                    <Icon name="chevron-right" size={20} color="#ccc" />
-                  </View>
-                </TouchableOpacity>
-              ))}
+                      <Text style={[styles.expenseText, {color: color.text}]}>
+                        {('0' + detail.day).slice(-2)}/
+                        {('0' + (selectedMonth.getMonth() + 1)).slice(-2)}
+                      </Text>
+                    </View>
+                    <View style={styles.expenseDetails}>
+                      <Text style={{color: 'green'}}>
+                        + {formatCurrency(detail.total)}
+                      </Text>
+                      <Icon name="chevron-right" size={20} color="#ccc" />
+                    </View>
+                  </TouchableOpacity>
+                ))}
             </View>
           )}
 

@@ -84,7 +84,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         id_user: receiverId,
         index: currentIndex,
       });
-      if (response.length > 0) {
+      if (response && response.length > 0) {
         markSeenMessage(receiverId);
         const newMessages = response.map((message: Message) => {
           if (message.type === 'photo') {
