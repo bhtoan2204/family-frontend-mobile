@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   Image,
-  StyleSheet,
   TouchableOpacity,
   TextInput,
   Platform,
@@ -29,8 +28,6 @@ import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {Feather} from '@expo/vector-icons';
 import {ScrollView} from 'react-native-gesture-handler';
-import {COLORS} from 'src/constants';
-import {Toast} from 'react-native-toast-notifications';
 import styles from './styles';
 
 const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
@@ -50,9 +47,24 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
 
-  useEffect(() => {
-    setImage(asset?.image_url);
-  }, []);
+  // Function to format currency
+  const formatCurrency = (amount: string | number) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(Number(amount));
+  };
+
+  // Function to parse currency input and return raw value
+  const parseCurrency = (input: string) => {
+    return input.replace(/[^\d]/g, ''); // Remove non-numeric characters
+  };
+
+  // Function to handle input changes
+  const handleValueChange = (text: string) => {
+    const rawValue = parseCurrency(text);
+    setValue(rawValue);
+  };
 
   const handleEditPress = () => {
     setIsEditing(true);
@@ -98,6 +110,7 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
       Toast.show('Failed to update asset', {type: 'danger', duration: 3000});
     }
   };
+
   const confirmDelete = async () => {
     try {
       await ExpenseServices.deleteAsset(asset?.id_family, asset?.id_asset);
@@ -105,26 +118,20 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
         type: 'success',
         duration: 3000,
       });
-
       dispatch(deleteAsset(asset?.id_asset));
       navigation.navigate('AssetScreen');
     } catch (error) {
       Toast.show('Failed to delete asset', {type: 'danger', duration: 3000});
     }
   };
+
   const handleDeletePress = async () => {
     Alert.alert(
       'Confirm Deletion',
       'Are you sure you want to delete this asset?',
       [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'OK',
-          onPress: () => confirmDelete(),
-        },
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'OK', onPress: () => confirmDelete()},
       ],
       {cancelable: true},
     );
@@ -138,7 +145,6 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
           'Sorry, we need camera roll permissions to make this work!',
           {type: 'danger', duration: 3000},
         );
-
         return;
       }
     }
@@ -178,13 +184,6 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
     setIsModalVisible(false);
   };
 
-  const formatCurrency = (amount: string | number | bigint) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-    }).format(amount);
-  };
-
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: color.background}]}>
@@ -196,7 +195,6 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
             <Icon name="arrow-back" size={30} color={color.text} />
           </TouchableOpacity>
           <Text style={[styles.title, {color: color.text}]}>{asset?.name}</Text>
-
           <TouchableOpacity onPress={handleEditPress}>
             <Feather name="edit" size={23} color={color.icon} />
           </TouchableOpacity>
@@ -235,17 +233,16 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
             {isEditing ? (
               <TextInput
                 style={[styles.input, {color: color.text}]}
-                value={value}
-                onChangeText={setValue}
+                value={formatCurrency(value)}
+                onChangeText={handleValueChange}
                 keyboardType="numeric"
                 placeholder={translate('Enter Value')}
               />
             ) : (
               <Text
-                style={[
-                  styles.assetDetailText,
-                  {color: color.textSubdued},
-                ]}>{`${formatCurrency(parseInt(asset?.value))}`}</Text>
+                style={[styles.assetDetailText, {color: color.textSubdued}]}>
+                {formatCurrency(parseInt(asset?.value))}
+              </Text>
             )}
             <Text style={[styles.assetDetailLabel, {color: color.text}]}>
               {translate('Asset Name')}
@@ -284,7 +281,6 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
                 {asset?.description}
               </Text>
             )}
-
             <Text style={[styles.assetDetailLabel, {color: color.text}]}>
               {translate('Purchase Date')}
             </Text>
@@ -326,10 +322,6 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
               </>
             ) : (
               <>
-                {/* <TouchableOpacity style={[styles.button, styles.editButton]} onPress={handleEditPress}>
-              <Text style={styles.buttonText}>{translate('Edit')}</Text>
-            </TouchableOpacity> */}
-
                 <TouchableOpacity
                   style={[styles.button, {backgroundColor: 'red'}]}
                   onPress={handleDeletePress}>
