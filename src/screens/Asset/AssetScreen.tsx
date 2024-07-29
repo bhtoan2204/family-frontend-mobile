@@ -108,7 +108,7 @@ const AssetScreen = ({navigation}: AssetScreenProps) => {
             <TouchableOpacity
               onPress={() => navigation.navigate('AddAssetScreen')}
               style={styles.headerButton}>
-              <Feather name="plus-circle" size={30} style={styles.backButton} />
+              <Feather name="plus" size={33} style={styles.backButton} />
             </TouchableOpacity>
           </View>
           <View style={styles.textContainer}>
@@ -126,6 +126,7 @@ const AssetScreen = ({navigation}: AssetScreenProps) => {
               renderItem={renderItem}
               contentContainerStyle={styles.list}
               showsVerticalScrollIndicator={false}
+              ListFooterComponent={<View style={{height: 180}} />}
             />
           </View>
         </View>

@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   headerText: {
-    fontSize: 18,
+    fontSize: 20,
     color: 'white',
     fontWeight: 'bold',
   },
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     color: '#111827',
   },
   list: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     paddingBottom: 16,
   },
   assetContainer: {
