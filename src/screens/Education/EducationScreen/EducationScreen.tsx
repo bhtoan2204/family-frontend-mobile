@@ -29,9 +29,10 @@ import {
 } from 'react-native-popup-menu';
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
 import UpdateProgressSheet from 'src/components/user/education/education-screen/sheet/update-progress-sheet';
-import { deleteEducation } from 'src/redux/slices/EducationSlice';
+import { clearEducation, deleteEducation, setEducation } from 'src/redux/slices/EducationSlice';
 import EducationServices from 'src/services/apiclient/EducationService';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import { useToast } from "react-native-toast-notifications";
 
 
 const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) => {
@@ -53,11 +54,48 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     const [schoolInfoUpdate, setSchoolInfoUpdate] = React.useState<string>("")
     const [progressNotesUpdate, setProgressNotesUpdate] = React.useState<string>("")
     const [pickedIdProgress, setPickedIdProgress] = React.useState<number>(-1)
-    // useEffect(() => {
-    //     setColorScheme('light')
-    // }, [])
+    const [loading, setLoading] = React.useState<boolean>(false)
 
-    // console.log("members of family", id_family, members)
+    const toast = useToast();
+
+    useEffect(() => {
+        const handleFetchEducation = async () => {
+            setLoading(true)
+            const educationsData = await EducationServices.getAllEducation(id_family!, 1, 20);
+            const edu = educationsData.map((education: any) => {
+                return {
+                    ...education,
+                    subjects: education.subjects.map((subject: any) => {
+                        return {
+                            ...subject,
+                            midterm_score: {
+                                component_name: 'Midterm',
+                                score: subject.midterm_score,
+                            },
+                            final_score: {
+                                component_name: 'Final',
+                                score: subject.final_score,
+                            },
+                        };
+                    }),
+                };
+            }) as Education[];
+            setLoading(false)
+            dispatch(setEducation(edu))
+        }
+        handleFetchEducation()
+
+        return () => {
+            dispatch(clearEducation())
+        }
+    }, [])
+
+    // if (loading) {
+    //     return <View className='justify-center items-center flex-1 bg-[#f7f7f7] dark:bg-[#0A1220]'>
+    //         <ActivityIndicator size="small" color={COLORS.AuroMetalSaurus} />
+    //     </View>
+    // }
+
     const handleNavigateProgress = (id_progress: number) => {
         navigation.navigate('ProgressScreen', { id_family: id_family, id_progress: id_progress })
     }
@@ -70,7 +108,6 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
         updateEducationSheetRef.current?.expand()
     }
     const onDeleteItem = async (id_progress: number) => {
-        // console.log("delete item", id_progress)
         dispatch(deleteEducation(id_progress))
         const res = await EducationServices.deleteEducation(id_progress, id_family)
         if (res) {
@@ -130,13 +167,41 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
 
             </View>
             <View className='flex-1 bg-[#f7f7f7] dark:bg-[#0A1220]'>
-                {
-                    educationData.length > 0 ? <>
-                        {buildList()}
-                    </> : <>
-                        {buildListEmpty()}
-                    </>
-                }
+                <TouchableOpacity activeOpacity={1.0} className=''
+                    onPress={() => {
+                        toast.show("pressed", {
+                            id: 'custom-add-edu',
+                            type: 'custom-add-edu',
+                            duration: 2000,
+                            onPress: () => {
+                                console.log('pressed')
+                            },
+                        })
+                    }}
+                >
+                    <View>
+                        <Text>hey</Text>
+                    </View>
+                </TouchableOpacity>
+                <>
+                    {
+                        loading ? <>
+                            <View className='flex-1 justify-center items-center'>
+                                <ActivityIndicator size="small" color={
+                                    colorScheme == 'dark' ? COLORS.AuroMetalSaurus : COLORS.AuroMetalSaurus
+                                } />
+                            </View>
+                        </> : <>
+                            {
+                                educationData.length > 0 ? <>
+                                    {buildList()}
+                                </> : <>
+                                    {buildListEmpty()}
+                                </>
+                            }
+                        </>
+                    }
+                </>
             </View>
             <AddProgressSheet bottomSheetRef={addProgressBottomSheetRef}
                 members={members}
@@ -145,6 +210,13 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                 setPickedIdUser={(id_user: string) => {
                     setPickedIdUser(id_user)
                 }}
+                onAddSuccess={
+                    () => {
+                        toast.show("Added new education", {
+                            type: "success",
+                        });
+                    }
+                }
                 pickMemberBottomSheetRef={pickMemberBottomSheetRef}
             />
             <AddProgressPickMemberSheet

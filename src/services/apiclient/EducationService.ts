@@ -52,9 +52,14 @@ const EducationServices = {
     }
   },
 
-  getAllEducation: async (id_family: number) => {
+  getAllEducation: async (
+    id_family: number,
+    page: number,
+    itemPerPage: number,
+  ) => {
     try {
-      const url = EducationUrls.getAll + '/?id_family=' + id_family;
+      const url = EducationUrls.getAll + '?id_family=' + id_family + `&page=${page}&itemsPerPage=${itemPerPage}&sortBy=created_at&sortDirection=ASC`;
+      console.log(url)
       const response: AxiosResponse = await instance.get(url);
 
       if (response.status === 200) {

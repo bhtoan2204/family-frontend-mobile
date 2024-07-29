@@ -23,51 +23,6 @@ const Stack = createNativeStackNavigator();
 
 const EducationStack = ({ navigation, route }: EducationStackProps) => {
 
-
-    const id_family = route.params?.params?.id_family
-    const dispatch = useDispatch<AppDispatch>()
-    const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
-
-    const [loading, setLoading] = React.useState<boolean>(false)
-
-    useEffect(() => {
-        const handleFetchEducation = async () => {
-            setLoading(true)
-            const educationsData = await EducationServices.getAllEducation(id_family!);
-            const edu = educationsData.map((education: any) => {
-                return {
-                    ...education,
-                    subjects: education.subjects.map((subject: any) => {
-                        return {
-                            ...subject,
-                            midterm_score: {
-                                component_name: 'Midterm',
-                                score: subject.midterm_score,
-                            },
-                            final_score: {
-                                component_name: 'Final',
-                                score: subject.final_score,
-                            },
-                        };
-                    }),
-                };
-            }) as Education[];
-            setLoading(false)
-            dispatch(setEducation(edu))
-        }
-        handleFetchEducation()
-
-        return () => {
-            dispatch(clearEducation())
-        }
-    }, [])
-
-    if (loading) {
-        return <View className='justify-center items-center flex-1 bg-[#f7f7f7] dark:bg-[#0A1220]'>
-            <ActivityIndicator size="small" color={COLORS.AuroMetalSaurus} />
-        </View>
-    }
-
     return (
         <>
             <Stack.Navigator

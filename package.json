@@ -60,7 +60,7 @@
     "expo-localization": "^15.0.3",
     "expo-mail-composer": "~13.0.1",
     "expo-media-library": "~16.0.4",
-    "expo-notifications": "~0.28.11",
+    "expo-notifications": "~0.28.12",
     "expo-random": "^14.0.1",
     "expo-status-bar": "~1.12.1",
     "formik": "^2.4.6",

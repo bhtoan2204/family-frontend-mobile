@@ -20,17 +20,19 @@ import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { handleRestore } from 'src/utils/sheet/func';
 
 
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
+
 interface AddItemSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
     id_family: number;
     members: Member[];
     pickedIdUser: string;
     setPickedIdUser: (id: string) => void;
+    onAddSuccess: () => void;
     pickMemberBottomSheetRef: React.RefObject<BottomSheet>
 }
 
-const screenHeight = Dimensions.get('window').height;
-const screenWidth = Dimensions.get('window').width;
 
 const AddProgressSheet = ({
     bottomSheetRef,
@@ -38,6 +40,7 @@ const AddProgressSheet = ({
     members,
     pickMemberBottomSheetRef,
     pickedIdUser,
+    onAddSuccess
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
 
@@ -51,7 +54,6 @@ const AddProgressSheet = ({
     const [inputTitle, setInputTitle] = React.useState('')
     const [inputProgressNotes, setInputProgressNotes] = React.useState('')
     const [inputSchoolInfo, setInputSchoolInfo] = React.useState('')
-    // const [pickedIdUser, setPickedIdUser] = React.useState<string>("")
     const isDarkMode = useSelector(getIsDarkMode)
     useEffect(() => {
         if (showError) {
@@ -121,6 +123,7 @@ const AddProgressSheet = ({
             }
             dispatch(addEducation(newEducation))
             bottomSheetRef.current?.close()
+            onAddSuccess()
         } else {
             console.log("error")
             bottomSheetRef.current?.close()
@@ -291,11 +294,11 @@ const AddProgressSheet = ({
                         </View>
                         <View className=' items-center'>
                             <Text className='text-base font-semibold text-[#2A475E] dark:text-white' style={{
-                                
+
 
                             }}>Add New Education Progress</Text>
                             <Text className='text-sm my-3 mx-5 text-center text-[#2A475E] dark:text-[#8D94A5]' style={{
-                                
+
 
                             }}>Give your education progress a name and some description</Text>
                         </View>

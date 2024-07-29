@@ -13,7 +13,7 @@ import {
   BottomSheetView,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
-import { ToastProvider } from 'react-native-toast-notifications'
+import ToastProviderApp from 'ToastProvider';
 
 const App: React.FC = () => {
 
@@ -22,7 +22,7 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <ToastProvider>
+    <ToastProviderApp>
       <Provider store={store}>
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
@@ -39,7 +39,7 @@ const App: React.FC = () => {
           </GestureHandlerRootView>
         </SafeAreaProvider>
       </Provider>
-    </ToastProvider>
+    </ToastProviderApp>
   );
 };
 
