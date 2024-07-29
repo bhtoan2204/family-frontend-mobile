@@ -3,7 +3,7 @@ import {ERROR_TEXTS} from 'src/constants';
 import instance from '../httpInterceptor';
 import {ProfileUrl} from '../urls';
 import {ImagePickerAsset} from 'expo-image-picker';
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
 import baseUrl from '../urls/baseUrl';
 
 const ProfileServices = {
@@ -22,7 +22,9 @@ const ProfileServices = {
   },
   getNotification: async (index: number) => {
     try {
-      const response: AxiosResponse = await instance.get(ProfileUrl.getNotification + `/${index}`);
+      const response: AxiosResponse = await instance.get(
+        ProfileUrl.getNotification + `/${index}`,
+      );
 
       if (response.status === 200) {
         return response.data;
@@ -35,32 +37,34 @@ const ProfileServices = {
   },
   getUserInfoByPhone: async (phone: string) => {
     try {
-      const response: AxiosResponse = await instance.get(ProfileUrl.getUserInfoByPhone, {
-        params: {
-          phone
-        }
-      } );
+      const response: AxiosResponse = await instance.get(
+        ProfileUrl.getUserInfoByPhone,
+        {
+          params: {
+            phone,
+          },
+        },
+      );
 
       if (response.status === 200) {
         return response.data.data;
-      } 
-      
-    } catch (error) {
-      
-    }
+      }
+    } catch (error) {}
   },
   getUserInfoByEmail: async (email: string) => {
     try {
-      const response: AxiosResponse = await instance.get(ProfileUrl.getUserInfoByEmail, {
-        params: {
-          email
-        }
-      } );
+      const response: AxiosResponse = await instance.get(
+        ProfileUrl.getUserInfoByEmail,
+        {
+          params: {
+            email,
+          },
+        },
+      );
 
       if (response.status === 200) {
         return response.data;
-      } 
-      else{
+      } else {
         return null;
       }
     } catch (error) {
@@ -69,7 +73,9 @@ const ProfileServices = {
   },
   markRead: async (index: string) => {
     try {
-      const response: AxiosResponse = await instance.get(ProfileUrl.markRead + `/${index}`);
+      const response: AxiosResponse = await instance.get(
+        ProfileUrl.markRead + `/${index}`,
+      );
 
       if (response.status === 200) {
         return response.data;
@@ -82,9 +88,13 @@ const ProfileServices = {
   },
   createFeedback: async (rating: number, comment: string) => {
     try {
-      const response: AxiosResponse = await instance.post(`${baseUrl}/api/v1/feedback`, {
-        comment, rating,
-      })
+      const response: AxiosResponse = await instance.post(
+        `${baseUrl}/api/v1/feedback`,
+        {
+          comment,
+          rating,
+        },
+      );
 
       if (response.status === 201) {
         return response.data;
@@ -128,7 +138,7 @@ const ProfileServices = {
       throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
-  
+
   changePassword: async ({
     oldPassword,
     newPassword,
@@ -139,15 +149,15 @@ const ProfileServices = {
     confirmPassword: string;
   }) => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-  
+
     if (!passwordRegex.test(newPassword)) {
       Alert.alert(
         'Error',
-        'New password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, and one number.'
+        'New password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, and one number.',
       );
       return;
     }
-  
+
     try {
       const response: AxiosResponse = await instance.post(
         ProfileUrl.changePassword,
@@ -157,7 +167,7 @@ const ProfileServices = {
           confirmPassword,
         },
       );
-  
+
       if (response.status === 200) {
         Alert.alert('Success', 'Password changed successfully');
       } else {
@@ -173,7 +183,7 @@ const ProfileServices = {
       }
     }
   },
-  
+
   changeAvatar: async (uri: string) => {
     try {
       const createFormData = (uri: string): FormData => {
@@ -200,9 +210,8 @@ const ProfileServices = {
           },
         },
       );
-      console.log(response);
       if (response.status === 200) {
-        return response.data.data.fileUrl;
+        return response.data.data;
       } else {
         throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
       }

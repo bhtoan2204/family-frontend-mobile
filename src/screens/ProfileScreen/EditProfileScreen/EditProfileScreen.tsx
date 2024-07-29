@@ -26,6 +26,7 @@ import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {ProfileScreenProps} from 'src/navigation/NavigationTypes';
 import {COLORS} from 'src/constants';
+import {Toast} from 'react-native-toast-notifications';
 
 const EditProfileScreen = ({navigation}: ProfileScreenProps) => {
   const profile = useSelector((state: RootState) => state.profile.profile);
@@ -62,9 +63,12 @@ const EditProfileScreen = ({navigation}: ProfileScreenProps) => {
         birthdate: formatDate(birthDate),
       });
       dispatch(updateProfileSlice(updatedProfile));
-      Alert.alert('Success', 'Profile updated successfully');
+      Toast.show('Profile updated successfully', {
+        type: 'success',
+        duration: 3000,
+      });
     } catch (error) {
-      Alert.alert('Error', 'Failed to update profile');
+      Toast.show('Failed to update profile', {type: 'danger', duration: 3000});
     }
   };
 
@@ -80,9 +84,24 @@ const EditProfileScreen = ({navigation}: ProfileScreenProps) => {
       const a = result.assets[0]!;
       const uri = a.uri;
       setIsUploadingImage(true);
-      const fileUrl = await ProfileServices.changeAvatar(uri);
-      dispatch(updateProfileSlice({...profile, avatar: fileUrl}));
-      setIsUploadingImage(false);
+      try {
+        const data = await ProfileServices.changeAvatar(uri);
+        if (data) {
+          dispatch(updateProfileSlice({...profile, avatar: data.avatar}));
+          setIsUploadingImage(false);
+          Toast.show('Change avatar successfully', {
+            type: 'success',
+            duration: 3000,
+          });
+        } else {
+          Toast.show('Fail to change avatar', {
+            type: 'danger',
+            duration: 3000,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
