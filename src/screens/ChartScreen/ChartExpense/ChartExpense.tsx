@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-
-  ImageBackground,
-} from 'react-native';
+import {View, Text, TouchableOpacity, ImageBackground} from 'react-native';
 import {ChartExpenseProps} from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
@@ -15,9 +9,9 @@ import BarChartScreen from './BarChart';
 import {useSelector} from 'react-redux';
 import {getOption} from 'src/redux/slices/ExpenseAnalysis';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import { selectProfile } from 'src/redux/slices/ProfileSclice';
-import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
-import { getTranslate } from 'src/redux/slices/languageSlice';
+import {selectProfile} from 'src/redux/slices/ProfileSclice';
+import {selectSelectedFamily} from 'src/redux/slices/FamilySlice';
+import {getTranslate} from 'src/redux/slices/languageSlice';
 
 const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
   const [selectedCategoryType, setSelectedCategoryType] = useState<string>('');
@@ -25,15 +19,11 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
   let option = useSelector(getOption);
 
   const profile = useSelector(selectProfile);
-  let family =useSelector(selectSelectedFamily);
+  let family = useSelector(selectSelectedFamily);
 
   useEffect(() => {
-      setSelectedCategoryType(option);
-    
+    setSelectedCategoryType(option);
   }, [option]);
-
-
-
 
   return (
     <ImageBackground
@@ -42,18 +32,17 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
       resizeMode="stretch">
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.container}>
-        <View style={styles.headerContainer}>
+          <View style={styles.headerContainer}>
             <TouchableOpacity
-              onPress={() =>
-                navigation.goBack()
-              }
+              onPress={() => navigation.goBack()}
               style={styles.headerButton}>
               <Icon name="arrow-back" size={30} style={styles.backButton} />
             </TouchableOpacity>
             <View style={styles.headerTitleContainer}>
-              <Text style={styles.headerText}>{translate('ExpenseAnalysis')}</Text>
+              <Text style={styles.headerText}>
+                {translate('ExpenseAnalysis')}
+              </Text>
             </View>
-
           </View>
           <View
             style={{
@@ -72,26 +61,28 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
               {translate('Hello')}, {profile.firstname} {profile.lastname}
             </Text>
             {selectedCategoryType === 'Year' && (
-                <Text style={{fontSize: 16, color: '#ccc'}}>
-                  {translate('overviewYear')}
-                </Text>
-              )}
-              {selectedCategoryType === 'Month' && (
-                <Text style={{fontSize: 16, color: '#ccc'}}>
-                  {translate('overviewMonth')}
-                </Text>
-              )}
-              {selectedCategoryType === 'Day' && (
-                <Text style={{fontSize: 16, color: '#ccc'}}>
-                  {translate('detailDay')}
-                </Text>
-              )}
-
+              <Text style={{fontSize: 16, color: '#ccc'}}>
+                {translate('overviewYear')}
+              </Text>
+            )}
+            {selectedCategoryType === 'Month' && (
+              <Text style={{fontSize: 16, color: '#ccc'}}>
+                {translate('overviewMonth')}
+              </Text>
+            )}
+            {selectedCategoryType === 'Day' && (
+              <Text style={{fontSize: 16, color: '#ccc'}}>
+                {translate('detailDay')}
+              </Text>
+            )}
           </View>
-         
+
           {selectedCategoryType === 'Day' && (
             <View>
-              <BarChartScreen id_family={family.id_family} navigation={navigation} />
+              <BarChartScreen
+                id_family={family.id_family}
+                navigation={navigation}
+              />
             </View>
           )}
           {selectedCategoryType === 'Month' && (
@@ -104,7 +95,6 @@ const ChartExpenseScreen = ({navigation}: ChartExpenseProps) => {
               <LineChartScreen id_family={family.id_family} />
             </View>
           )}
-          
         </View>
       </SafeAreaView>
     </ImageBackground>

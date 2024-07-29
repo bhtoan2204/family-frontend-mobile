@@ -6,28 +6,32 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AssetScreenProps} from 'src/navigation/NavigationTypes';
 import {useDispatch, useSelector} from 'react-redux';
 import {ExpenseServices} from 'src/services/apiclient';
-import {selectSelectedFamily} from 'src/redux/slices/FamilySlice';
 import {Asset} from 'src/interface/asset/asset';
 import {selectAsset, selectAssets, setAsset} from 'src/redux/slices/AssetSlice';
 import Feather from 'react-native-vector-icons/Feather';
 import {RootState} from 'src/redux/store';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
+import styles from './styles';
+import {selectProfile} from 'src/redux/slices/ProfileSclice';
+import {selectSelectedFamily} from 'src/redux/slices/FamilySlice';
 
 const AssetScreen = ({navigation}: AssetScreenProps) => {
   const dispatch = useDispatch();
-  const family = useSelector(selectSelectedFamily);
   const assets = useSelector(selectAssets);
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
   const [page, setPage] = useState(1);
   const [keySearch, setKeySearch] = useState('created_at');
+  const profile = useSelector(selectProfile);
+  let family = useSelector(selectSelectedFamily);
   useEffect(() => {
     fetchData();
   }, []);
@@ -86,101 +90,48 @@ const AssetScreen = ({navigation}: AssetScreenProps) => {
   );
 
   return (
-    <SafeAreaView
-      style={[styles.container, {backgroundColor: color.background}]}>
-      <View style={[styles.header, {backgroundColor: color.background}]}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={30} color={color.text} />
-        </TouchableOpacity>
-        <Text style={[styles.title, {color: color.text}]}>
-          {translate('Asset')}
-        </Text>
-      </View>
-      <FlatList
-        data={assets}
-        keyExtractor={item => item.id_asset.toString()}
-        renderItem={renderItem}
-        contentContainerStyle={styles.list}
-        showsVerticalScrollIndicator={false}
-      />
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => navigation.navigate('AddAssetScreen')}>
-        <Feather name="plus-circle" size={50} color="#2196F3" />
-      </TouchableOpacity>
-    </SafeAreaView>
+    <ImageBackground
+      source={require('../../assets/images/asset-detail-bg.png')}
+      style={{flex: 1}}
+      resizeMode="stretch">
+      <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
+          <View style={styles.headerContainer}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.headerButton}>
+              <Icon name="arrow-back" size={30} style={styles.backButton} />
+            </TouchableOpacity>
+            <View style={styles.headerTitleContainer}>
+              <Text style={styles.headerText}>{translate('Asset')}</Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('AddAssetScreen')}
+              style={styles.headerButton}>
+              <Feather name="plus-circle" size={30} style={styles.backButton} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.welcomeText}>
+              {translate('Hello')}, {profile.firstname} {profile.lastname}
+            </Text>
+            <Text style={styles.welcomeTextDetail}>
+              {translate('AssetDetail2')}
+            </Text>
+          </View>
+          <View style={[styles.assetList, {backgroundColor: color.background}]}>
+            <FlatList
+              data={assets}
+              keyExtractor={item => item.id_asset.toString()}
+              renderItem={renderItem}
+              contentContainerStyle={styles.list}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
+        </View>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    //backgroundColor: '#F9FAFB',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
-    borderBottomColor: '#E5E7EB',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '600',
-    marginLeft: 10,
-    color: '#111827',
-  },
-  list: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  assetContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 12,
-    marginBottom: 12,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  assetImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
-    marginRight: 16,
-  },
-  assetInfo: {
-    flex: 1,
-  },
-  assetName: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 4,
-    color: '#111827',
-  },
-  assetDescription: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 4,
-  },
-  assetValue: {
-    fontSize: 16,
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  assetDate: {
-    fontSize: 14,
-    color: '#9CA3AF',
-  },
-  addButton: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-  },
-});
 
 export default AssetScreen;
