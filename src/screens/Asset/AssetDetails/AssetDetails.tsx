@@ -203,7 +203,9 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
         <ScrollView contentContainerStyle={styles.scrollView}>
           {image ? (
             <>
-              <TouchableOpacity onPress={handleImagePress}>
+              <TouchableOpacity
+                onPress={handleImagePress}
+                style={styles.imageContainer1}>
                 <Image source={{uri: image}} style={styles.assetImage} />
               </TouchableOpacity>
             </>

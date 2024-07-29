@@ -29,6 +29,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 16,
   },
+  imageContainer1: {
+    alignItems: 'center',
+    marginVertical: 16,
+  },
   assetImage: {
     width: '100%',
     height: 300,
