@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -49,6 +49,10 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
+
+  useEffect(() => {
+    setImage(asset?.image_url);
+  }, []);
 
   const handleEditPress = () => {
     setIsEditing(true);
@@ -148,6 +152,7 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      console.log(result.assets[0].uri);
     }
   };
 
@@ -165,6 +170,7 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
   };
 
   const handleImagePress = () => {
+    console.log('Image URI in handleImagePress:', image);
     setIsModalVisible(true);
   };
 
@@ -195,19 +201,20 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
             <Feather name="edit" size={23} color={color.icon} />
           </TouchableOpacity>
         </View>
+
         <ScrollView contentContainerStyle={styles.scrollView}>
+          {image ? (
+            <>
+              <TouchableOpacity onPress={handleImagePress}>
+                <Image source={{uri: image}} style={styles.assetImage} />
+              </TouchableOpacity>
+            </>
+          ) : (
+            <View style={styles.noImageContainer}>
+              <Text style={styles.noImageText}>{translate('No Image')}</Text>
+            </View>
+          )}
           <View style={styles.imageContainer}>
-            {image ? (
-              <>
-                <TouchableOpacity onPress={handleImagePress}>
-                  <Image source={{uri: image}} style={styles.assetImage} />
-                </TouchableOpacity>
-              </>
-            ) : (
-              <View style={styles.noImageContainer}>
-                <Text style={styles.noImageText}>{translate('No Image')}</Text>
-              </View>
-            )}
             {isEditing && (
               <TouchableOpacity
                 onPress={handleImagePicker}
@@ -222,6 +229,24 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
             )}
           </View>
           <View style={[styles.assetInfo, {backgroundColor: color.white}]}>
+            <Text style={[styles.assetDetailLabel, {color: color.text}]}>
+              {translate('Value')}
+            </Text>
+            {isEditing ? (
+              <TextInput
+                style={[styles.input, {color: color.text}]}
+                value={value}
+                onChangeText={setValue}
+                keyboardType="numeric"
+                placeholder={translate('Enter Value')}
+              />
+            ) : (
+              <Text
+                style={[
+                  styles.assetDetailText,
+                  {color: color.textSubdued},
+                ]}>{`${formatCurrency(parseInt(asset?.value))}`}</Text>
+            )}
             <Text style={[styles.assetDetailLabel, {color: color.text}]}>
               {translate('Asset Name')}
             </Text>
@@ -259,24 +284,7 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
                 {asset?.description}
               </Text>
             )}
-            <Text style={[styles.assetDetailLabel, {color: color.text}]}>
-              {translate('Value')}
-            </Text>
-            {isEditing ? (
-              <TextInput
-                style={[styles.input, {color: color.text}]}
-                value={value}
-                onChangeText={setValue}
-                keyboardType="numeric"
-                placeholder={translate('Enter Value')}
-              />
-            ) : (
-              <Text
-                style={[
-                  styles.assetDetailText,
-                  {color: color.textSubdued},
-                ]}>{`${formatCurrency(parseInt(asset?.value))}`}</Text>
-            )}
+
             <Text style={[styles.assetDetailLabel, {color: color.text}]}>
               {translate('Purchase Date')}
             </Text>

@@ -45,7 +45,10 @@ const AssetScreen = ({navigation}: AssetScreenProps) => {
         'created_at',
         'DESC',
       );
-      dispatch(setAsset(data));
+      if (data.length > 0) {
+        dispatch(setAsset(data));
+        setPage(page + 1);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -57,6 +60,7 @@ const AssetScreen = ({navigation}: AssetScreenProps) => {
     }).format(amount);
   };
   const handlePressDetail = (item: Asset) => {
+    console.log(item);
     dispatch(selectAsset(item));
     navigation.navigate('AssetDetailScreen', {asset: item});
   };

@@ -8,9 +8,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
   },
-  scrollView: {
-    flex: 1,
-  },
+  scrollView: {},
   closeButton: {
     position: 'absolute',
     top: 10,
