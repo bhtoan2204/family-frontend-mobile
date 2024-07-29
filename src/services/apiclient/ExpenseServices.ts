@@ -70,24 +70,25 @@ const ExpenseServices = {
     image: string,
   ) => {
     try {
-      const createFormData = (image: string): FormData => {
+      const createFormData = (uri: string): FormData => {
         let formData = new FormData();
-        if (image != null) {
-          let filename = image.split('/').pop()!;
+
+        formData.append('id_family', id_family?.toString() || '');
+        formData.append('name', name || '');
+        formData.append('description', description || '');
+        formData.append('value', value?.toString() || '');
+        formData.append('purchase_date', purchase_date || '');
+        if (uri) {
+          let filename = uri.split('/').pop()!;
           let match = /\.(\w+)$/.exec(filename);
           let type = match ? `image/${match[1]}` : `image`;
           const file = {
-            image,
+            uri,
             name: filename,
             type,
           };
           formData.append('image', file);
         }
-        formData.append('id_family', id_family.toString());
-        formData.append('name', name.toString());
-        formData.append('description', description.toString());
-        formData.append('value', value.toString());
-        formData.append('purchase_date', purchase_date.toString());
 
         return formData;
       };
@@ -98,7 +99,7 @@ const ExpenseServices = {
         {
           headers: {
             'Content-Type': 'multipart/form-data',
-            accept: '*/*',
+            Accept: '*/*',
           },
         },
       );
@@ -108,6 +109,7 @@ const ExpenseServices = {
       }
     } catch (error: any) {
       console.error('Error in createAsset:', error.message);
+      throw error;
     }
   },
   updateAsset: async (
@@ -120,31 +122,33 @@ const ExpenseServices = {
     image?: string,
   ) => {
     try {
-      const formData = new FormData();
+      const createFormData = (uri: string): FormData => {
+        let formData = new FormData();
 
-      if (image) {
-        let filename = image.split('/').pop()!;
-        let match = /\.(\w+)$/.exec(filename);
-        let type = match ? `image/${match[1]}` : `image`;
-        const file = {
-          image,
-          name: filename,
-          type,
-        };
+        formData.append('id_asset', id_asset?.toString() || '');
+        formData.append('id_family', id_family?.toString() || '');
+        formData.append('name', name || '');
+        formData.append('description', description || '');
+        formData.append('value', value?.toString() || '');
+        formData.append('purchase_date', purchase_date || '');
+        if (uri) {
+          let filename = uri.split('/').pop()!;
+          let match = /\.(\w+)$/.exec(filename);
+          let type = match ? `image/${match[1]}` : `image`;
+          const file = {
+            uri,
+            name: filename,
+            type,
+          };
+          formData.append('image', file);
+        }
 
-        formData.append('image', file);
-      }
-
-      formData.append('id_asset', id_asset?.toString() || '');
-      formData.append('id_family', id_family?.toString() || '');
-      formData.append('name', name || '');
-      formData.append('description', description || '');
-      formData.append('value', value?.toString() || '');
-      formData.append('purchase_date', purchase_date || '');
+        return formData;
+      };
 
       const response: AxiosResponse = await instance.put(
         `${baseUrl}/api/v1/finance/asset/updateAsset`,
-        formData,
+        createFormData(image),
         {
           headers: {
             'Content-Type': 'multipart/form-data',

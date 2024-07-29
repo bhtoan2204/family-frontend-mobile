@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../store';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {RootState} from '../store';
 
 interface Asset {
   id_asset: number;
@@ -37,25 +37,39 @@ const assetSlice = createSlice({
     selectAsset: (state, action: PayloadAction<Asset>) => {
       state.selectedAsset = action.payload;
     },
-    clearSelectedAsset: (state) => {
+    clearSelectedAsset: state => {
       state.selectedAsset = null;
     },
     updateAsset: (state, action: PayloadAction<Asset>) => {
-      const index = state.assets.findIndex(asset => asset.id_asset === action.payload.id_asset);
+      const index = state.assets.findIndex(
+        asset => asset.id_asset === action.payload.id_asset,
+      );
       if (index !== -1) {
         state.assets[index] = action.payload;
       }
+      state.selectedAsset = action.payload;
     },
     deleteAsset: (state, action: PayloadAction<number>) => {
-      const index = state.assets.findIndex(asset => asset.id_asset === action.payload);
+      const index = state.assets.findIndex(
+        asset => asset.id_asset === action.payload,
+      );
       if (index !== -1) {
         state.assets.splice(index, 1);
       }
+      state.selectedAsset = null;
     },
   },
 });
 
-export const {setAsset, addAsset, selectAsset, clearSelectedAsset, updateAsset, deleteAsset } = assetSlice.actions;
+export const {
+  setAsset,
+  addAsset,
+  selectAsset,
+  clearSelectedAsset,
+  updateAsset,
+  deleteAsset,
+} = assetSlice.actions;
 export const selectAssets = (state: RootState) => state.asset.assets;
-export const selectSelectedAsset = (state: RootState) => state.asset.selectedAsset;
+export const selectSelectedAsset = (state: RootState) =>
+  state.asset.selectedAsset;
 export default assetSlice.reducer;

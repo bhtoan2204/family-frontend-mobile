@@ -57,7 +57,7 @@ const AddAssetScreen = ({navigation}: AddAssetScreenProps) => {
       image_url: image,
       id_family: family.id_family,
     };
-
+    console.log(newAsset);
     try {
       const data = await ExpenseServices.createAsset(
         newAsset.id_family,
@@ -69,7 +69,6 @@ const AddAssetScreen = ({navigation}: AddAssetScreenProps) => {
       );
 
       if (data.data) {
-        console.log(data.data);
         dispatch(addAsset(data.data));
         Toast.show('Asset saved successfully', {
           type: 'success',
