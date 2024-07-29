@@ -1,17 +1,17 @@
-import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
-import Checkbox from 'expo-checkbox';
-import {Formik, FormikHelpers} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {
   Alert,
   Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {COLORS, TEXTS} from 'src/constants';
 import {VerifyCodeProps} from 'src/navigation/NavigationTypes';
 import {AuthServices} from 'src/services/apiclient';
 import styles from './styles';
@@ -21,6 +21,7 @@ import {getIsDarkMode} from 'src/redux/slices/DarkModeSlice';
 import {useSelector} from 'react-redux';
 import {ImageBackground} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
   const {email, phone} = route.params;
@@ -84,21 +85,21 @@ const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
     setVerificationMethod(method);
     handleSendOTPVerify();
   };
+
   const image = !isDarkMode
     ? require('../../assets/images/verify-account-light.png')
     : require('../../assets/images/verify-account.png');
 
   const button = !isDarkMode
-    ? require('../../assets/images/button-rhino.png')
-    : require('../../assets/images/button-blue-demin.png');
+    ? require('../../assets/images/button-blue-demin.png')
+    : require('../../assets/images/button-rhino.png');
+
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: color.background}]}>
       <TouchableOpacity
         style={styles.arrowButton}
-        onPress={() => {
-          navigation.navigate('LoginScreen');
-        }}>
+        onPress={() => navigation.navigate('SignupScreen')}>
         <Icon
           name="arrow-back"
           size={31}
@@ -108,7 +109,12 @@ const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
       <Image
         source={image}
         resizeMode="stretch"
-        style={{height: 340, width: 450, marginBottom: 70, alignSelf: 'center'}}
+        style={{
+          height: 340,
+          width: 450,
+          marginBottom: 70,
+          alignSelf: 'center',
+        }}
       />
       <View style={styles.textContainer}>
         <Text style={[styles.title, {color: color.text}]}>
@@ -120,42 +126,49 @@ const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
       </View>
 
       {!verificationMethod ? (
-        <>
-          <View style={styles.buttonGroup}>
-            <ImageBackground
-              source={button}
-              style={styles.optionEmailButton}
-              resizeMode="stretch">
-              <TouchableOpacity
-                style={styles.selectedOption}
-                onPress={() => handleVerificationMethod('email')}>
-                <Text style={styles.selectedOptionText}>
-                  {translate('VerifyByEmail')}
-                </Text>
-              </TouchableOpacity>
-            </ImageBackground>
+        <View style={styles.buttonGroup}>
+          <ImageBackground
+            source={button}
+            style={styles.optionEmailButton}
+            resizeMode="stretch">
             <TouchableOpacity
-              style={[styles.button, {borderColor: color.border}]}
-              onPress={() => handleVerificationMethod('phone')}>
-              <Text style={[styles.buttonText, {color: color.text}]}>
-                {translate('VerifyByPhone')}
+              style={styles.selectedOption}
+              onPress={() => handleVerificationMethod('email')}>
+              <Text style={styles.selectedOptionText}>
+                {translate('VerifyByEmail')}
               </Text>
             </TouchableOpacity>
-          </View>
-        </>
+          </ImageBackground>
+          <TouchableOpacity
+            style={[styles.button, {borderColor: color.border}]}
+            onPress={() => handleVerificationMethod('phone')}>
+            <Text style={[styles.buttonText, {color: color.text}]}>
+              {translate('VerifyByPhone')}
+            </Text>
+          </TouchableOpacity>
+        </View>
       ) : (
-        <>
+        <View style={styles.OTPContainer}>
           <TextInput
-            style={styles.input}
-            placeholder="Enter OTP"
+            style={[styles.input, {borderColor: color.border}]}
+            placeholder={translate('EnterOTP')}
             value={code}
             onChangeText={setCode}
             keyboardType="numeric"
           />
-          <TouchableOpacity style={styles.button} onPress={handleVerifyOTP}>
-            <Text style={styles.buttonText}>Submit OTP</Text>
-          </TouchableOpacity>
-        </>
+          <ImageBackground
+            source={button}
+            style={styles.optionEmailButton}
+            resizeMode="stretch">
+            <TouchableOpacity
+              style={styles.selectedOption}
+              onPress={handleVerifyOTP}>
+              <Text style={styles.selectedOptionText}>
+                {translate('Submit OTP')}
+              </Text>
+            </TouchableOpacity>
+          </ImageBackground>
+        </View>
       )}
     </SafeAreaView>
   );

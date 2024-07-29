@@ -374,5 +374,7 @@
   "VerifyByEmail": "Xác Minh Bằng Email",
   "VerifyByPhone": "Xác Minh Bằng Điện Thoại",
   "Total expense for": "Chi tiêu của",
-  "Total income for": "Chi tiêu của"
+  "Total income for": "Chi tiêu của",
+  "EnterOTP": "Nhập Mã OTP",
+  "Submit OTP": "Xác nhận"
 }

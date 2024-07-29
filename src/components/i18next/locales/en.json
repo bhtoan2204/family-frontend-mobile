@@ -361,5 +361,7 @@
   "VerifyByEmail": "Verify By Email",
   "VerifyByPhone": "Verify By Phone",
   "Total expense for": "Total expense for",
-  "Total income for": "Total income for"
+  "Total income for": "Total income for",
+  "EnterOTP": "Enter OTP Code",
+  "Submit OTP": "Submit"
 }

@@ -68,13 +68,16 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: '#CCCCCC',
-    padding: 8,
+    padding: 18,
     borderRadius: 8,
     marginBottom: 16,
-    width: '80%',
     textAlign: 'center',
+    fontSize: 16,
   },
-
+  OTPContainer: {
+    width: '90%',
+    alignSelf: 'center',
+  }
 });
 
 export default styles;
