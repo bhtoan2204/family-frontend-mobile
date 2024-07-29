@@ -4,51 +4,23 @@ import {Formik, FormikHelpers} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
-  ImageBackground,
-  KeyboardAvoidingView,
-  Pressable,
-  ScrollView,
+  Alert,
+  SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  Image,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS, TEXTS} from 'src/constants';
-import {
-  SignupScreenProps,
-  VerifyCodeProps,
-} from 'src/navigation/NavigationTypes';
+import {VerifyCodeProps} from 'src/navigation/NavigationTypes';
 import {AuthServices} from 'src/services/apiclient';
-import * as WebBrowser from 'expo-web-browser';
-interface FormValues {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  password: string;
-  termsAndConditions: boolean;
-  birthdate: Date | null;
-  gender: string;
-  submit: null;
-}
-
-WebBrowser.maybeCompleteAuthSession();
-
-// Endpoint
-const discovery = {
-  authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
-  tokenEndpoint: 'https://oauth2.googleapis.com/token',
-  revocationEndpoint: 'https://oauth2.googleapis.com/revoke',
-};
 
 const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
   const {email, phone} = route.params;
   const [verificationMethod, setVerificationMethod] = useState<string | null>(
     null,
   );
-  const [otp, setOtp] = useState<string>('');
+  const [code, setCode] = useState<string>('');
 
   const handleSendOTPVerify = async () => {
     try {
@@ -65,15 +37,26 @@ const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
   const handleVerifyOTP = async () => {
     try {
       const params =
-        verificationMethod === 'phone' ? {phone, otp} : {email, otp};
+        verificationMethod === 'phone' ? {phone, code} : {email, code};
       const result = await AuthServices.verifyOTP(params);
       console.log('OTP verified successfully:', result);
-      // Handle successful verification (e.g., navigate to another screen)
+
+      // Display success alert
+      Alert.alert(
+        'Success',
+        'Your account has been successfully verified!',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('LoginScreen'),
+          },
+        ],
+        {cancelable: false},
+      );
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error in handleVerifyOTP:', error.message);
         console.error('Error stack trace:', error.stack);
-        // Log additional error properties if available
         if ((error as any).response) {
           const response = (error as any).response;
           console.error('Error response data:', response.data);
@@ -83,7 +66,7 @@ const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
       } else {
         console.error('Unexpected error:', error);
       }
-      // Handle verification error
+      Alert.alert('Error', 'Verification failed. Please try again.');
     }
   };
 
@@ -118,8 +101,8 @@ const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
           <TextInput
             style={styles.input}
             placeholder="Enter OTP"
-            value={otp}
-            onChangeText={setOtp}
+            value={code}
+            onChangeText={setCode}
             keyboardType="numeric"
           />
           <TouchableOpacity style={styles.button} onPress={handleVerifyOTP}>
@@ -130,6 +113,7 @@ const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -169,4 +153,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
 export default VerifyCode;

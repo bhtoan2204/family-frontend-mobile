@@ -13,7 +13,7 @@ const AuthUrl = {
   checkOTPForgotPassword: `${baseUrl}/api/v1/user/checkOTPForgotPassword`,
   resetPassword: `${baseUrl}/api/v1/user/resetPassword`,
   sendOTPVerify: `${baseUrl}/api/v1/user/register/sendOtpVerifyAccount`,
-  verifyAccount: `${baseUrl}/api/v1/user/register/verifyAccount`,
+  verifyOTP: `${baseUrl}/api/v1/user/register/verifyAccount`,
 };
 
 export default AuthUrl;

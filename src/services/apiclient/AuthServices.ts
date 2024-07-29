@@ -97,20 +97,14 @@ const AuthServices = {
   verifyOTP: async ({
     email,
     phone,
-    otp,
+    code,
   }: {
     email?: string;
     phone?: string;
-    otp: string;
+    code: string;
   }) => {
     try {
-      console.log('verifyOTP params:', { email, phone, otp });
-      const payload: { email?: string; phone?: string; otp: string } = { otp };
-      if (email) {
-        payload.email = email;
-      } else if (phone) {
-        payload.phone = phone;
-      }
+      const payload: { email?: string; phone?: string; code: string } = { email, phone, code };
   
       // Remove undefined properties from payload
       Object.keys(payload).forEach(key => {
@@ -119,7 +113,9 @@ const AuthServices = {
         }
       });
   
-      const response: AxiosResponse = await axios.post(AuthUrl.verifyAccount, payload);
+      console.log('verifyOTP params:', payload);
+  
+      const response: AxiosResponse = await axios.post(AuthUrl.verifyOTP, payload);
       const userData = response.data;
       if (response.status === 200) {
         return userData;
