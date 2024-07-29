@@ -87,8 +87,8 @@ const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
   };
 
   const image = !isDarkMode
-    ? require('../../assets/images/verify-account-light.png')
-    : require('../../assets/images/verify-account.png');
+    ? require('../../assets/images/verify-account.png')
+    : require('../../assets/images/verify-account-light.png');
 
   const button = !isDarkMode
     ? require('../../assets/images/button-blue-demin.png')
