@@ -355,5 +355,9 @@
   "phonenumber": "Phone Number",
   "emailaddress": "Email Address",
   "password": "Password",
-  "terms": "I agree to the terms and conditions"
+  "terms": "I agree to the terms and conditions",
+  "VerifyYourAccount": "Verify Your Account",
+  "VerifyYourAccountDetail": "Please select an option to verify your account",
+  "VerifyByEmail": "Verify By Email",
+  "VerifyByPhone": "Verify By Phone"
 }

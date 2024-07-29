@@ -4,6 +4,7 @@ import {Formik, FormikHelpers} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {
   Alert,
+  Image,
   SafeAreaView,
   Text,
   TextInput,
@@ -14,6 +15,12 @@ import {COLORS, TEXTS} from 'src/constants';
 import {VerifyCodeProps} from 'src/navigation/NavigationTypes';
 import {AuthServices} from 'src/services/apiclient';
 import styles from './styles';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
+import {getIsDarkMode} from 'src/redux/slices/DarkModeSlice';
+import {useSelector} from 'react-redux';
+import {ImageBackground} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
   const {email, phone} = route.params;
@@ -21,6 +28,9 @@ const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
     null,
   );
   const [code, setCode] = useState<string>('');
+  const translate = useSelector(getTranslate);
+  const color = useThemeColors();
+  const isDarkMode = useSelector(getIsDarkMode);
 
   const handleSendOTPVerify = async () => {
     try {
@@ -74,27 +84,64 @@ const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
     setVerificationMethod(method);
     handleSendOTPVerify();
   };
+  const image = !isDarkMode
+    ? require('../../assets/images/verify-account-light.png')
+    : require('../../assets/images/verify-account.png');
 
+  const button = !isDarkMode
+    ? require('../../assets/images/button-rhino.png')
+    : require('../../assets/images/button-blue-demin.png');
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Verify Your Account</Text>
-      <Text style={styles.subtitle}>
-        Choose a method to verify your account:
-      </Text>
+    <SafeAreaView
+      style={[styles.container, {backgroundColor: color.background}]}>
+      <TouchableOpacity
+        style={styles.arrowButton}
+        onPress={() => {
+          navigation.navigate('LoginScreen');
+        }}>
+        <Icon
+          name="arrow-back"
+          size={31}
+          style={[styles.backButton, {color: color.icon}]}
+        />
+      </TouchableOpacity>
+      <Image
+        source={image}
+        resizeMode="stretch"
+        style={{height: 340, width: 450, marginBottom: 70, alignSelf: 'center'}}
+      />
+      <View style={styles.textContainer}>
+        <Text style={[styles.title, {color: color.text}]}>
+          {translate('VerifyYourAccount')}
+        </Text>
+        <Text style={[styles.subtitle, {color: color.textSubdued}]}>
+          {translate('VerifyYourAccountDetail')}
+        </Text>
+      </View>
 
       {!verificationMethod ? (
         <>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => handleVerificationMethod('phone')}>
-            <Text style={styles.buttonText}>Verify by Phone</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => handleVerificationMethod('email')}>
-            <Text style={styles.buttonText}>Verify by Email</Text>
-          </TouchableOpacity>
+          <View style={styles.buttonGroup}>
+            <ImageBackground
+              source={button}
+              style={styles.optionEmailButton}
+              resizeMode="stretch">
+              <TouchableOpacity
+                style={styles.selectedOption}
+                onPress={() => handleVerificationMethod('email')}>
+                <Text style={styles.selectedOptionText}>
+                  {translate('VerifyByEmail')}
+                </Text>
+              </TouchableOpacity>
+            </ImageBackground>
+            <TouchableOpacity
+              style={[styles.button, {borderColor: color.border}]}
+              onPress={() => handleVerificationMethod('phone')}>
+              <Text style={[styles.buttonText, {color: color.text}]}>
+                {translate('VerifyByPhone')}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </>
       ) : (
         <>

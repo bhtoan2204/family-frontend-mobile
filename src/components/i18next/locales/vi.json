@@ -368,5 +368,9 @@
   "phonenumber": "Số Điện Thoại",
   "emailaddress": "Địa Chỉ Email",
   "password": "Mật Khẩu",
-  "terms": "Tôi đồng ý với các điều kiện và điều khoản"
+  "terms": "Tôi đồng ý với các điều kiện và điều khoản",
+  "VerifyYourAccount": "Xác Minh Tài Khoản",
+  "VerifyYourAccountDetail": "Vui lòng chọn cách xác minh tài khoản của bạn",
+  "VerifyByEmail": "Xác Minh Bằng Email",
+  "VerifyByPhone": "Xác Minh Bằng Điện Thoại"
 }
