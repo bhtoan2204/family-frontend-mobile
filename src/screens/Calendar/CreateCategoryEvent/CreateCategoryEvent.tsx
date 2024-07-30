@@ -19,6 +19,7 @@ import styles from './styles';
 import {selectSelectedFamily} from 'src/redux/slices/FamilySlice';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
+import {Toast} from 'react-native-toast-notifications';
 
 const colorPalette = [
   '#FF6633',
@@ -121,10 +122,15 @@ const CreateCategoryEventScreen: React.FC<CreateCategoryEventScreenProps> = ({
               fetchData();
               setIsUpdateModalVisible(false);
               setSelectedEventName('');
-              Alert.alert(t('successUpdate'), t('updateSuccessMessage'));
+              Toast.show(t('updateSuccessMessage'), {
+                type: 'success',
+              });
             } catch (error) {
               console.log('Error updating category event:', error);
               Alert.alert(t('errorUpdate'), t('updateErrorMessage'));
+              Toast.show(t('updateErrorMessage'), {
+                type: 'danger',
+              });
             }
           },
         },
@@ -149,9 +155,15 @@ const CreateCategoryEventScreen: React.FC<CreateCategoryEventScreenProps> = ({
               await CalendarServices.deleteCategoryEvent(id, family.id_family);
               fetchData();
               Alert.alert(t('successDelete'), t('deleteSuccessMessage'));
+              Toast.show(t('deleteSuccessMessage'), {
+                type: 'success',
+              });
             } catch (error) {
               console.log('Error deleting category event:', error);
               Alert.alert(t('errorDelete'), t('deleteErrorMessage'));
+              Toast.show(t('deleteErrorMessage'), {
+                type: 'danger',
+              });
             }
           },
           style: 'destructive',
