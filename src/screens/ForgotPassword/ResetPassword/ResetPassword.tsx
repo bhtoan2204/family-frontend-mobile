@@ -44,13 +44,24 @@ const ResetPasswordScreen = ({navigation}: ResetPasswordScreenProps) => {
   const handleChangePassword = async () => {
     try {
       console.log(email, phone, code, newPassword);
-      const response = await AuthServices.resetPassword({
-        email,
-        phone,
-        code,
-        password: newPassword,
-      });
+
+      // Construct the payload conditionally
+      const payload: {
+        email?: string;
+        phone?: string;
+        code: string;
+        password: string;
+      } = {code, password: newPassword};
+
+      if (email) {
+        payload.email = email;
+      } else if (phone) {
+        payload.phone = phone;
+      }
+
+      const response = await AuthServices.resetPassword(payload);
       console.log(response);
+
       if (response.message === 'Password has not been reset') {
         Alert.alert(t('error'), t('passwordResetFailed'));
         navigation.navigate('LoginScreen');
@@ -68,8 +79,8 @@ const ResetPasswordScreen = ({navigation}: ResetPasswordScreenProps) => {
   };
   const isDarkMode = useSelector(getIsDarkMode);
   const button = !isDarkMode
-    ? require('../../../assets/images/button-blue-demin.png')
-    : require('../../../assets/images/button-rhino.png');
+    ? require('../../../assets/images/button-rhino.png')
+    : require('../../../assets/images/button-blue-demin.png');
   return (
     <KeyboardAvoidingView
       style={styles.keyboardView}

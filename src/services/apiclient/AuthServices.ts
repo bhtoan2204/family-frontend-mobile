@@ -148,41 +148,43 @@ const AuthServices = {
     code,
     password,
   }: {
-    email: string;
-    phone: string;
+    email?: string;
+    phone?: string;
     code: string;
     password: string;
   }) => {
     try {
+      const payload: {
+        email?: string;
+        phone?: string;
+        code: string;
+        password: string;
+      } = {code, password};
+
       if (email) {
-        const response: AxiosResponse = await axios.post(
-          AuthUrl.resetPassword,
-          {
-            email: email,
-            code: code,
-            password: password,
-          },
-        );
-        if (response.status === 200) {
-          return response.data;
-        } else if (phone) {
-          const response: AxiosResponse = await axios.post(
-            AuthUrl.resetPassword,
-            {
-              phone: phone,
-              code: code,
-              password: password,
-            },
-          );
-          if (response.status === 200) {
-            return response.data;
-          }
-        }
+        payload.email = email;
+      } else if (phone) {
+        payload.phone = phone;
+      }
+
+      console.log('Reset Password Payload:', payload);
+
+      const response: AxiosResponse = await axios.post(
+        AuthUrl.resetPassword,
+        payload,
+      );
+
+      console.log('Reset Response:', response);
+
+      if (response.status === 200) {
+        return response.data;
       }
     } catch (error) {
+      console.error('Reset Password Error:', error);
       throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
+
   checkOTP: async ({
     email,
     phone,
