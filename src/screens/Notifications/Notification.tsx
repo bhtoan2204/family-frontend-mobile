@@ -137,7 +137,7 @@ const Notification = ({navigation}) => {
     if (socket) {
       socket.on('onNewMessage', handleNewMessage);
       socket.on('onNewFamilyMessage', handleNewMessageFamily);
-      socket.on('onNewNotification', handleNewNotification);
+      //socket.on('onNewNotification', handleNewNotification);
     }
 
     return () => {

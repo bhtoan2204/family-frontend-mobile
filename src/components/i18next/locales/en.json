@@ -370,5 +370,8 @@
   "minute": "minute",
   "hours": "hours",
   "hour": "hour",
-  "ago": "ago"
+  "ago": "ago",
+  "End Count": "End Count",
+  "Custom": "Custom",
+  "Until": "Until"
 }

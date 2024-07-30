@@ -1,22 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, Alert, Switch, ScrollView, KeyboardAvoidingView, Platform  } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  TextInput,
+  TouchableOpacity,
+  Text,
+  Alert,
+  Switch,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CalendarServices from 'src/services/apiclient/CalendarService';
-import { CreateEventScreenProps } from 'src/navigation/NavigationTypes';
+import {CreateEventScreenProps} from 'src/navigation/NavigationTypes';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import {AntDesign, Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ColorPicker from './ColorPicker';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import Custom from './Custom';
-import { RRule, RRuleStrOptions } from 'rrule';
-import { differenceInDays, differenceInWeeks, differenceInMonths, differenceInYears } from 'date-fns';
-import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
-import { CategoryEvent } from 'src/interface/calendar/CategoryEvent';
-import { TEXTS } from 'src/constants';
-import { getTranslate } from 'src/redux/slices/languageSlice';
-import { useThemeColors } from 'src/hooks/useThemeColor';
+import {RRule, RRuleStrOptions} from 'rrule';
+import {
+  differenceInDays,
+  differenceInWeeks,
+  differenceInMonths,
+  differenceInYears,
+} from 'date-fns';
+import {selectSelectedFamily} from 'src/redux/slices/FamilySlice';
+import {CategoryEvent} from 'src/interface/calendar/CategoryEvent';
+import {TEXTS} from 'src/constants';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
+import {Toast} from 'react-native-toast-notifications';
 
 const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   navigation,
@@ -30,7 +46,8 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   const [isPickerRepeatOpen, setIsPickerRepeatOpen] = useState(false);
   const [isPickerEndRepeatOpen, setIsPickerEndRepeatOpen] = useState(false);
   const [selectedOptionRepeat, setSelectedOptionRepeat] = useState('none');
-  const [selectedOptionEndRepeat, setSelectedOptionEndRepeat] = useState('never');
+  const [selectedOptionEndRepeat, setSelectedOptionEndRepeat] =
+    useState('never');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedDays, setSelectedDays] = useState<string | null>(null);
   const [selectedMonths, setSelectedMonths] = useState<string | null>(null);
@@ -38,10 +55,14 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   const [number, setNumber] = useState<number>(1);
   const [isAllDay, setIsAllDay] = useState(false);
   const [repeatEndDate, setRepeatEndDate] = useState(new Date());
-  const family= useSelector(selectSelectedFamily);
+  const family = useSelector(selectSelectedFamily);
   const [count, setCount] = useState(1);
-  const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(null);
-  const [eventCategory, setEventCategory] = useState<CategoryEvent | null> (null)
+  const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(
+    null,
+  );
+  const [eventCategory, setEventCategory] = useState<CategoryEvent | null>(
+    null,
+  );
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
 
@@ -54,22 +75,24 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   };
 
   const optionRepeat = [
-    { label: 'None', value: 'none' },
-    { label: 'Daily', value: 'daily' },
-    { label: 'Weekly', value: 'weekly' },
-    { label: 'Monthly', value: 'monthly' },
-    { label: 'Yearly', value: 'yearly' },
-    { label: 'Custom', value: 'custom' },
+    {label: 'None', value: 'none'},
+    {label: 'Daily', value: 'daily'},
+    {label: 'Weekly', value: 'weekly'},
+    {label: 'Monthly', value: 'monthly'},
+    {label: 'Yearly', value: 'yearly'},
+    {label: 'Custom', value: 'custom'},
   ];
 
   const optionEndRepeat = [
-    { label: 'Never', value: 'never' },
-    { label: 'Until', value: 'date' },
-    { label: 'Count', value: 'count' },
-
+    {label: 'Never', value: 'never'},
+    {label: 'Until', value: 'date'},
+    {label: 'Count', value: 'count'},
   ];
 
-  const handleDateChangeStart = (event: any, selectedDate: Date | undefined) => {
+  const handleDateChangeStart = (
+    event: any,
+    selectedDate: Date | undefined,
+  ) => {
     if (selectedDate) {
       setChosenDateStart(selectedDate);
     }
@@ -85,79 +108,82 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
     const timeStart = chosenDateStart;
     const timeEnd = chosenDateEnd;
     const frequency = selectedOptionRepeat.toUpperCase();
-    const interval = number === 0 ? 1 : number; 
-  
-    let count;
+    const interval = number === 0 ? 1 : number;
+
     let until;
-  
-    if (timeEnd) {
-      switch (frequency) {
-        case 'DAILY':
-          count = Math.floor(differenceInDays(timeEnd, timeStart) / interval);
-          break;
-        case 'WEEKLY':
-          count = Math.floor(differenceInWeeks(timeEnd, timeStart) / interval);
-          break;
-        case 'MONTHLY':
-          count = Math.floor(differenceInMonths(timeEnd, timeStart) / interval);
-          break;
-        case 'YEARLY':
-          count = Math.floor(differenceInYears(timeEnd, timeStart) / interval);
-          break;
-        default:
-          count = 1;
-      }
-    }
-  
+
     if (selectedOptionEndRepeat === 'date') {
       until = repeatEndDate;
     } else if (selectedOptionEndRepeat === 'count') {
       until = null;
     }
-  
+
     let recurrenceRule = '';
-  
+
     if (selectedOptionRepeat !== 'none') {
       const options: Partial<RRuleStrOptions> = {
         freq: RRule[frequency],
         interval: interval,
       };
-  
+
       if (count && selectedOptionEndRepeat === 'count') {
         options.count = count;
       }
-  
+
       if (selectedDays && selectedDays.length > 0) {
-        const daysMapping: { [key: string]: any } = {
-          'Monday': RRule.MO,
-          'Tuesday': RRule.TU,
-          'Wednesday': RRule.WE,
-          'Thursday': RRule.TH,
-          'Friday': RRule.FR,
-          'Saturday': RRule.SA,
-          'Sunday': RRule.SU,
+        const daysMapping: {[key: string]: any} = {
+          Monday: RRule.MO,
+          Tuesday: RRule.TU,
+          Wednesday: RRule.WE,
+          Thursday: RRule.TH,
+          Friday: RRule.FR,
+          Saturday: RRule.SA,
+          Sunday: RRule.SU,
         };
         options.byweekday = selectedDays.map(day => daysMapping[day]);
       }
       if (selectedMonths) {
-        const parsedMonths = Array.isArray(selectedMonths) ? selectedMonths : selectedMonths.split(',').map(month => parseInt(month, 10));
-        options.bymonth = parsedMonths.filter(month => !isNaN(month));
+        const parsedMonths = Array.isArray(selectedMonths)
+          ? selectedMonths
+          : selectedMonths.split(',').map(month => parseInt(month, 10));
+        options.bymonthday = parsedMonths.filter(day => day >= 1 && day <= 31);
       }
       if (selectedYears) {
-        const parsedYears = Array.isArray(selectedYears) ? selectedYears : selectedYears.split(',').map(year => parseInt(year, 10));
-        options.byyearday = parsedYears.filter(year => !isNaN(year));
+        const monthMapping: {[key: string]: number} = {
+          Jan: 1,
+          Feb: 2,
+          Mar: 3,
+          Apr: 4,
+          May: 5,
+          Jun: 6,
+          Jul: 7,
+          Aug: 8,
+          Sep: 9,
+          Oct: 10,
+          Nov: 11,
+          Dec: 12,
+        };
+        console.log(selectedYears);
+
+        const parsedMonths = Array.isArray(selectedYears)
+          ? selectedYears.map(month => monthMapping[month.trim()])
+          : selectedYears.split(',').map(month => monthMapping[month.trim()]);
+        console.log(parsedMonths);
+        options.bymonth = parsedMonths.filter(
+          month => month >= 1 && month <= 12,
+        );
       }
-  
+
       if (until) {
         options.until = until;
       }
-  
+
       const rule = new RRule(options as RRuleStrOptions);
       recurrenceRule = rule.toString();
-      recurrenceRule = recurrenceRule.replace(/^RRULE:/, '');
-      recurrenceRule= recurrenceRule+';';
+      recurrenceRule = recurrenceRule.replace(/^RRULE:/, '') + ';';
+      console.log(recurrenceRule);
     }
-    
+
     const eventDetails = {
       id_family: family?.id_family,
       title: title,
@@ -172,9 +198,9 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
       recurrence_id: null,
       recurrence_rule: recurrenceRule,
       start_timezone: null,
-      end_timezone: null
+      end_timezone: null,
     };
-  
+
     try {
       const message = await CalendarServices.CreateEvent(
         eventDetails.title,
@@ -192,31 +218,36 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
         eventDetails.end_timezone,
         eventDetails.id_family,
       );
-  
-      Alert.alert('Inform', message, [
-        {
-          text: 'OK',
-          onPress: () => {
-            navigation.goBack();
-          },
-        },
-      ]);
+
+      Toast.show(message, {
+        type: 'success',
+      });
     } catch (error) {
-      Alert.alert('Error', error.message);
+      Toast.show(translate('An error occurred while creating the event.'), {
+        type: 'danger',
+      });
     }
   };
-  
 
-  const handleRepeatEndDateChange = (event: any, selectedDate: Date | undefined) => {
+  const handleRepeatEndDateChange = (
+    event: any,
+    selectedDate: Date | undefined,
+  ) => {
     if (selectedDate) {
       setRepeatEndDate(selectedDate);
     }
   };
 
-  const handleCustomModalSubmit = (unit: string, number: number, selectedDays: string, selectedMonths: string, selectedYears: string) => {
+  const handleCustomModalSubmit = (
+    unit: string,
+    number: number,
+    selectedDays: string,
+    selectedMonths: string,
+    selectedYears: string,
+  ) => {
     setIsModalVisible(false);
     setSelectedOptionRepeat(unit);
-    console.log(unit)
+    console.log(selectedYears);
     setNumber(number);
     switch (unit) {
       case 'weekly':
@@ -250,275 +281,377 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: color.background }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 60}
-    >
-
-
-    <View style={[styles.modalContainer, {backgroundColor: color.background}]}>
-
-    <View style={{ backgroundColor: color.background, borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
-        <View style={styles.row}>
-          <Text style={[styles.headerTitle, {color: color.text}]}>{translate('add_new_event')}</Text>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="close" size={30} color={color.text} />
-          </TouchableOpacity>
-        </View>
-
-        <View>
-          <Text style={{ color: color.textSubdued, fontSize: 16 }}>{translate('title')}</Text>
-          <TextInput
-            style={[styles.input1, {backgroundColor: color.background}]}
-            placeholder={translate('enter_title')}
-            value={title}
-            onChangeText={setTitle}
-          />
-        </View>
-      </View>
-      <View style={styles.containerEnter}>
-        <View style={{ ...styles.column, backgroundColor: color.background, borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
-          <View style={[styles.row, { alignItems: 'center' }]}>
-            <Icon name="location" size={28} color={ color.text } />
-          </View>
-          <TextInput
-            style={[styles.input2, {backgroundColor: color.background}]}
-            placeholder={translate('enter_location')}
-            value={location}
-            onChangeText={setLocation}
-          />
-        </View>
-        <View style={{ ...styles.column, backgroundColor: color.background, borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 10 }}>
-          <View style={[styles.row, { alignItems: 'center' }]}>
-            <MaterialCommunityIcons
-              name="playlist-edit"
-              size={30}
-              style={{ color: color.text }}
-            />
-          </View>
-          <TextInput
-            style={[styles.input2, {backgroundColor: color.background}]}
-            placeholder={translate('Enter Description')}
-            value={description}
-            onChangeText={setDescription}
-          />
-        </View>
-      </View>
-      <View style={styles.datetimeContainer}>
-        <View style={styles.allDayConTainer}>
-          <Text style={[styles.text, {color: color.text}]}>{translate('all_day')}</Text>
-          <View style={styles.switches}>
-            <Switch
-              value={isAllDay}
-              onValueChange={setIsAllDay}
-            />
-          </View>
-        </View>
-        <View>
-          <View style={[styles.row, { backgroundColor: color.background, alignItems: 'center' }]}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialCommunityIcons
-                name="clock-time-four-outline"
-                size={30}
-                style={{ color:color.text }}
-              />
-              <Text style={{ fontSize: 16, color: color.text}}>
-              {translate('start')}
-              </Text>
-            </View>
-            <DateTimePicker
-              value={chosenDateStart}
-              mode={isAllDay ? 'date' : 'datetime'}
-              display="default"
-              onChange={handleDateChangeStart}
-            />
-          </View>
-          <View style={[styles.row, {  backgroundColor: color.background, borderBottomColor: '#ccc', paddingVertical: 10, alignItems: 'center' }]}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialCommunityIcons
-                name="clock-time-four-outline"
-                size={30}
-                style={{ color:color.text }}
-              />
-              <Text style={{ fontSize: 16, color:color.text }}>
-              {translate('end')}
-              </Text>
-            </View>
-            <DateTimePicker
-              value={chosenDateEnd}
-              mode={isAllDay ? 'date' : 'datetime'}
-              display="default"
-              onChange={handleDateChangeEnd}
-            />
-          </View>
-        </View>
-      </View>
-      <View style={[styles.row, { backgroundColor: color.background, borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center', zIndex: isPickerRepeatOpen ? 1000 : 1 }]}>
-        <MaterialCommunityIcons
-          name="repeat"
-          size={30}
-          style={{ color: color.text}}
-        />
-        <Text style={{ right: 30, fontSize: 16, color: color.text }}>
-        {translate('repeat')}
-        </Text>
-        <DropDownPicker
-          open={isPickerRepeatOpen}
-          setOpen={setIsPickerRepeatOpen}
-          value={selectedOptionRepeat}
-          items={optionRepeat.map(item => ({
-              ...item,
-              labelStyle: { color: color.text},
-              label: translate(item.label),
-            }))}
-          setValue={setSelectedOptionRepeat}
-          placeholder={translate('None')}
-          placeholderStyle={{ color: color.text}}
-           containerStyle={{
-            height: TEXTS.SCEEN_HEIGHT * 0.05,
-            width: TEXTS.SCREEN_WIDTH * 0.35,
-            borderBottomWidth: 1,
-            borderColor: color.textSubdued
-          }}
-          style={{
-            borderColor: color.background,
-            borderWidth: 1,
-            width: TEXTS.SCREEN_WIDTH * 0.35,
-            backgroundColor: color.background
-          }}
-          dropDownContainerStyle={{
-            width: TEXTS.SCREEN_WIDTH * 0.35,
-            borderColor: color.background,
-            borderWidth: 1,
-            backgroundColor: color.background,
-            zIndex: 1000
-          }}
-           ArrowUpIconComponent={({style}) => <Ionicons name="chevron-up" size={24} color={color.text} />}
-           ArrowDownIconComponent={({style}) => <Ionicons name="chevron-down" size={24} color={color.text} />}
-           TickIconComponent={({style}) => <AntDesign name="check" size={24} color={color.text} />}
-
-          textStyle={{ color: color.text }}
-          zIndex={1000}
-          zIndexInverse={1000}
-                />
-      </View>
-      {selectedOptionRepeat !== 'none' && (
-        <View style={[styles.row, { backgroundColor: color.background, borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center', zIndex: isPickerEndRepeatOpen ? 1000 : 1 }]}>
-          <MaterialCommunityIcons
-            name="calendar-end"
-            size={30}
-            style={{ color: color.text }}
-          />
-          <Text style={{ right: 30, fontSize: 16, color: color.text }}>
-          {translate('end_repeat')}
-          </Text>
-          <DropDownPicker
-            open={isPickerEndRepeatOpen}
-            setOpen={setIsPickerEndRepeatOpen}
-            value={selectedOptionEndRepeat}
-            items={optionEndRepeat.map(item => ({
-              ...item,
-              labelStyle: { color: color.text},
-              label: translate(item.label),
-
-            }))}
-            setValue={setSelectedOptionEndRepeat}
-            placeholder={translate('Never')}
-            placeholderStyle={{ color: color.text}}
-            containerStyle={{
-              height: TEXTS.SCEEN_HEIGHT * 0.05,
-              width: TEXTS.SCREEN_WIDTH * 0.35,
-              borderBottomWidth: 1,
-              borderColor: color.background
-            }}
+      style={{flex: 1, backgroundColor: color.background}}
+      behavior={Platform.OS === 'ios' ? 'padding' : 60}>
+      <View
+        style={[styles.modalContainer, {backgroundColor: color.background}]}>
+        <ScrollView
+          nestedScrollEnabled={true}
+          showsVerticalScrollIndicator={false}>
+          <View
             style={{
-              borderColor: color.background,
-              borderWidth: 1,
-              width: TEXTS.SCREEN_WIDTH * 0.35,
-              backgroundColor: color.background
-            }}
-            dropDownContainerStyle={{
-              width: TEXTS.SCREEN_WIDTH * 0.35,
-              borderColor: color.background,
-              borderWidth: 1,
               backgroundColor: color.background,
-              zIndex: 1000
-            }}
-            ArrowUpIconComponent={({style}) => <Ionicons name="chevron-up" size={24} color={color.text} />}
-            ArrowDownIconComponent={({style}) => <Ionicons name="chevron-down" size={24} color={color.text} />}
-            TickIconComponent={({style}) => <AntDesign name="check" size={24} color={color.text} />}
-            zIndex={1000}
-            zIndexInverse={1000}
-            textStyle={{ color: color.text }}
+              borderBottomWidth: 1,
+              borderBottomColor: '#ccc',
+              paddingVertical: 10,
+            }}>
+            <View style={styles.row}>
+              <Text style={[styles.headerTitle, {color: color.text}]}>
+                {translate('add_new_event')}
+              </Text>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Icon name="close" size={30} color={color.text} />
+              </TouchableOpacity>
+            </View>
 
-          />
-        </View>
-      )}
-      {selectedOptionEndRepeat === 'date' && (
-        <View style={[styles.row, { backgroundColor: color.background, borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center' }]}>
-          <MaterialCommunityIcons
-            name="calendar-end"
-            size={30}
-            color = {color.text}
-          />
-          <Text style={{ right: 30, fontSize: 16, color: color.text }}>{translate('End Date')}</Text>
-          <DateTimePicker
-            value={repeatEndDate}
-            mode="date"
-            display="default"
-            onChange={handleRepeatEndDateChange}
-          />
-        </View>
-      )}
-     {selectedOptionEndRepeat === 'count' && (
-        <View style={[styles.row, { backgroundColor: color.background, borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 5, alignItems: 'center' }]}>
-          <MaterialCommunityIcons
-            name="calendar-end"
-            size={30}
-            color = {color.text}
-          />
-          <Text style={{ right: 30, fontSize: 16, color: color.text }}>{translate('End Count')}</Text>
-          <TouchableOpacity onPress={handleDecrease}>
-            <MaterialCommunityIcons
-              name="minus-circle"
-              size={30}
-              style={[styles.icon, { marginRight: 5 }]}
-            />
-          </TouchableOpacity>
-          <Text style={{color: color.text}}>{count}</Text>
-          <TouchableOpacity onPress={handleIncrease}>
-            <MaterialCommunityIcons
-              name="plus-circle"
-              size={30}
-              style={[styles.icon, { marginLeft: 5 }]}
-            />
-          </TouchableOpacity>
-        </View>
-      )}
-
-
-      <ColorPicker 
-      navigation={navigation} 
-      id_Family = {family?.id_Family}
-      selectedColorIndex={selectedColorIndex}
-      setSelectedColorIndex={setSelectedColorIndex}
-      setEventCategory={setEventCategory}
-      />
-
-      <View style={[styles.formAction, { paddingVertical: 10 }]}>
-        <TouchableOpacity onPress={handleSubmit}>
-          <View style={styles.btn}>
-            <Text style={styles.btnText}>{translate('add_new_event')}</Text>
+            <View>
+              <Text style={{color: color.textSubdued, fontSize: 16}}>
+                {translate('title')}
+              </Text>
+              <TextInput
+                style={[
+                  styles.input1,
+                  {backgroundColor: color.background, color: color.text},
+                ]}
+                placeholder={translate('enter_title')}
+                value={title}
+                onChangeText={setTitle}
+              />
+            </View>
           </View>
-        </TouchableOpacity>
+          <View style={styles.containerEnter}>
+            <View
+              style={{
+                ...styles.column,
+                backgroundColor: color.background,
+                borderBottomWidth: 1,
+                borderBottomColor: '#ccc',
+                paddingVertical: 10,
+              }}>
+              <View style={[styles.row, {alignItems: 'center'}]}>
+                <Icon name="location" size={28} color={color.text} />
+              </View>
+              <TextInput
+                style={[
+                  styles.input2,
+                  {backgroundColor: color.background, color: color.text},
+                ]}
+                placeholder={translate('enter_location')}
+                value={location}
+                onChangeText={setLocation}
+              />
+            </View>
+            <View
+              style={{
+                ...styles.column,
+                backgroundColor: color.background,
+                borderBottomWidth: 1,
+                borderBottomColor: '#ccc',
+                paddingVertical: 10,
+              }}>
+              <View style={[styles.row, {alignItems: 'center'}]}>
+                <MaterialCommunityIcons
+                  name="playlist-edit"
+                  size={30}
+                  style={{color: color.text}}
+                />
+              </View>
+              <TextInput
+                style={[
+                  styles.input2,
+                  {backgroundColor: color.background, color: color.text},
+                ]}
+                placeholder={translate('Enter Description')}
+                value={description}
+                onChangeText={setDescription}
+              />
+            </View>
+          </View>
+          <View style={styles.datetimeContainer}>
+            <View style={styles.allDayConTainer}>
+              <Text style={[styles.text, {color: color.text}]}>
+                {translate('all_day')}
+              </Text>
+              <View style={styles.switches}>
+                <Switch value={isAllDay} onValueChange={setIsAllDay} />
+              </View>
+            </View>
+            <View>
+              <View
+                style={[
+                  styles.row,
+                  {backgroundColor: color.background, alignItems: 'center'},
+                ]}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <MaterialCommunityIcons
+                    name="clock-time-four-outline"
+                    size={30}
+                    style={{color: color.text}}
+                  />
+                  <Text style={{fontSize: 16, color: color.text}}>
+                    {translate('start')}
+                  </Text>
+                </View>
+                <DateTimePicker
+                  value={chosenDateStart}
+                  mode={isAllDay ? 'date' : 'datetime'}
+                  display="default"
+                  onChange={handleDateChangeStart}
+                />
+              </View>
+              <View
+                style={[
+                  styles.row,
+                  {
+                    backgroundColor: color.background,
+                    borderBottomColor: '#ccc',
+                    paddingVertical: 10,
+                    alignItems: 'center',
+                  },
+                ]}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <MaterialCommunityIcons
+                    name="clock-time-four-outline"
+                    size={30}
+                    style={{color: color.text}}
+                  />
+                  <Text style={{fontSize: 16, color: color.text}}>
+                    {translate('end')}
+                  </Text>
+                </View>
+                <DateTimePicker
+                  value={chosenDateEnd}
+                  mode={isAllDay ? 'date' : 'datetime'}
+                  display="default"
+                  onChange={handleDateChangeEnd}
+                />
+              </View>
+            </View>
+          </View>
+          <View
+            style={[
+              styles.row,
+              {
+                backgroundColor: color.background,
+                borderBottomWidth: 1,
+                borderBottomColor: '#ccc',
+                paddingVertical: 5,
+                alignItems: 'center',
+                zIndex: isPickerRepeatOpen ? 1000 : 1,
+              },
+            ]}>
+            <MaterialCommunityIcons
+              name="repeat"
+              size={30}
+              style={{color: color.text}}
+            />
+            <Text style={{right: 30, fontSize: 16, color: color.text}}>
+              {translate('repeat')}
+            </Text>
+            <DropDownPicker
+              open={isPickerRepeatOpen}
+              setOpen={setIsPickerRepeatOpen}
+              value={selectedOptionRepeat}
+              items={optionRepeat.map(item => ({
+                ...item,
+                labelStyle: {color: color.text},
+                label: translate(item.label),
+              }))}
+              setValue={setSelectedOptionRepeat}
+              placeholder={translate('None')}
+              placeholderStyle={{color: color.text}}
+              containerStyle={{
+                height: TEXTS.SCEEN_HEIGHT * 0.05,
+                width: TEXTS.SCREEN_WIDTH * 0.35,
+                borderBottomWidth: 1,
+                borderColor: color.textSubdued,
+              }}
+              style={{
+                borderColor: color.background,
+                borderWidth: 1,
+                width: TEXTS.SCREEN_WIDTH * 0.35,
+                backgroundColor: color.background,
+              }}
+              dropDownContainerStyle={{
+                width: TEXTS.SCREEN_WIDTH * 0.35,
+                borderColor: color.background,
+                borderWidth: 1,
+                backgroundColor: color.background,
+                zIndex: 1000,
+              }}
+              ArrowUpIconComponent={({style}) => (
+                <Ionicons name="chevron-up" size={24} color={color.text} />
+              )}
+              ArrowDownIconComponent={({style}) => (
+                <Ionicons name="chevron-down" size={24} color={color.text} />
+              )}
+              TickIconComponent={({style}) => (
+                <AntDesign name="check" size={24} color={color.text} />
+              )}
+              textStyle={{color: color.text}}
+              zIndex={1000}
+              zIndexInverse={1000}
+              listMode="SCROLLVIEW"
+            />
+          </View>
+          {selectedOptionRepeat !== 'none' && (
+            <View
+              style={[
+                styles.row,
+                {
+                  backgroundColor: color.background,
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#ccc',
+                  paddingVertical: 5,
+                  alignItems: 'center',
+                  zIndex: isPickerEndRepeatOpen ? 1000 : 1,
+                },
+              ]}>
+              <MaterialCommunityIcons
+                name="calendar-end"
+                size={30}
+                style={{color: color.text}}
+              />
+              <Text style={{right: 30, fontSize: 16, color: color.text}}>
+                {translate('end_repeat')}
+              </Text>
+              <DropDownPicker
+                open={isPickerEndRepeatOpen}
+                setOpen={setIsPickerEndRepeatOpen}
+                value={selectedOptionEndRepeat}
+                items={optionEndRepeat.map(item => ({
+                  ...item,
+                  labelStyle: {color: color.text},
+                  label: translate(item.label),
+                }))}
+                setValue={setSelectedOptionEndRepeat}
+                placeholder={translate('Never')}
+                placeholderStyle={{color: color.text}}
+                containerStyle={{
+                  height: TEXTS.SCEEN_HEIGHT * 0.05,
+                  width: TEXTS.SCREEN_WIDTH * 0.35,
+                  borderBottomWidth: 1,
+                  borderColor: color.background,
+                }}
+                style={{
+                  borderColor: color.background,
+                  borderWidth: 1,
+                  width: TEXTS.SCREEN_WIDTH * 0.35,
+                  backgroundColor: color.background,
+                }}
+                dropDownContainerStyle={{
+                  width: TEXTS.SCREEN_WIDTH * 0.35,
+                  borderColor: color.background,
+                  borderWidth: 1,
+                  backgroundColor: color.background,
+                  zIndex: 1000,
+                }}
+                ArrowUpIconComponent={({style}) => (
+                  <Ionicons name="chevron-up" size={24} color={color.text} />
+                )}
+                ArrowDownIconComponent={({style}) => (
+                  <Ionicons name="chevron-down" size={24} color={color.text} />
+                )}
+                TickIconComponent={({style}) => (
+                  <AntDesign name="check" size={24} color={color.text} />
+                )}
+                zIndex={1000}
+                zIndexInverse={1000}
+                textStyle={{color: color.text}}
+                listMode="SCROLLVIEW"
+              />
+            </View>
+          )}
+          {selectedOptionEndRepeat === 'date' && (
+            <View
+              style={[
+                styles.row,
+                {
+                  backgroundColor: color.background,
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#ccc',
+                  paddingVertical: 5,
+                  alignItems: 'center',
+                },
+              ]}>
+              <MaterialCommunityIcons
+                name="calendar-end"
+                size={30}
+                color={color.text}
+              />
+              <Text style={{right: 30, fontSize: 16, color: color.text}}>
+                {translate('End Date')}
+              </Text>
+              <DateTimePicker
+                value={repeatEndDate}
+                mode="date"
+                display="default"
+                onChange={handleRepeatEndDateChange}
+              />
+            </View>
+          )}
+          {selectedOptionEndRepeat === 'count' && (
+            <View
+              style={[
+                styles.row,
+                {
+                  backgroundColor: color.background,
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#ccc',
+                  paddingVertical: 5,
+                  alignItems: 'center',
+                },
+              ]}>
+              <MaterialCommunityIcons
+                name="calendar-end"
+                size={30}
+                color={color.text}
+              />
+              <Text style={{right: 30, fontSize: 16, color: color.text}}>
+                {translate('End Count')}
+              </Text>
+              <TouchableOpacity onPress={handleDecrease}>
+                <MaterialCommunityIcons
+                  name="minus-circle"
+                  size={30}
+                  style={[styles.icon, {marginRight: 5}]}
+                />
+              </TouchableOpacity>
+              <Text style={{color: color.text}}>{count}</Text>
+              <TouchableOpacity onPress={handleIncrease}>
+                <MaterialCommunityIcons
+                  name="plus-circle"
+                  size={30}
+                  style={[styles.icon, {marginLeft: 5}]}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+
+          <ColorPicker
+            navigation={navigation}
+            id_Family={family?.id_Family}
+            selectedColorIndex={selectedColorIndex}
+            setSelectedColorIndex={setSelectedColorIndex}
+            setEventCategory={setEventCategory}
+          />
+
+          <View style={[styles.formAction, {paddingVertical: 10}]}>
+            <TouchableOpacity onPress={handleSubmit}>
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>{translate('add_new_event')}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          {selectedOptionRepeat === 'custom' && (
+            <Custom
+              isVisible={isModalVisible}
+              onClose={() => setIsModalVisible(false)}
+              onSave={handleCustomModalSubmit}
+            />
+          )}
+        </ScrollView>
       </View>
-      {selectedOptionRepeat === 'custom' && (
-        <Custom
-          isVisible={isModalVisible}
-          onClose={() => setIsModalVisible(false)}
-          onSave={handleCustomModalSubmit}
-        />
-      )}
-    </View>
     </KeyboardAvoidingView>
   );
 };

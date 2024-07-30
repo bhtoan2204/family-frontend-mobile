@@ -383,5 +383,8 @@
   "minute": "phút",
   "hours": "giờ",
   "hour": "giờ",
-  "ago": "trước"
+  "ago": "trước",
+  "End Count": "Số đếm",
+  "Custom": "Tùy chọn",
+  "Until": "Đến"
 }
