@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { COLORS } from 'src/constants';
+import {StyleSheet} from 'react-native';
+import {COLORS} from 'src/constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: COLORS.white,
   },
   selectedTabButton: {
     backgroundColor: COLORS.BlueLight,
@@ -58,7 +57,6 @@ const styles = StyleSheet.create({
   addImage: {
     color: '#333333',
   },
- 
 
   bottomLine: {
     position: 'absolute',
@@ -115,7 +113,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: '#2196f3',
+    backgroundColor: COLORS.Rhino,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -124,6 +122,12 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#ffffff',
     fontSize: 16,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    padding: 5,
   },
 });
 

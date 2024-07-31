@@ -1,47 +1,56 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; 
-import { useSelector } from 'react-redux';
-import { getTranslate } from 'src/redux/slices/languageSlice';
-import { COLORS } from 'src/constants';
-import { useThemeColors } from 'src/hooks/useThemeColor';
+import {TouchableOpacity, Text, StyleSheet, View} from 'react-native';
+import {Ionicons} from '@expo/vector-icons';
+import {useSelector} from 'react-redux';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
 
+const DeleteButton = ({onPress}) => {
+  const translate = useSelector(getTranslate);
+  const color = useThemeColors();
 
-const DeleteButton = ({ onPress }) => {
-    const translate = useSelector(getTranslate);
-    const color = useThemeColors();
   return (
-    <TouchableOpacity
-      style={[styles.deleteButton, { backgroundColor: color.background, borderColor: 'red'}]}
-      onPress={onPress}
-    >
-      <Ionicons name="trash-outline" size={24} color='red' style={styles.editIcon} />
-      <Text style={[styles.deleteText, {color: color.text}]}>{translate('Delete')}</Text>
-
-    </TouchableOpacity>
+    <View style={styles.buttonContainer}>
+      <TouchableOpacity
+        style={[styles.button, {backgroundColor: 'red'}]}
+        onPress={onPress}>
+        {/* <Ionicons
+          name="trash-outline"
+          size={28}
+          color={'white'}
+          style={styles.icon}
+        /> */}
+        <Text style={[styles.deleteText, {color: 'white'}]}>
+          {translate('Delete')}
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  deleteButton: {
-    borderWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
+  buttonContainer: {
     alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 70,
-    borderRadius: 10,
     marginTop: 10,
-    alignSelf: 'center',
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 100,
+    paddingVertical: 12,
+    borderRadius: 10,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
   },
   deleteText: {
-    color: 'white',
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    marginLeft: 10,
+    marginLeft: 12,
   },
-  editIcon: {
-  },
+  icon: {},
 });
 
 export default DeleteButton;

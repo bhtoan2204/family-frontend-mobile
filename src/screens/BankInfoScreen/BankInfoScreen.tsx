@@ -1,17 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { Text, Image, View, StyleSheet, FlatList, Linking } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { PackageServices } from 'src/services/apiclient';
-import { TextInput } from 'react-native-paper';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import React, {useEffect, useState} from 'react';
+import {Text, Image, View, StyleSheet, FlatList, Linking} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {PackageServices} from 'src/services/apiclient';
+import {TextInput} from 'react-native-paper';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { BankInfoScreenProps } from 'src/navigation/NavigationTypes';
+import {BankInfoScreenProps} from 'src/navigation/NavigationTypes';
 import baseUrl from 'src/services/urls/baseUrl';
-import { useSelector } from 'react-redux';
-import { getTranslate } from 'src/redux/slices/languageSlice';
-import { useThemeColors } from 'src/hooks/useThemeColor';
-import { selectCombo, selectOption, selectPackage, selectService } from 'src/redux/slices/PackageSlice';
+import {useSelector} from 'react-redux';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
+import {
+  selectCombo,
+  selectOption,
+  selectPackage,
+  selectService,
+} from 'src/redux/slices/PackageSlice';
 
 type Bank = {
   id: number;
@@ -25,10 +30,10 @@ interface Event {
   url: string;
 }
 
-const BankInfoScreen = ({ route, navigation }: BankInfoScreenProps) => {
+const BankInfoScreen = ({route, navigation}: BankInfoScreenProps) => {
   const [banks, setBanks] = useState<Bank[]>([]);
   const [searchValue, setSearchValue] = useState('');
-  const { id_family, discountCode } = route.params;
+  const {id_family, discountCode} = route.params;
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
   const packages = useSelector(selectPackage);
@@ -55,43 +60,57 @@ const BankInfoScreen = ({ route, navigation }: BankInfoScreenProps) => {
 
   const handleSelectBank = async (bankCode?: string) => {
     try {
-
-      if (option === "Package") {
-          const paymentURL = await PackageServices.createPaymentURL(packages?.id_main_package,null, null, id_family, bankCode, discountCode);
-          console.log('Payment URL:', paymentURL);
-          if (paymentURL) {
-            Linking.openURL(paymentURL);
-          } else {
-            console.log('Failed to create payment URL');
-          }
-      }
-      else if (option==="Service"){
-        const paymentURL = await PackageServices.createPaymentURL(null, service?.id_extra_package, null, id_family, bankCode, discountCode);
-          console.log('Payment URL:', paymentURL);
-          if (paymentURL) {
-            Linking.openURL(paymentURL);
-          } else {
-            console.log('Failed to create payment URL');
-          }
-      }
-      else if (option==="Combo"){
-        const paymentURL = await PackageServices.createPaymentURL(null, null, Combo?.id_combo_package, id_family, bankCode, discountCode);
-          console.log('Payment URL:', paymentURL);
-          if (paymentURL) {
-            Linking.openURL(paymentURL);
-          } else {
-            console.log('Failed to create payment URL');
-          }
+      console.log(id_family);
+      if (option === 'Package') {
+        const paymentURL = await PackageServices.createPaymentURL(
+          packages?.id_main_package,
+          null,
+          null,
+          id_family,
+          bankCode,
+          discountCode,
+        );
+        console.log('Payment URL:', paymentURL);
+        if (paymentURL) {
+          Linking.openURL(paymentURL);
+        } else {
+          console.log('Failed to create payment URL');
+        }
+      } else if (option === 'Service') {
+        const paymentURL = await PackageServices.createPaymentURL(
+          null,
+          service?.id_extra_package,
+          null,
+          id_family,
+          bankCode,
+          discountCode,
+        );
+        console.log('Payment URL:', paymentURL);
+        if (paymentURL) {
+          Linking.openURL(paymentURL);
+        } else {
+          console.log('Failed to create payment URL');
+        }
+      } else if (option === 'Combo') {
+        const paymentURL = await PackageServices.createPaymentURL(
+          null,
+          null,
+          Combo?.id_combo_package,
+          id_family,
+          bankCode,
+          discountCode,
+        );
+        console.log('Payment URL:', paymentURL);
+        if (paymentURL) {
+          Linking.openURL(paymentURL);
+        } else {
+          console.log('Failed to create payment URL');
+        }
       }
     } catch (error: any) {
       console.log('Error selecting bank:', error);
     }
   };
-
-
-
-
-
 
   const handleReturnURL = async (url: string) => {
     console.log('URL được truyền vào hàm handleReturnURL:', url);
@@ -109,7 +128,7 @@ const BankInfoScreen = ({ route, navigation }: BankInfoScreenProps) => {
   };
 
   const handleOpenURL = async (event: Event) => {
-    const { url } = event;
+    const {url} = event;
     console.log('URL được truyền vào trong hàm handleOpenURL:', url);
 
     if (url.startsWith(`${baseUrl}/payment/vnpay_return`)) {
@@ -137,13 +156,19 @@ const BankInfoScreen = ({ route, navigation }: BankInfoScreenProps) => {
   }, []);
 
   return (
-    <SafeAreaView style={{ backgroundColor: color.background, flex: 1 }}>
+    <SafeAreaView style={{backgroundColor: color.background, flex: 1}}>
       <View style={styles.headerfile}>
-        <TouchableOpacity onPress={()=> {navigation.goBack()}}>
-          <Icon name="close" size={24} color={color.text}/>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}>
+          <Icon name="close" size={24} color={color.text} />
         </TouchableOpacity>
         <View style={styles.titleContainer}>
-          <Text style={[styles.title, {color: color.text}]}>   {translate('bank')}</Text>
+          <Text style={[styles.title, {color: color.text}]}>
+            {' '}
+            {translate('bank')}
+          </Text>
         </View>
       </View>
       <View style={styles.inputWrapper}>
@@ -151,7 +176,10 @@ const BankInfoScreen = ({ route, navigation }: BankInfoScreenProps) => {
           <TextInput
             placeholder={translate('search_placeholder')}
             placeholderTextColor="gray"
-            style={[styles.input, { backgroundColor: color.background, color:color.white }]}
+            style={[
+              styles.input,
+              {backgroundColor: color.background, color: color.white},
+            ]}
             onChangeText={handleSearchChange}
             value={searchValue}
           />
@@ -165,16 +193,15 @@ const BankInfoScreen = ({ route, navigation }: BankInfoScreenProps) => {
         data={filteredBanks}
         numColumns={3}
         keyExtractor={item => item.id.toString()}
-        renderItem={({ item: bank }) => (
+        renderItem={({item: bank}) => (
           <TouchableOpacity
             onPress={() => handleSelectBank(bank.code)}
-            style={styles.touchable}
-          >
-            <Image source={{ uri: bank.logo }} style={styles.image} />
+            style={styles.touchable}>
+            <Image source={{uri: bank.logo}} style={styles.image} />
           </TouchableOpacity>
         )}
-        contentContainerStyle={{ paddingBottom: 20 }} 
-        ListFooterComponent={<View style={{ height: 50 }} />} 
+        contentContainerStyle={{paddingBottom: 20}}
+        ListFooterComponent={<View style={{height: 50}} />}
       />
     </SafeAreaView>
   );
@@ -213,7 +240,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 20,
     top: '30%',
-    transform: [{ translateY: -8 }],
+    transform: [{translateY: -8}],
   },
   text1: {
     color: 'gray',

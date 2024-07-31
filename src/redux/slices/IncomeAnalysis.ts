@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../store';
-import { DailyIncome } from 'src/interface/income/IncomeDaily';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {RootState} from '../store';
+import {DailyIncome} from 'src/interface/income/IncomeDaily';
 
 interface IncomeSliceState {
   incomeList: DailyIncome[];
@@ -24,42 +24,60 @@ const incomeSlice = createSlice({
   reducers: {
     setIncomeList: (state, action: PayloadAction<DailyIncome[]>) => {
       state.incomeList = action.payload;
-      state.sumIncome = action.payload.reduce((sum, income) => sum + income.amount, 0);
+      state.sumIncome = action.payload.reduce(
+        (sum, income) => sum + income.amount,
+        0,
+      );
     },
     setSelectedIncome: (state, action: PayloadAction<DailyIncome | null>) => {
       state.selectedIncome = action.payload;
     },
-    setSelectedOptionIncome: (state, action: PayloadAction<'Day' | 'Month' | 'Year'>) => {
+    setSelectedOptionIncome: (
+      state,
+      action: PayloadAction<'Day' | 'Month' | 'Year'>,
+    ) => {
       state.selectedOptionIncome = action.payload;
     },
     setSelectedDate: (state, action: PayloadAction<string>) => {
       state.selectedDateIncome = action.payload;
     },
     deleteIncome: (state, action: PayloadAction<number>) => {
-      const incomeToRemove = state.incomeList.find(income => income.id_income === action.payload);
+      const incomeToRemove = state.incomeList.find(
+        income => income.id_income === action.payload,
+      );
       if (incomeToRemove) {
         state.sumIncome -= incomeToRemove.amount;
       }
-      state.incomeList = state.incomeList.filter(income => income.id_income !== action.payload);
-      if (state.selectedIncome && state.selectedIncome.id_income === action.payload) {
+      state.incomeList = state.incomeList.filter(
+        income => income.id_income !== action.payload,
+      );
+      if (
+        state.selectedIncome &&
+        state.selectedIncome.id_income === action.payload
+      ) {
         state.selectedIncome = null;
       }
     },
     updateIncome: (state, action: PayloadAction<Partial<DailyIncome>>) => {
       const payload = action.payload;
-      
-      const index = state.incomeList.findIndex(income => income.id_income === payload.id_income);
-      
+
+      const index = state.incomeList.findIndex(
+        income => income.id_income === payload.id_income,
+      );
+
       if (index !== -1) {
         const oldAmount = state.incomeList[index].amount;
-        state.incomeList[index] = { ...state.incomeList[index], ...payload };
+        state.incomeList[index] = {...state.incomeList[index], ...payload};
 
         const newAmount = state.incomeList[index].amount;
         state.sumIncome = state.sumIncome - oldAmount + newAmount;
       }
-      
-      if (state.selectedIncome && state.selectedIncome.id_income === payload.id_income) {
-        state.selectedIncome = { ...state.selectedIncome, ...payload };
+
+      if (
+        state.selectedIncome &&
+        state.selectedIncome.id_income === payload.id_income
+      ) {
+        state.selectedIncome = {...state.selectedIncome, ...payload};
       }
     },
     setSumIncome(state, action: PayloadAction<number>) {
@@ -68,12 +86,23 @@ const incomeSlice = createSlice({
   },
 });
 
-export const { setSumIncome, setIncomeList, setSelectedIncome, setSelectedOptionIncome, setSelectedDate, deleteIncome, updateIncome } = incomeSlice.actions;
+export const {
+  setSumIncome,
+  setIncomeList,
+  setSelectedIncome,
+  setSelectedOptionIncome,
+  setSelectedDate,
+  deleteIncome,
+  updateIncome,
+} = incomeSlice.actions;
 
 export const getIncomeList = (state: RootState) => state.income.incomeList;
-export const getSelectedIncome = (state: RootState) => state.income.selectedIncome;
-export const getSelectedOption = (state: RootState) => state.income.selectedOptionIncome;
-export const getSelectedDate = (state: RootState) => state.income.selectedDateIncome;
+export const getSelectedIncome = (state: RootState) =>
+  state.income.selectedIncome;
+export const getSelectedOption = (state: RootState) =>
+  state.income.selectedOptionIncome;
+export const getSelectedDate = (state: RootState) =>
+  state.income.selectedDateIncome;
 export const getSumIncome = (state: RootState) => state.income.sumIncome;
 
 export default incomeSlice.reducer;

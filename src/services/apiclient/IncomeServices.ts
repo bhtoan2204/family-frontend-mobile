@@ -79,22 +79,25 @@ const IncomeServices = {
       console.error('Error in getIncomeSource:', error.message);
     }
   },
-  createIncomeType: async (id_family: number | null, name: string) => {
+  createIncomeType: async (
+    id_family: number | null,
+    income_source_name: string,
+  ) => {
     try {
       const response: AxiosResponse = await instance.post(
         `${baseUrl}/api/v1/finance/incomeSource/createIncomeSource`,
         {
           id_family,
-          name,
+          income_source_name,
         },
       );
-      if (response.status === 200) {
-        return response.status;
+      if (response.status === 201) {
+        return response.data.data;
       } else {
-        console.error('Error in createIncomeType');
+        //console.error('Error in createIncomeType');
       }
     } catch (error: any) {
-      console.error('Error in createIncomeType:', error.message);
+      //console.error('Error in createIncomeType:', error.message);
     }
   },
   deleteIncomeSource: async (
@@ -106,12 +109,13 @@ const IncomeServices = {
         `${baseUrl}/api/v1/finance/incomeSource/deleteIncomeSource/${id_family}/${id_income_source}`,
       );
       if (response.status === 204) {
-        return response.status;
+        return true;
       } else {
-        console.error('Error in deleteIncomeSource');
+        return false;
+        //console.error('Error in deleteIncomeSource');
       }
     } catch (error: any) {
-      console.error('Error in deleteIncomeSource:', error.message);
+      //console.error('Error in deleteIncomeSource:', error.message);
     }
   },
 

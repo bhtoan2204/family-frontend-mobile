@@ -5,11 +5,21 @@ const styles = StyleSheet.create({
   container: {
     padding: 24,
   },
+
+  headerfile: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+  },
+  closeButton: {
+    marginRight: 0,
+  },
   title: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: COLORS.EerieBlack,
-    marginBottom: 12,
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 25,
+    fontWeight: 'bold',
   },
   /** Radio */
   radio: {
@@ -62,7 +72,7 @@ const styles = StyleSheet.create({
   radioDescription: {
     fontSize: 15,
     fontWeight: '500',
-    color: '#848a96',
+    color: COLORS.Rhino,
   },
   radioInput: {
     position: 'absolute',
@@ -76,7 +86,7 @@ const styles = StyleSheet.create({
   },
   radioInputActive: {
     borderWidth: 7,
-    borderColor: COLORS.BrandeisBlue1,
+    borderColor: COLORS.DenimBlue,
   },
   btn: {
     alignItems: 'center',
@@ -100,11 +110,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  headerfile: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 24,
-  },
+
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -121,6 +127,34 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  faqContainer: {
+    padding: 16,
+    backgroundColor: 'white',
+    marginTop: 20,
+    borderRadius: 8,
+    elevation: 2,
+  },
+  faqTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 0,
+  },
+  faqItem: {
+    marginBottom: 15,
+  },
+  faqQuestion: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  faqAnswer: {
+    fontSize: 14,
+    marginTop: 5,
+  },
+  faqHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 

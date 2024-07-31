@@ -242,10 +242,10 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
                   currency: 'VND',
                 })}
               </Text>
-              <Text
+              {/* <Text
                 style={[styles.serviceDescription, {color: color.textSubdued}]}>
                 {pkg.description}
-              </Text>
+              </Text> */}
 
               <View style={styles.serviceActions}>
                 <TouchableOpacity

@@ -132,14 +132,10 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
               style={[styles.buyPackageButton, styles.button]}
               onPress={() => onRenewPress(family)}>
               <View style={styles.buttonContent}>
-                <Text
-                  style={[
-                    styles.buyServiceButtonText,
-                    {color: color.text, marginRight: 5},
-                  ]}>
+                <Text style={[styles.buyServiceButtonText, {marginRight: 5}]}>
                   {translate('Renew Family')}
                 </Text>
-                <Icon name="arrow-forward" size={20} color={color.text} />
+                <Icon name="arrow-forward" size={20} color="white" />
               </View>
             </TouchableOpacity>
           </View>
@@ -155,12 +151,14 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.backButton}>
-            <Icon name="arrow-back" size={30} color={color.text} />
+            <Icon name="close" size={30} color={color.text} />
           </TouchableOpacity>
-          <Text style={[styles.headerText, {color: color.text}]}>
-            {translate('FAMILY_MANAGEMENT')}
-          </Text>
-          <View style={{flex: 1}} />
+          <View style={styles.headerTextContainer}>
+            <Text style={[styles.headerText, {color: color.text}]}>
+              {translate('FAMILY_MANAGEMENT')}
+            </Text>
+          </View>
+          <View style={styles.placeholder} />
         </View>
 
         <View style={styles.buttonContainer}>

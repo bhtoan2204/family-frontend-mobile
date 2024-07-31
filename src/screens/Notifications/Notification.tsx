@@ -66,7 +66,7 @@ const Notification = ({navigation}) => {
   };
 
   const handleNewNotification = async (message: Noti) => {
-    if (message.createdAt != profile.id_user) {
+    if (message.createdAt === profile?.id_user) {
       await Notifications.scheduleNotificationAsync({
         content: {
           title: `${message.familyInfo.name}`,

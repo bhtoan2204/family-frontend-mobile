@@ -82,9 +82,7 @@ const ExpenseScreen = ({navigation}: ExpenseScreenProps) => {
         formattedDateTo,
       );
       if (response) {
-        dispatch(
-          setExpenses(reset ? response.data : [...expenses, ...response.data]),
-        );
+        dispatch(setExpenses(response.data));
         setTotalPageExpense(Math.ceil(response.total / itemsPerPage));
         dispatch(setSumExpense(response.sum));
       }

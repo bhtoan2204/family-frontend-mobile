@@ -70,9 +70,7 @@ const IncomeScreen = ({navigation}: IncomeScreenProps) => {
       );
       if (response) {
         setTotalPageIncome(Math.ceil(response.total / itemsPerPage));
-        dispatch(
-          setIncomeList(reset ? response.data : [...income, ...response.data]),
-        );
+        dispatch(setIncomeList(response.data));
         dispatch(setSumIncome(response.sum));
       }
     } catch (error) {

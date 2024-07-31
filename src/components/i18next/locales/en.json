@@ -56,7 +56,7 @@
   "PASSWORD_REQUIRED": "Password is required",
   "EMAIL_PLACEHOLDER": "Enter your email address",
   "PASSWORD_PLACEHOLDER": "Enter your password",
-  "FAMILY_MANAGEMENT": "Family management",
+  "FAMILY_MANAGEMENT": "Family Management",
   "YOUR_FAMILIES": "Your families",
   "BUY_SERVICE": "Buy service",
   "FAMILY_MEMBERS": "Số thành viên",
@@ -376,7 +376,7 @@
   "Custom": "Custom",
   "Until": "Until",
   "deleteCategoryWithEventsErrorMessage": "Cannot delete the category because it has related events.",
-  "Renew Family": "Renew Family",
+  "Renew Family": "Extend family",
   "Vietnamese": "Vietnamese",
   "English": "English",
   "plan_your_day": "Plan your day\nwith",
@@ -410,5 +410,14 @@
   "Organize and track groceries.": "Organize and track groceries.",
   "Are you sure you want to leave this family?": "Are you sure you want to leave this family?",
   "Leave": "Leave",
-  "Members": "Members"
+  "Members": "Members",
+  "Discount Code": "Discount code",
+
+  "Create": "Create",
+  "Create category successfully": "Create category successfully",
+  "Fail to create category": "Fail to create category",
+  "An error occurred while creating the category.": "An error occurred while creating the category.",
+  "Are you sure you want to delete this category?": "Are you sure you want to delete this category?",
+  "The category has been deleted successfully": "The category has been deleted successfully",
+  "An error occurred while deleting the category.": "An error occurred while deleting the category."
 }

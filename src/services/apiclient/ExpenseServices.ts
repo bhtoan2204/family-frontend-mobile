@@ -179,23 +179,23 @@ const ExpenseServices = {
     }
   },
 
-  createExpenseType: async (id_family: number | null, name: string) => {
+  createExpenseType: async (
+    id_family: number | null,
+    expense_type_name: string,
+  ) => {
     try {
       const response: AxiosResponse = await instance.post(
         `${baseUrl}/api/v1/finance/expenseditureType/createExpenseType`,
         {
           id_family,
-          name,
+          expense_type_name,
         },
       );
       if (response.status === 200) {
-        return response.status;
+        return response.data.data;
       } else {
-        console.error('Error in createExpenseType');
       }
-    } catch (error: any) {
-      console.error('Error in createExpenseType:', error.message);
-    }
+    } catch (error: any) {}
   },
   deleteExpenseType: async (
     id_family: number | null,
@@ -206,12 +206,13 @@ const ExpenseServices = {
         `${baseUrl}/api/v1/finance/expenseditureType/deleteExpenseType/${id_family}/${id_expenditure_type}`,
       );
       if (response.status === 204) {
-        return response.status;
+        return true;
       } else {
-        console.error('Error in deleteExpenseType');
+        return false;
+        //console.error('Error in deleteExpenseType');
       }
     } catch (error: any) {
-      console.error('Error in deleteExpenseType:', error.message);
+      //console.error('Error in deleteExpenseType:', error.message);
     }
   },
 

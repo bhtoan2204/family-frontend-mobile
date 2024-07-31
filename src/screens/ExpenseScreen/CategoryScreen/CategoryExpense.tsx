@@ -1,33 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList,TouchableOpacity, Image,Modal,TextInput,Alert,} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Image,
+  Modal,
+  TextInput,
+  Alert,
+} from 'react-native';
 import ExpenseServices from 'src/services/apiclient/ExpenseServices';
-import { CategoryExpenseScreenProps } from 'src/navigation/NavigationTypes';
+import {CategoryExpenseScreenProps} from 'src/navigation/NavigationTypes';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectSelectedFamily } from 'src/redux/slices/FamilySlice';
-import { selectExpenseTypes, setSelectedExpenseType } from 'src/redux/slices/ExpenseTypeSlice';
-import { selectIncomeTypes, setSelectedIncomeType } from 'src/redux/slices/IncomeTypeSlice';
-import { IncomeServices } from 'src/services/apiclient';
-import { setType } from 'src/redux/slices/FinanceSlice';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { getTranslate, selectLocale } from 'src/redux/slices/languageSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectSelectedFamily} from 'src/redux/slices/FamilySlice';
+import {
+  createExpenseType,
+  deleteExpenseType,
+  selectExpenseTypes,
+  setSelectedExpenseType,
+} from 'src/redux/slices/ExpenseTypeSlice';
+import {
+  addIncomeType,
+  deleteIncomeType,
+  selectIncomeTypes,
+  setSelectedIncomeType,
+} from 'src/redux/slices/IncomeTypeSlice';
+import {IncomeServices} from 'src/services/apiclient';
+import {setType} from 'src/redux/slices/FinanceSlice';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
+import {Toast} from 'react-native-toast-notifications';
 
-const CategoryExpenseScreen = ({ navigation }: CategoryExpenseScreenProps) => {
+const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
   const expenseType = useSelector(selectExpenseTypes);
   const incomeCategories = useSelector(selectIncomeTypes);
   const family = useSelector(selectSelectedFamily);
   const dispatch = useDispatch();
-  const location = useSelector(selectLocale)
+  const location = useSelector(selectLocale);
   const translate = useSelector(getTranslate);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const [newCategoryName, setNewCategoryName] = useState<string>('');
-  const [selectedCategoryType, setSelectedCategoryType] = useState<string>('Expense');
+  const [selectedCategoryType, setSelectedCategoryType] =
+    useState<string>('Expense');
   const urlFood =
     'https://img.freepik.com/premium-vector/icon-food-drink-illustration-vector_643279-134.jpg';
-
+  const color = useThemeColors();
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -35,15 +57,49 @@ const CategoryExpenseScreen = ({ navigation }: CategoryExpenseScreenProps) => {
   const createCategory = async () => {
     try {
       if (selectedCategoryType === 'Expense') {
-        await ExpenseServices.createExpenseType(family.id_family, newCategoryName);
+        const data = await ExpenseServices.createExpenseType(
+          family.id_family,
+          newCategoryName,
+        );
+        if (data) {
+          console.log(data);
+          dispatch(createExpenseType(data));
+          Toast.show(translate('Create category successfully'), {
+            type: 'success',
+            duration: 3000,
+          });
+        } else {
+          Toast.show(translate('Fail to create category'), {
+            type: 'danger',
+            duration: 3000,
+          });
+        }
       } else if (selectedCategoryType === 'Income') {
-        await IncomeServices.createIncomeType(family.id_family, newCategoryName);
+        const data = await IncomeServices.createIncomeType(
+          family.id_family,
+          newCategoryName,
+        );
+        if (data) {
+          dispatch(addIncomeType(data));
+          Toast.show(translate('Create category successfully'), {
+            type: 'success',
+            duration: 3000,
+          });
+        } else {
+          Toast.show(translate('Fail to create category'), {
+            type: 'danger',
+            duration: 3000,
+          });
+        }
       }
       toggleModal();
       setNewCategoryName('');
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error creating category:', error.message);
-      Alert.alert('Error', 'An error occurred while creating the category.');
+      Toast.show(translate('An error occurred while creating the category.'), {
+        type: 'danger',
+        duration: 3000,
+      });
     }
   };
 
@@ -59,71 +115,112 @@ const CategoryExpenseScreen = ({ navigation }: CategoryExpenseScreenProps) => {
 
   const onDeleteIncome = async (item: any) => {
     Alert.alert(
-      'Confirm Delete',
-      'Are you sure you want to delete this category?',
+      translate('Confirm Delete'),
+      translate('Are you sure you want to delete this category?'),
       [
         {
-          text: 'Cancel',
+          text: translate('Cancel'),
           style: 'cancel',
         },
         {
-          text: 'Delete',
+          text: translate('Delete'),
           onPress: async () => {
             try {
-              await IncomeServices.deleteIncomeSource(family.id_family, item.id_income_source);
-              Alert.alert('Success', 'The category has been deleted successfully.');
+              await IncomeServices.deleteIncomeSource(
+                family.id_family,
+                item.id_income_source,
+              );
+              Toast.show(
+                translate('The category has been deleted successfully'),
+                {
+                  type: 'success',
+                  duration: 3000,
+                },
+              );
+              dispatch(deleteIncomeType(item.id_income_source));
             } catch (error) {
               console.error('Error deleting income category:', error);
-              Alert.alert('Error', 'An error occurred while deleting the category.');
+              Toast.show(
+                translate('An error occurred while deleting the category.'),
+                {
+                  type: 'danger',
+                  duration: 3000,
+                },
+              );
             }
           },
         },
       ],
-      { cancelable: true }
+      {cancelable: true},
     );
   };
 
   const onDeleteExpense = async (item: any) => {
     Alert.alert(
-      'Confirm Delete',
-      'Are you sure you want to delete this category?',
+      translate('Confirm Delete'),
+      translate('Are you sure you want to delete this category?'),
       [
         {
-          text: 'Cancel',
+          text: translate('Cancel'),
           style: 'cancel',
         },
         {
-          text: 'Delete',
+          text: translate('Delete'),
           onPress: async () => {
             try {
-              await ExpenseServices.deleteExpenseType(family.id_family, item.id_expenditure_type);
-              Alert.alert('Success', 'The category has been deleted successfully.');
+              const respone = await ExpenseServices.deleteExpenseType(
+                family.id_family,
+                item.id_expenditure_type,
+              );
+              if (respone) {
+                Toast.show(
+                  translate('The category has been deleted successfully'),
+                  {
+                    type: 'success',
+                    duration: 3000,
+                  },
+                );
+                dispatch(deleteExpenseType(item.id_expenditure_type));
+              }
             } catch (error) {
               console.error('Error deleting expense category:', error);
-              Alert.alert('Error', 'An error occurred while deleting the category.');
+              Toast.show(
+                translate('An error occurred while deleting the category.'),
+                {
+                  type: 'danger',
+                  duration: 3000,
+                },
+              );
             }
           },
         },
       ],
-      { cancelable: true }
+      {cancelable: true},
     );
   };
-
   const selectOption = (option: string) => {
     setSelectedCategoryType(option);
   };
 
-  const renderCategoryItem = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.categoryItemContainer} onPress={() => selectCategory(item)}>
-      <Image source={{ uri: urlFood }} style={styles.categoryImage} />
-      <Text style={styles.categoryName}>
-      {selectedCategoryType === 'Expense' 
-        ? (location === 'vi' ? item.expense_type_name_vn : item.expense_type_name) 
-        : (location === 'vi' ? item.income_source_name_vn : item.income_source_name)}      
+  const renderCategoryItem = ({item}: {item: any}) => (
+    <TouchableOpacity
+      style={styles.categoryItemContainer}
+      onPress={() => selectCategory(item)}>
+      <Image source={{uri: urlFood}} style={styles.categoryImage} />
+      <Text style={[styles.categoryName, {color: color.text}]}>
+        {selectedCategoryType === 'Expense'
+          ? location === 'vi'
+            ? item.expense_type_name_vn
+            : item.expense_type_name
+          : location === 'vi'
+            ? item.income_source_name_vn
+            : item.income_source_name}
       </Text>
       <TouchableOpacity
         onPress={() =>
-          selectedCategoryType === 'Expense' ? onDeleteExpense(item) : onDeleteIncome(item)
+          selectedCategoryType === 'Expense'
+            ? onDeleteExpense(item)
+            : onDeleteIncome(item)
         }
         style={styles.deleteButton}>
         <Icon name="trash-outline" size={20} color="red" />
@@ -132,50 +229,82 @@ const CategoryExpenseScreen = ({ navigation }: CategoryExpenseScreenProps) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, {backgroundColor: color.background}]}>
       <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('FamilyTab', {screen: 'Expense'})} style={styles.headerButton}>
-          <Icon name="arrow-back" size={25} style={styles.backButton} />
+        <TouchableOpacity
+          onPress={() => navigation.navigate('FamilyTab', {screen: 'Expense'})}
+          style={styles.headerButton}>
+          <Icon
+            name="arrow-back"
+            size={30}
+            style={[styles.addImage, {color: color.text}]}
+          />
         </TouchableOpacity>
         <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerText}>{translate('Category')}</Text>
+          <Text style={[styles.headerText, {color: color.text}]}>
+            {translate('Category')}
+          </Text>
         </View>
         <TouchableOpacity onPress={toggleModal} style={styles.headerButton}>
-          <Icon name="add" size={30} style={styles.addImage} />
+          <Icon
+            name="add"
+            size={30}
+            style={[styles.addImage, {color: color.text}]}
+          />
         </TouchableOpacity>
       </View>
       <View style={styles.containerTab}>
-            <TouchableOpacity
-              onPress={() => selectOption('Income')}
-              style={[
-                styles.tabButton,
-                selectedCategoryType === 'Income' && styles.selectedTabButton,
-                { borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }
-              ]}>
-              <Text style={[styles.tabButtonText, selectedCategoryType === 'Income' && styles.selectedTabText]}>Income</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => selectOption('Expense')}
-              style={[
-                styles.tabButton,
-                selectedCategoryType === 'Expense' && styles.selectedTabButton,
-                { borderTopRightRadius: 20, borderBottomRightRadius: 20 }
-              ]}>
-              <Text style={[styles.tabButtonText, selectedCategoryType === 'Expense' && styles.selectedTabText]}>Expense</Text>
-            </TouchableOpacity>
-            <View
-              style={[
-                styles.bottomLine,
-                { left: selectedCategoryType === 'Income' ? 0 : '50%', borderRadius: 20 }
-              ]}
-            />
-          </View>
+        <TouchableOpacity
+          onPress={() => selectOption('Income')}
+          style={[
+            styles.tabButton,
+            selectedCategoryType === 'Income' && styles.selectedTabButton,
+            {borderTopLeftRadius: 20, borderBottomLeftRadius: 20},
+          ]}>
+          <Text
+            style={[
+              styles.tabButtonText,
+              selectedCategoryType === 'Income' && styles.selectedTabText,
+            ]}>
+            {translate('Income')}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => selectOption('Expense')}
+          style={[
+            styles.tabButton,
+            selectedCategoryType === 'Expense' && styles.selectedTabButton,
+            {borderTopRightRadius: 20, borderBottomRightRadius: 20},
+          ]}>
+          <Text
+            style={[
+              styles.tabButtonText,
+              selectedCategoryType === 'Expense' && styles.selectedTabText,
+            ]}>
+            {translate('Expense')}
+          </Text>
+        </TouchableOpacity>
+        <View
+          style={[
+            styles.bottomLine,
+            {
+              left: selectedCategoryType === 'Income' ? 0 : '50%',
+              borderRadius: 20,
+            },
+          ]}
+        />
+      </View>
 
       <FlatList
-        data={selectedCategoryType === 'Expense' ? Object.values(expenseType) : Object.values(incomeCategories)}
+        data={
+          selectedCategoryType === 'Expense'
+            ? Object.values(expenseType)
+            : Object.values(incomeCategories)
+        }
         renderItem={renderCategoryItem}
         keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ paddingBottom: 20 }}
+        contentContainerStyle={{paddingBottom: 20}}
       />
 
       <Modal
@@ -183,11 +312,22 @@ const CategoryExpenseScreen = ({ navigation }: CategoryExpenseScreenProps) => {
         transparent={true}
         visible={isModalVisible}
         onRequestClose={toggleModal}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{translate('Add New Category')}</Text>
+        <TouchableOpacity
+          style={[styles.modalContainer]}
+          onPress={() => setModalVisible(false)}>
+          <View
+            style={[styles.modalContent, {backgroundColor: color.background}]}>
+            <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
+              <Icon name="close" size={30} color={color.text} />
+            </TouchableOpacity>
+            <Text style={[styles.modalTitle, {color: color.text}]}>
+              {translate('Add New Category')}
+            </Text>
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                {backgroundColor: color.background, color: color.text},
+              ]}
               placeholder={translate('Enter category name')}
               value={newCategoryName}
               onChangeText={setNewCategoryName}
@@ -195,11 +335,8 @@ const CategoryExpenseScreen = ({ navigation }: CategoryExpenseScreenProps) => {
             <TouchableOpacity style={styles.button} onPress={createCategory}>
               <Text style={styles.buttonText}>{translate('Create')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={toggleModal}>
-              <Text style={styles.buttonText}>{translate('Cancel')}</Text>
-            </TouchableOpacity>
           </View>
-        </View>
+        </TouchableOpacity>
       </Modal>
     </SafeAreaView>
   );

@@ -55,6 +55,12 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const screenHeight = Dimensions.get('screen').height;
   const [functions, setFunctions] = useState<Service[]>([]);
   const translate = useSelector(getTranslate);
+  const secondBottomSheetRef = useRef<RBSheet>(null);
+
+  useEffect(() => {
+    secondBottomSheetRef.current?.open();
+  }, []);
+
   const cards = [
     {
       id: 1,
@@ -365,7 +371,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.4)', // Điều chỉnh giá trị alpha (0.5 ở đây) để thay đổi độ tối
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
           }}
         />
       </View>
@@ -495,6 +501,43 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           name={selectedFamily?.name}
           description={selectedFamily?.description}
         />
+      </RBSheet>
+      <RBSheet
+        ref={secondBottomSheetRef}
+        closeOnDragDown={true}
+        height={screenHeight}
+        customStyles={{
+          wrapper: {
+            backgroundColor: 'rgba(0,0,0,0.7)',
+          },
+          container: {
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            height: screenHeight,
+            backgroundColor: 'transparent',
+          },
+        }}>
+        <TouchableOpacity
+          style={styles.cancel}
+          onPress={() => secondBottomSheetRef.current?.close()}>
+          <Image
+            source={require('../../assets/images/Cancel.png')}
+            resizeMode="stretch"
+            style={styles.cancelImage}
+          />
+        </TouchableOpacity>
+        <Image
+          source={require('../../assets/images/poster.png')}
+          resizeMode="stretch"
+          style={styles.fullScreenImage}
+        />
+        <TouchableOpacity style={styles.explore}>
+          <Image
+            source={require('../../assets/images/explore.png')}
+            resizeMode="stretch"
+            style={styles.exploreImage}
+          />
+        </TouchableOpacity>
       </RBSheet>
     </View>
   );

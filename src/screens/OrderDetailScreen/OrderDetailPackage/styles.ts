@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     borderWidth: 7,
     borderColor: COLORS.DenimBlue,
   },
-   submitButtonText: {
+  submitButtonText: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#ffffff',
@@ -252,6 +252,16 @@ const styles = StyleSheet.create({
   },
   radioPriceActive: {
     color: '#3f63ff',
+  },
+  discountInput: {
+    height: 40,
+    borderColor: '#e5e5e5',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    marginBottom: 16,
+    fontSize: 16,
+    color: '#333',
   },
 });
 

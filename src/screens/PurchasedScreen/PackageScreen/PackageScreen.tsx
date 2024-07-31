@@ -1,34 +1,28 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {ScrollView, Text, View, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {package_info} from './data';
-import {TEXTS} from 'src/constants';
-import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import styles from './styles';
-import {PackageServices} from 'src/services/apiclient';
-import {SwipeListView} from 'react-native-swipe-list-view';
-import {ViewAllPackageScreenProps} from 'src/navigation/NavigationTypes';
-import {RouteProp} from '@react-navigation/native';
-import {selectProfile} from 'src/redux/slices/ProfileSclice';
 import {useDispatch, useSelector} from 'react-redux';
+import {PackageServices} from 'src/services/apiclient';
+import {ViewAllPackageScreenProps} from 'src/navigation/NavigationTypes';
 import {Package} from 'src/interface/package/mainPackage';
-import {setPackage} from 'src/redux/slices/PackageSlice';
+import {setOption, setPackage} from 'src/redux/slices/PackageSlice';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
+import styles from './styles';
+import FAQ from './FAQ';
 
 const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
   const {id_family} = route.params;
   const [selectedPackage, setSelectedPackage] = useState<null | Package>(null);
-  const [selectedMount, setSelectedMount] = useState<number>(0);
   const [packages, setPackages] = useState<Package[]>([]);
-  const profile = useSelector(selectProfile);
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
 
   const handleSelectPackage = (pkg: Package) => {
+    dispatch(setOption('Package'));
     dispatch(setPackage(pkg));
     navigation.navigate('OrderDetailScreen', {id_family});
   };
@@ -50,15 +44,17 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
     <SafeAreaView style={{backgroundColor: color.background, height: '100%'}}>
       <ScrollView>
         <View style={styles.headerfile}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.closeButton}>
             <Icon name="close" size={30} color={color.text} />
           </TouchableOpacity>
-        </View>
-
-        <View style={[styles.container]}>
           <Text style={[styles.title, {color: color.text}]}>
             {translate('PACKAGE_TITLE')}
           </Text>
+        </View>
+
+        <View style={styles.container}>
           {packages.map((pkg, index) => {
             const isActive = value === index;
             return (
@@ -67,7 +63,6 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
                 onPress={() => {
                   setValue(index);
                   setSelectedPackage(pkg);
-                  setSelectedMount(pkg.price);
                 }}>
                 <View
                   style={[
@@ -119,6 +114,9 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
             </Text>
           </TouchableOpacity>
         </View>
+
+        {/* FAQ Section */}
+        <FAQ />
       </ScrollView>
     </SafeAreaView>
   );

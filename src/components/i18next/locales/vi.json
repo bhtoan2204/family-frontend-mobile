@@ -422,5 +422,14 @@
   "Shopping": "Mua sắm",
   "Organize and track groceries": "Tổ chức và theo dõi hàng tạp hóa.",
   "Are you sure you want to leave this family?": "Bạn có chắc chắn muốn rời gia đình này không?",
-  "Leave": "Rời đi"
+  "Leave": "Rời đi",
+  "Discount Code": "Mã giảm giá",
+
+  "Create": "Tạo",
+  "Create category successfully": "Tạo danh mục thành công",
+  "Fail to create category": "Tạo danh mục thất bại",
+  "An error occurred while creating the category.": "Đã xảy ra lỗi khi tạo danh mục.",
+  "Are you sure you want to delete this category?": "Bạn có chắc chắn muốn xóa danh mục này không?",
+  "The category has been deleted successfully": "Danh mục đã được xóa thành công",
+  "An error occurred while deleting the category.": "Đã xảy ra lỗi khi xóa danh mục."
 }

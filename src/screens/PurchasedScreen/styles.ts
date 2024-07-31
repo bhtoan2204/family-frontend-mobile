@@ -9,10 +9,16 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 5,
-    marginLeft: 10,
-    marginTop: 20,
-    alignContent: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  headerTextContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  placeholder: {
+    width: 30,
   },
   backButton: {
     paddingTop: 30,
@@ -39,7 +45,7 @@ const styles = StyleSheet.create({
   familyAvatar: {
     width: 60,
     height: 60,
-    borderRadius: 30,
+    borderRadius: 10,
   },
   defaultAvatar: {
     width: 60,
@@ -112,14 +118,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   headerText: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginLeft: 10,
-    color: 'black',
-    alignContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center',
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 25,
+    fontWeight: 'bold',
+
     paddingTop: 30,
   },
 
