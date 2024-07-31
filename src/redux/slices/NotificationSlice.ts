@@ -1,7 +1,6 @@
-
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../store'; 
-import { Notification } from 'src/interface/notification/getNoti';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {RootState} from '../store';
+import {Notification} from 'src/interface/notification/getNoti';
 
 interface NotificationState {
   notifications: Notification[];
@@ -15,7 +14,6 @@ const notificationSlice = createSlice({
   name: 'notifications',
   initialState,
   reducers: {
-    
     setNotificationSlice(state, action: PayloadAction<Notification[]>) {
       state.notifications = action.payload;
     },
@@ -24,7 +22,9 @@ const notificationSlice = createSlice({
       state.notifications.push(action.payload);
     },
     markAsRead(state, action: PayloadAction<string>) {
-      const notification = state.notifications.find((n) => n._id === action.payload);
+      const notification = state.notifications.find(
+        n => n._id === action.payload,
+      );
       if (notification) {
         notification.isRead = true;
       }
@@ -32,8 +32,10 @@ const notificationSlice = createSlice({
   },
 });
 
-export const { addNotification, markAsRead ,setNotificationSlice} = notificationSlice.actions;
+export const {addNotification, markAsRead, setNotificationSlice} =
+  notificationSlice.actions;
 
-export const selectNotifications = (state: RootState) => state.notifications.notifications;
+export const selectNotifications = (state: RootState) =>
+  state.notifications.notifications;
 
 export default notificationSlice.reducer;

@@ -64,13 +64,13 @@ const CalendarServices = {
           },
         },
       );
-      if (response.status === 200) {
-        return response.data;
+      if (response.status === 204) {
+        return true;
       } else {
-        console.error('Error in deleteCategoryEvent');
+        //console.error('Error in deleteCategoryEvent');
       }
     } catch (error: any) {
-      console.error('Error in deleteCategoryEvent', error.message);
+      //console.error('Error in deleteCategoryEvent', error.message);
     }
   },
   updateCategoryEvent: async (

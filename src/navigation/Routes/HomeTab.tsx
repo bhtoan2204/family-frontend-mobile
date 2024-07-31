@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import i18n from 'src/components/i18next/i18n';
 import ProfileDetail from 'src/screens/ProfileScreen/ProfileDetail/ProfileDetail';
+import FeedbackScreen from 'src/screens/FeedBack/FeedBack';
 
 const Tab = createBottomTabNavigator();
 
@@ -69,6 +70,12 @@ const TabList = [
     title: 'ProfileDetail',
     component: ProfileDetail,
     screen: 'ProfileDetail',
+  },
+  {
+    id: 'Feedback',
+    title: 'Feedback',
+    component: FeedbackScreen,
+    screen: 'Feedback',
   },
 ];
 

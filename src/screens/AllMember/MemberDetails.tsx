@@ -54,7 +54,7 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
   };
 
   const handleEmailPress = () => {
-    Linking.openURL(`mailto:${member?.user.phone}`);
+    Linking.openURL(`mailto:${member?.user.email}`);
   };
   const handleChangeRole = async () => {
     setIsLoading(true);

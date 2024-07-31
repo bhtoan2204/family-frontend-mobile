@@ -36,6 +36,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
   const {id_family, phone} = route.params || {};
   const [email, setEmail] = useState('');
   const [p_phone, setPhone] = useState(phone);
+  const [inviteLink, setInviteLink] = useState('');
   const profile = useSelector(selectProfile);
   const t = useSelector(getTranslate);
   const color = useThemeColors();
@@ -47,22 +48,34 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
     setPhone(formatPhoneNumber(phone));
   }, [phone]);
 
+  useEffect(() => {
+    fetchCode();
+  }, []);
+
+  const fetchCode = async () => {
+    try {
+      const data = await FamilyServices.inviteMember(id_family);
+      console.log(data);
+      const link = `https://famfund.io.vn/services/invite?code=${data.code}&id_family=${id_family}`;
+      setInviteLink(link);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const formatPhoneNumber = (phoneNumber?: string) => {
     const cleaned = ('' + phoneNumber).replace(/\D/g, '');
-
     const match = cleaned.match(/^(\d{1})(\d{3})(\d{3})(\d{3})$/);
-
     if (match) {
       return `+84${match[2]}${match[3]}${match[4]}`;
     }
     console.log(phoneNumber);
-
     return phoneNumber;
   };
 
   const handleAddMember = async () => {
     try {
-      if (!p_phone && !email) {
+      if (!p_phone && !email && !inviteLink) {
         Alert.alert(
           t('missingInformation'),
           t('missingInformationMessage'),
@@ -87,7 +100,6 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
         id_family: id_family,
         gmail: email || '',
         phone: formattedPhone || '',
-        role: 'Member',
       });
 
       if (result.data === t('successMessage')) {
@@ -116,108 +128,136 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, {backgroundColor: color.background}]}>
-      <KeyboardAvoidingView style={styles.keyboardView} behavior="padding">
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="close" size={34} color={color.text} />
-          </TouchableOpacity>
-        </View>
+    <View style={[styles.container, {backgroundColor: color.background}]}>
+      <KeyboardAvoidingView
+        style={styles.keyboardView}
+        behavior="padding"
+        keyboardVerticalOffset={100}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+            <View style={styles.header}>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Ionicons name="close" size={34} color={color.text} />
+              </TouchableOpacity>
+              <Text style={[styles.title, {color: color.text}]}>
+                {t('addFamilyMemberTitle')}
+              </Text>
+            </View>
 
-        <Text style={[styles.title, {color: color.text}]}>
-          {t('addFamilyMemberTitle')}
-        </Text>
-
-        <Image
-          source={require('src/assets/images/add-family-member.png')}
-          resizeMode="stretch"
-          style={{
-            width: 360,
-            height: 262,
-            alignSelf: 'center',
-            marginVertical: 40,
-          }}
-        />
-        <View style={styles.form}>
-          <View style={styles.input}>
-            <View style={styles.inputContainer}>
-              <MaterialIcons
-                name="phone-iphone"
+            <Image
+              source={require('src/assets/images/add-family-member.png')}
+              resizeMode="stretch"
+              style={{
+                width: 360,
+                height: 262,
+                alignSelf: 'center',
+                marginVertical: 0,
+              }}
+            />
+            <View style={styles.form}>
+              <View style={styles.input}>
+                <View style={styles.inputContainer}>
+                  <MaterialIcons
+                    name="phone-iphone"
+                    size={26}
+                    style={{
+                      position: 'absolute',
+                      zIndex: 1,
+                      marginLeft: 10,
+                      color: COLORS.Rhino,
+                    }}
+                  />
+                  <TextInput
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    keyboardType="phone-pad"
+                    placeholder={p_phone ? p_phone : t('enterPhoneNumber')}
+                    placeholderTextColor={color.textSubdued}
+                    style={[
+                      styles.inputPhone,
+                      {
+                        color: p_phone ? color.text : '#A6A6A6',
+                        backgroundColor: color.white,
+                      },
+                    ]}
+                    value={p_phone}
+                    onChangeText={setPhone}
+                  />
+                  <TouchableOpacity
+                    onPress={openContacts}
+                    style={{zIndex: 1, right: 15, position: 'absolute'}}>
+                    <Icon
+                      name="person-add"
+                      size={24}
+                      style={styles.contactIcon}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.input}>
+                <MaterialCommunityIcons
+                  name="email-outline"
+                  size={26}
+                  style={{
+                    position: 'absolute',
+                    zIndex: 1,
+                    marginLeft: 20,
+                    top: 10,
+                    color: COLORS.Rhino,
+                  }}
+                />
+                <TextInput
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardType="email-address"
+                  placeholder={t('familyMemberEmailPlaceholder')}
+                  placeholderTextColor={color.textSubdued}
+                  style={[
+                    styles.inputControl,
+                    {
+                      color: email ? 'black' : '#A6A6A6',
+                      backgroundColor: color.white,
+                    },
+                  ]}
+                  value={email}
+                  onChangeText={setEmail}
+                />
+              </View>
+              {/* <MaterialCommunityIcons
+                name="link-variant"
                 size={26}
                 style={{
                   position: 'absolute',
                   zIndex: 1,
-                  marginLeft: 10,
+                  marginLeft: 20,
+                  top: 10,
                   color: COLORS.Rhino,
                 }}
-              />
-              <TextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="phone-pad"
-                placeholder={p_phone ? p_phone : t('enterPhoneNumber')}
-                placeholderTextColor={color.textSubdued}
+              /> */}
+              <Text
                 style={[
-                  styles.inputPhone,
                   {
-                    color: p_phone ? color.text : '#A6A6A6',
-                    backgroundColor: color.white,
+                    color: inviteLink ? color.text : '#A6A6A6',
+                    marginBottom: 50,
                   },
-                ]}
-                value={p_phone}
-                onChangeText={setPhone}
-              />
-              <TouchableOpacity
-                onPress={openContacts}
-                style={{zIndex: 1, right: 15, position: 'absolute'}}>
-                <Icon name="person-add" size={24} style={styles.contactIcon} />
-              </TouchableOpacity>
+                ]}>
+                {inviteLink}
+              </Text>
             </View>
-          </View>
-          <View style={styles.input}>
-            <MaterialCommunityIcons
-              name="email-outline"
-              size={26}
-              style={{
-                position: 'absolute',
-                zIndex: 1,
-                marginLeft: 20,
-                top: 10,
-                color: COLORS.Rhino,
-              }}
-            />
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="email-address"
-              placeholder={t('familyMemberEmailPlaceholder')}
-              placeholderTextColor={color.textSubdued}
-              style={[
-                styles.inputControl,
-                {
-                  color: email ? 'black' : '#A6A6A6',
-                  backgroundColor: color.white,
-                },
-              ]}
-              onChangeText={setEmail}
-            />
-          </View>
-        </View>
-      </KeyboardAvoidingView>
 
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.addButtonContainer}>
-          <CustomButton
-            style={styles.btn}
-            title="Add"
-            filled
-            onPress={handleAddMember}
-            backgroundImage={require('src/assets/images/button.png')}
-          />
-        </View>
-      </TouchableWithoutFeedback>
-    </SafeAreaView>
+            <View style={styles.addButtonContainer}>
+              <CustomButton
+                style={styles.btn}
+                title={t('Add member')}
+                filled
+                onPress={handleAddMember}
+                backgroundImage={require('src/assets/images/button.png')}
+              />
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 

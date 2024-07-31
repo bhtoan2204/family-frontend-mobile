@@ -20,9 +20,8 @@ const EmojiPicker = ({onChange}) => {
             <Icon
               name="emoji-emotions"
               type="material"
-              size={40}
+              size={35}
               color={COLORS.DenimBlue}
-              containerStyle={styles.icon}
             />
           </TouchableOpacity>
         }>
@@ -33,9 +32,8 @@ const EmojiPicker = ({onChange}) => {
             }}
             columns={8}
             showSearchBar={true}
-            showSectionHeaders={false}
-            headerIconStyle={{fontSize: 30}}
-            categoryLabelStyle={styles.categoryLabel}
+            showSectionTitles={true}
+            showTabs={true}
           />
         </View>
       </Popover>

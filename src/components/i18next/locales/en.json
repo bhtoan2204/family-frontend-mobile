@@ -253,6 +253,7 @@
   "invalidOTP": "Invalid OTP",
   "otpVerificationError": "An error occurred while verifying the OTP",
   "addFamilyMemberTitle": "Add Family Member",
+  "Add member": "Add member",
   "enterPhoneNumber": "Enter phone number",
   "familyMemberEmailPlaceholder": "Enter email address",
   "missingInformation": "Missing Information",
@@ -373,5 +374,7 @@
   "ago": "ago",
   "End Count": "End Count",
   "Custom": "Custom",
-  "Until": "Until"
+  "Until": "Until",
+  "deleteCategoryWithEventsErrorMessage": "Cannot delete the category because it has related events.",
+  "Renew Family": "Renew Family"
 }

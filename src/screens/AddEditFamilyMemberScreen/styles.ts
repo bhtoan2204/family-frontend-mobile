@@ -1,5 +1,5 @@
-import { Dimensions, StyleSheet } from 'react-native';
-import { COLORS } from 'src/constants';
+import {Dimensions, StyleSheet} from 'react-native';
+import {COLORS} from 'src/constants';
 const screenHeight = Dimensions.get('screen').height;
 
 const styles = StyleSheet.create({
@@ -9,15 +9,13 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    paddingTop: 20,
-    height: screenHeight * 0.3,
-    backgroundColor: COLORS.white,
   },
+  scrollViewContainer: {
+    flexGrow: 1,
+  },
+
   scrollViewContent: {
     flexGrow: 1,
-    justifyContent: 'space-between',
     backgroundColor: COLORS.white,
     paddingHorizontal: 20,
   },
@@ -25,7 +23,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 0,
   },
   backButton: {
     color: COLORS.Rhino,
@@ -34,21 +32,21 @@ const styles = StyleSheet.create({
   //   color: COLORS.Blue,
   // },
   header: {
-    marginBottom: 20,
+    marginTop: 20,
+    marginBottom: 30,
   },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
     alignSelf: 'center',
-    marginVertical: 10,
-    marginTop: 20,
+    marginBottom: 0,
   },
   form: {
     marginTop: 20,
   },
   input: {
     marginBottom: 20,
-    width : 380
+    width: 380,
   },
   inputLabel: {
     fontSize: 16,
@@ -130,8 +128,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  addButtonContainer: {
-  },
+  addButtonContainer: {},
   contactIcon: {
     color: COLORS.Rhino,
   },
@@ -207,6 +204,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
   },
+  invitelink: {},
 });
 
 export default styles;

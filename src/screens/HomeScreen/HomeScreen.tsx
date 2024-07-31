@@ -134,8 +134,8 @@ const HomeScreen = ({
   const locale = useSelector(selectLocale);
 
   const source =
-    profile.avatar && profile.avatar !== '[NULL]'
-      ? {uri: profile.avatar}
+    profile?.avatar && profile?.avatar !== '[NULL]'
+      ? {uri: profile?.avatar}
       : require('../../assets/images/default_ava.png');
   const handlePress = () => {
     setIsLightMode(!isLightMode);
@@ -336,7 +336,7 @@ const HomeScreen = ({
       icon: 'feedback',
       label: translate('Feedback'),
       onPress: () => {
-        navigation.navigate('AuthStack', {screen: 'Feedback'});
+        navigation.navigate('HomeTab', {screen: 'Feedback'});
       },
     },
     {
@@ -379,7 +379,10 @@ const HomeScreen = ({
     : require('../../assets/images/home-screen-dark.png');
 
   return (
-    <ImageBackground source={background} style={{flex: 1}} resizeMode="stretch">
+    <ImageBackground
+      source={background}
+      style={{flex: 1, backgroundColor: color.background}}
+      resizeMode="stretch">
       <SafeAreaView style={{flex: 1, padding: 10}}>
         <View style={[styles.container, {marginBottom: 90}]}>
           <View style={styles.circleContainer}></View>

@@ -525,7 +525,10 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         </TouchableOpacity>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
           <TextInput
-            style={[styles.input, {flex: 1, backgroundColor: color.searchChat}]}
+            style={[
+              styles.input,
+              {flex: 1, backgroundColor: color.searchChat, color: color.text},
+            ]}
             value={message}
             onChangeText={setMessage}
             placeholder="Aa"></TextInput>

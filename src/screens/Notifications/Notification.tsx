@@ -29,11 +29,7 @@ const Notification = ({navigation}) => {
   const language = useSelector(selectLocale);
 
   const handleNewMessage = async (message: Message) => {
-    if (
-      !notificationQueue.some(
-        queuedMessage => queuedMessage._id === message._id,
-      )
-    ) {
+    if (message.senderId != profile.id_user) {
       let notificationBody = message.content;
       switch (message.type) {
         case 'photo':
@@ -52,7 +48,7 @@ const Notification = ({navigation}) => {
 
       await Notifications.scheduleNotificationAsync({
         content: {
-          title: `${message.senderInfo.firstname} ${message.senderInfo.lastname}`,
+          title: `${message.receiver.firstname} ${message.receiver.lastname}`,
           body: notificationBody,
           data: {
             screen: 'ChatUser',
@@ -70,7 +66,7 @@ const Notification = ({navigation}) => {
   };
 
   const handleNewNotification = async (message: Noti) => {
-    if (message.familyInfo) {
+    if (message.createdAt != profile.id_user) {
       await Notifications.scheduleNotificationAsync({
         content: {
           title: `${message.familyInfo.name}`,
@@ -137,7 +133,7 @@ const Notification = ({navigation}) => {
     if (socket) {
       socket.on('onNewMessage', handleNewMessage);
       socket.on('onNewFamilyMessage', handleNewMessageFamily);
-      //socket.on('onNewNotification', handleNewNotification);
+      socket.on('onNewNotification', handleNewNotification);
     }
 
     return () => {

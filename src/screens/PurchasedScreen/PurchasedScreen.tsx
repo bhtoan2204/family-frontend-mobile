@@ -121,18 +121,26 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
             </Text>
           </View>
           <View style={styles.buttonContainerFamily}>
-            {/* <TouchableOpacity
-              style={[styles.renewButton, styles.button]}
-              onPress={() => onRenewPress(family)}>
-              <Text style={styles.renewButtonText}>Renew</Text>
-            </TouchableOpacity> */}
             <TouchableOpacity
               style={[styles.buyServiceButton, styles.button]}
-              //onPress={() => handleViewService()}
               onPress={() => handleViewCombo()}>
               <Text style={styles.buyServiceButtonText}>
                 {translate('BUY_SERVICE')}
               </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.buyPackageButton, styles.button]}
+              onPress={() => onRenewPress(family)}>
+              <View style={styles.buttonContent}>
+                <Text
+                  style={[
+                    styles.buyServiceButtonText,
+                    {color: color.text, marginRight: 5},
+                  ]}>
+                  {translate('Renew Family')}
+                </Text>
+                <Icon name="arrow-forward" size={20} color={color.text} />
+              </View>
             </TouchableOpacity>
           </View>
         </View>
@@ -177,7 +185,7 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
         </View>
       </ScrollView>
 
-      <Modal
+      {/* <Modal
         animationType="slide"
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}>
@@ -209,7 +217,7 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
-      </Modal>
+      </Modal> */}
     </View>
   );
 };

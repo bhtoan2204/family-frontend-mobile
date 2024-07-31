@@ -6,16 +6,9 @@ import {
   StyleSheet,
   ActivityIndicator,
   Image,
+  TouchableOpacity,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {COLORS} from 'src/constants';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useDispatch, useSelector} from 'react-redux';
-import {
-  markAsRead,
-  selectNotifications,
-  setNotificationSlice,
-} from 'src/redux/slices/NotificationSlice';
 import {ProfileServices} from 'src/services/apiclient';
 import {Noti} from 'src/interface/notification/getNoti';
 import {ViewFamilyScreenProps} from 'src/navigation/NavigationTypes';
@@ -23,36 +16,50 @@ import {setSelectedFamilyById} from 'src/redux/slices/FamilySlice';
 import {setSelectedDate} from 'src/redux/slices/ExpenseAnalysis';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
+import {useSelector} from 'react-redux';
 
 const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
-  let notifications = useSelector(selectNotifications);
+  const [notifications, setNotifications] = useState<Noti[]>([]);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+  const [isFetching, setIsFetching] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const color = useThemeColors();
   const translate = useSelector(getTranslate);
   const language = useSelector(selectLocale);
 
   useEffect(() => {
     fetchNotification();
-  }, [index]);
+  }, []);
 
   const fetchNotification = async () => {
+    if (isFetching || !hasMore) return;
+
+    setIsFetching(true);
     setLoading(true);
     try {
-      if (index == 0) {
-        dispatch(setNotificationSlice([]));
-      }
       const response = await ProfileServices.getNotification(index);
       if (response && response.data.length > 0) {
         setIndex(index + 1);
-        dispatch(setNotificationSlice([...notifications, ...response.data]));
-        setLoading(false);
+        const uniqueNotifications = [
+          ...notifications,
+          ...response.data.filter(
+            newNoti =>
+              !notifications.some(
+                existingNoti => existingNoti._id === newNoti._id,
+              ),
+          ),
+        ];
+        setNotifications(uniqueNotifications);
+      } else {
+        setHasMore(false);
       }
     } catch (error) {
       console.error('Error fetchNotification:', error);
+    } finally {
+      setIsFetching(false);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const formatDateTime = (dateTime: Date | string) => {
@@ -94,6 +101,7 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
       return `${diffYears} ${diffYears > 1 ? translate('years') : translate('year')} ${translate('ago')}`;
     }
   };
+
   const formatDate = (timestamp: string | number | Date) => {
     const date = new Date(timestamp);
     return date.toISOString().split('T')[0];
@@ -106,7 +114,6 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
           screen: 'TodoList',
           params: {id_family: item.id_family},
         });
-
         break;
 
       case 'EXPENSE':
@@ -156,51 +163,6 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
   };
 
   const renderItem = ({item}: {item: Noti}) => (
-    // <TouchableOpacity
-    //   onPress={() => handlePressNoti(item)}
-    //   style={[
-    //     item.isRead
-    //       ? {backgroundColor: color.background}
-    //       : {backgroundColor: color.white},
-    //   ]}>
-    //   <View style={styles.notificationItem}>
-    //     {item.familyInfo.avatar && (
-    //       <Image
-    //         source={{uri: item.familyInfo.avatar}}
-    //         style={styles.avatar}
-    //         resizeMode="cover"
-    //       />
-    //     )}
-
-    //     {/* { item.familyInfo.avatar ? (
-    //     <Image
-    //       source={{uri: item.familyInfo.avatar}}
-    //       style={styles.avatar}
-    //       resizeMode="cover"
-    //     />
-    //   ):(
-    //     <Image
-    //     source={require('../../assets/images/avatar.png')}
-
-    //     style={styles.avatar}
-    //     resizeMode="cover"
-    //   />
-    //   )
-    // } */}
-    //     <View style={styles.notificationContent}>
-    //       <Text style={[styles.title, {color: color.text}]}>
-    //         {language === 'vi' ? item.title_vn : item.title}
-    //       </Text>
-    //       <Text style={[styles.content, {color: color.textSubdued}]}>
-    //         {language === 'vi' ? item.content_vn : item.content}
-    //       </Text>
-
-    //       <Text style={[styles.date, {color: color.textSubdued}]}>
-    //         {item.timestamp ? formatDateTime(item.timestamp) : ''}
-    //       </Text>
-    //     </View>
-    //   </View>
-    // </TouchableOpacity>
     <TouchableOpacity
       onPress={() => handlePressNoti(item)}
       style={[
@@ -209,7 +171,7 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
           : {backgroundColor: color.white},
       ]}>
       <View style={styles.notificationItem}>
-        {item.familyInfo.avatar && (
+        {item?.familyInfo?.avatar && (
           <Image
             source={{uri: item.familyInfo.avatar}}
             style={styles.avatar}
@@ -229,7 +191,6 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
           </Text>
         </View>
         {!item.isRead && <View style={styles.unreadIndicator} />}
-        {/* Hình tròn đỏ */}
       </View>
     </TouchableOpacity>
   );
@@ -251,6 +212,7 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
           data={notifications}
           renderItem={renderItem}
           keyExtractor={item => item._id}
+          onEndReached={fetchNotification}
           onEndReachedThreshold={0.5}
           ListFooterComponent={renderFooter}
         />
@@ -290,6 +252,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: 'red',
   },
+
   title: {
     fontSize: 16,
     fontWeight: 'bold',

@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native';
-import { ScreenHeight } from 'react-native-elements/dist/helpers';
-import { COLORS } from 'src/constants';
+import {StyleSheet} from 'react-native';
+import {ScreenHeight} from 'react-native-elements/dist/helpers';
+import {COLORS} from 'src/constants';
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -10,10 +10,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 5,
-    marginLeft:10,
-    marginTop:20,
+    marginLeft: 10,
+    marginTop: 20,
     alignContent: 'center',
-
   },
   backButton: {
     paddingTop: 30,
@@ -30,12 +29,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     shadowColor: '#000000',
     shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     elevation: 2,
   },
   familyAvatarContainer: {
     marginRight: 15,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   familyAvatar: {
@@ -80,9 +78,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonContainerFamily: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     marginTop: 10,
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   button: {
     paddingVertical: 8,
@@ -100,10 +98,13 @@ const styles = StyleSheet.create({
   },
   buyServiceButton: {
     backgroundColor: 'lightblue',
-
+    marginBottom: 10,
     alignSelf: 'flex-end',
-
-
+  },
+  buyPackageButton: {
+    backgroundColor: COLORS.Rhino,
+    marginBottom: 10,
+    alignSelf: 'flex-end',
   },
   buyServiceButtonText: {
     color: 'white',
@@ -113,16 +114,15 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 20,
     fontWeight: '600',
-    marginLeft: 10, 
-    color: 'black', 
+    marginLeft: 10,
+    color: 'black',
     alignContent: 'center',
     alignItems: 'center',
-    alignSelf:'center',
+    alignSelf: 'center',
     justifyContent: 'center',
     paddingTop: 30,
-
   },
-  
+
   serviceButton: {
     backgroundColor: '#AEC6CF',
   },
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 20,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 5,
@@ -148,9 +148,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  infoContainer: {
-
-  },
+  infoContainer: {},
   infoText: {
     fontSize: 16,
   },
@@ -160,7 +158,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   actionButton: {
-    backgroundColor: '#007BFF', 
+    backgroundColor: '#007BFF',
     borderRadius: 5,
     paddingVertical: 8,
     paddingHorizontal: 12,
@@ -178,25 +176,24 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
   },
- 
+
   familyListTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 24,
     marginBottom: 16,
-    color: '#ccc'
+    color: '#ccc',
   },
-  familyList: {
-  },
- 
+  familyList: {},
+
   buttonImage: {
-    height: 260, 
+    height: 260,
     width: 370,
   },
   buttonAddFamily: {
-    height: 30, 
+    height: 30,
     width: 150,
-    alignSelf: 'flex-end', 
+    alignSelf: 'flex-end',
     marginTop: 10,
   },
   settingsIconContainer: {
@@ -231,8 +228,12 @@ const styles = StyleSheet.create({
   },
   modalBackground: {
     flex: 1,
-    justifyContent: 'flex-end', 
+    justifyContent: 'flex-end',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 

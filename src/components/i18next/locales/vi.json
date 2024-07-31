@@ -386,5 +386,7 @@
   "ago": "trước",
   "End Count": "Số đếm",
   "Custom": "Tùy chọn",
-  "Until": "Đến"
+  "Until": "Đến",
+  "deleteCategoryWithEventsErrorMessage": "Không thể xóa danh mục vì có sự kiện liên quan.",
+  "Renew Family": "Gia hạn"
 }

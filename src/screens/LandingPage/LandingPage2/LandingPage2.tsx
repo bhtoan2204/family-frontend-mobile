@@ -7,17 +7,21 @@ import {
   LandingPage3ScreenProps,
   HomeTabProps,
 } from 'src/navigation/NavigationTypes';
+import {useThemeColors} from 'src/hooks/useThemeColor';
 
 type CombinedScreenProps = LandingPageScreenProps &
   LandingPage3ScreenProps &
   HomeTabProps;
 
 const LandingPage2 = ({navigation}: CombinedScreenProps) => {
+  const color = useThemeColors();
+
   const handleGoButtonPress = () => {
     navigation.navigate('HomeTab', {screen: 'HomeScreen'});
   };
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, {backgroundColor: color.background}]}>
       <View style={styles.hero}>
         <Image
           source={{uri: 'https://assets.withfra.me/Landing.3.png'}}

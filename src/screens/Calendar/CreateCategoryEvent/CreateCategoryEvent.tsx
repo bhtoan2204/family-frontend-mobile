@@ -149,18 +149,34 @@ const CreateCategoryEventScreen: React.FC<CreateCategoryEventScreenProps> = ({
           style: 'cancel',
         },
         {
-          text: t('delete'),
+          text: t('Delete'),
           onPress: async () => {
             try {
-              await CalendarServices.deleteCategoryEvent(id, family.id_family);
+              const respone = await CalendarServices.deleteCategoryEvent(
+                id,
+                family.id_family,
+              );
               fetchData();
-              Alert.alert(t('successDelete'), t('deleteSuccessMessage'));
-              Toast.show(t('deleteSuccessMessage'), {
-                type: 'success',
-              });
+              //Alert.alert(t('successDelete'), t('deleteSuccessMessage'));
+              if (respone) {
+                Toast.show(t('deleteSuccessMessage'), {
+                  type: 'success',
+                });
+              } else {
+                Alert.alert(
+                  t('errorDelete'),
+                  t('deleteCategoryWithEventsErrorMessage'),
+                );
+                Toast.show(t('deleteErrorMessage'), {
+                  type: 'danger',
+                });
+              }
             } catch (error) {
-              console.log('Error deleting category event:', error);
-              Alert.alert(t('errorDelete'), t('deleteErrorMessage'));
+              //console.log('Error deleting category event:', error);
+              Alert.alert(
+                t('errorDelete'),
+                t('deleteCategoryWithEventsErrorMessage'),
+              );
               Toast.show(t('deleteErrorMessage'), {
                 type: 'danger',
               });
@@ -281,13 +297,17 @@ const CreateCategoryEventScreen: React.FC<CreateCategoryEventScreenProps> = ({
           onPress={() => setIsUpdateModalVisible(false)}>
           <View
             style={[styles.modalContent, {backgroundColor: color.background}]}>
-            <Text style={styles.modalTitle}>{t('update')}</Text>
+            <Text style={[styles.modalTitle, {color: color.text}]}>
+              {t('update')}
+            </Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, {color: color.text}]}
               value={selectedEventName}
               onChangeText={setSelectedEventName}
             />
-            <Text style={styles.colorLabel}>{t('chooseColor')}</Text>
+            <Text style={[styles.colorLabel, {color: color.text}]}>
+              {t('chooseColor')}
+            </Text>
             <FlatList
               data={colorPalette}
               horizontal

@@ -23,6 +23,8 @@ import {selectSelectedMember} from 'src/redux/slices/FamilySlice';
 import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 import {setUserMessage} from 'src/redux/slices/MessageUser';
 import {RootState} from 'src/redux/store';
+import IconL from 'react-native-vector-icons/Ionicons';
+
 const screenHeight = Dimensions.get('screen').height;
 
 const ProfileDetailsScreen = ({
@@ -49,7 +51,7 @@ const ProfileDetailsScreen = ({
   };
 
   const handleEmailPress = () => {
-    Linking.openURL(`mailto:${member?.phone}`);
+    Linking.openURL(`mailto:${member?.email}`);
   };
 
   return (
@@ -71,10 +73,10 @@ const ProfileDetailsScreen = ({
         }}>
         <Header
           leftComponent={{
-            icon: 'arrow-back',
+            icon: 'close',
             color: 'white',
             size: 30,
-            onPress: () => navigation.goBack(),
+            onPress: () => navigation.navigate('HomeTab', {screen: 'Profile'}),
           }}
           centerComponent={{}}
           containerStyle={{
@@ -195,9 +197,18 @@ const ProfileDetailsScreen = ({
                 }}>
                 {translate('PhoneNumber')}
               </Text>
-              <Text style={[styles.contactText, {color: '#007bff'}]}>
-                {member.phone}
-              </Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text
+                  style={[
+                    styles.contactText,
+                    {color: '#007bff', marginRight: 5},
+                  ]}>
+                  {member.phone}
+                </Text>
+                {member?.isphoneverified && (
+                  <IconL name="checkmark-circle" size={20} color="green" />
+                )}
+              </View>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleEmailPress}>
@@ -210,9 +221,17 @@ const ProfileDetailsScreen = ({
                 }}>
                 Email:
               </Text>
-              <Text style={[styles.contactText, {color: '#007bff'}]}>
+              <View style={{flexDirection: 'row'}}></View>
+              <Text
+                style={[
+                  styles.contactText,
+                  {color: '#007bff', marginLeft: 25},
+                ]}>
                 {member.email}
               </Text>
+              {member?.isemailverified && (
+                <IconL name="checkmark-circle" size={20} color="green" />
+              )}
             </View>
           </TouchableOpacity>
         </View>
