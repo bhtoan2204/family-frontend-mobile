@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, TouchableOpacity, Alert} from 'react-native';
 import {EventDetailsScreenProps} from 'src/navigation/NavigationTypes';
 import {useSelector, useDispatch} from 'react-redux';
@@ -26,6 +26,9 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
   const language = useSelector(selectLocale);
+  useEffect(() => {
+    console.log(event);
+  });
   const onUpdate = () => {
     if (event?.recurrence_rule) {
       Alert.alert(
@@ -77,7 +80,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                   event?.id_calendar,
                 );
                 await dispatch(deleteEvent(event?.id_calendar));
-                Toast.show(translate('Event has been deleted successfully.'), {
+                Toast.show(translate('Event has been deleted successfully'), {
                   type: 'success',
                 });
                 navigation.goBack();
@@ -108,18 +111,20 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
             text: translate('Delete This Event Only'),
             onPress: async () => {
               try {
+                const timeStartWithComma = `${event.recurrence_exception}${event.time_end},`;
+
                 await CalendarServices.UpdateEvent(
                   event.id_calendar,
                   id_family,
                   event.title,
                   event.description,
-                  event.time_start,
-                  event.time_end,
+                  new Date(event.time_start),
+                  new Date(event.time_end),
                   event.color,
                   event.is_all_day,
                   event.category,
                   event.location,
-                  moment(event.time_start).toISOString() + ',',
+                  timeStartWithComma,
                   event.recurrence_id,
                   event.recurrence_rule,
                   event.start_timezone,
@@ -131,7 +136,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                     time_start: event.time_start,
                   }),
                 );
-                Toast.show(translate('Event has been deleted successfully.'), {
+                Toast.show(translate('Event has been deleted successfully'), {
                   type: 'success',
                 });
                 navigation.goBack();
@@ -332,6 +337,21 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
       );
     }
   };
+  const formatEventTime = (startTime, endTime) => {
+    const startDate = new Date(startTime);
+    const endDate = new Date(endTime);
+
+    const isSameDay = startDate.toDateString() === endDate.toDateString();
+
+    const timeFormat = date =>
+      `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+
+    if (isSameDay) {
+      return `${timeFormat(startDate)} - ${timeFormat(endDate)}`;
+    }
+
+    return `${startDate.toDateString()} ${timeFormat(startDate)} - ${endDate.toDateString()} ${timeFormat(endDate)}`;
+  };
 
   return (
     <SafeAreaView
@@ -386,10 +406,40 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
             {event.categoryEvent.title}
           </Text>
         </View>
+        {/* <View style={styles.locationContainer}>
+          <Text style={[styles.location, {color: color.text}]}>
+            {translate('Category')}:
+          </Text>
+          <Text style={{color: event.color, fontSize: 16}}>
+            {' '}
+            {event.time_start.toString()} {event.time_end.toString()}
+          </Text>
+        </View>
+        {event.recurrence_rule
+          ? explainRecurrenceRule(event.recurrence_rule, language)
+          : null}
+      </View> */}
+        <View style={styles.locationContainer}>
+          <Text style={[styles.location, {color: color.text}]}>
+            {translate('Time')}:
+          </Text>
+          {event.is_all_day ? (
+            <Text style={{color: color.text, fontSize: 16}}>
+              {' '}
+              {translate('All Day')}
+            </Text>
+          ) : (
+            <Text style={{color: color.text, fontSize: 16}}>
+              {' '}
+              {formatEventTime(event.time_start, event.time_end)}
+            </Text>
+          )}
+        </View>
         {event.recurrence_rule
           ? explainRecurrenceRule(event.recurrence_rule, language)
           : null}
       </View>
+
       <View
         style={[
           styles.containerBtnDelete,

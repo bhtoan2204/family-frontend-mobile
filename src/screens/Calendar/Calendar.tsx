@@ -138,7 +138,8 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
   };
 
   const handlePressEvent = async (event: EventDetail) => {
-    dispatch(setSelectedEventById(event.id_calendar));
+    console.log(event);
+    dispatch(setSelectedEvent(event));
     navigation.navigate('EventDetailsScreen', {
       id_family: id_family,
       id_calendar: event.id_calendar,

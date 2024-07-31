@@ -16,7 +16,7 @@ import {format, startOfMonth, endOfMonth, addMonths, subMonths} from 'date-fns';
 import {rrulestr} from 'rrule';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import _ from 'lodash';
-import {Event} from 'src/interface/calendar/Event';
+import {Event, EventDetail} from 'src/interface/calendar/Event';
 import styles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -24,6 +24,7 @@ import {
   selectEvents,
   selectSelectedDate,
   setSelectedDate,
+  setSelectedEvent,
   setSelectedEventById,
 } from 'src/redux/slices/CalendarSlice';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -41,7 +42,7 @@ const EventListScreen = ({route, navigation}: EventListScreenProps) => {
   const selectedDate = useSelector(selectSelectedDate);
   const [showTimeline, setShowTimeline] = useState(true);
   const INITIAL_TIME = {hour: 9, minutes: 0};
-  const [eventTL, setEventTL] = useState<Event[]>([]);
+  const [eventTL, setEventTL] = useState<EventDetail[]>([]);
   let date = useSelector(selectSelectedDate);
   const translate = useSelector(getTranslate);
   const dispatch = useDispatch();
@@ -66,7 +67,7 @@ const EventListScreen = ({route, navigation}: EventListScreenProps) => {
 
       try {
         if (allEvent) {
-          const groupedEvents: Event[] = [];
+          const groupedEvents: EventDetail[] = [];
 
           allEvent.forEach(event => {
             if (event.recurrence_rule) {
@@ -134,7 +135,7 @@ const EventListScreen = ({route, navigation}: EventListScreenProps) => {
             }
           });
 
-          const multiDayEvents: Event[] = [];
+          const multiDayEvents: EventDetail[] = [];
           groupedEvents.forEach(event => {
             let currentDate = new Date(event.time_start);
             const endDate = new Date(event.time_end);
@@ -216,20 +217,34 @@ const EventListScreen = ({route, navigation}: EventListScreenProps) => {
     return markedDates;
   };
 
-  const formatEvent = (events: Event[]) => {
-    const allEvents = Object.values(events)
-      .flat()
-      .map((e: Event) => ({
-        id_calendar: e.id_calendar,
-        start: format(new Date(e.time_start), 'yyyy-MM-dd HH:mm:ss'),
-        end: format(new Date(e.time_end), 'yyyy-MM-dd HH:mm:ss'),
-        title: e.title,
-        color: e.color,
-      }));
+  const formatEvent = (events: EventDetail[]) => {
+    const allEvents = events.map((e: EventDetail) => {
+      const start = new Date(e.time_start);
+      const end = new Date(e.time_end);
 
-    const eventsByDate = _.groupBy(allEvents, e =>
-      CalendarUtils.getCalendarDateString(e.start),
-    );
+      return {
+        id_calendar: e.id_calendar,
+        id_family: e.id_family,
+        category: e.category,
+        title: e.title,
+        description: e.description,
+        start: format(start, 'yyyy-MM-dd HH:mm:ss'),
+        end: format(end, 'yyyy-MM-dd HH:mm:ss'),
+        is_all_day: e.is_all_day,
+        location: e.location,
+        color: e.color,
+        start_timezone: e.start_timezone,
+        end_timezone: e.end_timezone,
+        recurrence_id: e.recurrence_id,
+        recurrence_exception: e.recurrence_exception,
+        recurrence_rule: e.recurrence_rule,
+        created_at: e.created_at,
+        updated_at: e.updated_at,
+        categoryEvent: e.categoryEvent,
+      };
+    });
+
+    const eventsByDate = _.groupBy(allEvents, e => e.start.split(' ')[0]);
 
     return eventsByDate;
   };
@@ -249,11 +264,30 @@ const EventListScreen = ({route, navigation}: EventListScreenProps) => {
     dispatch(setSelectedDate(date.toISOString()));
     await handleGetCalendarForDay(selectedMonth);
   };
-  const handlePressEvent = (item: any) => {
-    dispatch(setSelectedEventById(item.id_calendar));
+  const handlePressEvent = (item: EventDetail) => {
+    const eventDetail: EventDetail = {
+      id_calendar: item.id_calendar,
+      id_family: item.id_family,
+      category: item.category,
+      title: item.title,
+      description: item.description,
+      time_start: new Date(item.start).toISOString(),
+      time_end: new Date(item.end).toISOString(),
+      is_all_day: item.is_all_day,
+      location: item.location,
+      color: item.color,
+      start_timezone: item.start_timezone,
+      end_timezone: item.end_timezone,
+      recurrence_id: item.recurrence_id,
+      recurrence_exception: item.recurrence_exception,
+      recurrence_rule: item.recurrence_rule,
+      categoryEvent: item.categoryEvent,
+    };
+
+    dispatch(setSelectedEvent(eventDetail));
     navigation.navigate('EventDetailsScreen', {
       id_family: id_family,
-      id_calendar: item.id_calendar,
+      id_calendar: eventDetail.id_calendar,
     });
   };
 
