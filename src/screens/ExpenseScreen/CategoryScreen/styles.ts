@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
   categoryName: {
     fontSize: 16,
     flex: 1,
+    marginLeft: 20,
   },
   deleteButton: {
     padding: 10,

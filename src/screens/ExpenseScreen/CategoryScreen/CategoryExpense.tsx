@@ -33,6 +33,27 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {Toast} from 'react-native-toast-notifications';
+const categoryIcons = {
+  'Food & Groceries': 'fast-food',
+  Rent: 'home',
+  Utilities: 'water',
+  Transportation: 'car',
+  Healthcare: 'heart',
+  Education: 'school',
+  Entertainment: 'tv',
+  Insurance: 'shield',
+  'Debt Payments': 'cash',
+  Savings: 'cash',
+  Salary: 'cash',
+  Services: 'briefcase',
+  Investments: 'cash',
+  Dividends: 'cash',
+  'Consulting fees': 'briefcase',
+  Royalties: 'gift',
+  Grants: 'gift',
+  Bonuses: 'gift',
+  Interest: 'cash',
+};
 
 const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
   const expenseType = useSelector(selectExpenseTypes);
@@ -210,31 +231,40 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
     setSelectedCategoryType(option);
   };
 
-  const renderCategoryItem = ({item}: {item: any}) => (
-    <TouchableOpacity
-      style={styles.categoryItemContainer}
-      onPress={() => selectCategory(item)}>
-      <Image source={{uri: urlFood}} style={styles.categoryImage} />
-      <Text style={[styles.categoryName, {color: color.text}]}>
-        {selectedCategoryType === 'Expense'
-          ? location === 'vi'
-            ? item.expense_type_name_vn
-            : item.expense_type_name
-          : location === 'vi'
-            ? item.income_source_name_vn
-            : item.income_source_name}
-      </Text>
+  const renderCategoryItem = ({item}: {item: any}) => {
+    // Lấy tên loại chi phí hoặc thu nhập
+    const categoryName =
+      selectedCategoryType === 'Expense'
+        ? location === 'vi'
+          ? item.expense_type_name_vn
+          : item.expense_type_name
+        : location === 'vi'
+          ? item.income_source_name_vn
+          : item.income_source_name;
+
+    // Xác định biểu tượng dựa trên tên loại chi phí hoặc thu nhập
+    const iconName = categoryIcons[categoryName] || 'ellipsis-horizontal';
+
+    return (
       <TouchableOpacity
-        onPress={() =>
-          selectedCategoryType === 'Expense'
-            ? onDeleteExpense(item)
-            : onDeleteIncome(item)
-        }
-        style={styles.deleteButton}>
-        <Icon name="trash-outline" size={20} color="red" />
+        style={styles.categoryItemContainer}
+        onPress={() => selectCategory(item)}>
+        <Icon name={iconName} size={40} color={color.text} />
+        <Text style={[styles.categoryName, {color: color.text}]}>
+          {categoryName}
+        </Text>
+        <TouchableOpacity
+          onPress={() =>
+            selectedCategoryType === 'Expense'
+              ? onDeleteExpense(item)
+              : onDeleteIncome(item)
+          }
+          style={styles.deleteButton}>
+          <Icon name="trash-outline" size={20} color="red" />
+        </TouchableOpacity>
       </TouchableOpacity>
-    </TouchableOpacity>
-  );
+    );
+  };
 
   return (
     <SafeAreaView

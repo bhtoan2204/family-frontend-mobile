@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   expenseItem: {
-    marginLeft: 5,
+    //marginLeft: 5,
     fontSize: 16,
     justifyContent: 'center',
   },
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     color: '#ccc',
   },
   icon: {
-    marginRight: 20,
+    //marginRight: 20,
   },
 
   walletContainer: {
