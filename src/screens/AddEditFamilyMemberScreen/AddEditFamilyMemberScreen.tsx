@@ -4,6 +4,7 @@ import {
   Image,
   Keyboard,
   KeyboardAvoidingView,
+  Linking,
   SafeAreaView,
   ScrollView,
   Text,
@@ -28,6 +29,10 @@ import Invite from './Invite';
 import {selectProfile} from 'src/redux/slices/ProfileSclice';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
+import * as Clipboard from 'expo-clipboard';
+import {Toast} from 'react-native-toast-notifications';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 
 const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
   navigation,
@@ -75,7 +80,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
 
   const handleAddMember = async () => {
     try {
-      if (!p_phone && !email && !inviteLink) {
+      if (!p_phone && !email) {
         Alert.alert(
           t('missingInformation'),
           t('missingInformationMessage'),
@@ -102,12 +107,16 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
         phone: formattedPhone || '',
       });
 
-      if (result.data === t('successMessage')) {
-        Alert.alert(t('inform'), result.data);
+      if (result) {
+        //dispatch(addMember())
+        Toast.show(t('successMessage'), {
+          type: 'success',
+          duration: 3000,
+        });
       } else {
         Alert.alert(
-          t('inform'),
-          result.data,
+          t('error'),
+          t('errorMessage'),
           [
             {
               text: 'Cancel',
@@ -116,7 +125,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
             },
             {
               text: t('invite'),
-              onPress: () => Invite(id_family, email, profile),
+              onPress: () => Invite(id_family, email, profile, inviteLink),
             },
           ],
           {cancelable: false},
@@ -124,6 +133,42 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
       }
     } catch (error: any) {
       console.log('FamilyServices.addMember result:', error);
+    }
+  };
+
+  const handleOpenLink = async () => {
+    if (inviteLink) {
+      try {
+        await Linking.openURL(inviteLink);
+      } catch (error) {
+        console.error('Error opening link:', error);
+      }
+    } else {
+      Alert.alert('No invite link available.');
+    }
+  };
+
+  const handleCopyLink = async () => {
+    await Clipboard.setStringAsync(inviteLink);
+
+    Toast.show('Link copied to clipboard', {
+      type: 'success',
+      duration: 3000,
+    });
+  };
+  const handleShare = async () => {
+    try {
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(inviteLink, {
+          mimeType: 'text/plain',
+          dialogTitle: 'Share Invite Link',
+          UTI: 'public.plain-text',
+        });
+      } else {
+        Alert.alert('Sharing is not available on this device.');
+      }
+    } catch (error) {
+      console.log('Error sharing:', error);
     }
   };
 
@@ -136,7 +181,13 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView contentContainerStyle={styles.scrollViewContainer}>
             <View style={styles.header}>
-              <TouchableOpacity onPress={() => navigation.goBack()}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('AllMember', {
+                    id_family: id_family,
+                    forceUpdate: new Date().getTime(),
+                  })
+                }>
                 <Ionicons name="close" size={34} color={color.text} />
               </TouchableOpacity>
               <Text style={[styles.title, {color: color.text}]}>
@@ -186,11 +237,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                   <TouchableOpacity
                     onPress={openContacts}
                     style={{zIndex: 1, right: 15, position: 'absolute'}}>
-                    <Icon
-                      name="person-add"
-                      size={24}
-                      style={styles.contactIcon}
-                    />
+                    <Icon name="person-add" size={24} color={color.text} />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -215,7 +262,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                   style={[
                     styles.inputControl,
                     {
-                      color: email ? 'black' : '#A6A6A6',
+                      color: email ? color.text : '#A6A6A6',
                       backgroundColor: color.white,
                     },
                   ]}
@@ -223,36 +270,49 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                   onChangeText={setEmail}
                 />
               </View>
-              {/* <MaterialCommunityIcons
-                name="link-variant"
-                size={26}
-                style={{
-                  position: 'absolute',
-                  zIndex: 1,
-                  marginLeft: 20,
-                  top: 10,
-                  color: COLORS.Rhino,
-                }}
-              /> */}
-              <Text
-                style={[
-                  {
-                    color: inviteLink ? color.text : '#A6A6A6',
-                    marginBottom: 50,
-                  },
-                ]}>
-                {inviteLink}
-              </Text>
-            </View>
+              <View style={styles.addButtonContainer}>
+                <CustomButton
+                  style={styles.btn}
+                  title={t('Add member')}
+                  filled
+                  onPress={handleAddMember}
+                  backgroundImage={require('src/assets/images/button.png')}
+                />
+              </View>
 
-            <View style={styles.addButtonContainer}>
-              <CustomButton
-                style={styles.btn}
-                title={t('Add member')}
-                filled
-                onPress={handleAddMember}
-                backgroundImage={require('src/assets/images/button.png')}
-              />
+              <Text
+                style={[styles.inviteLinkLabel, {color: 'gray', fontSize: 17}]}>
+                {t('inviteLinkLabel')}{' '}
+              </Text>
+              <View
+                style={[
+                  styles.inviteLinkWrapper,
+                  {backgroundColor: color.white},
+                ]}>
+                <View style={styles.inviteLinkContent}>
+                  <TouchableOpacity
+                    onPress={handleOpenLink}
+                    style={styles.inviteLinkContainer}>
+                    <Text style={styles.inviteLinkText}>
+                      {inviteLink || t('generateInviteLink')}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleCopyLink}
+                    style={styles.copyButton}>
+                    <Icon name="copy" size={24} color={color.text} />
+                  </TouchableOpacity>
+                </View>
+                <TouchableOpacity
+                  onPress={handleShare}
+                  style={styles.shareButton}>
+                  <Icon
+                    name="share-social"
+                    size={24}
+                    color={COLORS.BlueLight}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
           </ScrollView>
         </TouchableWithoutFeedback>

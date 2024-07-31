@@ -13,7 +13,6 @@ const FamilyUrl = {
   leaveFamily: `${baseUrl}/api/v1/family/leaveFamily`,
   changeAvatar: `${baseUrl}/api/v1/family/changeAvatar`,
   inviteMember: `${baseUrl}/api/v1/invitation/generateInvitation`,
-
 };
 
 export default FamilyUrl;

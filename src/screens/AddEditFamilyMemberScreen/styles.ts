@@ -129,9 +129,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   addButtonContainer: {},
-  contactIcon: {
-    color: COLORS.Rhino,
-  },
+
   sheetHeader: {
     backgroundColor: COLORS.darkgray,
     paddingVertical: 15,
@@ -204,7 +202,46 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
   },
-  invitelink: {},
+  inviteLinkWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 10,
+    borderRadius: 10,
+    marginVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  inviteLinkContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inviteLinkLabel: {
+    fontSize: 20,
+    marginLeft: 5,
+    marginTop: 20,
+  },
+  inviteLinkContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inviteLinkText: {
+    color: COLORS.BlueLight,
+    fontSize: 18,
+    textDecorationLine: 'underline',
+    marginRight: 10,
+  },
+  shareButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  shareIcon: {
+    marginLeft: 10,
+  },
 });
 
 export default styles;

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import {
   FlatList,
   Text,
@@ -103,7 +103,7 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
     }
   };
 
-  const UserContact: React.FC<{item: Contact}> = ({item}) => (
+  const UserContact = React.memo(({item}: {item: Contact}) => (
     <View
       style={[
         {
@@ -142,9 +142,9 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
         </View>
       </View>
     </View>
-  );
+  ));
 
-  const NormalContact: React.FC<{item: Contact}> = ({item}) => (
+  const NormalContact = React.memo(({item}: {item: Contact}) => (
     <View
       style={[
         {
@@ -171,7 +171,7 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
         </Text>
       </View>
     </View>
-  );
+  ));
 
   const renderContactItem = ({item}: {item: Contact}) => {
     return (
@@ -187,28 +187,42 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
     );
   };
 
+  const contactList = useMemo(
+    () => (
+      <FlatList
+        data={contacts}
+        renderItem={renderContactItem}
+        keyExtractor={item => item.id || ''}
+        ListEmptyComponent={() => <Text>{t('No contacts found')}</Text>}
+      />
+    ),
+    [contacts, color, renderContactItem, t],
+  );
+
   return (
     <SafeAreaView
       style={{
         backgroundColor: color.background,
         marginBottom: SCREEN_HEIGHT * 0.05,
       }}>
-      <View style={styles.headerContainer}>
+      <View
+        style={[styles.headerContainer, {backgroundColor: color.background}]}>
         <Text style={[styles.headerTitle, {color: color.text}]}>
           {t('Contact List')}
         </Text>
       </View>
       {isLoading ? (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <ActivityIndicator size="large" color={COLORS.Primary} />
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: color.background,
+          }}>
+          <ActivityIndicator size="large" color={color.text} />
         </View>
       ) : (
-        <FlatList
-          data={contacts}
-          renderItem={renderContactItem}
-          keyExtractor={item => item.id || ''}
-          ListEmptyComponent={() => <Text>{t('No contacts found')}</Text>}
-        />
+        contactList
       )}
     </SafeAreaView>
   );

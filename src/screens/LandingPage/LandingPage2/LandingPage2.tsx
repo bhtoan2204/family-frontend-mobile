@@ -8,6 +8,8 @@ import {
   HomeTabProps,
 } from 'src/navigation/NavigationTypes';
 import {useThemeColors} from 'src/hooks/useThemeColor';
+import {useSelector} from 'react-redux';
+import {getTranslate} from 'src/redux/slices/languageSlice';
 
 type CombinedScreenProps = LandingPageScreenProps &
   LandingPage3ScreenProps &
@@ -15,10 +17,12 @@ type CombinedScreenProps = LandingPageScreenProps &
 
 const LandingPage2 = ({navigation}: CombinedScreenProps) => {
   const color = useThemeColors();
+  const t = useSelector(getTranslate);
 
   const handleGoButtonPress = () => {
     navigation.navigate('HomeTab', {screen: 'HomeScreen'});
   };
+
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: color.background}]}>
@@ -32,20 +36,17 @@ const LandingPage2 = ({navigation}: CombinedScreenProps) => {
       <View style={styles.content}>
         <View style={styles.contentHeader}>
           <Text style={styles.title}>
-            Plan your day{'\n'}with{' '}
+            {t('plan_your_day')}{' '}
             <View style={styles.appName}>
-              <Text style={styles.appNameText}>Fam Fund</Text>
+              <Text style={styles.appNameText}>{t('app_name')}</Text>
             </View>
           </Text>
-          <Text style={styles.text}>
-            Fostering Strong Family Connections: Connect, Organize, Share, and
-            Treasure Every Moment Together.
-          </Text>
+          <Text style={styles.text}>{t('description')}</Text>
         </View>
 
         <TouchableOpacity onPress={handleGoButtonPress}>
           <View style={[styles.button, {flexDirection: 'row'}]}>
-            <Text style={[styles.buttonText, {left: 15}]}>Let's go</Text>
+            <Text style={[styles.buttonText, {left: 15}]}>{t('lets_go')}</Text>
             <Icon
               name="arrow-forward"
               size={24}

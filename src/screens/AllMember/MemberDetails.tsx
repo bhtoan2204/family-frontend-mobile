@@ -22,17 +22,24 @@ import {COLORS} from 'src/constants';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {Role} from 'src/interface/member/member';
 import {MemberDetailsScreenProps} from 'src/navigation/NavigationTypes';
-import {selectSelectedMember} from 'src/redux/slices/FamilySlice';
+import {
+  removeMember,
+  selectSelectedFamily,
+  selectSelectedMember,
+} from 'src/redux/slices/FamilySlice';
 import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 import {setUserMessage} from 'src/redux/slices/MessageUser';
 import {RootState} from 'src/redux/store';
 import {FamilyServices} from 'src/services/apiclient';
 import RoleService from 'src/services/apiclient/RoleServices';
+import IconL from 'react-native-vector-icons/Ionicons';
+
 const screenHeight = Dimensions.get('screen').height;
 
 const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
   const member = useSelector((state: RootState) => state.family.selectedMember);
   const local = useSelector(selectLocale);
+  const family = useSelector(selectSelectedFamily);
 
   const [newRole, setNewRole] = useState(
     local === 'vi'
@@ -77,15 +84,17 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
         member.id_family,
         roleName.id_family_role,
       );
-      setNewRole(local == 'vi' ? roleName.role_name_vn : roleName.role_name_en);
+      setNewRole(
+        local === 'vi' ? roleName.role_name_vn : roleName.role_name_en,
+      );
       setModalVisible(false);
-      Toast.show('Assign role successfully', {
+      Toast.show(translate('roleAssignSuccess'), {
         type: 'success',
         duration: 3000,
       });
     } catch (error) {
       console.log(error);
-      Toast.show('Fail to assign role', {
+      Toast.show(translate('roleAssignFail'), {
         type: 'danger',
         duration: 3000,
       });
@@ -93,15 +102,25 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
       setIsLoading(false);
     }
   };
+
   const renderRoleItem = ({item}: {item: Role}) => (
     <TouchableOpacity
-      style={styles.roleItem}
+      style={[styles.roleItemContainer, {backgroundColor: color.white}]}
       onPress={() => handleRoleSelect(item)}>
-      <Text style={[styles.roleItem, {color: color.text}]}>
+      <Text style={[styles.roleItemText, {color: color.text}]}>
         {local == 'vi' ? item.role_name_vn : item.role_name_en}
       </Text>
+      {item.id_family_role === member.familyRoles.id_family_role && (
+        <MaterialCommunityIcons
+          name="check"
+          color={COLORS.DenimBlue}
+          size={20}
+          style={styles.checkIcon}
+        />
+      )}
     </TouchableOpacity>
   );
+
   const handlePressMessage = async () => {
     await dispatch(setUserMessage(member?.user));
     navigation.navigate('ChatStack', {
@@ -110,23 +129,47 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
     });
   };
   const handleRemoveMember = async () => {
-    setIsLoading(true);
-    try {
-      await FamilyServices.kickMember(member.id_user, member?.id_family);
-      Toast.show('Member removed successfully', {
-        type: 'success',
-        duration: 3000,
-      });
-    } catch (error) {
-      console.log(error);
-
-      Toast.show('Only owner can remove member', {
-        type: 'danger',
-        duration: 3000,
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    Alert.alert(
+      translate('confirmRemovalTitle'),
+      translate('confirmRemovalMessage'),
+      [
+        {
+          text: translate('cancel'),
+          onPress: () => console.log('Removal cancelled'),
+          style: 'cancel',
+        },
+        {
+          text: translate('ok'),
+          onPress: async () => {
+            setIsLoading(true);
+            try {
+              await FamilyServices.kickMember(
+                member.id_user,
+                member?.id_family,
+              );
+              Toast.show(translate('memberRemovedSuccess'), {
+                type: 'success',
+                duration: 3000,
+              });
+              await dispatch(removeMember(member?.id_family, member?.id_user));
+              navigation.navigate('AllMember', {
+                id_family: family?.id_family,
+                forceUpdate: new Date().getTime(),
+              });
+            } catch (error) {
+              console.log(error);
+              Toast.show(translate('memberRemovedFail'), {
+                type: 'danger',
+                duration: 3000,
+              });
+            } finally {
+              setIsLoading(false);
+            }
+          },
+        },
+      ],
+      {cancelable: false},
+    );
   };
 
   return (
@@ -356,8 +399,7 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
             style={styles.centeredView}
             activeOpacity={1}
             onPressOut={() => setModalVisible(false)}>
-            <View
-              style={[styles.modalView, {backgroundColor: color.background}]}>
+            <View style={[styles.modalView, {backgroundColor: color.white}]}>
               <Text style={[styles.modalTitle, {color: color.text}]}>
                 {translate('Select Role')}
               </Text>
@@ -498,7 +540,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     maxHeight: '70%',
-    width: '60%',
+    width: '80%',
   },
   modalTitle: {
     fontSize: 20,
@@ -518,8 +560,26 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: 'gray',
     color: '#555',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  roleItemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: 'gray',
+  },
+  roleItemText: {
+    fontSize: 18,
+    flex: 1,
+  },
+  checkIcon: {
+    marginLeft: 10,
   },
 });
 

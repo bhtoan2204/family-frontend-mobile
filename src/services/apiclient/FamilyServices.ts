@@ -244,13 +244,14 @@ const FamilyServices = {
   },
 
   //da xong
-  getAllMembers: async ({id_family}: {id_family?: number}) => {
+  getAllMembers: async (search: string, id_family?: number) => {
     try {
       const response: AxiosResponse = await instance.get(
         FamilyUrl.getAllMembers,
         {
           params: {
             id_family,
+            search,
           },
         },
       );
@@ -298,11 +299,12 @@ const FamilyServices = {
         phone,
       });
       if (response.status === 201) {
-        return response.data;
+        return true;
+      } else {
+        return false;
       }
     } catch (error) {
-      console.error('Error in addMember:', error);
-      //throw new Error(ERROR_TEXTS.ADD_MEMBER_ERROR);
+      //console.error('Error in addMember:', error);
     }
   },
 
@@ -349,8 +351,13 @@ const FamilyServices = {
   },
   inviteMember: async (familyId?: number) => {
     try {
-      const response: AxiosResponse = await axios.get(
-        `${FamilyUrl.inviteMember}/${familyId}`,
+      const response: AxiosResponse = await instance.get(
+        `${FamilyUrl.inviteMember}`,
+        {
+          params: {
+            id_family: familyId,
+          },
+        },
       );
       if (response.status === 201) {
         return response.data.data;

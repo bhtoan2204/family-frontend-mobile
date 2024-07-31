@@ -1,11 +1,13 @@
-import { Linking } from 'react-native';
-import { FamilyServices } from 'src/services/apiclient';
+import {Linking} from 'react-native';
+import {FamilyServices} from 'src/services/apiclient';
 
-const Invite = async (id_family?: number, email: string, profile: { firstname: string, lastname: string }) => {
+const Invite = async (
+  id_family?: number,
+  email: string,
+  profile: {firstname: string; lastname: string},
+  link: string,
+) => {
   try {
-    const data = await FamilyServices.inviteMember(id_family);
-
-    const link = `http://localhost:8080/invite/${id_family}/${data.code}`;
     const subject = 'Invitation to Join Family';
     const body = `Hello,
 

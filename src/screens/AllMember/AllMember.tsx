@@ -14,6 +14,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import {AllMemberScreenProps} from 'src/navigation/NavigationTypes';
 import {
   selectFamilyMembers,
+  setFamilyMembers,
   setSelectedFamilyById,
   setSelectedMemberById,
 } from 'src/redux/slices/FamilySlice';
@@ -23,6 +24,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
+import {FamilyServices} from 'src/services/apiclient';
+import {useRoute} from '@react-navigation/native';
 
 const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
   const {id_family} = route.params || {};
@@ -32,6 +35,19 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
   const translate = useSelector(getTranslate);
   const local = useSelector(selectLocale);
   const color = useThemeColors();
+
+  useEffect(() => {
+    fetchData();
+  }, [searchQuery, route.params?.forceUpdate]);
+
+  const fetchData = async () => {
+    try {
+      const data = await FamilyServices.getAllMembers(searchQuery, id_family);
+      dispatch(setFamilyMembers(data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleAddMember = () => {
     const phone = undefined;
@@ -95,7 +111,7 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
                   autoComplete="off"
                   placeholder={translate('SEARCH')}
                   placeholderTextColor="gray"
-                  style={[styles.headerSearchInput, {color: color.textSubdued}]}
+                  style={[styles.headerSearchInput, {color: color.text}]}
                   onChangeText={text => setSearchQuery(text)}
                   value={searchQuery}
                 />

@@ -1,4 +1,3 @@
-
 export interface User {
   id_user: string;
   email: string;
@@ -25,7 +24,7 @@ export interface Member {
   user: User;
   familyRoles: Role;
 }
-export interface Role{
+export interface Role {
   id_family_role: number;
   role_name_vn: string;
   role_name_en: string;

@@ -37,6 +37,7 @@ import {Member} from 'src/interface/member/member';
 import * as ImagePicker from 'expo-image-picker';
 import {Service} from 'src/interface/package/mainPackage';
 import {useThemeColors} from 'src/hooks/useThemeColor';
+import {getTranslate} from 'src/redux/slices/languageSlice';
 
 const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const color = useThemeColors();
@@ -53,11 +54,12 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
   const screenHeight = Dimensions.get('screen').height;
   const [functions, setFunctions] = useState<Service[]>([]);
+  const translate = useSelector(getTranslate);
   const cards = [
     {
       id: 1,
       title: 'Members',
-      detail: 'Manage family members.',
+      detail: 'Manage family members',
       icon: require('../../assets/icons/family-member.png'),
     },
     {
@@ -69,31 +71,31 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     {
       id: 4,
       title: 'Calendar',
-      detail: 'Organize events and activities.',
+      detail: 'Organize events and activities',
       icon: require('../../assets/icons/calendar-scheduling.png'),
     },
     {
       id: 5,
       title: 'Guideline',
-      detail: 'Provides for family activities.',
+      detail: 'Provides for family activities',
       icon: require('../../assets/icons/guideline-items.png'),
     },
     {
       id: 6,
       title: 'Household',
-      detail: 'Optimize household devices.',
+      detail: 'Optimize household devices',
       icon: require('../../assets/icons/household-appliances.png'),
     },
     {
       id: 7,
       title: 'Check List',
-      detail: 'Manage family task lists.',
+      detail: 'Manage family task lists',
       icon: require('../../assets/icons/checklist.png'),
     },
     {
       id: 8,
       title: 'Shopping',
-      detail: 'Organize and track groceries.',
+      detail: 'Organize and track groceries',
       icon: require('../../assets/icons/shopping-list.png'),
     },
   ];
@@ -293,7 +295,8 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
 
   if (isLoading || !selectedFamily) {
     return (
-      <View style={[styles.loadingContainer, {backgroundColor: color.background}]}>
+      <View
+        style={[styles.loadingContainer, {backgroundColor: color.background}]}>
         <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     );
@@ -454,10 +457,10 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
                     onPress={() => handlePress(card.id)}
                     style={[styles.card, {backgroundColor: color.card}]}>
                     <Text style={[styles.title, {color: color.text}]}>
-                      {card.title}
+                      {translate(card.title)}
                     </Text>
                     <Text style={[styles.detail, {color: color.textSubdued}]}>
-                      {card.detail}
+                      {translate(card.detail)}
                     </Text>
                     <Image source={card.icon} style={styles.icon} />
                   </TouchableOpacity>
