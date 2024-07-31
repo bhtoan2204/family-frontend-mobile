@@ -300,8 +300,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
                     style={[
                       styles.purchaseButton,
                       {backgroundColor: color.white},
-                    ]}
-                    onPress={() => handleBuyService(pkg)}>
+                    ]}>
                     <Text
                       style={[styles.purchaseButtonText, {color: color.text}]}>
                       {translate('purchased')}

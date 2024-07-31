@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     color: 'gray',
     marginBottom: 16,
   },
-  
+
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.DenimBlue,
     borderColor: COLORS.DenimBlue,
     marginBottom: 12,
-    width: '100%'
+    width: '100%',
   },
   btnText: {
     fontSize: 18,
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     borderWidth: 7,
     borderColor: COLORS.DenimBlue,
   },
-   submitButtonText: {
+  submitButtonText: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#ffffff',
@@ -249,34 +249,38 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ddd',
-    elevation: 1, // Để tạo hiệu ứng bóng cho Android
-    shadowColor: '#000', // Để tạo hiệu ứng bóng cho iOS
-    shadowOffset: { width: 0, height: 2 },
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
+
+  discountContainer: {
+    width: '80%',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+  },
   discountInput: {
     height: 40,
-    borderColor: '#ddd',
-    borderWidth: 1,
+    borderColor: '#e5e5e5',
     borderRadius: 8,
-    paddingHorizontal: 10,
-    backgroundColor: '#fff',
+    paddingHorizontal: 12,
     fontSize: 16,
-    width: '100%'
+    color: '#333',
   },
-  discountButton: {
-    marginTop: 10,
-    backgroundColor: '#007bff',
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+
+  inputContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    height: 50,
   },
-  discountButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+  icon: {
+    marginRight: 10,
   },
 });
 

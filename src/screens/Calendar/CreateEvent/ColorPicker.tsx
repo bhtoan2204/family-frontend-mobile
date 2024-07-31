@@ -6,16 +6,16 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
+  Animated,
 } from 'react-native';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import {CategoryEvent} from 'src/interface/calendar/CategoryEvent';
-import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 
-const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
+const {width: screenWidth} = Dimensions.get('window');
 
 const ColorPicker = ({
   navigation,
@@ -25,6 +25,7 @@ const ColorPicker = ({
   setEventCategory,
 }) => {
   const [availableColors, setAvailableColors] = useState<CategoryEvent[]>([]);
+  const animation = useState(new Animated.Value(-1))[0];
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
@@ -42,6 +43,15 @@ const ColorPicker = ({
     fetchData();
   }, [id_Family]);
 
+  useEffect(() => {
+    // Animate when selectedColorIndex changes
+    Animated.timing(animation, {
+      toValue: selectedColorIndex !== null ? selectedColorIndex : -1,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  }, [selectedColorIndex]);
+
   const handleColorSelect = (index: number, item: CategoryEvent) => {
     setEventCategory(item);
     setSelectedColorIndex(selectedColorIndex === index ? null : index);
@@ -55,24 +65,47 @@ const ColorPicker = ({
   };
 
   const renderColorCircles = () => {
-    return availableColors.map((item, index) => (
-      <View key={item.id_category_event} style={styles.containerColor}>
-        <TouchableOpacity
-          style={[
-            styles.colorCircle,
-            {backgroundColor: item.color},
-            selectedColorIndex === index && styles.selectedColor,
-          ]}
-          onPress={() => handleColorSelect(index, item)}>
-          {selectedColorIndex === index && <View style={styles.selected} />}
-        </TouchableOpacity>
-        <Text
-          style={[
-            styles.textHashtag,
-            {color: item.color},
-          ]}>{`#${item.title}`}</Text>
-      </View>
-    ));
+    return availableColors.map((item, index) => {
+      const isSelected = selectedColorIndex === index;
+      const animatedStyle = {
+        transform: [
+          {
+            scale: animation.interpolate({
+              inputRange: [-1, index],
+              outputRange: [1, 1.2],
+            }),
+          },
+        ],
+      };
+
+      return (
+        <View key={item.id_category_event} style={styles.containerColor}>
+          <TouchableOpacity
+            style={[
+              styles.colorCircle,
+              {backgroundColor: item.color, borderColor: item.color},
+              isSelected && styles.selectedColor,
+            ]}
+            onPress={() => handleColorSelect(index, item)}>
+            {isSelected && (
+              <Animated.View
+                style={[
+                  styles.selected,
+                  {backgroundColor: item.color},
+                  animatedStyle,
+                ]}
+              />
+            )}
+            {isSelected && <View style={styles.centerDot} />}
+          </TouchableOpacity>
+          <Text
+            style={[
+              styles.textHashtag,
+              {color: item.color},
+            ]}>{`#${item.title}`}</Text>
+        </View>
+      );
+    });
   };
 
   return (
@@ -99,6 +132,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     padding: 10,
+    marginTop: 10,
   },
   title: {
     fontSize: 18,
@@ -107,6 +141,7 @@ const styles = StyleSheet.create({
   },
   colorList: {
     alignItems: 'center',
+    marginTop: 10,
   },
   containerColor: {
     paddingRight: 15,
@@ -118,9 +153,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Arial',
   },
   colorCircle: {
-    width: screenWidth * 0.2,
-    height: screenHeight * 0.05,
-    borderRadius: screenHeight * 0.025,
+    width: screenWidth * 0.15,
+    height: screenWidth * 0.15,
+    borderRadius: screenWidth * 0.1,
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: '#f0f0f0',
@@ -132,9 +167,17 @@ const styles = StyleSheet.create({
     borderColor: '#000',
   },
   selected: {
+    width: screenWidth * 0.15,
+    height: screenWidth * 0.15,
+    borderRadius: screenWidth * 0.1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+  },
+  centerDot: {
+    position: 'absolute',
     width: screenWidth * 0.1,
-    height: screenHeight * 0.05,
-    borderRadius: screenHeight * 0.025,
+    height: screenWidth * 0.1,
+    borderRadius: screenWidth * 0.1,
     backgroundColor: 'white',
     borderWidth: 1,
     borderColor: '#ccc',
@@ -143,6 +186,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0e0e0',
     justifyContent: 'center',
     alignItems: 'center',
+    width: screenWidth * 0.15,
+    height: screenWidth * 0.15,
+    borderRadius: screenWidth * 0.1,
     marginBottom: 20,
   },
   plusSign: {

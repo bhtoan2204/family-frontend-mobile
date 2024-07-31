@@ -253,15 +253,31 @@ const styles = StyleSheet.create({
   radioPriceActive: {
     color: '#3f63ff',
   },
+  discountContainer: {
+    width: '80%',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+  },
   discountInput: {
     height: 40,
     borderColor: '#e5e5e5',
-    borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 12,
-    marginBottom: 16,
     fontSize: 16,
     color: '#333',
+  },
+
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    height: 50,
+  },
+  icon: {
+    marginRight: 10,
   },
 });
 

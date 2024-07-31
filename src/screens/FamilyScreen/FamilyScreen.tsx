@@ -35,134 +35,84 @@ import styles from './styles';
 import {Family} from 'src/interface/family/family';
 import {Member} from 'src/interface/member/member';
 import * as ImagePicker from 'expo-image-picker';
-import {Service} from 'src/interface/package/mainPackage';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate} from 'src/redux/slices/languageSlice';
+import {Service} from 'src/interface/package/mainPackage';
+
+const cards = [
+  {
+    id: 1,
+    title: 'Members',
+    detail: 'Manage family members',
+    icon: require('../../assets/icons/family-member.png'),
+  },
+  {
+    id: 3,
+    title: 'Education',
+    detail: 'Monitor educational progress',
+    icon: require('../../assets/icons/manage-eduction.png'),
+  },
+  {
+    id: 4,
+    title: 'Calendar',
+    detail: 'Organize events and activities',
+    icon: require('../../assets/icons/calendar-scheduling.png'),
+  },
+  {
+    id: 5,
+    title: 'Guideline',
+    detail: 'Provides for family activities',
+    icon: require('../../assets/icons/guideline-items.png'),
+  },
+  {
+    id: 6,
+    title: 'Household',
+    detail: 'Optimize household devices',
+    icon: require('../../assets/icons/household-appliances.png'),
+  },
+  {
+    id: 7,
+    title: 'Check List',
+    detail: 'Manage family task lists',
+    icon: require('../../assets/icons/checklist.png'),
+  },
+  {
+    id: 8,
+    title: 'Shopping',
+    detail: 'Organize and track groceries',
+    icon: require('../../assets/icons/shopping-list.png'),
+  },
+];
 
 const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
-  const color = useThemeColors();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const bottomSheetRef = useRef<RBSheet>(null);
   const allMemberRef = useRef<RBSheet>(null);
   const dispatch = useDispatch<AppDispatch>();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const families = useSelector(selectFamilies);
   const selectedFamily = useSelector(selectSelectedFamily);
-  const [membersMap, setMembersMap] = useState<{[key: number]: Member[]}>({});
+  const membersMap = useSelector(selectFamilyMembers);
   const shakeAnimation = useRef(new Animated.Value(0)).current;
   const rotateAnimation = useRef(new Animated.Value(0)).current;
   const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
   const screenHeight = Dimensions.get('screen').height;
-  const [functions, setFunctions] = useState<Service[]>([]);
+  const secondBottomSheetRef = useRef(null);
+  const color = useThemeColors();
   const translate = useSelector(getTranslate);
-  const secondBottomSheetRef = useRef<RBSheet>(null);
-
-  useEffect(() => {
-    secondBottomSheetRef.current?.open();
-  }, []);
-
-  const cards = [
-    {
-      id: 1,
-      title: 'Members',
-      detail: 'Manage family members',
-      icon: require('../../assets/icons/family-member.png'),
-    },
-    {
-      id: 3,
-      title: 'Education',
-      detail: 'Monitor educational progress',
-      icon: require('../../assets/icons/manage-eduction.png'),
-    },
-    {
-      id: 4,
-      title: 'Calendar',
-      detail: 'Organize events and activities',
-      icon: require('../../assets/icons/calendar-scheduling.png'),
-    },
-    {
-      id: 5,
-      title: 'Guideline',
-      detail: 'Provides for family activities',
-      icon: require('../../assets/icons/guideline-items.png'),
-    },
-    {
-      id: 6,
-      title: 'Household',
-      detail: 'Optimize household devices',
-      icon: require('../../assets/icons/household-appliances.png'),
-    },
-    {
-      id: 7,
-      title: 'Check List',
-      detail: 'Manage family task lists',
-      icon: require('../../assets/icons/checklist.png'),
-    },
-    {
-      id: 8,
-      title: 'Shopping',
-      detail: 'Organize and track groceries',
-      icon: require('../../assets/icons/shopping-list.png'),
-    },
-  ];
   const source =
     selectedFamily?.avatar && selectedFamily.avatar !== '[NULL]'
       ? {uri: selectedFamily.avatar}
       : require('../../assets/images/default_ava.png');
-
-  const fetchFunction = async () => {
-    try {
-      const data = await PackageServices.getAvailableFunction(
-        selectedFamily?.id_family,
-      );
-      setFunctions(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const memoizedFetchFunction = useMemo(
-    () => fetchFunction,
-    [selectedFamily?.id_family],
-  );
+  const [functions, setFunctions] = useState<Service[]>([]);
 
   useEffect(() => {
-    memoizedFetchFunction();
-  }, [memoizedFetchFunction]);
-
-  useEffect(() => {
-    fetchFamiliesAndMembers();
+    console.log(selectedFamily);
   }, []);
-  const fetchFamiliesAndMembers = async () => {
-    setIsLoading(true);
-    try {
-      const allFamilies = await FamilyServices.getAllFamily();
 
-      dispatch(setFamilies(allFamilies));
-
-      if (allFamilies.length > 0) {
-        const initialFamily = allFamilies[0];
-        dispatch(setSelectedFamily(initialFamily));
-      }
-
-      const membersObject = {};
-
-      for (let i = 0; i < allFamilies.length; i++) {
-        const family = allFamilies[i];
-        const members = await FamilyServices.getAllMembers({
-          id_family: family.id_family,
-        });
-        membersObject[family.id_family] = members;
-        setMembersMap(membersObject);
-      }
-
-      dispatch(setFamilyMembers(membersObject));
-    } catch (error) {
-      console.error('Error fetching families or members:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    secondBottomSheetRef.current!.open();
+  }, []);
 
   useEffect(() => {
     const animation = Animated.loop(
@@ -194,6 +144,25 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
     return () => animation.stop();
   }, []);
 
+  const fetchFunction = async () => {
+    try {
+      const data = await PackageServices.getAvailableFunction(
+        selectedFamily?.id_family,
+      );
+      setFunctions(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const memoizedFetchFunction = useMemo(
+    () => fetchFunction,
+    [selectedFamily?.id_family],
+  );
+
+  useEffect(() => {
+    memoizedFetchFunction();
+  }, [memoizedFetchFunction]);
   const handleChangeAvatar = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -255,8 +224,8 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         });
         break;
       case 3:
-        navigation.navigate('EducationStack', {
-          screen: 'EducationScreen',
+        navigation.navigate('FamilyStack', {
+          screen: 'Education',
           params: {id_family: selectedFamily!.id_family},
         });
         break;
@@ -279,8 +248,8 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         });
         break;
       case 7:
-        navigation.navigate('TodoListStack', {
-          screen: 'TodoList',
+        navigation.navigate('ShoppingListStack', {
+          screen: 'ShoppingList',
           params: {id_family: selectedFamily!.id_family},
         });
         break;
@@ -301,8 +270,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
 
   if (isLoading || !selectedFamily) {
     return (
-      <View
-        style={[styles.loadingContainer, {backgroundColor: color.background}]}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     );
@@ -487,6 +455,45 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         onChangeAvatar={handleChangeAvatar}
       />
       <RBSheet
+        ref={secondBottomSheetRef}
+        closeOnDragDown={false}
+        height={screenHeight * 0.7}
+        customStyles={{
+          wrapper: {
+            backgroundColor: 'rgba(0,0,0,0.7)',
+          },
+          container: {
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            height: screenHeight,
+            backgroundColor: 'transparent',
+          },
+        }}>
+        <TouchableOpacity
+          style={styles.cancel}
+          onPress={() => secondBottomSheetRef.current.close()}>
+          <Image
+            source={require('../../assets/images/Cancel.png')}
+            resizeMode="stretch"
+            style={styles.cancelImage}
+          />
+        </TouchableOpacity>
+        <Image
+          source={require('../../assets/images/poster.png')}
+          resizeMode="stretch"
+          style={styles.fullScreenImage}
+        />
+        <TouchableOpacity
+          style={styles.explore}
+          onPress={() => secondBottomSheetRef.current.close()}>
+          <Image
+            source={require('../../assets/images/explore.png')}
+            resizeMode="stretch"
+            style={styles.exploreImage}
+          />
+        </TouchableOpacity>
+      </RBSheet>
+      <RBSheet
         ref={bottomSheetRef}
         closeOnDragDown={true}
         height={screenHeight * 0.5}
@@ -501,43 +508,6 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
           name={selectedFamily?.name}
           description={selectedFamily?.description}
         />
-      </RBSheet>
-      <RBSheet
-        ref={secondBottomSheetRef}
-        closeOnDragDown={true}
-        height={screenHeight}
-        customStyles={{
-          wrapper: {
-            backgroundColor: 'rgba(0,0,0,0.7)',
-          },
-          container: {
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            height: screenHeight,
-            backgroundColor: 'transparent',
-          },
-        }}>
-        <TouchableOpacity
-          style={styles.cancel}
-          onPress={() => secondBottomSheetRef.current?.close()}>
-          <Image
-            source={require('../../assets/images/Cancel.png')}
-            resizeMode="stretch"
-            style={styles.cancelImage}
-          />
-        </TouchableOpacity>
-        <Image
-          source={require('../../assets/images/poster.png')}
-          resizeMode="stretch"
-          style={styles.fullScreenImage}
-        />
-        <TouchableOpacity style={styles.explore}>
-          <Image
-            source={require('../../assets/images/explore.png')}
-            resizeMode="stretch"
-            style={styles.exploreImage}
-          />
-        </TouchableOpacity>
       </RBSheet>
     </View>
   );

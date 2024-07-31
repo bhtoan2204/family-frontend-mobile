@@ -407,7 +407,7 @@
   "Check List": "Check List",
   "Manage family task lists": "Manage family task lists.",
   "Shopping": "Shopping",
-  "Organize and track groceries.": "Organize and track groceries.",
+  "Organize and track groceries": "Organize and track groceries.",
   "Are you sure you want to leave this family?": "Are you sure you want to leave this family?",
   "Leave": "Leave",
   "Members": "Members",
@@ -419,5 +419,7 @@
   "An error occurred while creating the category.": "An error occurred while creating the category.",
   "Are you sure you want to delete this category?": "Are you sure you want to delete this category?",
   "The category has been deleted successfully": "The category has been deleted successfully",
-  "An error occurred while deleting the category.": "An error occurred while deleting the category."
+  "An error occurred while deleting the category.": "An error occurred while deleting the category.",
+  "Finance": "Finance",
+  "Enter discount code": "Enter discount code"
 }

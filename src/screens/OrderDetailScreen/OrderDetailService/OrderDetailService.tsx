@@ -32,6 +32,7 @@ import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {PaymentMethod} from 'src/interface/purchased/purchased';
 import {AppDispatch} from 'src/redux/store';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const OrderDetailService = ({route, navigation}: OrderDetailServiceProps) => {
   const [code, setCodeMethod] = useState('vnpay');
@@ -312,15 +313,31 @@ const OrderDetailService = ({route, navigation}: OrderDetailServiceProps) => {
               <Text style={[styles.detailsTitle, {color: color.text}]}>
                 {translate('Discount Code')}
               </Text>
-              <TextInput
+              <View
                 style={[
-                  styles.discountInput,
-                  {backgroundColor: color.white, color: color.text},
-                ]}
-                placeholder={translate('Enter discount code')}
-                onChangeText={handleDiscountCodeChange}
-                value={discountCode}
-              />
+                  styles.inputContainer,
+                  {backgroundColor: color.background},
+                ]}>
+                <Icon
+                  name="pricetag"
+                  size={24}
+                  color={color.text}
+                  style={styles.icon}
+                />
+                <TextInput
+                  style={[
+                    styles.discountInput,
+                    {
+                      color: color.text,
+                      fontWeight: 'bold',
+                    },
+                  ]}
+                  placeholder={translate('Enter discount code')}
+                  placeholderTextColor={color.placeholderText}
+                  onChangeText={handleDiscountCodeChange}
+                  value={discountCode}
+                />
+              </View>
             </View>
           </ScrollView>
         </SafeAreaView>

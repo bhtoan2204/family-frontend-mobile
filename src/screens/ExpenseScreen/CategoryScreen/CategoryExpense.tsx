@@ -181,6 +181,14 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
                   },
                 );
                 dispatch(deleteExpenseType(item.id_expenditure_type));
+              } else {
+                Toast.show(
+                  translate('An error occurred while deleting the category.'),
+                  {
+                    type: 'danger',
+                    duration: 3000,
+                  },
+                );
               }
             } catch (error) {
               console.error('Error deleting expense category:', error);

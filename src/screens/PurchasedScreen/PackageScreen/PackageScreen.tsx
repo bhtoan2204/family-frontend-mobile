@@ -31,6 +31,7 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
     try {
       const result = await PackageServices.getAllPackage();
       setPackages(result);
+      setSelectedPackage(packages[0]);
     } catch (error: any) {
       console.log('PackageServices.getPackage error:', error);
     }

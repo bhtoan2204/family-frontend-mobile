@@ -580,7 +580,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
                 color={color.text}
               />
               <Text style={{right: 30, fontSize: 16, color: color.text}}>
-                {translate('End Date')}
+                {translate('End time')}
               </Text>
               <DateTimePicker
                 value={repeatEndDate}
