@@ -78,6 +78,7 @@ const UpdateDescriptionSheet = ({
 
     }, [showError])
 
+
     const handleSubmit = async () => {
         Keyboard.dismiss()
         await handleRestore();
@@ -157,7 +158,7 @@ const UpdateDescriptionSheet = ({
 
                 }
             }}
-            keyboardBehavior="extend"
+            keyboardBehavior="interactive"
             keyboardBlurBehavior="restore"
 
 

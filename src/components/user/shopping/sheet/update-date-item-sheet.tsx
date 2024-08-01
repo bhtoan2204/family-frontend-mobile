@@ -67,7 +67,7 @@ const UpdateDateItemSheet = ({
         setKey((prev) => !prev)
     }, [isDarkMode])
 
-    console.log('hello dcmm', format(new Date('2024-07-05T19:26:03.642Z'), 'yyyy-MM-dd'))
+    // console.log('hello dcmm', format(new Date('2024-07-05T19:26:03.642Z'), 'yyyy-MM-dd'))
 
     const buildDate = (dateString: string) => {
         const date: Date = new Date(dateString);

@@ -27,6 +27,7 @@ import { updateDescription, updateDateTodoList } from 'src/redux/slices/TodoList
 
 import { to_vietnamese } from 'src/utils/currency-str';
 import { handleRestore } from 'src/utils/sheet/func';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
 
 
@@ -60,8 +61,8 @@ const UpdateDescriptionSheet = ({
 
 
     const [inputDescription, setInputDescription] = React.useState(description != "" ? description : '')
-
     const [isKeyboardFocused, setIsKeyboardFocused] = React.useState(false)
+    const isDarkMode = useSelector(getIsDarkMode)
 
     useEffect(() => {
         if (showError) {
@@ -72,6 +73,7 @@ const UpdateDescriptionSheet = ({
         }
 
     }, [showError])
+
 
     const handleSubmit = async () => {
         // dispatch(updateDescriptionItem({
@@ -114,9 +116,9 @@ const UpdateDescriptionSheet = ({
                 }}
                 // className='rounded-lg'
                 style={{
-                    backgroundColor: '#f5f5f5',
-                    borderWidth: 1,
-                    borderColor: '#DEDCDC',
+                    backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
+                    borderWidth: !isDarkMode ? 1 : 1.5,
+                    borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
                     borderRadius: 10,
                     marginVertical: 10,
                     paddingVertical: screenHeight * 0.02,
@@ -124,7 +126,7 @@ const UpdateDescriptionSheet = ({
                     marginHorizontal: screenWidth * 0.05,
                     // fontWeight: 'bold',
                     fontSize: 15,
-                    color: '#b0b0b0'
+                    color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
                 }}
             />
 
@@ -143,6 +145,10 @@ const UpdateDescriptionSheet = ({
 
             // handleComponent={null}
             // handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
+            backgroundStyle={{
+                backgroundColor: isDarkMode ? '#0A1220' : '#f7f7f7'
+            }}
+
             backdropComponent={renderBackdrop}
             onClose={() => {
                 Keyboard.dismiss()
@@ -160,7 +166,7 @@ const UpdateDescriptionSheet = ({
         >
             <BottomSheetView className='flex-1 bg-[#F7F7F7] ' style={{
                 flex: 1,
-                backgroundColor: '#F7F7F7',
+                backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7',
             }}>
                 <BottomSheetScrollView className='' showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='handled'>
 
@@ -169,14 +175,8 @@ const UpdateDescriptionSheet = ({
                             <Image source={AddInfoImageSheet} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                         </View>
                         <View className=' items-center'>
-                            <Text className='text-base font-semibold' style={{
-                                color: iOSGrayColors.systemGray6.accessibleDark
-
-                            }}>Add Item Information</Text>
-                            <Text className='text-sm my-3' style={{
-                                color: iOSGrayColors.systemGray6.accessibleDark
-
-                            }}>Enter description for your item</Text>
+                            <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >Add Item Information</Text>
+                            <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >Enter description for your item</Text>
                         </View>
                         {
                             buildInputDescription()

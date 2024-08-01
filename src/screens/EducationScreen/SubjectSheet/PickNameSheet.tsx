@@ -6,8 +6,9 @@ import { Picker } from '@react-native-picker/picker';
 import { ComponentScore, Subject } from 'src/interface/education/education';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { AppDispatch } from 'src/redux/store';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateComponentScoreOfSubject, updateNameOfComponentScore } from 'src/redux/slices/EducationSlice';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 interface PickScoreSheetProps {
     setNameSheetRef: React.RefObject<any>;
     // setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>;
@@ -36,6 +37,7 @@ const PickNameSheet = ({ setNameSheetRef, name, index, id_education_progress, id
     const [isValid, setIsValid] = React.useState<boolean>(isNumberInRange(inputValue))
     const inputRef = React.useRef<TextInput>(null)
     const dispatch = useDispatch<AppDispatch>();
+    const isDarkMode = useSelector(getIsDarkMode)
 
     const handleFocus = () => {
         setIsFocus(true)
@@ -127,7 +129,8 @@ const PickNameSheet = ({ setNameSheetRef, name, index, id_education_progress, id
             // closeOnPressBack
             customStyles={{
                 container: {
-                    backgroundColor: "#F5F6F7",
+                    backgroundColor: isDarkMode ? "#0A1220" : "#F7F7F7",
+
                     borderTopRightRadius: Dimensions.get("window").width * 0.03,
                     borderTopLeftRadius: Dimensions.get("window").width * 0.03
                     ,
@@ -146,7 +149,7 @@ const PickNameSheet = ({ setNameSheetRef, name, index, id_education_progress, id
         >
 
             <View className='flex-1 '>
-                <View className='flex-row items-center justify-between top-[-10] mb-6  z-[100000] pt-6 px-6' >
+                <View className='flex-row items-center justify-between top-[-10] mb-6  z-[100000] pt-6 px-6 ' >
                     <TouchableOpacity onPress={() => {
                         // setScoreSheetRef.current?.close()
                     }} >
@@ -154,7 +157,7 @@ const PickNameSheet = ({ setNameSheetRef, name, index, id_education_progress, id
                             color: iOSColors.systemRed.defaultDark
                         }}>Cancel</Text> */}
                     </TouchableOpacity >
-                    <Text className='text-base font-semibold '>Update name </Text>
+                    <Text className='text-base font-semibold text-black dark:text-white'>Update name </Text>
                     <TouchableOpacity onPress={() => {
                         // if (isNumberInRange(inputValue)) {
                         //     handleSave()
@@ -189,6 +192,7 @@ const PickNameSheet = ({ setNameSheetRef, name, index, id_education_progress, id
                                 onBlur={handleBlur}
                                 autoFocus
                                 editable
+                                placeholderTextColor={!isDarkMode ? '#b0b0b0' : '#A6A6A6'}
                                 placeholder={`Update new name. Old name: ${name}`}
                                 multiline={false}
                                 onChangeText={(text) => {
@@ -207,7 +211,8 @@ const PickNameSheet = ({ setNameSheetRef, name, index, id_education_progress, id
                                     marginBottom: 15,
                                     fontSize: 17,
                                     padding: 17,
-                                    backgroundColor: "#fff"
+                                    backgroundColor: isDarkMode ? "#171A21" : "#F7F7F7",
+                                    color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
 
                                 }}
                             />
