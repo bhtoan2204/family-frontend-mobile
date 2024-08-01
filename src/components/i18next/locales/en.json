@@ -423,5 +423,10 @@
   "Finance": "Finance",
   "Enter discount code": "Enter discount code",
   "Time": "Time",
-  "All Day": "All day"
+  "All Day": "All day",
+  "Leave family successfully": "Leave family successfully",
+  "Fail to leave family": "Fail to leave family",
+
+  "Family avatar changed successfully": "Family avatar changed successfully",
+  "Failed to change family avatar": "Failed to change family avatar"
 }

@@ -48,10 +48,6 @@ const CategoryExpense = ({
     'https://png.pngtree.com/element_our/20190530/ourmid/pngtree-correct-icon-image_1267804.jpg';
   const color = useThemeColors();
 
-  useEffect(() => {
-    console.log(expenseType);
-  });
-
   return (
     <View
       style={[styles.ContainerCategory, {backgroundColor: color.background}]}>

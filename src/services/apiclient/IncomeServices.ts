@@ -17,19 +17,19 @@ const IncomeServices = {
     }
   },
   createUtility: async (
-    id_family: number,
-    id_utilities_type: number,
-    value: number,
-    description: string,
-    utilityImg: string,
+    id_family?: number,
+    id_utilities_type?: number,
+    value?: number,
+    description?: string,
+    utilityImg?: string,
   ) => {
     try {
-      const createFormData = (): FormData => {
+      const createFormData = (utilityImg?: string): FormData => {
         let formData = new FormData();
         formData.append('id_family', String(id_family));
         formData.append('id_utilities_type', String(id_utilities_type));
         formData.append('value', String(value));
-        formData.append('description', description);
+        formData.append('description', String(description));
 
         if (utilityImg) {
           let filename = utilityImg.split('/').pop()!;
@@ -48,7 +48,7 @@ const IncomeServices = {
 
       const response: AxiosResponse = await instance.post(
         `${baseUrl}/api/v1/utilities/createUtility`,
-        createFormData(),
+        createFormData(utilityImg),
         {
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -65,7 +65,7 @@ const IncomeServices = {
     }
   },
 
-  getIncomeType: async (id_family: number) => {
+  getIncomeType: async (id_family?: number) => {
     try {
       const response: AxiosResponse = await instance.get(
         `${baseUrl}/api/v1/finance/incomeSource/getIncomeSource/${id_family}`,
@@ -192,7 +192,7 @@ const IncomeServices = {
           params: {
             page,
             itemsPerPage,
-            sortBy: 'created_at',
+            sortBy: 'income_date',
             sortDirection: 'DESC',
             id_family,
             fromDate,
@@ -210,9 +210,9 @@ const IncomeServices = {
     }
   },
   createIncome: async (
-    id_family: number | null,
-    amount: number | null,
-    id_created_by: string,
+    id_family?: number | null,
+    amount: number,
+    id_created_by?: string,
     id_income_source?: number,
     income_date?: Date,
     description?: string,

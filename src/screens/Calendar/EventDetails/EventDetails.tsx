@@ -111,7 +111,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
             text: translate('Delete This Event Only'),
             onPress: async () => {
               try {
-                const timeStartWithComma = `${event.recurrence_exception}${event.time_end},`;
+                const timeStartWithComma = `${event.recurrence_exception}${new Date(event.time_start).toISOString()},`;
 
                 await CalendarServices.UpdateEvent(
                   event.id_calendar,

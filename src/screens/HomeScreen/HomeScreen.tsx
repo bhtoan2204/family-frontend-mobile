@@ -194,9 +194,10 @@ const HomeScreen = ({
 
       for (let i = 0; i < validFamilies.length; i++) {
         const family = validFamilies[i];
-        const members = await FamilyServices.getAllMembers({
-          id_family: family.id_family,
-        });
+        const members = await FamilyServices.getAllMembers(
+          '',
+          family.id_family,
+        );
         const service = await PackageServices.getAvailableFunction(
           family.id_family,
         );

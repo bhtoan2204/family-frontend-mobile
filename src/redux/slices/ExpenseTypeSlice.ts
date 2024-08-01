@@ -8,7 +8,7 @@ interface ExpenseTypeSliceState {
 }
 
 const initialState: ExpenseTypeSliceState = {
-  categories: [], // Khởi tạo là một mảng
+  categories: [],
   selectedExpenseType: null,
 };
 

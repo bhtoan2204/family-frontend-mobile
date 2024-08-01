@@ -435,5 +435,10 @@
   "Finance": "Tài chính",
   "Enter discount code": "Nhập mã giảm giá",
   "Time": "Thời gian",
-  "All Day": "Cả ngày"
+  "All Day": "Cả ngày",
+  "Leave family successfully": "Rời khỏi gia đình thành công",
+  "Fail to leave family": "Rời khỏi gia đình thất bại",
+
+  "Family avatar changed successfully": "Đổi ảnh đại diện gia đình thành công",
+  "Failed to change family avatar": "Đổi ảnh đại diện gia đình thất bại"
 }
