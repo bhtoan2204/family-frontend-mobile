@@ -160,62 +160,6 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
-      // <TouchableOpacity
-      // key={family.id_family}
-      // onPress={() => NavigateFamily(family)}
-      // style={[styles.familyCard, {backgroundColor: color.white}]}>
-      //   {/* <TouchableOpacity
-      //     style={styles.settingsIconContainer}
-      //     onPress={() => setModalVisible(true)}>
-      //     <Icon
-      //       name="ellipsis-vertical"
-      //       size={24}
-      //       style={styles.settingsIcon}
-      //     />
-      //   </TouchableOpacity> */}
-      // <View style={styles.familyAvatarContainer}>
-      //   {family.avatar ? (
-      //     <Image source={{uri: family.avatar}} style={styles.familyAvatar} />
-      //   ) : (
-      //     <View style={styles.defaultAvatar} />
-      //   )}
-      // </View>
-      // <View style={styles.familyInfo}>
-      //   <Text style={[styles.familyName, {color: color.text}]}>
-      //     {family.name}
-      //   </Text>
-      //   <Text style={[styles.familyQuantity, {color: color.textSubdued}]}>
-      //     {translate('FAMILY_MEMBERS')}: {family.quantity}
-      //   </Text>
-      //   <View style={styles.expiredAtContainer}>
-      //     <Text style={[styles.familyQuantity, {color: color.textSubdued}]}>
-      //       {translate('EXPIRED_AT')}:{' '}
-      //     </Text>
-      //     <Text style={[styles.familyQuantity, styles.expiredAtText]}>
-      //       {moment(new Date(family.expired_at)).format('DD/MM/YYYY')}
-      //     </Text>
-      //   </View>
-      //   <View style={styles.buttonContainerFamily}>
-      //     <TouchableOpacity
-      //       style={[styles.buyServiceButton, styles.button]}
-      //       onPress={() => handleViewCombo()}>
-      //       <Text style={styles.buyServiceButtonText}>
-      //         {translate('BUY_SERVICE')}
-      //       </Text>
-      //     </TouchableOpacity>
-      //     <TouchableOpacity
-      //       style={[styles.buyPackageButton, styles.button]}
-      //       onPress={() => onRenewPress(family)}>
-      //       <View style={styles.buttonContent}>
-      //         <Text style={[styles.buyServiceButtonText, {marginRight: 5}]}>
-      //           {translate('Renew Family')}
-      //         </Text>
-      //         <Icon name="arrow-forward" size={20} color="white" />
-      //       </View>
-      //     </TouchableOpacity>
-      //   </View>
-      // </View>
-      // </TouchableOpacity>
     ));
   };
 
@@ -227,11 +171,7 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
           style={styles.backButton}>
           <Icon name="chevron-back" size={30} color={color.text} />
         </TouchableOpacity>
-        {/* <View style={styles.headerTextContainer}>
-          <Text style={[styles.headerText, {color: color.text}]}>
-            {translate('FAMILY_MANAGEMENT')}
-          </Text>
-        </View> */}
+
         <View style={styles.placeholder} />
       </View>
       <View style={styles.imageContainer}>

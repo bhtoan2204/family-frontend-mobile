@@ -5,10 +5,8 @@ const styles = StyleSheet.create({
   container: {
     padding: 24,
   },
-
   headerfile: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
   },
@@ -16,8 +14,6 @@ const styles = StyleSheet.create({
     marginRight: 0,
   },
   title: {
-    flex: 1,
-    textAlign: 'center',
     fontSize: 25,
     fontWeight: 'bold',
   },

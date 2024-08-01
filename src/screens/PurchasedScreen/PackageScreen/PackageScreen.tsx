@@ -42,13 +42,18 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
   }, []);
 
   return (
-    <SafeAreaView style={{backgroundColor: color.background, height: '100%'}}>
+    <SafeAreaView
+      style={{
+        backgroundColor: color.background,
+        height: '100%',
+        paddingTop: 10,
+      }}>
       <ScrollView>
         <View style={styles.headerfile}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.closeButton}>
-            <Icon name="close" size={30} color={color.text} />
+            <Icon name="chevron-back" size={30} color={color.text} />
           </TouchableOpacity>
           <Text style={[styles.title, {color: color.text}]}>
             {translate('PACKAGE_TITLE')}
