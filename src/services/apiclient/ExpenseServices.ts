@@ -5,9 +5,9 @@ import baseUrl from '../urls/baseUrl';
 
 const ExpenseServices = {
   getExpenseType: async (
-    id_family: number,
-    page: number,
-    itemsPerPage: number,
+    id_family?: number,
+    page?: number,
+    itemsPerPage?: number,
   ) => {
     try {
       const response: AxiosResponse = await instance.get(
@@ -294,7 +294,7 @@ const ExpenseServices = {
           params: {
             page,
             itemsPerPage,
-            sortBy: 'created_at',
+            sortBy: 'expenditure_date',
             sortDirection: 'DESC',
             id_family,
             fromDate,
@@ -313,20 +313,21 @@ const ExpenseServices = {
     }
   },
   createExpense: async (
-    id_family: number | null,
-    amount: number | null,
+    id_family?: number | null,
+    amount?: number | null,
     id_created_by: string,
-    id_expense_type?: number,
-    expenditure_date?: Date,
+    id_expense_type: number,
+    expenditure_date: Date,
     description?: string,
-    uri: string,
+    uri?: string | null,
   ) => {
     try {
+      console.log(id_expense_type);
       const createFormData = (uri: string): FormData => {
         let formData = new FormData();
         formData.append('id_family', String(id_family));
         formData.append('id_created_by', String(id_created_by));
-        formData.append('id_expense_type', id_expense_type.toString());
+        formData.append('id_expenditure_type', id_expense_type);
         formData.append('amount', String(amount));
         formData.append('expenditure_date', expenditure_date?.toISOString());
         formData.append('description', description);
@@ -425,16 +426,8 @@ const ExpenseServices = {
     uri?: string,
   ) => {
     try {
-      const createFormData = (): FormData => {
+      const createFormData = (uri?: string): FormData => {
         let formData = new FormData();
-        let filename = uri.split('/').pop()!;
-        let match = /\.(\w+)$/.exec(filename);
-        let type = match ? `image/${match[1]}` : `image`;
-        const file = {
-          uri,
-          name: filename,
-          type,
-        };
         formData.append('id_expenditure', String(id_expenditure));
         formData.append('id_family', String(id_family));
         formData.append('id_created_by', String(id_created_by));
@@ -442,14 +435,25 @@ const ExpenseServices = {
         formData.append('amount', String(amount));
         formData.append('expenditure_date', expenditure_date);
         formData.append('description', description);
-        formData.append('expenseImg', file);
+
+        if (uri) {
+          let filename = uri.split('/').pop()!;
+          let match = /\.(\w+)$/.exec(filename);
+          let type = match ? `image/${match[1]}` : `image`;
+          const file = {
+            uri,
+            name: filename,
+            type,
+          };
+          formData.append('expenseImg', file);
+        }
 
         return formData;
       };
 
       const response: AxiosResponse = await instance.put(
         `${baseUrl}/api/v1/finance/expensediture/updateExpense`,
-        createFormData(),
+        createFormData(uri),
         {
           headers: {
             'Content-Type': 'multipart/form-data',

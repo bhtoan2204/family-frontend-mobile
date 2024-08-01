@@ -140,7 +140,11 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
             {backgroundColor: color.white, borderColor: color.white},
           ]}>
           <Text style={styles.sectionHeader}>{translate('preferences')}</Text>
-          <TouchableOpacity style={styles.item} onPress={handleChangePassword}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => {
+              navigation.navigate('HomeTab', {screen: 'Feedback'});
+            }}>
             <AntDesign
               name="mail"
               size={24}
