@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView, StatusBar } from 'react-native'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ShoppingListCategoryScreenProps } from 'src/navigation/NavigationTypes'
-import { RootState } from 'src/redux/store'
+import { AppDispatch, RootState } from 'src/redux/store'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import { COLORS } from 'src/constants'
 import { colors, textColors } from '../const/color'
@@ -24,6 +24,8 @@ import AddItemSheet from 'src/components/user/shopping/sheet/add-item-sheet'
 import ShoppingListPickCategorySheet from 'src/components/user/shopping/sheet/add-category-sheet'
 import { useColorScheme } from 'nativewind'
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
+import { useToast } from 'react-native-toast-notifications'
+import { updatePurchasedItem } from 'src/redux/slices/ShoppingListSlice'
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -81,7 +83,11 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
     const addItemBottomSheetRef = React.useRef<BottomSheet>(null)
     const addCategoryBottomSheetRef = React.useRef<BottomSheet>(null)
     const [pickedCategory, setPickedCategory] = useState<number>(-1)
+    const dispatch = useDispatch<AppDispatch>()
+
     const isDarkMode = useSelector(getIsDarkMode)
+    const toast = useToast()
+
     // const items: ShoppingListItem[] = []
     useEffect(() => {
         console.log("shopping list", shoppingListInfo)
@@ -140,6 +146,14 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
         })
     }
 
+    const handleCompleteItem = (id_list: number, id_item: number) => {
+        console.log('id_list', id_list, 'id_item', id_item)
+        dispatch(updatePurchasedItem({
+            id_item: id_item,
+            id_list: id_list,
+        }))
+    }
+
     const buildEmptyList = () => {
         return (
             <View className='flex-1 justify-center items-center bg-white dark:bg-[#0A1220] '>
@@ -161,12 +175,29 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
         return (
             Array.from(items.entries()).map(([item, index]) => {
                 return (
-                    <ShoppingListCategoryItem
-                        item_type={JSON.parse(item)} items={
-                            items.get(item) || []
-                        } handleNavigateItemDetail={handleNavigateItemDetail}
-                        
-                    />
+                    <React.Fragment key={item}>
+                        <ShoppingListCategoryItem
+                            item_type={JSON.parse(item)} items={
+                                items.get(item) || []
+                            }
+                            handleNavigateItemDetail={handleNavigateItemDetail}
+                            handleCompleteItem={handleCompleteItem}
+                            onPurchase={() => {
+                                toast.show("Purchased", {
+                                    type: "success",
+                                    duration: 2000,
+                                    icon: <Material name="check" size={24} color={"white"} />,
+                                })
+                            }}
+                            onUnpurchase={() => {
+                                toast.show("Unpurchased", {
+                                    type: "success",
+                                    duration: 2000,
+                                    icon: <Material name="close" size={24} color={"white"} />,
+                                })
+                            }}
+                        />
+                    </React.Fragment>
                 )
             })
         )
@@ -252,6 +283,24 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
                 pickedCategory={pickedCategory}
                 categories={categories}
                 id_shopping_list_type={id_category!}
+                onAddSuccess={
+                    () => {
+                        toast.show("New shopping item added", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        });
+                    }
+                }
+                onAddFailed={
+                    () => {
+                        toast.show("Failed to add item", {
+                            type: "error",
+                            duration: 2000,
+                            icon: <Material name="close" size={24} color={"white"} />,
+                        });
+                    }
+                }
             />
             {/* <AddCategorySheet bottomSheetRef={addCategoryBottomSheetRef} id_family={id_family!} /> */}
             <ShoppingListPickCategorySheet refRBSheet={addCategoryBottomSheetRef}

@@ -7,14 +7,18 @@ import GamingIcon from 'src/assets/images/shoppinglist_assets/gaming_icon.png'
 import ShoppingListCategoryItemContent from "./shopping-list-category-item-content";
 import { useSelector } from "react-redux";
 import { getIsDarkMode } from "src/redux/slices/DarkModeSlice";
+import React from "react";
 
 interface ShoppingListCategoryItemProps {
     item_type: ShoppingListItemType,
     items: ShoppingListItem[],
     handleNavigateItemDetail: (id_item: number, id_list: number) => void
+    handleCompleteItem: (id_item: number, id_list: number) => void
+    onPurchase: () => void
+    onUnpurchase: () => void
 }
 
-const ShoppingListCategoryItem = ({ item_type, items, handleNavigateItemDetail }: ShoppingListCategoryItemProps) => {
+const ShoppingListCategoryItem = ({ item_type, items, handleNavigateItemDetail, handleCompleteItem, onPurchase, onUnpurchase }: ShoppingListCategoryItemProps) => {
     // console.log(item.listType.icon_url)
     const [expanded, setExpanded] = useState(true);
     const isDarkMode = useSelector(getIsDarkMode)
@@ -95,7 +99,15 @@ const ShoppingListCategoryItem = ({ item_type, items, handleNavigateItemDetail }
                 {
                     items.map((item, index) => {
                         return (
-                            <ShoppingListCategoryItemContent item={item} index={index} isLast={index === items.length - 1} handleNavigateItemDetail={handleNavigateItemDetail} />
+                            <React.Fragment key={index}>
+                                <ShoppingListCategoryItemContent item={item} index={index} isLast={index === items.length - 1}
+                                    handleNavigateItemDetail={handleNavigateItemDetail}
+                                    handleCompleteItem={handleCompleteItem}
+                                    onPurchase={onPurchase}
+                                    onUnpurchase={onUnpurchase}
+
+                                />
+                            </React.Fragment>
                         )
                     })
                 }

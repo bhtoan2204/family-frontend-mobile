@@ -36,6 +36,7 @@ interface AddItemSheetProps {
     id_shopping_list_type: number
     price: number
     id_item: number
+    onUpdateSuccess: () => void
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -47,7 +48,8 @@ const UpdatePriceSheet = ({
     id_list,
     id_shopping_list_type,
     price,
-    id_item
+    id_item,
+    onUpdateSuccess
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
     const [loading, setLoading] = React.useState(false)
@@ -152,6 +154,7 @@ const UpdatePriceSheet = ({
             price: (inputPrice).toString(),
         }))
         bottomSheetRef.current?.close()
+        onUpdateSuccess()
     }
 
     return (

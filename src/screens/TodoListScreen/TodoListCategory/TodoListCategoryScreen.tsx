@@ -39,6 +39,7 @@ import { categoriesImage } from '../const/image'
 import { TodoListItem } from 'src/interface/todo/todo'
 import { styled, useColorScheme } from "nativewind";
 import { updateDoneTodoList } from 'src/redux/slices/TodoListSlice'
+import { useToast } from 'react-native-toast-notifications'
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -61,7 +62,7 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
     const addItemBottomSheetRef = React.useRef<BottomSheet>(null)
     const addCategoryBottomSheetRef = React.useRef<BottomSheet>(null)
     const { colorScheme, toggleColorScheme } = useColorScheme();
-
+    const toast = useToast()
 
     const getImage = (id_category: number) => {
         return categoriesImage[id_category - 1]
@@ -84,6 +85,11 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
         dispatch(updateDoneTodoList({
             id_item: id_item,
         }))
+        toast.show('Update successfully', {
+            duration: 2000,
+            icon: <Material name='check' size={24} color={'white'} />,
+            type: 'success',
+        })
     }
 
     const buildEmptyList = () => {
@@ -199,7 +205,27 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
 
                 </View>
             </View>
-            <AddItemSheet bottomSheetRef={addItemBottomSheetRef} id_family={id_family!} id_checklist_type={id_category!} checklistType={todoListType} />
+            <AddItemSheet
+                bottomSheetRef={addItemBottomSheetRef} id_family={id_family!} id_checklist_type={id_category!} checklistType={todoListType}
+                onAddSuccess={
+                    () => {
+                        toast.show("New item added", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        });
+                    }
+                }
+                onAddFailed={
+                    () => {
+                        toast.show("Failed to add item", {
+                            type: "error",
+                            duration: 2000,
+                            icon: <Material name="close" size={24} color={"white"} />,
+                        });
+                    }
+                }
+            />
             {/* <AddCategorySheet bottomSheetRef={addCategoryBottomSheetRef} id_family={id_family!} /> */}
 
         </View>

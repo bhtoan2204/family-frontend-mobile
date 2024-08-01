@@ -18,6 +18,7 @@ import { deleteGuideline } from 'src/redux/slices/GuidelineSlice';
 import { GuildLineDetailScreenProps } from 'src/navigation/NavigationTypes';
 import GuildlineDetailInfo from './GuildlineDetailDescriptionInfo';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import { useToast } from 'react-native-toast-notifications';
 const screenWidth = Dimensions.get('window').width;
 const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps) => {
   const { id_item, id_family } = route.params
@@ -35,14 +36,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
   const bottomSheetRef = React.useRef<any>(null);
   const detailSheetRef = React.useRef<any>(null);
   const isDarkMode = useSelector(getIsDarkMode)
-  // const guidelineInfo = useSelector((state: RootState) => state.guidelines).find(item => item.id_guide_item === id_guide_item)!
-  // const stepFromStore = useSelector((state: RootState) => state.guidelines).find(item => item.id_guide_item === id_guide_item)!.steps || [
-  //     {
-  //         name: "",
-  //         description: "",
-  //         imageUrl: ""
-  //     }
-  // ]
+  const toast = useToast()
 
   const [contentSheet, setContentSheet] = useState<{
     text: string;
@@ -98,6 +92,23 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
     setCurrentStep(currentStep <= 0 ? 0 : currentStep - 1)
   }
 
+  const onSucess = () => {
+    toast.show("Update success", {
+      type: "success",
+      duration: 2000,
+      icon: <Material name="check" size={24} color={"white"} />,
+    });
+
+  }
+
+  const onFailed = () => {
+    toast.show("Failed to update", {
+      type: "error",
+      duration: 2000,
+      icon: <Material name="close" size={24} color={"white"} />,
+    });
+  }
+
   const handleIsAddingStep = async () => {
     const newStep: Step = {
       name: "",
@@ -124,7 +135,6 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
   };
 
   const handleSaveAddStep = async () => {
-
     const newStep = guildLineSteps?.filter((step, index) => index === currentStep)[0];
     console.log(inputName, inputDescription)
 
@@ -138,26 +148,21 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
       const a = await GuildLineService.addStepGuildLine(
         id_item!, id_family!, newStep2
       )
-      // setGuildLineSteps((prev) => {
-      //     return prev?.map((step, index) => {
-      //         if (index === currentStep) {
-      //             return {
-      //                 imageUrl: newStep.imageUrl || "",
-      //                 name: inputName,
-      //                 description: inputDescription,
-      //             }
-      //         }
-      //         return step
-      //     })
-      // })
-      setGuildLineSteps((prev) => {
-        return prev?.map((step, index) => {
-          if (index === currentStep) {
-            return newStep2
-          }
-          return step
+
+      if (a) {
+        setGuildLineSteps((prev) => {
+          return prev?.map((step, index) => {
+            if (index === currentStep) {
+              return newStep2
+            }
+            return step
+          })
         })
-      })
+        onSucess()
+      } else {
+        onFailed()
+      }
+
 
 
       setIsAdding(false);
@@ -190,6 +195,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
         newStep2,
         currentStep
       )
+      onSucess()
       setGuildLineSteps((prev) => {
         return prev?.map((step, index) => {
           if (index === currentStep) {
@@ -217,6 +223,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
 
   const handleDeleteCurrentStep = async () => {
     await GuildLineService.deleteStepGuildLine(id_family!, id_item!, currentStep)
+    onSucess()
     const currStep = currentStep
     if (currStep > 0) {
       setCurrentStep(currStep - 1)
@@ -235,7 +242,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
     navigation.goBack()
   }
 
-  
+
 
   const handleTakePhoto = async () => {
     console.log("Take photo")
@@ -322,17 +329,36 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
 
   const handleShareGuideline = async () => {
     try {
-      const result = await Share.share({
-        message: 'Check out this guideline!',
-        url: 'https://example.com',
-        title: 'Guideline'
+      // const result = await Share.share({
+      //   message: 'Check out this guideline!',
+      //   url: 'https://example.com',
+      //   title: 'Guideline'
 
-      })
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-        } else {
+      // })
+      // if (result.action === Share.sharedAction) {
+      //   if (result.activityType) {
+      //   } else {
+      //   }
+      // } else if (result.action === Share.dismissedAction) {
+      // }
+      setGuildLineDetail((prev) => {
+        return {
+          ...prev!,
+          is_shared: !prev?.is_shared
         }
-      } else if (result.action === Share.dismissedAction) {
+      })
+      if (guildLineDetail?.is_shared) {
+        toast.show("Guideline unshared", {
+          type: "success",
+          duration: 2000,
+          icon: <Material name="check" size={24} color={"white"} />,
+        });
+      } else {
+        toast.show("Guideline shared", {
+          type: "success",
+          duration: 2000,
+          icon: <Material name="check" size={24} color={"white"} />,
+        });
       }
     } catch (error) {
       console.log(error);
@@ -348,8 +374,8 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
   }
   if (loading) {
     return <View className='flex-1 bg-[#f7f7f7] dark:bg-[#0A1220] items-center justify-center'>
-       <ActivityIndicator style={{ flex: 1, justifyContent: 'center' }} size="small" />
-      
+      <ActivityIndicator style={{ flex: 1, justifyContent: 'center' }} size="small" />
+
     </View>;
   }
 

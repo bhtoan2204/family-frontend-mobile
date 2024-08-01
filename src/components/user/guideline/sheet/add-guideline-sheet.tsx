@@ -22,6 +22,8 @@ import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 interface AddItemSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
     id_family: number;
+    onAddSuccess: () => void;
+    onAddFailed: () => void;
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -30,7 +32,8 @@ const screenWidth = Dimensions.get('window').width;
 const AddGuidelineSheet = ({
     bottomSheetRef,
     id_family,
-
+    onAddSuccess,
+    onAddFailed
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
 
@@ -80,8 +83,14 @@ const AddGuidelineSheet = ({
             console.log(newGuildline)
             if (newGuildline) {
                 dispatch(addGuideline(newGuildline))
+                bottomSheetRef.current?.close()
+                onAddSuccess()
+            } else {
+                setShowError(true)
+                setErrorText('Failed to add new guideline')
+                onAddFailed()
             }
-            bottomSheetRef.current?.close()
+
         } catch (error) {
             console.log(error)
         }

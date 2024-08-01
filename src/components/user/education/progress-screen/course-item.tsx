@@ -30,12 +30,26 @@ const CourseItem = ({ data, onPress, index }: CourseItemProps) => {
     }
 
     const calculateScore = (data: Subject) => {
+        let totalComponent = 0;
+        let total = 0
+
+        if (data.midterm_score) {
+            if (data.midterm_score.score) {
+                totalComponent += 1;
+                total += data.midterm_score.score;
+            }
+        }
+        if (data.final_score != null) {
+            if (data.final_score.score) {
+                totalComponent += 1;
+                total += data.final_score.score;
+            }
+        }
         if (data.component_scores) {
-            let total = 0;
             data.component_scores.forEach((item) => {
                 if (item.score) total += item.score;
             })
-            return total / data.component_scores.length;
+            return total / (data.component_scores.length + totalComponent);
         }
         return 0;
     }
@@ -52,7 +66,7 @@ const CourseItem = ({ data, onPress, index }: CourseItemProps) => {
             data.component_scores.forEach((item) => {
                 if (item.score) total += 1;
             })
-            const fin =  (total + isFinalDone + isMidtermDone) * 100 / (data.component_scores.length + i);
+            const fin = (total + isFinalDone + isMidtermDone) * 100 / (data.component_scores.length + i);
             return Math.floor(fin)
         }
         return 0;

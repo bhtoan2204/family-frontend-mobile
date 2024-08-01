@@ -55,8 +55,9 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     const [progressNotesUpdate, setProgressNotesUpdate] = React.useState<string>("")
     const [pickedIdProgress, setPickedIdProgress] = React.useState<number>(-1)
     const [loading, setLoading] = React.useState<boolean>(false)
-
+    const [filteredData, setFilteredData] = React.useState<Education[]>([])
     const toast = useToast();
+
 
     useEffect(() => {
         const handleFetchEducation = async () => {
@@ -80,6 +81,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                     }),
                 };
             }) as Education[];
+            setFilteredData(edu)
             setLoading(false)
             dispatch(setEducation(edu))
         }
@@ -90,11 +92,17 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
         }
     }, [])
 
-    // if (loading) {
-    //     return <View className='justify-center items-center flex-1 bg-[#f7f7f7] dark:bg-[#0A1220]'>
-    //         <ActivityIndicator size="small" color={COLORS.AuroMetalSaurus} />
-    //     </View>
-    // }
+    useEffect(() => {
+        if (searchQuery == "") {
+            setFilteredData(educationData)
+        } else {
+            const filtered = educationData.filter(item => {
+                return item.title.toLowerCase().includes(searchQuery.toLowerCase())
+            })
+            setFilteredData(filtered)
+        }
+
+    }, [searchQuery])
 
     const handleNavigateProgress = (id_progress: number) => {
         navigation.navigate('ProgressScreen', { id_family: id_family, id_progress: id_progress })
@@ -109,6 +117,11 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     }
     const onDeleteItem = async (id_progress: number) => {
         dispatch(deleteEducation(id_progress))
+        toast.show("Deleted", {
+            type: "success",
+            duration: 2000,
+            icon: <Material name="close" size={24} color={"white"} />,
+        })
         const res = await EducationServices.deleteEducation(id_progress, id_family)
         if (res) {
             //setLoading here
@@ -129,7 +142,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     const buildList = () => {
         return <ScrollView className='flex-1 z-10 mt-5 bg-[#F7F7F7] dark:bg-[#0A1220]'>
             {
-                educationData.map((item, index) => {
+                filteredData.map((item, index) => {
                     return <React.Fragment key={index}>
                         <EducationItem item={item} handleNavigateProgress={handleNavigateProgress}
                             openUpdateProgressSheet={openUpdateProgressSheet}
@@ -145,15 +158,6 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
 
     return (
         <View className="flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]">
-            {/* <TouchableOpacity activeOpacity={1.0} className='flex-1 bg-transparent' onPress={() => {
-                console.log('pressed')
-                Keyboard.dismiss()
-            }}
-                disabled={isKeyboardVisible == false}
-            >
-                
-
-            </TouchableOpacity> */}
             <EducationScreenHeader navigationBack={() => navigation.goBack()}
                 idFamily={id_family!}
                 imageUrl={familyInfo!.avatar || undefined}
@@ -167,22 +171,6 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
 
             </View>
             <View className='flex-1 bg-[#f7f7f7] dark:bg-[#0A1220]'>
-                <TouchableOpacity activeOpacity={1.0} className=''
-                    onPress={() => {
-                        toast.show("pressed", {
-                            id: 'custom-add-edu',
-                            type: 'custom-add-edu',
-                            duration: 2000,
-                            onPress: () => {
-                                console.log('pressed')
-                            },
-                        })
-                    }}
-                >
-                    <View>
-                        <Text>hey</Text>
-                    </View>
-                </TouchableOpacity>
                 <>
                     {
                         loading ? <>
@@ -193,7 +181,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                             </View>
                         </> : <>
                             {
-                                educationData.length > 0 ? <>
+                                filteredData.length > 0 ? <>
                                     {buildList()}
                                 </> : <>
                                     {buildListEmpty()}
@@ -212,8 +200,19 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                 }}
                 onAddSuccess={
                     () => {
-                        toast.show("Added new education", {
+                        toast.show("New progress added for family", {
                             type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        });
+                    }
+                }
+                onAddFailed={
+                    () => {
+                        toast.show("Failed to add new progress for family", {
+                            type: "error",
+                            duration: 2000,
+                            icon: <Material name="close" size={24} color={"white"} />,
                         });
                     }
                 }
@@ -233,6 +232,24 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                 progressNotes={progressNotesUpdate}
                 schoolInfo={schoolInfoUpdate}
                 title={titleUpdate}
+                onUpdateSuccess={
+                    () => {
+                        toast.show("Progress updated", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        });
+                    }
+                }
+                onUpdateFailed={
+                    () => {
+                        toast.show("Failed to update", {
+                            type: "error",
+                            duration: 2000,
+                            icon: <Material name="close" size={24} color={"white"} />,
+                        });
+                    }
+                }
             />
         </View>
 

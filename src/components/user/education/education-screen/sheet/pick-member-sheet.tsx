@@ -33,6 +33,11 @@ const AddProgressPickMemberSheet = ({
         []
     );
     const isDarkMode = useSelector(getIsDarkMode)
+    const [memberList, setMemberList] = React.useState<Member[]>(members)
+    const [key, setKey] = React.useState<boolean>(false)
+    React.useEffect(() => {
+        setMemberList(members)
+    }, [members])
     // const [pickedUser, setPickedUser] = React.useState<string>(pickedIdUser)
     return (
         <BottomSheet
@@ -52,7 +57,9 @@ const AddProgressPickMemberSheet = ({
             keyboardBlurBehavior="restore"
             onChange={(index) => {
                 if (index == -1) {
-
+                    setKey((prev)=>!prev)
+                } else {
+                    setKey((prev)=>!prev)
                 }
             }}
 
@@ -84,16 +91,15 @@ const AddProgressPickMemberSheet = ({
                 </View>
 
                 <BottomSheetScrollView snapToInterval={Dimensions.get('screen').width} showsHorizontalScrollIndicator={false} contentContainerStyle={{ minHeight: '100%' }}>
-                    <View className='mt-5'>
+                    <View className='mt-5' key={key.toString()}>
 
-                        <ItemItems data={members || []}
+                        <ItemItems data={memberList}
                             pickedIdUser={pickedIdUser}
                             setPickedIdUser={setPickedIdUser}
                             // setPickedUser={setPickedUser}
                             pickMemberSheetRef={refRBSheet}
                             isDark={isDarkMode}
                         />
-
                     </View>
                 </BottomSheetScrollView >
 
@@ -115,6 +121,7 @@ interface ItemItemsProps {
 }
 
 const ItemItems = ({ data, pickedIdUser, setPickedIdUser, pickMemberSheetRef, isDark }: ItemItemsProps) => {
+    console.log('data', data)
     const renderItem = (item: Member, index: number) => {
         return (
             <View className='items-center ' style={{
@@ -159,7 +166,8 @@ const ItemItems = ({ data, pickedIdUser, setPickedIdUser, pickMemberSheetRef, is
                         marginTop: 10,
 
                     }}>
-                        {item.user.firstname} {item.user.lastname}
+                        {item.user.firstname ? item.user.firstname : ""} {item.user.lastname ? item.user.lastname : ""}
+                        {/* <Text className='opacity-1'>x</Text> */}
                         {
                             item.id_user == pickedIdUser ? <Material name='check' size={20} color={iOSColors.systemBlue.defaultLight} /> : null
 

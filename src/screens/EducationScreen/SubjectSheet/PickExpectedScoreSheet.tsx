@@ -19,6 +19,8 @@ interface PickExpectedScoreSheetProps {
     // setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>;
     score: number | null;
     index: number;
+    onSuccess: () => void;
+    onFailed: () => void;
 }
 const isNumberInRange = (numberString: string) => {
     const number = parseFloat(numberString);
@@ -30,7 +32,7 @@ const isNumberInRange = (numberString: string) => {
 
 
 
-const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, id_education_progress, id_subject }: PickExpectedScoreSheetProps) => {
+const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, id_education_progress, id_subject,onSuccess }: PickExpectedScoreSheetProps) => {
 
     const [inputValue, setInputValue] = React.useState<string>(score?.toString() || '0')
     const [isFocus, setIsFocus] = React.useState<boolean>(false)
@@ -78,6 +80,8 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, 
             score: parseFloat(inputValue),
             index: index
         }))
+        setExpectedSheetRef.current?.close()
+        onSuccess()
         // if (index === -1) {
         //     dispatch(updateComponentScoreOfSubject({
         //         id_subject: id_subject!,
@@ -166,7 +170,7 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, 
                     <TouchableOpacity onPress={() => {
                         if (isNumberInRange(inputValue)) {
                             handleSave()
-                            setExpectedSheetRef.current?.close()
+                            
                         }
                     }}>
                         {/* <Text className='text-base font-semibold'

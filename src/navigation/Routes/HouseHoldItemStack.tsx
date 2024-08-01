@@ -24,7 +24,9 @@ import UpdateExpiredDateItemSheet from 'src/components/user/household/household-
 import AddEditDescriptionSheet from 'src/components/user/household/household-item-stack/sheet/add-edit-description-sheet';
 import { format } from 'date-fns';
 import EditTitleSheet from 'src/components/user/household/household-item-stack/sheet/edit-title-sheet';
-
+import { useToast } from 'react-native-toast-notifications';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import { deleteHouseholdItem } from 'src/redux/slices/HouseHoldSlice';
 
 
 const Stack = createNativeStackNavigator();
@@ -50,7 +52,7 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
     const updateExpiredDateSheet = React.useRef<BottomSheet>(null)
     const editTitleSheetRef = React.useRef<BottomSheet>(null)
     const [expired_date, setExpiredDate] = React.useState<string>(new Date().toISOString())
-
+    const toast = useToast()
     useEffect(() => {
         const fetchHouseHoldItemDetail = async () => {
             const data = await HouseHoldService.getHouseHoldItemDetail(id_item!, id_family!)
@@ -157,10 +159,32 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
         pickPhotoSheetRef.current?.open()
     }
 
+    const handleDeleteItem = React.useCallback(async () => {
+        const res = await HouseHoldService.deleteItem(id_item!, id_family!)
+        if (res == true) {
+            navigation.goBack()
+            dispatch(deleteHouseholdItem(id_item!))
+            toast.show("Delete successfully", {
+                type: "success",
+                duration: 2000,
+                icon: <Material name="check" size={24} color={"white"} />,
+            });
+        } else {
+            toast.show("Delete failed", {
+                type: "error",
+                duration: 2000,
+                icon: <Material name="close" size={24} color={"white"} />,
+            });
+        }
+    }, [])
+
     return (
         <View className="flex-1 bg-[#F7F7F7]">
             <HouseHoldItemStackHeader data={houseHoldItemInfo} navigationBack={() => navigation.goBack()}
                 handleEditImage={handlePickEditImage}
+                handleDeleteItem={() => {
+                    handleDeleteItem()
+                }}
                 handleEditTitle={() => {
                     editTitleSheetRef.current?.expand()
                 }}

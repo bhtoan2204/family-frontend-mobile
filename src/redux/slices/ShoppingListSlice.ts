@@ -12,12 +12,14 @@ interface ShoppingListSliceState {
   shoppingList: ShoppingList[];
   shoppingListType: ShoppingListType[];
   shoppingListItemType: ShoppingListItemType[];
+  dateSelected: string;
 }
 
 const initialState: ShoppingListSliceState = {
   shoppingList: [],
   shoppingListType: [],
   shoppingListItemType: [],
+  dateSelected: new Date().toISOString(),
 };
 
 const shoppingListSlice = createSlice({
@@ -147,6 +149,12 @@ const shoppingListSlice = createSlice({
         ].items?.filter(item => item.id_item !== id_item);
       }
     },
+    setDateSelected: (state, action: PayloadAction<string>) => {
+      state.dateSelected = action.payload;
+    },
+    resetDateSelected: state => {
+      state.dateSelected = new Date().toISOString();
+    },
   },
 });
 
@@ -163,6 +171,8 @@ export const {
   updatePriceItem,
   updateReminderDateItem,
   deleteItem,
+  resetDateSelected,
+  setDateSelected,
 } = shoppingListSlice.actions;
 
 export const selectProfile = (state: RootState) => state.profile;

@@ -30,6 +30,7 @@ interface AddItemSheetProps {
     pickedIdUser: string;
     setPickedIdUser: (id: string) => void;
     onAddSuccess: () => void;
+    onAddFailed: () => void;
     pickMemberBottomSheetRef: React.RefObject<BottomSheet>
 }
 
@@ -40,7 +41,8 @@ const AddProgressSheet = ({
     members,
     pickMemberBottomSheetRef,
     pickedIdUser,
-    onAddSuccess
+    onAddSuccess,
+    onAddFailed
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
 
@@ -127,6 +129,7 @@ const AddProgressSheet = ({
         } else {
             console.log("error")
             bottomSheetRef.current?.close()
+            onAddFailed()
         }
     }
 

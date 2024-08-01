@@ -22,6 +22,8 @@ interface AddItemSheetProps {
     id_family: number
     id_checklist_type: number
     checklistType: TodoListType
+    onAddSuccess: () => void
+    onAddFailed: () => void
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -31,7 +33,9 @@ const AddItemSheet = ({
     bottomSheetRef,
     id_family,
     id_checklist_type,
-    checklistType
+    checklistType,
+    onAddSuccess,
+    onAddFailed
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
 
@@ -96,6 +100,7 @@ const AddItemSheet = ({
             }
             dispatch(addTodoList(newTodoItem))
             bottomSheetRef.current?.close()
+            onAddSuccess()
         }
 
     }

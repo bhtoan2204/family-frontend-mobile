@@ -223,21 +223,21 @@ const HomeScreen = ({
     }
   };
 
-  const buildPublicGuidelines = () => {
-    // const dat: Guildline[] = publicGuidelines.data;
-    return <View style={styles.comboContainer}>
-      <Text style={styles.textCombo}>Public guidelines</Text>
-      {
-        publicGuidelines.data.map((item: Guildline, index: number) => {
-          return <SharedGuildlineItem key={index} item={item} index={index}
-            onPress={() => {
-              navigation.navigate('SharedGuidelineDetail', { id: item.id_guide_item, id_family: item.id_family })
-            }}
-          />
-        })
-      }
-    </View>
-  }
+  // const buildPublicGuidelines = () => {
+  //   // const dat: Guildline[] = publicGuidelines.data;
+  //   return <View style={styles.comboContainer}>
+  //     <Text style={styles.textCombo}>Public guidelines</Text>
+  //     {
+  //       publicGuidelines.data.map((item: Guildline, index: number) => {
+  //         return <SharedGuildlineItem key={index} item={item} index={index}
+  //           onPress={() => {
+  //             navigation.navigate('SharedGuidelineDetail', { id: item.id_guide_item, id_family: item.id_family })
+  //           }}
+  //         />
+  //       })
+  //     }
+  //   </View>
+  // }
 
   const views = [
     <View style={[styles.pictureBox, { backgroundColor: '#9572A7' }]}>
@@ -341,7 +341,8 @@ const HomeScreen = ({
       icon: 'guideline',
       label: translate('Guideline'),
       onPress: () => {
-        navigation.navigate('FamilyStack', { screen: 'GuidelinePublic' });
+        // navigation.navigate('FamilyStack', { screen: 'GuidelinePublic' });
+        navigation.navigate('SharedGuideline')
       },
     },
 
@@ -551,9 +552,9 @@ const HomeScreen = ({
                 </View>
               </ScrollView>
             </View>
-            {
+            {/* {
               buildPublicGuidelines()
-            }
+            } */}
 
           </ScrollView>
         </View>

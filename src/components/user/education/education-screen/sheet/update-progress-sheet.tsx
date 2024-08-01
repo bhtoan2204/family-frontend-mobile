@@ -40,6 +40,8 @@ interface AddItemSheetProps {
     title: string;
     progressNotes: string;
     schoolInfo: string;
+    onUpdateSuccess: () => void
+    onUpdateFailed: () => void
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -51,7 +53,9 @@ const UpdateProgressSheet = ({
     id_progress,
     title,
     progressNotes,
-    schoolInfo
+    schoolInfo,
+    onUpdateSuccess,
+    onUpdateFailed
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
 
@@ -154,9 +158,11 @@ const UpdateProgressSheet = ({
                 school_info: inputSchoolInfo,
             }))
             bottomSheetRef.current?.close()
+            onUpdateSuccess()
         } else {
             console.log("error")
             bottomSheetRef.current?.close()
+            onUpdateFailed()
         }
     }
 

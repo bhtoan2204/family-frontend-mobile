@@ -17,7 +17,7 @@ const HouseHoldTab = ({
     return (
         <View className=' items-center  rounded-2xl mx-[7%]  bg-[#f7f7f7] dark:bg-[#252D3B]'
             style={{
-                borderWidth: 1,
+                borderWidth: 0.5,
                 // borderColor: iOSGrayColors.systemGray5.defaultLight,
             }}
         >

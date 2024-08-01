@@ -37,6 +37,7 @@ interface AddItemSheetProps {
     id_list: number
     id_item: number
     initialDate: string
+    onUpdateSuccess: () => void
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -48,6 +49,7 @@ const UpdateDateItemSheet = ({
     id_list,
     id_item,
     initialDate,
+    onUpdateSuccess
 
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
@@ -146,6 +148,7 @@ const UpdateDateItemSheet = ({
             reminder_date: selectDate
         }))
         bottomSheetRef.current?.close()
+        onUpdateSuccess()
     }
 
     return (

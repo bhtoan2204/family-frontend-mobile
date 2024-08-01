@@ -9,10 +9,31 @@ import {
 } from 'src/interface/guideline/guideline';
 
 const GuildLineService = {
+  getSharedGuidelines: async (page: number, itemsPerPage: number) => {
+    try {
+      const url =
+        baseUrl +
+        GuildlineUrl.getSharedGuideline +
+        `?page=${page}&itemsPerPage=${itemsPerPage}&sortDirection=asc`;
+      const res = await instance.get(url);
+      const guidelineData = res.data.data as Guildline[];
+      const total = res.data.total;
+      return {guidelineData, total};
+      // return res.data.data as Guildline[];
+    } catch (error) {
+      console.error('Error fetching shared guidelines:', error);
+      throw error;
+    }
+  },
+  getSharedGuidelineDetail: async (id_item: number) => {},
   getAllGuideLine: async (id_family: number) => {
     try {
       const url =
-        baseUrl + GuildlineUrl.getGuideline + '/' + id_family.toString();
+        baseUrl +
+        GuildlineUrl.getGuideline +
+        '?id_family=' +
+        id_family.toString() +
+        '&page=1&itemsPerPage=25&sortBy=created_at&sortDirection=ASC';
       console.log('url get all guildline', url);
       const res = await instance.get(url);
       return res.data.data as Guildline[];

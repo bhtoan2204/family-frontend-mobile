@@ -20,6 +20,7 @@ import AddGuidelineSheet from 'src/components/user/guideline/sheet/add-guideline
 import UpdateGuidelineSheet from 'src/components/user/guideline/sheet/update-guideline-sheet'
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 import { ScreenHeight } from 'react-native-elements/dist/helpers'
+import { useToast } from 'react-native-toast-notifications'
 // id_item: number;
 //   name: string;
 //   description: string;
@@ -42,6 +43,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
     // const [guidelines, setGuidelines] = React.useState<Guildline[]>([]);
     const dispatch = useDispatch<AppDispatch>();
     const guidelines = useSelector((state: RootState) => state.guidelines)
+    const publicguidelines = guidelines.filter((item) => item.is_shared)
     const [loading, setLoading] = React.useState(true);
     const refRBSheet = React.useRef<any>(null);
     const [tab, setTab] = React.useState(0);
@@ -55,7 +57,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
     const [isScrollDown, setIsScrollDown] = React.useState<boolean>(false)
     const isDarkMode = useSelector(getIsDarkMode)
     const scrollYRef = React.useRef<any>(0);
-
+    const toast = useToast()
 
     useEffect(() => {
         const fetchGuidelines = async () => {
@@ -108,6 +110,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
             is_shared: false,
         }
         return <GuildlineItem item={emptyGuideline}
+            index={0}
             onPress={() => {
                 addGuidelineBottomSheetRef.current?.expand()
             }}
@@ -184,37 +187,58 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                 <Animatable.View animation={tab == 0 ? 'slideInLeft' : 'slideInRight'} key={tab} duration={400} className='' style={{
 
                 }}>
-                    {
-                        tab == 0 ? <>
-                            {
-                                guidelines.length > 0 ? guidelines.map((item, index) => (
-                                    <React.Fragment key={index}>
-                                        <GuildlineItem item={item}
-                                            onPress={() => {
-                                                navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_guide_item })
-                                            }}
-                                            key={index}
-                                            onUpdate={() => {
-                                                setPickedIdGuideline(item.id_guide_item);
-                                                setPickedNameGuideline(item.name);
-                                                setPickedDescriptionGuideline(item.description);
-                                                updateGuidelineBottomSheetRef.current?.expand()
+                    <>
+                        {
+                            tab == 0 && <>
+                                {
+                                    guidelines.length > 0 ? guidelines.map((item, index) => (
+                                        <React.Fragment key={index}>
+                                            <GuildlineItem item={item}
+                                                index={index}
+                                                onPress={() => {
+                                                    navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_guide_item })
+                                                }}
+                                                key={index}
+                                                onUpdate={() => {
+                                                    setPickedIdGuideline(item.id_guide_item);
+                                                    setPickedNameGuideline(item.name);
+                                                    setPickedDescriptionGuideline(item.description);
+                                                    updateGuidelineBottomSheetRef.current?.expand()
 
-                                            }}
-                                        />
-                                    </React.Fragment>
-                                )) : renderEmptyGuideline()
-                            }
+                                                }}
+                                            />
+                                        </React.Fragment>
+                                    )) : renderEmptyGuideline()
+                                }
+                            </>
+                        }
+                    </>
+                    <>
+                        {
+                            tab == 1 && <>
+                                {
+                                    publicguidelines.map((item, index) => {
+                                        return <React.Fragment key={index}>
+                                            <GuildlineItem item={item}
+                                                index={index}
+                                                onPress={() => {
+                                                    navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_guide_item })
+                                                }}
+                                                key={index}
+                                                onUpdate={() => {
+                                                    setPickedIdGuideline(item.id_guide_item);
+                                                    setPickedNameGuideline(item.name);
+                                                    setPickedDescriptionGuideline(item.description);
+                                                    updateGuidelineBottomSheetRef.current?.expand()
 
-                        </> : <>
-                            <GuildlineItem item={guildLineData}
-                                onPress={() => {
-                                    navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: 1 })
-                                }}
-                                onUpdate={() => { }}
-                            />
-                        </>
-                    }
+                                                }}
+                                            />
+                                        </React.Fragment>
+                                    })
+                                }
+                            </>
+                        }
+                    </>
                 </Animatable.View>
             </ScrollView>
             <TouchableOpacity className={`absolute rounded-full  bottom-5 right-5  bg-[#66C0F4] items-center justify-center transition ${isScrollDown ? "opacity-30" : ""}`} style={{
@@ -232,11 +256,47 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                 }} /> */}
             {/* <AddGuildLineSheet refRBSheet={refRBSheet} /> */}
             <AddGuidelineSheet bottomSheetRef={addGuidelineBottomSheetRef} id_family={id_family!}
+                onAddSuccess={
+                    () => {
+                        toast.show("New guideline added", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        });
+                    }
+                }
+                onAddFailed={
+                    () => {
+                        toast.show("Failed to add new guideline", {
+                            type: "error",
+                            duration: 2000,
+                            icon: <Material name="close" size={24} color={"white"} />,
+                        });
+                    }
+                }
             />
             <UpdateGuidelineSheet bottomSheetRef={updateGuidelineBottomSheetRef} id_family={id_family!}
                 description={pickedDescriptionGuideline}
                 id_item={pickedIdGuideline}
                 name={pickedNameGuideline}
+                onUpdateSuccess={
+                    () => {
+                        toast.show("Guideline updated", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        });
+                    }
+                }
+                onUpdateFailed={
+                    () => {
+                        toast.show("Failed to update guideline", {
+                            type: "error",
+                            duration: 2000,
+                            icon: <Material name="close" size={24} color={"white"} />,
+                        });
+                    }
+                }
 
             />
         </View>
