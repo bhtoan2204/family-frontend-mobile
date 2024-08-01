@@ -1,31 +1,37 @@
-import React, { useEffect } from 'react';
-import { Provider } from 'react-redux';
-import { PaperProvider } from 'react-native-paper';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import React, {useEffect} from 'react';
+import {Provider} from 'react-redux';
+import {PaperProvider} from 'react-native-paper';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import NavigationContainer from 'src/navigation';
-import { store } from 'src/redux/store';
-import { connectSocket } from 'src/services/apiclient/Socket';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { ActionSheetProvider } from '@expo/react-native-action-sheet';
-import { MenuProvider } from 'react-native-popup-menu';
+import {store} from 'src/redux/store';
+import {connectSocket} from 'src/services/apiclient/Socket';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {ActionSheetProvider} from '@expo/react-native-action-sheet';
+import {MenuProvider} from 'react-native-popup-menu';
 import {
   BottomSheetModal,
   BottomSheetView,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
-import ToastProviderApp from 'ToastProvider';
+import {ToastProvider} from 'react-native-toast-notifications';
+import CustomToast from 'src/components/Toast/Toast';
 
 const App: React.FC = () => {
-
   useEffect(() => {
     connectSocket();
   }, []);
 
   return (
-    <ToastProviderApp>
+    <ToastProvider
+      placement="top"
+      duration={3000}
+      animationType="slide-in"
+      renderToast={({message, type}) => (
+        <CustomToast message={message} type={type} />
+      )}>
       <Provider store={store}>
         <SafeAreaProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
+          <GestureHandlerRootView style={{flex: 1}}>
             <PaperProvider>
               <ActionSheetProvider>
                 <MenuProvider>
@@ -38,7 +44,7 @@ const App: React.FC = () => {
           </GestureHandlerRootView>
         </SafeAreaProvider>
       </Provider>
-    </ToastProviderApp>
+    </ToastProvider>
   );
 };
 
