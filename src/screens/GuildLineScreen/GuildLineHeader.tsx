@@ -60,6 +60,7 @@ const GuildLineHeader = ({
 }: GuildLineHeaderProps
 ) => {
     const isDarkMode = useSelector(getIsDarkMode)
+    console.log(item)
     return (
         <View className='w-full  flex-row justify-between items-center py-3 z-10 mt-7 bg-[#f7f7f7] dark:bg-[#0A1220]' >
             {
@@ -78,6 +79,12 @@ const GuildLineHeader = ({
                         <Material name="chevron-left" size={30} style={{ color: iOSGrayColors.systemGray.defaultLight, fontWeight: "bold" }} />
                         {/* <Text className='text-lg font-semibold' style={{ color: COLORS.AuroMetalSaurus }}>Back</Text> */}
                     </TouchableOpacity>
+            }
+            {
+                item.is_shared && <View className='px-4 py-2 bg-[#248046] rounded-lg flex-row items-center'>
+
+                    <Text className='text-white font-semibold'>Public</Text>
+                </View>
             }
             <View className='mr-3'>
                 {
@@ -130,16 +137,30 @@ const GuildLineHeader = ({
                                         </View>
                                     </MenuOption>
                                     <Divider />
-                                    <MenuOption onSelect={async () => {
-                                        await handleShareGuideline()
-                                    }} >
+                                    {
+                                        item.is_shared ? <>
+                                            <MenuOption onSelect={async () => {
+                                                await handleShareGuideline()
+                                            }} >
 
-                                        <View className='flex-row items-center justify-between'>
-                                            <Text className='text-base ' style={{ color: iOSColors.systemBlue.defaultLight }}>Share</Text>
-                                            <Material name="share-all-outline" size={20} style={{ color: iOSColors.systemBlue.defaultLight, fontWeight: "bold" }} />
-                                        </View>
-                                    </MenuOption>
-                                    <Divider />
+                                                <View className='flex-row items-center justify-between'>
+                                                    <Text className='text-base ' style={{ color: iOSColors.systemBlue.defaultLight }}>Un-share</Text>
+                                                    <Material name="share-off-outline" size={20} style={{ color: iOSColors.systemBlue.defaultLight, fontWeight: "bold" }} />
+                                                </View>
+                                            </MenuOption>
+                                            <Divider />
+                                        </> : <>
+                                            <MenuOption onSelect={async () => {
+                                                await handleShareGuideline()
+                                            }} >
+
+                                                <View className='flex-row items-center justify-between'>
+                                                    <Text className='text-base ' style={{ color: '#248046' }}>Share</Text>
+                                                    <Material name="share-all-outline" size={20} style={{ color: '#248046', fontWeight: "bold" }} />
+                                                </View>
+                                            </MenuOption>
+                                            <Divider /></>
+                                    }
                                     <MenuOption onSelect={async () => {
                                         handleDeleteCurrentStep()
                                     }} >

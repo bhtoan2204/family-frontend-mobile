@@ -9,6 +9,7 @@ import { AppDispatch } from 'src/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateComponentScoreOfSubject } from 'src/redux/slices/EducationSlice';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import EducationServices from 'src/services/apiclient/EducationService';
 interface PickScoreSheetProps {
     setScoreSheetRef: React.RefObject<any>;
     // setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>;
@@ -17,6 +18,8 @@ interface PickScoreSheetProps {
     id_family: number;
     id_education_progress: number;
     id_subject: number;
+    onSuccess: () => void;
+    onFailed: () => void;
 }
 
 const isNumberInRange = (numberString: string) => {
@@ -27,7 +30,7 @@ const isNumberInRange = (numberString: string) => {
     return number >= 0 && number <= 10;
 };
 
-const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress, id_family, id_subject }: PickScoreSheetProps) => {
+const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress, id_family, id_subject, onSuccess, onFailed }: PickScoreSheetProps) => {
 
 
     const [inputValue, setInputValue] = React.useState<string>(score?.toString() || '0')
@@ -65,54 +68,107 @@ const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress,
             return "Invalid input";
         }
     };
-    const handleSave = () => {
+    const handleSave = async () => {
+
         dispatch(updateComponentScoreOfSubject({
             id_subject: id_subject!,
             id_education_progress: id_education_progress,
             score: parseFloat(inputValue),
             index: index
         }))
-        if (index === -1) {
-            // dispatch(updateComponentScoreOfSubject({
+        setScoreSheetRef.current?.close()
 
-            // }))
-            // setSubjectDetai  lData((prev) => {
-            //     return {
-            //         ...prev,
-            //         final_score: {
-            //             ...prev.final_score,
-            //             score: parseFloat(inputValue)
-            //         }
-            //     }
-            // })
+        onSuccess()
 
-        } else if (index === -2) {
-            // setSubjectDetailData((prev) => {
-            //     return {
-            //         ...prev,
-            //         midterm_score: {
-            //             ...prev.midterm_score,
-            //             score: parseFloat(inputValue)
-            //         }
-            //     }
-            // })
-        } else {
-            // setSubjectDetailData((prev) => {
-            //     return {
-            //         ...prev,
-            //         component_scores: prev.component_scores.map((item, i) => {
-            //             if (i === index) {
-            //                 return {
-            //                     ...item,
-            //                     score: parseFloat(inputValue)
-            //                 }
-            //             }
-            //             return item
-            //         })
-            //     }
-            // })
+        // if (index === -1) {
+        //     // dispatch(updateComponentScoreOfSubject({
 
-        }
+        //     // }))
+        //     // setSubjectDetai  lData((prev) => {
+        //     //     return {
+        //     //         ...prev,
+        //     //         final_score: {
+        //     //             ...prev.final_score,
+        //     //             score: parseFloat(inputValue)
+        //     //         }
+        //     //     }
+        //     // })
+        //     const res = await EducationServices.modifyScore(id_subject, id_family, id_education_progress, null, parseFloat(inputValue), null)
+        //     if (res) {
+        //         dispatch(updateComponentScoreOfSubject({
+        //             id_subject: id_subject!,
+        //             id_education_progress: id_education_progress,
+        //             score: parseFloat(inputValue),
+        //             index: index
+        //         }))
+        //         setScoreSheetRef.current?.close()
+
+        //         onSuccess()
+        //     } else {
+        //         setScoreSheetRef.current?.close()
+
+        //         onFailed()
+        //     }
+
+        // } else if (index === -2) {
+        //     // setSubjectDetailData((prev) => {
+        //     //     return {
+        //     //         ...prev,
+        //     //         midterm_score: {
+        //     //             ...prev.midterm_score,
+        //     //             score: parseFloat(inputValue)
+        //     //         }
+        //     //     }
+        //     // })
+        //     const res = await EducationServices.modifyScore(id_subject, id_family, id_education_progress, parseFloat(inputValue), null, null)
+        //     if (res) {
+        //         dispatch(updateComponentScoreOfSubject({
+        //             id_subject: id_subject!,
+        //             id_education_progress: id_education_progress,
+        //             score: parseFloat(inputValue),
+        //             index: index
+        //         }))
+        //         setScoreSheetRef.current?.close()
+
+        //         onSuccess()
+        //     } else {
+        //         setScoreSheetRef.current?.close()
+
+        //         onFailed()
+        //     }
+
+        // } else {
+        //     // setSubjectDetailData((prev) => {
+        //     //     return {
+        //     //         ...prev,
+        //     //         component_scores: prev.component_scores.map((item, i) => {
+        //     //             if (i === index) {
+        //     //                 return {
+        //     //                     ...item,
+        //     //                     score: parseFloat(inputValue)
+        //     //                 }
+        //     //             }
+        //     //             return item
+        //     //         })
+        //     //     }
+        //     // })
+        //     const res = await EducationServices.updateComponentScore(id_subject, id_education_progress, id_family, index, parseFloat(inputValue))
+        //     if (res) {
+        //         dispatch(updateComponentScoreOfSubject({
+        //             id_subject: id_subject!,
+        //             id_education_progress: id_education_progress,
+        //             score: parseFloat(inputValue),
+        //             index: index
+        //         }))
+        //         setScoreSheetRef.current?.close()
+        //         onSuccess()
+        //     } else {
+        //         setScoreSheetRef.current?.close()
+        //         onFailed()
+        //     }
+
+        // }
+
     }
 
     return (
@@ -193,10 +249,9 @@ const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress,
                                     console.log(parseFloat(text) <= 10 && parseFloat(text) >= 0)
                                     setInputValue(text)
                                 }}
-                                onSubmitEditing={(event) => {
+                                onSubmitEditing={async (event) => {
                                     if (isNumberInRange(event.nativeEvent.text)) {
-                                        handleSave()
-                                        setScoreSheetRef.current?.close()
+                                        await handleSave()
                                     }
                                 }}
                                 style={{
@@ -206,7 +261,7 @@ const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress,
                                     marginBottom: 15,
                                     fontSize: 17,
                                     padding: 17,
-                                     backgroundColor: isDarkMode ? "#171A21" : "#F7F7F7",
+                                    backgroundColor: isDarkMode ? "#171A21" : "#F7F7F7",
                                     color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
 
                                 }}

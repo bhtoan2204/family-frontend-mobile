@@ -25,8 +25,8 @@ const TodoListServices = {
   ) => {
     const url =
       TodoListUrls.getFamilyTodoList +
-      `/${id_family}` +
-      `?page=${page}&itemsPerPage=${itemsPerPage}`;
+      `?id_family=${id_family}` +
+      `&page=${page}&itemsPerPage=${itemsPerPage}&sortBy=created_at&sortDirection=ASC`;
     console.log(url);
     try {
       const response = await instance.get(url);
@@ -38,6 +38,26 @@ const TodoListServices = {
     } catch (error: any) {
       console.log(error.message);
       return [];
+    }
+  },
+  addItem: async (
+    id_family: number,
+    id_checklist_type: number,
+    task_name: string,
+    description: string,
+    due_date: string,
+  ) => {
+    const res = await instance.post(TodoListUrls.createTodoList, {
+      id_family,
+      id_checklist_type,
+      task_name,
+      description,
+      due_date,
+    });
+    if (res.status === 200) {
+      return res.data.data as TodoListItem;
+    } else {
+      return null;
     }
   },
 };

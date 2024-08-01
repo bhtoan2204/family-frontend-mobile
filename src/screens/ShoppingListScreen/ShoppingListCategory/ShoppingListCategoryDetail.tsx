@@ -35,6 +35,7 @@ import UpdateDescriptionSheet from 'src/components/user/shopping/sheet/update-de
 import UpdatePriceSheet from 'src/components/user/shopping/sheet/update-price-sheet'
 import { convertToNumber } from 'src/utils/currency/convertPriceFromDB'
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
+import { useToast } from 'react-native-toast-notifications'
 
 
 const screenHeight = Dimensions.get('screen').height;
@@ -58,7 +59,7 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
     const [description, setDescription] = useState<string>('')
 
     const isDarkMode = useSelector(getIsDarkMode)
-
+    const toast = useToast()
 
     useEffect(() => {
         console.log("items", item)
@@ -132,6 +133,19 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                                 id_item: id_item,
                                 id_list: id_shopping_list
                             }))
+                            if (itemDetail?.is_purchased) {
+                                toast.show("Item is marked as not purchased", {
+                                    type: "warning",
+                                    duration: 2000,
+                                    icon: <Material name="close" size={24} color={"white"} />,
+                                });
+                            } else {
+                                toast.show("Item is marked as purchased", {
+                                    type: "success",
+                                    duration: 2000,
+                                    icon: <Material name="check" size={24} color={"white"} />,
+                                });
+                            }
                         }}
                     >
                         {
@@ -252,6 +266,11 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                 onPress: () => {
                     navigation.goBack()
                     dispatch(deleteItem({ id_item: id_item, id_list: id_shopping_list }))
+                    toast.show("Item deleted", {
+                        type: "success",
+                        duration: 2000,
+                        icon: <Material name="close" size={24} color={"white"} />,
+                    })
                     // dispatch(deleteTodoList({ id_item: id_item }))
                 }
             },
@@ -343,23 +362,60 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
             </View>
             <UpdateDateItemSheet bottomSheetRef={updateDateBottomSheetRef} id_family={id_family!} id_list={id_shopping_list} id_item={id_item} initialDate={
                 itemDetail?.reminder_date ? itemDetail?.reminder_date : new Date().toISOString()
-            } />
+            }
+                onUpdateSuccess={
+                    () => {
+                        toast.show("Reminder date updated", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        })
+                    }}
+            />
             <AddMoreInfoSheet
                 bottomSheetRef={addInformationBottomSheetRef} id_family={id_family!} id_list={id_shopping_list}
                 description={description}
                 price={itemDetail?.price ? convertToNumber(itemDetail?.price) : 0}
                 id_item={id_item}
                 id_shopping_list_type={id_shopping_list}
+                onUpdateSuccess={
+                    () => {
+                        toast.show("Description and price updated", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        })
+                    }
+                }
             />
             <UpdateDescriptionSheet bottomSheetRef={updateDescriptionBottomSheetRef} id_family={id_family!} id_list={id_shopping_list}
                 description={description}
                 id_item={id_item}
                 id_shopping_list_type={id_shopping_list}
+                onUpdateSuccess={
+                    () => {
+                        toast.show("Description updated", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        })
+                    }
+                }
             />
             <UpdatePriceSheet bottomSheetRef={updatePriceBottomSheetRef} id_family={id_family!} id_list={id_shopping_list}
                 price={itemDetail?.price ? convertToNumber(itemDetail?.price) : 0}
                 id_item={id_item}
                 id_shopping_list_type={id_shopping_list}
+                onUpdateSuccess={
+                    () => {
+                        toast.show("Price updated", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        })
+                    }
+                }
+
             />
         </View>
 

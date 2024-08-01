@@ -52,9 +52,18 @@ const EducationServices = {
     }
   },
 
-  getAllEducation: async (id_family: number) => {
+  getAllEducation: async (
+    id_family: number,
+    page: number,
+    itemPerPage: number,
+  ) => {
     try {
-      const url = EducationUrls.getAll + '/?id_family=' + id_family;
+      const url =
+        EducationUrls.getAll +
+        '?id_family=' +
+        id_family +
+        `&page=${page}&itemsPerPage=${itemPerPage}&sortBy=created_at&sortDirection=ASC`;
+      console.log(url);
       const response: AxiosResponse = await instance.get(url);
 
       if (response.status === 200) {
@@ -263,7 +272,6 @@ const EducationServices = {
     id_education_progress: number,
     id_family: number,
     index: number,
-    component_name: number,
     score: number,
   ) => {
     try {
@@ -274,7 +282,6 @@ const EducationServices = {
           id_education_progress,
           id_family,
           index,
-          component_name,
           score,
         },
       );

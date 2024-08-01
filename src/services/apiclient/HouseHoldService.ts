@@ -34,12 +34,13 @@ const HouseHoldService = {
       console.log('token', token);
       const url =
         HouseHoldUrls.getHouseHoldItem +
-        '/' +
+        '?id_family=' +
         id_family +
-        '?page=' +
+        '&page=' +
         page +
         '&itemsPerPage=' +
-        itemsPerPage;
+        itemsPerPage +
+        '&sortBy=created_at&sortDirection=ASC';
       console.log(url);
       const response = await instance.get(url);
       if (response.status === 200) {
@@ -50,6 +51,69 @@ const HouseHoldService = {
       }
     } catch (error) {
       throw new Error();
+    }
+  },
+  createHouseholdItem: async (
+    id_family: number,
+    item_image: string,
+    item_name: string,
+    id_category: number,
+    item_description: string,
+    id_room: number,
+  ) => {
+    const url = HouseHoldUrls.createHouseHoldItem;
+    const createFormData = (uri: string): FormData => {
+      let formData = new FormData();
+      if (uri != '') {
+        let filename = uri.split('/').pop()!;
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+        const file = {
+          uri,
+          name: filename,
+          type,
+        };
+        formData.append('item_image', file);
+      }
+      formData.append('id_family', id_family.toString());
+      formData.append('item_name', item_name);
+      formData.append('id_category', id_category.toString());
+      formData.append('item_description', item_description);
+      formData.append('item_type', 'durable');
+      formData.append('id_room', id_room.toString());
+      return formData;
+    };
+
+    try {
+      const res = await instance.post(url, createFormData(item_image), {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          accept: '*/*',
+        },
+      });
+      if (res.status === 201) {
+        const itemData = res.data.data;
+        // itemData.id_family = parseInt(itemData.id_family);
+        // itemData.id_category = parseInt(itemData.id_category);
+        // itemData.id_room = parseInt(itemData.id_room);
+        // console.log('created item data', itemData);
+        return {
+          id_family: itemData.id_family,
+          id_household_item: itemData.id_household_item,
+          id_category: itemData.id_category,
+          id_room: itemData.id_room,
+          item_description: itemData.item_description,
+          item_imageurl: itemData.item_imageurl,
+          item_name: itemData.item_name,
+          created_at: itemData.created_at,
+          updated_at: itemData.updated_at,
+        };
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.log('Error creating item:', error);
+      return null;
     }
   },
   getHouseHoldItemDetail: async (id_item: number, id_family: number) => {
@@ -143,12 +207,13 @@ const HouseHoldService = {
     try {
       const url =
         HouseHoldUrls.getAllRoom +
-        '/' +
+        '?id_family=' +
         id_family +
-        '?page=' +
+        '&page=' +
         page +
         '&itemsPerPage=' +
-        itemsPerPage;
+        itemsPerPage +
+        '&sortBy=created_at&sortDirection=ASC';
       const response = await instance.get(url);
       if (response.status === 200) {
         console.log('uwu', response.data.data);
@@ -204,7 +269,7 @@ const HouseHoldService = {
       if (res.status === 201) {
         const roomData = res.data;
         roomData.id_family = parseInt(roomData.id_family);
-        console.log("created room data",roomData)
+        console.log('created room data', roomData);
         return roomData as RoomInterface;
       } else {
         return null;
@@ -254,6 +319,18 @@ const HouseHoldService = {
     } catch (error) {
       console.log('Error updating room info:', error);
     }
+  },
+  deleteItem: async (id_item: number, id_family: number) => {
+    try {
+      const url =
+        HouseHoldUrls.deleteHouseHoldItem + '/' + id_family + '/' + id_item;
+      const response = await instance.delete(url);
+      if (response.status === 204) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {}
   },
 };
 

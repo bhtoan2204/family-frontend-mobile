@@ -35,6 +35,7 @@ interface AddItemSheetProps {
     description: string
     price: number
     id_item: number
+    onUpdateSuccess: () => void
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -47,7 +48,8 @@ const AddMoreInfoSheet = ({
     id_shopping_list_type,
     description,
     price,
-    id_item
+    id_item,
+    onUpdateSuccess
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
     const [loading, setLoading] = React.useState(false)

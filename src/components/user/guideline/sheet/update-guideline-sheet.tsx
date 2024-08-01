@@ -25,6 +25,8 @@ interface AddItemSheetProps {
     id_item: number;
     name: string;
     description: string;
+    onUpdateSuccess: () => void;
+    onUpdateFailed: () => void;
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -35,7 +37,9 @@ const UpdateGuidelineSheet = ({
     id_family,
     id_item,
     name,
-    description
+    description,
+    onUpdateSuccess,
+    onUpdateFailed
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
 
@@ -92,6 +96,7 @@ const UpdateGuidelineSheet = ({
                 title: inputName,
                 description: inputDescription
             }))
+            onUpdateSuccess()
             bottomSheetRef.current?.close()
         } catch (error) {
             console.log(error)

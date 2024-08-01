@@ -36,6 +36,8 @@ interface AddItemSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
     id_education_progress: number;
     id_family: number;
+    onAddSuccess: () => void;
+    onAddFailed: () => void;
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -45,6 +47,8 @@ const AddCourseSheet = ({
     bottomSheetRef,
     id_education_progress,
     id_family,
+    onAddSuccess,
+    onAddFailed
 
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
@@ -118,10 +122,12 @@ const AddCourseSheet = ({
             }
             dispatch(addSubject(newSubject))
             bottomSheetRef.current?.close()
+            onAddSuccess()
         }
         else {
             console.log('error')
             bottomSheetRef.current?.close()
+            onAddFailed()
         }
         // const res = await EducationServices.addComponentScore(
         //     id_subject

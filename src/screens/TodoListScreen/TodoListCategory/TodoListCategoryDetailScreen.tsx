@@ -35,6 +35,7 @@ import { deleteTodoList, updateDoneTodoList } from 'src/redux/slices/TodoListSli
 import UpdateDateItemSheet from 'src/components/user/shopping-todo/sheet/update-date-item-sheet'
 import UpdateDescriptionSheet from 'src/components/user/shopping-todo/sheet/update-description-sheet'
 import { useColorScheme } from 'nativewind'
+import { useToast } from 'react-native-toast-notifications'
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -51,7 +52,7 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
     const addInformationBottomSheetRef = React.useRef<BottomSheet>(null)
     const updateDescriptionBottomSheetRef = React.useRef<BottomSheet>(null)
     const { colorScheme } = useColorScheme()
-
+    const toast = useToast()
 
 
     useEffect(() => {
@@ -94,6 +95,11 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                             dispatch(updateDoneTodoList({
                                 id_item: id_item,
                             }))
+                            toast.show("Updated", {
+                                type: "success",
+                                duration: 2000,
+                                icon: <Material name="check" size={24} color={"white"} />,
+                            });
                         }}
                     >
                         {
@@ -197,6 +203,11 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                 onPress: () => {
                     navigation.goBack()
                     dispatch(deleteTodoList({ id_item: id_item }))
+                    toast.show("Deleted", {
+                        type: "success",
+                        duration: 2000,
+                        icon: <Material name="check" size={24} color={"white"} />,
+                    });
                 }
             },
             {
@@ -282,12 +293,48 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                 id_family={id_family!}
                 id_item={id_item}
                 initialDate={itemDetail?.due_date ? itemDetail?.due_date : new Date().toISOString()}
+                onUpdateSuccess={
+                    () => {
+                        toast.show("Date updated", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        });
+                    }
+                }
+                onUpdateFailed={
+                    () => {
+                        toast.show("Failed to updated date", {
+                            type: "error",
+                            duration: 2000,
+                            icon: <Material name="close" size={24} color={"white"} />,
+                        });
+                    }
+                }
             />
             <UpdateDescriptionSheet
                 bottomSheetRef={updateDescriptionBottomSheetRef}
                 id_family={id_family!}
                 id_item={id_item}
                 description={itemDetail?.description || ""}
+                onUpdateSuccess={
+                    () => {
+                        toast.show("Description updated", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        });
+                    }
+                }
+                onUpdateFailed={
+                    () => {
+                        toast.show("Failed to update description", {
+                            type: "error",
+                            duration: 2000,
+                            icon: <Material name="close" size={24} color={"white"} />,
+                        });
+                    }
+                }
             />
 
             {/* <UpdateDateItemSheet bottomSheetRef={updateDateBottomSheetRef} id_family={id_family!} id_list={id_shopping_list} id_item={id_item} initialDate={

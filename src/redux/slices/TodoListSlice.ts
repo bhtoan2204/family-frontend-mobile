@@ -12,11 +12,13 @@ import {TodoListType, TodoListItem} from 'src/interface/todo/todo';
 interface ShoppingListSliceState {
   todoList: TodoListItem[];
   todoListType: TodoListType[];
+  dateSelected: string;
 }
 
 const initialState: ShoppingListSliceState = {
   todoList: [],
   todoListType: [],
+  dateSelected: new Date().toISOString(),
 };
 
 const todoListSlice = createSlice({
@@ -77,6 +79,12 @@ const todoListSlice = createSlice({
         item => item.id_checklist !== action.payload.id_item,
       );
     },
+    setDateSelected: (state, action: PayloadAction<string>) => {
+      state.dateSelected = action.payload;
+    },
+    resetDateSelected: state => {
+      state.dateSelected = new Date().toISOString();
+    },
   },
 });
 
@@ -88,6 +96,8 @@ export const {
   updateDescription,
   updateDoneTodoList,
   deleteTodoList,
+  setDateSelected,
+  resetDateSelected,
 } = todoListSlice.actions;
 
 export const selectProfile = (state: RootState) => state.profile;

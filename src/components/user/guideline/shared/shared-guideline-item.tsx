@@ -30,7 +30,7 @@ const SharedGuildlineItem = ({ item, onPress, onUpdate, index }: GuildlineItemPr
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
     }
     return (
-        <View className='ml-6 '>
+        <View className='mx-4 '>
             <TouchableOpacity
                 className="flex-row items-center py-4 rounded-lg mb-3 border-[#DEDCDC] dark:border-[#252D3B]"
                 onPress={() => {
