@@ -33,20 +33,24 @@ import { clearEducation, deleteEducation, setEducation } from 'src/redux/slices/
 import EducationServices from 'src/services/apiclient/EducationService';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { useToast } from "react-native-toast-notifications";
+import FamilyServices from 'src/services/apiclient/FamilyServices';
+import { Member } from 'src/interface/member/member';
 
 
 const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
-
+    console.log("id_family", id_family)
     const dispatch = useDispatch<AppDispatch>()
     const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
     const [searchQuery, setSearchQuery] = React.useState<string>('')
     const educationData = useSelector((state: RootState) => state.educations)
     const addProgressBottomSheetRef = useRef<BottomSheet>(null)
     const pickMemberBottomSheetRef = useRef<BottomSheet>(null)
-    const members = useSelector((state: RootState) => state.family).familyMembers.filter(item => {
-        return item.id_family == id_family
-    })
+    // const members = useSelector((state: RootState) => state.family).familyMembers.filter(item => {
+    //     return item.id_family == id_family
+    // })
+    // console.log(members)
+    const [members, setFamilyMembers] = React.useState<Member[]>([])
     const [pickedIdUser, setPickedIdUser] = React.useState<string>("")
     const { colorScheme, setColorScheme } = useColorScheme()
     const updateEducationSheetRef = useRef<BottomSheet>(null)
@@ -60,6 +64,20 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
 
 
     useEffect(() => {
+        const handleFetchMember = async () => {
+            try {
+              const data = await FamilyServices.getAllMembers("", id_family);
+              if (data) {
+                setFamilyMembers(data);
+              }else {
+                setFamilyMembers([])
+                //   setFamilyMembers(data);
+              }
+            //   dispatch(setFamilyMembers(data));
+            } catch (error) {
+              console.log(error);
+            }
+          };
         const handleFetchEducation = async () => {
             setLoading(true)
             const educationsData = await EducationServices.getAllEducation(id_family!, 1, 20);
@@ -85,8 +103,8 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
             setLoading(false)
             dispatch(setEducation(edu))
         }
+        handleFetchMember()
         handleFetchEducation()
-
         return () => {
             dispatch(clearEducation())
         }

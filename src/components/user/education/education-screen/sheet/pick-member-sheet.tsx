@@ -12,7 +12,7 @@ import { RoomInterface } from 'src/interface/household/room';
 import { Member } from 'src/interface/member/member';
 import { useSelector } from 'react-redux';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
-
+import NoMemberImage from 'src/assets/images/education_assets/no_member.png'
 
 
 const screenWidth = Dimensions.get('screen').width
@@ -57,9 +57,9 @@ const AddProgressPickMemberSheet = ({
             keyboardBlurBehavior="restore"
             onChange={(index) => {
                 if (index == -1) {
-                    setKey((prev)=>!prev)
+                    setKey((prev) => !prev)
                 } else {
-                    setKey((prev)=>!prev)
+                    setKey((prev) => !prev)
                 }
             }}
 
@@ -93,13 +93,26 @@ const AddProgressPickMemberSheet = ({
                 <BottomSheetScrollView snapToInterval={Dimensions.get('screen').width} showsHorizontalScrollIndicator={false} contentContainerStyle={{ minHeight: '100%' }}>
                     <View className='mt-5' key={key.toString()}>
 
-                        <ItemItems data={memberList}
-                            pickedIdUser={pickedIdUser}
-                            setPickedIdUser={setPickedIdUser}
-                            // setPickedUser={setPickedUser}
-                            pickMemberSheetRef={refRBSheet}
-                            isDark={isDarkMode}
-                        />
+                        {
+                            memberList.length > 0 ? <ItemItems data={memberList}
+                                pickedIdUser={pickedIdUser}
+                                setPickedIdUser={setPickedIdUser}
+                                // setPickedUser={setPickedUser}
+                                pickMemberSheetRef={refRBSheet}
+                                isDark={isDarkMode}
+                            /> : <>
+                                <View className='mx-6 justify-center items-center'>
+                                    <View className='my-3'>
+                                        <Image source={NoMemberImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
+                                    </View>
+                                    <Text className='text-base text-black dark:text-white text-center '>
+                                        Family currently has no member please add member and come back later
+
+
+                                    </Text>
+                                </View>
+                            </>
+                        }
                     </View>
                 </BottomSheetScrollView >
 

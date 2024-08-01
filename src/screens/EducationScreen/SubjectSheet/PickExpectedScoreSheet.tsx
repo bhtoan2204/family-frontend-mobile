@@ -208,6 +208,7 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, 
                                     console.log(isValid)
                                     setInputValue(text)
                                 }}
+                                
                                 onSubmitEditing={(event) => {
                                     if (isNumberInRange(event.nativeEvent.text)) {
                                         handleSave()

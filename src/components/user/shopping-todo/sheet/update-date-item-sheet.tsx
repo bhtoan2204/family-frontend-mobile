@@ -28,6 +28,7 @@ import { addShoppingList, addShoppingListItem, updateReminderDateItem } from 'sr
 import { addMonths, format, subMonths } from 'date-fns';
 import { Calendar } from 'react-native-calendars';
 import { updateDescription, updateDateTodoList } from 'src/redux/slices/TodoListSlice';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
 
 
@@ -61,9 +62,14 @@ const UpdateDateItemSheet = ({
 
     const [errorText, setErrorText] = React.useState('')
     const [showError, setShowError] = React.useState(false)
-
     const [selectDate, setSelectDate] = useState<string>(format(new Date(initialDate), 'yyyy-MM-dd'));
-    console.log('hello dcmm', format(new Date('2024-07-05T19:26:03.642Z'), 'yyyy-MM-dd'))
+    const [key, setKey] = useState(false)
+    const isDarkMode = useSelector(getIsDarkMode)
+
+    useEffect(() => {
+        setKey((prev) => !prev)
+    }, [isDarkMode])
+    // console.log('hello dcmm', format(new Date('2024-07-05T19:26:03.642Z'), 'yyyy-MM-dd'))
 
     const buildDate = (dateString: string) => {
         const date: Date = new Date(dateString);
@@ -118,7 +124,7 @@ const UpdateDateItemSheet = ({
 
                 <View className=''>
                     <Text className='flex-1 text-center text-base'
-                        style={{ color: '#2A475E', fontWeight: 'bold' }}
+                        style={{ color: !isDarkMode ? '#2A475E' : COLORS.DenimBlue, fontWeight: 'bold' }}
                     >{buildDate(selectDate)}</Text>
                 </View>
                 <View className='flex-row '>
@@ -161,6 +167,9 @@ const UpdateDateItemSheet = ({
 
             // snapPoints={snapPoints}
             handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
+            backgroundStyle={{
+                backgroundColor: isDarkMode ? '#0A1220' : '#f7f7f7'
+            }}
             backdropComponent={renderBackdrop}
             onClose={() => {
                 Keyboard.dismiss()
@@ -175,8 +184,8 @@ const UpdateDateItemSheet = ({
             }}
 
         >
-            <BottomSheetView style={{ minHeight: 100, flex: 0, backgroundColor: '#f7f7f7' }}>
-                <View className='my-3'>
+            <BottomSheetView style={{ minHeight: 100, flex: 0, backgroundColor: isDarkMode ? '#0A1220' : '#f7f7f7' }}>
+                <View className='my-3 bg-[#F7F7F7] dark:bg-[#252D3B]'>
                     <Calendar
                         onDayPress={handleDayPress}
                         markedDates={{
@@ -184,15 +193,18 @@ const UpdateDateItemSheet = ({
                         }}
                         initialDate={selectDate}
                         theme={{
-                            calendarBackground: '#f7f7f7',
+                            // calendarBackground: colorScheme === 'light' ? '#f7f7f7' : '#1A1A1A',
+                            calendarBackground: 'transparent',
+                            dayTextColor: !isDarkMode ? '#000000' : 'white',
+                            textDisabledColor: !isDarkMode ? '#7C7C7C' : '#92969D',
                         }}
                         minDate={'2024-05-10'}
                         maxDate={'2026-06-10'}
                         disableAllTouchEventsForDisabledDays={true}
                         // hideDayNames={true}
                         style={{
-                            backgroundColor: '#f7f7f7',
-                            marginHorizontal: 10,
+                            // backgroundColor: '#f7f7f7',
+                            // marginHorizontal: 10,
                         }}
                         customHeader={customCalendarHeader}
 

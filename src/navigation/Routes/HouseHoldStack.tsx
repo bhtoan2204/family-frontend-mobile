@@ -103,7 +103,7 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
     }, [currScreen])
 
     if (loading) {
-        return <View className='justify-center items-center flex-1'>
+        return <View className='justify-center items-center flex-1 bg-white dark:bg-[#0A1220]'>
             <ActivityIndicator size="small" color={COLORS.AuroMetalSaurus} />
         </View>
     }
