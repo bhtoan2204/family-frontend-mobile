@@ -16,6 +16,8 @@ interface PickScoreSheetProps {
     id_family: number;
     id_education_progress: number;
     id_subject: number;
+    onSuccess: () => void;
+    onFailed: () => void;
 }
 
 const isNumberInRange = (numberString: string) => {
@@ -26,7 +28,7 @@ const isNumberInRange = (numberString: string) => {
     return number >= 0 && number <= 10;
 };
 
-const PickNameSheet = ({ setNameSheetRef, name, index, id_education_progress, id_family, id_subject }: PickScoreSheetProps) => {
+const PickNameSheet = ({ setNameSheetRef, name, index, id_education_progress, id_family, id_subject, onFailed, onSuccess }: PickScoreSheetProps) => {
 
 
     const [inputValue, setInputValue] = React.useState<string>(name || '0')
@@ -72,6 +74,7 @@ const PickNameSheet = ({ setNameSheetRef, name, index, id_education_progress, id
             index: index
         }))
         setNameSheetRef.current?.close()
+        onSuccess();
         if (index === -1) {
             // dispatch(updateComponentScoreOfSubject({
 

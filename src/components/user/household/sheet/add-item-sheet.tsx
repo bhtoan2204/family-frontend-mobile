@@ -16,6 +16,9 @@ import OpenedFolder from 'src/assets/images/household_assets/OpenedFolder.png'
 import Room2 from 'src/assets/images/household_assets/Room_2.png'
 import { RoomInterface } from 'src/interface/household/room';
 import { HouseHoldCategoryInterface } from 'src/interface/household/household_category';
+import { HouseHoldItemInterface } from 'src/interface/household/household_item';
+import { addHouseholdItem } from 'src/redux/slices/HouseHoldSlice';
+import HouseHoldService from 'src/services/apiclient/HouseHoldService';
 
 interface AddRoomSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -80,6 +83,8 @@ const AddItemSheet = ({
         }
 
     }, [showError])
+
+
 
     useEffect(() => {
         if (addItemType == 0) {
@@ -162,22 +167,32 @@ const AddItemSheet = ({
             console.log(
                 id_family,
                 householdName,
-                householdCategory,
-                householdRoom,
+                pickedCategory,
+                pickedRoom,
                 imageUri,
             )
-            // setLoading(true)
-            // console.log({ id_family, text, image_uri })
-            // const newRoomDat = await HouseHoldService.createRoom(id_family, text, image_uri)
-            // if (newRoomDat) {
-            //     console.log(newRoomDat)
-            //     dispatch(addRoom(newRoomDat))
-            //     setLoading(false)
-            //     bottomSheetRef.current?.close()
-            // } else {
-            //     setLoading(false)
-            //     setShowError(true)
-            //     setErrorText('Something went wrong')
+            const data = await HouseHoldService.createHouseholdItem(id_family, imageUri, householdName, pickedCategory, "", pickedRoom)
+            if (data) {
+                const newItem: HouseHoldItemInterface = {
+                    id_household_item: data.id_household_item,
+                    item_name: householdName,
+                    id_category: pickedCategory,
+                    id_room: pickedRoom,
+                    item_imageurl: imageUri,
+                    room: rooms.find((room) => room.id_room === pickedRoom),
+                    category: categories.find((category) => category.id_household_item_category === pickedCategory),
+                    description: '',
+                    id_family: id_family,
+                }
+                dispatch(addHouseholdItem(newItem))
+                bottomSheetRef.current?.close()
+
+            } else {
+                bottomSheetRef.current?.close()
+
+            }
+
+
             // }
         } catch (error) {
             console.log(error)
@@ -224,11 +239,11 @@ const AddItemSheet = ({
                 </View>
                 <View className=''>
                     <Text style={{
-                        color: householdCategory == -1 ? "#b0b0b0" : iOSColors.systemBlue.defaultLight,
+                        color: pickedCategory == -1 ? "#b0b0b0" : iOSColors.systemBlue.defaultLight,
                         fontSize: 15,
 
                     }}>{
-                            householdCategory == -1 ? "Choose category" : findCategoryText(householdCategory)
+                            pickedCategory == -1 ? "Choose category" : findCategoryText(pickedCategory)
                         }</Text>
                 </View>
             </View>
@@ -261,11 +276,11 @@ const AddItemSheet = ({
                 </View>
                 <View className=''>
                     <Text style={{
-                        color: householdRoom == -1 ? "#b0b0b0" : iOSColors.systemBlue.defaultLight,
+                        color: pickedRoom == -1 ? "#b0b0b0" : iOSColors.systemBlue.defaultLight,
                         fontSize: 15,
 
                     }}>{
-                            householdRoom == -1 ? "Choose room" : findRoomText(householdRoom)
+                            pickedRoom == -1 ? "Choose room" : findRoomText(pickedRoom)
                         }</Text>
                 </View>
             </View>
@@ -274,7 +289,7 @@ const AddItemSheet = ({
 
     return (
         <BottomSheet
-        
+
             ref={bottomSheetRef}
             index={-1}
             enableOverDrag={true}
@@ -389,10 +404,16 @@ const AddItemSheet = ({
                         <TouchableOpacity className='items-center rounded-lg justify-center' style={{
                             width: screenWidth * 0.1,
                             height: screenWidth * 0.1,
-                            backgroundColor: householdName != '' && householdCategory != -1 && householdRoom != -1 ? COLORS.DenimBlue : iOSGrayColors.systemGray6.defaultLight,
-                        }} >
+                            backgroundColor: householdName != '' && pickedCategory != -1 && pickedRoom != -1 ? COLORS.DenimBlue : iOSGrayColors.systemGray6.defaultLight,
+                        }}
+                            onPress={async () => {
+                                if (householdName != '' && pickedCategory != -1 && pickedRoom != -1) {
+                                    await handleSubmit()
+                                }
+                            }}
+                        >
                             <Material name='arrow-right' size={24} color={
-                                householdName != '' && householdCategory != -1 && householdRoom != -1 ? 'white' : iOSGrayColors.systemGray.defaultDark
+                                householdName != '' && pickedCategory != -1 && pickedRoom != -1 ? 'white' : iOSGrayColors.systemGray.defaultDark
                             }
                             />
                         </TouchableOpacity>

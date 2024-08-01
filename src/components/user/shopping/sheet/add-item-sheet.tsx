@@ -36,7 +36,9 @@ interface AddItemSheetProps {
     addRoomSheetRef: React.RefObject<BottomSheet>
     pickedCategory: number
     categories: ShoppingListItemType[],
-    id_shopping_list_type: number
+    id_shopping_list_type: number,
+    onAddSuccess: () => void
+    onAddFailed: () => void
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -48,7 +50,10 @@ const AddItemSheet = ({
     addRoomSheetRef,
     pickedCategory,
     categories,
-    id_shopping_list_type
+    id_shopping_list_type,
+    onAddSuccess,
+    onAddFailed
+
 
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
@@ -130,9 +135,11 @@ const AddItemSheet = ({
             dispatch(addShoppingList(newShoppingList))
             await addItem(id_list)
             bottomSheetRef.current?.close()
+            onAddSuccess()
         } else {
             await addItem(shoppingList[0].id_list)
             bottomSheetRef.current?.close()
+            onAddSuccess()
 
         }
 

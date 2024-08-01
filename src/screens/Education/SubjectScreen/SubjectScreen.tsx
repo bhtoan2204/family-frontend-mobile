@@ -25,6 +25,7 @@ import SubjectItemEmpty from 'src/screens/EducationScreen/SubjectItem/SubjectIte
 import SubjectScreenHeader from 'src/components/user/education/subject-screen/subject-screen-header';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import AddComponentScoreSheet from 'src/components/user/education/subject-screen/sheet/add-component-score-sheet';
+import { useToast } from 'react-native-toast-notifications';
 
 
 const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
@@ -37,7 +38,7 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
     const [expectedGrade, setExpectedGrade] = React.useState<number>(0)
     const [currentGrade, setCurrentGrade] = React.useState<number>(0)
     const addComponentScoreSheetRef = React.useRef<BottomSheet>(null)
-
+    const toast = useToast();
     const getFirstLetterSubject = (subject: string) => {
         var str = subject.split(" ");
         return str[0]
@@ -133,6 +134,7 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
                             id_education_progress={id_progress}
                             id_subject={id_subject}
                             id_family={id_family!}
+                            isFirst={true}
                         />
                         <SubjectItem
                             isGraded={subjectDetailData.midterm_score?.score != null} subjectComponentData={subjectDetailData.midterm_score}
@@ -157,6 +159,9 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
                                         id_education_progress={id_progress}
                                         id_subject={id_subject}
                                         id_family={id_family!}
+                                        isFirst={
+                                            index == 0 ? true : false
+                                        }
                                     />
                                 )
                             })
@@ -185,7 +190,24 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
                 id_education_progress={id_progress}
                 id_subject={id_subject}
                 id_family={id_family}
-
+                onAddSuccess={
+                    () => {
+                        toast.show("New component added for subject", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        });
+                    }
+                }
+                onAddFailed={
+                    () => {
+                        toast.show("Failed to add new component for subject", {
+                            type: "error",
+                            duration: 2000,
+                            icon: <Material name="close" size={24} color={"white"} />,
+                        });
+                    }
+                }
             />
 
 

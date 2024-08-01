@@ -23,6 +23,7 @@ export type RootParamList = {
   TodoListStack: NavigatorScreenParams<TodoListStackParamList>;
   EducationStack: NavigatorScreenParams<EducationTabParamList>;
   GuidelineStack: NavigatorScreenParams<GuidelineStackParamList>;
+  SharedGuideline: undefined;
   SharedGuidelineDetail: {
     id_guide_item: number;
     id_family: number;
@@ -412,14 +413,24 @@ export interface GuildLineDetailScreenProps {
   route: RouteProp<GuidelineStackParamList, 'GuildLineDetail'>;
 }
 
-type SharedGuidelineNavigationProp = NativeStackNavigationProp<
-  GuidelineStackParamList,
+// type SharedGuidelineNavigationProp = NativeStackNavigationProp<
+//   GuidelineStackParamList,
+//   'SharedGuideline'
+// >;
+
+// export interface SharedGuidelineScreenProps {
+//   navigation: SharedGuidelineNavigationProp;
+//   route: RouteProp<GuidelineStackParamList, 'SharedGuideline'>;
+// }
+//share guideline
+type SharedGuidelineScreenNavigationProp = NativeStackNavigationProp<
+  RootParamList,
   'SharedGuideline'
 >;
 
 export interface SharedGuidelineScreenProps {
-  navigation: SharedGuidelineNavigationProp;
-  route: RouteProp<GuidelineStackParamList, 'SharedGuideline'>;
+  navigation: SharedGuidelineScreenNavigationProp;
+  route: RouteProp<RootParamList, 'SharedGuideline'>;
 }
 
 

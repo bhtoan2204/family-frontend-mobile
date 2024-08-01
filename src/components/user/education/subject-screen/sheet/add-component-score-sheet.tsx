@@ -37,6 +37,8 @@ interface AddItemSheetProps {
     id_education_progress: number;
     id_family: number;
     id_subject: number;
+    onAddSuccess: () => void;
+    onAddFailed: () => void;
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -46,7 +48,9 @@ const AddComponentScoreSheet = ({
     bottomSheetRef,
     id_education_progress,
     id_family,
-    id_subject
+    id_subject,
+    onAddSuccess,
+    onAddFailed
 
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
@@ -104,6 +108,7 @@ const AddComponentScoreSheet = ({
 
         }))
         bottomSheetRef.current?.close()
+        onAddSuccess()
         // if (res) {
         //     dispatch(addComponentScoreToSubject({
         //         component_name: inputName,

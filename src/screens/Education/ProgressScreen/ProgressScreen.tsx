@@ -21,41 +21,40 @@ import { calculateProgress, calculateScore } from 'src/utils/education/util';
 import CourseItem from 'src/components/user/education/progress-screen/course-item';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import AddCourseSheet from 'src/components/user/education/progress-screen/sheet/add-course-sheet';
+import { useToast } from 'react-native-toast-notifications';
 
 const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) => {
     const { id_family, id_progress } = route.params
 
     const dispatch = useDispatch<AppDispatch>()
     const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
-    const [searchQuery, setSearchQuery] = React.useState<string>('')
-    const educationData = useSelector((state: RootState) => state.educations)
-    const isKeyboardVisible = useKeyboardVisible()
     const [choosenTab, setChoosenTab] = React.useState<number>(0)
+    const toast = useToast();
 
     const progressData = useSelector((state: RootState) => state.educations).find(item => {
         return item.id_education_progress == id_progress
     })
 
+    const [filteredData, setFilteredData] = React.useState<Subject[]>([])
+
     const addCourseBottomSheetRef = useRef<BottomSheet>(null)
 
-    // useEffect(() => {
-    //     const recalculateScoreAndProgress = () => {
-    //         // const subjects: Subject[] = JSON.parse(JSON.stringify(progressData ? progressData?.subjects : []))
-
-    //         if (progressData) {
-    //             for (let i = 0; i < progressData.subjects.length; i++) {
-    //                 progressData.subjects[i].score_calculated = calculateScore(progressData.subjects[i])
-    //                 progressData.subjects[i].progress_calculated = calculateProgress(progressData.subjects[i])
-    //             }
-    //         }
-    //     }
-    //     recalculateScoreAndProgress()
-    // }, [progressData])
-
     useEffect(() => {
-        console.log('haha')
-        console.log(progressData)
-    }, [progressData])
+
+        if (progressData) {
+            const subjects = progressData.subjects
+            const filtered = subjects.filter(item => {
+                if (choosenTab == 0) {
+                    return item.id_education_progress == id_progress
+                } else if (choosenTab == 1) {
+                    return item.id_education_progress == id_progress && item.status == "in_progress"
+                } else if (choosenTab == 2) {
+                    return item.id_education_progress == id_progress && item.status != "in_progress"
+                }
+            })
+            setFilteredData(filtered)
+        }
+    }, [choosenTab, progressData])
 
     const buildListEmpty = () => {
         return <TouchableOpacity className='flex-1 z-10 items-center justify-center bg-[#F7F7F7] dark:bg-[#0A1220]' activeOpacity={1.0} onPress={() => {
@@ -66,15 +65,12 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
     }
 
 
-
-
-
     const buildList = () => {
         return <ScrollView className='flex-1 z-10 mt-5 bg-[#F7F7F7] dark:bg-[#0A1220]'
             showsVerticalScrollIndicator={false}
         >
             {
-                progressData && progressData.subjects.map((item, index) => {
+                filteredData.map((item, index) => {
                     return <React.Fragment key={index}>
                         <CourseItem data={item} onPress={() => {
                             navigation.navigate('SubjectScreen', {
@@ -117,14 +113,33 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
 
             <View className='flex-1'>
                 {
-                    progressData && progressData.subjects.length > 0 ? <>
+                    filteredData.length > 0 ? <>
                         {buildList()}
                     </> : <>
                         {buildListEmpty()}
                     </>
                 }
             </View>
-            <AddCourseSheet bottomSheetRef={addCourseBottomSheetRef} id_family={id_family!} id_education_progress={id_progress!} />
+            <AddCourseSheet bottomSheetRef={addCourseBottomSheetRef} id_family={id_family!} id_education_progress={id_progress!}
+                onAddSuccess={
+                    () => {
+                        toast.show("New subject added for family", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        });
+                    }
+                }
+                onAddFailed={
+                    () => {
+                        toast.show("Failed to add new subject for progress", {
+                            type: "error",
+                            duration: 2000,
+                            icon: <Material name="close" size={24} color={"white"} />,
+                        });
+                    }
+                }
+            />
         </View>
 
     )

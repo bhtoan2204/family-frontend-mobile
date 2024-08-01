@@ -2,9 +2,9 @@ import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns
 import React, { useCallback, useEffect, useState } from 'react'
 import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView, StatusBar } from 'react-native'
 import { Agenda, AgendaSchedule, Calendar, CalendarList } from 'react-native-calendars'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ShoppingListScreenProps } from 'src/navigation/NavigationTypes'
-import { RootState } from 'src/redux/store'
+import { AppDispatch, RootState } from 'src/redux/store'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import { COLORS } from 'src/constants'
 import { colors } from '../const/color'
@@ -16,6 +16,8 @@ import FurnitureImage from 'src/assets/images/shoppinglist_assets/Furniture.png'
 import PharmacyImage from 'src/assets/images/shoppinglist_assets/Pharmacy.png'
 import OtherImage from 'src/assets/images/shoppinglist_assets/Other.png'
 import { useColorScheme } from 'nativewind'
+import { useToast } from 'react-native-toast-notifications'
+import { setDateSelected } from 'src/redux/slices/ShoppingListSlice'
 const screenHeight = Dimensions.get('screen').height;
 
 
@@ -28,7 +30,8 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
     const shoppingListFiltered = shoppingList.filter((item) => item.id_family === id_family)
     const { colorScheme, setColorScheme } = useColorScheme()
     const [key, setKey] = useState(false)
-    
+    const dispatch = useDispatch<AppDispatch>()
+    const toast = useToast()
     useEffect(() => {
         // setColorScheme('dark')
         // console.log(colorScheme)
@@ -36,12 +39,8 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
     useEffect(() => {
         setKey((prev) => !prev)
     }, [colorScheme])
-    // const handleFilterData = () => {
-    //     const returnArray = []
-    //     for (let i = 0; i < data.length; i++) {
 
-    //     }
-    // }
+
     console.log("gg", shoppingListType)
     const loadItemsForMonth = (month: any) => {
         console.log('trigger items loading');
@@ -62,6 +61,8 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
         } else {
             console.log(date.dateString)
             setSelectDate(date.dateString);
+            dispatch(setDateSelected(date.dateString))
+
         }
     };
     const handleNavigateCategory = (id_category: number) => {

@@ -2,9 +2,9 @@ import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns
 import React, { useCallback, useEffect, useState } from 'react'
 import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView, StatusBar } from 'react-native'
 import { Agenda, AgendaSchedule, Calendar, CalendarList } from 'react-native-calendars'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ShoppingListScreenProps, TodoListScreenProps } from 'src/navigation/NavigationTypes'
-import { RootState } from 'src/redux/store'
+import { AppDispatch, RootState } from 'src/redux/store'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import { COLORS } from 'src/constants'
 
@@ -18,6 +18,7 @@ import { colors } from '../const/color'
 import { TodoListItem, TodoListType } from 'src/interface/todo/todo'
 import { useColorScheme } from 'nativewind'
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
+import { setDateSelected } from 'src/redux/slices/TodoListSlice'
 const screenHeight = Dimensions.get('screen').height;
 
 
@@ -54,6 +55,7 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
     const { colorScheme, setColorScheme } = useColorScheme();
     const [key, setKey] = useState(false);
     const isDarkMode = useSelector(getIsDarkMode)
+    const dispatch = useDispatch<AppDispatch>()
     // useEffect(() => {
     //     console.log(todosMap)
     //     console.log(todoList)
@@ -89,6 +91,8 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
         } else {
             console.log(date.dateString)
             setSelectDate(date.dateString);
+            dispatch(setDateSelected(date.dateString))
+
         }
     };
     // const handleNavigateCategory = (id_category: number) => {
@@ -147,20 +151,22 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
     }
 
     const buildItems = () => {
-        // const a = Array.from(todosMap.entries())
+        const a = Array.from(todosMap.entries())
         return Array.from(todosMap.entries()).map(([item, index]) => {
             const type = JSON.parse(item) as TodoListType
-            return todosMap.get(item) && <TodoListCategoryItem id_category={type.id_checklist_type} category_name={type.name_en} total_items={todosMap.get(item)!.length}
-                handleNavigateCategory={() => {
-                    // console.log('navigate')
-                    navigation.navigate('TodoListCategory', {
-                        id_family: id_family,
-                        id_category: type.id_checklist_type
-                    })
-                }}
-                iconUrl={type.icon_url}
-                scheme={colorScheme}
-            />
+            return todosMap.get(item) && <React.Fragment key={item}>
+                <TodoListCategoryItem id_category={type.id_checklist_type} category_name={type.name_en} total_items={todosMap.get(item)!.length}
+                    handleNavigateCategory={() => {
+                        // console.log('navigate')
+                        navigation.navigate('TodoListCategory', {
+                            id_family: id_family,
+                            id_category: type.id_checklist_type
+                        })
+                    }}
+                    iconUrl={type.icon_url}
+                    scheme={colorScheme}
+                />
+            </React.Fragment>
         })
     }
 

@@ -11,7 +11,8 @@ import { AppDispatch } from 'src/redux/store';
 import { useDispatch } from 'react-redux';
 import { clearScoreOfSubject, deleteComponentScoreOfSubject } from 'src/redux/slices/EducationSlice';
 import PickNameSheet from './PickNameSheet';
-
+import { useToast } from 'react-native-toast-notifications';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 interface SubjectSheetProps {
     bottomSheetRef: React.RefObject<any>,
     subjectComponentData: ComponentScore,
@@ -28,15 +29,8 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
     const setScoreSheetRef = React.useRef<any>(null);
     const setNameSheetRef = React.useRef<any>(null);
     const [selectedLanguage, setSelectedLanguage] = React.useState();
-    const numbers = [];
     const dispatch = useDispatch<AppDispatch>();
-    for (let i = 0; i <= 9; i++) {
-        for (let j = 1; j <= 9; j++) {
-            const number = i + j * 0.1;
-            numbers.push(Math.round(number * 10) / 10);
-        }
-    }
-    numbers.push(10);
+    const toast = useToast();
 
     return (
         <AutoHeightRBSheet
@@ -117,7 +111,26 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                 id_subject={id_subject}
                 setExpectedSheetRef={setExpectedSheetRef}
                 index={index}
-                score={subjectComponentData.expected_score!} />
+                score={subjectComponentData.expected_score!}
+                onSuccess={
+                    () => {
+                        toast.show("Expected score updated", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        });
+                    }
+                }
+                onFailed={
+                    () => {
+                        toast.show("Failed to update expected score", {
+                            type: "error",
+                            duration: 2000,
+                            icon: <Material name="close" size={24} color={"white"} />,
+                        });
+                    }
+                }
+            />
             <PickScoreSheet
                 id_education_progress={id_education_progress}
                 id_family={id_family}
@@ -125,6 +138,24 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                 setScoreSheetRef={setScoreSheetRef}
                 index={index}
                 score={subjectComponentData.score!}
+                onSuccess={
+                    () => {
+                        toast.show("Score updated", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        });
+                    }
+                }
+                onFailed={
+                    () => {
+                        toast.show("Failed to update score", {
+                            type: "error",
+                            duration: 2000,
+                            icon: <Material name="close" size={24} color={"white"} />,
+                        });
+                    }
+                }
             />
             {
                 index !== -1 && index !== -2 && <PickNameSheet
@@ -134,6 +165,24 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                     setNameSheetRef={setNameSheetRef}
                     index={index}
                     name={subjectComponentData.component_name || ""}
+                    onSuccess={
+                        () => {
+                            toast.show("Component score updated", {
+                                type: "success",
+                                duration: 2000,
+                                icon: <Material name="check" size={24} color={"white"} />,
+                            });
+                        }
+                    }
+                    onFailed={
+                        () => {
+                            toast.show("Failed to update component score", {
+                                type: "error",
+                                duration: 2000,
+                                icon: <Material name="close" size={24} color={"white"} />,
+                            });
+                        }
+                    }
                 />
             }
 

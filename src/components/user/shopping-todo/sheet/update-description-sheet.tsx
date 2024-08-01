@@ -35,6 +35,8 @@ interface AddItemSheetProps {
     id_family: number
     description: string
     id_item: number
+    onUpdateSuccess: () => void
+    onUpdateFailed: () => void
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -44,7 +46,9 @@ const UpdateDescriptionSheet = ({
     bottomSheetRef,
     id_family,
     description,
-    id_item
+    id_item,
+    onUpdateSuccess,
+    onUpdateFailed
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
     const [loading, setLoading] = React.useState(false)
@@ -83,6 +87,7 @@ const UpdateDescriptionSheet = ({
         }))
 
         bottomSheetRef.current?.close()
+        onUpdateSuccess()
     }
 
     const renderBackdrop = React.useCallback(

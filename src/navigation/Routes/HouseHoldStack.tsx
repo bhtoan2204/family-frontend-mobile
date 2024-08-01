@@ -259,6 +259,7 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
             <AddHouseHoldItemPickRoomSheet
                 refRBSheet={pickRoomSheetRef}
                 roomsData={rooms} room={pickedRoom} onSetRoom={(room: number) => {
+                    console.log(room)
                     setPickedRoom(room)
                 }}
                 addRoomSheetRef={addRoomSheetRef}
@@ -266,6 +267,7 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
 
             <AddHouseHoldItemPickCategorySheet
                 refRBSheet={pickCategorySheetRef} category={pickedCategory} onSetCategory={(id: number) => {
+                    console.log(id)
                     setPickedCategory(id)
                 }}
                 categories={categories}

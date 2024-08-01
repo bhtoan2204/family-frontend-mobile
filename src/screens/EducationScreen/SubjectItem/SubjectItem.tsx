@@ -12,11 +12,12 @@ interface SubjectItemProps {
     id_education_progress: number,
     id_family: number,
     id_subject: number,
+    isFirst?: boolean,
     // setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>,
     index: number
 }
 
-const SubjectItem = ({ isGraded, subjectComponentData, index, id_education_progress, id_family, id_subject }: SubjectItemProps) => {
+const SubjectItem = ({ isGraded, subjectComponentData, index, id_education_progress, id_family, id_subject, isFirst }: SubjectItemProps) => {
     // const [isEditing, setIsEditing] = React.useState(false)
     const [isGradded, setIsGradded] = React.useState(subjectComponentData == null ? false : subjectComponentData.score !== null)
     // const [expected, setExpected] = React.useState<number | null>(subjectComponentData.expected_score)
@@ -31,7 +32,7 @@ const SubjectItem = ({ isGraded, subjectComponentData, index, id_education_progr
     }, [subjectComponentData])
 
     return (
-        subjectComponentData ? <TouchableOpacity className='flex-row items-center  border-b-[1px] border-gray-200 dark:border-[#232A3D] bg-white dark:bg-[#0A1220]' onPress={() => {
+        subjectComponentData ? <TouchableOpacity className={`flex-row items-center  border-b-[1px] border-gray-200 dark:border-[#232A3D] bg-white dark:bg-[#0A1220] ${isFirst ? isFirst == true ? " border-t-[1px] " : "" : ""}`} onPress={() => {
             bottomSheetRef.current?.open()
         }}>
             <View className='flex-1 py-6 ml-4 '>

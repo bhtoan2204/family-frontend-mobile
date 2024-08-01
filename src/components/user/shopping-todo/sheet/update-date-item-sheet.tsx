@@ -35,7 +35,9 @@ interface AddItemSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
     id_family: number
     id_item: number
-    initialDate: string
+    initialDate: string,
+    onUpdateSuccess: () => void
+    onUpdateFailed: () => void
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -46,6 +48,8 @@ const UpdateDateItemSheet = ({
     id_family,
     id_item,
     initialDate,
+    onUpdateSuccess,
+    onUpdateFailed
 
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
@@ -144,6 +148,7 @@ const UpdateDateItemSheet = ({
             date: selectDate
         }))
         bottomSheetRef.current?.close()
+        onUpdateSuccess()
     }
 
     return (

@@ -10,9 +10,11 @@ import { useDispatch } from 'react-redux';
 import { deleteGuideline } from 'src/redux/slices/GuidelineSlice';
 import ImageComponent from 'src/components/Image/Image';
 import { Guildline } from 'src/interface/guideline/guideline';
+import { shared_guideline_img } from 'src/assets/images/guideline_assets/item';
 
 interface GuildlineItemProps {
     item: Guildline;
+    index: number;
     onPress: () => void;
     onUpdate: () => void;
 }
@@ -20,7 +22,7 @@ interface GuildlineItemProps {
 const screenHeight = Dimensions.get('screen').height
 const screenWidth = Dimensions.get('screen').width
 
-const GuildlineItem = ({ item, onPress, onUpdate }: GuildlineItemProps) => {
+const GuildlineItem = ({ item, onPress, onUpdate, index }: GuildlineItemProps) => {
     const dispatch = useDispatch<AppDispatch>();
     const itemRef = React.useRef<Swipeable>(null);
     const handleDelete = () => {
@@ -89,7 +91,7 @@ const GuildlineItem = ({ item, onPress, onUpdate }: GuildlineItemProps) => {
                         height={70}
                         className="w-16 h-16 mr-4 ml-1 "
                     /> */}
-                    <ImageComponent defaultImage={MemberIcon}
+                    <ImageComponent defaultImage={shared_guideline_img[index % shared_guideline_img.length]}
                         imageUrl={
                             item.steps == null
                                 ? ""
