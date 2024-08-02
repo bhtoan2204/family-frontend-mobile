@@ -438,5 +438,7 @@
   "All Day": "Cả ngày",
   "AnyAdditionQuestions": "Bạn có câu hỏi nào khác không?",
   "DontHesitate": "Đừng ngần ngại, hãy liên hệ với chúng tôi!",
-  "FrequentlyAskedQuestions": "Câu hỏi thường gặp"
+  "FrequentlyAskedQuestions": "Câu hỏi thường gặp",
+  "PasswordHasNotBeenReset": "Mật khẩu chưa được đặt lại",
+  "AnErrorOccurredWhileResettingThePassword": "Đã xảy ra lỗi trong quá trình đặt lại mật khẩu"
 }
