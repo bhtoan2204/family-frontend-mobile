@@ -28,6 +28,13 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     }
   };
 
+  const handleFeedback = async () => {
+    try {
+      navigation.navigate('HomeTab', {screen: 'Feedback'});
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
   const handleChangePassword = async () => {
     try {
       navigation.navigate('ChangePassword');
@@ -48,9 +55,9 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
       style={[styles.container, {backgroundColor: color.background}]}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.header}>
-          <Text style={[styles.headerText, {color: color.text}]}>
+          {/* <Text style={[styles.headerText, {color: color.text}]}>
             {translate('profile')}
-          </Text>
+          </Text> */}
         </View>
         <View
           style={[
@@ -140,7 +147,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
             {backgroundColor: color.white, borderColor: color.white},
           ]}>
           <Text style={styles.sectionHeader}>{translate('preferences')}</Text>
-          <TouchableOpacity style={styles.item} onPress={handleChangePassword}>
+          <TouchableOpacity style={styles.item} onPress={handleFeedback}>
             <AntDesign
               name="mail"
               size={24}
