@@ -192,7 +192,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 24,
     marginBottom: 16,
-    color: '#ccc',
   },
   familyList: {},
 
@@ -257,6 +256,23 @@ const styles = StyleSheet.create({
   },
   imageButton: {
     gap: 10,
+  },
+  imageSearch: {
+    width: 100,
+    height: 100,
+  },
+  noFamilyContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 100,
+    gap: 10,
+  },
+  noFamilyText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  noFamilyTextDescription: {
+    fontSize: 16,
   },
 });
 

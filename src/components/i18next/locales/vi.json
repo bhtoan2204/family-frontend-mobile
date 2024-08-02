@@ -448,5 +448,7 @@
   "LandingPage2Title": "Cân đối tài chính gia đình của bạn",
   "LandingPage2Description": "Theo dõi chi tiêu và thu nhập với phân tích chi tiết.",
   "LandingPage3Title": "Luôn kết nối và cập nhật",
-  "LandingPage3Description": "Trò chuyện, tạo danh sách và nhận tin tức mới nhất cho gia đình của bạn."
+  "LandingPage3Description": "Trò chuyện, tạo danh sách và nhận tin tức mới nhất cho gia đình của bạn.",
+  "NO_FAMILY_MESSAGE": "Không có dữ liệu gia đình",
+  "ADD_FAMILY_PROMPT": "Bấm nút đang nhấp nháy để thêm gia đình."
 }

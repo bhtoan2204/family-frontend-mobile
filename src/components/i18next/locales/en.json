@@ -436,5 +436,7 @@
   "LandingPage2Title": "Balance your family finance",
   "LandingPage2Description": "Track expense and income with detailed analysis.",
   "LandingPage3Title": "Stay connected and updated",
-  "LandingPage3Description": "Chat, create lists and get the latest news for your family."
+  "LandingPage3Description": "Chat, create lists and get the latest news for your family.",
+  "NO_FAMILY_MESSAGE": "No family found",
+  "ADD_FAMILY_PROMPT": "Click the blinking button to add a family."
 }

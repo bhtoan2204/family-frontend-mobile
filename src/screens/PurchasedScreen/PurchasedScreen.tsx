@@ -195,8 +195,29 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
       </View>
 
       <View style={styles.container}>
-        <Text style={styles.familyListTitle}>{translate('YOUR_FAMILIES')}</Text>
-        <ScrollView>{renderFamilyCards()}</ScrollView>
+        <Text style={[styles.familyListTitle, {color: color.text}]}>
+          {translate('YOUR_FAMILIES')}
+        </Text>
+        {families.length === 0 ? (
+          <View style={styles.noFamilyContainer}>
+            <Image
+              source={require('../../assets/images/search-icon-family.png')}
+              style={styles.imageSearch}
+            />
+            <Text style={[styles.noFamilyText, {color: color.text}]}>
+              {translate('NO_FAMILY_MESSAGE')}
+            </Text>
+            <Text
+              style={[
+                styles.noFamilyTextDescription,
+                {color: color.textSubdued},
+              ]}>
+              {translate('ADD_FAMILY_PROMPT')}
+            </Text>
+          </View>
+        ) : (
+          <ScrollView>{renderFamilyCards()}</ScrollView>
+        )}
       </View>
 
       {/* <Modal
