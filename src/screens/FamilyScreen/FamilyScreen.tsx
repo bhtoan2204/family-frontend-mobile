@@ -469,7 +469,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
             backgroundColor: 'transparent',
           },
         }}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.cancel}
           onPress={() => secondBottomSheetRef.current.close()}>
           <Image
@@ -477,7 +477,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
             resizeMode="stretch"
             style={styles.cancelImage}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Image
           source={require('../../assets/images/poster.png')}
           resizeMode="stretch"

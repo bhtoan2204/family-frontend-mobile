@@ -121,7 +121,7 @@
   "Save": "Save",
   "Purchase Date": "Purchase Date",
   "Value": "Value",
-  "Enter Description": "Enter Description",
+  "Enter Description": "Description",
   "Enter Value": "Enter Value",
   "Asset Name": "Asset Name",
   "Enter Asset Name": "Enter Asset Name",
@@ -163,11 +163,11 @@
   "Category": "Category",
   "Delete event": "Delete event",
 
-  "add_new_event": "Add New Event",
+  "add_new_event": "Create New Event",
   "title": "Title",
   "enter_title": "Enter title",
   "location": "Location",
-  "enter_location": "Enter location",
+  "enter_location": "Location",
 
   "all_day": "All day",
   "start": "Start",
