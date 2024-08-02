@@ -426,5 +426,7 @@
   "All Day": "All day",
   "AnyAdditionQuestions": "Any addition questions?",
   "DontHesitate": "Don’t hesitate to drop us a line at",
-  "FrequentlyAskedQuestions": "Frequently asked questions"
+  "FrequentlyAskedQuestions": "Frequently asked questions",
+  "PasswordHasNotBeenReset": "Password has not been reset",
+  "AnErrorOccurredWhileResettingThePassword": "An error occurred while resetting the password"
 }
