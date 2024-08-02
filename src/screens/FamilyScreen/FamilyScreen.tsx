@@ -259,19 +259,18 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         });
         break;
       case 7:
-console.log(selectedFamily!.id_family);
+        console.log(selectedFamily!.id_family);
         navigation.navigate('TodoListStack', {
           screen: 'TodoList',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
       case 8:
         navigation.navigate('ShoppingListStack', {
           screen: 'ShoppingList',
-          params: { id_family: selectedFamily!.id_family },
+          params: {id_family: selectedFamily!.id_family},
         });
         break;
-
     }
   };
 

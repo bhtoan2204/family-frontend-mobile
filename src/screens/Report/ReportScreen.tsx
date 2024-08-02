@@ -32,7 +32,7 @@ import i18n from 'src/components/i18next/i18n';
 import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 
 const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
-  const appCurrentLocale = useSelector(selectLocale); // Make sure to create and export getLocale selector from your languageSlice
+  const appCurrentLocale = useSelector(selectLocale);
   const color = useThemeColors();
   const dispatch = useDispatch();
   const family = useSelector(selectSelectedFamily);
@@ -52,7 +52,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     fetchDataIncome();
   }, []);
   const fetchDataExpense = async () => {
-    setIsLoading(true);
+    setIsLoading(false);
     try {
       const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
       const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');
@@ -73,7 +73,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
     }
   };
   const fetchDataIncome = async () => {
-    setIsLoading(true);
+    setIsLoading(false);
     try {
       const formattedDateFrom = moment(dateFrom).format('YYYY-MM-DD');
       const formattedDateTo = moment(dateTo).format('YYYY-MM-DD');

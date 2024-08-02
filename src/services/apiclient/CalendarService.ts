@@ -216,10 +216,11 @@ const CalendarServices = {
           end_timezone,
         },
       );
-
-      return 'Successfully created event';
+      if (response.status === 201) {
+        return response.data.data;
+      }
     } catch (error: any) {
-      return 'Failed to create event';
+      console.log(error);
     }
   },
   UpdateEvent: async (
@@ -238,7 +239,7 @@ const CalendarServices = {
     recurrence_rule?: string,
     start_timezone?: string,
     end_timezone?: string,
-  ): Promise<string> => {
+  ) => {
     try {
       const requestData = {
         id_calendar,
@@ -253,11 +254,11 @@ const CalendarServices = {
         location: location || null,
         recurrence_exception: recurrence_exception || null,
         recurrence_id: recurrence_id || null,
-        recurrence_rule: recurrence_rule || '',
+        recurrence_rule: recurrence_rule || null,
         start_timezone: start_timezone || null,
         end_timezone: end_timezone || null,
       };
-
+      console.log(requestData);
       const response: AxiosResponse = await instance.put(
         CalendarUrls.updateCalender,
         requestData,

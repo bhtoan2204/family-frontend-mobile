@@ -209,11 +209,28 @@ const EventListScreen = ({route, navigation}: EventListScreenProps) => {
     setShowTimeline(true);
   };
 
-  const formatMarkedDates = (events: {[x: string]: AgendaEntry[]}) => {
+  const formatMarkedDates = (
+    events: EventDetail[],
+  ): {[date: string]: {marked: boolean}} => {
     const markedDates: {[date: string]: {marked: boolean}} = {};
-    Object.keys(events).forEach(date => {
-      markedDates[date] = {marked: true};
+
+    events.forEach(event => {
+      const startDate = format(new Date(event.time_start), 'yyyy-MM-dd');
+      const endDate = format(new Date(event.time_end), 'yyyy-MM-dd');
+
+      if (startDate === endDate) {
+        markedDates[startDate] = {marked: true};
+      } else {
+        let currentDate = new Date(startDate);
+        const endDateObj = new Date(endDate);
+
+        while (currentDate <= endDateObj) {
+          markedDates[format(currentDate, 'yyyy-MM-dd')] = {marked: true};
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+      }
     });
+
     return markedDates;
   };
 
@@ -336,7 +353,7 @@ const EventListScreen = ({route, navigation}: EventListScreenProps) => {
           }}>
           <ExpandableCalendar
             firstDay={1}
-            markedDates={formatMarkedDates(events)}
+            markedDates={formatMarkedDates(eventTL)}
             onDayPress={days => onDayPress(days)}
             hideExtraDays={true}
             theme={{
@@ -400,7 +417,7 @@ const EventListScreen = ({route, navigation}: EventListScreenProps) => {
           scrollEnabled={true}
           showScrollIndicator={true}
           onDayPress={onDayPress}
-          markedDates={formatMarkedDates(events)}
+          markedDates={formatMarkedDates(eventTL)}
           onVisibleMonthsChange={months => loadItemsForMonth(months)}
           theme={{
             backgroundColor: color.background,

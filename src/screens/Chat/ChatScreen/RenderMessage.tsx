@@ -4,6 +4,7 @@ import {Video} from 'expo-av';
 import {Message} from 'src/interface/chat/chat';
 import styles from './styles';
 import {COLORS} from 'src/constants';
+import { useThemeColors } from 'src/hooks/useThemeColor';
 
 interface Props {
   item: Message;
@@ -20,6 +21,7 @@ const MessageItem: React.FC<Props> = ({
   isSelected,
   formatDateTime,
 }) => {
+  const color = useThemeColors();
   return (
     <View>
       <TouchableOpacity

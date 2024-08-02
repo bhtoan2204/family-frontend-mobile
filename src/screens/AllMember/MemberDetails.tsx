@@ -194,7 +194,11 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
             icon: 'arrow-back',
             color: 'white',
             size: 30,
-            onPress: () => navigation.goBack(),
+            onPress: () =>
+              navigation.navigate('AllMember', {
+                id_family: family?.id_family,
+                forceUpdate: new Date().getTime(),
+              }),
           }}
           centerComponent={{}}
           containerStyle={{

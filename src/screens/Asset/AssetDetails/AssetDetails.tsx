@@ -29,6 +29,7 @@ import {useThemeColors} from 'src/hooks/useThemeColor';
 import {Feather} from '@expo/vector-icons';
 import {ScrollView} from 'react-native-gesture-handler';
 import styles from './styles';
+import { Toast } from 'react-native-toast-notifications';
 
 const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
   const asset = useSelector(selectSelectedAsset);

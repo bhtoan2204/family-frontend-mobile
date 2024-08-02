@@ -18,7 +18,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {AntDesign, Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ColorPicker from './ColorPicker';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Custom from './Custom';
 import {RRule, RRuleStrOptions} from 'rrule';
 import {
@@ -33,6 +33,7 @@ import {TEXTS} from 'src/constants';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {Toast} from 'react-native-toast-notifications';
+import {addEvent} from 'src/redux/slices/CalendarSlice';
 
 const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   navigation,
@@ -65,7 +66,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   );
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
-
+  const dispatch = useDispatch();
   const handleDecrease = () => {
     setCount(prevCount => Math.max(1, prevCount - 1));
   };
@@ -219,8 +220,12 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
         eventDetails.id_family,
       );
 
-      Toast.show(message, {
+      dispatch(addEvent(message));
+      Toast.show('Create event successfully', {
         type: 'success',
+      });
+      navigation.navigate('CalendarScreen', {
+        forceUpdate: new Date().getTime(),
       });
     } catch (error) {
       Toast.show(translate('An error occurred while creating the event.'), {

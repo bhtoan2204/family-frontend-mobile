@@ -39,6 +39,7 @@ import {Member} from 'src/interface/member/member';
 import {selectSelectedFamily} from 'src/redux/slices/FamilySlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate} from 'src/redux/slices/languageSlice';
+import MessageItem from '../ChatScreen/RenderMessage';
 
 const ChatFamilyLastScreen = ({
   navigation,
@@ -340,6 +341,12 @@ const ChatFamilyLastScreen = ({
       </View>
     );
   }
+  const formatDateTime = (dateTime: Date | null | undefined) => {
+    if (!(dateTime instanceof Date) || isNaN(dateTime.getTime())) {
+      return 'Invalid date';
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -351,6 +358,7 @@ const ChatFamilyLastScreen = ({
           bottom: 0,
           left: 0,
           right: 0,
+          backgroundColor: color.background,
         }}>
         <View style={[styles.header, {backgroundColor: color.background}]}>
           <View
@@ -413,51 +421,24 @@ const ChatFamilyLastScreen = ({
         </View>
         {messages ? (
           <FlatList
-            key={refreshFlatList ? 'refresh' : 'no-refresh'}
             style={[
               styles.messagesContainer,
               {backgroundColor: color.background},
             ]}
+            contentContainerStyle={[
+              styles.contentContainer,
+              {backgroundColor: color.chatBackground},
+            ]}
             data={messages}
             inverted
             renderItem={({item, index}) => (
-              <TouchableOpacity onPress={() => onMessagePress(item)}>
-                <View>
-                  {item.senderId !== profile.id_user ? (
-                    renderMemberMessage(item)
-                  ) : (
-                    <View
-                      style={[
-                        styles.messageContainer,
-                        styles.senderMessageContainer,
-                      ]}>
-                      {item.type === 'photo' ? (
-                        <TouchableOpacity onPress={() => onMessagePress(item)}>
-                          <View style={styles.messageContentContainer}>
-                            <Image
-                              source={{uri: item.content}}
-                              style={styles.imageMessage}
-                            />
-                          </View>
-                        </TouchableOpacity>
-                      ) : item.type === 'video' ? (
-                        <View style={styles.messageContentContainer}>
-                          <Video
-                            source={{uri: item.content}}
-                            useNativeControls
-                            resizeMode="contain"
-                            style={{width: 300, height: 200}}
-                          />
-                        </View>
-                      ) : (
-                        <Text style={styles.senderMessageContent}>
-                          {item.content}
-                        </Text>
-                      )}
-                    </View>
-                  )}
-                </View>
-              </TouchableOpacity>
+              <MessageItem
+                item={item}
+                profileId={profile.id_user}
+                onMessagePress={onMessagePress}
+                isSelected={selectedMessageId === item._id}
+                formatDateTime={formatDateTime}
+              />
             )}
             keyExtractor={(item, index) => index.toString()}
             keyboardShouldPersistTaps="handled"

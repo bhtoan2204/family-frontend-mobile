@@ -8,6 +8,7 @@ import {
   deleteEventOnly,
   selectSelectedEvent,
   setOnly,
+  updateEvent,
 } from 'src/redux/slices/CalendarSlice';
 import {deleteEvent} from 'src/redux/slices/CalendarSlice';
 import moment from 'moment';
@@ -28,7 +29,8 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
   const language = useSelector(selectLocale);
   useEffect(() => {
     console.log(event);
-  });
+  }, []);
+
   const onUpdate = () => {
     if (event?.recurrence_rule) {
       Alert.alert(
@@ -62,6 +64,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
   };
 
   const onDelete = () => {
+    // console.log(event);
     if (!event?.recurrence_rule) {
       Alert.alert(
         translate('Confirm Delete'),
@@ -111,9 +114,12 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
             text: translate('Delete This Event Only'),
             onPress: async () => {
               try {
-                const timeStartWithComma = `${event.recurrence_exception}${new Date(event.time_start).toISOString()},`;
+                //console.log(event.id_calendar);
+                const timeStartWithComma = event.recurrence_exception
+                  ? `${event.recurrence_exception},${new Date(event.time_start).toISOString()}`
+                  : new Date(event.time_start).toISOString();
 
-                await CalendarServices.UpdateEvent(
+                const data = await CalendarServices.UpdateEvent(
                   event.id_calendar,
                   id_family,
                   event.title,
@@ -130,16 +136,16 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                   event.start_timezone,
                   event.end_timezone,
                 );
-                dispatch(
-                  deleteEventOnly({
-                    id_calendar: event.id_calendar,
-                    time_start: event.time_start,
-                  }),
-                );
-                Toast.show(translate('Event has been deleted successfully'), {
-                  type: 'success',
-                });
-                navigation.goBack();
+                if (data) {
+                  console.log(data);
+                  dispatch(deleteEventOnly());
+                  Toast.show(translate('Event has been deleted successfully'), {
+                    type: 'success',
+                  });
+                  navigation.goBack();
+                } else {
+                  console.log('hi');
+                }
               } catch (error) {
                 console.error('Error deleting event:', error);
                 Toast.show(
@@ -190,7 +196,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
 
   const explainRecurrenceRule = (ruleString: string, language: 'en' | 'vi') => {
     const cleanedRecurrenceRule = cleanRecurrenceRule(ruleString);
-    console.log('Cleaned Rule String:', cleanedRecurrenceRule);
+    //console.log('Cleaned Rule String:', cleanedRecurrenceRule);
 
     try {
       const rule = rrulestr(cleanedRecurrenceRule);
@@ -384,7 +390,9 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
         </TouchableOpacity>
       </View>
       <View style={[styles.card, {backgroundColor: color.white}]}>
-        <Text style={[styles.title, {color: color.text}]}>{event.title}</Text>
+        {/* {event.title && (
+          <Text style={[styles.title, {color: color.text}]}>{event.title}</Text>
+        )} */}
         <Text style={[styles.description, {color: color.text}]}>
           {translate('Description')}: {event.description}
         </Text>
@@ -401,10 +409,12 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
           <Text style={[styles.location, {color: color.text}]}>
             {translate('Category')}:
           </Text>
-          <Text style={{color: event.color, fontSize: 16}}>
-            {' '}
-            {event.categoryEvent.title}
-          </Text>
+          {/* {event.categoryEvent.title && (
+            <Text style={{color: event.color, fontSize: 16}}>
+              {' '}
+              {event.categoryEvent.title}
+            </Text>
+          )} */}
         </View>
         {/* <View style={styles.locationContainer}>
           <Text style={[styles.location, {color: color.text}]}>

@@ -58,7 +58,7 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
 
   useEffect(() => {
     fetchEvent();
-  }, []);
+  }, [route.params?.forceUpdate]);
 
   useEffect(() => {
     LocaleConfig.defaultLocale = location;
@@ -86,6 +86,7 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
           time_end: new Date(item.time_end),
         }));
         dispatch(setEvents(formattedEvents));
+        dispatch(setSelectedDate(moment(new Date()).format('YYYY-MM-DD')));
       }
     } catch (error) {
       console.error('Error fetching calendar data:', error);

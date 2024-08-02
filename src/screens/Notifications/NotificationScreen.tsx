@@ -16,7 +16,8 @@ import {setSelectedFamilyById} from 'src/redux/slices/FamilySlice';
 import {setSelectedDate} from 'src/redux/slices/ExpenseAnalysis';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {setType} from 'src/redux/slices/FinanceSlice';
 
 const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
   const [notifications, setNotifications] = useState<Noti[]>([]);
@@ -27,6 +28,7 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
   const color = useThemeColors();
   const translate = useSelector(getTranslate);
   const language = useSelector(selectLocale);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetchNotification();
@@ -156,6 +158,19 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
         });
         break;
       case 'CHAT':
+        break;
+      case 'EXPENSE_TYPE':
+        dispatch(setSelectedFamilyById(item.id_family));
+        dispatch(setType('Expense'));
+        navigation.navigate('ExpenseStack', {screen: 'CategoryExpense'});
+
+        break;
+      case 'INCOME_SOURCE':
+        dispatch(setType('Income'));
+
+        dispatch(setSelectedFamilyById(item.id_family));
+        navigation.navigate('ExpenseStack', {screen: 'CategoryExpense'});
+
         break;
       default:
         console.log(`Unhandled notification type: ${item.type}`);
