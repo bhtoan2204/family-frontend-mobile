@@ -428,5 +428,13 @@
   "DontHesitate": "Don’t hesitate to drop us a line at",
   "FrequentlyAskedQuestions": "Frequently asked questions",
   "PasswordHasNotBeenReset": "Password has not been reset",
-  "AnErrorOccurredWhileResettingThePassword": "An error occurred while resetting the password"
+  "AnErrorOccurredWhileResettingThePassword": "An error occurred while resetting the password",
+  "Skip": "Skip",
+  "NextLanding": "Next",
+  "LandingPage1Title": "Organize your family life",
+  "LandingPage1Description": "Manage schedules, event and activities with ease.",
+  "LandingPage2Title": "Balance your family finance",
+  "LandingPage2Description": "Track expense and income with detailed analysis.",
+  "LandingPage3Title": "Stay connected and updated",
+  "LandingPage3Description": "Chat, create lists and get the latest news for your family."
 }

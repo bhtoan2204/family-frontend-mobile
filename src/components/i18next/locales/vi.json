@@ -440,5 +440,13 @@
   "DontHesitate": "Đừng ngần ngại, hãy liên hệ với chúng tôi!",
   "FrequentlyAskedQuestions": "Câu hỏi thường gặp",
   "PasswordHasNotBeenReset": "Mật khẩu chưa được đặt lại",
-  "AnErrorOccurredWhileResettingThePassword": "Đã xảy ra lỗi trong quá trình đặt lại mật khẩu"
+  "AnErrorOccurredWhileResettingThePassword": "Đã xảy ra lỗi trong quá trình đặt lại mật khẩu",
+  "Skip": "Bỏ qua",
+  "NextLanding": "Tiếp theo",
+  "LandingPage1Title": "Tổ chức cuộc sống gia đình của bạn",
+  "LandingPage1Description": "Quản lý lịch trình, sự kiện và các hoạt động một cách dễ dàng.",
+  "LandingPage2Title": "Cân đối tài chính gia đình của bạn",
+  "LandingPage2Description": "Theo dõi chi tiêu và thu nhập với phân tích chi tiết.",
+  "LandingPage3Title": "Luôn kết nối và cập nhật",
+  "LandingPage3Description": "Trò chuyện, tạo danh sách và nhận tin tức mới nhất cho gia đình của bạn."
 }
