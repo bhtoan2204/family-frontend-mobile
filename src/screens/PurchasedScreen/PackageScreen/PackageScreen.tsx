@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {ScrollView, Text, View, TouchableOpacity} from 'react-native';
+import {ScrollView, Text, View, TouchableOpacity, Image} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux';
@@ -13,7 +13,7 @@ import styles from './styles';
 import FAQ from './FAQ';
 
 const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(null);
   const {id_family} = route.params;
   const [selectedPackage, setSelectedPackage] = useState<null | Package>(null);
   const [packages, setPackages] = useState<Package[]>([]);
@@ -46,7 +46,7 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
       style={{
         backgroundColor: color.background,
         height: '100%',
-        paddingTop: 10,
+        paddingTop: 20,
       }}>
       <ScrollView>
         <View style={styles.headerfile}>
@@ -123,6 +123,23 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
 
         {/* FAQ Section */}
         <FAQ />
+        <View style={styles.questionContainer}>
+          <Text style={[styles.textH1, {color: color.blackQuestion}]}>
+            {translate('AnyAdditionQuestions')}
+          </Text>
+          <Text style={[styles.textH2, {color: color.textSubdued}]}>
+            {translate('DontHesitate')}
+          </Text>
+          <TouchableOpacity style={styles.contactContainer}>
+            <Text style={[styles.textH3, {color: color.text}]}>
+              supportFamfund@gmail.com
+            </Text>
+            <Image
+              source={require('../../../assets/images/mail.png')}
+              style={styles.mailIcon}
+            />
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
