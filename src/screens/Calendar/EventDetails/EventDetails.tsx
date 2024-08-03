@@ -130,7 +130,18 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                   event.start_timezone,
                   event.end_timezone,
                 );
-
+<<<<<<< Updated upstream
+                dispatch(
+                  deleteEventOnly({
+                    id_calendar: event.id_calendar,
+                    time_start: event.time_start,
+                  }),
+                );
+                Toast.show(translate('Event has been deleted successfully'), {
+                  type: 'success',
+                });
+                navigation.goBack();
+=======
                 if (data) {
                   dispatch(deleteEventOnly());
                   Toast.show(translate('Event has been deleted successfully'), {
@@ -140,6 +151,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                 } else {
                   console.log('hi');
                 }
+>>>>>>> Stashed changes
               } catch (error) {
                 console.error('Error deleting event:', error);
                 Toast.show(
