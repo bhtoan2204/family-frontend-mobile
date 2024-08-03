@@ -23,8 +23,6 @@ import {
   addEvent,
   getOnly,
   selectSelectedEvent,
-  setSelectedDate,
-  setSelectedEvent,
   updateEvent,
 } from 'src/redux/slices/CalendarSlice';
 import Custom from './Custom';
@@ -41,7 +39,6 @@ import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {TEXTS} from 'src/constants';
 import {Toast} from 'react-native-toast-notifications';
-import moment from 'moment';
 
 const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
   navigation,
