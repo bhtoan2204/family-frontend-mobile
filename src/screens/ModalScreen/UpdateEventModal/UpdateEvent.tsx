@@ -22,6 +22,8 @@ import {
   addEvent,
   getOnly,
   selectSelectedEvent,
+  setSelectedDate,
+  setSelectedEvent,
   updateEvent,
 } from 'src/redux/slices/CalendarSlice';
 import Custom from './Custom';
@@ -38,6 +40,7 @@ import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {TEXTS} from 'src/constants';
 import {Toast} from 'react-native-toast-notifications';
+import moment from 'moment';
 
 const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
   navigation,
@@ -215,13 +218,7 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
       //   },
       // ]);
       dispatch(updateEvent(message2));
-<<<<<<< Updated upstream
-      dispatch(addEvent(message1));
 
-      Toast.show('Edit this event successfully', {
-        type: 'success',
-      });
-=======
       console.log(message1);
       dispatch(setSelectedEvent(message1));
 
@@ -232,7 +229,6 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
         Toast.show('Edit this event successfully', {
           type: 'success',
         });
->>>>>>> Stashed changes
       navigation.goBack();
     } catch (error) {
       try {
