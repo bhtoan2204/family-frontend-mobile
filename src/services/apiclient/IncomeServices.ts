@@ -24,25 +24,34 @@ const IncomeServices = {
     utilityImg: string,
   ) => {
     try {
+<<<<<<< Updated upstream
       const createFormData = (): FormData => {
         let formData = new FormData();
         formData.append('id_family', String(id_family));
         formData.append('id_utilities_type', String(id_utilities_type));
         formData.append('value', String(value));
         formData.append('description', description);
+=======
+      const createFormData = (uri?: string): FormData => {
+        let formData = new FormData();
+>>>>>>> Stashed changes
 
-        if (utilityImg) {
-          let filename = utilityImg.split('/').pop()!;
+        if (uri) {
+          let filename = uri.split('/').pop()!;
           let match = /\.(\w+)$/.exec(filename);
           let type = match ? `image/${match[1]}` : `image`;
           const file = {
-            utilityImg,
+            uri,
             name: filename,
             type,
           };
           formData.append('utilityImg', file);
         }
 
+        formData.append('id_family', String(id_family));
+        formData.append('id_utilities_type', String(id_utilities_type));
+        formData.append('value', String(value));
+        formData.append('description', description);
         return formData;
       };
 

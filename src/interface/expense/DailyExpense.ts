@@ -2,11 +2,24 @@ export interface DailyExpense {
     id_expenditure: number;
     id_family: number;
     id_expenditure_type: number | null;
+<<<<<<< Updated upstream
     id_created_by: string | null;
     amount: number;
     expenditure_date: string | null;
     description: string | null;
     image_url: string | null;
+=======
+    expense_type_name: string | null;
+    expense_type_name_vn: string | null;
+    id_family: number | null;
+  } | null;
+  users: {
+    id_user: string;
+    email: string;
+    phone: string;
+    firstname: string;
+    lastname: string;
+>>>>>>> Stashed changes
     created_at: string;
     updated_at: string;
     family: {

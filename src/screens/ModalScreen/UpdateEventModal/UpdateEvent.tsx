@@ -215,11 +215,24 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
       //   },
       // ]);
       dispatch(updateEvent(message2));
+<<<<<<< Updated upstream
       dispatch(addEvent(message1));
 
       Toast.show('Edit this event successfully', {
         type: 'success',
       });
+=======
+      console.log(message1);
+      dispatch(setSelectedEvent(message1));
+
+      dispatch(addEvent(message1));
+      setSelectedDate(
+        moment(new Date(message1.time_start)).format('YYYY-MM-DD'),
+      ),
+        Toast.show('Edit this event successfully', {
+          type: 'success',
+        });
+>>>>>>> Stashed changes
       navigation.goBack();
     } catch (error) {
       try {
