@@ -19,13 +19,15 @@ import ProgressScreenHeader from 'src/components/user/education/progress-screen/
 import ProgressTab from 'src/components/user/education/progress-screen/progress-tab';
 import { calculateProgress, calculateScore } from 'src/utils/education/util';
 import CourseItem from 'src/components/user/education/progress-screen/course-item';
-import SubjectItem from 'src/screens/EducationScreen/SubjectItem/SubjectItem';
-import SubjectItemEmpty from 'src/screens/EducationScreen/SubjectItem/SubjectItemEmp';
+// import SubjectItem from 'src/screens/EducationScreen/SubjectItem/SubjectItem';
+// import SubjectItemEmpty from 'src/screens/EducationScreen/SubjectItem/SubjectItemEmp';
 // import AddComponentScoreSheet from 'src/screens/EducationScreen/SubjectSheet/AddComponentScoreSheet';
 import SubjectScreenHeader from 'src/components/user/education/subject-screen/subject-screen-header';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import AddComponentScoreSheet from 'src/components/user/education/subject-screen/sheet/add-component-score-sheet';
 import { useToast } from 'react-native-toast-notifications';
+import SubjectItem from 'src/components/user/education/subject-screen/SubjectItem';
+import SubjectItemEmpty from 'src/components/user/education/subject-screen/SubjectItemEmp';
 
 
 const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {

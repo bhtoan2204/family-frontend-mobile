@@ -4,13 +4,6 @@ import { GuidelineStackProps, GuildLineDetailScreenProps, GuildLineScreenProps, 
 
 import React, { useEffect } from 'react';
 
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from 'src/redux/store';
-import TodoListScreen from 'src/screens/TodoListScreen/TodoList/TodoListScreen';
-import TodoListServices from 'src/services/apiclient/TodoListService';
-import { setTodoList, setTodoListType } from 'src/redux/slices/TodoListSlice';
-import TodoListCategoryScreen from 'src/screens/TodoListScreen/TodoListCategory/TodoListCategoryScreen';
-import TodoListCategoryDetailScreen from 'src/screens/TodoListScreen/TodoListCategory/TodoListCategoryDetailScreen';
 import GuildLineScreen from 'src/screens/GuildLineScreen/GuildLineScreen';
 import GuildLineDetailScreen from 'src/screens/GuildLineScreen/GuildLineDetailScreen';
 

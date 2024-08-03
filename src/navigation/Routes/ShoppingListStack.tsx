@@ -21,40 +21,6 @@ import { setShoppingList, setShoppingListItemType, setShoppingListType } from 's
 
 const Stack = createNativeStackNavigator();
 
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
-
-// const ShoppingListStack = ({ navigation, route }: ShoppingListStackProps) => {
-//     const { id_family } = route.params.params!
-//     // console.log(route.params)
-//     const handleNavigateShoppingListCategory = (id_category: number) => {
-//         navigation.navigate('ShoppingListCategoryStack', {
-//             screen: 'ShoppingListCategory',
-//             params: {
-//                 id_category: id_category,
-//                 id_family: id_family
-//             }
-//         });
-//     }
-//     return (
-//         <Stack.Navigator
-//             screenOptions={{
-//                 headerShown: false,
-//             }}
-//             initialRouteName='ShoppingList'
-
-//         >
-//             <Stack.Screen name="ShoppingList" >{(props) => <ShoppingListScreen
-//                 {...props as ShoppingListScreenProps}
-//                 handleNavigateShoppingListCategory={handleNavigateShoppingListCategory}
-//             />}
-//             </Stack.Screen>
-
-
-//         </Stack.Navigator>
-
-//     );
-// };
 const ShoppingListStack = ({ navigation, route }: ShoppingListStackProps) => {
 
     const dispatch = useDispatch<AppDispatch>()

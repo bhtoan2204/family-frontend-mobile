@@ -35,6 +35,10 @@ import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { useToast } from "react-native-toast-notifications";
 import FamilyServices from 'src/services/apiclient/FamilyServices';
 import { Member } from 'src/interface/member/member';
+import AddCourseSheet from 'src/components/user/education/progress-screen/sheet/add-course-sheet';
+import AddCoursesPickTargetsSheet from 'src/components/user/education/progress-screen/sheet/pick-target-sheet';
+import { goal_data } from 'src/components/user/education/progress-screen/const/color';
+import AddComponentScoreSheet1 from 'src/components/user/education/subject-screen/sheet/add-component-score-sheet-1';
 
 
 const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) => {
@@ -51,6 +55,8 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     // })
     // console.log(members)
     const [members, setFamilyMembers] = React.useState<Member[]>([])
+    const [pickedTargets, setPickedTargets] = React.useState<string[]>([])
+
     const [pickedIdUser, setPickedIdUser] = React.useState<string>("")
     const { colorScheme, setColorScheme } = useColorScheme()
     const updateEducationSheetRef = useRef<BottomSheet>(null)
@@ -66,18 +72,18 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     useEffect(() => {
         const handleFetchMember = async () => {
             try {
-              const data = await FamilyServices.getAllMembers("", id_family);
-              if (data) {
-                setFamilyMembers(data);
-              }else {
-                setFamilyMembers([])
-                //   setFamilyMembers(data);
-              }
-            //   dispatch(setFamilyMembers(data));
+                const data = await FamilyServices.getAllMembers("", id_family);
+                if (data) {
+                    setFamilyMembers(data);
+                } else {
+                    setFamilyMembers([])
+                    //   setFamilyMembers(data);
+                }
+                //   dispatch(setFamilyMembers(data));
             } catch (error) {
-              console.log(error);
+                console.log(error);
             }
-          };
+        };
         const handleFetchEducation = async () => {
             setLoading(true)
             const educationsData = await EducationServices.getAllEducation(id_family!, 1, 20);
@@ -150,9 +156,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     }
 
     const buildListEmpty = () => {
-        return <TouchableOpacity className='flex-1 z-10 items-center justify-center bg-[#F7F7F7] dark:bg-[#0A1220]' activeOpacity={1.0} onPress={() => {
-            Keyboard.dismiss()
-        }}>
+        return <TouchableOpacity className='flex-1 z-10 items-center justify-center bg-[#F7F7F7] dark:bg-[#0A1220]' activeOpacity={1.0} >
             <Text className='text-center text-lg text-gray-500'>No Education Found</Text>
         </TouchableOpacity>
     }
@@ -180,6 +184,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                 idFamily={id_family!}
                 imageUrl={familyInfo!.avatar || undefined}
                 addProgressBottomSheetRef={addProgressBottomSheetRef}
+                pickMemberBottomSheetRef={pickMemberBottomSheetRef}
             />
 
             <View className=' bg-[#f7f7f7] dark:bg-[#0A1220] mt-[-3%]  rounded-tl-xl rounded-tr-xl h-[3%]'>
@@ -190,6 +195,11 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
             </View>
             <View className='flex-1 bg-[#f7f7f7] dark:bg-[#0A1220]'>
                 <>
+                    <TouchableOpacity onPress={() => {
+                        addProgressBottomSheetRef.current?.expand()
+                    }}>
+                        <Text>hi</Text>
+                    </TouchableOpacity>
                     {
                         loading ? <>
                             <View className='flex-1 justify-center items-center'>
@@ -209,7 +219,73 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                     }
                 </>
             </View>
-            <AddProgressSheet bottomSheetRef={addProgressBottomSheetRef}
+            {/* <AddCourseSheet bottomSheetRef={addProgressBottomSheetRef}
+                id_education_progress={1}
+                id_family={id_family!}
+                pickedTargets={pickedTargets}
+                pickTargetBottomSheetRef={pickMemberBottomSheetRef}
+                targets={goal_data}
+                onAddSuccess={
+                    () => {
+                        toast.show("New course added for family", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        });
+                    }
+                }
+                onAddFailed={
+                    () => {
+                        toast.show("Failed to add new course for family", {
+                            type: "error",
+                            duration: 2000,
+                            icon: <Material name="close" size={24} color={"white"} />,
+                        });
+                    }
+                }
+            />
+            <AddCoursesPickTargetsSheet refRBSheet={pickMemberBottomSheetRef}
+                targets={goal_data}
+                pickedTargets={pickedTargets}
+                setPickedTargets={(targets: string) => {
+                    if (!pickedTargets.includes(targets)) {
+                        setPickedTargets((prev) => {
+                            return [...prev, targets]
+                        })
+                    }
+                }}
+                removePickedTargets={(targets: string) => {
+                    setPickedTargets((prev) => {
+                        return prev.filter(item => item != targets)
+                    })
+                }}
+                addCourseBottomSheetRef={addProgressBottomSheetRef}
+
+            /> */}
+            <AddComponentScoreSheet1 bottomSheetRef={addProgressBottomSheetRef} 
+                id_education_progress={1}
+                id_family={id_family!}
+                id_subject={1}
+                onAddSuccess={
+                    () => {
+                        toast.show("New course added for family", {
+                            type: "success",
+                            duration: 2000,
+                            icon: <Material name="check" size={24} color={"white"} />,
+                        });
+                    }
+                }
+                onAddFailed={
+                    () => {
+                        toast.show("Failed to add new course for family", {
+                            type: "error",
+                            duration: 2000,
+                            icon: <Material name="close" size={24} color={"white"} />,
+                        });
+                    }
+                }
+            />
+            {/* <AddProgressSheet bottomSheetRef={addProgressBottomSheetRef}
                 members={members}
                 id_family={id_family!}
                 pickedIdUser={pickedIdUser}
@@ -234,7 +310,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                         });
                     }
                 }
-                pickMemberBottomSheetRef={pickMemberBottomSheetRef}
+
             />
             <AddProgressPickMemberSheet
                 refRBSheet={pickMemberBottomSheetRef}
@@ -243,7 +319,8 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                 setPickedIdUser={(id_user: string) => {
                     setPickedIdUser(id_user)
                 }}
-            />
+                addProgressBottomSheetRef={addProgressBottomSheetRef}
+            /> */}
             <UpdateProgressSheet bottomSheetRef={updateEducationSheetRef}
                 id_family={id_family!}
                 id_progress={pickedIdProgress}

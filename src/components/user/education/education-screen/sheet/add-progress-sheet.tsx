@@ -31,7 +31,7 @@ interface AddItemSheetProps {
     setPickedIdUser: (id: string) => void;
     onAddSuccess: () => void;
     onAddFailed: () => void;
-    pickMemberBottomSheetRef: React.RefObject<BottomSheet>
+    // pickMemberBottomSheetRef: React.RefObject<BottomSheet>
 }
 
 
@@ -39,7 +39,7 @@ const AddProgressSheet = ({
     bottomSheetRef,
     id_family,
     members,
-    pickMemberBottomSheetRef,
+    // pickMemberBottomSheetRef,
     pickedIdUser,
     onAddSuccess,
     onAddFailed
@@ -83,14 +83,20 @@ const AddProgressSheet = ({
 
     }
 
-    const getMemberName = (id: string) => {
+    const getMemberName = React.useCallback((id: string) => {
         const memberData = members.find(member => member.id_user === id)
         return memberData?.user.firstname + ' ' + memberData?.user.lastname
-    }
-    const getMemberAvatar = (id: string) => {
+    }, [])
+
+    const getMemberAvatar = React.useCallback((id: string) => {
         const memberData = members.find(member => member.id_user === id)
         return memberData?.user.avatar
-    }
+    }, [])
+
+    // const getMemberAvatar = (id: string) => {
+    //     const memberData = members.find(member => member.id_user === id)
+    //     return memberData?.user.avatar
+    // }
 
     const handleAdd = async () => {
         console.log('add')
@@ -228,7 +234,7 @@ const AddProgressSheet = ({
         }} onPress={() => {
             // pickCategorySheetRef.current?.expand()
             // addRoomSheetRef.current?.expand()
-            pickMemberBottomSheetRef.current?.expand()
+            // pickMemberBottomSheetRef.current?.expand()
         }}>
             <View className='flex-row justify-between items-center'>
                 <View className='flex-row  items-center '>
@@ -299,7 +305,9 @@ const AddProgressSheet = ({
                             <Text className='text-base font-semibold text-[#2A475E] dark:text-white' style={{
 
 
-                            }}>Add New Education Progress</Text>
+                            }}>Add New Education Progress for {
+                                    pickedIdUser == "" ? 'Member' : getMemberName(pickedIdUser)
+                                }</Text>
                             <Text className='text-sm my-3 mx-5 text-center text-[#2A475E] dark:text-[#8D94A5]' style={{
 
 
@@ -307,7 +315,7 @@ const AddProgressSheet = ({
                         </View>
 
                         {
-                            buildPickMember()
+                            // buildPickMember()
                         }
                         {
                             buildInputTitle()

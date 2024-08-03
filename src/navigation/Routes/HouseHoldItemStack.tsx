@@ -35,13 +35,9 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
-    const [choosenTab, setChoosenTab] = React.useState<number>(0)
+    // const [choosenTab, setChoosenTab] = React.useState<number>(0)
     // console.log(route.params?.params?.id_family)
 
-
-
-    console.log("curr ", route)
-    const currScreen = route.params?.screen
     const id_family = route.params?.params?.id_family
     const id_item = route.params?.params?.id_item
     const dispatch = useDispatch<AppDispatch>()
@@ -78,13 +74,13 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
     }, [])
 
 
-    useEffect(() => {
-        if (currScreen == 'HouseHoldItem') {
-            setChoosenTab(0)
-        } else if (currScreen == 'ReceiptInfo') {
-            setChoosenTab(1)
-        }
-    }, [currScreen])
+    // useEffect(() => {
+    //     if (currScreen == 'HouseHoldItem') {
+    //         setChoosenTab(0)
+    //     } else if (currScreen == 'ReceiptInfo') {
+    //         setChoosenTab(1)
+    //     }
+    // }, [currScreen])
 
     if (!houseHoldItemInfo) {
         return <ActivityIndicator size="small" color="#0000ff" />

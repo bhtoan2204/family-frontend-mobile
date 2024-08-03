@@ -3,8 +3,9 @@ import { View, Text, Dimensions } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 import RBSheet from 'react-native-raw-bottom-sheet'
 import { COLORS } from 'src/constants'
-import SubjectSheet from '../SubjectSheet/SubjectSheet'
+// import SubjectSheet from '../SubjectSheet/SubjectSheet'
 import { ComponentScore, Subject } from 'src/interface/education/education'
+import SubjectSheet from './sheet/SubjectSheet'
 
 interface SubjectItemProps {
     isGraded?: boolean,

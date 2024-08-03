@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { Fragment, useEffect, useRef } from 'react'
 import { View, Text, ScrollView, RefreshControl, Keyboard, Dimensions, Image, TouchableOpacity, TextInput, ActivityIndicator, KeyboardAvoidingView, Platform, StyleSheet, ImageBackground } from 'react-native'
 import { COLORS } from 'src/constants'
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
@@ -28,6 +28,7 @@ import { addShoppingList, addShoppingListItem } from 'src/redux/slices/ShoppingL
 import EducationServices from 'src/services/apiclient/EducationService';
 import { addComponentScoreToSubject, addSubject } from 'src/redux/slices/EducationSlice';
 import AddCourseImage from 'src/assets/images/education_assets/add_course_img.png';
+import TargetImage from 'src/assets/images/education_assets/target.png'
 import { Subject } from 'src/interface/education/education';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
@@ -36,6 +37,13 @@ interface AddItemSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
     id_education_progress: number;
     id_family: number;
+    targets: {
+        id: number;
+        title: string;
+        color: string;
+    }[]
+    pickedTargets: string[];
+    pickTargetBottomSheetRef: React.RefObject<BottomSheet>;
     onAddSuccess: () => void;
     onAddFailed: () => void;
 }
@@ -48,7 +56,10 @@ const AddCourseSheet = ({
     id_education_progress,
     id_family,
     onAddSuccess,
-    onAddFailed
+    onAddFailed,
+    pickTargetBottomSheetRef,
+    pickedTargets,
+    targets
 
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
@@ -63,7 +74,7 @@ const AddCourseSheet = ({
     const [inputName, setInputName] = React.useState('')
     const [inputDescription, setInputDescription] = React.useState('')
     const isDarkMode = useSelector(getIsDarkMode)
-
+    console.log(isDarkMode)
     useEffect(() => {
         if (showError) {
             setTimeout(() => {
@@ -155,7 +166,7 @@ const AddCourseSheet = ({
         // }
     }
 
-    const buildInputName = () => {
+    const buildInputName = React.useCallback(() => {
         return <BottomSheetTextInput
             placeholder='Give your new course a name'
             value={inputName}
@@ -178,9 +189,10 @@ const AddCourseSheet = ({
                 color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
             }}
         />
-    }
+    }, [isDarkMode])
 
-    const buildInputDescription = () => {
+
+    const buildInputDescription = React.useCallback(() => {
         return <BottomSheetTextInput
             placeholder='Give your new course some description'
             value={inputDescription}
@@ -203,10 +215,60 @@ const AddCourseSheet = ({
                 color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
             }}
         />
+    }, [isDarkMode])
 
+    const findTargetById = React.useCallback((id: number) => {
+        return targets.find(target => target.id == id)
+    }, [])
 
-    }
+    const buildPickTargets = React.useCallback(() => {
+        return <TouchableOpacity className='   mt-3 justify-center rounded-lg  ' style={{
+            backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
+            borderWidth: !isDarkMode ? 1 : 1.5,
+            borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
+            borderRadius: 10,
+            marginVertical: 10,
+            paddingVertical: screenHeight * 0.008,
+            // paddingHorizontal: screenWidth * 0.05,
+            marginHorizontal: screenWidth * 0.05,
+            // fontWeight: 'bold',
+        }} onPress={() => {
+            pickTargetBottomSheetRef.current?.expand()
+        }}>
+            <View>
+                <View className='flex-row justify-between items-center mx-3 '>
+                    <View className='flex-row  items-center '>
+                        <Image source={
+                            TargetImage
+                        } style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} />
+                        <Text className='pl-3 text-[#2A475E] dark:text-white font-semibold' style={{
+                            fontSize: 15,
+                            // fontWeight: 500
 
+                        }}>{
+                                "Targets"
+
+                            }</Text>
+                    </View>
+                    <View className=''>
+                        <Text className='text-[#b0b0b0] dark:text-white'>Choose target</Text>
+                    </View>
+
+                </View>
+                {
+                    pickedTargets.length > 0 && <View className='mx-3 my-3 flex-wrap flex-row'>
+                        {
+                            pickedTargets.map((target, index) => {
+                                return <Fragment key={index}>
+                                    <TargetItem data={findTargetById(parseInt(target))!} onPress={() => { }} />
+                                </Fragment>
+                            })
+                        }
+                    </View>
+                }
+            </View>
+        </TouchableOpacity>
+    }, [isDarkMode, pickedTargets])
 
 
     return (
@@ -215,8 +277,8 @@ const AddCourseSheet = ({
             index={-1}
             enableOverDrag={true}
             enablePanDownToClose={loading ? false : true}
-            enableDynamicSizing={true}
-            // snapPoints={snapPoints}
+            // enableDynamicSizing={true}
+            snapPoints={snapPoints}
             // handleComponent={null}
             handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
             backgroundStyle={{
@@ -262,6 +324,9 @@ const AddCourseSheet = ({
                             buildInputDescription()
                         }
 
+                        {
+                            buildPickTargets()
+                        }
 
 
                         <View>
@@ -294,5 +359,34 @@ const AddCourseSheet = ({
     )
 }
 
+const TargetItem = ({ data, onPress }: {
+    data: {
+        id: number;
+        title: string;
+        color: string;
+    }, onPress: () => void
+}) => {
+    return (
+        <TouchableOpacity className='flex-row justify-between items-center px-1 py-2' onPress={onPress}>
+            <View className='flex-row items-center'>
+                <View className='rounded-xl px-3 py-4' style={{
+                    backgroundColor: data.color,
+
+                    // width: 20,
+                    // height: 20
+                }}>
+                    <Text className='px-3 text-white text-sm' style={{
+                        fontSize: 15,
+                        // fontWeight: 500
+
+                    }}>{data.title}</Text>
+
+                </View>
+
+            </View>
+
+        </TouchableOpacity>
+    )
+}
 
 export default AddCourseSheet

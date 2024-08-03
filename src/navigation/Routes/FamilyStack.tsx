@@ -21,6 +21,7 @@ import {
   HouseHoldScreenProps,
   MemberDetailsScreenProps,
   NewsScreenProps,
+  ProgressScreenProps,
   SharedGuildLineScreenProps,
   SubjectDetailScreenProps,
   ThemeSwitcherProps,
@@ -31,9 +32,9 @@ import {
 import ContactListScreen from 'src/screens/ContactList/ContactList';
 import GuildLineScreen from 'src/screens/GuildLineScreen/GuildLineScreen';
 import GuildLineDetailScreen from 'src/screens/GuildLineScreen/GuildLineDetailScreen';
-import EducationScreen from 'src/screens/EducationScreen/EducationScreen';
-import EducationDetailScreen from 'src/screens/EducationScreen/EducationDetailScreen';
-import SubjectDetailScreen from 'src/screens/EducationScreen/SubjectDetailScreen';
+import EducationScreen from 'src/screens/Education/EducationScreen/EducationScreen';
+import ProgressScreen from 'src/screens/Education/ProgressScreen/ProgressScreen';
+// import SubjectDetailScreen from 'src/screens/EducationScreen/SubjectDetailScreen';
 import HouseHoldScreen from 'src/screens/HouseHoldScreen/HouseHoldScreen';
 import ChecklistScreen from 'src/screens/CheckListScreen/CheckListScreen/CheckListScreen';
 import NewsScreen from 'src/screens/NewsScreen/NewsScreen';
@@ -103,22 +104,18 @@ const FamilyStack = () => {
           />
         )}
       </Stack.Screen>
-      <Stack.Screen name="Education">
+      <Stack.Screen name="EducationScreen">
         {props => <EducationScreen {...(props as EducationScreenProps)} />}
       </Stack.Screen>
-      <Stack.Screen name="EducationDetail">
+      <Stack.Screen name="ProgressScreen">
         {props => (
-          <EducationDetailScreen {...(props as EducationDetailScreenProps)} />
+          <ProgressScreen {...(props as ProgressScreenProps)} />
         )}
       </Stack.Screen>
-      <Stack.Screen name="SubjectDetail">
-        {props => (
-          <SubjectDetailScreen {...(props as SubjectDetailScreenProps)} />
-        )}
-      </Stack.Screen>
-      <Stack.Screen name="HouseHold">
+      
+      {/* <Stack.Screen name="HouseHold">
         {props => <HouseHoldScreen {...(props as HouseHoldScreenProps)} />}
-      </Stack.Screen>
+      </Stack.Screen> */}
       <Stack.Screen name="CheckList">
         {props => <ChecklistScreen {...(props as CheckListScreenProps)} />}
       </Stack.Screen>
