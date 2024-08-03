@@ -121,7 +121,7 @@
   "Save": "Save",
   "Purchase Date": "Purchase Date",
   "Value": "Value",
-  "Enter Description": "Description",
+  "Enter Description": "Enter Description",
   "Enter Value": "Enter Value",
   "Asset Name": "Asset Name",
   "Enter Asset Name": "Enter Asset Name",
@@ -157,17 +157,17 @@
 
   "What do you want to do with this event?": "What do you want to do with this event?",
   "Delete This Event Only": "Delete This Event Only",
-  "Delete All Future Events": "Delete All Future Events",
+  "Delete All Future Events": "Delete All Events",
   "Event Detail": "Event Detail",
 
   "Category": "Category",
   "Delete event": "Delete event",
 
-  "add_new_event": "Create New Event",
+  "add_new_event": "Add New Event",
   "title": "Title",
   "enter_title": "Enter title",
   "location": "Location",
-  "enter_location": "Location",
+  "enter_location": "Enter location",
 
   "all_day": "All day",
   "start": "Start",
@@ -424,19 +424,10 @@
   "Enter discount code": "Enter discount code",
   "Time": "Time",
   "All Day": "All day",
-  "AnyAdditionQuestions": "Any addition questions?",
-  "DontHesitate": "Don’t hesitate to drop us a line at",
-  "FrequentlyAskedQuestions": "Frequently asked questions",
-  "PasswordHasNotBeenReset": "Password has not been reset",
-  "AnErrorOccurredWhileResettingThePassword": "An error occurred while resetting the password",
-  "Skip": "Skip",
-  "NextLanding": "Next",
-  "LandingPage1Title": "Organize your family life",
-  "LandingPage1Description": "Manage schedules, event and activities with ease.",
-  "LandingPage2Title": "Balance your family finance",
-  "LandingPage2Description": "Track expense and income with detailed analysis.",
-  "LandingPage3Title": "Stay connected and updated",
-  "LandingPage3Description": "Chat, create lists and get the latest news for your family.",
-  "NO_FAMILY_MESSAGE": "No family found",
-  "ADD_FAMILY_PROMPT": "Click the blinking button to add a family."
+  "Leave family successfully": "Leave family successfully",
+  "Fail to leave family": "Fail to leave family",
+
+  "Family avatar changed successfully": "Family avatar changed successfully",
+  "Failed to change family avatar": "Failed to change family avatar",
+  "Create event successfully": "Create event successfully"
 }

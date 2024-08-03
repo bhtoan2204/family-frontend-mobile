@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   familyCard: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     padding: 15,
     backgroundColor: '#FFFFFF',
     marginBottom: 10,
@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   familyAvatar: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
     borderRadius: 10,
   },
   defaultAvatar: {
@@ -84,11 +84,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonContainerFamily: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignSelf: 'center',
-    width: '100%',
+    flexDirection: 'column',
     marginTop: 10,
+    justifyContent: 'flex-end',
   },
   button: {
     paddingVertical: 8,
@@ -104,9 +102,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
   },
-  flexButton: {
-    flex: 1,
-  },
   buyServiceButton: {
     backgroundColor: 'lightblue',
     marginBottom: 10,
@@ -121,8 +116,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
     fontWeight: 'bold',
-    marginLeft: 12,
-    alignSelf: 'center',
   },
   headerText: {
     flex: 1,
@@ -192,24 +185,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 24,
     marginBottom: 16,
+    color: '#ccc',
   },
   familyList: {},
 
   buttonImage: {
-    height: 220,
-    width: 350,
-  },
-  imageWrapper: {
-    position: 'relative',
+    height: 260,
+    width: 370,
   },
   buttonAddFamily: {
-    height: 55,
-    width: 55,
-    position: 'absolute',
-    top: 24,
-    right: 1,
+    height: 30,
+    width: 150,
+    alignSelf: 'flex-end',
+    marginTop: 10,
   },
-
   settingsIconContainer: {
     position: 'absolute',
     top: 10,
@@ -248,31 +237,6 @@ const styles = StyleSheet.create({
   buttonContent: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  imageContainer: {
-    alignItems: 'center',
-    marginTop: 20,
-    flexDirection: 'column',
-  },
-  imageButton: {
-    gap: 10,
-  },
-  imageSearch: {
-    width: 100,
-    height: 100,
-  },
-  noFamilyContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 100,
-    gap: 10,
-  },
-  noFamilyText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  noFamilyTextDescription: {
-    fontSize: 16,
   },
 });
 

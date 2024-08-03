@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ScrollView,
   Text,
@@ -8,7 +8,6 @@ import {
   FlatList,
   Image,
   Modal,
-  Animated,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -37,7 +36,6 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
   const [modalVisible, setModalVisible] = useState(false);
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
-  const scaleValue = useRef(new Animated.Value(1)).current;
 
   const handleViewAllPackage = () => {
     const id_family = undefined;
@@ -69,23 +67,6 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
     fetchData();
   }, [page]);
 
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(scaleValue, {
-          toValue: 1.2,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(scaleValue, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-      ]),
-    ).start();
-  }, [scaleValue]);
-
   const onRenewPress = (family: Family) => {
     navigation.navigate('PackStack', {
       screen: 'ViewAllPackage',
@@ -108,56 +89,56 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
         key={family.id_family}
         onPress={() => NavigateFamily(family)}
         style={[styles.familyCard, {backgroundColor: color.white}]}>
-        <View style={{flexDirection: 'column'}}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <View style={styles.familyAvatarContainer}>
-              {family.avatar ? (
-                <Image
-                  source={{uri: family.avatar}}
-                  style={styles.familyAvatar}
-                  resizeMode="cover"
-                />
-              ) : (
-                <View style={styles.defaultAvatar} />
-              )}
-            </View>
-            <View style={{flexDirection: 'column', gap: 5, marginLeft: 5}}>
-              <Text style={[styles.familyName, {color: color.text}]}>
-                {family.name}
-              </Text>
-              <Text style={[styles.familyQuantity, {color: color.textSubdued}]}>
-                {translate('FAMILY_MEMBERS')}: {family.quantity}
-              </Text>
-              <View style={styles.expiredAtContainer}>
-                <Text
-                  style={[styles.familyQuantity, {color: color.textSubdued}]}>
-                  {translate('EXPIRED_AT')}:{' '}
-                </Text>
-                <Text style={[styles.familyQuantity, styles.expiredAtText]}>
-                  {moment(new Date(family.expired_at)).format('DD/MM/YYYY')}
-                </Text>
-              </View>
-            </View>
-          </View>
+        <TouchableOpacity
+          style={styles.settingsIconContainer}
+          onPress={() => setModalVisible(true)}>
+          <Icon
+            name="ellipsis-vertical"
+            size={24}
+            style={styles.settingsIcon}
+          />
+        </TouchableOpacity>
+        <View style={styles.familyAvatarContainer}>
+          {family.avatar ? (
+            <Image source={{uri: family.avatar}} style={styles.familyAvatar} />
+          ) : (
+            <View style={styles.defaultAvatar} />
+          )}
         </View>
-        <View style={styles.buttonContainerFamily}>
-          <TouchableOpacity
-            style={[styles.buyServiceButton, styles.button, styles.flexButton]}
-            onPress={() => handleViewCombo()}>
-            <Text style={styles.buyServiceButtonText}>
-              {translate('BUY_SERVICE')}
+        <View style={styles.familyInfo}>
+          <Text style={[styles.familyName, {color: color.text}]}>
+            {family.name}
+          </Text>
+          <Text style={[styles.familyQuantity, {color: color.textSubdued}]}>
+            {translate('FAMILY_MEMBERS')}: {family.quantity}
+          </Text>
+          <View style={styles.expiredAtContainer}>
+            <Text style={[styles.familyQuantity, {color: color.textSubdued}]}>
+              {translate('EXPIRED_AT')}:{' '}
             </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.buyPackageButton, styles.button, styles.flexButton]}
-            onPress={() => onRenewPress(family)}>
-            <View style={styles.buttonContent}>
-              <Text style={[styles.buyServiceButtonText, {marginRight: 5}]}>
-                {translate('Renew Family')}
+            <Text style={[styles.familyQuantity, styles.expiredAtText]}>
+              {moment(new Date(family.expired_at)).format('DD/MM/YYYY')}
+            </Text>
+          </View>
+          <View style={styles.buttonContainerFamily}>
+            <TouchableOpacity
+              style={[styles.buyServiceButton, styles.button]}
+              onPress={() => handleViewCombo()}>
+              <Text style={styles.buyServiceButtonText}>
+                {translate('BUY_SERVICE')}
               </Text>
-              <Icon name="arrow-forward" size={20} color="white" />
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.buyPackageButton, styles.button]}
+              onPress={() => onRenewPress(family)}>
+              <View style={styles.buttonContent}>
+                <Text style={[styles.buyServiceButtonText, {marginRight: 5}]}>
+                  {translate('Renew Family')}
+                </Text>
+                <Icon name="arrow-forward" size={20} color="white" />
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       </TouchableOpacity>
     ));
@@ -165,60 +146,42 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
 
   return (
     <View style={[styles.safeArea, {backgroundColor: color.background}]}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}>
-          <Icon name="chevron-back" size={30} color={color.text} />
-        </TouchableOpacity>
+      <ScrollView>
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}>
+            <Icon name="close" size={30} color={color.text} />
+          </TouchableOpacity>
+          <View style={styles.headerTextContainer}>
+            <Text style={[styles.headerText, {color: color.text}]}>
+              {translate('FAMILY_MANAGEMENT')}
+            </Text>
+          </View>
+          <View style={styles.placeholder} />
+        </View>
 
-        <View style={styles.placeholder} />
-      </View>
-      <View style={styles.imageContainer}>
-        <TouchableOpacity
-          onPress={handleViewAllPackage}
-          style={styles.imageButton}>
-          <View style={styles.imageWrapper}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={handleViewAllPackage}
+            style={styles.button}>
             <Image
-              source={require('../../assets/images/image-purchase1.png')}
+              source={require('../../assets/images/image-purchase.png')}
               style={styles.buttonImage}
             />
-            <Animated.Image
-              source={require('../../assets/images/plus-image.png')}
-              style={[
-                styles.buttonAddFamily,
-                {transform: [{scale: scaleValue}]},
-              ]}
-            />
-          </View>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.container}>
-        <Text style={[styles.familyListTitle, {color: color.text}]}>
-          {translate('YOUR_FAMILIES')}
-        </Text>
-        {families.length === 0 ? (
-          <View style={styles.noFamilyContainer}>
             <Image
-              source={require('../../assets/images/search-icon-family.png')}
-              style={styles.imageSearch}
+              source={require('../../assets/images/new-family-button.png')}
+              style={styles.buttonAddFamily}
             />
-            <Text style={[styles.noFamilyText, {color: color.text}]}>
-              {translate('NO_FAMILY_MESSAGE')}
-            </Text>
-            <Text
-              style={[
-                styles.noFamilyTextDescription,
-                {color: color.textSubdued},
-              ]}>
-              {translate('ADD_FAMILY_PROMPT')}
-            </Text>
-          </View>
-        ) : (
-          <ScrollView>{renderFamilyCards()}</ScrollView>
-        )}
-      </View>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.container}>
+          <Text style={styles.familyListTitle}>
+            {translate('YOUR_FAMILIES')}
+          </Text>
+          {renderFamilyCards()}
+        </View>
+      </ScrollView>
 
       {/* <Modal
         animationType="slide"
