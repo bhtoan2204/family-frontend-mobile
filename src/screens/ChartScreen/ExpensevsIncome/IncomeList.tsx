@@ -71,7 +71,9 @@ const IncomeScreen = ({navigation}: IncomeScreenProps) => {
       if (response) {
         setTotalPageIncome(Math.ceil(response.total / itemsPerPage));
         dispatch(setIncomeList(response.data));
-        dispatch(setSumIncome(response.sum));
+        if (page) {
+          dispatch(setSumIncome(response.sum));
+        }
       }
     } catch (error) {
       console.log(error);

@@ -199,10 +199,10 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
                 navigation.goBack();
               } catch (error) {
                 console.error(error);
-                Alert.alert(
-                  'Failed to delete expense',
-                  'Please try again later.',
-                );
+                Toast.show('Failed to delete expense', {
+                  type: 'danger',
+                  duration: 3000,
+                });
               }
             }
           },
@@ -462,14 +462,16 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
                 <Text style={[styles.label, {color: color.text}]}>
                   {translate('Create by')}:
                 </Text>
-                <TouchableOpacity
-                  onPress={() => pressMember(expense?.id_created_by)}>
-                  <Text style={styles.ValueName}>
-                    {expense?.users?.firstname
-                      ? `${expense.users.firstname} ${expense.users?.lastname || ''}`.trim()
-                      : 'No user data available'}
-                  </Text>
-                </TouchableOpacity>
+                {expense?.id_created_by && (
+                  <TouchableOpacity
+                    onPress={() => pressMember(expense?.id_created_by)}>
+                    <Text style={styles.ValueName}>
+                      {expense?.users?.firstname
+                        ? `${expense.users.firstname} ${expense.users?.lastname || ''}`.trim()
+                        : 'No user data available'}
+                    </Text>
+                  </TouchableOpacity>
+                )}
               </View>
               <View style={styles.detailRow}>
                 <Text style={[styles.label, {color: color.text}]}>

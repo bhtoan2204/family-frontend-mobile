@@ -40,7 +40,7 @@ interface LineChartScreenProps {
 }
 
 const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
-  const [showDetails, setShowDetails] = useState<boolean>(false);
+  const [showDetails, setShowDetails] = useState<boolean>(true);
   const [selectedLegends, setSelectedLegends] = useState<string[]>(['Total']);
   const [isYearPickerVisible, setYearPickerVisible] = useState<boolean>(false);
   const [selectedYear, setSelectedYear] = useState(moment().year());

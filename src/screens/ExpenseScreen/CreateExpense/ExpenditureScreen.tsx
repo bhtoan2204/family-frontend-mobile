@@ -15,6 +15,8 @@ import {
   Alert,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from './styles';
@@ -223,6 +225,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
       Toast.show('Transaction recorded', {
         type: 'success',
       });
+      setFormattedAmount('');
       setAmount(null);
       setDescription('');
       setUriImage(null);
