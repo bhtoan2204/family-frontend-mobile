@@ -18,18 +18,23 @@ interface SubjectItemProps {
     index: number
 }
 
+const checkIfGraded = (subjectComponentData: ComponentScore | null) => {
+    if (subjectComponentData) {
+        if (subjectComponentData.score !== null && subjectComponentData.score !== 0) return true
+        else return false
+    }
+    return false
+}
+
 const SubjectItem = ({ isGraded, subjectComponentData, index, id_education_progress, id_family, id_subject, isFirst }: SubjectItemProps) => {
     // const [isEditing, setIsEditing] = React.useState(false)
-    const [isGradded, setIsGradded] = React.useState(subjectComponentData == null ? false : subjectComponentData.score !== null)
+    const [isGradded, setIsGradded] = React.useState(checkIfGraded(subjectComponentData))
     // const [expected, setExpected] = React.useState<number | null>(subjectComponentData.expected_score)
     // const [score, setScore] = React.useState<number | null>(subjectComponentData.score)
 
     const bottomSheetRef = React.useRef<any>(null)
     React.useEffect(() => {
-        if (subjectComponentData) {
-            if (subjectComponentData.score !== null) setIsGradded(true)
-            else setIsGradded(false)
-        }
+        setIsGradded(checkIfGraded(subjectComponentData))
     }, [subjectComponentData])
 
     return (
@@ -46,7 +51,7 @@ const SubjectItem = ({ isGraded, subjectComponentData, index, id_education_progr
                     isGradded ?
                         <><Text className='  text-base opacity-40 text-[#2F2F34] dark:text-white' >score</Text><Text className=' text-[#918D92] text-xl mt-1 opacity-40'>{subjectComponentData.score} / 10</Text></>
                         :
-                        <><Text className='  text-base text-[#2F2F34] dark:text-white' >need</Text><Text className='text-[#2F2F34] dark:text-white  text-xl mt-1'>{subjectComponentData.expected_score || 0}</Text></>
+                        <><Text className='  text-base text-[#2F2F34] dark:text-white' >need</Text><Text className='text-[#2F2F34] dark:text-white  text-xl mt-1'>{subjectComponentData.target_score || 0}</Text></>
                 }
 
             </View>

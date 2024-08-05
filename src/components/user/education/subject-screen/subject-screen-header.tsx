@@ -71,11 +71,11 @@ const SubjectScreenHeader = ({
                         </BlurView>
 
 
-                        <BlurView intensity={35} tint='dark' className='flex-row items-center  mr-1 rounded-lg overflow-hidden'>
+                        <BlurView intensity={35} tint='dark' className='flex-row items-center  mx-3 rounded-lg overflow-hidden'>
                             <TouchableOpacity className='' onPress={()=>{
-                                addComponentScoreSheetRef.current?.expand()
+                                // addComponentScoreSheetRef.current?.expand()
                             }}>
-                                <Material name="plus" size={29} style={{ color: 'white', fontWeight: "bold" }} />
+                                {/* <Material name="plus" size={29} style={{ color: 'white', fontWeight: "bold" }} /> */}
                             </TouchableOpacity>
                             {/* <Menu >
                                 <MenuTrigger>

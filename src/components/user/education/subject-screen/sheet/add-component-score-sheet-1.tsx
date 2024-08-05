@@ -15,15 +15,22 @@ import AddComponentScoreImage from 'src/assets/images/education_assets/add_compo
 import TargetImage from 'src/assets/images/education_assets/target.png';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { handleRestore } from 'src/utils/sheet/func';
-import { goal_data } from '../const/target_data';
 
 interface AddItemSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
     id_education_progress: number;
     id_family: number;
-    id_subject: number;
     onAddSuccess: () => void;
     onAddFailed: () => void;
+    targetData: {
+        id: number;
+        title: string;
+        color: string;
+    }[];
+    pickedTargets: string[];
+    setPickedTargets: (data: string) => void;
+    removePickedTargets: (data: string) => void;
+    addComponentSheet2Ref: React.RefObject<BottomSheet>
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -33,13 +40,17 @@ const AddComponentScoreSheet1 = ({
     bottomSheetRef,
     id_education_progress,
     id_family,
-    id_subject,
     onAddSuccess,
-    onAddFailed
+    onAddFailed,
+    pickedTargets,
+    targetData,
+    addComponentSheet2Ref,
+    removePickedTargets,
+    setPickedTargets
+
 
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
-
     const [loading, setLoading] = React.useState(false)
     const dispatch = useDispatch<AppDispatch>()
 
@@ -68,93 +79,13 @@ const AddComponentScoreSheet1 = ({
         []
     );
 
-    const handleAddComponentScore = React.useCallback(async (id: number) => {
-        Keyboard.dismiss()
-        await handleRestore()
-
-        // const res = await EducationServices.addComponentScore(
-        //     id_subject
-        //     , id_education_progress
-        //     , id_family
-        //     , inputName
-        //     , 0
-        // )
-        const data = goal_data.find(target => target.id == id)!
-        dispatch(addComponentScoreToSubject({
-            component_name: data.title,
-            // expected_score: null,
-            score: 0,
-            id_subject: id_subject,
-            id_family: id_family,
-            id_education_progress: id_education_progress,
-
-        }))
-        bottomSheetRef.current?.close()
-        onAddSuccess()
-        // if (res) {
-        //     dispatch(addComponentScoreToSubject({
-        //         component_name: inputName,
-        //         // expected_score: null,
-        //         score: 0,
-        //         id_subject: id_subject,
-        //         id_family: id_family,
-        //         id_education_progress: id_education_progress,
-
-        //     }))
-        //     bottomSheetRef.current?.close()
-        // }
-        // else {
-        //     console.log("error")
-        //     bottomSheetRef.current?.close()
-        // }
-    }, [])
-
-    // const handleAddComponentScore = async () => {
-    //     Keyboard.dismiss()
-    //     await handleRestore()
-
-    //     // const res = await EducationServices.addComponentScore(
-    //     //     id_subject
-    //     //     , id_education_progress
-    //     //     , id_family
-    //     //     , inputName
-    //     //     , 0
-    //     // )
-    //     const data = 
-    //     dispatch(addComponentScoreToSubject({
-    //         component_name: findTargetById(goal_data[0])!.title,
-    //         // expected_score: null,
-    //         score: 0,
-    //         id_subject: id_subject,
-    //         id_family: id_family,
-    //         id_education_progress: id_education_progress,
-
-    //     }))
-    //     bottomSheetRef.current?.close()
-    //     onAddSuccess()
-    //     // if (res) {
-    //     //     dispatch(addComponentScoreToSubject({
-    //     //         component_name: inputName,
-    //     //         // expected_score: null,
-    //     //         score: 0,
-    //     //         id_subject: id_subject,
-    //     //         id_family: id_family,
-    //     //         id_education_progress: id_education_progress,
-
-    //     //     }))
-    //     //     bottomSheetRef.current?.close()
-    //     // }
-    //     // else {
-    //     //     console.log("error")
-    //     //     bottomSheetRef.current?.close()
-    //     // }
-    // }
-
     const findTargetById = React.useCallback((id: number) => {
-        return goal_data.find(target => target.id == id)
-    }, [])
+        return targetData.find(target => target.id == id)
+    }, [targetData])
 
-
+    const checkIsPicked = React.useCallback((id: number) => {
+        return pickedTargets.includes(id.toString())
+    }, [pickedTargets])
 
 
     return (
@@ -198,19 +129,69 @@ const AddComponentScoreSheet1 = ({
                             {/* <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]'>Give your new component score a name</Text> */}
                         </View>
                         <View className='items-center flex-1 justify-center  my-3'>
-                            <View className='mx-3 my-3 flex-wrap flex-row justify-between items-stretch '>
+                            <View className=' flex-wrap flex-row justify-between items-stretch px-3 py-1'>
                                 {
-                                    goal_data.map((target, index) => {
-                                        return <Fragment key={index}>
-                                            <TargetItem data={findTargetById(target.id)!} onPress={() => { }} />
-                                        </Fragment>
+                                    targetData.map((target, index) => {
+                                        if (index < 9) {
+                                            return <Fragment key={index}>
+                                                <TargetItem
+                                                    data={findTargetById(target.id)!} onPress={() => {
+                                                        if (checkIsPicked(target.id)) {
+                                                            removePickedTargets(target.id.toString())
+                                                        } else {
+                                                            setPickedTargets(target.id.toString())
+                                                        }
+
+                                                    }}
+                                                    isPicked={checkIsPicked(target.id)}
+                                                    index={index}
+                                                // setPickedTargets={() => {
+                                                //     setPickedTargets(target.id.toString())
+                                                // }}
+                                                // removePickedTargets={() => {
+                                                //     removePickedTargets(target.id.toString())
+                                                // }}
+                                                />
+                                            </Fragment>
+                                        }
                                     })
                                 }
-                                
+
+                            </View>
+                            <View className=' flex-wrap flex-row  w-full  px-3'>
+                                {
+                                    targetData.map((target, index) => {
+                                        if (index >= 9) {
+                                            return <Fragment key={index}>
+                                                <TargetItem
+                                                    data={findTargetById(target.id)!} onPress={() => {
+                                                        if (checkIsPicked(target.id)) {
+                                                            removePickedTargets(target.id.toString())
+                                                        } else {
+                                                            setPickedTargets(target.id.toString())
+                                                        }
+
+                                                    }}
+                                                    isPicked={checkIsPicked(target.id)}
+                                                    index={index}
+                                                // setPickedTargets={() => {
+                                                //     setPickedTargets(target.id.toString())
+                                                // }}
+                                                // removePickedTargets={() => {
+                                                //     removePickedTargets(target.id.toString())
+                                                // }}
+                                                />
+                                            </Fragment>
+                                        }
+                                    })
+                                }
+
                             </View>
                         </View>
-                        <Text className='mb-10 mx-4 text-center underline underline-offset-3 text-[#2A475E] dark:text-white italic	'  onPress={()=>{
-                            console.log('ok')
+                        <Text className='mb-10 mx-4 text-center underline underline-offset-3 text-[#2A475E] dark:text-white italic	' onPress={() => {
+                            // console.log('ok')
+                            // bottomSheetRef.current?.close()
+                            addComponentSheet2Ref.current?.expand()
                         }}>Can't find the goal you're looking for? Let's create a new one! </Text>
 
 
@@ -221,22 +202,7 @@ const AddComponentScoreSheet1 = ({
                             }
                         </View>
 
-                        {/* <View className='items-end pr-3 my-3 mt-12 '>
-                            <TouchableOpacity className='items-center rounded-lg justify-center' style={{
-                                width: screenWidth * 0.1,
-                                height: screenWidth * 0.1,
-                                backgroundColor: inputName != "" ? COLORS.DenimBlue : iOSGrayColors.systemGray6.defaultLight,
-                            }}
-                                onPress={async () => {
-                                    await handleAddComponentScore()
-                                }}
-                            >
-                                <Material name='arrow-right' size={24} color={
-                                    inputName != "" ? 'white' : iOSGrayColors.systemGray.defaultDark
-                                }
-                                />
-                            </TouchableOpacity>
-                        </View> */}
+
                     </View>
                 </BottomSheetScrollView>
             </View>
@@ -245,23 +211,27 @@ const AddComponentScoreSheet1 = ({
     )
 }
 
-const TargetItem = ({ data, onPress }: {
+const TargetItem = ({ data, onPress, isPicked, index }: {
     data: {
         id: number;
         title: string;
         color: string;
-    }, onPress: () => void
+    },
+    onPress: () => void
+    isPicked: boolean
+    index: number
+
 }) => {
     return (
-        <TouchableOpacity className='flex-row justify-between items-center px-1 py-2' onPress={onPress}>
+        <TouchableOpacity className={`flex-row justify-between items-center ${index >= 9 ? "pr-8" : "px-1"} py-2`} onPress={onPress}>
             <View className='flex-row items-center'>
-                <View className='rounded-xl px-3 py-4' style={{
-                    backgroundColor: data.color,
+                <View className={`rounded-xl px-3 py-4 ${isPicked ? "" : "border-[1px]"} border-[#CCCCCC] dark:border-white`} style={{
+                    backgroundColor: isPicked ? data.color : 'transparent',
 
                     // width: 20,
                     // height: 20
                 }}>
-                    <Text className='px-3 text-white text-sm' style={{
+                    <Text className={`px-3 ${isPicked ? 'text-white' : 'text-[#7C7C7C]'} text-sm `} style={{
                         fontSize: 15,
                         // fontWeight: 500
 

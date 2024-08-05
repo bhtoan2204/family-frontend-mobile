@@ -53,6 +53,7 @@ const EducationScreenHeader = ({
             }}>
                 <ImageBackground
                     source={imageUrl ? { uri: imageUrl } : gradients_list[idFamily % gradients_list.length]}
+                    // source={gradients_list[idFamily % gradients_list.length]}
                     style={{ width: screenWidth, height: screenHeight * 0.3 }}
                 >
                     <View className='w-full absolute z-10 flex-row justify-between items-center py-3 mt-5'>

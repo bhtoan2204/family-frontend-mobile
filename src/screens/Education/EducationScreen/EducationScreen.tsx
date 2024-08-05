@@ -39,11 +39,13 @@ import AddCourseSheet from 'src/components/user/education/progress-screen/sheet/
 import AddCoursesPickTargetsSheet from 'src/components/user/education/progress-screen/sheet/pick-target-sheet';
 import { goal_data } from 'src/components/user/education/progress-screen/const/color';
 import AddComponentScoreSheet1 from 'src/components/user/education/subject-screen/sheet/add-component-score-sheet-1';
+import AddComponentScoreSheet from 'src/components/user/education/subject-screen/sheet/add-component-score-sheet';
+import AddComponentScoreSheet2 from 'src/components/user/education/subject-screen/sheet/add-component-score-sheet2';
 
 
 const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
-    console.log("id_family", id_family)
+    // console.log("id_family", id_family)
     const dispatch = useDispatch<AppDispatch>()
     const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
     const [searchQuery, setSearchQuery] = React.useState<string>('')
@@ -55,8 +57,12 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     // })
     // console.log(members)
     const [members, setFamilyMembers] = React.useState<Member[]>([])
+
+    /// for progress screen
+
     const [pickedTargets, setPickedTargets] = React.useState<string[]>([])
 
+    ///
     const [pickedIdUser, setPickedIdUser] = React.useState<string>("")
     const { colorScheme, setColorScheme } = useColorScheme()
     const updateEducationSheetRef = useRef<BottomSheet>(null)
@@ -86,21 +92,21 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
         };
         const handleFetchEducation = async () => {
             setLoading(true)
-            const educationsData = await EducationServices.getAllEducation(id_family!, 1, 20);
+            const educationsData = await EducationServices.getAllEducation(id_family!, 1, 100);
             const edu = educationsData.map((education: any) => {
                 return {
                     ...education,
                     subjects: education.subjects.map((subject: any) => {
                         return {
                             ...subject,
-                            midterm_score: {
-                                component_name: 'Midterm',
-                                score: subject.midterm_score,
-                            },
-                            final_score: {
-                                component_name: 'Final',
-                                score: subject.final_score,
-                            },
+                            // midterm_score: {
+                            //     component_name: 'Midterm',
+                            //     score: subject.midterm_score,
+                            // },
+                            // final_score: {
+                            //     component_name: 'Final',
+                            //     score: subject.final_score,
+                            // },
                         };
                     }),
                 };
@@ -156,7 +162,9 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     }
 
     const buildListEmpty = () => {
-        return <TouchableOpacity className='flex-1 z-10 items-center justify-center bg-[#F7F7F7] dark:bg-[#0A1220]' activeOpacity={1.0} >
+        return <TouchableOpacity className='flex-1 z-10 items-center justify-center bg-[#F7F7F7] dark:bg-[#0A1220]' activeOpacity={1.0} onPress={() => {
+            // Keyboard.dismiss()
+        }} >
             <Text className='text-center text-lg text-gray-500'>No Education Found</Text>
         </TouchableOpacity>
     }
@@ -182,7 +190,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
         <View className="flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]">
             <EducationScreenHeader navigationBack={() => navigation.goBack()}
                 idFamily={id_family!}
-                imageUrl={familyInfo!.avatar || undefined}
+                imageUrl={familyInfo ? familyInfo.avatar ? familyInfo.avatar : undefined : undefined}
                 addProgressBottomSheetRef={addProgressBottomSheetRef}
                 pickMemberBottomSheetRef={pickMemberBottomSheetRef}
             />
@@ -243,8 +251,8 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                         });
                     }
                 }
-            />
-            <AddCoursesPickTargetsSheet refRBSheet={pickMemberBottomSheetRef}
+            /> */}
+            {/* <AddCoursesPickTargetsSheet refRBSheet={pickMemberBottomSheetRef}
                 targets={goal_data}
                 pickedTargets={pickedTargets}
                 setPickedTargets={(targets: string) => {
@@ -262,7 +270,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                 addCourseBottomSheetRef={addProgressBottomSheetRef}
 
             /> */}
-            <AddComponentScoreSheet1 bottomSheetRef={addProgressBottomSheetRef} 
+            {/* <AddComponentScoreSheet1 bottomSheetRef={addProgressBottomSheetRef}
                 id_education_progress={1}
                 id_family={id_family!}
                 id_subject={1}
@@ -284,8 +292,22 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                         });
                     }
                 }
-            />
-            {/* <AddProgressSheet bottomSheetRef={addProgressBottomSheetRef}
+                addComponentSheetRef={pickMemberBottomSheetRef}
+            /> */}
+            {/* <AddComponentScoreSheet2 bottomSheetRef={pickMemberBottomSheetRef} onAddSuccess={(input: string) => {
+                const newTarget = {
+                    id: goal_data.length + 1,
+                    title: input,
+                    color: COLORS.DenimBlue
+                }
+                setGoalData((prev) => {
+                    return [...prev, newTarget]
+                })
+                setPickedTargets((prev) => {
+                    return [...prev, input]
+                })
+            }} /> */}
+            <AddProgressSheet bottomSheetRef={addProgressBottomSheetRef}
                 members={members}
                 id_family={id_family!}
                 pickedIdUser={pickedIdUser}
@@ -320,7 +342,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                     setPickedIdUser(id_user)
                 }}
                 addProgressBottomSheetRef={addProgressBottomSheetRef}
-            /> */}
+            />
             <UpdateProgressSheet bottomSheetRef={updateEducationSheetRef}
                 id_family={id_family!}
                 id_progress={pickedIdProgress}
@@ -374,7 +396,11 @@ const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, 
 
         <View className='flex-row items-center'>
             <View className='mx-4'>
-                <Image source={item.user.avatar != "" ? { uri: item.user.avatar } : DefaultAvatar} style={{ width: ScreenHeight * 0.17, height: ScreenHeight * 0.17, borderRadius: 12 }}
+                <Image
+                    source={item.users.avatar != "" ? { uri: item.users.avatar } : DefaultAvatar}
+                    // source={DefaultAvatar}
+
+                    style={{ width: ScreenHeight * 0.17, height: ScreenHeight * 0.17, borderRadius: 12 }}
                 />
             </View>
             <View className='flex-1 mr-3 py-1 ' style={{
@@ -432,7 +458,7 @@ const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, 
                         color: isDarkMode ? 'white' : '#2F2F34',
                         fontWeight: "bold"
                     }} />
-                    <Text className='ml-3 text-sm font-semibold dark:text-white ' numberOfLines={1} >{item.user.firstname} {item.user.lastname}</Text>
+                    <Text className='ml-3 text-sm font-semibold dark:text-white ' numberOfLines={1} >{item.users.firstname} {item.users.lastname}</Text>
                 </View>
                 <View className='flex-row items-center overflow-clip mr-5'>
                     <Material name="town-hall" size={ScreenHeight * 0.035} style={{ color: isDarkMode ? 'white' : '#2F2F34', fontWeight: "bold" }} />

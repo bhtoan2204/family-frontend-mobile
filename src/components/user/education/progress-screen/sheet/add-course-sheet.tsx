@@ -31,6 +31,7 @@ import AddCourseImage from 'src/assets/images/education_assets/add_course_img.pn
 import TargetImage from 'src/assets/images/education_assets/target.png'
 import { Subject } from 'src/interface/education/education';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import { handleRestore } from 'src/utils/sheet/func';
 
 
 interface AddItemSheetProps {
@@ -88,82 +89,81 @@ const AddCourseSheet = ({
 
 
     const renderBackdrop = React.useCallback(
-        (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} pressBehavior={
-            loading ? 'none' : undefined
-        } />,
+        (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1}
+            {...props}
+        // pressBehavior={
+        //     loading ? 'none' : undefined
+        // }
+        />,
         []
     );
 
     const handleAddComponentScore = async () => {
         Keyboard.dismiss()
-        await Promise.resolve(
-            new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve('1')
-                }, 100)
-            })
-        )
-        const response = await EducationServices.createSubject(
+        await handleRestore()
+        const targetsArr = pickedTargets.map(target => {
+            return {
+                id: parseInt(target),
+                title: targets.find(t => t.id == parseInt(target))!.title,
+                color: targets.find(t => t.id == parseInt(target))!.color
+            }
+        })
+        console.log(targetsArr)
+        console.log({
+            id_education_progress,
+            id_family,
+            inputName,
+            inputDescription,
+            targetsArr
+        })
+        // onAddSuccess()
+        setLoading(true)
+        const response = await EducationServices.createSubjectAndComponentScores(
             id_education_progress,
             id_family!,
             inputName,
-            inputDescription
+            inputDescription,
+            targetsArr
         )
+        setLoading(false)
         if (response) {
-            // console.log(response)
-            const newSubject: Subject = {
-                component_scores: response.component_scores,
-                id_education_progress: id_education_progress,
-                id_subject: response.id_subject,
-                subject_name: response.subject_name,
-                description: response.description,
-                final_score: {
-                    score: response.final_score,
-                    // expected_score: response.final_score.expected_score
-                    component_name: "Final"
-                },
-                midterm_score: {
-                    score: response.midterm_score,
-                    // expected_score: response.midterm_score.expected_score
-                    component_name: "Midterm"
-
-                },
-                bonus_score: response.bonus_score,
-                status: response.status
-            }
-            dispatch(addSubject(newSubject))
-            bottomSheetRef.current?.close()
+            dispatch(addSubject(response))
             onAddSuccess()
-        }
-        else {
-            console.log('error')
-            bottomSheetRef.current?.close()
+        } else {
             onAddFailed()
         }
-        // const res = await EducationServices.addComponentScore(
-        //     id_subject
-        //     , id_education_progress
-        //     , id_family
-        //     , inputName
-        //     , 0
-        // )
-        // if (res) {
-        //     dispatch(addComponentScoreToSubject({
-        //         component_name: inputName,
-        //         // expected_score: null,
-        //         score: 0,
-        //         id_subject: id_subject,
-        //         id_family: id_family,
+        // if (response) {
+        //     // console.log(response)
+        //     const newSubject: Subject = {
+        //         component_scores: response.component_scores,
         //         id_education_progress: id_education_progress,
+        //         id_subject: response.id_subject,
+        //         subject_name: response.subject_name,
+        //         description: response.description,
+        //         final_score: {
+        //             score: response.final_score,
+        //             // expected_score: response.final_score.expected_score
+        //             component_name: "Final"
+        //         },
+        //         midterm_score: {
+        //             score: response.midterm_score,
+        //             // expected_score: response.midterm_score.expected_score
+        //             component_name: "Midterm"
 
-        //     }))
-        //     setInputName("")
+        //         },
+        //         bonus_score: response.bonus_score,
+        //         status: response.status
+        //     }
+        //     dispatch(addSubject(newSubject))
         //     bottomSheetRef.current?.close()
+        //     onAddSuccess()
         // }
         // else {
-        //     console.log("error")
+        //     console.log('error')
         //     bottomSheetRef.current?.close()
+        //     onAddFailed()
         // }
+
     }
 
     const buildInputName = React.useCallback(() => {
@@ -189,7 +189,7 @@ const AddCourseSheet = ({
                 color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
             }}
         />
-    }, [isDarkMode])
+    }, [isDarkMode, inputName])
 
 
     const buildInputDescription = React.useCallback(() => {
@@ -215,11 +215,11 @@ const AddCourseSheet = ({
                 color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
             }}
         />
-    }, [isDarkMode])
+    }, [isDarkMode, inputDescription])
 
     const findTargetById = React.useCallback((id: number) => {
         return targets.find(target => target.id == id)
-    }, [])
+    }, [targets])
 
     const buildPickTargets = React.useCallback(() => {
         return <TouchableOpacity className='   mt-3 justify-center rounded-lg  ' style={{
@@ -276,7 +276,8 @@ const AddCourseSheet = ({
             ref={bottomSheetRef}
             index={-1}
             enableOverDrag={true}
-            enablePanDownToClose={loading ? false : true}
+            enablePanDownToClose={true}
+            // enablePanDownToClose={loading ? false : true}
             // enableDynamicSizing={true}
             snapPoints={snapPoints}
             // handleComponent={null}
@@ -293,13 +294,27 @@ const AddCourseSheet = ({
             onChange={(index) => {
                 console.log(index)
                 if (index == -1) {
-
+                    setLoading(false)
                 }
             }}
         // keyboardBehavior="extend"
         // keyboardBlurBehavior="restore"
 
         >
+            <>
+                {
+                    loading && <View className='flex-1 absolute w-full h-full bg-white opacity-50 z-10 items-center justify-center'>
+                        <View className='items-center justify-center bg-black  rounded-lg'
+                            style={{
+                                width: screenHeight * 0.1,
+                                height: screenHeight * 0.1,
+                            }}
+                        >
+                            <ActivityIndicator size='small' color={'white'} />
+                        </View>
+                    </View>
+                }
+            </>
             <View className='flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]'>
                 <BottomSheetScrollView className='' showsVerticalScrollIndicator={false} automaticallyAdjustKeyboardInsets style={{}} keyboardShouldPersistTaps='handled'>
 

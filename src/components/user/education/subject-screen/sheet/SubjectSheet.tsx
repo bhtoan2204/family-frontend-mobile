@@ -48,13 +48,7 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
             }}
         >
             <View className='flex-col px-6 py-6 bg-[#fafafa] dark:bg-[#0A1220] justify-center'>
-                <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] dark:border-[#232A3D] rounded-lg shadow-sm bg-white dark:bg-[#232A3D]' onPress={() => {
-                    // bottomSheetRef.current?.close()
-                    setExpectedSheetRef.current?.open()
-                    // await handleTakePhoto()
-                }}>
-                    <Text className='text-lg font-semibold text-black dark:text-white'>Set expect score</Text>
-                </TouchableOpacity>
+
                 <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] dark:border-[#232A3D] rounded-lg shadow-sm bg-white dark:bg-[#232A3D]' onPress={() => {
                     // bottomSheetRef.current?.close()
                     setScoreSheetRef.current?.open()
@@ -63,23 +57,22 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                 }}>
                     <Text className='text-lg font-semibold text-black dark:text-white'>Set score</Text>
                 </TouchableOpacity>
-                {
-                    index !== -1 && index !== -2 && <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] dark:border-[#232A3D] rounded-lg shadow-sm bg-white dark:bg-[#232A3D]' onPress={async () => {
-                        // dispatch(clearScoreOfSubject({
-                        //     id_subject,
-                        //     id_education_progress,
-                        //     index,
-                        // }))
-                        // bottomSheetRef.current?.close()
-                        setNameSheetRef.current?.open()
-                    }}>
-                        <Text className='text-lg font-semibold' style={{
-                            color: iOSColors.systemBlue.defaultLight
-                        }}>Update name</Text>
-                    </TouchableOpacity>
-                }
                 <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] dark:border-[#232A3D] rounded-lg shadow-sm bg-white dark:bg-[#232A3D]' onPress={async () => {
-                    dispatch(clearScoreOfSubject({
+                    // dispatch(clearScoreOfSubject({
+                    //     id_subject,
+                    //     id_education_progress,
+                    //     index,
+                    // }))
+                    // bottomSheetRef.current?.close()
+                    setNameSheetRef.current?.open()
+                }}>
+                    <Text className='text-lg font-semibold' style={{
+                        color: iOSColors.systemBlue.defaultLight
+                    }}>Update name</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity className='h-16 flex-row items-center justify-center border-[1px] border-[#d1d1d1] dark:border-[#232A3D]  rounded-lg shadow-sm bg-white dark:bg-[#232A3D]' onPress={async () => {
+                    dispatch(deleteComponentScoreOfSubject({
                         id_subject,
                         id_education_progress,
                         index,
@@ -88,22 +81,8 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                 }}>
                     <Text className='text-lg font-semibold' style={{
                         color: iOSColors.systemRed.defaultDark
-                    }}>Clear score data</Text>
+                    }}>Delete component score</Text>
                 </TouchableOpacity>
-                {
-                    index !== -1 && index !== -2 && <TouchableOpacity className='h-16 flex-row items-center justify-center border-[1px] border-[#d1d1d1] dark:border-[#232A3D]  rounded-lg shadow-sm bg-white dark:bg-[#232A3D]' onPress={async () => {
-                        dispatch(deleteComponentScoreOfSubject({
-                            id_subject,
-                            id_education_progress,
-                            index,
-                        }))
-                        bottomSheetRef.current?.close()
-                    }}>
-                        <Text className='text-lg font-semibold' style={{
-                            color: iOSColors.systemRed.defaultDark
-                        }}>Delete component score</Text>
-                    </TouchableOpacity>
-                }
             </View>
             <PickExpectedScoreSheet
                 id_education_progress={id_education_progress}
@@ -114,6 +93,8 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                 score={subjectComponentData.expected_score!}
                 onSuccess={
                     () => {
+                        bottomSheetRef.current?.close()
+
                         toast.show("Expected score updated", {
                             type: "success",
                             duration: 2000,
@@ -123,6 +104,7 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                 }
                 onFailed={
                     () => {
+                        bottomSheetRef.current?.close()
                         toast.show("Failed to update expected score", {
                             type: "error",
                             duration: 2000,
@@ -140,6 +122,7 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                 score={subjectComponentData.score!}
                 onSuccess={
                     () => {
+                        bottomSheetRef.current?.close()
                         toast.show("Score updated", {
                             type: "success",
                             duration: 2000,
@@ -149,6 +132,7 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                 }
                 onFailed={
                     () => {
+                        bottomSheetRef.current?.close()
                         toast.show("Failed to update score", {
                             type: "error",
                             duration: 2000,
