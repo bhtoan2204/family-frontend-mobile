@@ -68,11 +68,21 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
 
   return (
     <View style={{flex: 1}}>
+<<<<<<< HEAD
       <Image
         source={{uri: family?.avatar}}
         resizeMode="contain"
         style={{width: '100%', height: '35%', borderRadius: 0}}
       />
+=======
+      <TouchableOpacity onPress={() => handlePressAvatar(family?.avatar)}>
+        <Image
+          source={{uri: family?.avatar}}
+          resizeMode="contain"
+          style={{width: '100%', height: '35%', borderRadius: 0}}
+        />
+      </TouchableOpacity>
+>>>>>>> parent of e611b09 (Revert "Merge branch 'RHYDER' into dev")
       <View style={{flex: 1, marginTop: -40}}>
         <View
           style={{

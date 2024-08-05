@@ -35,7 +35,7 @@ const screenWidth = Dimensions.get('window').width;
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {DailyExpense} from 'src/interface/expense/DailyExpense';
 import {setDate} from 'date-fns';
-import {getTranslate} from 'src/redux/slices/languageSlice';
+import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 
 const ExpenseScreen = ({navigation}: ExpenseScreenProps) => {
@@ -61,6 +61,7 @@ const ExpenseScreen = ({navigation}: ExpenseScreenProps) => {
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
+  const location = useSelector(selectLocale);
 
   const [dateTo, setDateTo] = useState(new Date());
   const [dateFrom, setDateFrom] = useState(() => {
@@ -125,7 +126,9 @@ const ExpenseScreen = ({navigation}: ExpenseScreenProps) => {
           <View>
             {item.financeExpenditureType ? (
               <Text style={[styles.expenseCategory, {color: color.text}]}>
-                {item.financeExpenditureType.expense_type_name}
+                {location === 'en'
+                  ? item.financeExpenditureType.expense_type_name
+                  : item.financeExpenditureType.expense_type_name_vn}
               </Text>
             ) : (
               <Text style={[styles.expenseCategory, {color: color.text}]}>

@@ -29,7 +29,8 @@ const Notification = ({navigation}) => {
   const language = useSelector(selectLocale);
 
   const handleNewMessage = async (message: Message) => {
-    if (message.senderId != profile.id_user) {
+    console.log(message);
+    if (message.senderId != profile?.id_user) {
       let notificationBody = message.content;
       switch (message.type) {
         case 'photo':
@@ -48,7 +49,7 @@ const Notification = ({navigation}) => {
 
       await Notifications.scheduleNotificationAsync({
         content: {
-          title: `${message.receiver.firstname} ${message.receiver.lastname}`,
+          title: `${message.senderInfo.firstname} ${message.senderInfo.lastname}`,
           body: notificationBody,
           data: {
             screen: 'ChatUser',
@@ -58,10 +59,10 @@ const Notification = ({navigation}) => {
         },
         trigger: {seconds: 1},
       });
-      setNotificationQueue(prevQueue => [
-        ...prevQueue,
-        {...message, isRead: false, category: 'User'},
-      ]);
+      // setNotificationQueue(prevQueue => [
+      //   ...prevQueue,
+      //   {...message, isRead: false, category: 'User'},
+      // ]);
     }
   };
 

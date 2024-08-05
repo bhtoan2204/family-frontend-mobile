@@ -7,21 +7,22 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.white,
     flex: 1,
-    
   },
   title: {
-    fontSize: screenHeight * 0.03,
-    color: COLORS.Rhino,
+    fontSize: 25,
+    fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: screenHeight * 0.02,
-    lineHeight: screenHeight * 0.045,
-    fontWeight: '600',
+    marginBottom: 20,
+  },
+  imageBackground: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 5,
+    overflow: 'hidden',
+    marginRight: 20,
   },
   text: {
-    fontSize: screenHeight * 0.018,
-    lineHeight: screenHeight * 0.03,
-    fontWeight: '600',
-    color: COLORS.PaleAqua,
+    fontSize: 15,
     textAlign: 'center',
   },
   /** Hero */
@@ -60,23 +61,41 @@ const styles = StyleSheet.create({
     color: COLORS.DenimBlue,
   },
   button: {
-    backgroundColor: COLORS.Rhino,
-    paddingVertical: 12,
-    paddingHorizontal: screenWidth * 0.3,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 12,
-    width: screenWidth * 0.9,
-    alignSelf: 'center',
+    padding: 10,
+    paddingHorizontal: 25,
+    borderRadius: 5,
   },
   buttonText: {
-    fontSize: screenHeight * 0.018,
-    fontWeight: '500',
-    color: COLORS.white,
+    fontWeight: 'semibold',
+    color: 'white',
   },
-  icon: { left: screenWidth * 0.3 },
-
-  backButton:{color: COLORS.Rhino,},
+  icon: {
+    marginLeft: 5,
+  },
+  imageContainer: {position: 'relative', alignSelf: 'center', marginTop: 40},
+  image2: {
+    width: 87,
+    height: 218,
+    alignSelf: 'flex-start',
+    bottom: 155,
+    right: 15,
+  },
+  paging: {width: 81, height: 27, alignSelf: 'center'},
+  buttonGroup: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 100,
+  },
+  skip: {padding: 10, paddingHorizontal: 30},
+  calendarImage: {
+    width: 266,
+    height: 173,
+    alignSelf: 'center',
+    marginTop: 40,
+    left: 20,
+  },
 });
 
 export default styles;
