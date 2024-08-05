@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 import CalendarServices from 'src/services/apiclient/CalendarService';
 import {CreateEventScreenProps} from 'src/navigation/NavigationTypes';
 import styles from './styles';
@@ -414,12 +414,11 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
                       {translate('start')}
                     </Text>
                   </View>
-                  <DateTimePicker
+                  <RNDateTimePicker
                     value={chosenDateStart}
                     mode={isAllDay ? 'date' : 'datetime'}
                     display="default"
                     onChange={handleDateChangeStart}
-                    textColor="white"
                   />
                 </View>
                 <View
@@ -442,7 +441,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
                       {translate('end')}
                     </Text>
                   </View>
-                  <DateTimePicker
+                  <RNDateTimePicker
                     value={chosenDateEnd}
                     mode={isAllDay ? 'date' : 'datetime'}
                     display="default"
@@ -525,7 +524,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
                 styles.row,
                 {
                   backgroundColor: color.background,
-                  borderBottomWidth: 1,
+                  borderBottomWidth: 1.5,
                   borderBottomColor: '#ccc',
                   paddingVertical: 5,
                   alignItems: 'center',
@@ -538,7 +537,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
                 size={30}
                 style={{color: color.text}}
               />
-              <Text style={{right: 30, fontSize: 16, color: color.text}}>
+              <Text style={{marginRight: 30, fontSize: 16, color: color.text}}>
                 {translate('end_repeat')}
               </Text>
               <DropDownPicker
@@ -609,7 +608,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
               <Text style={{right: 30, fontSize: 16, color: color.text}}>
                 {translate('End time')}
               </Text>
-              <DateTimePicker
+              <RNDateTimePicker
                 value={repeatEndDate}
                 mode="date"
                 display="default"
@@ -638,33 +637,38 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
               <Text style={{right: 30, fontSize: 16, color: color.text}}>
                 {translate('End Count')}
               </Text>
-              <TouchableOpacity onPress={handleDecrease}>
-                <MaterialCommunityIcons
-                  name="minus-circle"
-                  size={30}
-                  style={[styles.icon, {marginRight: 5}]}
-                />
-              </TouchableOpacity>
-              <Text style={{color: color.text}}>{count}</Text>
-              <TouchableOpacity onPress={handleIncrease}>
-                <MaterialCommunityIcons
-                  name="plus-circle"
-                  size={30}
-                  style={[styles.icon, {marginLeft: 5}]}
-                />
-              </TouchableOpacity>
+              <View
+                style={{flexDirection: 'row', alignItems: 'center', gap: 30}}>
+                <TouchableOpacity onPress={handleDecrease}>
+                  <MaterialCommunityIcons
+                    name="minus-circle"
+                    size={30}
+                    style={[styles.icon, {marginRight: 5}]}
+                  />
+                </TouchableOpacity>
+                <Text style={{color: color.text}}>{count}</Text>
+                <TouchableOpacity onPress={handleIncrease}>
+                  <MaterialCommunityIcons
+                    name="plus-circle"
+                    size={30}
+                    style={[styles.icon, {marginLeft: 5}]}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
           )}
 
-          <ColorPicker
-            navigation={navigation}
-            id_Family={family?.id_Family}
-            selectedColorIndex={selectedColorIndex}
-            setSelectedColorIndex={setSelectedColorIndex}
-            setEventCategory={setEventCategory}
-            setAvailableColors={setAvailableColors}
-            setSelectedColor={setSelectedColor} // Pass the setter function
-          />
+          <View>
+            <ColorPicker
+              navigation={navigation}
+              id_Family={family?.id_Family}
+              selectedColorIndex={selectedColorIndex}
+              setSelectedColorIndex={setSelectedColorIndex}
+              setEventCategory={setEventCategory}
+              setAvailableColors={setAvailableColors}
+              setSelectedColor={setSelectedColor} // Pass the setter function
+            />
+          </View>
 
           <View style={[styles.formAction, {paddingVertical: 10, padding: 20}]}>
             <TouchableOpacity onPress={handleSubmit}>
