@@ -114,7 +114,7 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({
           <View style={{justifyContent: 'center', flexDirection: 'row'}}>
             <View style={styles.rowInfo}>
               <Text style={styles.expenseAmount}>
-                -{formatCurrency(item.amount)}
+                +{formatCurrency(item.amount)}
               </Text>
               <Text style={[styles.expenseDate, {color: color.textSubdued}]}>
                 {formatDate(item.income_date)}
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   expenseAmount: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: 'red',
+    color: 'green',
   },
   expenseName: {
     fontSize: 14,

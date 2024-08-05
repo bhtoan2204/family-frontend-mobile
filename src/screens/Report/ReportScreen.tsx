@@ -366,7 +366,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
               transform: [{scale: scaleAnim}],
             },
           ]}>
-          - {formatCurrency(sumExpense)}
+          -{formatCurrency(sumExpense)}
         </Animated.Text>
       </TouchableOpacity>
       <TouchableOpacity

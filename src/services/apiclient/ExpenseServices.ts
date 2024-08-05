@@ -322,7 +322,6 @@ const ExpenseServices = {
     uri?: string | null,
   ) => {
     try {
-      console.log(id_expense_type);
       const createFormData = (uri: string): FormData => {
         let formData = new FormData();
         formData.append('id_family', String(id_family));
@@ -426,15 +425,41 @@ const ExpenseServices = {
     uri?: string,
   ) => {
     try {
+      console.log(
+        id_expenditure,
+        id_family,
+        id_created_by,
+        id_expense_type,
+        amount,
+        description,
+        expenditure_date,
+      );
+
       const createFormData = (uri?: string): FormData => {
         let formData = new FormData();
-        formData.append('id_expenditure', String(id_expenditure));
-        formData.append('id_family', String(id_family));
-        formData.append('id_created_by', String(id_created_by));
-        formData.append('id_expense_type', id_expense_type.toString());
-        formData.append('amount', String(amount));
-        formData.append('expenditure_date', expenditure_date);
-        formData.append('description', description);
+
+        // Chỉ thêm các trường không phải null hoặc undefined vào FormData
+        if (id_expenditure !== null) {
+          formData.append('id_expenditure', String(id_expenditure));
+        }
+        if (id_family !== null) {
+          formData.append('id_family', String(id_family));
+        }
+        if (id_created_by !== null) {
+          formData.append('id_created_by', String(id_created_by));
+        }
+        if (id_expense_type !== null) {
+          formData.append('id_expense_type', String(id_expense_type));
+        }
+        if (amount !== null) {
+          formData.append('amount', String(amount));
+        }
+        if (expenditure_date !== null) {
+          formData.append('expenditure_date', String(expenditure_date));
+        }
+        if (description !== null) {
+          formData.append('description', String(description));
+        }
 
         if (uri) {
           let filename = uri.split('/').pop()!;

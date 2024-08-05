@@ -78,11 +78,11 @@ const PeopleScreen = ({navigation}: ChatScreenProps) => {
 
   return (
     <SafeAreaView
-      style={[styles.container, {backgroundColor: color.background}]}>
-      <View style={[styles.header, {backgroundColor: color.background}]}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+      style={[styles.container, {backgroundColor: color.chatBackground}]}>
+      <View style={[styles.header, {backgroundColor: color.chatBackground}]}>
+        {/* <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={24} color={color.text} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Text style={[styles.headerTitle, {color: color.text}]}>
           {translate('Contacts')}
         </Text>
@@ -91,10 +91,7 @@ const PeopleScreen = ({navigation}: ChatScreenProps) => {
         <View
           style={[styles.searchContainer, {backgroundColor: color.searchChat}]}>
           <TextInput
-            style={[
-              styles.searchInput,
-              {backgroundColor: color.searchChat, color: color.text},
-            ]}
+            style={[styles.searchInput, {backgroundColor: color.searchChat}]}
             placeholder={translate('SEARCH')}
             placeholderTextColor={color.text}
             value={searchQuery}
@@ -154,7 +151,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginLeft: 115,
+    marginLeft: 140,
   },
   loadingIndicator: {
     flex: 1,

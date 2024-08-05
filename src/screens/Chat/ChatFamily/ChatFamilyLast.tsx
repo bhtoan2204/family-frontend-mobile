@@ -358,11 +358,10 @@ const ChatFamilyLastScreen = ({
           bottom: 0,
           left: 0,
           right: 0,
-          backgroundColor: color.background,
+          backgroundColor: color.white,
         }}>
-        <View style={[styles.header, {backgroundColor: color.background}]}>
-          <View
-            style={[styles.receiverInfo, {backgroundColor: color.background}]}>
+        <View style={[styles.header, {backgroundColor: color.white}]}>
+          <View style={[styles.receiverInfo, {backgroundColor: color.white}]}>
             <View
               style={{
                 flexDirection: 'row',
@@ -421,13 +420,10 @@ const ChatFamilyLastScreen = ({
         </View>
         {messages ? (
           <FlatList
-            style={[
-              styles.messagesContainer,
-              {backgroundColor: color.background},
-            ]}
+            style={[styles.messagesContainer, {backgroundColor: color.white}]}
             contentContainerStyle={[
               styles.contentContainer,
-              {backgroundColor: color.chatBackground},
+              {backgroundColor: color.white},
             ]}
             data={messages}
             inverted
@@ -457,10 +453,7 @@ const ChatFamilyLastScreen = ({
             }}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View
-                style={[
-                  styles.introContainer,
-                  {backgroundColor: color.background},
-                ]}>
+                style={[styles.introContainer, {backgroundColor: color.white}]}>
                 {LastMessageFamily && (
                   <>
                     <View
@@ -491,7 +484,7 @@ const ChatFamilyLastScreen = ({
                 </Text>
                 <View
                   style={{
-                    backgroundColor: color.background,
+                    backgroundColor: color.white,
                     minHeight: 470,
                   }}></View>
               </View>
@@ -501,7 +494,7 @@ const ChatFamilyLastScreen = ({
         <View
           style={[
             styles.inputContainer,
-            {backgroundColor: color.background},
+            {backgroundColor: color.white},
             keyboardIsOpen && {paddingBottom: 20},
           ]}>
           <TouchableOpacity
@@ -513,7 +506,7 @@ const ChatFamilyLastScreen = ({
             <TextInput
               style={[
                 styles.input,
-                {backgroundColor: color.white, color: color.text},
+                {backgroundColor: color.background, color: color.text},
                 {flex: 1},
               ]}
               value={message}

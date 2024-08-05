@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'white',
     width: '100%',
-    borderRadius: 20,
+    borderRadius: 0,
   },
   menuItem: {
     paddingVertical: 5,

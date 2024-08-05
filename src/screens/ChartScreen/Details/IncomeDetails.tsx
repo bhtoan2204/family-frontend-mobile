@@ -137,19 +137,21 @@ const IncomeDetailScreen = ({navigation}: IncomeDetailScreenProps) => {
           type: 'success',
           duration: 3000,
         });
+        setIsEditing(false);
       } else {
         Toast.show('Selected category not found', {
           type: 'danger',
           duration: 3000,
         });
       }
-      setLoading(false);
     } catch (error) {
       console.error('Error updating income:', error);
       Toast.show('An error occurred while updating income', {
         type: 'danger',
         duration: 3000,
       });
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };

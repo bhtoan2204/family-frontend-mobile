@@ -11,16 +11,14 @@ const DeleteButton = ({onPress}) => {
 
   return (
     <View style={styles.buttonContainer}>
-      <TouchableOpacity
-        style={[styles.button, {backgroundColor: 'red'}]}
-        onPress={onPress}>
+      <TouchableOpacity style={[styles.button]} onPress={onPress}>
         {/* <Ionicons
           name="trash-outline"
           size={28}
           color={'white'}
           style={styles.icon}
         /> */}
-        <Text style={[styles.deleteText, {color: 'white'}]}>
+        <Text style={[styles.deleteText, {color: 'red'}]}>
           {translate('Delete')}
         </Text>
       </TouchableOpacity>

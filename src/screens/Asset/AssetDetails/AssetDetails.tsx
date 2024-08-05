@@ -29,7 +29,7 @@ import {useThemeColors} from 'src/hooks/useThemeColor';
 import {Feather} from '@expo/vector-icons';
 import {ScrollView} from 'react-native-gesture-handler';
 import styles from './styles';
-import { Toast } from 'react-native-toast-notifications';
+import {Toast} from 'react-native-toast-notifications';
 
 const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
   const asset = useSelector(selectSelectedAsset);
@@ -313,14 +313,14 @@ const AssetDetailScreen = ({route, navigation}: AssetDetailScreenProps) => {
             {isEditing ? (
               <>
                 <TouchableOpacity
-                  style={[styles.button, styles.saveButton]}
-                  onPress={handleSavePress}>
-                  <Text style={styles.buttonText}>{translate('Save')}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
                   style={[styles.button]}
                   onPress={handleCancel}>
                   <Text style={styles.buttonText}>{translate('Cancel')}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.button, styles.saveButton]}
+                  onPress={handleSavePress}>
+                  <Text style={styles.buttonText}>{translate('Save')}</Text>
                 </TouchableOpacity>
               </>
             ) : (
