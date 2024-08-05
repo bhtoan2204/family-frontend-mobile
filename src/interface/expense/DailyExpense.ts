@@ -41,4 +41,17 @@ export interface DailyExpense {
     birthdate: string;
     is_banned: boolean;
   };
+  utilities: Utility;
+}
+
+export interface Utility {
+  id_utility: number;
+  id_family: number;
+  id_utilities_type: number;
+  description: string;
+  image_url: string | null;
+  value: number;
+  id_expenditure: number;
+  created_at: string;
+  updated_at: string;
 }

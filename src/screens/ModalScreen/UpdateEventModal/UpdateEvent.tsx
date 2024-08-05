@@ -23,6 +23,8 @@ import {
   addEvent,
   getOnly,
   selectSelectedEvent,
+  setSelectedDate,
+  setSelectedEvent,
   updateEvent,
 } from 'src/redux/slices/CalendarSlice';
 import Custom from './Custom';
@@ -39,6 +41,7 @@ import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {TEXTS} from 'src/constants';
 import {Toast} from 'react-native-toast-notifications';
+import moment from 'moment';
 
 const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
   navigation,
@@ -206,26 +209,20 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
         eventDetails2.end_timezone,
       );
 
-      Alert.alert('Inform', 'Successfully', [
-        {
-          text: 'OK',
-          onPress: () => {
-            navigation.goBack();
-          },
-        },
-      ]);
       dispatch(updateEvent(message2));
       console.log(message1);
       dispatch(setSelectedEvent(message2));
 
       dispatch(addEvent(message1));
-      setSelectedDate(
-        moment(new Date(message1.time_start)).format('YYYY-MM-DD'),
-      ),
-        Toast.show('Edit this event successfully', {
-          type: 'success',
-        });
-      // navigation.goBack();
+      dispatch(
+        setSelectedDate(
+          moment(new Date(message1.time_start)).format('YYYY-MM-DD'),
+        ),
+      );
+      Toast.show('Edit this event successfully', {
+        type: 'success',
+      });
+      navigation.goBack();
     } catch (error) {
       try {
         await CalendarServices.DeleteEvent(eventDetails2.id_calendar);

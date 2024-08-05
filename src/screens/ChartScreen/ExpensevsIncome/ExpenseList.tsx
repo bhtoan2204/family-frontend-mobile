@@ -146,6 +146,19 @@ const ExpenseScreen = ({navigation}: ExpenseScreenProps) => {
                 </View>
               )}
             </View>
+            <View style={styles.row}>
+              {item.utilities && (
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={{color: 'gray'}}>
+                    {translate('Utility category: ')}:{' '}
+                  </Text>
+
+                  <Text style={styles.expenseName}>
+                    {item.utilities.description}
+                  </Text>
+                </View>
+              )}
+            </View>
             <Text style={styles.expenseDescription}>{item.description}</Text>
           </View>
           <View style={{justifyContent: 'center', flexDirection: 'row'}}>

@@ -426,6 +426,15 @@ const ExpenseServices = {
     uri?: string,
   ) => {
     try {
+      console.log(
+        id_expenditure,
+        id_family,
+        id_created_by,
+        id_expense_type,
+        amount,
+        expenditure_date,
+        description,
+      );
       const createFormData = (uri?: string): FormData => {
         let formData = new FormData();
         formData.append('id_expenditure', String(id_expenditure));
@@ -433,8 +442,8 @@ const ExpenseServices = {
         formData.append('id_created_by', String(id_created_by));
         formData.append('id_expense_type', id_expense_type.toString());
         formData.append('amount', String(amount));
-        formData.append('expenditure_date', expenditure_date);
-        formData.append('description', description);
+        formData.append('expenditure_date', String(expenditure_date));
+        formData.append('description', String(description));
 
         if (uri) {
           let filename = uri.split('/').pop()!;
