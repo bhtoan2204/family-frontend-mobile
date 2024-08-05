@@ -203,11 +203,6 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
             </View>
             <View className='flex-1 bg-[#f7f7f7] dark:bg-[#0A1220]'>
                 <>
-                    <TouchableOpacity onPress={() => {
-                        addProgressBottomSheetRef.current?.expand()
-                    }}>
-                        <Text>hi</Text>
-                    </TouchableOpacity>
                     {
                         loading ? <>
                             <View className='flex-1 justify-center items-center'>

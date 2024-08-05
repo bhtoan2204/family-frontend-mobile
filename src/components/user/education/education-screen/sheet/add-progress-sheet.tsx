@@ -121,7 +121,7 @@ const AddProgressSheet = ({
                 progress_notes: res.progress_notes,
                 school_info: res.school_info,
                 subjects: [],
-                user: {
+                users: {
                     avatar: memberData?.user.avatar || '',
                     birthdate: memberData?.user.birthdate || null,
                     firstname: memberData?.user.firstname || '',
