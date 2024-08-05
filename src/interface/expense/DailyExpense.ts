@@ -41,4 +41,5 @@ export interface DailyExpense {
     birthdate: string;
     is_banned: boolean;
   };
+  utilities: {};
 }

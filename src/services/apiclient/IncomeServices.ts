@@ -261,7 +261,6 @@ const IncomeServices = {
         {
           id_income,
           id_family,
-          id_created_by,
           id_income_source,
           amount,
           income_date,

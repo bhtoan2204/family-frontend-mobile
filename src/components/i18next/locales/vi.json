@@ -457,5 +457,9 @@
   "Family avatar changed successfully": "Đổi ảnh đại diện gia đình thành công",
   "Failed to change family avatar": "Đổi ảnh đại diện gia đình thất bại",
   "Create event successfully": "Tạo sự kiện thành công",
-  "Add member": "Thêm thành viên"
+  "Add member": "Thêm thành viên",
+  "confirmDeleteChat": "Bạn có chắc chắn muốn xóa tin nhắn này không?",
+
+  "deleteSuccess": "Xóa thành công",
+  "deleteError": "Lỗi khi xóa tin nhắn"
 }

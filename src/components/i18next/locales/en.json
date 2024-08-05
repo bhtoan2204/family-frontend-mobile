@@ -365,7 +365,7 @@
   "Total income for": "Total income for",
   "EnterOTP": "Enter OTP Code",
   "Submit OTP": "Submit",
-  "AssetDetail2": "Here you can view a summary of your family's assets, including current status and recent changes.",
+  "AssetDetail2": "Here you can view a summary of your family's assets.",
   "Just now": "Just now",
   "minutes": "minutes",
   "minute": "minute",
@@ -444,5 +444,9 @@
 
   "Family avatar changed successfully": "Family avatar changed successfully",
   "Failed to change family avatar": "Failed to change family avatar",
-  "Create event successfully": "Create event successfully"
+  "Create event successfully": "Create event successfully",
+  "confirmDeleteChat": "Are you sure you want to delete this message?",
+
+  "deleteSuccess": "Deleted successfully",
+  "deleteError": "Error deleting message"
 }

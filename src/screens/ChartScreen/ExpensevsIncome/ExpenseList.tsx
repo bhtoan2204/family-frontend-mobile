@@ -135,15 +135,24 @@ const ExpenseScreen = ({navigation}: ExpenseScreenProps) => {
                 {translate('Other')}
               </Text>
             )}
+            {item.users && (
+              <View style={styles.row}>
+                <Text style={{color: 'gray'}}>{translate('Create by')}: </Text>
 
-            <View style={styles.row}>
-              <Text style={{color: 'gray'}}>{translate('Create by')}: </Text>
-              {item.users && (
                 <Text style={styles.expenseName}>
                   {item.users.firstname} {item.users.lastname}
                 </Text>
-              )}
-            </View>
+              </View>
+            )}
+            {item.utilities && (
+              <View style={styles.row}>
+                {/* <Text style={{color: 'gray'}}>
+                  {translate('Category utility')}:{' '}
+                </Text> */}
+
+                <Text style={styles.expenseName}>{/* {item} */}</Text>
+              </View>
+            )}
             <Text style={styles.expenseDescription}>{item.description}</Text>
           </View>
           <View style={{justifyContent: 'center', flexDirection: 'row'}}>

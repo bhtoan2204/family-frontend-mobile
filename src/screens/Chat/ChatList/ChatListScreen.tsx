@@ -32,6 +32,7 @@ import {setFamilyLastMessage} from 'src/redux/slices/MessageFamily';
 import {selectProfile} from 'src/redux/slices/ProfileSclice';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
+import {Toast} from 'react-native-toast-notifications';
 
 const ChatListScreen = ({
   navigation,
@@ -193,7 +194,7 @@ const ChatListScreen = ({
   const onDelete = async message => {
     Alert.alert(
       translate('confirmDelete'),
-      translate('confirmDeleteMessage'),
+      translate('confirmDeleteChat'),
       [
         {
           text: translate('cancel'),
@@ -203,15 +204,28 @@ const ChatListScreen = ({
           text: translate('delete'),
           onPress: async () => {
             try {
-              await ChatServices.removeMessage(receiverId, message._id);
-              Alert.alert(
-                translate('success'),
-                translate('deleteSuccessMessage'),
+              const respone = await ChatServices.removeMessage(
+                receiverId,
+                message._id,
               );
-              //await handleGetCalendar();
+              if (respone) {
+                Toast.show(translate('deleteSuccess'), {
+                  type: 'success',
+                  duration: 2000,
+                });
+                fetchData();
+              } else {
+                Toast.show(translate('deleteError'), {
+                  type: 'danger',
+                  duration: 2000,
+                });
+              }
             } catch (error) {
               console.error('Error deleting event:', error);
-              Alert.alert(translate('error'), translate('deleteErrorMessage'));
+              Toast.show('Delete deleteError', {
+                type: 'danger',
+                duration: 2000,
+              });
             }
           },
         },
