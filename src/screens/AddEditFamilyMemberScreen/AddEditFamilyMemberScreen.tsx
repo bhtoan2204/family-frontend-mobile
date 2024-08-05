@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   Alert,
   Image,
-  ImageBackground,
   Keyboard,
   KeyboardAvoidingView,
   Linking,
@@ -34,13 +33,11 @@ import * as Clipboard from 'expo-clipboard';
 import {Toast} from 'react-native-toast-notifications';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
-import {getIsDarkMode} from 'src/redux/slices/DarkModeSlice';
 
 const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
   navigation,
   route,
 }) => {
-  const isDarkMode = useSelector(getIsDarkMode);
   const {id_family, phone} = route.params || {};
   const [email, setEmail] = useState('');
   const [p_phone, setPhone] = useState(phone);
@@ -174,9 +171,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
       console.log('Error sharing:', error);
     }
   };
-  const button = !isDarkMode
-    ? require('../../assets/images/button-rhino.png')
-    : require('../../assets/images/button-blue-demin.png');
+
   return (
     <View style={[styles.container, {backgroundColor: color.background}]}>
       <KeyboardAvoidingView
@@ -193,7 +188,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                     forceUpdate: new Date().getTime(),
                   })
                 }>
-                <Icon name="chevron-back" size={34} color={color.icon} />
+                <Ionicons name="close" size={34} color={color.text} />
               </TouchableOpacity>
               <Text style={[styles.title, {color: color.text}]}>
                 {t('addFamilyMemberTitle')}
@@ -204,11 +199,10 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
               source={require('src/assets/images/add-family-member.png')}
               resizeMode="stretch"
               style={{
-                width: 380,
+                width: 360,
                 height: 262,
                 alignSelf: 'center',
                 marginVertical: 0,
-                marginBottom: 10,
               }}
             />
             <View style={styles.form}>
@@ -221,7 +215,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                       position: 'absolute',
                       zIndex: 1,
                       marginLeft: 10,
-                      color: color.icon,
+                      color: COLORS.Rhino,
                     }}
                   />
                   <TextInput
@@ -229,7 +223,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                     autoCorrect={false}
                     keyboardType="phone-pad"
                     placeholder={p_phone ? p_phone : t('enterPhoneNumber')}
-                    placeholderTextColor={color.text}
+                    placeholderTextColor={color.textSubdued}
                     style={[
                       styles.inputPhone,
                       {
@@ -256,7 +250,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                     zIndex: 1,
                     marginLeft: 20,
                     top: 10,
-                    color: color.icon,
+                    color: COLORS.Rhino,
                   }}
                 />
                 <TextInput
@@ -264,7 +258,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                   autoCorrect={false}
                   keyboardType="email-address"
                   placeholder={t('familyMemberEmailPlaceholder')}
-                  placeholderTextColor={color.text}
+                  placeholderTextColor={color.textSubdued}
                   style={[
                     styles.inputControl,
                     {
@@ -276,18 +270,15 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
                   onChangeText={setEmail}
                 />
               </View>
-              <ImageBackground
-                source={button}
-                style={styles.optionEmailButton}
-                resizeMode="stretch">
-                <TouchableOpacity
-                  style={styles.selectedOption}
-                  onPress={handleAddMember}>
-                  <Text style={styles.selectedOptionText}>
-                    {t('Add member')}
-                  </Text>
-                </TouchableOpacity>
-              </ImageBackground>
+              <View style={styles.addButtonContainer}>
+                <CustomButton
+                  style={styles.btn}
+                  title={t('Add member')}
+                  filled
+                  onPress={handleAddMember}
+                  backgroundImage={require('src/assets/images/button.png')}
+                />
+              </View>
 
               <Text
                 style={[styles.inviteLinkLabel, {color: 'gray', fontSize: 17}]}>

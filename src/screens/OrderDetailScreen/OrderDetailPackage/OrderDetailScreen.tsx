@@ -91,7 +91,7 @@ const OrderDetailScreen = ({route, navigation}: OrderDetailScreenProps) => {
 
   return (
     <GestureHandlerRootView
-      style={{backgroundColor: color.whiteBackground, height: '100%'}}>
+      style={{backgroundColor: color.background, height: '100%'}}>
       <KeyboardAvoidingView
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -195,7 +195,8 @@ const OrderDetailScreen = ({route, navigation}: OrderDetailScreenProps) => {
                       style={[
                         styles.radioWrapper,
                         {
-                          borderColor: color.border,
+                          backgroundColor: color.white,
+                          borderColor: color.background,
                         },
                         isActive && styles.radioActive,
                         isFirst && styles.radioFirst,
@@ -209,7 +210,7 @@ const OrderDetailScreen = ({route, navigation}: OrderDetailScreenProps) => {
                         <View
                           style={[
                             styles.radio,
-                            {backgroundColor: color.background},
+                            {backgroundColor: color.white},
                           ]}>
                           <View
                             style={[
@@ -243,10 +244,7 @@ const OrderDetailScreen = ({route, navigation}: OrderDetailScreenProps) => {
               <View
                 style={[
                   styles.inputContainer,
-                  {
-                    backgroundColor: color.background,
-                    borderColor: color.border,
-                  },
+                  {backgroundColor: color.background},
                 ]}>
                 <Icon
                   name="pricetag"
@@ -263,7 +261,7 @@ const OrderDetailScreen = ({route, navigation}: OrderDetailScreenProps) => {
                     },
                   ]}
                   placeholder={translate('Enter discount code')}
-                  placeholderTextColor={color.text}
+                  placeholderTextColor={color.placeholderText}
                   onChangeText={handleDiscountCodeChange}
                   value={discountCode}
                 />

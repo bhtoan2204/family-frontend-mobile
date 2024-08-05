@@ -62,7 +62,7 @@ const ResetPasswordScreen = ({navigation}: ResetPasswordScreenProps) => {
       const response = await AuthServices.resetPassword(payload);
       console.log(response);
 
-      if (response.message === t('PasswordHasNotBeenReset')) {
+      if (response.message === 'Password has not been reset') {
         Alert.alert(t('error'), t('passwordResetFailed'));
         navigation.navigate('LoginScreen');
       } else {
@@ -70,7 +70,10 @@ const ResetPasswordScreen = ({navigation}: ResetPasswordScreenProps) => {
         navigation.navigate('LoginScreen');
       }
     } catch (error) {
-      Alert.alert(t('error'), t('AnErrorOccurredWhileResettingThePassword'));
+      Alert.alert(
+        t('error'),
+        'An error occurred while resetting the password.',
+      );
       console.log(error);
     }
   };

@@ -436,10 +436,6 @@
   "Enter discount code": "Nhập mã giảm giá",
   "Time": "Thời gian",
   "All Day": "Cả ngày",
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
->>>>>>> parent of e611b09 (Revert "Merge branch 'RHYDER' into dev")
   "AnyAdditionQuestions": "Bạn có câu hỏi nào khác không?",
   "DontHesitate": "Đừng ngần ngại, hãy liên hệ với chúng tôi!",
   "FrequentlyAskedQuestions": "Câu hỏi thường gặp",
@@ -454,12 +450,7 @@
   "LandingPage3Title": "Luôn kết nối và cập nhật",
   "LandingPage3Description": "Trò chuyện, tạo danh sách và nhận tin tức mới nhất cho gia đình của bạn.",
   "NO_FAMILY_MESSAGE": "Không có dữ liệu gia đình",
-<<<<<<< HEAD
   "ADD_FAMILY_PROMPT": "Bấm nút đang nhấp nháy để thêm gia đình.",
-=======
-  "ADD_FAMILY_PROMPT": "Bấm nút đang nhấp nháy để thêm gia đình."
-=======
->>>>>>> parent of e611b09 (Revert "Merge branch 'RHYDER' into dev")
   "Leave family successfully": "Rời khỏi gia đình thành công",
   "Fail to leave family": "Rời khỏi gia đình thất bại",
 
@@ -467,8 +458,4 @@
   "Failed to change family avatar": "Đổi ảnh đại diện gia đình thất bại",
   "Create event successfully": "Tạo sự kiện thành công",
   "Add member": "Thêm thành viên"
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
->>>>>>> parent of e611b09 (Revert "Merge branch 'RHYDER' into dev")
 }

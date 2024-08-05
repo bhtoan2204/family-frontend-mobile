@@ -37,8 +37,8 @@ const ForgotPassword = ({navigation}: ForgotPasswordScreenProps) => {
     : require('../../assets/images/forgot-password-dark.png');
 
   const button = !isDarkMode
-    ? require('../../assets/images/button-rhino.png')
-    : require('../../assets/images/button-blue-demin.png');
+    ? require('../../assets/images/button-blue-demin.png')
+    : require('../../assets/images/button-rhino.png');
   return (
     <KeyboardAvoidingView
       style={[styles.keyboardView, {backgroundColor: color.background}]}

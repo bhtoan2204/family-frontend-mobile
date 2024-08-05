@@ -18,7 +18,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {AntDesign, Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ColorPicker from './ColorPicker';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Custom from './Custom';
 import {RRule, RRuleStrOptions} from 'rrule';
 import {
@@ -33,6 +33,7 @@ import {TEXTS} from 'src/constants';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {Toast} from 'react-native-toast-notifications';
+import {addEvent} from 'src/redux/slices/CalendarSlice';
 
 const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   navigation,
@@ -57,15 +58,15 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   const [repeatEndDate, setRepeatEndDate] = useState(new Date());
   const family = useSelector(selectSelectedFamily);
   const [count, setCount] = useState(1);
-
-  const translate = useSelector(getTranslate);
-  const color = useThemeColors();
-  const [selectedColor, setSelectedColor] = useState<string>('#2A475E');
   const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(
     null,
   );
-  const [eventCategory, setEventCategory] = useState(null);
-  const [availableColors, setAvailableColors] = useState([]);
+  const [eventCategory, setEventCategory] = useState<CategoryEvent | null>(
+    null,
+  );
+  const translate = useSelector(getTranslate);
+  const color = useThemeColors();
+  const dispatch = useDispatch();
   const handleDecrease = () => {
     setCount(prevCount => Math.max(1, prevCount - 1));
   };
@@ -219,8 +220,12 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
         eventDetails.id_family,
       );
 
-      Toast.show(message, {
+      dispatch(addEvent(message));
+      Toast.show('Create event successfully', {
         type: 'success',
+      });
+      navigation.navigate('CalendarScreen', {
+        forceUpdate: new Date().getTime(),
       });
     } catch (error) {
       Toast.show(translate('An error occurred while creating the event.'), {
@@ -281,174 +286,150 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
 
   return (
     <KeyboardAvoidingView
-      style={{flex: 1}}
+      style={{flex: 1, backgroundColor: color.background}}
       behavior={Platform.OS === 'ios' ? 'padding' : 60}>
       <View
         style={[styles.modalContainer, {backgroundColor: color.background}]}>
         <ScrollView
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}>
-          <View style={{backgroundColor: selectedColor, padding: 20}}>
+          <View
+            style={{
+              backgroundColor: color.background,
+              borderBottomWidth: 1,
+              borderBottomColor: '#ccc',
+              paddingVertical: 10,
+            }}>
+            <View style={styles.row}>
+              <Text style={[styles.headerTitle, {color: color.text}]}>
+                {translate('add_new_event')}
+              </Text>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Icon name="close" size={30} color={color.text} />
+              </TouchableOpacity>
+            </View>
+
+            <View>
+              <Text style={{color: color.textSubdued, fontSize: 16}}>
+                {translate('title')}
+              </Text>
+              <TextInput
+                style={[
+                  styles.input1,
+                  {backgroundColor: color.background, color: color.text},
+                ]}
+                placeholder={translate('enter_title')}
+                value={title}
+                onChangeText={setTitle}
+              />
+            </View>
+          </View>
+          <View style={styles.containerEnter}>
             <View
               style={{
-                backgroundColor: 'transparent',
+                ...styles.column,
+                backgroundColor: color.background,
                 borderBottomWidth: 1,
-                borderBottomColor: '#fff',
+                borderBottomColor: '#ccc',
                 paddingVertical: 10,
-                marginTop: 20,
               }}>
-              <View style={[styles.row, {marginBottom: 20}]}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <Icon name="chevron-back" size={30} color="#fff" />
-                </TouchableOpacity>
-                <Text style={[styles.headerTitle, {color: '#fff'}]}>
-                  {translate('add_new_event')}
-                </Text>
+              <View style={[styles.row, {alignItems: 'center'}]}>
+                <Icon name="location" size={28} color={color.text} />
               </View>
-
-              <View>
-                <TextInput
-                  style={[
-                    styles.input1,
-                    {backgroundColor: 'transparent', color: '#fff'},
-                  ]}
-                  placeholder={translate('enter_title')}
-                  value={title}
-                  onChangeText={setTitle}
-                  placeholderTextColor="#fff"
+              <TextInput
+                style={[
+                  styles.input2,
+                  {backgroundColor: color.background, color: color.text},
+                ]}
+                placeholder={translate('enter_location')}
+                value={location}
+                onChangeText={setLocation}
+              />
+            </View>
+            <View
+              style={{
+                ...styles.column,
+                backgroundColor: color.background,
+                borderBottomWidth: 1,
+                borderBottomColor: '#ccc',
+                paddingVertical: 10,
+              }}>
+              <View style={[styles.row, {alignItems: 'center'}]}>
+                <MaterialCommunityIcons
+                  name="playlist-edit"
+                  size={30}
+                  style={{color: color.text}}
                 />
               </View>
+              <TextInput
+                style={[
+                  styles.input2,
+                  {backgroundColor: color.background, color: color.text},
+                ]}
+                placeholder={translate('Enter Description')}
+                value={description}
+                onChangeText={setDescription}
+              />
             </View>
-            <View style={styles.containerEnter}>
+          </View>
+          <View style={styles.datetimeContainer}>
+            <View style={styles.allDayConTainer}>
+              <Text style={[styles.text, {color: color.text}]}>
+                {translate('all_day')}
+              </Text>
+              <View style={styles.switches}>
+                <Switch value={isAllDay} onValueChange={setIsAllDay} />
+              </View>
+            </View>
+            <View>
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <View
-                  style={{
-                    ...styles.column,
-                    backgroundColor: 'transparent',
-                    borderBottomWidth: 1,
-                    borderBottomColor: '#fff',
-                    paddingVertical: 10,
-                    width: '48%', // Set fixed width
-                  }}>
-                  <View style={[styles.row, {alignItems: 'center', flex: 1}]}>
-                    <Icon
-                      name="location"
-                      size={28}
-                      color="#fff"
-                      style={{marginRight: 5}} // Adjust margin to move icon closer to TextInput
-                    />
-                    <TextInput
-                      style={[
-                        styles.input2,
-                        {
-                          backgroundColor: 'transparent',
-                          color: '#fff',
-                          flex: 1, // Ensure flex is set to take available space
-                          paddingLeft: 0, // Remove padding to align placeholder closer to icon
-                        },
-                      ]}
-                      placeholder={translate('enter_location')}
-                      value={location}
-                      onChangeText={setLocation}
-                      placeholderTextColor="#fff" // Ensure placeholder color is set
-                    />
-                  </View>
-                </View>
-                <View
-                  style={{
-                    ...styles.column1,
-                    backgroundColor: 'transparent',
-                    borderBottomWidth: 1,
-                    borderBottomColor: '#fff',
-                    paddingVertical: 10,
-                    width: '48%', // Set fixed width
-                  }}>
-                  <View style={[styles.row1, {alignItems: 'center', flex: 1}]}>
-                    <MaterialCommunityIcons
-                      name="playlist-edit"
-                      size={30}
-                      style={{color: '#fff', marginRight: 5}} // Adjust margin to move icon closer to TextInput
-                    />
-                    <TextInput
-                      style={[
-                        styles.input2,
-                        {
-                          backgroundColor: 'transparent',
-                          color: '#fff',
-                          flex: 1, // Ensure flex is set to take available space
-                          paddingLeft: 0, // Remove padding to align placeholder closer to icon
-                        },
-                      ]}
-                      placeholder={translate('Enter Description')}
-                      value={description}
-                      onChangeText={setDescription}
-                      placeholderTextColor="#fff" // Ensure placeholder color is set
-                    />
-                  </View>
-                </View>
-              </View>
-            </View>
-            <View style={styles.datetimeContainer}>
-              <View style={styles.allDayConTainer}>
-                <Text style={[styles.text, {color: '#fff'}]}>
-                  {translate('all_day')}
-                </Text>
-                <View style={styles.switches}>
-                  <Switch value={isAllDay} onValueChange={setIsAllDay} />
-                </View>
-              </View>
-              <View>
-                <View
-                  style={[
-                    styles.row,
-                    {backgroundColor: 'transparent', alignItems: 'center'},
-                  ]}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <MaterialCommunityIcons
-                      name="clock-time-four-outline"
-                      size={30}
-                      style={{color: '#fff', marginRight: 10}}
-                    />
-                    <Text style={{fontSize: 16, color: '#fff'}}>
-                      {translate('start')}
-                    </Text>
-                  </View>
-                  <DateTimePicker
-                    value={chosenDateStart}
-                    mode={isAllDay ? 'date' : 'datetime'}
-                    display="default"
-                    onChange={handleDateChangeStart}
-                    textColor="white"
+                style={[
+                  styles.row,
+                  {backgroundColor: color.background, alignItems: 'center'},
+                ]}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <MaterialCommunityIcons
+                    name="clock-time-four-outline"
+                    size={30}
+                    style={{color: color.text}}
                   />
+                  <Text style={{fontSize: 16, color: color.text}}>
+                    {translate('start')}
+                  </Text>
                 </View>
-                <View
-                  style={[
-                    styles.row,
-                    {
-                      backgroundColor: 'transparent',
-                      borderBottomColor: '#fff',
-                      paddingVertical: 10,
-                      alignItems: 'center',
-                    },
-                  ]}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <MaterialCommunityIcons
-                      name="clock-time-four-outline"
-                      size={30}
-                      style={{color: '#fff', marginRight: 10}}
-                    />
-                    <Text style={{fontSize: 16, color: '#fff'}}>
-                      {translate('end')}
-                    </Text>
-                  </View>
-                  <DateTimePicker
-                    value={chosenDateEnd}
-                    mode={isAllDay ? 'date' : 'datetime'}
-                    display="default"
-                    onChange={handleDateChangeEnd}
+                <DateTimePicker
+                  value={chosenDateStart}
+                  mode={isAllDay ? 'date' : 'datetime'}
+                  display="default"
+                  onChange={handleDateChangeStart}
+                />
+              </View>
+              <View
+                style={[
+                  styles.row,
+                  {
+                    backgroundColor: color.background,
+                    borderBottomColor: '#ccc',
+                    paddingVertical: 10,
+                    alignItems: 'center',
+                  },
+                ]}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <MaterialCommunityIcons
+                    name="clock-time-four-outline"
+                    size={30}
+                    style={{color: color.text}}
                   />
+                  <Text style={{fontSize: 16, color: color.text}}>
+                    {translate('end')}
+                  </Text>
                 </View>
+                <DateTimePicker
+                  value={chosenDateEnd}
+                  mode={isAllDay ? 'date' : 'datetime'}
+                  display="default"
+                  onChange={handleDateChangeEnd}
+                />
               </View>
             </View>
           </View>
@@ -462,7 +443,6 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
                 paddingVertical: 5,
                 alignItems: 'center',
                 zIndex: isPickerRepeatOpen ? 1000 : 1,
-                padding: 20,
               },
             ]}>
             <MaterialCommunityIcons
@@ -530,7 +510,6 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
                   paddingVertical: 5,
                   alignItems: 'center',
                   zIndex: isPickerEndRepeatOpen ? 1000 : 1,
-                  padding: 20,
                 },
               ]}>
               <MaterialCommunityIcons
@@ -598,7 +577,6 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
                   borderBottomColor: '#ccc',
                   paddingVertical: 5,
                   alignItems: 'center',
-                  padding: 20,
                 },
               ]}>
               <MaterialCommunityIcons
@@ -627,7 +605,6 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
                   borderBottomColor: '#ccc',
                   paddingVertical: 5,
                   alignItems: 'center',
-                  padding: 20,
                 },
               ]}>
               <MaterialCommunityIcons
@@ -662,11 +639,9 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
             selectedColorIndex={selectedColorIndex}
             setSelectedColorIndex={setSelectedColorIndex}
             setEventCategory={setEventCategory}
-            setAvailableColors={setAvailableColors}
-            setSelectedColor={setSelectedColor} // Pass the setter function
           />
 
-          <View style={[styles.formAction, {paddingVertical: 10, padding: 20}]}>
+          <View style={[styles.formAction, {paddingVertical: 10}]}>
             <TouchableOpacity onPress={handleSubmit}>
               <View style={styles.btn}>
                 <Text style={styles.btnText}>{translate('add_new_event')}</Text>

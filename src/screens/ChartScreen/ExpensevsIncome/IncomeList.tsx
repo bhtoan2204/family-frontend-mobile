@@ -31,7 +31,7 @@ import {
   setSumIncome,
 } from 'src/redux/slices/IncomeAnalysis';
 import {useThemeColors} from 'src/hooks/useThemeColor';
-import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
+import {getTranslate} from 'src/redux/slices/languageSlice';
 
 const IncomeScreen = ({navigation}: IncomeScreenProps) => {
   const income = useSelector(getIncomeList);
@@ -50,8 +50,6 @@ const IncomeScreen = ({navigation}: IncomeScreenProps) => {
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
   const [dateTo, setDateTo] = useState(new Date());
-  const location = useSelector(selectLocale);
-
   const [dateFrom, setDateFrom] = useState(() => {
     const date = new Date(dateTo);
     date.setDate(date.getDate() - 30);
@@ -119,10 +117,8 @@ const IncomeScreen = ({navigation}: IncomeScreenProps) => {
             <Text style={[styles.expenseCategory, {color: color.text}]}>
               {item.financeIncomeSource &&
               item.financeIncomeSource.income_source_name
-                ? location === 'en'
-                  ? item.financeIncomeSource.income_source_name
-                  : item.financeIncomeSource.income_source_name_vn
-                : translate('Other')}
+                ? item.financeIncomeSource.income_source_name
+                : 'Other'}
             </Text>
             <View style={styles.row}>
               <Text style={{color: 'gray'}}>{translate('Create by')}: </Text>
