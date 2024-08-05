@@ -66,7 +66,7 @@ const Notification = ({navigation}) => {
   };
 
   const handleNewNotification = async (message: Noti) => {
-    if (message.createdAt === profile?.id_user) {
+    if (message.createdAt !== profile?.id_user) {
       await Notifications.scheduleNotificationAsync({
         content: {
           title: `${message.familyInfo.name}`,
@@ -133,7 +133,7 @@ const Notification = ({navigation}) => {
     if (socket) {
       socket.on('onNewMessage', handleNewMessage);
       socket.on('onNewFamilyMessage', handleNewMessageFamily);
-      socket.on('onNewNotification', handleNewNotification);
+      //socket.on('onNewNotification', handleNewNotification);
     }
 
     return () => {
