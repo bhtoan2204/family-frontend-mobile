@@ -84,8 +84,8 @@ const EnterEmailScreen = ({navigation}: ForgotPasswordScreenProps) => {
   };
   const isDarkMode = useSelector(getIsDarkMode);
   const button = !isDarkMode
-    ? require('../../../assets/images/button-blue-demin.png')
-    : require('../../../assets/images/button-rhino.png');
+    ? require('../../../assets/images/button-rhino.png')
+    : require('../../../assets/images/button-blue-demin.png');
 
   return (
     <ImageBackground

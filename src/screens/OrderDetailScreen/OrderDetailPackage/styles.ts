@@ -202,6 +202,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    borderRadius: 12,
   },
   radioWrapper: {
     backgroundColor: '#fff',
@@ -271,13 +272,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 10,
-    paddingHorizontal: 10,
+    padding: 10,
     borderWidth: 1,
-    borderColor: '#ddd',
-    height: 50,
   },
   icon: {
-    marginRight: 10,
+    marginRight: 5,
+    marginLeft: 5,
   },
 });
 
