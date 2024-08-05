@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContainer: {
     flexGrow: 1,
+    marginTop: 30,
   },
 
   scrollViewContent: {
@@ -40,6 +41,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     alignSelf: 'center',
     marginBottom: 0,
+    marginTop: 20,
   },
   form: {
     marginTop: 20,
@@ -62,6 +64,24 @@ const styles = StyleSheet.create({
     width: '95%',
     backgroundColor: COLORS.PaleAqua,
     paddingLeft: 45,
+  },
+  optionEmailButton: {
+    width: '100%',
+    marginBottom: 20,
+    padding: 10,
+    left: 10,
+    alignSelf: 'center',
+  },
+  selectedOption: {
+    borderColor: '#f0f0f0',
+  },
+  selectedOptionText: {
+    fontSize: 16,
+    color: COLORS.white,
+    fontWeight: 'bold',
+    padding: 5,
+    alignSelf: 'center',
+    right: 10,
   },
   inputControl: {
     borderWidth: 1.5,
@@ -128,7 +148,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  addButtonContainer: {},
 
   sheetHeader: {
     backgroundColor: COLORS.darkgray,

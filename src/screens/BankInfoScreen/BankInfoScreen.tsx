@@ -156,17 +156,16 @@ const BankInfoScreen = ({route, navigation}: BankInfoScreenProps) => {
   }, []);
 
   return (
-    <SafeAreaView style={{backgroundColor: color.background, flex: 1}}>
+    <SafeAreaView style={{backgroundColor: color.whiteBackground, flex: 1}}>
       <View style={styles.headerfile}>
         <TouchableOpacity
           onPress={() => {
             navigation.goBack();
           }}>
-          <Icon name="close" size={24} color={color.text} />
+          <Icon name="chevron-back" size={24} color={color.text} />
         </TouchableOpacity>
         <View style={styles.titleContainer}>
           <Text style={[styles.title, {color: color.text}]}>
-            {' '}
             {translate('bank')}
           </Text>
         </View>
@@ -178,7 +177,7 @@ const BankInfoScreen = ({route, navigation}: BankInfoScreenProps) => {
             placeholderTextColor="gray"
             style={[
               styles.input,
-              {backgroundColor: color.background, color: color.white},
+              {backgroundColor: color.whiteBackground, color: color.white},
             ]}
             onChangeText={handleSearchChange}
             value={searchValue}
@@ -212,13 +211,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
+    paddingHorizontal: 20,
+    justifyContent: 'space-between',
   },
   backButton: {
     marginRight: 10,
   },
-  titleContainer: {
-    flex: 1,
-  },
+  titleContainer: {},
   title: {
     fontSize: 18,
     fontWeight: 'bold',

@@ -5,19 +5,16 @@ const styles = StyleSheet.create({
   container: {
     padding: 24,
   },
-
   headerfile: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+    paddingTop: 20,
   },
   closeButton: {
     marginRight: 0,
   },
   title: {
-    flex: 1,
-    textAlign: 'center',
     fontSize: 25,
     fontWeight: 'bold',
   },
@@ -117,11 +114,38 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginVertical: 36,
   },
+  mailIcon: {
+    width: 25,
+    height: 25,
+  },
+  questionContainer: {
+    flexDirection: 'column',
+    gap: 8,
+    paddingHorizontal: 20,
+  },
+  contactContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  textH1: {
+    fontSize: 22,
+    fontWeight: 'bold',
+  },
+  textH2: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  textH3: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   registerButton: {
     backgroundColor: COLORS.DenimBlue,
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
+    marginTop: 10,
   },
   registerButtonText: {
     color: '#ffffff',
