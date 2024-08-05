@@ -248,13 +248,14 @@ export type AuthStackParamList = {
   LandingPage: undefined;
   LandingPage2: undefined;
   LandingPage3: undefined;
+  LandingPageOld: undefined;
   Notification: undefined;
   WelcomeScreen: undefined;
   EnterCodeScreen: undefined;
   EnterEmailScreen: undefined;
   ResetPasswordScreen: undefined;
   Feedback: undefined;
-  VerifyCode: { email: string; phone: string };
+  VerifyCode: {email: string; phone: string};
 };
 
 export type CalendarStackParamList = {
@@ -365,7 +366,7 @@ export type PackStackParamList = {
   ComboScreen: undefined;
   OrderDetailService: {
     id_family: number;
-  }
+  };
 };
 
 //guideline stack
@@ -432,7 +433,6 @@ export interface SharedGuidelineScreenProps {
   navigation: SharedGuidelineScreenNavigationProp;
   route: RouteProp<RootParamList, 'SharedGuideline'>;
 }
-
 
 // shared_guideline_detail
 type SharedGuidelineDetailNavigationProp = NativeStackNavigationProp<
@@ -949,8 +949,8 @@ type EnterCodeScreenNavigationProp = NativeStackNavigationProp<
   'EnterCodeScreen'
 >;
 type EnterEmailScreenNavigationProp = NativeStackNavigationProp<
-AuthStackParamList,
-'EnterEmailScreen'
+  AuthStackParamList,
+  'EnterEmailScreen'
 >;
 
 export interface ResetPasswordScreenProps {
@@ -970,7 +970,7 @@ type VerifyCodeNavigationProp = NativeStackNavigationProp<
   'VerifyCode'
 >;
 
-export interface VerifyCodeProps { 
+export interface VerifyCodeProps {
   navigation: VerifyCodeNavigationProp;
   route: RouteProp<AuthStackParamList, 'VerifyCode'>;
 }
@@ -992,7 +992,7 @@ export interface EnterCodeScreenProps {
 }
 
 export interface EnterEmailScreenProps {
-  navigation: EnterEmailScreenProps
+  navigation: EnterEmailScreenProps;
 }
 type WelcomeScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -1323,6 +1323,15 @@ export interface LandingPage2ScreenProps {
 type LandingPage3NavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
   'LandingPage3'
+>;
+
+export interface LandingPageOldScreenProps {
+  navigation: LandingPageOldScreenProps;
+}
+
+type LandingPageOldNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'LandingPageOld'
 >;
 
 export interface LandingPage3ScreenProps {
