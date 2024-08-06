@@ -361,7 +361,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                 <Text style={[styles.headerText, {marginRight: 10}]}>
                   {translate(selectedMenu)}
                 </Text>
-                <Octicons name="triangle-down" size={35} color={color.text} />
+                <Octicons name="triangle-down" size={35} color="white" />
               </View>
             </TouchableOpacity>
           </LinearGradient>
@@ -369,7 +369,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
           <TouchableOpacity
             style={styles.chevronContainer}
             onPress={handleSubmit}>
-            <Icon name="checkmark-done-sharp" color={color.text} size={30} />
+            <Icon name="save" color={color.text} size={30} />
           </TouchableOpacity>
         </View>
         <View style={{flex: 1}}>

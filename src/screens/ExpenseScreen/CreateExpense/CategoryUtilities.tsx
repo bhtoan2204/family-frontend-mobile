@@ -9,7 +9,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/FontAwesome6';
 import styles from './styles';
 import {UtilitiesType} from 'src/interface/income/getIncome';
 import {IncomeServices} from 'src/services/apiclient';
@@ -19,19 +19,19 @@ import {useThemeColors} from 'src/hooks/useThemeColor';
 import {COLORS} from 'src/constants';
 
 const iconMapping = {
-  1: 'flame',
-  2: 'flash',
-  3: 'water',
-  4: 'globe',
+  1: 'fire-flame-curved',
+  2: 'bolt-lightning',
+  3: 'faucet-drip',
+  4: 'fire-flame-curved',
   5: 'trash',
   6: 'build',
-  7: 'snow',
-  8: 'snow',
+  7: 'snowflake',
+  8: 'snowflake',
   9: 'tv',
-  10: 'call',
+  10: 'phone',
   11: 'shield',
   12: 'refresh-circle',
-  13: 'help-circle',
+  13: 'shield',
 };
 
 const CategoryUtilities = ({
@@ -67,7 +67,12 @@ const CategoryUtilities = ({
     <View
       style={[styles.ContainerCategory, {backgroundColor: color.background}]}>
       <View style={styles.selectedItemContainer}>
-        <Image source={{uri: urlCatetory}} style={styles.avatar} />
+        <Icon
+          name="hashtag"
+          size={30}
+          color={color.text}
+          style={styles.avatar}
+        />
         <Text
           style={[
             styles.inputAmount,
@@ -111,7 +116,7 @@ const CategoryUtilities = ({
                 <Icon
                   name={iconMapping[item.id_utilities_type]}
                   size={30}
-                  color={COLORS.AzureishWhite}
+                  color={color.icon}
                   style={styles.icon}
                 />
                 <Text

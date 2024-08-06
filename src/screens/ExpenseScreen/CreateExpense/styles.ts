@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   avatar: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     borderRadius: 25,
     marginBottom: 5,
   },
