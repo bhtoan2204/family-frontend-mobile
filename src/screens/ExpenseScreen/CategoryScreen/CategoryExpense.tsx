@@ -245,7 +245,7 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
           : item.income_source_name;
 
     // Xác định biểu tượng dựa trên tên loại chi phí hoặc thu nhập
-    const iconName = categoryIcons[categoryName] || 'ellipsis-horizontal';
+    const iconName = categoryIcons[categoryName] || 'ellipsis-v';
 
     return (
       <TouchableOpacity

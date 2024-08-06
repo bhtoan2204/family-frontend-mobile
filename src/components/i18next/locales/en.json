@@ -448,5 +448,6 @@
   "confirmDeleteChat": "Are you sure you want to delete this message?",
 
   "deleteSuccess": "Deleted successfully",
-  "deleteError": "Error deleting message"
+  "deleteError": "Error deleting message",
+  "Event created successfully": "Event created successfully"
 }

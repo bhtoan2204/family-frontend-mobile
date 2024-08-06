@@ -4,9 +4,9 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
+  ScrollView,
   Dimensions,
   Animated,
-  FlatList,
 } from 'react-native';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
@@ -70,58 +70,66 @@ const ColorPicker = ({
     });
   };
 
-  const renderColorRectangle = ({item, index}) => {
-    const isSelected = selectedColorIndex === index;
-    const animatedStyle = {
-      transform: [
-        {
-          scale: animation.interpolate({
-            inputRange: [-1, index],
-            outputRange: [1, 1.2],
-          }),
-        },
-      ],
-    };
+  const renderColorCircles = () => {
+    return availableColors.map((item, index) => {
+      const isSelected = selectedColorIndex === index;
+      const animatedStyle = {
+        transform: [
+          {
+            scale: animation.interpolate({
+              inputRange: [-1, index],
+              outputRange: [1, 1.2],
+            }),
+          },
+        ],
+      };
 
-    return (
-      <View key={item.id_category_event} style={styles.containerColor}>
-        <TouchableOpacity
-          style={[
-            styles.colorRectangle,
-            {backgroundColor: item.color, borderColor: item.color},
-            isSelected && styles.selectedColor,
-          ]}
-          onPress={() => handleColorSelect(index, item)}>
-          <Text style={[styles.textHashtag, {color: '#fff'}]}>
-            {item.title}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
+      return (
+        <View key={item.id_category_event} style={styles.containerColor}>
+          <TouchableOpacity
+            style={[
+              styles.colorCircle,
+              {backgroundColor: item.color, borderColor: item.color},
+              isSelected && styles.selectedColor,
+            ]}
+            onPress={() => handleColorSelect(index, item)}>
+            {isSelected && (
+              <Animated.View
+                style={[
+                  styles.selected,
+                  {backgroundColor: item.color},
+                  animatedStyle,
+                ]}
+              />
+            )}
+            {isSelected && <View style={styles.centerDot} />}
+          </TouchableOpacity>
+          <Text
+            style={[
+              styles.textHashtag,
+              {color: item.color},
+            ]}>{`#${item.title}`}</Text>
+        </View>
+      );
+    });
   };
 
   return (
-    <View style={styles.container1}>
+    <View style={styles.container}>
       <Text style={[styles.title, {color: color.text}]}>
         {translate('Category')}
       </Text>
-      <FlatList
-        data={[...availableColors, {id_category_event: 'addButton'}]} // Add a dummy item for the add button
-        renderItem={({item, index}) =>
-          item.id_category_event === 'addButton' ? (
-            <TouchableOpacity
-              style={[styles.colorRectangle, styles.addButton]}
-              onPress={handleCreateCategory}>
-              <Material name="plus" size={22} style={styles.plusSign} />
-            </TouchableOpacity>
-          ) : (
-            renderColorRectangle({item, index})
-          )
-        }
-        keyExtractor={item => item.id_category_event.toString()}
-        numColumns={3}
-        columnWrapperStyle={styles.row}
-      />
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.colorList}>
+        {renderColorCircles()}
+        <TouchableOpacity
+          style={[styles.colorCircle, styles.addButton]}
+          onPress={handleCreateCategory}>
+          <Material name="plus" size={22} style={styles.plusSign} />
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 };
@@ -129,52 +137,66 @@ const ColorPicker = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-  },
-  container1: {
-    paddingHorizontal: 20,
-    marginTop: 30,
+    padding: 10,
+    marginTop: 10,
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  row: {
-    justifyContent: 'flex-start',
-    marginBottom: 10,
+  colorList: {
+    alignItems: 'center',
+    marginTop: 10,
   },
   containerColor: {
+    paddingRight: 15,
     alignItems: 'center',
-    paddingHorizontal: 5, // Reduce horizontal padding
+    paddingHorizontal: 20,
   },
   textHashtag: {
-    marginTop: 3,
-    fontSize: 15,
+    marginTop: 5,
+    fontSize: 12,
     fontFamily: 'Arial',
-    color: '#fff',
   },
-  colorRectangle: {
-    paddingVertical: 15, // Reduce vertical padding
-    paddingHorizontal: 25, // Reduce horizontal padding
+  colorCircle: {
+    width: screenWidth * 0.15,
+    height: screenWidth * 0.15,
+    borderRadius: screenWidth * 0.1,
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: '#f0f0f0',
+    marginRight: 15,
     borderWidth: 1,
-    borderRadius: 10,
-    margin: 2, // Reduce margin to ensure closer spacing
   },
   selectedColor: {
+    borderWidth: 2,
+    borderColor: '#000',
+  },
+  selected: {
+    width: screenWidth * 0.15,
+    height: screenWidth * 0.15,
+    borderRadius: screenWidth * 0.1,
     borderWidth: 1,
-    borderColor: '#bdbdbd', // Change this to the desired border color
+    borderColor: '#ccc',
+  },
+  centerDot: {
+    position: 'absolute',
+    width: screenWidth * 0.1,
+    height: screenWidth * 0.1,
+    borderRadius: screenWidth * 0.1,
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
   addButton: {
     backgroundColor: '#e0e0e0',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 6, // Reduce vertical padding
-    paddingHorizontal: 10, // Reduce horizontal padding
-    borderRadius: 10,
-    margin: 2, // Reduce margin to ensure closer spacing
+    width: screenWidth * 0.15,
+    height: screenWidth * 0.15,
+    borderRadius: screenWidth * 0.1,
+    marginBottom: 20,
   },
   plusSign: {
     color: '#000',

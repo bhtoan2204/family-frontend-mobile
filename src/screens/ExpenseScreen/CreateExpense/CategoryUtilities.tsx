@@ -22,16 +22,16 @@ const iconMapping = {
   1: 'fire-flame-curved',
   2: 'bolt-lightning',
   3: 'faucet-drip',
-  4: 'fire-flame-curved',
+  4: 'wifi', // Internet
   5: 'trash',
-  6: 'build',
-  7: 'snowflake',
+  6: 'wrench', // Thay thế 'pipes' bằng 'wrench'
+  7: 'thermometer', // Hoặc 'fire' cho heating
   8: 'snowflake',
   9: 'tv',
   10: 'phone',
   11: 'shield',
-  12: 'refresh-circle',
-  13: 'shield',
+  12: 'recycle', // Tái chế
+  13: 'ellipsis-v', // Khác
 };
 
 const CategoryUtilities = ({

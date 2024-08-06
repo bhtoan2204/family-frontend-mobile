@@ -65,7 +65,7 @@ const incomeSlice = createSlice({
         income => income.id_income === payload.id_income,
       );
       state.incomeList = state.incomeList.filter(
-        income => income.id_income !== action.payload.id_income,
+        income => income.id_income !== payload.id_income,
       );
 
       if (index !== -1) {

@@ -461,5 +461,6 @@
   "confirmDeleteChat": "Bạn có chắc chắn muốn xóa tin nhắn này không?",
 
   "deleteSuccess": "Xóa thành công",
-  "deleteError": "Lỗi khi xóa tin nhắn"
+  "deleteError": "Lỗi khi xóa tin nhắn",
+  "Event created successfully": "Tạo sự kiện thành công"
 }
