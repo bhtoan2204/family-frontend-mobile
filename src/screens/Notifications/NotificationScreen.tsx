@@ -18,6 +18,7 @@ import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {setType} from 'src/redux/slices/FinanceSlice';
+import {setUnreadCount} from 'src/redux/slices/NotificationSlice';
 
 const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
   const [notifications, setNotifications] = useState<Noti[]>([]);
@@ -53,6 +54,8 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
           ),
         ];
         setNotifications(uniqueNotifications);
+        dispatch(setUnreadCount(response.unreadCount));
+        console.log(response.unreadCount);
       } else {
         setHasMore(false);
       }

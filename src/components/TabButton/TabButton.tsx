@@ -11,6 +11,7 @@ import {COLORS} from 'src/constants';
 import {useSelector} from 'react-redux';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
+import {selectunreadCount} from 'src/redux/slices/NotificationSlice';
 
 interface TabButtonProps {
   item: {
@@ -33,6 +34,7 @@ const TabButton = ({item, accessibilityState, onPress}: TabButtonProps) => {
     scale: useRef(new Animated.Value(0)).current,
   };
   const {translate, scale} = animatedValues;
+  const count = useSelector(selectunreadCount);
 
   useEffect(() => {
     handleAnimated();

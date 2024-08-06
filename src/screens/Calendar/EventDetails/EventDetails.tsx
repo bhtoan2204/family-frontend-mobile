@@ -468,7 +468,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
               <TouchableOpacity
                 style={[styles.addButton, {backgroundColor: color.primary}]}
                 onPress={() =>
-                  navigation.navigate('NewShoppingList', {id_family})
+                  navigation.navigate('ShoppingListDetail', {id_family})
                 }>
                 <Text style={styles.addButtonText}>
                   {translate('Add New Shopping List')}

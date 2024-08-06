@@ -146,9 +146,9 @@ const ExpenseScreen = ({navigation}: ExpenseScreenProps) => {
             )}
             {item.utilities && (
               <View style={styles.row}>
-                {/* <Text style={{color: 'gray'}}>
+                <Text style={{color: 'gray'}}>
                   {translate('Category utility')}:{' '}
-                </Text> */}
+                </Text>
 
                 <Text style={styles.expenseName}>{/* {item} */}</Text>
               </View>
