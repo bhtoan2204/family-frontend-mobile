@@ -34,14 +34,21 @@ import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {Toast} from 'react-native-toast-notifications';
 import {addEvent} from 'src/redux/slices/CalendarSlice';
+import Autocomplete from 'react-native-autocomplete-input';
 
+interface geonames {
+  name: string;
+}
 const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   navigation,
   route,
 }) => {
   const [title, setTitle] = useState<string | null>(null);
   const [description, setDescription] = useState<string>('');
-  const [location, setLocation] = useState<string | null>(null);
+  const [location, setLocation] = useState<string>('');
+  const [locations, setLocations] = useState<geonames[]>([]);
+  const [query, setQuery] = useState<string>('');
+
   const [chosenDateStart, setChosenDateStart] = useState(new Date());
   const [chosenDateEnd, setChosenDateEnd] = useState(new Date());
   const [isPickerRepeatOpen, setIsPickerRepeatOpen] = useState(false);
@@ -283,6 +290,23 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
     }
   }, [selectedOptionRepeat]);
 
+  useEffect(() => {
+    fetchLocation(location);
+  }, [location]);
+
+  const fetchLocation = async (query: string) => {
+    const locations = await CalendarServices.getLocation(query);
+    if (locations.length > 0) {
+      setLocations(locations);
+    }
+  };
+
+  const handleSelectLocation = (location: Geoname) => {
+    setLocation(location.name);
+    setQuery(location.name);
+    setLocations([]);
+  };
+
   return (
     <KeyboardAvoidingView
       style={{flex: 1}}
@@ -357,6 +381,17 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
                       onChangeText={setLocation}
                       placeholderTextColor="#fff"
                     />
+                    {/* <Autocomplete
+            data={locations}
+            defaultValue={location}
+            onChangeText={text => setLocation(text)}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handleSelectLocation(item)}>
+                <Text>{item.name}</Text>
+              </TouchableOpacity>
+            )}
+            placeholder={translate('Search for location')}
+          /> */}
                   </View>
                 </View>
                 <View

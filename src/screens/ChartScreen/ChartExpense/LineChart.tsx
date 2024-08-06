@@ -207,7 +207,6 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
       name: 'Total',
       data: monthlyTotals,
       color: () => categoryColors[0],
-      key: 'Total',
     });
   }
   allCategories.forEach((categoryId, index) => {

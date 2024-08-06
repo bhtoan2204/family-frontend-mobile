@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: '#fff',
+    marginBottom: 10,
   },
   scrollContainer: {
     paddingBottom: 20,
@@ -79,6 +80,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 10,
     borderRadius: 5,
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  buttonText: {
+    marginLeft: 10,
   },
   containerBtnDelete: {
     flex: 1,
@@ -109,6 +115,44 @@ const styles = StyleSheet.create({
   recurrenceText: {
     fontSize: 16,
     color: '#333', // Hoặc sử dụng màu từ `color.text` nếu có
+  },
+  dateTime: {
+    color: 'gray',
+  },
+  checklistItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  checklistText: {
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#333',
+  },
+  shoppingListItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  shoppingListText: {
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#333',
+  },
+  addButton: {
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 10,
+  },
+  addButtonText: {
+    fontSize: 16,
+    color: 'white',
   },
 });
 export default styles;

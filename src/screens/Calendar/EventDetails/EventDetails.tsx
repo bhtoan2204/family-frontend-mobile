@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Text, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, TouchableOpacity, Alert, FlatList} from 'react-native';
 import {EventDetailsScreenProps} from 'src/navigation/NavigationTypes';
 import {useSelector, useDispatch} from 'react-redux';
 import {Feather} from '@expo/vector-icons';
@@ -19,14 +19,54 @@ import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {Toast} from 'react-native-toast-notifications';
 import {RRule, rrulestr} from 'rrule';
+import {format} from 'date-fns';
+const formatEventDate = (start: Date, end: Date) => {
+  const formattedStart = format(start, 'yyyy-MM-dd');
+  const formattedEnd = format(end, 'yyyy-MM-dd');
+  return formattedStart === formattedEnd
+    ? formattedStart + ` All day`
+    : `${formattedStart} - ${formattedEnd} All day`;
+};
 
+const formatEventTime = (start: Date, end: Date) => {
+  const formattedStart = format(start, 'HH:mm');
+  const formattedEnd = format(end, 'HH:mm');
+  return `${formattedStart} - ${formattedEnd}`;
+};
+const fakeEvent = {
+  id_calendar: '1',
+  id_family: '96',
+  title: 'Birthday Party',
+  description: "Celebrate John's birthday",
+  location: "John's House",
+  categoryEvent: {title: 'Party', color: '#ff6347'},
+  color: '#ff6347',
+  is_all_day: false,
+  time_start: new Date('2024-08-10T18:00:00Z'),
+  time_end: new Date('2024-08-10T21:00:00Z'),
+  recurrence_rule: 'FREQ=WEEKLY;COUNT=10;BYDAY=MO,WE,FR',
+  recurrence_exception: null,
+  recurrence_id: null,
+  start_timezone: 'UTC',
+  end_timezone: 'UTC',
+  checklist: ['Buy balloons', 'Order cake'],
+  shoppingList: ['Party hats', 'Drinks'],
+};
 const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
   const {id_family} = route.params;
-  const event = useSelector(selectSelectedEvent);
+  //const event = useSelector(selectSelectedEvent);
+  const event = fakeEvent;
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
   const language = useSelector(selectLocale);
+
+  const startDate = new Date(event.time_start);
+
+  const endDate = new Date(event.time_end);
+  const isSameDay =
+    format(startDate, 'yyyy-MM-dd') === format(endDate, 'yyyy-MM-dd');
+
   useEffect(() => {
     console.log(event);
   }, []);
@@ -82,7 +122,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                   event?.id_family,
                   event?.id_calendar,
                 );
-                await dispatch(deleteEvent(event?.id_calendar));
+                await dispatch(deleteEvent(event.id_calendar));
                 Toast.show(translate('Event has been deleted successfully'), {
                   type: 'success',
                 });
@@ -343,20 +383,110 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
       );
     }
   };
-  const formatEventTime = (startTime, endTime) => {
+  const formatEventTime = (
+    startTime: Date | string,
+    endTime: Date | string,
+  ) => {
     const startDate = new Date(startTime);
     const endDate = new Date(endTime);
 
     const isSameDay = startDate.toDateString() === endDate.toDateString();
+    const isSameMonth =
+      startDate.getFullYear() === endDate.getFullYear() &&
+      startDate.getMonth() === endDate.getMonth();
 
-    const timeFormat = date =>
+    const timeFormat = (date: Date) =>
       `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+
+    const dateFormat = (date: Date) => format(date, 'yyyy/MM/dd');
 
     if (isSameDay) {
       return `${timeFormat(startDate)} - ${timeFormat(endDate)}`;
     }
 
-    return `${startDate.toDateString()} ${timeFormat(startDate)} - ${endDate.toDateString()} ${timeFormat(endDate)}`;
+    if (isSameMonth) {
+      return `${dateFormat(startDate)} ${timeFormat(startDate)} - ${dateFormat(endDate)} ${timeFormat(endDate)}`;
+    }
+
+    return `${dateFormat(startDate)} ${timeFormat(startDate)} - ${dateFormat(endDate)} ${timeFormat(endDate)}`;
+  };
+
+  const renderChecklists = () => {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.header}>{translate('Check List')}</Text>
+        {event.checklist && event.checklist.length > 0 ? (
+          <FlatList
+            data={event.checklist}
+            renderItem={({item}) => (
+              <View style={styles.checklistItem}>
+                <Feather name="check-circle" size={24} color={color.primary} />
+                <Text style={styles.checklistText}>{item}</Text>
+              </View>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+            ListFooterComponent={
+              <TouchableOpacity
+                style={[styles.addButton, {backgroundColor: color.primary}]}
+                onPress={() =>
+                  navigation.navigate('NewCheckList', {id_family})
+                }>
+                <Text style={styles.addButtonText}>
+                  {translate('Add New Check List')}
+                </Text>
+              </TouchableOpacity>
+            }
+          />
+        ) : (
+          <TouchableOpacity
+            style={[styles.addButton, {backgroundColor: color.primary}]}
+            onPress={() => navigation.navigate('NewCheckList', {id_family})}>
+            <Text style={styles.addButtonText}>
+              {translate('New Check List')}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  };
+
+  const renderShoppingList = () => {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.header}>{translate('Shopping List')}</Text>
+        {event.shoppingList && event.shoppingList.length > 0 ? (
+          <FlatList
+            data={event.shoppingList}
+            renderItem={({item}) => (
+              <View style={styles.shoppingListItem}>
+                <Feather name="shopping-cart" size={24} color={color.primary} />
+                <Text style={styles.shoppingListText}>{item}</Text>
+              </View>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+            ListFooterComponent={
+              <TouchableOpacity
+                style={[styles.addButton, {backgroundColor: color.primary}]}
+                onPress={() =>
+                  navigation.navigate('NewShoppingList', {id_family})
+                }>
+                <Text style={styles.addButtonText}>
+                  {translate('Add New Shopping List')}
+                </Text>
+              </TouchableOpacity>
+            }
+          />
+        ) : (
+          <TouchableOpacity
+            style={[styles.addButton, {backgroundColor: color.primary}]}
+            onPress={() => navigation.navigate('NewShoppingList', {id_family})}>
+            <Text style={styles.addButtonText}>
+              {translate('New Shopping List')}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
   };
 
   return (
@@ -390,9 +520,9 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
         </TouchableOpacity>
       </View>
       <View style={[styles.card, {backgroundColor: color.white}]}>
-        {/* {event.title && (
+        {event.title && (
           <Text style={[styles.title, {color: color.text}]}>{event.title}</Text>
-        )} */}
+        )}
         <Text style={[styles.description, {color: color.text}]}>
           {translate('Description')}: {event.description}
         </Text>
@@ -409,12 +539,12 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
           <Text style={[styles.location, {color: color.text}]}>
             {translate('Category')}:
           </Text>
-          {/* {event.categoryEvent.title && (
+          {event.categoryEvent && event.categoryEvent.title && (
             <Text style={{color: event.color, fontSize: 16}}>
               {' '}
               {event.categoryEvent.title}
             </Text>
-          )} */}
+          )}
         </View>
         {/* <View style={styles.locationContainer}>
           <Text style={[styles.location, {color: color.text}]}>
@@ -430,26 +560,50 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
           : null}
       </View> */}
         <View style={styles.locationContainer}>
-          <Text style={[styles.location, {color: color.text}]}>
-            {translate('Time')}:
+          <Text>Time: </Text>
+          <Text style={styles.dateTime}>
+            {event.is_all_day
+              ? formatEventDate(startDate, endDate)
+              : `${formatEventTime(startDate, endDate)}`}
           </Text>
-          {event.is_all_day ? (
-            <Text style={{color: color.text, fontSize: 16}}>
-              {' '}
-              {translate('All Day')}
-            </Text>
-          ) : (
-            <Text style={{color: color.text, fontSize: 16}}>
-              {' '}
-              {formatEventTime(event.time_start, event.time_end)}
-            </Text>
-          )}
         </View>
+
         {event.recurrence_rule
           ? explainRecurrenceRule(event.recurrence_rule, language)
           : null}
       </View>
-
+      {!event.checklist ? (
+        <TouchableOpacity
+          style={[styles.button]}
+          onPress={() =>
+            navigation.navigate('TodoListStack', {
+              screen: 'TodoList',
+              params: {id_family: event.id_family},
+            })
+          }>
+          <Feather name="list" size={24} color={color.text} />
+          <Text style={styles.buttonText}>{translate('New Check List')}</Text>
+        </TouchableOpacity>
+      ) : (
+        renderChecklists()
+      )}
+      {!event.shoppingList ? (
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() =>
+            navigation.navigate('ShoppingListStack', {
+              screen: 'ShoppingList',
+              params: event.id_family,
+            })
+          }>
+          <Feather name="shopping-cart" size={24} color={color.text} />
+          <Text style={styles.buttonText}>
+            {translate('New Shopping List')}
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        renderShoppingList()
+      )}
       <View
         style={[
           styles.containerBtnDelete,

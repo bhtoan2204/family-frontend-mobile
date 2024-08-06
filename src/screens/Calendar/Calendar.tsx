@@ -26,15 +26,19 @@ import {selectProfile} from 'src/redux/slices/ProfileSclice';
 import type {Event, EventDetail} from 'src/interface/calendar/Event';
 import moment from 'moment';
 import {selectSelectedFamily} from 'src/redux/slices/FamilySlice';
-import {
-  format,
-  isSameDay as isSameDayFn,
-  isSameMonth,
-  isSameYear,
-} from 'date-fns';
+import {isSameDay as isSameDayFn, isSameMonth, isSameYear} from 'date-fns';
 import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import './localeConfig';
+import CustomDay from './CustomDay';
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  isBefore,
+  startOfDay,
+} from 'date-fns';
 
 const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
   const {id_family} = route.params || {};
@@ -146,70 +150,53 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
       id_calendar: event.id_calendar,
     });
   };
+  const isPastDate = date =>
+    isBefore(startOfDay(new Date(date)), startOfDay(new Date()));
 
-  const renderItem = (item: EventDetail) => {
-    const startDate = format(new Date(item.time_start), 'yyyy-MM-dd HH:mm:ss');
-    const endDate = format(new Date(item.time_end), 'yyyy-MM-dd HH:mm:ss');
+  const renderItem = item => {
+    const startDate = new Date(item.time_start);
+    const endDate = new Date(item.time_end);
     const isAllDay = item.is_all_day;
 
-    const isSameDay = isSameDayFn(startDate, endDate);
+    const backgroundColor = isPastDate(startDate)
+      ? 'lightgray'
+      : `${item.color}90`;
+
+    const textColor = item.color !== 'white' ? 'white' : 'black';
+
+    const isSameDay = startDate.toDateString() === endDate.toDateString();
     const isSameMonthYear =
-      isSameMonth(startDate, endDate) && isSameYear(startDate, endDate);
+      startDate.getMonth() === endDate.getMonth() &&
+      startDate.getFullYear() === endDate.getFullYear();
 
     return (
-      <TouchableOpacity
-        onPress={() => handlePressEvent(item)}
-        style={{backgroundColor: color.background}}>
-        <View style={[styles.agendaItem, {backgroundColor: `${item.color}90`}]}>
-          <Text
-            style={[
-              styles.agendaItemText,
-              {color: item.color !== 'white' ? 'white' : 'black'},
-            ]}>
+      <TouchableOpacity onPress={() => handlePressEvent(item)}>
+        <View style={[styles.agendaItem, {backgroundColor}]}>
+          <Text style={[styles.agendaItemText, {color: textColor}]}>
             {item.title}
           </Text>
           {isAllDay ? (
             isSameDay ? (
-              <Text
-                style={[
-                  styles.agendaItemTime,
-                  {color: item.color !== 'white' ? 'white' : 'black'},
-                ]}>
+              <Text style={[styles.agendaItemTime, {color: textColor}]}>
                 {translate('All day')}
               </Text>
             ) : isSameMonthYear ? (
-              <Text
-                style={[
-                  styles.agendaItemTime,
-                  {color: item.color !== 'white' ? 'white' : 'black'},
-                ]}>
+              <Text style={[styles.agendaItemTime, {color: textColor}]}>
                 {translate('All day')} {format(startDate, 'MM/dd')} -{' '}
                 {format(endDate, 'MM/dd')}
               </Text>
             ) : (
-              <Text
-                style={[
-                  styles.agendaItemTime,
-                  {color: item.color !== 'white' ? 'white' : 'black'},
-                ]}>
+              <Text style={[styles.agendaItemTime, {color: textColor}]}>
                 {translate('All day')} {format(startDate, 'yyyy/MM/dd')} -{' '}
                 {format(endDate, 'yyyy/MM/dd')}
               </Text>
             )
           ) : isSameDay ? (
-            <Text
-              style={[
-                styles.agendaItemTime,
-                {color: item.color !== 'white' ? 'white' : 'black'},
-              ]}>
+            <Text style={[styles.agendaItemTime, {color: textColor}]}>
               {format(startDate, 'HH:mm')} - {format(endDate, 'HH:mm')}
             </Text>
           ) : (
-            <Text
-              style={[
-                styles.agendaItemTime,
-                {color: item.color !== 'white' ? 'white' : 'black'},
-              ]}>
+            <Text style={[styles.agendaItemTime, {color: textColor}]}>
               {format(startDate, 'yyyy/MM/dd HH:mm')} -{' '}
               {format(
                 endDate,
@@ -217,19 +204,14 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
               )}
             </Text>
           )}
-          <Text
-            style={[
-              {
-                color: item.color !== 'white' ? 'white' : 'black',
-                fontWeight: '800',
-              },
-            ]}>
+          <Text style={[{color: textColor, fontWeight: '800'}]}>
             {translate('Location')}: {item.location}
           </Text>
         </View>
       </TouchableOpacity>
     );
   };
+
   const renderEmptyDate = () => {
     return (
       <View style={[styles.emptyDate, {backgroundColor: color.background}]}>
@@ -259,6 +241,10 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
     const options = {year: 'numeric', month: 'short'};
     return date.toLocaleDateString(location === 'vi' ? 'vi' : 'en-US', options);
   }
+  const getDayTextColor = (date: string | number | Date) => {
+    const today = new Date();
+    return isBefore(new Date(date), today) ? '#ccc' : 'black';
+  };
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: color.background}}>
@@ -320,13 +306,17 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
             renderItem={renderItem}
             renderEmptyData={renderEmptyDate}
             rowHasChanged={rowHasChanged}
-            onDayPress={(days: any) => handleDayPress(days)}
+            onDayPress={days => handleDayPress(days)}
             selected={selectDate}
+            hideExtraDays
+            showClosingKnob={true}
             theme={{
               backgroundColor: color.background,
               calendarBackground: color.background,
               monthTextColor: color.text,
-              dayTextColor: color.text,
+              textDecorationColor: color.background,
+              dayTextColor: (date: any) => getDayTextColor(date),
+
               textSectionTitleColor: color.text,
               agendaKnobColor: color.white,
               reservationsBackgroundColor: color.background,

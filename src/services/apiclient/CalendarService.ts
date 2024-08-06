@@ -179,6 +179,23 @@ const CalendarServices = {
       return 'Failed to delete event';
     }
   },
+  getLocation: async (query: string) => {
+    try {
+      const response = await axios.get(
+        `http://api.geonames.org/searchJSON?q=${encodeURIComponent(query)}&country=VN&username=thuhien2105`,
+      );
+      if (response.status === 200) {
+        const locationNames = response.data.geonames.map(
+          (location: {name: string}) => location.name,
+        );
+        console.log(locationNames);
+        return locationNames;
+      }
+    } catch (error) {
+      console.error('Failed to fetch locations:', error);
+      return [];
+    }
+  },
 
   CreateEvent: async (
     title: string,
@@ -223,6 +240,7 @@ const CalendarServices = {
       console.log(error);
     }
   },
+
   UpdateEvent: async (
     id_calendar: number,
     id_family?: number,

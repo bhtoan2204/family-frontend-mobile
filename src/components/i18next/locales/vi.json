@@ -462,5 +462,8 @@
 
   "deleteSuccess": "Xóa thành công",
   "deleteError": "Lỗi khi xóa tin nhắn",
-  "Event created successfully": "Tạo sự kiện thành công"
+  "Event created successfully": "Tạo sự kiện thành công",
+  "New Check List": "Danh sách kiểm tra mới",
+  "New Shopping List": "Danh sách mua sắm mới",
+  "Shopping List": "Danh sách mua sắm"
 }

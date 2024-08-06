@@ -449,5 +449,8 @@
 
   "deleteSuccess": "Deleted successfully",
   "deleteError": "Error deleting message",
-  "Event created successfully": "Event created successfully"
+  "Event created successfully": "Event created successfully",
+  "New Check List": "New Check List",
+  "New Shopping List": "New Shopping List",
+  "Shopping List": "Shopping List"
 }

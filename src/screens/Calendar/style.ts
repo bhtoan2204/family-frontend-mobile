@@ -11,7 +11,6 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#ffffff',
     justifyContent: 'space-between',
-
   },
   headerText: {
     marginLeft: 10,
@@ -110,6 +109,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     flex: 1,
+  },
+  dayTextColor: {
+    fontSize: 16,
   },
 });
 
