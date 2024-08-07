@@ -9,6 +9,7 @@ import {
   Image,
   Modal,
   Animated,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -35,6 +36,7 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
   const families = useSelector(selectFamilies);
   const dispatch = useDispatch<AppDispatch>();
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedFamily, setSelectedFamily] = useState<Family | null>(null);
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
   const scaleValue = useRef(new Animated.Value(1)).current;
@@ -87,6 +89,7 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
   }, [scaleValue]);
 
   const onRenewPress = (family: Family) => {
+    setModalVisible(false);
     navigation.navigate('PackStack', {
       screen: 'ViewAllPackage',
       params: {id_family: family.id_family},
@@ -102,11 +105,16 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
     });
   };
 
+  const handleCardPress = (family: Family) => {
+    setSelectedFamily(family);
+    setModalVisible(true);
+  };
+
   const renderFamilyCards = () => {
     return families.map(family => (
       <TouchableOpacity
         key={family.id_family}
-        onPress={() => NavigateFamily(family)}
+        onPress={() => handleCardPress(family)}
         style={[styles.familyCard, {backgroundColor: color.white}]}>
         <View style={{flexDirection: 'column'}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -125,9 +133,6 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
               <Text style={[styles.familyName, {color: color.text}]}>
                 {family.name}
               </Text>
-              <Text style={[styles.familyQuantity, {color: color.textSubdued}]}>
-                {translate('FAMILY_MEMBERS')}: {family.quantity}
-              </Text>
               <View style={styles.expiredAtContainer}>
                 <Text
                   style={[styles.familyQuantity, {color: color.textSubdued}]}>
@@ -139,25 +144,6 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
               </View>
             </View>
           </View>
-        </View>
-        <View style={styles.buttonContainerFamily}>
-          <TouchableOpacity
-            style={[styles.buyServiceButton, styles.button, styles.flexButton]}
-            onPress={() => handleViewCombo()}>
-            <Text style={styles.buyServiceButtonText}>
-              {translate('BUY_SERVICE')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.buyPackageButton, styles.button, styles.flexButton]}
-            onPress={() => onRenewPress(family)}>
-            <View style={styles.buttonContent}>
-              <Text style={[styles.buyServiceButtonText, {marginRight: 5}]}>
-                {translate('Renew Family')}
-              </Text>
-              <Icon name="arrow-forward" size={20} color="white" />
-            </View>
-          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     ));
@@ -220,39 +206,58 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
         )}
       </View>
 
-      {/* <Modal
+      <Modal
         animationType="slide"
+        transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}>
-        <TouchableOpacity
-          style={styles.modalBackground}
-          activeOpacity={1}
-          onPress={() => setModalVisible(false)}>
-          <View style={styles.modalContainer}>
-            <TouchableOpacity
-              style={styles.modalOption}
-              onPress={() => {
-                setModalVisible(false);
-              }}>
-              <Text style={styles.modalOptionText}>Option 1</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalOption}
-              onPress={() => {
-                setModalVisible(false);
-              }}>
-              <Text style={styles.modalOptionText}>Option 2</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalOption}
-              onPress={() => {
-                setModalVisible(false);
-              }}>
-              <Text style={styles.modalOptionText}>Option 3</Text>
-            </TouchableOpacity>
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalBackground1}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContainer1}>
+                {selectedFamily && (
+                  <>
+                    <Image
+                      source={{uri: selectedFamily.avatar}}
+                      style={styles.modalImage}
+                      resizeMode="cover"
+                    />
+                    <Text style={styles.modalTitle}>{selectedFamily.name}</Text>
+                    <Text style={styles.modalText}>
+                      {translate('FAMILY_MEMBERS')}: {selectedFamily.quantity}
+                    </Text>
+                    <Text style={styles.modalText}>
+                      {translate('EXPIRED_AT')}:{' '}
+                      {moment(new Date(selectedFamily.expired_at)).format(
+                        'DD/MM/YYYY',
+                      )}
+                    </Text>
+                    <View style={styles.modalButtonContainer}>
+                      <TouchableOpacity
+                        style={styles.modalButton}
+                        onPress={() => {
+                          setModalVisible(false);
+                          handleViewCombo();
+                        }}>
+                        <Text style={styles.modalButtonText}>
+                          {translate('BUY_SERVICE')}
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.modalButton}
+                        onPress={() => onRenewPress(selectedFamily)}>
+                        <Text style={styles.modalButtonText}>
+                          {translate('Renew Family')}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </>
+                )}
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </TouchableOpacity>
-      </Modal> */}
+        </TouchableWithoutFeedback>
+      </Modal>
     </View>
   );
 };

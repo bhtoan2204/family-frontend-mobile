@@ -274,6 +274,53 @@ const styles = StyleSheet.create({
   noFamilyTextDescription: {
     fontSize: 16,
   },
+  modalBackground1: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContainer1: {
+    width: '100%',
+    height: '50%',
+    backgroundColor: 'white',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  modalButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: 20,
+  },
+  modalButton: {
+    flex: 1,
+    backgroundColor: COLORS.Rhino,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  modalButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  modalImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
+  },
 });
 
 export default styles;
