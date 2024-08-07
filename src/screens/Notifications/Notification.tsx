@@ -11,6 +11,7 @@ import {Noti} from 'src/interface/notification/getNoti';
 import {setSelectedFamilyById} from 'src/redux/slices/FamilySlice';
 import {setSelectedDate} from 'src/redux/slices/CalendarSlice';
 import {selectLocale} from 'src/redux/slices/languageSlice';
+import {addUnreadCount} from 'src/redux/slices/NotificationSlice';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -69,6 +70,7 @@ const Notification = ({navigation}) => {
 
   const handleNewNotification = async (message: Noti) => {
     console.log(message);
+    dispatch(addUnreadCount());
     if (message.type === 'CHAT') {
       handleNewMessage(message);
     } else {

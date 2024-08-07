@@ -5,8 +5,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: '#fff',
-    marginBottom: 10,
   },
   scrollContainer: {
     paddingBottom: 20,
@@ -73,7 +71,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#ffffff',
     justifyContent: 'space-between',
   },
   button: {
@@ -114,10 +111,12 @@ const styles = StyleSheet.create({
   },
   recurrenceText: {
     fontSize: 16,
-    color: '#333', // Hoặc sử dụng màu từ `color.text` nếu có
+    color: '#333',
   },
   dateTime: {
     color: 'gray',
+    marginBottom: 10,
+    fontSize: 16,
   },
   checklistItem: {
     flexDirection: 'row',

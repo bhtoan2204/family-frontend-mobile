@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { COLORS } from 'src/constants';
+import {StyleSheet} from 'react-native';
+import {COLORS} from 'src/constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
   comboList: {
     marginBottom: 20,
     padding: 10,
-
   },
   backButton: {
     color: 'gray',
@@ -33,9 +32,9 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 10,
     backgroundColor: 'white',
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 2 }, 
-    shadowOpacity: 0.2, 
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
     shadowRadius: 2,
     width: 151,
     height: 151,
@@ -50,9 +49,9 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 10,
     backgroundColor: 'white',
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 2 }, 
-    shadowOpacity: 0.2, 
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
     shadowRadius: 2,
     height: 150,
     width: 150,
@@ -60,7 +59,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   familyCardSelected: {
-    borderColor: '#007bff', 
+    borderColor: '#007bff',
   },
   avatar: {
     width: 150,
@@ -82,7 +81,7 @@ const styles = StyleSheet.create({
     bottom: -5,
     width: '100%',
     height: 2,
-    backgroundColor: '#007bff', 
+    backgroundColor: '#007bff',
   },
   serviceList: {
     padding: 10,
@@ -91,7 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#ccc'
+    color: '#ccc',
   },
   serviceItem: {
     marginBottom: 15,
@@ -102,7 +101,7 @@ const styles = StyleSheet.create({
     borderColor: '#f0f0f0',
   },
   serviceItemActive: {
-    borderColor: '#007bff', 
+    borderColor: '#007bff',
   },
   serviceName: {
     fontSize: 16,
@@ -111,7 +110,7 @@ const styles = StyleSheet.create({
   serviceNamePur: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: 'gray'
+    color: 'gray',
   },
   servicePrice: {
     fontSize: 14,
@@ -133,7 +132,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   purchaseButton: {
-    backgroundColor: COLORS.Rhino, 
+    backgroundColor: COLORS.Rhino,
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
@@ -148,6 +147,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent background
   },
   searchContainer: {
     width: '90%',
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   headerSearchInput: {
-    flex: 1, 
+    flex: 1,
   },
   yourFamily: {
     fontSize: 20,

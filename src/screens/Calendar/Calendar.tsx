@@ -243,7 +243,7 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
   }
   const getDayTextColor = (date: string | number | Date) => {
     const today = new Date();
-    return isBefore(new Date(date), today) ? '#ccc' : 'black';
+    return isBefore(new Date(date), today) ? 'white' : color.text;
   };
 
   return (
@@ -315,7 +315,7 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
               calendarBackground: color.background,
               monthTextColor: color.text,
               textDecorationColor: color.background,
-              dayTextColor: (date: any) => getDayTextColor(date),
+              dayTextColor: color.text,
 
               textSectionTitleColor: color.text,
               agendaKnobColor: color.white,

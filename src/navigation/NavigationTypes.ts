@@ -3,6 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import {Member} from 'src/interface/member/member';
 import BottomSheet from '@gorhom/bottom-sheet';
+import {Family} from 'src/interface/family/family';
 
 export type RootParamList = {
   AuthStack: NavigatorScreenParams<AuthStackParamList>;
@@ -355,7 +356,9 @@ export type PackStackParamList = {
   ViewAllPackage: {
     id_family: number | null;
   };
-  ViewAllService: undefined;
+  ViewAllService: {
+    families: Family;
+  };
 
   BankInfoScreen: {
     id_family: number | null;

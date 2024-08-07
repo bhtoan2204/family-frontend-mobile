@@ -17,6 +17,7 @@ import {PaymentHistoryScreennProps} from 'src/navigation/NavigationTypes';
 import {Feather} from '@expo/vector-icons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import moment from 'moment';
 
 export interface PaymentHistoryItem {
   id_payment_history: number;
@@ -107,6 +108,9 @@ const PaymentHistoryScreen = ({
         return 'Unknown';
     }
   };
+  const formatCurrency = (amount: any) => {
+    return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+  };
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: color.background}}>
@@ -137,18 +141,22 @@ const PaymentHistoryScreen = ({
           <View
             key={index}
             style={[styles.paymentItem, {backgroundColor: color.white}]}>
-            <Text style={styles.paymentText}>Amount: {item.amount}</Text>
-            <Text style={styles.paymentText}>
+            <Text style={[styles.paymentText, {color: color.text}]}>
+              Amount: {formatCurrency(item.amount)}
+            </Text>
+            <Text style={[styles.paymentText, {color: color.text}]}>
               Type: {getTypeLabel(item.type)}
             </Text>
-            <Text style={styles.paymentText}>
+            <Text style={[styles.paymentText, {color: color.text}]}>
               Payment Method: {item.payment_method}
             </Text>
-            <Text style={styles.paymentText}>
-              Date: {new Date(item.created_at).toLocaleDateString()}
+            <Text style={[styles.paymentText, {color: color.text}]}>
+              Date: {moment(item.created_at).format('YYYY-MM-DD HH:mm')}
             </Text>
             <View style={{flexDirection: 'row'}}>
-              <Text style={[styles.paymentText]}>Order Status:</Text>
+              <Text style={[styles.paymentText, {color: color.text}]}>
+                Order Status:
+              </Text>
               <Text style={[{color: getStatusColor(item.orders.status)}]}>
                 {' '}
                 {item.orders.status}

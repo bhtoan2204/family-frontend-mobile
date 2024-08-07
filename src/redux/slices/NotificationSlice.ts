@@ -22,6 +22,9 @@ const notificationSlice = createSlice({
     setUnreadCount(state, action: PayloadAction<number>) {
       state.unreadCount = action.payload;
     },
+    addUnreadCount(state) {
+      state.unreadCount += 1;
+    },
     addNotification(state, action: PayloadAction<Noti>) {
       state.notifications.push(action.payload);
     },
@@ -41,6 +44,7 @@ export const {
   addNotification,
   markAsRead,
   setNotificationSlice,
+  addUnreadCount,
 } = notificationSlice.actions;
 
 export const selectNotifications = (state: RootState) =>

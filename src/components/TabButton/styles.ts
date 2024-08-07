@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 100,
     alignSelf: 'stretch',
-    
   },
   animated: {
     width: 50,
@@ -63,6 +62,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     position: 'absolute',
     bottom: 50,
+  },
+  notificationContainer: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  notificationText: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
   },
 });
 
