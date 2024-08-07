@@ -39,6 +39,7 @@ import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {Service} from 'src/interface/package/mainPackage';
 import {Toast} from 'react-native-toast-notifications';
+import {setExtraPackages} from 'src/redux/slices/FunctionSlice';
 
 const cards = [
   {
@@ -151,6 +152,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         selectedFamily?.id_family,
       );
       setFunctions(data);
+      dispatch(setExtraPackages(data));
     } catch (error) {
       console.log(error);
     }

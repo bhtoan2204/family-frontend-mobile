@@ -350,6 +350,8 @@ export type FamilyStackParamList = {
 
 export type PackStackParamList = {
   ViewAllPurchased: undefined;
+  PaymentHistoryScreen: undefined;
+
   ViewAllPackage: {
     id_family: number | null;
   };
@@ -1020,6 +1022,16 @@ export interface PurchasedScreenProps {
   navigation: ViewAllFamilyNavigationProp & FamilyStackNavigationProp;
   route: RouteProp<PackStackParamList, 'ViewAllPurchased'>;
 }
+
+type PaymentHistoryScreenNavigationProp = NativeStackNavigationProp<
+  PackStackParamList,
+  'PaymentHistoryScreen'
+>;
+export interface PaymentHistoryScreennProps {
+  navigation: PaymentHistoryScreenNavigationProp;
+  route: RouteProp<PackStackParamList, 'PaymentHistoryScreen'>;
+}
+
 type ViewAllServiceNavigationProp = NativeStackNavigationProp<
   PackStackParamList,
   'ViewAllService'

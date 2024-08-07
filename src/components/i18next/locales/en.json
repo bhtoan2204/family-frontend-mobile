@@ -453,5 +453,9 @@
   "New Check List": "New Check List",
   "New Shopping List": "New Shopping List",
   "Shopping List": "Shopping List",
-  "Category utility": "Category utility"
+  "Category utility": "Category utility",
+  "Add New Shopping List": "Add New Shopping List",
+  "Buy Service Shopping List": "Buy Service Shopping List",
+  "DAYS_LEFT": "Days left",
+  "PAYMENT_HISTORY": "Payment history"
 }

@@ -154,7 +154,7 @@ const modalStyles = StyleSheet.create({
     backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    maxHeight: '100%',
+    maxHeight: '80%',
     paddingBottom: 20,
   },
   header: {

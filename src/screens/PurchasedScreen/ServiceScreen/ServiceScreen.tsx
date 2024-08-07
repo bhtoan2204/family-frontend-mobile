@@ -209,7 +209,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
                     source={
                       item.avatar
                         ? {uri: item.avatar}
-                        : require('../../../assets/images/avatar.png')
+                        : require('../../../assets/images/big-family_4441180.png')
                     }
                     style={styles.avatar}
                   />

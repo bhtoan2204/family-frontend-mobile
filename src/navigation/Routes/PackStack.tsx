@@ -8,6 +8,7 @@ import ComboScreen from 'src/screens/ComboScreen';
 import ServiceScreen from 'src/screens/PurchasedScreen/ServiceScreen/ServiceScreen';
 import OrderDetailScreen from 'src/screens/OrderDetailScreen/OrderDetailPackage/OrderDetailScreen';
 import OrderDetailService from 'src/screens/OrderDetailScreen/OrderDetailService/OrderDetailService';
+import PaymentHistoryScreen from 'src/screens/PurchasedScreen/HistoryPayment';
 
 const Stack = createNativeStackNavigator<PackStackParamList>();
 
@@ -23,9 +24,12 @@ const PackStack = () => {
       <Stack.Screen name="BankInfoScreen" component={BankInfoScreen} />
       <Stack.Screen name="ViewAllPurchased" component={PurchasedScreen} />
       <Stack.Screen name="ViewAllService" component={ServiceScreen} />
-      <Stack.Screen name="ComboScreen" component={ComboScreen} />     
+      <Stack.Screen name="ComboScreen" component={ComboScreen} />
       <Stack.Screen name="OrderDetailService" component={OrderDetailService} />
-
+      <Stack.Screen
+        name="PaymentHistoryScreen"
+        component={PaymentHistoryScreen}
+      />
     </Stack.Navigator>
   );
 };

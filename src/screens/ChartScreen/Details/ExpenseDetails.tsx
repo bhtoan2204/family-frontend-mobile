@@ -25,6 +25,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {ExpenseServices} from 'src/services/apiclient';
 import {ExpenseType} from 'src/interface/expense/ExpenseType';
 import {
+  selectFamilyMembers,
   selectSelectedFamily,
   setSelectedMemberById,
 } from 'src/redux/slices/FamilySlice';
@@ -104,9 +105,15 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
     number | undefined
   >(expense?.financeExpenditureType?.id_expenditure_type);
 
+  const initialUtilityCategoryId =
+    expense?.utilities && expense?.utilities?.utilitiesType
+      ? expense.utilities.utilitiesType.id_utilities_type
+      : undefined;
+
   const [selectedUtilityCategoryId, setSelectedUtilityCategoryId] = useState<
     number | undefined
-  >(expense?.utilities.id_utilities_type);
+  >(initialUtilityCategoryId);
+  const members = useSelector(selectFamilyMembers);
 
   useEffect(() => {
     fetchExpenseType(family.id_family);
@@ -363,8 +370,15 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   };
 
   const pressMember = (id_user?: string) => {
-    dispatch(setSelectedMemberById(id_user));
-    navigation.navigate('FamilyStack', {screen: 'MemberDetails'});
+    if (expense?.users && id_user) {
+      const memberExists = members.some(member => member.id_user === id_user);
+      if (memberExists) {
+        dispatch(setSelectedMemberById(id_user));
+        navigation.navigate('FamilyStack', {screen: 'MemberDetails'});
+      } else {
+        Alert.alert('Notice', 'This member is not in the family.');
+      }
+    }
   };
 
   const handleCloseModal = () => {
@@ -600,7 +614,8 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
                     </Text>
                     <View style={styles.valueContainer}>
                       {!isEditing ? (
-                        expense?.financeExpenditureType ? (
+                        expense?.utilities &&
+                        expense?.utilities.utilitiesType ? (
                           <Text style={[styles.value, {color: color.text}]}>
                             {location === 'vi'
                               ? expense.utilities.utilitiesType.name_vn

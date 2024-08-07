@@ -55,6 +55,9 @@ const styles = StyleSheet.create({
   },
   familyInfo: {
     flex: 1,
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
   },
   familyName: {
     fontSize: 18,
@@ -278,7 +281,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContainer1: {
     width: '100%',
@@ -320,6 +322,7 @@ const styles = StyleSheet.create({
     height: 100,
     marginBottom: 20,
     marginTop: 10,
+    borderRadius: 10,
   },
   button2: {
     flex: 1,
@@ -329,6 +332,47 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 5,
     borderWidth: 1.5,
+  },
+
+  closeButton: {
+    padding: 5,
+  },
+  familyItem: {},
+  familyItemContainer: {
+    flexDirection: 'column',
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+
+  familyItemText: {
+    fontSize: 18,
+    color: 'gray',
+    fontWeight: 'bold',
+  },
+  membersList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  memberItemContainer: {
+    alignItems: 'center',
+    marginRight: 5,
+  },
+  avatar: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+  },
+  avatarFamily: {
+    width: 60,
+    height: 60,
+    borderRadius: 10,
+    marginRight: 10,
+  },
+  selectedFamilyItem: {
+    backgroundColor: '#E0F7FA',
   },
 });
 

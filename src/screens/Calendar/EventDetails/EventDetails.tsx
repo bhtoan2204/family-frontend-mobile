@@ -20,6 +20,7 @@ import {useThemeColors} from 'src/hooks/useThemeColor';
 import {Toast} from 'react-native-toast-notifications';
 import {RRule, rrulestr} from 'rrule';
 import {format} from 'date-fns';
+import {getExtraPackages} from 'src/redux/slices/FunctionSlice';
 const formatEventDate = (start: Date, end: Date) => {
   const formattedStart = format(start, 'yyyy-MM-dd');
   const formattedEnd = format(end, 'yyyy-MM-dd');
@@ -54,13 +55,13 @@ const fakeEvent = {
 };
 const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
   const {id_family} = route.params;
-  //const event = useSelector(selectSelectedEvent);
-  const event = fakeEvent;
+  const event = useSelector(selectSelectedEvent);
+  //const event = fakeEvent;
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
   const language = useSelector(selectLocale);
-
+  const extraPackage = useSelector(getExtraPackages);
   const startDate = new Date(event.time_start);
 
   const endDate = new Date(event.time_end);
@@ -588,19 +589,25 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
         renderChecklists()
       )}
       {!event.shoppingList ? (
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() =>
-            navigation.navigate('ShoppingListStack', {
-              screen: 'ShoppingList',
-              params: event.id_family,
-            })
-          }>
-          <Feather name="shopping-cart" size={24} color={color.text} />
-          <Text style={styles.buttonText}>
-            {translate('New Shopping List')}
-          </Text>
-        </TouchableOpacity>
+        extraPackage.some(pkg => pkg.name === 'Shopping List') ? (
+          <TouchableOpacity
+            style={[styles.addButton, {backgroundColor: color.primary}]}
+            onPress={() => navigation.navigate('NewShoppingList', {id_family})}>
+            <Text style={[styles.addButtonText, {color: color.text}]}>
+              {translate('Add New Shopping List')}
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={[styles.addButton, {backgroundColor: color.primary}]}
+            onPress={() =>
+              navigation.navigate('PackStack', {screen: 'ViewAllService'})
+            }>
+            <Text style={[styles.addButtonText, {color: color.text}]}>
+              {translate('Buy Service Shopping List')}
+            </Text>
+          </TouchableOpacity>
+        )
       ) : (
         renderShoppingList()
       )}

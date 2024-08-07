@@ -466,5 +466,9 @@
   "New Check List": "Danh sách kiểm tra mới",
   "New Shopping List": "Danh sách mua sắm mới",
   "Shopping List": "Danh sách mua sắm",
-  "Category utility": "Loại tiện ích"
+  "Category utility": "Loại tiện ích",
+  "Add New Shopping List": "Thêm danh sách mua sắm",
+  "Buy Service Shopping List": "Mua chức năng mua sắm",
+  "DAYS_LEFT": "Số ngày còn lại",
+  "PAYMENT_HISTORY": "Lịch sử thanh toán"
 }

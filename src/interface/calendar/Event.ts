@@ -1,3 +1,5 @@
+import {ShoppingListCategoryInterface} from '../checklist/checklist';
+
 export interface Event {
   id_calendar: number;
   title: string;
@@ -44,4 +46,5 @@ export interface EventDetail {
   created_at: string;
   updated_at: string;
   categoryEvent: CategoryEvent;
+  checklist: ShoppingListCategoryInterface[] | null;
 }
