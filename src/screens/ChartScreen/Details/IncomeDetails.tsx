@@ -18,6 +18,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {IncomeDetailScreenProps} from 'src/navigation/NavigationTypes';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
+  selectFamilyMembers,
   selectSelectedFamily,
   setSelectedMemberById,
 } from 'src/redux/slices/FamilySlice';
@@ -77,6 +78,11 @@ const IncomeDetailScreen = ({navigation}: IncomeDetailScreenProps) => {
   const [formattedAmount, setFormattedAmount] = useState(
     income?.amount.toString() || '',
   );
+  const members = useSelector(selectFamilyMembers);
+
+  useEffect(() => {
+    console.log(members);
+  }, []);
 
   useEffect(() => {
     if (income?.amount) {
@@ -216,9 +222,17 @@ const IncomeDetailScreen = ({navigation}: IncomeDetailScreenProps) => {
   };
 
   const pressMember = (id_user?: string) => {
-    dispatch(setSelectedMemberById(id_user));
-    navigation.navigate('FamilyStack', {screen: 'MemberDetails'});
+    if (income?.users && id_user) {
+      const memberExists = members.some(member => member.id_user === id_user);
+      if (memberExists) {
+        dispatch(setSelectedMemberById(id_user));
+        navigation.navigate('FamilyStack', {screen: 'MemberDetails'});
+      } else {
+        Alert.alert('Notice', 'This member is not in the family.');
+      }
+    }
   };
+
   const formatNumberWithDots = (value: any) => {
     if (value === '') return '';
 

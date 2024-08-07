@@ -127,12 +127,17 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
   };
 
   const selectCategory = (item: any) => {
-    dispatch(setType(selectedCategoryType));
-    if (selectedCategoryType === 'Expense') {
-      dispatch(setSelectedExpenseType(item));
-    } else if (selectedCategoryType === 'Income') {
-      dispatch(setSelectedIncomeType(item));
+    if (item.expense_type_name !== 'Utilities') {
+      dispatch(setType(selectedCategoryType));
+      if (selectedCategoryType === 'Expense') {
+        dispatch(setSelectedExpenseType(item));
+      } else if (selectedCategoryType === 'Income') {
+        dispatch(setSelectedIncomeType(item));
+      }
+    } else {
+      dispatch(setType('Utilities'));
     }
+
     navigation.navigate('FamilyTab', {screen: 'Expense'});
   };
 

@@ -80,7 +80,10 @@ const CategoryIncome: React.FC<Props> = ({
             {fontSize: 18},
             {color: color.text},
           ]}>
-          {incomeCategory?.income_source_name || translate('Select category')}
+          {location === 'vn'
+            ? incomeCategory?.income_source_name_vn
+            : incomeCategory?.income_source_name ||
+              translate('Select category')}
         </Text>
 
         <TouchableOpacity

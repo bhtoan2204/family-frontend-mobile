@@ -65,7 +65,10 @@ const CategoryExpense = ({
             {fontSize: 18},
             {color: color.text},
           ]}>
-          {expenseCategory?.expense_type_name || translate('Select category')}
+          {location === 'vn'
+            ? expenseCategory?.expense_type_name_vn
+            : expenseCategory?.expense_type_name ||
+              translate('Select category')}
         </Text>
 
         <TouchableOpacity

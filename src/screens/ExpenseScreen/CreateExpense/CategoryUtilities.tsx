@@ -80,7 +80,9 @@ const CategoryUtilities = ({
             {fontSize: 18},
             {color: color.text},
           ]}>
-          {utilitiesSelect?.name_vn || translate('Select category')}
+          {location === 'vn'
+            ? utilitiesSelect?.name_vn
+            : utilitiesSelect?.name_en || translate('Select category')}
         </Text>
       </View>
       <View style={{height: 1, backgroundColor: color.background, bottom: 5}} />

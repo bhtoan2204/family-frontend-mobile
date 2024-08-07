@@ -30,6 +30,47 @@ const ExpenseServices = {
       console.error('Error in getExpenseType:', error.message);
     }
   },
+  getUtilityType: async () => {
+    try {
+      const response: AxiosResponse = await instance.get(
+        `${baseUrl}/api/v1/utilities/getUtilityTypes`,
+      );
+
+      if (response.status === 200) {
+        return response.data.data;
+      } else {
+        console.error('Error in getUtilityType');
+      }
+    } catch (error: any) {
+      console.error('Error in getUtilityType:', error.message);
+    }
+  },
+
+  updateUtility: async (
+    id_utility: number,
+    id_family: number,
+    id_utilities_type: number,
+  ) => {
+    try {
+      const response: AxiosResponse = await instance.put(
+        `${baseUrl}/api/v1/utilities/updateUtility`,
+        {
+          id_utility,
+          id_family,
+          id_utilities_type,
+        },
+      );
+      console.log('updateUtility: ', response.data.data);
+      if (response.status === 200) {
+        return response.data.data;
+      } else {
+        console.error('Error in updateUtility');
+      }
+    } catch (error: any) {
+      console.error('Error in updateUtility:', error.message);
+    }
+  },
+
   getAsset: async (
     id_family: number,
     page: number,
@@ -438,7 +479,6 @@ const ExpenseServices = {
       const createFormData = (uri?: string): FormData => {
         let formData = new FormData();
 
-        // Chỉ thêm các trường không phải null hoặc undefined vào FormData
         if (id_expenditure !== null) {
           formData.append('id_expenditure', String(id_expenditure));
         }
