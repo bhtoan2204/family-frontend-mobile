@@ -22,56 +22,80 @@ const CourseItem = ({ data, onPress, index }: CourseItemProps) => {
     // const rand_gradient = gradients_list[Math.floor(Math.random() * gradients_list.length)]
 
     const getColor = (data: Subject) => {
-        const p = calculateProgress(data)
+        const p = handleCalculateExpectedScore()
         if (p <= 36) return progress_color.LessThan36
         else if (p <= 51) return progress_color.LessThan51
         else if (p <= 96) return progress_color.LessThan99
         else if (p == 100) return progress_color.Equal100
     }
 
-    const calculateScore = (data: Subject) => {
-        let totalComponent = 0;
-        let total = 0
+    const handleCalculateScore = React.useCallback(() => {
+        let totalScore = 0
+        let totalExpectedScore = 0
+        let scoreCount = 0
+        let expectedCount = 0
 
-        if (data.midterm_score) {
-            if (data.midterm_score.score) {
-                totalComponent += 1;
-                total += data.midterm_score.score;
-            }
-        }
-        if (data.final_score != null) {
-            if (data.final_score.score) {
-                totalComponent += 1;
-                total += data.final_score.score;
-            }
-        }
-        if (data.component_scores) {
-            data.component_scores.forEach((item) => {
-                if (item.score) total += item.score;
-            })
-            return total / (data.component_scores.length + totalComponent);
-        }
-        return 0;
-    }
+        if (data) {
 
-    const calculateProgress = (data: Subject) => {
-        const i = 2; //Điểm của final và midterm
-        const isFinalDone = data.final_score
-            ? data.final_score.score
-                ? 1 : 0
-            : 0;
-        const isMidtermDone = data.midterm_score ? data.midterm_score.score ? 1 : 0 : 0;
+            if (data.component_scores != null) {
+                data.component_scores.map((item) => {
+                    if (item.score != null && item.score != 0) {
+                        scoreCount += 1
+                        totalScore += parseFloat((item.score).toString())
+                    }
+                    if (item.target_score != null && item.target_score != 0) {
+                        expectedCount += 1
+                        totalExpectedScore += parseFloat((item.target_score).toString())
+                    }
+                })
+
+            }
+            return parseFloat((totalScore / scoreCount).toPrecision(2))
+
+        }
+    }, [data])
+
+    const handleCalculateExpectedScore = React.useCallback(() => {
         if (data.component_scores) {
             let total = 0;
             data.component_scores.forEach((item) => {
-                if (item.score) total += 1;
+                if (item.score && item.score != 0) total += 1;
             })
-            const fin = (total + isFinalDone + isMidtermDone) * 100 / (data.component_scores.length + i);
+            const fin = (total) * 100 / (data.component_scores.length);
             return Math.floor(fin)
         }
         return 0;
+    }, [data])
 
-    }
+    // const calculateScore = (data: Subject) => {
+    //     let totalComponent = 0;
+    //     let total = 0
+
+
+    //     if (data.component_scores) {
+    //         data.component_scores.forEach((item) => {
+    //             if (item.score != null && item.score != 0) {
+    //                 total += parseFloat((item.score).toString())
+    //             }
+    //         })
+    //         return total / (data.component_scores.length);
+    //     }
+    //     return 0;
+    // }
+
+    // const calculateProgress = (data: Subject) => {
+
+    //     if (data.component_scores) {
+    //         let total = 0;
+    //         data.component_scores.forEach((item) => {
+    //             if (item.score && item.score != 0) total += 1;
+    //         })
+    //         const fin = (total) * 100 / (data.component_scores.length);
+    //         return Math.floor(fin)
+    //     }
+    //     return 0;
+
+    // }
 
     return (
         data && <TouchableOpacity className=' h-auto  mt-4 mx-5 ' onPress={onPress}>
@@ -112,12 +136,12 @@ const CourseItem = ({ data, onPress, index }: CourseItemProps) => {
                         }}
                         numberOfLines={1}
 
-                    >Total score: {calculateScore(data)}</Text>
+                    >Total score: {handleCalculateScore()}</Text>
                 </View>
                 <View className='flex-row items-center  '>
                     <CircularProgress
                         size={60}
-                        progress={calculateProgress(data)}
+                        progress={handleCalculateExpectedScore()}
                         strokeWidth={5}
                         backgroundColor="#e0e0e0"
                         progressColor={getColor(data)}

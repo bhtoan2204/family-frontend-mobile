@@ -22,10 +22,14 @@ import CourseItem from 'src/components/user/education/progress-screen/course-ite
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import AddCourseSheet from 'src/components/user/education/progress-screen/sheet/add-course-sheet';
 import { useToast } from 'react-native-toast-notifications';
-
+import { goal_data } from 'src/components/user/education/progress-screen/const/color';
+import AddComponentScoreSheet from 'src/components/user/education/subject-screen/sheet/AddComponentScoreSheet';
+import AddComponentScoreSheet1 from 'src/components/user/education/subject-screen/sheet/add-component-score-sheet-1';
+import AddComponentScoreSheet2 from 'src/components/user/education/subject-screen/sheet/add-component-score-sheet2';
 const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) => {
     const { id_family, id_progress } = route.params
-
+    console.log('id_family', id_family)
+    console.log('id_progress', id_progress)
     const dispatch = useDispatch<AppDispatch>()
     const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
     const [choosenTab, setChoosenTab] = React.useState<number>(0)
@@ -34,15 +38,24 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
     const progressData = useSelector((state: RootState) => state.educations).find(item => {
         return item.id_education_progress == id_progress
     })
+    console.log(progressData)
 
+    const [pickedTargets, setPickedTargets] = React.useState<string[]>([])
+
+    const [goalData, setGoalData] = React.useState<{
+        id: number,
+        title: string,
+        color: string,
+    }[]>(goal_data)
     const [filteredData, setFilteredData] = React.useState<Subject[]>([])
 
     const addCourseBottomSheetRef = useRef<BottomSheet>(null)
-
+    const pickedTargetsBottomSheetRef = useRef<BottomSheet>(null)
+    const addGoalBottomSheetRef = useRef<BottomSheet>(null)
     useEffect(() => {
-
         if (progressData) {
             const subjects = progressData.subjects
+            console.log(subjects)
             const filtered = subjects.filter(item => {
                 if (choosenTab == 0) {
                     return item.id_education_progress == id_progress
@@ -123,6 +136,8 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
             <AddCourseSheet bottomSheetRef={addCourseBottomSheetRef} id_family={id_family!} id_education_progress={id_progress!}
                 onAddSuccess={
                     () => {
+                        setGoalData(goal_data)
+                        setPickedTargets([])
                         toast.show("New subject added for family", {
                             type: "success",
                             duration: 2000,
@@ -139,6 +154,62 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
                         });
                     }
                 }
+                pickedTargets={pickedTargets}
+                pickTargetBottomSheetRef={pickedTargetsBottomSheetRef}
+                targets={goalData}
+            />
+            <AddComponentScoreSheet1
+                bottomSheetRef={pickedTargetsBottomSheetRef}
+                addComponentSheet2Ref={addGoalBottomSheetRef}
+                pickedTargets={pickedTargets}
+                targetData={goalData}
+                id_education_progress={id_progress!}
+                id_family={id_family!}
+                onAddSuccess={() => {
+
+                    toast.show("New component score added", {
+                        type: "success",
+                        duration: 2000,
+                        icon: <Material name="check" size={24} color={"white"} />,
+                    });
+                }}
+                onAddFailed={() => {
+                    toast.show("Failed to add new component score", {
+                        type: "error",
+                        duration: 2000,
+                        icon: <Material name="close" size={24} color={"white"} />,
+                    });
+                }}
+                setPickedTargets={(id: string) => {
+                    setPickedTargets((prev) => {
+                        return [...prev, id]
+                    })
+                }}
+                removePickedTargets={(id: string) => {
+                    setPickedTargets((prev) => {
+                        return prev.filter(item => item != id)
+                    })
+                }}
+            />
+            <AddComponentScoreSheet2
+                bottomSheetRef={addGoalBottomSheetRef}
+                addComponentSheet1Ref={pickedTargetsBottomSheetRef}
+                onAddSuccess={(input: string) => {
+                    const newGoal = {
+                        id: goalData.length + 1,
+                        title: input,
+                        color: COLORS.DenimBlue
+                    }
+                    console.log(newGoal)
+                    setGoalData((prev) => {
+                        return [...prev, newGoal]
+                    })
+                    setPickedTargets((prev) => {
+                        return [...prev, newGoal.id.toString()]
+                    })
+                    // setGoalData([...goalData, newGoal])
+                    // setPickedTargets([...pickedTargets, newGoal.id.toString()])
+                }}
             />
         </View>
 

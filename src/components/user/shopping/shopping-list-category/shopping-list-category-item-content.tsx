@@ -16,7 +16,7 @@ interface ShoppingListCategoryItemContentProps {
     onUnpurchase: () => void
 }
 
-const ShoppingListCategoryItemContent = ({ item, index, isLast, handleNavigateItemDetail, handleCompleteItem, onPurchase,onUnpurchase }: ShoppingListCategoryItemContentProps) => {
+const ShoppingListCategoryItemContent = ({ item, index, isLast, handleNavigateItemDetail, handleCompleteItem, onPurchase, onUnpurchase }: ShoppingListCategoryItemContentProps) => {
     const isDarkMode = useSelector(getIsDarkMode)
     return (
         <ListItem onPress={() => {
@@ -69,7 +69,10 @@ const ShoppingListCategoryItemContent = ({ item, index, isLast, handleNavigateIt
                                 item?.is_purchased && <Material name='check' size={20} color={'white'} />
                             }
                         </TouchableOpacity>
-                        <Text className='text-base text-[#2F2F34] dark:text-white'>{item.item_name}</Text>
+
+                        <View className="mr-2">
+                            <Text className='text-base text-[#2F2F34] dark:text-white w-40' numberOfLines={1} >{item.item_name}</Text>
+                        </View>
                     </View>
                     <View className='justify-end '>
                         <Text className='text-sm text-[#B2B2B4]'>{item.price} VND</Text>

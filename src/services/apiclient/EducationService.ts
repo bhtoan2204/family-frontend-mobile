@@ -185,6 +185,54 @@ const EducationServices = {
       throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
+  createSubjectAndComponentScores: async (
+    id_education_progress: number,
+    id_family: number,
+    subject_name: string,
+    description: string,
+    component_scores: {
+      id: number;
+      title: string;
+      color: string;
+    }[],
+  ) => {
+    try {
+      const response = await EducationServices.createSubject(
+        id_education_progress,
+        id_family,
+        subject_name,
+        description,
+      );
+      if (response) {
+        const id_subject = response.id_subject as number;
+        const componentScores = component_scores.map((component, index) => {
+          return {
+            id_subject: id_subject,
+            id_education_progress: id_education_progress,
+            id_family: id_family,
+            component_name: component.title,
+            score: null,
+            target_score: 10,
+            maximum_score: 10,
+          };
+        });
+        const res = await instance.post(EducationUrls.addComponentScore, {
+          id_subject,
+          id_education_progress,
+          id_family,
+          component_scores: componentScores,
+        });
+        if (res) {
+          return res.data.data as Subject;
+        } else {
+          return null;
+        }
+      }
+    } catch (error: any) {
+      console.log(error.message);
+      throw new Error(ERROR_TEXTS.API_ERROR);
+    }
+  },
   updateSubject: async (
     id_subject: number,
     id_education_progress: number,

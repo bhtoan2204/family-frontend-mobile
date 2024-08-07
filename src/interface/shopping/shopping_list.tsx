@@ -84,9 +84,9 @@ export interface ShoppingListItem {
     is_purchased: boolean;
     priority_level: number;
     reminder_date: string;
-    price: string;
+    price: number;
     created_at: string;
     updated_at: string;
     itemType: ShoppingListItemType;
-    shoppingList: ShoppingList;
+    // shoppingList: ShoppingList;
 }

@@ -14,24 +14,6 @@ const educationSlice = createSlice({
   initialState,
   reducers: {
     setEducation(state, action: PayloadAction<Education[]>) {
-      const newEducation = action.payload.map(education => {
-        return {
-          ...education,
-          subjects: education.subjects.map(subject => {
-            return {
-              ...subject,
-              midterm_score: {
-                component_name: 'Midterm',
-                score: subject.midterm_score,
-              },
-              final_score: {
-                component_name: 'Final',
-                score: subject.final_score,
-              },
-            };
-          }),
-        };
-      });
       return action.payload;
     },
     clearEducation(state) {
@@ -161,27 +143,15 @@ const educationSlice = createSlice({
           subject => subject.id_subject === action.payload.id_subject,
         );
         if (subjectIndex !== -1) {
-          if (action.payload.index == -1) {
-            state[index].subjects[subjectIndex].final_score = {
-              ...state[index].subjects[subjectIndex].final_score,
-              score: action.payload.score,
-            };
-          } else if (action.payload.index == -2) {
-            state[index].subjects[subjectIndex].midterm_score = {
-              ...state[index].subjects[subjectIndex].midterm_score,
-              score: action.payload.score,
-            };
-          } else {
-            state[index].subjects[subjectIndex].component_scores[
+          state[index].subjects[subjectIndex].component_scores[
+            action.payload.index
+          ] = {
+            // component_name: action.payload.component_name,
+            ...state[index].subjects[subjectIndex].component_scores[
               action.payload.index
-            ] = {
-              // component_name: action.payload.component_name,
-              ...state[index].subjects[subjectIndex].component_scores[
-                action.payload.index
-              ],
-              score: action.payload.score,
-            };
-          }
+            ],
+            score: action.payload.score,
+          };
         }
       }
     },
@@ -204,27 +174,15 @@ const educationSlice = createSlice({
           subject => subject.id_subject === action.payload.id_subject,
         );
         if (subjectIndex !== -1) {
-          if (action.payload.index === -1) {
-            state[index].subjects[subjectIndex].final_score = {
-              ...state[index].subjects[subjectIndex].final_score,
-              score: action.payload.score,
-            };
-          } else if (action.payload.index === -2) {
-            state[index].subjects[subjectIndex].midterm_score = {
-              ...state[index].subjects[subjectIndex].midterm_score,
-              score: action.payload.score,
-            };
-          } else {
-            state[index].subjects[subjectIndex].component_scores[
+          state[index].subjects[subjectIndex].component_scores[
+            action.payload.index
+          ] = {
+            ...state[index].subjects[subjectIndex].component_scores[
               action.payload.index
-            ] = {
-              ...state[index].subjects[subjectIndex].component_scores[
-                action.payload.index
-              ],
-              // component_name: action.payload.component_name,
-              expected_score: action.payload.score,
-            };
-          }
+            ],
+            // component_name: action.payload.component_name,
+            expected_score: action.payload.score,
+          };
         }
       }
     },
@@ -303,27 +261,15 @@ const educationSlice = createSlice({
           subject => subject.id_subject === action.payload.id_subject,
         );
         if (subjectIndex !== -1) {
-          if (action.payload.index === -1) {
-            state[index].subjects[subjectIndex].final_score = {
-              ...state[index].subjects[subjectIndex].final_score,
-              score: null,
-            };
-          } else if (action.payload.index === -2) {
-            state[index].subjects[subjectIndex].midterm_score = {
-              ...state[index].subjects[subjectIndex].midterm_score,
-              score: null,
-            };
-          } else {
-            state[index].subjects[subjectIndex].component_scores[
+          state[index].subjects[subjectIndex].component_scores[
+            action.payload.index
+          ] = {
+            ...state[index].subjects[subjectIndex].component_scores[
               action.payload.index
-            ] = {
-              ...state[index].subjects[subjectIndex].component_scores[
-                action.payload.index
-              ],
-              expected_score: null,
-              score: null,
-            };
-          }
+            ],
+            expected_score: null,
+            score: null,
+          };
         }
       }
     },

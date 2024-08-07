@@ -372,6 +372,8 @@ export type PackStackParamList = {
 type GuidelineStackParamList = {
   GuildLine: {
     id_family: number | undefined;
+    id_household_item: number | undefined;
+    openSheet: boolean;
   };
   GuildLineDetail: {
     id_family: number | undefined;
@@ -647,6 +649,7 @@ type ShoppingListStackParamList = {
   ShoppingListCategory: {
     id_family: number | undefined;
     id_category: number;
+    openSheet: boolean;
   };
   ShoppingListDetail: {
     id_family: number | undefined;
@@ -1172,10 +1175,10 @@ export interface EducationDetailScreenProps {
   route: RouteProp<FamilyStackParamList, 'EducationDetail'>;
 }
 
-export interface GuildLineScreenProps {
-  navigation: GuildLineNavigationProp;
-  route: RouteProp<FamilyStackParamList, 'GuildLine'>;
-}
+// export interface GuildLineScreenProps {
+//   navigation: GuildLineNavigationProp;
+//   route: RouteProp<FamilyStackParamList, 'GuildLine'>;
+// }
 
 export interface GuildLineDetailScreenProps {
   navigation: GuildLineDetailNavigationProp;

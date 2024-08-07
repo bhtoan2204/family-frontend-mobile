@@ -62,7 +62,7 @@ export interface Education {
   created_at: string;
   updated_at: string;
   subjects: Subject[];
-  user: {
+  users: {
     firstname: string;
     lastname: string;
     avatar: string;
@@ -96,11 +96,11 @@ export interface Subject {
   subject_name: string;
   description: string;
   component_scores: ComponentScore[];
-  midterm_score: ComponentScore | null;
-  final_score: ComponentScore | null;
+  // midterm_score: ComponentScore | null;
+  // final_score: ComponentScore | null;
   // midterm_score?: number | null;
   // final_score?: number | null;
-  bonus_score?: number | null;
+  // bonus_score?: number | null;
   status: string;
   score_calculated?: number;
   progress_calculated?: number;
@@ -108,6 +108,7 @@ export interface Subject {
 
 export interface ComponentScore {
   expected_score?: number | null;
+  target_score?: number | null;
   score?: number | null;
   component_name?: string;
   // id_family: number;

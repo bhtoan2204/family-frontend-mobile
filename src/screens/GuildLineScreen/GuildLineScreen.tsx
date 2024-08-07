@@ -21,7 +21,7 @@ import UpdateGuidelineSheet from 'src/components/user/guideline/sheet/update-gui
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 import { ScreenHeight } from 'react-native-elements/dist/helpers'
 import { useToast } from 'react-native-toast-notifications'
-import { getTranslate } from 'src/redux/slices/languageSlice' 
+import { getTranslate } from 'src/redux/slices/languageSlice'
 // id_item: number;
 //   name: string;
 //   description: string;
@@ -40,7 +40,7 @@ const guildLineData: Guildline = {
 
 
 const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) => {
-    const { id_family } = route.params
+    const { id_family, id_household_item, openSheet } = route.params
     // const [guidelines, setGuidelines] = React.useState<Guildline[]>([]);
     const dispatch = useDispatch<AppDispatch>();
     const translate = useSelector(getTranslate);
@@ -258,7 +258,10 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                     navigation.navigate('SharedGuildLine', { id_family: id_family, id_item: guildLineData.id_item })
                 }} /> */}
             {/* <AddGuildLineSheet refRBSheet={refRBSheet} /> */}
-            <AddGuidelineSheet bottomSheetRef={addGuidelineBottomSheetRef} id_family={id_family!}
+            <AddGuidelineSheet
+                appearsOnIndex={openSheet}
+                bottomSheetRef={addGuidelineBottomSheetRef}
+                id_family={id_family!}
                 onAddSuccess={
                     () => {
                         toast.show("New guideline added", {

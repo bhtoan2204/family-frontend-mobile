@@ -29,6 +29,7 @@ interface EducationScreenHeaderProps {
     handleDeleteItem?: () => void
     navigationBack?: () => void
     addProgressBottomSheetRef: React.RefObject<BottomSheet>
+    pickMemberBottomSheetRef: React.RefObject<BottomSheet>
 }
 
 const screenWidth = Dimensions.get('window').width;
@@ -41,7 +42,7 @@ const Divider = () => {
 }
 
 const EducationScreenHeader = ({
-    imageUrl, idFamily, handleEditImage, handleEditTitle, handleDeleteItem, navigationBack, addProgressBottomSheetRef
+    imageUrl, idFamily, handleEditImage, handleEditTitle, handleDeleteItem, navigationBack, addProgressBottomSheetRef, pickMemberBottomSheetRef
 }: EducationScreenHeaderProps) => {
 
 
@@ -52,6 +53,7 @@ const EducationScreenHeader = ({
             }}>
                 <ImageBackground
                     source={imageUrl ? { uri: imageUrl } : gradients_list[idFamily % gradients_list.length]}
+                    // source={gradients_list[idFamily % gradients_list.length]}
                     style={{ width: screenWidth, height: screenHeight * 0.3 }}
                 >
                     <View className='w-full absolute z-10 flex-row justify-between items-center py-3 mt-5'>
@@ -72,7 +74,8 @@ const EducationScreenHeader = ({
 
                         <BlurView intensity={35} tint='dark' className='flex-row items-center  mr-1 rounded-lg overflow-hidden'>
                             <TouchableOpacity className='' onPress={() => {
-                                addProgressBottomSheetRef.current?.expand()
+                                // addProgressBottomSheetRef.current?.expand()
+                                pickMemberBottomSheetRef.current?.expand()
                             }}>
                                 <Material name="plus" size={29} style={{ color: 'white', fontWeight: "bold" }} />
                             </TouchableOpacity>

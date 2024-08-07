@@ -70,7 +70,8 @@ const mapByItemType2 = (items: ShoppingListItem[]): Map<string, ShoppingListItem
 }
 
 const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryScreenProps) => {
-    const { id_family, id_category } = route.params
+    const { id_family, id_category, openSheet } = route.params
+    console.log(openSheet)
     // console.log('id_family', id_family, 'id_category', id_category)
     const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
     const shoppingListInfo = useSelector((state: RootState) => state.shoppinglist).shoppingList.filter((item) => item.id_shopping_list_type === id_category)
@@ -89,13 +90,11 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
     const toast = useToast()
 
     // const items: ShoppingListItem[] = []
-    useEffect(() => {
-        console.log("shopping list", shoppingListInfo)
-        console.log(items)
-    }, [shoppingListInfo])
+    // useEffect(() => {
+    //     console.log("shopping list", shoppingListInfo)
+    //     console.log(items)
+    // }, [shoppingListInfo])
 
-    useEffect(() => {
-    }, [])
 
 
     const getImage = (id_category: number) => {
@@ -279,10 +278,14 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
 
                 </View>
             </View>
-            <AddItemSheet addRoomSheetRef={addCategoryBottomSheetRef} id_family={id_family!} bottomSheetRef={addItemBottomSheetRef}
+            <AddItemSheet
+                addRoomSheetRef={addCategoryBottomSheetRef}
+                id_family={id_family!}
+                bottomSheetRef={addItemBottomSheetRef}
                 pickedCategory={pickedCategory}
                 categories={categories}
                 id_shopping_list_type={id_category!}
+                appearOnIndex={openSheet}
                 onAddSuccess={
                     () => {
                         toast.show("New shopping item added", {

@@ -3,7 +3,12 @@ import { View, Text, ScrollView, RefreshControl, Keyboard, Dimensions, Image, To
 import { COLORS } from 'src/constants'
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
+import RoomIcon from 'src/assets/images/household_assets/room.png';
+import ImageIcon from 'src/assets/images/household_assets/image.png';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as ImagePicker from 'expo-image-picker';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import HouseHoldService from 'src/services/apiclient/HouseHoldService';
 import { AppDispatch, RootState } from 'src/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { addRoom } from 'src/redux/slices/RoomSlice';
@@ -11,31 +16,35 @@ import { HouseHoldItemInterface } from 'src/interface/household/household_item';
 import * as Animatable from 'react-native-animatable';
 import CategoryIcon from 'src/assets/images/household_assets/category.png';
 
+import NewItemImageSheet from 'src/assets/images/household_assets/new_item_image_sheet.png'
+import Camera from 'src/assets/images/household_assets/Camera.png'
+import Ingredients from 'src/assets/images/household_assets/Ingredients.png'
+import OpenedFolder from 'src/assets/images/household_assets/OpenedFolder.png'
+import Room2 from 'src/assets/images/household_assets/Room_2.png'
 
-import AddCourseImage from 'src/assets/images/education_assets/add_course_img.png';
-import { Subject } from 'src/interface/education/education';
-import { GuideLineService } from 'src/services/apiclient';
-import { addGuideline } from 'src/redux/slices/GuidelineSlice';
+import { BlurView } from 'expo-blur';
+import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interface/shopping/shopping_list';
+import { addShoppingList, addShoppingListItem } from 'src/redux/slices/ShoppingListSlice';
+import EducationServices from 'src/services/apiclient/EducationService';
+import { addComponentScoreToSubject } from 'src/redux/slices/EducationSlice';
+import AddComponentScoreImage from 'src/assets/images/education_assets/add_component_score_img.png';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
-
+import { handleRestore } from 'src/utils/sheet/func';
+import TargetImage from 'src/assets/images/education_assets/target.png';
 
 interface AddItemSheetProps {
-    bottomSheetRef: React.RefObject<BottomSheet>
-    id_family: number;
-    onAddSuccess: () => void;
-    onAddFailed: () => void;
-    appearsOnIndex: boolean;
+    bottomSheetRef: React.RefObject<BottomSheet>;
+    addComponentSheet1Ref: React.RefObject<BottomSheet>;
+    onAddSuccess: (input: string) => void;
 }
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
-const AddGuidelineSheet = ({
+const AddComponentScoreSheet2 = ({
     bottomSheetRef,
-    id_family,
-    appearsOnIndex,
+    addComponentSheet1Ref,
     onAddSuccess,
-    onAddFailed
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
 
@@ -47,10 +56,7 @@ const AddGuidelineSheet = ({
     const [showError, setShowError] = React.useState(false)
 
     const [inputName, setInputName] = React.useState('')
-    const [inputDescription, setInputDescription] = React.useState('')
     const isDarkMode = useSelector(getIsDarkMode)
-
-
     useEffect(() => {
         if (showError) {
             setTimeout(() => {
@@ -72,88 +78,20 @@ const AddGuidelineSheet = ({
 
     const handleAddComponentScore = async () => {
         Keyboard.dismiss()
-        await Promise.resolve(
-            new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve('1')
-                }, 100)
-            })
-        )
-
-        try {
-            const newGuildline = await GuideLineService.addGuildLine(id_family!, inputName, inputDescription)
-            console.log(newGuildline)
-            if (newGuildline) {
-                dispatch(addGuideline(newGuildline))
-                bottomSheetRef.current?.close()
-                onAddSuccess()
-            } else {
-                setShowError(true)
-                setErrorText('Failed to add new guideline')
-                onAddFailed()
-            }
-
-        } catch (error) {
-            console.log(error)
-        }
+        await handleRestore()
+        onAddSuccess(inputName)
+        setInputName('')
+        bottomSheetRef.current?.close()
     }
 
-    const buildInputName = () => {
-        return <BottomSheetTextInput
-            placeholder='Give your new guideline a name'
-            value={inputName}
-            onChangeText={(text) => {
-                setInputName(text)
-            }}
-            // className='rounded-lg'
-            style={{
-                backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
-                borderWidth: !isDarkMode ? 1 : 1.5,
-                borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
-                borderRadius: 10,
-                marginVertical: 10,
-                paddingVertical: screenHeight * 0.02,
-                paddingHorizontal: screenWidth * 0.05,
-                marginHorizontal: screenWidth * 0.05,
-                // fontWeight: 'bold',
-                fontSize: 15,
-                color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
-            }}
-        />
-    }
 
-    const buildInputDescription = () => {
-        return <BottomSheetTextInput
-            placeholder='Give your new guideline some description'
-            value={inputDescription}
-            onChangeText={(text) => {
-                setInputDescription(text)
-            }}
-            // className='rounded-lg'
-            style={{
-                backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
-                borderWidth: !isDarkMode ? 1 : 1.5,
-                borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
-                borderRadius: 10,
-                marginVertical: 10,
-                paddingVertical: screenHeight * 0.02,
-                paddingHorizontal: screenWidth * 0.05,
-                marginHorizontal: screenWidth * 0.05,
-                // fontWeight: 'bold',
-                fontSize: 15,
-                color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
-            }}
-        />
-
-
-    }
 
 
 
     return (
         <BottomSheet
             ref={bottomSheetRef}
-            index={appearsOnIndex ? 0 : -1}
+            index={-1}
             enableOverDrag={true}
             enablePanDownToClose={loading ? false : true}
             enableDynamicSizing={true}
@@ -175,9 +113,6 @@ const AddGuidelineSheet = ({
 
                 }
             }}
-            style={{
-                zIndex: 100
-            }}
         // keyboardBehavior="extend"
         // keyboardBlurBehavior="restore"
 
@@ -187,20 +122,34 @@ const AddGuidelineSheet = ({
 
                     <View className='flex-1  mt-10'>
                         <View className='my-3 items-center'>
-                            <Image source={AddCourseImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
+                            <Image source={TargetImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                         </View>
                         <View className=' items-center'>
-                            <Text className='text-base font-semibold text-[#2A475E] dark:text-white'>Add New Guideline</Text>
-                            <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >Give your guideline a name and a description</Text>
+                            <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >Add New Target</Text>
+                            <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]'>Give your new component score a name</Text>
                         </View>
+                        <BottomSheetTextInput
+                            placeholder='Name of the item'
+                            value={inputName}
+                            onChangeText={(text) => {
+                                setInputName(text)
+                            }}
+                            // className='rounded-lg'
+                            style={{
+                                backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
+                                borderWidth: !isDarkMode ? 1 : 1.5,
+                                borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
+                                borderRadius: 10,
+                                marginVertical: 10,
+                                paddingVertical: screenHeight * 0.02,
+                                paddingHorizontal: screenWidth * 0.05,
+                                marginHorizontal: screenWidth * 0.05,
+                                // fontWeight: 'bold',
+                                fontSize: 15,
+                                color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
+                            }}
+                        />
 
-                        {
-                            buildInputName()
-                        }
-
-                        {
-                            buildInputDescription()
-                        }
 
 
 
@@ -235,4 +184,4 @@ const AddGuidelineSheet = ({
 }
 
 
-export default AddGuidelineSheet
+export default AddComponentScoreSheet2
