@@ -53,7 +53,11 @@ const AddEditDescriptionSheet = ({
 
     }, [showError])
 
-
+    useEffect(() => {
+        if (description) {
+            setInputDescription(description)
+        }
+    }, [description])
 
     const renderBackdrop = React.useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} pressBehavior={
@@ -81,7 +85,6 @@ const AddEditDescriptionSheet = ({
             setShowError(true)
             setErrorText('Something went wrong')
         }
-        // console.log({ id_family: 1, room_name: text, room_image: image_uri })
     }
 
     const buildAddDesc = () => {
@@ -132,10 +135,6 @@ const AddEditDescriptionSheet = ({
                 Keyboard.dismiss()
             }}
             onChange={(index) => {
-                console.log("cc", index)
-                if (index == -1) {
-
-                }
             }}
 
         >
@@ -154,7 +153,8 @@ const AddEditDescriptionSheet = ({
                 }
             </>
 
-            <BottomSheetScrollView className='flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]' automaticallyAdjustKeyboardInsets
+            <BottomSheetScrollView className='flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]'
+                automaticallyAdjustKeyboardInsets
                 keyboardShouldPersistTaps='handled'
                 style={{
                     backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7',

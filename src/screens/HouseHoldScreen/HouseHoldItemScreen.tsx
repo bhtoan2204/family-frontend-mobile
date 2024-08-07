@@ -73,23 +73,53 @@ const HouseHoldItemScreen: React.FC<HouseHoldItemScreenProps> = ({ navigation, r
                     >
                         <DescriptionInfo data={householdItems} />
                     </HouseHoldItemInfoBox>
+                    <View className='my-2'></View>
+                    <HouseHoldItemInfoBox id={householdItems.id_household_item} title="Room"
+                        onPress={() => {
+                            // navigation.navigate('EditDescription', {
+                            //     id_family: id_family,
+                            //     id_item: householdItems.id_household_item,
+                            //     id_category: householdItems.id_category,
+                            //     description: householdItems.description || ""
+                            // })
+                            addEditDescriptionSheetRef && addEditDescriptionSheetRef.current?.expand()
+
+                        }}
+                        iconImage={DescriptionIcon}
+                    >
+                        <DescriptionInfo data={householdItems} />
+                    </HouseHoldItemInfoBox>
+                    <TouchableOpacity activeOpacity={0.65} className={`mb-4 mt-7 w-[65%] h-12 bg-[#66C0F4]  self-center rounded-lg justify-center align-center `}
+                        onPress={() => {
+                            if (1 == 1) {
+                                navigation.navigate('GuidelineStack', {
+                                    screen: 'GuildLine',
+                                    params: {
+                                        id_family: id_family,
+                                        id_household_item: householdItems.id_household_item,
+                                        openSheet: true
+                                    }
+                                })
+                            } else {
+                                navigation.navigate('GuidelineStack', {
+                                    screen: 'GuildLineDetail',
+                                    params: {
+                                        id_family: id_family,
+                                        id_item: householdItems.id_household_item,
+                                    }
+                                })
+                            }
+                        }}
+                    >
+                        <Text className='text-center text-white font-semibold '> {
+                            1 == 1 ? "Create a guideline" : "View guideline"
+                        } </Text>
+                    </TouchableOpacity>
+                    <View className='my-4'></View>
 
                 </View>
             </ScrollView>
-            <TouchableOpacity activeOpacity={0.65} className={`absolute w-[65%] h-[10%] bg-[#66C0F4] bottom-5 self-center rounded-lg justify-center align-center `}
-                onPress={() => {
-                    navigation.navigate('GuidelineStack', {
-                        screen: 'GuildLine',
-                        params: {
-                            id_family: id_family,
-                            id_household_item: householdItems.id_household_item,
-                            openSheet: true
-                        }
-                    })
-                }}
-            >
-                <Text className='text-center text-white font-semibold '> Create a guideline  </Text>
-            </TouchableOpacity>
+
 
 
         </View>

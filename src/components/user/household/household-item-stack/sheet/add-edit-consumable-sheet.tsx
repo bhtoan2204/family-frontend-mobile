@@ -65,6 +65,11 @@ const AddEditConsumableSheet = ({
 
     }, [showError])
 
+    useEffect(() => {
+        // setInputDescription(title)
+        setQuantity(consumableItem ? consumableItem.quantity : 0)
+        setThreshhold(consumableItem ? consumableItem.threshold : 0)
+    }, [consumableItem])
 
 
     const renderBackdrop = React.useCallback(
@@ -240,8 +245,13 @@ const AddEditConsumableSheet = ({
                         <Image source={EditConsumableImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                     </View>
                     <View className=' items-center'>
-                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >Add Comsumable</Text>
-                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >Fill in the consumable information for your item</Text>
+                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >{
+                            consumableItem ? 'Edit consumable item' : 'Add Comsumable Item'
+                        }
+                        </Text>
+                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >{
+                            consumableItem ? 'Change your consumable item information' : 'Fill in the consumable information for your item'
+                        }</Text>
                     </View>
                     {
                         buildAddQuantity()
