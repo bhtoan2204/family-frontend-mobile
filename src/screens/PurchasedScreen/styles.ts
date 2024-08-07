@@ -282,10 +282,9 @@ const styles = StyleSheet.create({
   },
   modalContainer1: {
     width: '100%',
-    height: '50%',
-    backgroundColor: 'white',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    height: '40%',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     padding: 20,
     alignItems: 'center',
   },
@@ -306,20 +305,30 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     flex: 1,
-    backgroundColor: COLORS.Rhino,
     padding: 10,
+    paddingVertical: 10,
     borderRadius: 5,
     alignItems: 'center',
     marginHorizontal: 5,
   },
   modalButtonText: {
-    color: 'white',
     fontSize: 16,
+    fontWeight: 'bold',
   },
   modalImage: {
     width: 100,
     height: 100,
-    marginBottom: 10,
+    marginBottom: 20,
+    marginTop: 10,
+  },
+  button2: {
+    flex: 1,
+    padding: 10,
+    paddingVertical: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginHorizontal: 5,
+    borderWidth: 1.5,
   },
 });
 

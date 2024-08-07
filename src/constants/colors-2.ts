@@ -59,9 +59,11 @@ const COLORS = {
     progressBarActive: '#2A475E',
     blackQuestion: '#000000',
     whiteBackground: '#fff',
+    button: '#2A475E',
   },
 
   dark: {
+    button: '#66C0F4',
     whiteBackground: '#0A1220',
     blackQuestion: '#fff',
     progressBar: '#232A3D',

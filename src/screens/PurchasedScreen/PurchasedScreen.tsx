@@ -138,7 +138,12 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
                   style={[styles.familyQuantity, {color: color.textSubdued}]}>
                   {translate('EXPIRED_AT')}:{' '}
                 </Text>
-                <Text style={[styles.familyQuantity, styles.expiredAtText]}>
+                <Text
+                  style={[
+                    styles.familyQuantity,
+                    styles.expiredAtText,
+                    {color: color.textSubdued},
+                  ]}>
                   {moment(new Date(family.expired_at)).format('DD/MM/YYYY')}
                 </Text>
               </View>
@@ -214,7 +219,11 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
         <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
           <View style={styles.modalBackground1}>
             <TouchableWithoutFeedback>
-              <View style={styles.modalContainer1}>
+              <View
+                style={[
+                  styles.modalContainer1,
+                  {backgroundColor: color.background},
+                ]}>
                 {selectedFamily && (
                   <>
                     <Image
@@ -222,11 +231,15 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
                       style={styles.modalImage}
                       resizeMode="cover"
                     />
-                    <Text style={styles.modalTitle}>{selectedFamily.name}</Text>
-                    <Text style={styles.modalText}>
+                    <Text style={[styles.modalTitle, {color: color.text}]}>
+                      {selectedFamily.name}
+                    </Text>
+                    <Text
+                      style={[styles.modalText, {color: color.textSubdued}]}>
                       {translate('FAMILY_MEMBERS')}: {selectedFamily.quantity}
                     </Text>
-                    <Text style={styles.modalText}>
+                    <Text
+                      style={[styles.modalText, {color: color.textSubdued}]}>
                       {translate('EXPIRED_AT')}:{' '}
                       {moment(new Date(selectedFamily.expired_at)).format(
                         'DD/MM/YYYY',
@@ -234,19 +247,27 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
                     </Text>
                     <View style={styles.modalButtonContainer}>
                       <TouchableOpacity
-                        style={styles.modalButton}
+                        style={[styles.button2, {borderColor: color.button}]}
                         onPress={() => {
                           setModalVisible(false);
                           handleViewCombo();
                         }}>
-                        <Text style={styles.modalButtonText}>
+                        <Text
+                          style={[
+                            styles.modalButtonText,
+                            {color: color.button},
+                          ]}>
                           {translate('BUY_SERVICE')}
                         </Text>
                       </TouchableOpacity>
                       <TouchableOpacity
-                        style={styles.modalButton}
+                        style={[
+                          styles.modalButton,
+                          {backgroundColor: color.button},
+                        ]}
                         onPress={() => onRenewPress(selectedFamily)}>
-                        <Text style={styles.modalButtonText}>
+                        <Text
+                          style={[styles.modalButtonText, {color: 'white'}]}>
                           {translate('Renew Family')}
                         </Text>
                       </TouchableOpacity>
