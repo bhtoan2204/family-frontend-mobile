@@ -60,7 +60,7 @@ const UpdatePriceSheet = ({
     const [showError, setShowError] = React.useState(false)
 
 
-    const [inputPrice, setInputPrice] = React.useState<number>(price * 1000)
+    const [inputPrice, setInputPrice] = React.useState<number>(price )
 
 
     const shoppingList = useSelector((state: RootState) => state.shoppinglist).shoppingList.filter(list => list.id_shopping_list_type == id_shopping_list_type)
@@ -177,7 +177,7 @@ const UpdatePriceSheet = ({
 
                 }
             }}
-            keyboardBehavior="extend"
+            keyboardBehavior="interactive"
             keyboardBlurBehavior="restore"
             backgroundStyle={{
                 backgroundColor: isDarkMode ? '#0A1220' : '#f7f7f7'

@@ -55,7 +55,9 @@ const EditTitleSheet = ({
 
     }, [showError])
 
-
+    useEffect(()=>{
+        setInputDescription(title)
+    },[title])
 
     const renderBackdrop = React.useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} pressBehavior={
@@ -90,7 +92,7 @@ const EditTitleSheet = ({
 
     const buildAddDesc = () => {
         return <BottomSheetTextInput
-            placeholder='Give your item a description'
+            placeholder='Give your item a new title'
             value={inputDescription}
             onChangeText={(text) => {
                 setInputDescription(text)

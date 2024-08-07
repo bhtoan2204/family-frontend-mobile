@@ -12,32 +12,9 @@ const Stack = createNativeStackNavigator();
 
 const GuidelineStack = ({ navigation, route }: GuidelineStackProps) => {
 
-    // const dispatch = useDispatch<AppDispatch>()
 
     const { id_family } = route.params.params!
-    // const [loading, setLoading] = React.useState(false)
-
-
-    // useEffect(() => {
-    //     const fetchTodoListType = async () => {
-    //         const response = await TodoListServices.getAllTodoListType()
-    //         console.log('todo list types ', response)
-    //         dispatch(setTodoListType(response))
-    //     }
-    //     const fetchTodoListItem = async () => {
-    //         const response = await TodoListServices.getAllItemOfFamily(id_family!, 1, 100)
-    //         dispatch(setTodoList(response))
-    //         console.log('todo list items ', response)
-    //     }
-    //     const fetchAllDatas = async () => {
-    //         setLoading(true)
-    //         await fetchTodoListType()
-    //         await fetchTodoListItem()
-    //         setLoading(false)
-    //     }
-    //     fetchAllDatas()
-    // }, [])
-
+    
     return (
         <Stack.Navigator
             screenOptions={{

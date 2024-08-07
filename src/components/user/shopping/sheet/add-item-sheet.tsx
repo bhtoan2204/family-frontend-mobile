@@ -27,6 +27,7 @@ import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interf
 import { addShoppingList, addShoppingListItem } from 'src/redux/slices/ShoppingListSlice';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { handleRestore } from 'src/utils/sheet/func';
+import ShoppingListServices from 'src/services/apiclient/ShoppingListServices';
 
 
 
@@ -37,6 +38,7 @@ interface AddItemSheetProps {
     pickedCategory: number
     categories: ShoppingListItemType[],
     id_shopping_list_type: number,
+    appearOnIndex: boolean,
     onAddSuccess: () => void
     onAddFailed: () => void
 }
@@ -51,6 +53,7 @@ const AddItemSheet = ({
     pickedCategory,
     categories,
     id_shopping_list_type,
+    appearOnIndex,
     onAddSuccess,
     onAddFailed
 
@@ -89,7 +92,99 @@ const AddItemSheet = ({
         } />,
         []
     );
+    
+    const addItem = async (id_list: number) => {
+        try {
+            const res = await ShoppingListServices.createShoppingListItem({
+                id_family: id_family,
+                id_list: id_list,
+                id_item_type: pickedCategory,
+                item_name: householdName,
+                description: '',
+                quantity: 1,
+                priority_level: 0,
+                reminder_date: new Date().toISOString(),
+                price: 0,
+            });
 
+            if (res) {
+                dispatch(
+                    addShoppingListItem({
+                        id_item: res.id_item,
+                        id_list: res.id_list,
+                        id_item_type: res.id_item_type,
+                        item_name: res.item_name,
+                        description: res.description,
+                        quantity: res.quantity,
+                        is_purchased: res.is_purchased,
+                        priority_level: res.priority_level,
+                        reminder_date: res.reminder_date,
+                        price: res.price,
+                        created_at: res.created_at,
+                        updated_at: res.updated_at,
+                        itemType: categories.find(
+                            (category) => category.id_item_type === res.id_item_type
+                        )!,
+                    })
+                );
+            } else {
+                throw new Error('Failed to add item');
+            }
+        } catch (error) {
+            console.error('Error adding item:', error);
+            onAddFailed();
+        }
+    };
+
+    const createAndAddToNewList = async () => {
+        try {
+            const newList = await ShoppingListServices.createShoppingList({
+                id_family: id_family,
+                id_shopping_list_type: id_shopping_list_type,
+                title: 'Shopping List ' + id_shopping_list_type,
+                description: '',
+            });
+
+            if (newList) {
+                dispatch(
+                    addShoppingList({
+                        id_list: newList.id_list,
+                        id_family: id_family,
+                        id_shopping_list_type: id_shopping_list_type,
+                        title: 'Shopping List ' + id_shopping_list_type,
+                        description: '',
+                        status: '',
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                        listType: listType!,
+                        items: [],
+                    })
+                );
+
+                await addItem(newList.id_list);
+                onAddSuccess();
+            } else {
+                onAddFailed();
+            }
+        } catch (error) {
+            console.error('Error creating shopping list:', error);
+            onAddFailed();
+        } finally {
+            // bottomSheetRef.current?.close();
+        }
+    };
+
+    const addToExistingList = async (id_list: number) => {
+        try {
+          await addItem(id_list);
+          onAddSuccess();
+        } catch (error) {
+          console.error('Error adding to existing list:', error);
+          onAddFailed();
+        } finally {
+        //   bottomSheetRef.current?.close();
+        }
+      };
     const handleSubmit = async () => {
         Keyboard.dismiss()
         await handleRestore()
@@ -99,50 +194,14 @@ const AddItemSheet = ({
             return
         }
         console.log(shoppingList)
-        const addItem = async (id_list: number) => {
-            const newShoppingItem: ShoppingListItem = {
-                id_item: Math.floor(Math.random() * 1000),
-                id_list: id_list,
-                id_item_type: pickedCategory,
-                item_name: householdName,
-                description: '',
-                quantity: 1,
-                is_purchased: false,
-                priority_level: 100,
-                reminder_date: new Date().toISOString(),
-                price: '$0.00',
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-                itemType: categories.find(category => category.id_item_type == pickedCategory)!,
-                shoppingList: shoppingList[0]
-            }
-            dispatch(addShoppingListItem(newShoppingItem))
-        }
+        setLoading(true)
         if (shoppingList.length == 0) {
-            const id_list = Math.floor(Math.random() * 1000)
-            const newShoppingList: ShoppingList = {
-                id_list: id_list,
-                id_family: id_family,
-                id_shopping_list_type: id_shopping_list_type,
-                title: 'Shopping List ' + id_shopping_list_type,
-                description: '',
-                status: '',
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-                listType: listType!,
-                items: []
-            }
-            dispatch(addShoppingList(newShoppingList))
-            await addItem(id_list)
-            bottomSheetRef.current?.close()
-            onAddSuccess()
+            await createAndAddToNewList();
         } else {
-            await addItem(shoppingList[0].id_list)
-            bottomSheetRef.current?.close()
-            onAddSuccess()
-
+            await addToExistingList(shoppingList[0].id_list);
         }
-
+        setLoading(false)
+        bottomSheetRef.current?.close()
     }
     const onSetName = (name: string) => {
         setHouseholdName(name)
@@ -158,7 +217,7 @@ const AddItemSheet = ({
     return (
         <BottomSheet
             ref={bottomSheetRef}
-            index={-1}
+            index={appearOnIndex ? 0 : -1}
             enableOverDrag={true}
             enablePanDownToClose={loading ? false : true}
             snapPoints={snapPoints}
@@ -184,7 +243,22 @@ const AddItemSheet = ({
             keyboardBehavior="interactive"
             keyboardBlurBehavior="restore"
 
+
         >
+            <>
+                {
+                    loading && <View className='flex-1 absolute w-full h-full bg-white opacity-50 z-10 items-center justify-center'>
+                        <View className='items-center justify-center bg-black  rounded-lg'
+                            style={{
+                                width: screenHeight * 0.1,
+                                height: screenHeight * 0.1,
+                            }}
+                        >
+                            <ActivityIndicator size='small' color={'white'} />
+                        </View>
+                    </View>
+                }
+            </>
             <View className='flex-1 bg-[#F7F7F7] dark:bg-[#0A1220] '>
                 <BottomSheetScrollView className='' showsVerticalScrollIndicator={false} automaticallyAdjustKeyboardInsets style={{}} keyboardShouldPersistTaps='handled'>
 

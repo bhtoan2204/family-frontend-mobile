@@ -73,15 +73,6 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
         }
     }, [])
 
-
-    // useEffect(() => {
-    //     if (currScreen == 'HouseHoldItem') {
-    //         setChoosenTab(0)
-    //     } else if (currScreen == 'ReceiptInfo') {
-    //         setChoosenTab(1)
-    //     }
-    // }, [currScreen])
-
     if (!houseHoldItemInfo) {
         return <ActivityIndicator size="small" color="#0000ff" />
     }

@@ -1,11 +1,5 @@
 import { Dimensions, SafeAreaView, Text, TouchableOpacity, View, Image, ActivityIndicator } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import CreateFamilyScreen from 'src/screens/CreateFamilyScreen';
-import InviteNewMemberScreen from 'src/screens/InviteNewMemberScreen';
-import ViewAllFamilyScreen from 'src/screens/ViewAllFamily';
-import ViewFamilyScreen from 'src/screens/FamilyScreen';
-import ViewAllMemberScreen from 'src/screens/AllMember';
-import AddMemberScreen from 'src/screens/AddEditFamilyMemberScreen';
 import { ShoppingListCategoryScreenProps, ShoppingListDetailScreenProps, ShoppingListScreenProps, ShoppingListStackProps } from '../NavigationTypes';
 
 import React, { useEffect } from 'react';

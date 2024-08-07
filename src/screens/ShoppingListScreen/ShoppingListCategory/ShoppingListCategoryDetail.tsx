@@ -118,9 +118,9 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
     const buildInfoBox = () => {
         return <View className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'>
             <View className='flex-row  items-center  w-full  py-2 '>
-                <View className=' flex-row mr-2 items-center'>
+                <View className=' flex-row  items-center '>
 
-                    <TouchableOpacity className=' rounded-full mr-2  items-center justify-center' style={{
+                    <TouchableOpacity className=' rounded-full mr-2  items-center justify-center self-start' style={{
                         height: screenHeight * 0.04,
                         width: screenHeight * 0.04,
                         borderWidth: itemDetail?.is_purchased ? 0 : 2,
@@ -135,7 +135,7 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                             }))
                             if (itemDetail?.is_purchased) {
                                 toast.show("Item is marked as not purchased", {
-                                    type: "warning",
+                                    type: "success",
                                     duration: 2000,
                                     icon: <Material name="close" size={24} color={"white"} />,
                                 });
@@ -152,7 +152,9 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                             itemDetail?.is_purchased && <Material name='check' size={24} color={'white'} />
                         }
                     </TouchableOpacity>
-                    <Text className='text-base text-[#2F2F34] dark:text-white'>{itemDetail?.item_name}</Text>
+                    <View className='flex-1'>
+                        <Text className='text-base text-[#2F2F34] dark:text-white'>{itemDetail?.item_name}</Text>
+                    </View>
                 </View>
 
             </View>
@@ -253,7 +255,7 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                 </View>
 
                 <Text className='text-base text-[#2F2F34] dark:text-white'>{
-                    itemDetail?.price != '' && itemDetail?.price != null ? convertToNumber(itemDetail?.price) : 'Add price'
+                    itemDetail?.price != null ? itemDetail.price : 'Add price'
                 }</Text>
             </View>
         </TouchableOpacity>
@@ -375,7 +377,7 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
             <AddMoreInfoSheet
                 bottomSheetRef={addInformationBottomSheetRef} id_family={id_family!} id_list={id_shopping_list}
                 description={description}
-                price={itemDetail?.price ? convertToNumber(itemDetail?.price) : 0}
+                price={itemDetail?.price ? itemDetail?.price : 0}
                 id_item={id_item}
                 id_shopping_list_type={id_shopping_list}
                 onUpdateSuccess={
@@ -403,7 +405,7 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                 }
             />
             <UpdatePriceSheet bottomSheetRef={updatePriceBottomSheetRef} id_family={id_family!} id_list={id_shopping_list}
-                price={itemDetail?.price ? convertToNumber(itemDetail?.price) : 0}
+                price={itemDetail?.price ? itemDetail?.price : 0}
                 id_item={id_item}
                 id_shopping_list_type={id_shopping_list}
                 onUpdateSuccess={

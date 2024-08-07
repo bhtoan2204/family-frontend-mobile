@@ -42,19 +42,19 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
 
 
     console.log("gg", shoppingListType)
-    const loadItemsForMonth = (month: any) => {
-        console.log('trigger items loading');
-    }
-    const renderEmptyDate = () => {
-        return (
-            <View className='flex-1 justify-center items-center'>
-                <Text>No events for this day</Text>
-            </View>
-        );
-    };
-    const rowHasChanged = (r1: any, r2: any) => {
-        return r1.id_calendar !== r2.id_calendar;
-    };
+    // const loadItemsForMonth = (month: any) => {
+    //     console.log('trigger items loading');
+    // }
+    // const renderEmptyDate = () => {
+    //     return (
+    //         <View className='flex-1 justify-center items-center'>
+    //             <Text>No events for this day</Text>
+    //         </View>
+    //     );
+    // };
+    // const rowHasChanged = (r1: any, r2: any) => {
+    //     return r1.id_calendar !== r2.id_calendar;
+    // };
     const handleDayPress = (date: any) => {
         if (selectDate === date.dateString) {
             // setSelectDate(new Date); 
@@ -68,12 +68,13 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
     const handleNavigateCategory = (id_category: number) => {
         navigation.navigate('ShoppingListCategory', {
             id_family: id_family,
-            id_category: id_category
+            id_category: id_category,
+            openSheet: false
         })
 
     }
 
-    const buildDate = (dateString: string) => {
+    const buildDate = React.useCallback((dateString: string) => {
         const date: Date = new Date(dateString);
 
         if (isNaN(date.getTime())) {
@@ -90,10 +91,9 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
 
         const description: string = `${month} ${year}`;
         return description;
-    }
+    }, [])
 
-
-    const customCalendarHeader = () => {
+    const customCalendarHeader = React.useCallback(() => {
         return (
             <View className='flex-row justify-between items-center py-3 ' style={{
                 marginHorizontal: 10,
@@ -118,7 +118,10 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
                 </View>
             </View>
         )
-    }
+    }, [selectDate])
+    // const customCalendarHeader = () => {
+
+    // }
 
     return (
         <SafeAreaView style={{ flex: 1 }} className='bg-[#f7f7f7] dark:bg-[#0A1220] '>
@@ -194,14 +197,6 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
                         color:
                             colorScheme === 'light' ? COLORS.Rhino : 'white',
                     }}>My shopping list</Text>
-                    {/* <ShoppingListCategoryItem id_category={1} category_name='Grocery' total_items={10}
-                        handleNavigateCategory={handleNavigateCategory}
-                    />
-                    <ShoppingListCategoryItem id_category={2} category_name='Electronics' total_items={10} handleNavigateCategory={handleNavigateCategory} />
-                    <ShoppingListCategoryItem id_category={3} category_name='Clothing' total_items={10} handleNavigateCategory={handleNavigateCategory} />
-                    <ShoppingListCategoryItem id_category={4} category_name='Furniture' total_items={10} handleNavigateCategory={handleNavigateCategory} />
-                    <ShoppingListCategoryItem id_category={5} category_name='Pharmacy' total_items={10} handleNavigateCategory={handleNavigateCategory} />
-                    <ShoppingListCategoryItem id_category={6} category_name='Other' total_items={10} handleNavigateCategory={handleNavigateCategory} /> */}
                     {
                         shoppingListType.length > 0 && shoppingListType.map((item, index) => {
                             const total_items = shoppingList.filter((shoppingItem) => shoppingItem.id_shopping_list_type === item.id_shopping_list_type)[0]?.items?.length || 0

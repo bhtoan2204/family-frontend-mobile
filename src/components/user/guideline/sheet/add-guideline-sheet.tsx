@@ -24,6 +24,7 @@ interface AddItemSheetProps {
     id_family: number;
     onAddSuccess: () => void;
     onAddFailed: () => void;
+    appearsOnIndex: boolean;
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -32,6 +33,7 @@ const screenWidth = Dimensions.get('window').width;
 const AddGuidelineSheet = ({
     bottomSheetRef,
     id_family,
+    appearsOnIndex,
     onAddSuccess,
     onAddFailed
 }: AddItemSheetProps) => {
@@ -151,7 +153,7 @@ const AddGuidelineSheet = ({
     return (
         <BottomSheet
             ref={bottomSheetRef}
-            index={-1}
+            index={appearsOnIndex ? 0 : -1}
             enableOverDrag={true}
             enablePanDownToClose={loading ? false : true}
             enableDynamicSizing={true}
