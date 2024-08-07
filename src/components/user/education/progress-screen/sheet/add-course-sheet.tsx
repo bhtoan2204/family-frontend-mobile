@@ -233,6 +233,7 @@ const AddCourseSheet = ({
             marginHorizontal: screenWidth * 0.05,
             // fontWeight: 'bold',
         }} onPress={() => {
+            Keyboard.dismiss()
             pickTargetBottomSheetRef.current?.expand()
         }}>
             <View>

@@ -41,6 +41,7 @@ import { goal_data } from 'src/components/user/education/progress-screen/const/c
 import AddComponentScoreSheet1 from 'src/components/user/education/subject-screen/sheet/add-component-score-sheet-1';
 import AddComponentScoreSheet from 'src/components/user/education/subject-screen/sheet/add-component-score-sheet';
 import AddComponentScoreSheet2 from 'src/components/user/education/subject-screen/sheet/add-component-score-sheet2';
+import EducationTab from 'src/components/user/education/education-screen/education-tab';
 
 
 const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) => {
@@ -72,6 +73,9 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     const [pickedIdProgress, setPickedIdProgress] = React.useState<number>(-1)
     const [loading, setLoading] = React.useState<boolean>(false)
     const [filteredData, setFilteredData] = React.useState<Education[]>([])
+    const [choosenTab, setChoosenTab] = React.useState<number>(0)
+    const profile = useSelector((state: RootState) => state.profile).profile
+
     const toast = useToast();
 
 
@@ -123,20 +127,62 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     }, [])
 
     useEffect(() => {
+        // if (searchQuery == "") {
+        //     // setFilteredData(educationData)
+        //     if (choosenTab == 0) {
+        //         setFilteredData(educationData)
+        //     } else {
+
+        //     }
+        // } else {
+        //     const filtered = educationData.filter(item => {
+        //         return item.title.toLowerCase().includes(searchQuery.toLowerCase())
+        //     })
+        //     setFilteredData(filtered)
+        // }
+        handleFilter(searchQuery, choosenTab, educationData)
+
+    }, [searchQuery, choosenTab, educationData])
+
+    const handleFilter = React.useCallback((searchQuery: string, choosenTab: number, educationData: Education[]) => {
         if (searchQuery == "") {
-            setFilteredData(educationData)
+            // setFilteredData(educationData)
+            if (choosenTab == 0) {
+                const filtered = educationData.filter(item => {
+                    return item.is_shared == true
+                })
+                setFilteredData(filtered)
+            } else if (choosenTab == 1) {
+                const filtered = educationData.filter(item => {
+                    return item.id_user == profile?.id_user
+                })
+                setFilteredData(filtered)
+            }
         } else {
             const filtered = educationData.filter(item => {
                 return item.title.toLowerCase().includes(searchQuery.toLowerCase())
             })
-            setFilteredData(filtered)
+            if (choosenTab == 0) {
+                const filtered2 = filtered.filter(item => {
+                    return item.is_shared == true
+                })
+                setFilteredData(filtered2)
+            } else if (choosenTab == 1) {
+                const filtered2 = filtered.filter(item => {
+                    return item.id_user == profile?.id_user
+                })
+                setFilteredData(filtered2)
+            }
+            // setFilteredData(filtered)
         }
+    }, [])
 
-    }, [searchQuery])
-
-    const handleNavigateProgress = (id_progress: number) => {
+    const handleNavigateProgress = React.useCallback((id_progress: number) => {
         navigation.navigate('ProgressScreen', { id_family: id_family, id_progress: id_progress })
-    }
+    }, [])
+    // const handleNavigateProgress = (id_progress: number) => {
+    //     navigation.navigate('ProgressScreen', { id_family: id_family, id_progress: id_progress })
+    // }
 
     const openUpdateProgressSheet = (id_progress: number, title: string, school_info: string, progress_notes: string) => {
         setPickedIdProgress(id_progress)
@@ -161,6 +207,8 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
         }
     }
 
+
+
     const buildListEmpty = () => {
         return <TouchableOpacity className='flex-1 z-10 items-center justify-center bg-[#F7F7F7] dark:bg-[#0A1220]' activeOpacity={1.0} onPress={() => {
             // Keyboard.dismiss()
@@ -169,20 +217,37 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
         </TouchableOpacity>
     }
 
-    const buildList = () => {
+    const buildList = React.useCallback(() => {
         return <ScrollView className='flex-1 z-10 mt-5 bg-[#F7F7F7] dark:bg-[#0A1220]'>
             {
                 filteredData.map((item, index) => {
                     return <React.Fragment key={index}>
-                        <EducationItem item={item} handleNavigateProgress={handleNavigateProgress}
+                        <EducationItem
+                            item={item}
+                            handleNavigateProgress={handleNavigateProgress}
                             openUpdateProgressSheet={openUpdateProgressSheet}
                             onDeleteItem={onDeleteItem}
+                            isMe={profile?.id_user == item.id_user}
                         />
                     </React.Fragment>
                 })
             }
         </ScrollView>
-    }
+    }, [filteredData])
+    // const buildList = () => {
+    //     return <ScrollView className='flex-1 z-10 mt-5 bg-[#F7F7F7] dark:bg-[#0A1220]'>
+    //         {
+    //             filteredData.map((item, index) => {
+    //                 return <React.Fragment key={index}>
+    //                     <EducationItem item={item} handleNavigateProgress={handleNavigateProgress}
+    //                         openUpdateProgressSheet={openUpdateProgressSheet}
+    //                         onDeleteItem={onDeleteItem}
+    //                     />
+    //                 </React.Fragment>
+    //             })
+    //         }
+    //     </ScrollView>
+    // }
 
 
 
@@ -197,7 +262,11 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
 
             <View className=' bg-[#f7f7f7] dark:bg-[#0A1220] mt-[-3%]  rounded-tl-xl rounded-tr-xl h-[3%]'>
                 <View className='mt-[-5%] bg-transparent justify-center items-center  '>
-                    <EducationScreenSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+                    {/* <EducationScreenSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
+                    <EducationTab
+                        choosenTab={choosenTab} setChoosenTab={setChoosenTab}
+                        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+                    />
                 </View>
 
             </View>
@@ -222,86 +291,6 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                     }
                 </>
             </View>
-            {/* <AddCourseSheet bottomSheetRef={addProgressBottomSheetRef}
-                id_education_progress={1}
-                id_family={id_family!}
-                pickedTargets={pickedTargets}
-                pickTargetBottomSheetRef={pickMemberBottomSheetRef}
-                targets={goal_data}
-                onAddSuccess={
-                    () => {
-                        toast.show("New course added for family", {
-                            type: "success",
-                            duration: 2000,
-                            icon: <Material name="check" size={24} color={"white"} />,
-                        });
-                    }
-                }
-                onAddFailed={
-                    () => {
-                        toast.show("Failed to add new course for family", {
-                            type: "error",
-                            duration: 2000,
-                            icon: <Material name="close" size={24} color={"white"} />,
-                        });
-                    }
-                }
-            /> */}
-            {/* <AddCoursesPickTargetsSheet refRBSheet={pickMemberBottomSheetRef}
-                targets={goal_data}
-                pickedTargets={pickedTargets}
-                setPickedTargets={(targets: string) => {
-                    if (!pickedTargets.includes(targets)) {
-                        setPickedTargets((prev) => {
-                            return [...prev, targets]
-                        })
-                    }
-                }}
-                removePickedTargets={(targets: string) => {
-                    setPickedTargets((prev) => {
-                        return prev.filter(item => item != targets)
-                    })
-                }}
-                addCourseBottomSheetRef={addProgressBottomSheetRef}
-
-            /> */}
-            {/* <AddComponentScoreSheet1 bottomSheetRef={addProgressBottomSheetRef}
-                id_education_progress={1}
-                id_family={id_family!}
-                id_subject={1}
-                onAddSuccess={
-                    () => {
-                        toast.show("New course added for family", {
-                            type: "success",
-                            duration: 2000,
-                            icon: <Material name="check" size={24} color={"white"} />,
-                        });
-                    }
-                }
-                onAddFailed={
-                    () => {
-                        toast.show("Failed to add new course for family", {
-                            type: "error",
-                            duration: 2000,
-                            icon: <Material name="close" size={24} color={"white"} />,
-                        });
-                    }
-                }
-                addComponentSheetRef={pickMemberBottomSheetRef}
-            /> */}
-            {/* <AddComponentScoreSheet2 bottomSheetRef={pickMemberBottomSheetRef} onAddSuccess={(input: string) => {
-                const newTarget = {
-                    id: goal_data.length + 1,
-                    title: input,
-                    color: COLORS.DenimBlue
-                }
-                setGoalData((prev) => {
-                    return [...prev, newTarget]
-                })
-                setPickedTargets((prev) => {
-                    return [...prev, input]
-                })
-            }} /> */}
             <AddProgressSheet bottomSheetRef={addProgressBottomSheetRef}
                 members={members}
                 id_family={id_family!}
@@ -311,6 +300,7 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                 }}
                 onAddSuccess={
                     () => {
+                        setChoosenTab(1)
                         toast.show("New progress added for family", {
                             type: "success",
                             duration: 2000,
@@ -379,9 +369,10 @@ interface EducationItemProps {
     handleNavigateProgress: (id_progress: number) => void
     openUpdateProgressSheet: (id_progress: number, title: string, school_info: string, progress_notes: string) => void
     onDeleteItem: (id_progress: number) => Promise<void>
+    isMe: boolean
 }
 
-const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, onDeleteItem }: EducationItemProps) => {
+const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, onDeleteItem, isMe }: EducationItemProps) => {
     const isDarkMode = useSelector(getIsDarkMode)
     return <TouchableOpacity className='flex-row mx-6 items-center my-2 py-3  bg-white dark:bg-[#252D3B] shadow-lg rounded-lg'
         onPress={() => {
@@ -393,8 +384,6 @@ const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, 
             <View className='mx-4'>
                 <Image
                     source={item.users.avatar != "" ? { uri: item.users.avatar } : DefaultAvatar}
-                    // source={DefaultAvatar}
-
                     style={{ width: ScreenHeight * 0.17, height: ScreenHeight * 0.17, borderRadius: 12 }}
                 />
             </View>
@@ -433,6 +422,28 @@ const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, 
                                     </View>
                                 </MenuOption>
                                 <Divider />
+                                {
+                                    isMe && <>
+                                        <MenuOption onSelect={() => {
+                                            // setIsEditing(true)
+                                            openUpdateProgressSheet(item.id_education_progress, item.title, item.school_info, item.progress_notes)
+                                        }} >
+                                            {
+                                                item.is_shared ?
+                                                    <View className='flex-row items-center justify-between'>
+                                                        <Text className='text-base' style={{ color: iOSColors.systemBlue.defaultLight }}>Private</Text>
+                                                        <Material name="publish-off" size={20} style={{ color: iOSColors.systemBlue.defaultLight, fontWeight: "bold" }} />
+                                                    </View>
+                                                    : <View className='flex-row items-center justify-between'>
+                                                        <Text className='text-base' style={{ color: iOSColors.systemBlue.defaultLight }}>Public</Text>
+                                                        <Material name="publish" size={20} style={{ color: iOSColors.systemBlue.defaultLight, fontWeight: "bold" }} />
+                                                    </View>
+                                            }
+
+                                        </MenuOption>
+                                        <Divider />
+                                    </>
+                                }
                                 <MenuOption onSelect={async () => {
                                     await onDeleteItem(item.id_education_progress)
                                 }} >

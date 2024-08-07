@@ -18,6 +18,7 @@ import OtherImage from 'src/assets/images/shoppinglist_assets/Other.png'
 import { useColorScheme } from 'nativewind'
 import { useToast } from 'react-native-toast-notifications'
 import { setDateSelected } from 'src/redux/slices/ShoppingListSlice'
+import { ScreenHeight } from '@rneui/base'
 const screenHeight = Dimensions.get('screen').height;
 
 
@@ -41,7 +42,7 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
     }, [colorScheme])
 
 
-    console.log("gg", shoppingListType)
+    // console.log("gg", shoppingListType)
     // const loadItemsForMonth = (month: any) => {
     //     console.log('trigger items loading');
     // }
@@ -207,8 +208,31 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
                         })
                     }
                 </View>
-
             </ScrollView>
+            <TouchableOpacity className={`absolute rounded-full  bottom-5 right-5  bg-[#66C0F4] items-center justify-center transition duration-75`} style={{
+                width: ScreenHeight * 0.085,
+                height: ScreenHeight * 0.085,
+            }}
+                onPress={() => {
+                    // addListBottomSheetRef.current?.expand()
+                    // addGuidelineBottomSheetRef.current?.expand()
+                }}
+            >
+                <Material name='plus' size={30} color='white' />
+            </TouchableOpacity>
+            {/* <AddListSheet
+                bottomSheetRef={addListBottomSheetRef}
+                appearsOnIndex={openSheet != null ? openSheet : false}
+                id_family={id_family!}
+                onAddSuccess={(id_category: number) => {
+                    navigation.navigate('TodoListCategory', {
+                        id_family: id_family,
+                        id_category: id_category
+                    })
+                }}
+                onAddFailed={() => { }}
+                id_calendar={id_calendar}
+            /> */}
         </SafeAreaView>
     )
 }

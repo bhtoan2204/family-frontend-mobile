@@ -75,7 +75,7 @@ const EducationScreenHeader = ({
                         <BlurView intensity={35} tint='dark' className='flex-row items-center  mr-1 rounded-lg overflow-hidden'>
                             <TouchableOpacity className='' onPress={() => {
                                 // addProgressBottomSheetRef.current?.expand()
-                                pickMemberBottomSheetRef.current?.expand()
+                                addProgressBottomSheetRef.current?.expand()
                             }}>
                                 <Material name="plus" size={29} style={{ color: 'white', fontWeight: "bold" }} />
                             </TouchableOpacity>

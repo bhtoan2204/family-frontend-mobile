@@ -22,7 +22,7 @@ const EducationServices = {
         EducationUrls.createEducation,
         {
           id_family,
-          id_user,
+          // id_user,
           title,
           progress_notes,
           school_info,

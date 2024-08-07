@@ -3,8 +3,8 @@ import instance from '../httpInterceptor';
 import {TodoListUrls} from '../urls/todoUrls';
 
 const TodoListServices = {
-  getAllTodoListType: async () => {
-    const url = TodoListUrls.getTodoListTypes;
+  getAllTodoListType: async (id_family:number) => {
+    const url = TodoListUrls.getTodoListTypes + `?id_family=${id_family}`;
     console.log(url);
     try {
       const response = await instance.get(url);

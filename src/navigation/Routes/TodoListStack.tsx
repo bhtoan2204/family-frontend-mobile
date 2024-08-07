@@ -25,7 +25,7 @@ const TodoListStack = ({ navigation, route }: TodoListStackProps) => {
 
     useEffect(() => {
         const fetchTodoListType = async () => {
-            const response = await TodoListServices.getAllTodoListType()
+            const response = await TodoListServices.getAllTodoListType(id_family!)
             console.log('todo list types ', response)
             dispatch(setTodoListType(response))
         }

@@ -15,7 +15,7 @@ import NewRoomImageSheet from 'src/assets/images/household_assets/new_room_image
 import Camera from 'src/assets/images/household_assets/Camera.png'
 import Room2 from 'src/assets/images/household_assets/Room_2.png'
 import EditConsumableImage from 'src/assets/images/household_assets/edit_consumable_sheet_img.png'
-import { updateComsumableItem } from 'src/redux/slices/HouseHoldDetailSlice';
+import { updateComsumableItem, updateTitle } from 'src/redux/slices/HouseHoldDetailSlice';
 import { handleRestore } from 'src/utils/sheet/func';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
@@ -23,7 +23,7 @@ interface EditTitleSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
     id_family: number,
     id_item: number,
-    title:string
+    title: string
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -55,9 +55,9 @@ const EditTitleSheet = ({
 
     }, [showError])
 
-    useEffect(()=>{
+    useEffect(() => {
         setInputDescription(title)
-    },[title])
+    }, [title])
 
     const renderBackdrop = React.useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} pressBehavior={
@@ -73,7 +73,9 @@ const EditTitleSheet = ({
         await handleRestore()
         try {
             setLoading(true)
-            
+            dispatch(updateTitle(
+                inputDescription
+            ))
             // dispatch(updateComsumableItem({
             //     id_household_item: id_item,
             //     quantity: quantity,

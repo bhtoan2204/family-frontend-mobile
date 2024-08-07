@@ -7,7 +7,7 @@ import ProjectDeadlineBgImage from 'src/assets/images/todo_assets/project_deadli
 import AppointmentBgImage from 'src/assets/images/todo_assets/appointments_bg_image.png';
 import ErrandsBgImage from 'src/assets/images/todo_assets/errands_bg_image.png';
 import OtherBgImage from 'src/assets/images/todo_assets/other_bg_image.png';
-
+import CustomImage from 'src/assets/images/todo_assets/custom_bg_image.png';
 export const categoriesImage = [
     DailyTaskBgImage,
     WorkTaskBgImage,
@@ -17,5 +17,6 @@ export const categoriesImage = [
     ProjectDeadlineBgImage,
     AppointmentBgImage,
     ErrandsBgImage,
-    OtherBgImage
+    OtherBgImage,
+    CustomImage,
 ]

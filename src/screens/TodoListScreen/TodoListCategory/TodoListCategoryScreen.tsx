@@ -65,7 +65,7 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
     const toast = useToast()
 
     const getImage = (id_category: number) => {
-        return categoriesImage[id_category - 1]
+        return categoriesImage[id_category - 1] != undefined ? categoriesImage[id_category - 1] : categoriesImage[9]
     }
 
     const getCategoryName = (id_category: number) => {
@@ -135,7 +135,7 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
     return (
         <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
             <View className='py-6 h-[29%] ' style={{
-                backgroundColor: colors[id_category - 1],
+                backgroundColor: colors[id_category - 1] != undefined ? colors[id_category - 1] : colors[9],
             }}>
 
                 <View className='flex-row  ml-3'>
@@ -161,7 +161,7 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
                 <View className='ml-3 mt-10'>
                     <Text className='' style={{
                         fontSize: 40,
-                        color: textColors[id_category - 1],
+                        color: textColors[id_category - 1] != undefined ? textColors[id_category - 1] : textColors[9],
                         fontWeight: '600',
                     }}>{
                             getCategoryName(id_category)

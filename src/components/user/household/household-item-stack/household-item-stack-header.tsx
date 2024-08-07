@@ -60,9 +60,15 @@ const HouseHoldItemStackHeader = ({
 
                     </BlurView>
 
-                    <BlurView intensity={35} tint='dark' className='px-3 overflow-hidden rounded-lg '>
+                    <BlurView intensity={35} tint='dark' className='px-3 overflow-hidden rounded-lg max-w-10'>
                         <View >
-                            <Text className='text-lg font-semibold text-white' >{data.item_name}</Text>
+                            <Text className='text-lg font-semibold text-white ' numberOfLines={1}
+                                style={{
+                                    maxWidth: screenWidth * 0.3,
+                                }}
+                            >
+                                {data.item_name}
+                            </Text>
                         </View>
                     </BlurView>
 
