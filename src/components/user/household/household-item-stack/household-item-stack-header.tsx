@@ -1,6 +1,6 @@
 import React from 'react'
 import { HouseHoldItemDetailInterface } from 'src/interface/household/household_item_detail'
-import { View, Text, Image, Dimensions, TouchableOpacity, ImageBackground } from 'react-native'
+import { View, Text, Image, Dimensions, TouchableOpacity, ImageBackground, Keyboard } from 'react-native'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useSelector } from 'react-redux'
 import { RootState } from 'src/redux/store'
@@ -44,12 +44,14 @@ const HouseHoldItemStackHeader = ({
     // console.log(data.)
     const isDarkMode = useSelector(getIsDarkMode)
     return (
-        <>
+        <TouchableOpacity activeOpacity={1.0} onPress={() => {
+            Keyboard.dismiss()
+        }}>
             <ImageBackground
                 source={data.item_imageurl ? { uri: data.item_imageurl } : data.item_image!}
                 style={{ width: screenWidth, height: screenHeight * 0.3 }}
             >
-                <View className='w-full absolute z-10 flex-row justify-between items-center py-3 mt-5'>
+                <View className='w-full absolute z-10 flex-row justify-between items-center py-3 mt-5' >
                     <BlurView intensity={35} tint='dark' className=' ml-1 rounded-lg overflow-hidden '>
                         <TouchableOpacity onPress={navigationBack} className=' flex-row items-center'>
                             <Material name="chevron-left" size={30} style={{ color: "white", fontWeight: "bold" }} />
@@ -122,7 +124,7 @@ const HouseHoldItemStackHeader = ({
             </ImageBackground>
 
 
-        </>
+        </TouchableOpacity>
 
     )
 }
