@@ -14,9 +14,10 @@ import {COLORS} from 'src/constants';
 import {
   deleteEventOnly,
   doneTodoList,
-  getChecklist,
+  selectTodoList,
   selectSelectedEvent,
   setOnly,
+  setSelectedDate,
   setTodoList,
   updateEvent,
 } from 'src/redux/slices/CalendarSlice';
@@ -84,13 +85,12 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
   const family = useSelector(selectSelectedFamily);
 
   const endDate = new Date(event.time_end);
-  const checkList = useSelector(getChecklist);
+  const checkList = useSelector(selectTodoList);
 
   const isSameDay =
     format(startDate, 'yyyy-MM-dd') === format(endDate, 'yyyy-MM-dd');
 
   useEffect(() => {
-    console.log(event);
     fetchChecklist();
   }, [event?.checklistType != null]);
 
@@ -192,7 +192,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
             text: translate('Delete This Event Only'),
             onPress: async () => {
               try {
-                //console.log(event.id_calendar);
+                console.log(event.time_start);
                 const timeStartWithComma = event.recurrence_exception
                   ? `${event.recurrence_exception},${new Date(event.time_start).toISOString()}`
                   : new Date(event.time_start).toISOString();
@@ -211,12 +211,12 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                   timeStartWithComma,
                   event.recurrence_id,
                   event.recurrence_rule,
-                  event.start_timezone,
-                  event.end_timezone,
                 );
                 if (data) {
-                  console.log(data);
-                  dispatch(deleteEventOnly());
+                  await dispatch(
+                    deleteEventOnly(data.id_calendar, data.recurrence_rule),
+                  );
+                  //await dispatch(setSelectedDate(data.time_start));
                   Toast.show(translate('Event has been deleted successfully'), {
                     type: 'success',
                   });
@@ -518,7 +518,20 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
   };
 
   const renderChecklists = () => (
-    <View style={[styles.container, {backgroundColor: color.white}]}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: color.white,
+          borderRadius: 10,
+          shadowColor: color.text,
+          shadowOffset: {width: 0, height: 4},
+          shadowOpacity: 0.2,
+          shadowRadius: 8,
+
+          elevation: 5,
+        },
+      ]}>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <Text
           style={[
@@ -573,7 +586,19 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
   const renderShoppingList = () => {
     return (
       <TouchableOpacity
-        style={[styles.container, {backgroundColor: color.white}]}>
+        style={[
+          styles.container,
+          {
+            backgroundColor: color.white,
+            borderRadius: 10,
+            shadowColor: color.text,
+            shadowOffset: {width: 0, height: 4},
+            shadowOpacity: 0.2,
+            shadowRadius: 8,
+
+            elevation: 5,
+          },
+        ]}>
         <Text
           style={[
             styles.header,
@@ -621,61 +646,65 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: color.background}]}>
-      <View style={[styles.header, {backgroundColor: color.background}]}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Feather name="arrow-left" size={20} color={color.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerText, {color: color.text}]}>
-          {translate('Event Detail')}
-        </Text>
-        <TouchableOpacity
-          onPress={onUpdate}
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            backgroundColor: '#00adf5',
-            padding: 15,
-            borderRadius: 30,
-            paddingHorizontal: 20,
-            shadowColor: '#00adf5',
-            shadowOffset: {width: 0, height: 4},
-            shadowOpacity: 0.3,
-            shadowRadius: 2,
-          }}>
-          <Feather name="edit" size={20} color="white" />
-          <Text style={{marginLeft: 10, fontWeight: '700', color: 'white'}}>
-            {translate('Edit')}
+      <ScrollView>
+        <View style={[styles.header, {backgroundColor: color.background}]}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Feather name="arrow-left" size={20} color={color.text} />
+          </TouchableOpacity>
+          <Text style={[styles.headerText, {color: color.text}]}>
+            {translate('Event Detail')}
           </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={[styles.card, {backgroundColor: color.white}]}>
-        {event.title && (
-          <Text style={[styles.title, {color: color.text}]}>{event.title}</Text>
-        )}
-        <Text style={[styles.description, {color: color.text}]}>
-          {translate('Description')}: {event.description}
-        </Text>
-        <View style={styles.locationContainer}>
-          <Text style={[styles.location, {color: color.text}]}>
-            {translate('Location')}:
-          </Text>
-          <Text style={[styles.description, {fontSize: 16, color: color.text}]}>
-            {' '}
-            {event.location}
-          </Text>
+          <TouchableOpacity
+            onPress={onUpdate}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: '#00adf5',
+              padding: 15,
+              borderRadius: 30,
+              paddingHorizontal: 20,
+              shadowColor: '#00adf5',
+              shadowOffset: {width: 0, height: 4},
+              shadowOpacity: 0.3,
+              shadowRadius: 2,
+            }}>
+            <Feather name="edit" size={20} color="white" />
+            <Text style={{marginLeft: 10, fontWeight: '700', color: 'white'}}>
+              {translate('Edit')}
+            </Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.locationContainer}>
-          <Text style={[styles.location, {color: color.text}]}>
-            {translate('Category')}:
-          </Text>
-          {event.categoryEvent && event.categoryEvent.title && (
-            <Text style={{color: event.color, fontSize: 16}}>
-              {' '}
-              {event.categoryEvent.title}
+        <View style={[styles.card, {backgroundColor: color.white}]}>
+          {event.title && (
+            <Text style={[styles.title, {color: color.text}]}>
+              {event.title}
             </Text>
           )}
-        </View>
-        {/* <View style={styles.locationContainer}>
+          <Text style={[styles.description, {color: color.text}]}>
+            {translate('Description')}: {event.description}
+          </Text>
+          <View style={styles.locationContainer}>
+            <Text style={[styles.location, {color: color.text}]}>
+              {translate('Location')}:
+            </Text>
+            <Text
+              style={[styles.description, {fontSize: 16, color: color.text}]}>
+              {' '}
+              {event.location}
+            </Text>
+          </View>
+          <View style={styles.locationContainer}>
+            <Text style={[styles.location, {color: color.text}]}>
+              {translate('Category')}:
+            </Text>
+            {event.categoryEvent && event.categoryEvent.title && (
+              <Text style={{color: event.color, fontSize: 16}}>
+                {' '}
+                {event.categoryEvent.title}
+              </Text>
+            )}
+          </View>
+          {/* <View style={styles.locationContainer}>
           <Text style={[styles.location, {color: color.text}]}>
             {translate('Category')}:
           </Text>
@@ -688,73 +717,102 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
           ? explainRecurrenceRule(event.recurrence_rule, language)
           : null}
       </View> */}
-        <View style={styles.locationContainer}>
-          <Text style={[styles.location, {color: color.text}]}>
-            {translate('Time')}:{' '}
-          </Text>
-          <Text style={styles.dateTime}>
-            {event.is_all_day
-              ? formatEventDate(startDate, endDate)
-              : `${formatEventTime(startDate, endDate)}`}
-          </Text>
-        </View>
+          <View style={styles.locationContainer}>
+            <Text style={[styles.location, {color: color.text}]}>
+              {translate('Time')}:{' '}
+            </Text>
+            <Text style={styles.dateTime}>
+              {event.is_all_day
+                ? formatEventDate(startDate, endDate)
+                : `${formatEventTime(startDate, endDate)}`}
+            </Text>
+          </View>
 
-        {event.recurrence_rule
-          ? explainRecurrenceRule(event.recurrence_rule, language)
-          : null}
-      </View>
-      {!event.checklistType ? (
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {backgroundColor: color.white, alignItems: 'center'},
-          ]}
-          onPress={() =>
-            navigation.navigate('TodoListStack', {
-              screen: 'TodoList',
-              params: {id_family: event.id_family},
-            })
-          }>
-          <Feather name="list" size={24} color={color.text} />
-          <Text style={styles.buttonText}>{translate('New Check List')}</Text>
-        </TouchableOpacity>
-      ) : (
-        renderChecklists()
-      )}
-      {!event.shoppingList ? (
-        extraPackage.some(pkg => pkg.name === 'Shopping') ? (
+          {event.recurrence_rule
+            ? explainRecurrenceRule(event.recurrence_rule, language)
+            : null}
+        </View>
+        {!event.checklistType ? (
           <TouchableOpacity
             style={[
               styles.button,
               {
                 backgroundColor: color.white,
-                flexDirection: 'row',
                 alignItems: 'center',
+                borderRadius: 10,
+                shadowColor: color.text,
+                shadowOffset: {width: 0, height: 4},
+                shadowOpacity: 0.2,
+                shadowRadius: 8,
+
+                elevation: 5,
               },
             ]}
-            onPress={() => navigation.navigate('NewShoppingList', {id_family})}>
-            <Feather name="shopping-cart" size={24} color={color.text} />
-            <Text style={styles.buttonText}>
-              {translate('Add New Shopping List')}
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={[styles.addButton, {backgroundColor: color.primary}]}
             onPress={() =>
-              navigation.navigate('PackStack', {
-                screen: 'ViewAllService',
-                params: {families: family},
+              navigation.navigate('TodoListStack', {
+                screen: 'TodoList',
+                params: {id_family: event.id_family},
               })
             }>
-            <Text style={[styles.addButtonText, {color: color.text}]}>
-              {translate('Buy Service Shopping List')}
-            </Text>
+            <Feather name="list" size={24} color={color.text} />
+            <Text style={styles.buttonText}>{translate('New Check List')}</Text>
           </TouchableOpacity>
-        )
-      ) : (
-        renderShoppingList()
-      )}
+        ) : (
+          renderChecklists()
+        )}
+        {!event.shoppingList ? (
+          extraPackage.some(pkg => pkg.name === 'Shopping') ? (
+            <TouchableOpacity
+              style={[
+                styles.button,
+                {
+                  backgroundColor: color.white,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginTop: 20,
+                  borderRadius: 10,
+                  paddingHorizontal: 15,
+                  shadowColor: color.text,
+                  shadowOffset: {width: 0, height: 4},
+                  shadowOpacity: 0.2,
+                  shadowRadius: 8,
+
+                  elevation: 5,
+                },
+              ]}
+              onPress={() =>
+                navigation.navigate('NewShoppingList', {id_family})
+              }>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Feather name="shopping-cart" size={24} color={color.text} />
+                <Text style={styles.buttonText}>
+                  {translate('Add New Shopping List')}
+                </Text>
+              </View>
+              <Feather name="arrow-right" size={24} color={color.text} />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={[
+                styles.addButton,
+                {backgroundColor: color.white, borderRadius: 10, marginTop: 20},
+              ]}
+              onPress={() =>
+                navigation.navigate('PackStack', {
+                  screen: 'ViewAllService',
+                  params: {families: family},
+                })
+              }>
+              <Text style={[styles.addButtonText, {color: color.text}]}>
+                {translate('Buy Service Shopping List')}
+              </Text>
+            </TouchableOpacity>
+          )
+        ) : (
+          renderShoppingList()
+        )}
+      </ScrollView>
       <View
         style={[
           styles.containerBtnDelete,

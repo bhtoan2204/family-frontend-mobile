@@ -290,8 +290,6 @@ const CalendarServices = {
     recurrence_exception?: string,
     recurrence_id?: number,
     recurrence_rule?: string,
-    start_timezone?: string,
-    end_timezone?: string,
   ) => {
     try {
       const requestData = {
@@ -308,8 +306,6 @@ const CalendarServices = {
         recurrence_exception: recurrence_exception || null,
         recurrence_id: recurrence_id || null,
         recurrence_rule: recurrence_rule || null,
-        start_timezone: start_timezone || null,
-        end_timezone: end_timezone || null,
       };
       console.log(requestData);
       const response: AxiosResponse = await instance.put(

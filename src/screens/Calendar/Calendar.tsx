@@ -39,6 +39,8 @@ import {
   isBefore,
   startOfDay,
 } from 'date-fns';
+import {getSocket} from 'src/services/apiclient/Socket';
+import {Noti} from 'src/interface/notification/getNoti';
 
 const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
   const {id_family} = route.params || {};
@@ -59,10 +61,28 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
   const color = useThemeColors();
   const location = useSelector(selectLocale);
   const [key, setKey] = useState(Date.now());
+  const socket = getSocket();
 
+  const handleNewNotification = async (item: Noti) => {
+    switch (item.type) {
+      case 'CALENDAR':
+        fetchEvent();
+
+        break;
+    }
+  };
   useEffect(() => {
     fetchEvent();
-  }, [route.params?.forceUpdate]);
+    if (socket) {
+      socket.on('onNewNotification', handleNewNotification);
+
+      return () => {
+        if (socket) {
+          socket.off('onNewNotification', handleNewNotification);
+        }
+      };
+    }
+  }, []);
 
   useEffect(() => {
     LocaleConfig.defaultLocale = location;

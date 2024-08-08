@@ -6,6 +6,7 @@ import {rrulestr} from 'rrule';
 import {addMonths, endOfMonth, format, startOfMonth, subMonths} from 'date-fns';
 import {AgendaSchedule} from 'react-native-calendars';
 import {TodoListItem} from 'src/interface/todo/todo';
+
 interface CalendarState {
   events: EventDetail[];
   allEvents: AgendaSchedule;
@@ -36,74 +37,6 @@ const calendarSlice = createSlice({
   reducers: {
     setEvents(state, action: PayloadAction<EventDetail[]>) {
       state.events = action.payload;
-
-      // const groupedEvents: AgendaSchedule = {};
-
-      // action.payload.forEach(event => {
-      //   const dateKey = format(event.time_start, 'yyyy-MM-dd');
-      //   if (!groupedEvents[dateKey]) {
-      //     groupedEvents[dateKey] = [];
-      //   }
-      //   groupedEvents[dateKey].push({
-      //     ...event,
-      //     name: event.title,
-      //     height: 50,
-      //     day: dateKey,
-      //   });
-
-      //   const start = startOfMonth(subMonths(new Date(state.selectedDate), 1));
-      //   const end = endOfMonth(addMonths(new Date(state.selectedDate), 3));
-
-      //   if (event.recurrence_rule) {
-      //     const cleanedRecurrenceRule = cleanRecurrenceRule(
-      //       event.recurrence_rule,
-      //     );
-      //     try {
-      //       const rule = rrulestr(cleanedRecurrenceRule);
-      //       const dates = rule.between(start, end);
-
-      //       dates.forEach(date => {
-      //         if (!isNaN(date.getTime())) {
-      //           const recurrenceDateKey = format(date, 'yyyy-MM-dd');
-      //           if (!groupedEvents[recurrenceDateKey]) {
-      //             groupedEvents[recurrenceDateKey] = [];
-      //           }
-      //           groupedEvents[recurrenceDateKey].push({
-      //             ...event,
-      //             time_start:
-      //               format(new Date(date), 'yyyy-MM-dd') +
-      //               ' ' +
-      //               format(new Date(event.time_start), 'HH:mm:ss'),
-      //             time_end:
-      //               format(
-      //                 new Date(
-      //                   date.getTime() +
-      //                     (event.time_end.getTime() -
-      //                       event.time_start.getTime()),
-      //                 ),
-      //                 'yyyy-MM-dd',
-      //               ) +
-      //               ' ' +
-      //               format(new Date(event.time_end), 'HH:mm:ss'),
-      //             name: event.title,
-      //             height: 50,
-      //             day: recurrenceDateKey,
-      //           });
-      //         } else {
-      //           console.error('Invalid date:', date);
-      //         }
-      //       });
-      //     } catch (recurrenceError) {
-      //       // console.error(
-      //       //   'Error parsing cleaned recurrence rule:',
-      //       //   recurrenceError,
-      //       //   cleanedRecurrenceRule,
-      //       // );
-      //     }
-      //   }
-      // });
-
-      // state.allEvents = {groupedEvents};
     },
 
     setTodoList: (state, action: PayloadAction<TodoListItem[]>) => {
@@ -147,6 +80,7 @@ const calendarSlice = createSlice({
         name: newEvent.title,
         height: 50,
         day: dateKey,
+        id: newEvent.id_calendar, // Add unique identifier
       });
 
       if (newEvent.recurrence_rule) {
@@ -203,23 +137,25 @@ const calendarSlice = createSlice({
                 name: newEvent.title,
                 height: 50,
                 day: recurrenceDateKey,
+                id: `${newEvent.id_calendar}-${recurrenceDateKey}`, // Unique identifier for recurring events
               });
             } else {
               console.error('Invalid date:', date);
             }
           });
         } catch (recurrenceError) {
-          // console.error(
-          //   'Error parsing cleaned recurrence rule:',
-          //   recurrenceError,
-          //   cleanedRecurrenceRule,
-          // );
+          console.error(
+            'Error parsing cleaned recurrence rule:',
+            recurrenceError,
+            cleanedRecurrenceRule,
+          );
         }
       }
     },
 
     updateEvent(state, action: PayloadAction<EventDetail>) {
-      const {id_calendar} = action.payload;
+      const {id_calendar, time_start, title} = action.payload;
+      const dateKey = format(time_start, 'yyyy-MM-dd');
 
       const index = state.events.findIndex(
         event => event.id_calendar === id_calendar,
@@ -228,20 +164,31 @@ const calendarSlice = createSlice({
         state.events[index] = action.payload;
       }
 
-      // const dateKey = format(action.payload.time_start, 'yyyy-MM-dd');
-      // const eventIndex = state.allEvents[dateKey]?.findIndex(
-      //   event => event.id_calendar === id_calendar,
-      // );
       state.selectedEvent = action.payload;
 
-      // if (eventIndex !== -1) {
-      //   state.allEvents[dateKey][eventIndex] = {
-      //     ...action.payload,
-      //     name: action.payload.title,
-      //     height: 50,
-      //     day: dateKey,
-      //   };
-      // }
+      if (state.allEvents[dateKey]) {
+        const eventIndex = state.allEvents[dateKey].findIndex(
+          event => event.id_calendar === id_calendar,
+        );
+        if (eventIndex !== -1) {
+          state.allEvents[dateKey][eventIndex] = {
+            ...action.payload,
+            name: title, // Cập nhật tiêu đề của sự kiện
+            height: 50, // Hoặc bất kỳ giá trị nào bạn muốn đặt cho chiều cao
+            day: dateKey, // Ngày sự kiện
+            id: id_calendar,
+          };
+        } else {
+          // Nếu sự kiện không tồn tại trong danh sách sự kiện cho ngày đó, thêm mới vào
+          state.allEvents[dateKey].push({
+            ...action.payload,
+            name: title,
+            height: 50,
+            day: dateKey,
+            id: id_calendar,
+          });
+        }
+      }
     },
 
     deleteEvent(state, action: PayloadAction<number>) {
@@ -257,43 +204,26 @@ const calendarSlice = createSlice({
         );
       });
     },
-    deleteEventOnly(state: CalendarState) {
-      if (state.selectedEvent) {
-        const {id_calendar, time_start} = state.selectedEvent;
+    deleteEventOnly(
+      state,
+      action: PayloadAction<{id_calendar: string; recurrence_rule: string}>,
+    ) {
+      const {id_calendar, recurrence_rule} = action.payload;
 
-        Object.keys(state.allEvents).forEach(date => {
-          state.allEvents[date] = state.allEvents[date].filter(
-            event =>
-              !(
-                event.id_calendar === id_calendar &&
-                event.time_start === time_start
-              ),
-          );
+      if (state.selectedEvent) {
+        state.events = state.events.map(event => {
+          if (event.id_calendar === id_calendar) {
+            return {
+              ...event,
+              recurrence_rule: recurrence_rule,
+            };
+          }
+          return event;
         });
 
-        state.events = state.events
-          .map(event => {
-            if (event.id_calendar === id_calendar) {
-              const newRecurrenceException = event.recurrence_exception
-                ? `${event.recurrence_exception},${new Date(time_start).toISOString()}`
-                : new Date(time_start).toISOString();
-
-              return {
-                ...event,
-                recurrence_exception: newRecurrenceException,
-              };
-            }
-            return event;
-          })
-          .filter(
-            event =>
-              !(
-                event.id_calendar === id_calendar &&
-                event.time_start === time_start
-              ),
-          );
-
         state.selectedEvent = null;
+      } else {
+        console.error('No selected event to delete');
       }
     },
 
@@ -330,6 +260,7 @@ const calendarSlice = createSlice({
             name: event.title,
             height: 50,
             day: dateKey,
+            id: event.id_calendar,
           });
         } else {
           const cleanedRecurrenceRule = cleanRecurrenceRule(
@@ -367,12 +298,18 @@ const calendarSlice = createSlice({
                 }
 
                 const adjustedStartTime = new Date(date);
-                adjustedStartTime.setHours(event.time_start.getHours());
-                adjustedStartTime.setMinutes(event.time_start.getMinutes());
+                adjustedStartTime.setHours(
+                  new Date(event.time_start).getHours(),
+                );
+                adjustedStartTime.setMinutes(
+                  new Date(event.time_start).getMinutes(),
+                );
 
                 const adjustedEndTime = new Date(date);
-                adjustedEndTime.setHours(event.time_end.getHours());
-                adjustedEndTime.setMinutes(event.time_end.getMinutes());
+                adjustedEndTime.setHours(new Date(event.time_end).getHours());
+                adjustedEndTime.setMinutes(
+                  new Date(event.time_end).getMinutes(),
+                );
 
                 state.allEvents[recurrenceDateKey].push({
                   ...event,
@@ -381,47 +318,48 @@ const calendarSlice = createSlice({
                   name: event.title,
                   height: 50,
                   day: recurrenceDateKey,
+                  id: `${event.id_calendar}-${recurrenceDateKey}`, // Unique identifier for recurring events
                 });
               } else {
                 console.error('Invalid date:', date);
               }
             });
           } catch (recurrenceError) {
-            // console.error(
-            //   'Error parsing cleaned recurrence rule:',
-            //   recurrenceError,
-            //   cleanedRecurrenceRule,
-            // );
+            console.error(
+              'Error parsing cleaned recurrence rule:',
+              recurrenceError,
+              cleanedRecurrenceRule,
+            );
           }
         }
       });
     },
   },
 });
+
 export const {
-  setSelectedEventById,
-  deleteEventOnly,
-  setOption,
-  setOnly,
   setEvents,
   addEvent,
   updateEvent,
   deleteEvent,
+  deleteEventOnly,
   setSelectedEvent,
+  setSelectedEventById,
+  setOption,
+  setOnly,
   setSelectedDate,
   setTodoList,
   doneTodoList,
 } = calendarSlice.actions;
 
 export const selectEvents = (state: RootState) => state.calendar.events;
-export const selectAllEvent = (state: RootState) => state.calendar.allEvents;
-
 export const selectSelectedEvent = (state: RootState) =>
   state.calendar.selectedEvent;
 export const selectSelectedDate = (state: RootState) =>
   state.calendar.selectedDate;
-export const getOption = (state: RootState) => state.calendar.option;
-export const getOnly = (state: RootState) => state.calendar.isOnly;
-export const getChecklist = (state: RootState) => state.calendar.todoList;
+export const selectAllEvent = (state: RootState) => state.calendar.allEvents;
+export const selectOption = (state: RootState) => state.calendar.option;
+export const selectIsOnly = (state: RootState) => state.calendar.isOnly;
+export const selectTodoList = (state: RootState) => state.calendar.todoList;
 
 export default calendarSlice.reducer;

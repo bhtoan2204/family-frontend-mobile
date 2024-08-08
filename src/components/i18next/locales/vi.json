@@ -180,7 +180,9 @@
   "Monthly": "Hàng Tháng",
   "Yearly": "Hàng Năm",
   "Every": "Mỗi",
-
+  "weekly": "Hàng Tuần",
+  "monthly": "Hàng Tháng",
+  "yearly": "Hàng Năm",
   "day": "ngày",
   "days": "ngày",
   "week": "tuần",
