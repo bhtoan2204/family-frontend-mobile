@@ -6,8 +6,6 @@ import {ERROR_TEXTS} from 'src/constants';
 import baseUrl from '../urls/baseUrl';
 
 const PackageServices = {
-  
-
   //da xong
   getProfile: async () => {
     try {
@@ -73,13 +71,10 @@ const PackageServices = {
     }
   },
 
-
-
   getAllPackage: async () => {
     try {
       const response: AxiosResponse = await instance.get(
         PackageUrl.getAllPackage,
-       
       );
       if (response.status === 200) {
         return response.data.data;
@@ -123,7 +118,7 @@ const PackageServices = {
       throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
     }
   },
-  
+
   getAvailableFunction: async (id_family?: number) => {
     try {
       const response: AxiosResponse = await instance.get(
@@ -146,25 +141,25 @@ const PackageServices = {
     id_combo_package?: number | null,
     id_family?: number | null,
     bankCode?: string | null,
-    code?: string | null
+    code?: string | null,
   ) => {
     try {
       const payload = {
-        ...(id_main_package !== null && { id_main_package }),
-        ...(id_extra_package !== null && { id_extra_package }),
-        ...(id_combo_package !== null && { id_combo_package }),
-        ...(id_family !== null && { id_family }),
-        ...(bankCode !== null && { bankCode }),
-        ...(code !== null && { code }),
+        ...(id_main_package !== null && {id_main_package}),
+        ...(id_extra_package !== null && {id_extra_package}),
+        ...(id_combo_package !== null && {id_combo_package}),
+        ...(id_family !== null && {id_family}),
+        ...(bankCode !== null && {bankCode}),
+        ...(code !== null && {code}),
       };
-  
+
       console.log(payload);
-  
+
       const response: AxiosResponse = await instance.post(
         PackageUrl.createPaymentURL,
-        payload
+        payload,
       );
-  
+
       if (response.status === 200) {
         return response.data;
       } else {
@@ -175,8 +170,7 @@ const PackageServices = {
       throw new Error(ERROR_TEXTS.CREATE_ORDER_ERROR);
     }
   },
-  
-  
+
   //danglam
   getReturnUrl: async () => {
     try {
@@ -198,14 +192,17 @@ const PackageServices = {
       }
     }
   },
-  paymentHistory: async (itemsPerPage: number, page: number ) => {
+  paymentHistory: async (itemsPerPage: number, page: number) => {
     try {
       const response: AxiosResponse = await instance.get(
         PackageUrl.paymentHistory,
         {
           params: {
-            itemsPerPage, page
-          }
+            itemsPerPage,
+            page,
+            sortBy: 'created_at',
+            sortDirection: 'DESC',
+          },
         },
       );
       if (response.status === 200) {
@@ -214,7 +211,7 @@ const PackageServices = {
         throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
       }
     } catch (error: any) {
-      console.error('Error in getAllPackages:', error.message);
+      console.error('Error in paymentHistory:', error.message);
       throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
     }
   },

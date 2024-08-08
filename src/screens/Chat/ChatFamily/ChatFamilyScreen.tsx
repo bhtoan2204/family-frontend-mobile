@@ -321,6 +321,51 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
       return 'Invalid date';
     }
   };
+
+  const onDeleteFamily = async (message: Message) => {
+    Alert.alert(
+      translate('confirmDelete'),
+      translate('confirmDeleteChat'),
+      [
+        {
+          text: translate('Cancel'),
+          style: 'cancel',
+        },
+        {
+          text: translate('Delete'),
+          onPress: async () => {
+            try {
+              const respone = await ChatServices.removeMessageFamily(
+                LastMessageFamily.familyId,
+                message._id,
+              );
+              if (respone) {
+                setMessages(prevMessages =>
+                  prevMessages.filter(msg => msg._id !== message._id),
+                );
+                Toast.show(translate('deleteSuccess'), {
+                  type: 'success',
+                  duration: 2000,
+                });
+              } else {
+                Toast.show(translate('deleteError'), {
+                  type: 'danger',
+                  duration: 2000,
+                });
+              }
+            } catch (error) {
+              console.error('Error deleting event:', error);
+              Toast.show('Delete deleteError', {
+                type: 'danger',
+                duration: 2000,
+              });
+            }
+          },
+        },
+      ],
+      {cancelable: true},
+    );
+  };
   return (
     <KeyboardAvoidingView
       behavior="padding"
@@ -332,9 +377,8 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
         left: 0,
         right: 0,
       }}>
-      <View style={[styles.header, {backgroundColor: color.background}]}>
-        <View
-          style={[styles.receiverInfo, {backgroundColor: color.background}]}>
+      <View style={[styles.header, {backgroundColor: color.white}]}>
+        <View style={[styles.receiverInfo, {backgroundColor: color.white}]}>
           <View
             style={{
               flexDirection: 'row',
@@ -406,6 +450,7 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
               onMessagePress={onMessagePress}
               isSelected={selectedMessageId === item._id}
               formatDateTime={formatDateTime}
+              onRemoveMessage={onDeleteFamily}
             />
           )}
           keyExtractor={(item, index) => index.toString()}
@@ -458,7 +503,7 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
       <View
         style={[
           styles.inputContainer,
-          {backgroundColor: color.background},
+          {backgroundColor: color.white},
           keyboardIsOpen && {paddingBottom: 20},
         ]}>
         <TouchableOpacity
@@ -470,7 +515,7 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
           <TextInput
             style={[
               styles.input,
-              {backgroundColor: color.white, color: color.text},
+              {backgroundColor: color.background, color: color.text},
               {flex: 1},
             ]}
             value={message}

@@ -40,6 +40,7 @@ import {selectSelectedFamily} from 'src/redux/slices/FamilySlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import MessageItem from '../ChatScreen/RenderMessage';
+import {Toast} from 'react-native-toast-notifications';
 
 const ChatFamilyLastScreen = ({
   navigation,
@@ -346,7 +347,50 @@ const ChatFamilyLastScreen = ({
       return 'Invalid date';
     }
   };
-
+  const onDeleteFamily = async (message: Message) => {
+    Alert.alert(
+      translate('confirmDelete'),
+      translate('confirmDeleteChat'),
+      [
+        {
+          text: translate('Cancel'),
+          style: 'cancel',
+        },
+        {
+          text: translate('Cancel'),
+          onPress: async () => {
+            try {
+              const respone = await ChatServices.removeMessageFamily(
+                LastMessageFamily.familyId,
+                message._id,
+              );
+              if (respone) {
+                setMessages(prevMessages =>
+                  prevMessages.filter(msg => msg._id !== message._id),
+                );
+                Toast.show(translate('deleteSuccess'), {
+                  type: 'success',
+                  duration: 2000,
+                });
+              } else {
+                Toast.show(translate('deleteError'), {
+                  type: 'danger',
+                  duration: 2000,
+                });
+              }
+            } catch (error) {
+              console.error('Error deleting event:', error);
+              Toast.show('Delete deleteError', {
+                type: 'danger',
+                duration: 2000,
+              });
+            }
+          },
+        },
+      ],
+      {cancelable: true},
+    );
+  };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -358,11 +402,10 @@ const ChatFamilyLastScreen = ({
           bottom: 0,
           left: 0,
           right: 0,
-          backgroundColor: color.background,
+          backgroundColor: color.white,
         }}>
-        <View style={[styles.header, {backgroundColor: color.background}]}>
-          <View
-            style={[styles.receiverInfo, {backgroundColor: color.background}]}>
+        <View style={[styles.header, {backgroundColor: color.white}]}>
+          <View style={[styles.receiverInfo, {backgroundColor: color.white}]}>
             <View
               style={{
                 flexDirection: 'row',
@@ -421,13 +464,10 @@ const ChatFamilyLastScreen = ({
         </View>
         {messages ? (
           <FlatList
-            style={[
-              styles.messagesContainer,
-              {backgroundColor: color.background},
-            ]}
+            style={[styles.messagesContainer, {backgroundColor: color.white}]}
             contentContainerStyle={[
               styles.contentContainer,
-              {backgroundColor: color.chatBackground},
+              {backgroundColor: color.white},
             ]}
             data={messages}
             inverted
@@ -438,6 +478,7 @@ const ChatFamilyLastScreen = ({
                 onMessagePress={onMessagePress}
                 isSelected={selectedMessageId === item._id}
                 formatDateTime={formatDateTime}
+                onRemoveMessage={onDeleteFamily}
               />
             )}
             keyExtractor={(item, index) => index.toString()}
@@ -457,10 +498,7 @@ const ChatFamilyLastScreen = ({
             }}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View
-                style={[
-                  styles.introContainer,
-                  {backgroundColor: color.background},
-                ]}>
+                style={[styles.introContainer, {backgroundColor: color.white}]}>
                 {LastMessageFamily && (
                   <>
                     <View
@@ -491,7 +529,7 @@ const ChatFamilyLastScreen = ({
                 </Text>
                 <View
                   style={{
-                    backgroundColor: color.background,
+                    backgroundColor: color.white,
                     minHeight: 470,
                   }}></View>
               </View>
@@ -501,7 +539,7 @@ const ChatFamilyLastScreen = ({
         <View
           style={[
             styles.inputContainer,
-            {backgroundColor: color.background},
+            {backgroundColor: color.white},
             keyboardIsOpen && {paddingBottom: 20},
           ]}>
           <TouchableOpacity
@@ -513,7 +551,7 @@ const ChatFamilyLastScreen = ({
             <TextInput
               style={[
                 styles.input,
-                {backgroundColor: color.white, color: color.text},
+                {backgroundColor: color.background, color: color.text},
                 {flex: 1},
               ]}
               value={message}

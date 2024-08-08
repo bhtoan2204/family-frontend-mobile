@@ -12,7 +12,8 @@ import {
 import ExpenseServices from 'src/services/apiclient/ExpenseServices';
 import {CategoryExpenseScreenProps} from 'src/navigation/NavigationTypes';
 import styles from './styles';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/FontAwesome6';
+import Icon1 from 'react-native-vector-icons/Fontisto';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectSelectedFamily} from 'src/redux/slices/FamilySlice';
 import {
@@ -34,25 +35,26 @@ import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {Toast} from 'react-native-toast-notifications';
 const categoryIcons = {
-  'Food & Groceries': 'fast-food',
-  Rent: 'home',
-  Utilities: 'water',
+  'Food & Groceries': 'burger',
+  Rent: 'house-chimney',
+  Utilities: 'child-reaching',
   Transportation: 'car',
-  Healthcare: 'heart',
+  Healthcare: 'heart-pulse',
   Education: 'school',
-  Entertainment: 'tv',
-  Insurance: 'shield',
-  'Debt Payments': 'cash',
-  Savings: 'cash',
-  Salary: 'cash',
+  Entertainment: 'dice',
+  Insurance: 'user-injured',
+  'Debt Payments': 'sack-xmark',
+  Savings: 'money-bill-trend-up',
+  Salary: 'money-bill-transfer',
   Services: 'briefcase',
-  Investments: 'cash',
-  Dividends: 'cash',
-  'Consulting fees': 'briefcase',
-  Royalties: 'gift',
-  Grants: 'gift',
+  Investments: 'landmark',
+  Dividends: 'people-line',
+  'Consulting fees': 'people-carry-box',
+  Royalties: 'stamp',
+  Grants: 'puzzle-piece',
   Bonuses: 'gift',
-  Interest: 'cash',
+  Interest: 'handshake-simple',
+  Shopping: 'basket-shopping',
 };
 
 const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
@@ -125,12 +127,17 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
   };
 
   const selectCategory = (item: any) => {
-    dispatch(setType(selectedCategoryType));
-    if (selectedCategoryType === 'Expense') {
-      dispatch(setSelectedExpenseType(item));
-    } else if (selectedCategoryType === 'Income') {
-      dispatch(setSelectedIncomeType(item));
+    if (item.expense_type_name !== 'Utilities') {
+      dispatch(setType(selectedCategoryType));
+      if (selectedCategoryType === 'Expense') {
+        dispatch(setSelectedExpenseType(item));
+      } else if (selectedCategoryType === 'Income') {
+        dispatch(setSelectedIncomeType(item));
+      }
+    } else {
+      dispatch(setType('Utilities'));
     }
+
     navigation.navigate('FamilyTab', {screen: 'Expense'});
   };
 
@@ -243,7 +250,7 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
           : item.income_source_name;
 
     // Xác định biểu tượng dựa trên tên loại chi phí hoặc thu nhập
-    const iconName = categoryIcons[categoryName] || 'ellipsis-horizontal';
+    const iconName = categoryIcons[categoryName] || 'ellipsis-v';
 
     return (
       <TouchableOpacity
@@ -260,7 +267,7 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
               : onDeleteIncome(item)
           }
           style={styles.deleteButton}>
-          <Icon name="trash-outline" size={20} color="red" />
+          <Icon name="trash-can" size={20} color="red" />
         </TouchableOpacity>
       </TouchableOpacity>
     );
@@ -274,7 +281,7 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
           onPress={() => navigation.navigate('FamilyTab', {screen: 'Expense'})}
           style={styles.headerButton}>
           <Icon
-            name="arrow-back"
+            name="chevron-left"
             size={30}
             style={[styles.addImage, {color: color.text}]}
           />
@@ -356,7 +363,7 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
           <View
             style={[styles.modalContent, {backgroundColor: color.background}]}>
             <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
-              <Icon name="close" size={30} color={color.text} />
+              <Icon1 name="close-a" size={20} color={color.text} />
             </TouchableOpacity>
             <Text style={[styles.modalTitle, {color: color.text}]}>
               {translate('Add New Category')}

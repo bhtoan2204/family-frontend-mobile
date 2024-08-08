@@ -1,3 +1,23 @@
+export interface UtilitiesType {
+  id_utilities_type: number;
+  name_en: string;
+  name_vn: string;
+}
+
+export interface Utilities {
+  id_utility: number;
+  id_family: number;
+  id_utilities_type: number;
+  name: string;
+  description: string;
+  image_url: string | null;
+  value: number;
+  id_expenditure: number;
+  created_at: string;
+  updated_at: string;
+  utilitiesType: UtilitiesType;
+}
+
 export interface DailyExpense {
   id_expenditure: number;
   id_family: number;
@@ -24,6 +44,7 @@ export interface DailyExpense {
     id_expenditure_type: number | null;
     expense_type_name: string | null;
     id_family: number | null;
+    expense_type_name_vn: string | null;
   } | null;
   users: {
     id_user: string;
@@ -41,4 +62,5 @@ export interface DailyExpense {
     birthdate: string;
     is_banned: boolean;
   };
+  utilities: Utilities;
 }

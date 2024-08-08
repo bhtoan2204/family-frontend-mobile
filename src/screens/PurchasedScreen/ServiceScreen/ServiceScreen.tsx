@@ -33,12 +33,14 @@ import {useThemeColors} from 'src/hooks/useThemeColor';
 import {AppDispatch} from 'src/redux/store';
 
 const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
+  const {families} = route.params;
+
   const [selectedService, setSelectedService] = useState<null | Service>(null);
   const [selectedMount, setSelectedMount] = useState<number>(0);
   const [service, setService] = useState<Service[]>([]);
   const profile = useSelector(selectProfile);
   const [family, setFamily] = useState<Family[]>([]);
-  const [familySelected, setFamilySelected] = useState<Family | null>(null);
+  const [familySelected, setFamilySelected] = useState<Family | null>(families);
   const [purchasedServices, setPurchasedServices] = useState<number[]>([]);
   const [serviceFamily, setServiceFamily] = useState<Service[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -68,8 +70,10 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
       const data = await FamilyServices.getAllFamily();
       if (data && data.length > 0) {
         setFamily(data);
-        setFamilySelected(data[0]);
-        fetchServiceOfFamily(data[0].id_family);
+        if (!familySelected) {
+          setFamilySelected(data[0]);
+        }
+        fetchServiceOfFamily(familySelected?.id_family);
       }
     } catch (error) {
       console.log('Fetch family error:', error);
@@ -143,10 +147,9 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="gray" />
-        </View>
+      <SafeAreaView
+        style={[styles.container, {backgroundColor: color.background}]}>
+        <ActivityIndicator size="large" color={color.text} />
       </SafeAreaView>
     );
   }
@@ -167,6 +170,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
       id_family: familySelected?.id_family,
     });
   };
+
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: color.background}]}>
@@ -209,7 +213,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
                     source={
                       item.avatar
                         ? {uri: item.avatar}
-                        : require('../../../assets/images/avatar.png')
+                        : require('../../../assets/images/big-family_4441180.png')
                     }
                     style={styles.avatar}
                   />

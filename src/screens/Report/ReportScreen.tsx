@@ -366,7 +366,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
               transform: [{scale: scaleAnim}],
             },
           ]}>
-          - {formatCurrency(sumExpense)}
+          -{formatCurrency(sumExpense)}
         </Animated.Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -472,7 +472,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
       case 'expenseIncome':
         return renderExVsInScreen();
       case 'asset':
-        return renderAsset();
+        return navigation.navigate('ExpenseStack', {screen: 'AssetScreen'});
     }
   };
 

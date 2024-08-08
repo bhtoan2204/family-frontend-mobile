@@ -40,7 +40,7 @@ interface LineChartScreenProps {
 }
 
 const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
-  const [showDetails, setShowDetails] = useState<boolean>(false);
+  const [showDetails, setShowDetails] = useState<boolean>(true);
   const [selectedLegends, setSelectedLegends] = useState<string[]>(['Total']);
   const [isYearPickerVisible, setYearPickerVisible] = useState<boolean>(false);
   const [selectedYear, setSelectedYear] = useState(moment().year());
@@ -158,46 +158,49 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
   };
 
   const categoryColors: string[] = [
-    // 'rgba(255, 0, 0, 1)',
-    // 'rgba(0, 255, 0, 1)',
-    // 'rgba(0, 0, 255, 1)',
-    // 'rgba(255, 255, 0, 1)',
-    // 'rgba(255, 0, 255, 1)',
-    // 'rgba(0, 255, 255, 1)',
-    // 'rgba(128, 0, 0, 1)',
-    // 'rgba(0, 128, 0, 1)',
-    // 'rgba(0, 0, 128, 1)',
-    // 'rgba(128, 128, 0, 1)',
-    // 'rgba(128, 0, 128, 1)',
-    // 'rgba(255, 165, 0, 1)',
-    // 'rgba(255, 192, 203, 1)',
-    // 'rgba(0, 255, 127, 1)',
-    // 'rgba(255, 20, 147, 1)',
-    // 'rgba(255, 140, 0, 1)',
-    // 'rgba(0, 255, 255, 0.5)',
-    // 'rgba(255, 255, 255, 0.5)',
-    // 'rgba(255, 255, 0, 0.5)',
-    // 'rgba(128, 0, 128, 0.5)',
-    `rgba(255, 99, 132, 0.8)`,
-    `rgba(75, 192, 192, 0.8)`,
-    `rgba(54, 162, 235, 0.8)`,
-    `rgba(255, 206, 86, 0.8)`,
-    `rgba(200, 200, 100, 0.8)`,
-    `rgba(255, 159, 64, 0.8)`,
-    `rgba(255, 99, 132, 0.8)`,
-    `rgba(75, 192, 192, 0.8)`,
-    `rgba(54, 162, 235, 0.8)`,
-    `rgba(255, 206, 86, 0.8)`,
-    `rgba(153, 102, 255, 0.8)`,
-    `rgba(255, 159, 64, 0.8)`,
-    `rgba(255, 99, 132, 0.8)`,
-    `rgba(75, 192, 192, 0.8)`,
-    `rgba(54, 162, 235, 0.8)`,
-    `rgba(255, 206, 86, 0.8)`,
-    `rgba(153, 102, 255, 0.8)`,
-    `rgba(255, 159, 64, 0.8)`,
-    `rgba(255, 206, 86, 0.8)`,
-    `rgba(153, 102, 255, 0.8)`,
+    'rgba(255, 99, 132, 1)',
+    'rgba(54, 162, 235, 1)',
+    'rgba(255, 206, 86, 1)',
+    'rgba(75, 192, 192, 1)',
+    'rgba(153, 102, 255, 1)',
+    'rgba(255, 159, 64, 1)',
+    'rgba(199, 199, 199, 1)',
+    'rgba(83, 102, 132, 1)',
+    'rgba(190, 60, 70, 1)',
+    'rgba(50, 150, 50, 1)',
+    'rgba(255, 20, 147, 1)',
+    'rgba(255, 69, 0, 1)',
+    'rgba(135, 206, 250, 1)',
+    'rgba(0, 255, 0, 1)',
+    'rgba(255, 105, 180, 1)',
+    'rgba(30, 144, 255, 1)',
+    'rgba(219, 112, 147, 1)',
+    'rgba(255, 20, 147, 0.8)',
+    'rgba(123, 104, 238, 1)',
+    'rgba(0, 139, 139, 1)',
+    'rgba(255, 69, 0, 0.8)',
+    'rgba(255, 99, 71, 1)',
+    'rgba(32, 178, 170, 1)',
+    'rgba(128, 128, 128, 1)',
+    'rgba(255, 0, 0, 0.5)',
+    'rgba(0, 255, 0, 0.5)',
+    'rgba(0, 0, 255, 0.5)',
+    'rgba(255, 255, 0, 0.5)',
+    'rgba(255, 105, 180, 0.7)',
+    'rgba(139, 0, 139, 0.8)',
+    'rgba(255, 69, 0, 0.6)',
+    'rgba(0, 128, 128, 0.6)',
+    'rgba(255, 192, 203, 0.5)',
+    'rgba(64, 224, 208, 0.7)',
+    'rgba(0, 191, 255, 0.7)',
+    'rgba(186, 85, 211, 0.7)',
+    'rgba(255, 165, 0, 0.5)',
+    'rgba(144, 238, 144, 0.6)',
+    'rgba(135, 206, 250, 0.5)',
+    'rgba(255, 228, 196, 0.7)',
+    'rgba(255, 140, 0, 0.6)',
+    'rgba(255, 20, 147, 0.7)',
+    'rgba(0, 250, 154, 0.6)',
   ];
 
   const categoryDatasets: any[] = [];
@@ -207,7 +210,6 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
       name: 'Total',
       data: monthlyTotals,
       color: () => categoryColors[0],
-      key: 'Total',
     });
   }
   allCategories.forEach((categoryId, index) => {
@@ -228,7 +230,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
         }
         return categoryDataAmount;
       }),
-      color: () => categoryColors[categoryId.length % 20],
+      color: () => categoryColors[categoryId.length % 10],
     };
     categoryDatasets.push(dataset);
   });
@@ -279,7 +281,6 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
           </Picker>
         </View>
       )}
-
       <View
         style={[
           styles.chartLineContainer,
@@ -322,15 +323,9 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
               let categoryAmount = 0;
 
               if (selectedLegends.length === 1) {
-                if (
-                  selectedLegends.length === 1 &&
-                  selectedLegends[0] === 'Total'
-                ) {
+                if (selectedLegends[0] === 'Total') {
                   categoryAmount = month.total;
-                } else if (
-                  selectedLegends.length === 1 &&
-                  month.categories.find(cat => cat.name === selectedLegends[0])
-                ) {
+                } else {
                   const selectedCategory = month.categories.find(
                     cat => cat.name === selectedLegends[0],
                   );
@@ -340,15 +335,14 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
                 }
 
                 return (
-                  <View>
+                  <View key={`dot-content-${index}`}>
                     <Text
-                      key={index}
                       style={{
                         position: 'absolute',
                         left: x - 15,
                         top: y - 20,
                         fontSize: 10,
-                        color: 'gray',
+                        color: 'green',
                       }}>
                       {categoryAmount !== 0
                         ? `${categoryAmount.toFixed(0)}M VNĐ`
@@ -397,7 +391,9 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
             </TouchableOpacity>
           ))}
         </ScrollView>
-        <View style={{height: 1, backgroundColor: '#F3F1EE', marginTop: 10}} />
+        <View
+          style={{height: 1, backgroundColor: color.background, marginTop: 10}}
+        />
 
         <TouchableOpacity
           style={{
@@ -405,6 +401,7 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
             justifyContent: 'space-between',
             padding: 10,
             alignItems: 'center',
+            marginTop: 10,
           }}
           onPress={() => setShowDetails(!showDetails)}>
           <Text style={{fontWeight: '500', color: color.text}}>
@@ -419,7 +416,11 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
           />
         </TouchableOpacity>
         {showDetails && (
-          <ScrollView style={styles.ContainerCategory}>
+          <ScrollView
+            style={[
+              styles.ContainerCategory,
+              {backgroundColor: color.background},
+            ]}>
             {monthlyData.map(monthData => (
               <TouchableOpacity
                 key={monthData.month}
@@ -435,8 +436,8 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
                   </Text>
                 </View>
                 <View style={styles.expenseDetails}>
-                  <Text style={styles.expenseAmount}>
-                    - {formatCurrency(monthData.total * 1000000)}
+                  <Text style={[styles.expenseAmount]}>
+                    + {formatCurrency(monthData.total * 1000000)}
                   </Text>
 
                   <Icon name="chevron-right" size={20} color="#ccc" />

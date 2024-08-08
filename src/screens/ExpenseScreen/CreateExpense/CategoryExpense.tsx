@@ -9,7 +9,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/FontAwesome6';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import styles from './styles';
 import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
@@ -17,11 +17,11 @@ import {useSelector} from 'react-redux';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 
 const iconMapping = {
-  1: 'fast-food',
-  2: 'home',
-  3: 'water',
+  1: 'burger',
+  2: 'building-user',
+  3: 'bolt-lightning',
   4: 'car',
-  5: 'medkit',
+  5: 'kit-medical',
   6: 'school',
   7: 'game-controller',
   8: 'shield',
@@ -52,7 +52,12 @@ const CategoryExpense = ({
     <View
       style={[styles.ContainerCategory, {backgroundColor: color.background}]}>
       <View style={styles.selectedItemContainer}>
-        <Image source={{uri: urlCatetory}} style={styles.avatar} />
+        <Icon
+          name="hashtag"
+          size={30}
+          color={color.text}
+          style={styles.avatar}
+        />
         <Text
           style={[
             styles.inputAmount,
@@ -60,7 +65,10 @@ const CategoryExpense = ({
             {fontSize: 18},
             {color: color.text},
           ]}>
-          {expenseCategory?.expense_type_name || translate('Select category')}
+          {location === 'vn'
+            ? expenseCategory?.expense_type_name_vn
+            : expenseCategory?.expense_type_name ||
+              translate('Select category')}
         </Text>
 
         <TouchableOpacity
@@ -77,7 +85,7 @@ const CategoryExpense = ({
             ]}>
             {translate('View All')}
           </Text>
-          <Icon name="chevron-forward-outline" size={22} color={color.text} />
+          <Icon name="chevron-right" size={20} color={color.text} />
         </TouchableOpacity>
       </View>
       <View style={{height: 1, backgroundColor: color.background, bottom: 5}} />

@@ -4,13 +4,15 @@ import {
   Animated,
   GestureResponderEvent,
   TouchableOpacity,
+  View,
+  Text,
 } from 'react-native';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from './styles';
-import {COLORS} from 'src/constants';
 import {useSelector} from 'react-redux';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
+import {selectunreadCount} from 'src/redux/slices/NotificationSlice';
 
 interface TabButtonProps {
   item: {
@@ -33,21 +35,22 @@ const TabButton = ({item, accessibilityState, onPress}: TabButtonProps) => {
     scale: useRef(new Animated.Value(0)).current,
   };
   const {translate, scale} = animatedValues;
+  const count = useSelector(selectunreadCount);
 
   useEffect(() => {
     handleAnimated();
     setIsPressed(!!accessibilityState?.selected);
-  }, [accessibilityState!.selected]);
+  }, [accessibilityState?.selected]);
 
   const handleAnimated = () => {
     Animated.parallel([
       Animated.timing(translate, {
-        toValue: accessibilityState!.selected ? 1 : 0,
+        toValue: accessibilityState?.selected ? 1 : 0,
         duration: 400,
         useNativeDriver: false,
       }),
       Animated.timing(scale, {
-        toValue: accessibilityState!.selected ? 1 : 0,
+        toValue: accessibilityState?.selected ? 1 : 0,
         duration: 250,
         useNativeDriver: false,
       }),
@@ -95,7 +98,6 @@ const TabButton = ({item, accessibilityState, onPress}: TabButtonProps) => {
           style={[
             styles.animated,
             scaleStyles,
-            // {borderColor: color.backgroundTabChoose},
             {
               backgroundColor: isPressed
                 ? color.backgroundTabChoose
@@ -108,7 +110,15 @@ const TabButton = ({item, accessibilityState, onPress}: TabButtonProps) => {
           color={isPressed ? color.iconChoose : color.icon}
           size={30}
         />
+        {item.id === 'Notification' && count > 0 && (
+          <View style={styles.notificationContainer}>
+            <Animated.Text style={styles.notificationText}>
+              {count}
+            </Animated.Text>
+          </View>
+        )}
       </Animated.View>
+
       <Animated.Text
         style={[styles.title, {opacity: scale, color: color.TaButtonText}]}>
         {translation(item.title)}

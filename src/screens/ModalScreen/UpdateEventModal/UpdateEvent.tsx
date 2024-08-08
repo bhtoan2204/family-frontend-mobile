@@ -23,6 +23,8 @@ import {
   addEvent,
   getOnly,
   selectSelectedEvent,
+  setSelectedDate,
+  setSelectedEvent,
   updateEvent,
 } from 'src/redux/slices/CalendarSlice';
 import Custom from './Custom';
@@ -39,6 +41,7 @@ import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {TEXTS} from 'src/constants';
 import {Toast} from 'react-native-toast-notifications';
+import moment from 'moment';
 
 const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
   navigation,
@@ -206,17 +209,17 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
         eventDetails2.end_timezone,
       );
 
-      Alert.alert('Inform', 'Successfully', [
-        {
-          text: 'OK',
-          onPress: () => {
-            navigation.goBack();
-          },
-        },
-      ]);
+      // Alert.alert('Inform', 'Successfully', [
+      //   {
+      //     text: 'OK',
+      //     onPress: () => {
+      //       navigation.goBack();
+      //     },
+      //   },
+      // ]);
       dispatch(updateEvent(message2));
       console.log(message1);
-      dispatch(setSelectedEvent(message2));
+      dispatch(setSelectedEvent(message1));
 
       dispatch(addEvent(message1));
       setSelectedDate(
@@ -225,7 +228,7 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
         Toast.show('Edit this event successfully', {
           type: 'success',
         });
-      // navigation.goBack();
+      navigation.goBack();
     } catch (error) {
       try {
         await CalendarServices.DeleteEvent(eventDetails2.id_calendar);
@@ -360,12 +363,15 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
       console.log(message);
       await dispatch(updateEvent(message));
       await dispatch(setSelectedEvent(message));
-      setSelectedDate(
-        moment(new Date(message.time_start)).format('YYYY-MM-DD'),
-      ),
-        navigation.navigate('EventDetailsScreen', {
-          forceUpdate: new Date().getTime(),
-        });
+      dispatch(
+        setSelectedDate(
+          moment(new Date(message.time_start)).format('YYYY-MM-DD'),
+        ),
+      );
+
+      navigation.navigate('EventDetailsScreen', {
+        forceUpdate: new Date().getTime(),
+      });
       Toast.show('Event updated successfully!', {
         type: 'success',
       });

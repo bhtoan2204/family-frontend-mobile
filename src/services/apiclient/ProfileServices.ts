@@ -35,6 +35,21 @@ const ProfileServices = {
       throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
+  markAllRead: async () => {
+    try {
+      const response: AxiosResponse = await instance.get(
+        ProfileUrl.markAllRead,
+      );
+
+      if (response.status === 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false;
+    }
+  },
   getUserInfoByPhone: async (phone: string) => {
     try {
       const response: AxiosResponse = await instance.get(

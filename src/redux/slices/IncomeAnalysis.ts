@@ -64,13 +64,16 @@ const incomeSlice = createSlice({
       const index = state.incomeList.findIndex(
         income => income.id_income === payload.id_income,
       );
+      state.incomeList = state.incomeList.filter(
+        income => income.id_income !== payload.id_income,
+      );
 
       if (index !== -1) {
         const oldAmount = state.incomeList[index].amount;
         state.incomeList[index] = {...state.incomeList[index], ...payload};
 
         const newAmount = state.incomeList[index].amount;
-        state.sumIncome = state.sumIncome - oldAmount + newAmount;
+        state.sumIncome = state.sumIncome - oldAmount;
       }
 
       if (

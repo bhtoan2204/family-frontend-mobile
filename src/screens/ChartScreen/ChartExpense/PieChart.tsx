@@ -96,7 +96,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
 
         if (response) {
           response = response.filter(
-            (item: {day: number}) => item.day < currentDate,
+            (item: {day: number}) => item.day <= currentDate,
           );
         }
       } else {
@@ -349,7 +349,6 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
             }}
             yearTextStyle={{color: color.text}}
             monthTextStyle={{color: color.text}}
-            selectedBackgroundColor={color.white}
             seperatorColor={color.textSubdued}
             currentMonthTextStyle={{color: 'green'}}
             yearDisabledStyle={{color: color.text}}

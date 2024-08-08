@@ -30,6 +30,47 @@ const ExpenseServices = {
       console.error('Error in getExpenseType:', error.message);
     }
   },
+  getUtilityType: async () => {
+    try {
+      const response: AxiosResponse = await instance.get(
+        `${baseUrl}/api/v1/utilities/getUtilityTypes`,
+      );
+
+      if (response.status === 200) {
+        return response.data.data;
+      } else {
+        console.error('Error in getUtilityType');
+      }
+    } catch (error: any) {
+      console.error('Error in getUtilityType:', error.message);
+    }
+  },
+
+  updateUtility: async (
+    id_utility: number,
+    id_family: number,
+    id_utilities_type: number,
+  ) => {
+    try {
+      const response: AxiosResponse = await instance.put(
+        `${baseUrl}/api/v1/utilities/updateUtility`,
+        {
+          id_utility,
+          id_family,
+          id_utilities_type,
+        },
+      );
+      console.log('updateUtility: ', response.data.data);
+      if (response.status === 200) {
+        return response.data.data;
+      } else {
+        console.error('Error in updateUtility');
+      }
+    } catch (error: any) {
+      console.error('Error in updateUtility:', error.message);
+    }
+  },
+
   getAsset: async (
     id_family: number,
     page: number,
@@ -322,7 +363,6 @@ const ExpenseServices = {
     uri?: string | null,
   ) => {
     try {
-      console.log(id_expense_type);
       const createFormData = (uri: string): FormData => {
         let formData = new FormData();
         formData.append('id_family', String(id_family));
@@ -426,15 +466,40 @@ const ExpenseServices = {
     uri?: string,
   ) => {
     try {
+      console.log(
+        id_expenditure,
+        id_family,
+        id_created_by,
+        id_expense_type,
+        amount,
+        description,
+        expenditure_date,
+      );
+
       const createFormData = (uri?: string): FormData => {
         let formData = new FormData();
-        formData.append('id_expenditure', String(id_expenditure));
-        formData.append('id_family', String(id_family));
-        formData.append('id_created_by', String(id_created_by));
-        formData.append('id_expense_type', id_expense_type.toString());
-        formData.append('amount', String(amount));
-        formData.append('expenditure_date', expenditure_date);
-        formData.append('description', description);
+
+        if (id_expenditure !== null) {
+          formData.append('id_expenditure', String(id_expenditure));
+        }
+        if (id_family !== null) {
+          formData.append('id_family', String(id_family));
+        }
+        if (id_created_by !== null) {
+          formData.append('id_created_by', String(id_created_by));
+        }
+        if (id_expense_type !== null) {
+          formData.append('id_expense_type', String(id_expense_type));
+        }
+        if (amount !== null) {
+          formData.append('amount', String(amount));
+        }
+        if (expenditure_date !== null) {
+          formData.append('expenditure_date', String(expenditure_date));
+        }
+        if (description !== null) {
+          formData.append('description', String(description));
+        }
 
         if (uri) {
           let filename = uri.split('/').pop()!;

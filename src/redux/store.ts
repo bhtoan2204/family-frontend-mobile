@@ -28,12 +28,15 @@ import categorySlice from './slices/CategorySlice';
 import HouseHoldRefSlice from './slices/HouseHoldRefSlice';
 import TodoListSlice from './slices/TodoListSlice';
 import DarkModeSlice from './slices/DarkModeSlice';
-import localizationReducer from './slices/languageSlice'
+import localizationReducer from './slices/languageSlice';
+import extraPackageReducer from './slices/FunctionSlice';
+
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
     family: familyReducer,
     localization: localizationReducer,
+    extraPackage: extraPackageReducer,
 
     // checklist: checkListReducer,
     shoppinglist: shoppingListSlice,

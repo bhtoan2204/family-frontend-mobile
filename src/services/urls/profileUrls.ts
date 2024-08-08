@@ -9,7 +9,7 @@ const ProfileUrl = {
   markRead: `${baseUrl}/api/v1/notification/markRead`,
   getUserInfoByPhone: `${baseUrl}/api/v1/user/getUserInfoByPhone`,
   getUserInfoByEmail: `${baseUrl}/api/v1/user/getUserInfoByEmail`,
-
+  markAllRead: `${baseUrl}/api/v1/notification/markAllRead`,
 };
 
 export default ProfileUrl;

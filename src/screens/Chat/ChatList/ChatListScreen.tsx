@@ -32,6 +32,7 @@ import {setFamilyLastMessage} from 'src/redux/slices/MessageFamily';
 import {selectProfile} from 'src/redux/slices/ProfileSclice';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
+import {Toast} from 'react-native-toast-notifications';
 
 const ChatListScreen = ({
   navigation,
@@ -190,10 +191,10 @@ const ChatListScreen = ({
     setSelectedButton('Channels');
   };
 
-  const onDelete = async message => {
+  const onDelete = async (message: LastMessage) => {
     Alert.alert(
       translate('confirmDelete'),
-      translate('confirmDeleteMessage'),
+      translate('confirmDeleteChat'),
       [
         {
           text: translate('cancel'),
@@ -203,15 +204,71 @@ const ChatListScreen = ({
           text: translate('delete'),
           onPress: async () => {
             try {
-              await ChatServices.removeMessage(receiverId, message._id);
-              Alert.alert(
-                translate('success'),
-                translate('deleteSuccessMessage'),
+              const respone = await ChatServices.removeMessage(
+                message.receiverId,
+                message.latestMessage._id,
               );
-              //await handleGetCalendar();
+              if (respone) {
+                Toast.show(translate('deleteSuccess'), {
+                  type: 'success',
+                  duration: 2000,
+                });
+                fetchData();
+              } else {
+                Toast.show(translate('deleteError'), {
+                  type: 'danger',
+                  duration: 2000,
+                });
+              }
             } catch (error) {
               console.error('Error deleting event:', error);
-              Alert.alert(translate('error'), translate('deleteErrorMessage'));
+              Toast.show('Delete deleteError', {
+                type: 'danger',
+                duration: 2000,
+              });
+            }
+          },
+        },
+      ],
+      {cancelable: true},
+    );
+  };
+
+  const onDeleteFamily = async (message: LastMessage) => {
+    Alert.alert(
+      translate('confirmDelete'),
+      translate('confirmDeleteChat'),
+      [
+        {
+          text: translate('cancel'),
+          style: 'cancel',
+        },
+        {
+          text: translate('delete'),
+          onPress: async () => {
+            try {
+              const respone = await ChatServices.removeMessageFamily(
+                message.familyId,
+                message.lastMessage._id,
+              );
+              if (respone) {
+                Toast.show(translate('deleteSuccess'), {
+                  type: 'success',
+                  duration: 2000,
+                });
+                fetchData();
+              } else {
+                Toast.show(translate('deleteError'), {
+                  type: 'danger',
+                  duration: 2000,
+                });
+              }
+            } catch (error) {
+              console.error('Error deleting event:', error);
+              Toast.show('Delete deleteError', {
+                type: 'danger',
+                duration: 2000,
+              });
             }
           },
         },
@@ -241,6 +298,19 @@ const ChatListScreen = ({
         size={30}
         color="#fff"
         onPress={() => onDelete(event)}
+      />
+      <Text style={{color: '#fff', marginTop: 5, fontWeight: '600'}}>
+        Delete
+      </Text>
+    </View>
+  );
+  const renderRightActionsFamily = (event: any) => (
+    <View style={styles.rightAction}>
+      <Ionicons
+        name="trash-sharp"
+        size={30}
+        color="#fff"
+        onPress={() => onDeleteFamily(event)}
       />
       <Text style={{color: '#fff', marginTop: 5, fontWeight: '600'}}>
         Delete
@@ -304,7 +374,7 @@ const ChatListScreen = ({
   };
 
   const renderChatFamilyItem = ({item}: {item: FamilyLastMessage}) => (
-    <Swipeable renderRightActions={() => renderRightActions(item)}>
+    <Swipeable renderRightActions={() => renderRightActionsFamily(item)}>
       <TouchableOpacity onPress={() => handlePressChatFamily(item)}>
         <View style={styles.chatItem}>
           <View style={styles.avatarContainer}>

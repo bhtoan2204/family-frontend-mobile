@@ -23,8 +23,12 @@ const ColorPicker = ({
   setSelectedColorIndex,
   selectedColorIndex,
   setEventCategory,
+  setAvailableColors,
+  setSelectedColor,
 }) => {
-  const [availableColors, setAvailableColors] = useState<CategoryEvent[]>([]);
+  const [availableColors, setAvailableColorsState] = useState<CategoryEvent[]>(
+    [],
+  );
   const animation = useState(new Animated.Value(-1))[0];
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
@@ -34,7 +38,8 @@ const ColorPicker = ({
     const fetchData = async () => {
       try {
         const result = await CalendarServices.getAllCategoryEvent(id_Family);
-        setAvailableColors(result);
+        setAvailableColorsState(result);
+        setAvailableColors(result); // Pass colors to parent
       } catch (error) {
         console.log('Error fetching colors:', error);
       }
@@ -55,6 +60,7 @@ const ColorPicker = ({
   const handleColorSelect = (index: number, item: CategoryEvent) => {
     setEventCategory(item);
     setSelectedColorIndex(selectedColorIndex === index ? null : index);
+    setSelectedColor(item.color); // Update the selected color
   };
 
   const handleCreateCategory = () => {
@@ -146,6 +152,7 @@ const styles = StyleSheet.create({
   containerColor: {
     paddingRight: 15,
     alignItems: 'center',
+    paddingHorizontal: 20,
   },
   textHashtag: {
     marginTop: 5,

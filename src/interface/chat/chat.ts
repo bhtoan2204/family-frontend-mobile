@@ -12,11 +12,11 @@ export interface Message {
   isRead: boolean;
   timestamp: Date;
   _id: string;
-  receiver: User; 
+  receiver: User;
 }
 
 export interface User {
-  id_user: string,
+  id_user: string;
   firstname: string;
   lastname: string;
   avatar: string | null;

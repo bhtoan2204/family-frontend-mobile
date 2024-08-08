@@ -261,7 +261,6 @@ const IncomeServices = {
         {
           id_income,
           id_family,
-          id_created_by,
           id_income_source,
           amount,
           income_date,
@@ -273,6 +272,19 @@ const IncomeServices = {
       }
     } catch (error: any) {
       console.error('Error in updateIncome:', error.message);
+    }
+  },
+  deleteIncome: async (id_income?: number, id_family?: number) => {
+    try {
+      console.log(id_family, id_income);
+      const response: AxiosResponse = await instance.delete(
+        `${baseUrl}/api/v1/finance/income/deleteIncome/${id_family}/${id_income}`,
+      );
+      if (response.status === 204) {
+        return true;
+      }
+    } catch (error: any) {
+      return false;
     }
   },
 };

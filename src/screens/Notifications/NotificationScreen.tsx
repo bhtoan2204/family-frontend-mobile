@@ -18,6 +18,8 @@ import {useThemeColors} from 'src/hooks/useThemeColor';
 import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {setType} from 'src/redux/slices/FinanceSlice';
+import {setUnreadCount} from 'src/redux/slices/NotificationSlice';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Import icon
 
 const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
   const [notifications, setNotifications] = useState<Noti[]>([]);
@@ -53,6 +55,7 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
           ),
         ];
         setNotifications(uniqueNotifications);
+        dispatch(setUnreadCount(response.unreadCount));
       } else {
         setHasMore(false);
       }
@@ -61,6 +64,20 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
     } finally {
       setIsFetching(false);
       setLoading(false);
+    }
+  };
+
+  const markAllRead = async () => {
+    try {
+      await ProfileServices.markAllRead();
+      const updatedNotifications = notifications.map(noti => ({
+        ...noti,
+        isRead: true,
+      }));
+      setNotifications(updatedNotifications);
+      dispatch(setUnreadCount(0));
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
     }
   };
 
@@ -90,7 +107,7 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
     if (diffSeconds < 60) {
       return translate('Just now');
     } else if (diffMinutes < 60) {
-      return `${diffMinutes} ${diffMinutes > 1 ? translate('minutes') : translate('')} ${translate('ago')}`;
+      return `${diffMinutes} ${diffMinutes > 1 ? translate('minutes') : translate('minute')} ${translate('ago')}`;
     } else if (diffHours < 24) {
       return `${diffHours} ${diffHours > 1 ? translate('hours') : translate('hour')} ${translate('ago')}`;
     } else if (diffDays < 7) {
@@ -193,6 +210,13 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
             resizeMode="cover"
           />
         )}
+        {item?.user?.avatar && (
+          <Image
+            source={{uri: item.user.avatar}}
+            style={styles.avatar}
+            resizeMode="cover"
+          />
+        )}
         <View style={styles.notificationContent}>
           <Text style={[styles.title, {color: color.text}]}>
             {language === 'vi' ? item.title_vn : item.title}
@@ -220,9 +244,23 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
     <SafeAreaView
       style={[styles.safeArea, {backgroundColor: color.background}]}>
       <View style={styles.container}>
-        <Text style={[styles.header, {color: color.text}]}>
-          {translate('notificationTab')}
-        </Text>
+        <View style={styles.headerContainer}>
+          <Text style={[styles.header, {color: color.text}]}>
+            {translate('notificationTab')}
+          </Text>
+          <TouchableOpacity
+            style={styles.markAllReadButton}
+            onPress={markAllRead}>
+            <Icon name="check" size={16} color={color.text} />
+            <Text
+              style={[
+                styles.markAllReadText,
+                {color: color.text, fontWeight: 'bold'},
+              ]}>
+              {translate('Mark All Read')}
+            </Text>
+          </TouchableOpacity>
+        </View>
         <FlatList
           data={notifications}
           renderItem={renderItem}
@@ -244,12 +282,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+  },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333',
-    marginLeft: 20,
   },
   notificationItem: {
     position: 'relative',
@@ -267,7 +310,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: 'red',
   },
-
   title: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -290,6 +332,15 @@ const styles = StyleSheet.create({
   },
   notificationContent: {
     flex: 1,
+  },
+  markAllReadButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  markAllReadText: {
+    marginLeft: 5,
+    fontSize: 16,
   },
 });
 

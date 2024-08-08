@@ -1,7 +1,6 @@
 import {Dimensions, StyleSheet} from 'react-native';
-import { COLORS } from 'src/constants';
+import {COLORS} from 'src/constants';
 const halfScreenHeight = Dimensions.get('window').height / 1.8;
-
 
 const styles = StyleSheet.create({
   headerContainer: {
@@ -40,7 +39,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff', 
+    backgroundColor: '#fff',
   },
   avatarButton: {
     width: 190,
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-  imageBackgroundDescription:{
+  imageBackgroundDescription: {
     color: '#ccc',
   },
   container: {
@@ -116,7 +115,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 0.5 },
+    shadowOffset: {width: 0, height: 0.5},
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
   },
@@ -156,6 +155,7 @@ const styles = StyleSheet.create({
   cancelImage: {
     height: 40,
     width: 40,
+    zIndex: 10,
   },
   cancel: {
     position: 'absolute',

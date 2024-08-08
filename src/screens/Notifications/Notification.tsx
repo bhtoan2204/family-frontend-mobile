@@ -6,11 +6,12 @@ import {AxiosResponse} from 'axios';
 import {FamilyServices} from '../../services/apiclient';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectProfile} from '../../redux/slices/ProfileSclice';
-import {Message} from 'src/redux/slices/MessageUser';
+import {Message, setUserMessage} from 'src/redux/slices/MessageUser';
 import {Noti} from 'src/interface/notification/getNoti';
 import {setSelectedFamilyById} from 'src/redux/slices/FamilySlice';
 import {setSelectedDate} from 'src/redux/slices/CalendarSlice';
 import {selectLocale} from 'src/redux/slices/languageSlice';
+import {addUnreadCount} from 'src/redux/slices/NotificationSlice';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -29,8 +30,9 @@ const Notification = ({navigation}) => {
   const language = useSelector(selectLocale);
 
   const handleNewMessage = async (message: Message) => {
+    console.log(message);
     if (message.senderId != profile.id_user) {
-      let notificationBody = message.content;
+      let notificationBody = '';
       switch (message.type) {
         case 'photo':
           notificationBody = 'Sent image';
@@ -48,12 +50,13 @@ const Notification = ({navigation}) => {
 
       await Notifications.scheduleNotificationAsync({
         content: {
-          title: `${message.receiver.firstname} ${message.receiver.lastname}`,
+          title: `${message.senderInfo.firstname} ${message.senderInfo.lastname}`,
+          subtitle: ``,
           body: notificationBody,
           data: {
             screen: 'ChatUser',
             id_user: message.receiverId,
-            receiverId: message.senderId,
+            receiver: message.senderInfo,
           },
         },
         trigger: {seconds: 1},
@@ -66,55 +69,64 @@ const Notification = ({navigation}) => {
   };
 
   const handleNewNotification = async (message: Noti) => {
-    if (message.createdAt === profile?.id_user) {
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: `${message.familyInfo.name}`,
-          body: message.content,
-          data: {
-            type: message.type,
-            id_family: message.id_family,
-            timestamp: message.timestamp,
+    console.log(message);
+    dispatch(addUnreadCount());
+    if (message.type === 'CHAT') {
+      handleNewMessage(message);
+    } else {
+      if (message.createdAt !== profile?.id_user) {
+        await Notifications.scheduleNotificationAsync({
+          content: {
+            title: `${message.familyInfo.name}`,
+            body: message.content,
+            data: {
+              type: message.type,
+              id_family: message.id_family,
+              timestamp: message.timestamp,
+            },
           },
-        },
-        trigger: {seconds: 1},
-      });
+          trigger: {seconds: 1},
+        });
+      }
     }
   };
 
   const handleNewMessageFamily = async (message: any) => {
-    let notificationBody = '';
-    switch (message.type) {
-      case 'photo':
-        notificationBody = 'Sent image';
-        break;
-      case 'video':
-        notificationBody = 'Sent video';
-        break;
-      case 'text':
-        notificationBody = message.content;
-        break;
-      default:
-        notificationBody = 'New message';
-        break;
-    }
+    console.log(message);
+    if (message.senderId != profile.id_user) {
+      let notificationBody = '';
+      switch (message.type) {
+        case 'photo':
+          notificationBody = 'Sent image';
+          break;
+        case 'video':
+          notificationBody = 'Sent video';
+          break;
+        case 'text':
+          notificationBody = message.content;
+          break;
+        default:
+          notificationBody = 'New message';
+          break;
+      }
 
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: `${message.senderInfo.firstname} ${message.senderInfo.lastname}`,
-        subtitle: `${message.senderInfo.firstname}`,
-        body: notificationBody,
-        data: {
-          screen: 'ChatFamily',
-          familyId: message.familyId,
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: `${message.senderInfo.firstname} ${message.senderInfo.lastname}`,
+          subtitle: `Famfund 2`,
+          body: notificationBody,
+          data: {
+            screen: 'ChatFamily',
+            familyId: message.familyId,
+          },
         },
-      },
-      trigger: {seconds: 1},
-    });
-    setNotificationQueue(prevQueue => [
-      ...prevQueue,
-      {...message, isRead: false, category: 'Family'},
-    ]);
+        trigger: {seconds: 1},
+      });
+      setNotificationQueue(prevQueue => [
+        ...prevQueue,
+        {...message, isRead: false, category: 'Family'},
+      ]);
+    }
   };
 
   const checkNotificationPermission = async () => {
@@ -150,13 +162,13 @@ const Notification = ({navigation}) => {
       Notifications.addNotificationResponseReceivedListener(response => {
         const screen = response.notification.request.content.data.screen;
         let id_user = response.notification.request.content.data.id_user;
-        const receiverId =
-          response.notification.request.content.data.receiverId;
+        const receiver = response.notification.request.content.data.receiver;
         const familyId = response.notification.request.content.data.familyId;
-        if (navigation && screen === 'ChatUser' && receiverId) {
+        if (navigation && screen === 'ChatUser' && receiver) {
+          dispatch(setUserMessage(receiver));
           navigation.navigate('ChatStack', {
             screen: 'ChatUser',
-            params: {id_user: id_user, receiverId: receiverId},
+            params: {receiverId: receiver.id_user},
           });
         }
         if (navigation && screen === 'ChatFamily' && familyId) {

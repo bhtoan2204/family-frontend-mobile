@@ -9,26 +9,43 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import Icon from 'react-native-vector-icons/FontAwesome6';
 import styles from './styles';
 import {useSelector} from 'react-redux';
 import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
-const incomeCategoryIcons = {
-  Salary: 'cash',
-  Services: 'briefcase',
-  Investments: 'trending-up',
-  Rent: 'home',
-  Dividends: 'star',
-  'Consulting fees': 'chatbubbles',
-  Royalties: 'gift',
-  Grants: 'cash',
-  Bonuses: 'star',
-  Interest: 'money',
+
+const incomeCategoryIcons: Record<string, string> = {
+  Salary: 'money-check-dollar',
+  Services: 'gas-pump',
+  Investments: 'money-bill-trend-up',
+  Rent: 'warehouse',
+  Dividends: 'seedling',
+  'Consulting fees': 'people-group',
+  Royalties: 'person-rays',
+  Grants: 'person-pregnant',
+  Bonuses: 'gift',
+  Interest: 'sack-dollar',
 };
 
-const CategoryIncome = ({
+interface IncomeType {
+  id_income_source: number;
+  income_source_name: string;
+  income_source_name_vn: string;
+}
+
+interface Props {
+  incomeCategory: IncomeType | null;
+  pressSelectCategory: () => void;
+  handleMostUsedPress: () => void;
+  isScrollViewVisible: boolean;
+  scrollX: Animated.Value;
+  dataIncomeTypeToShow: Record<string, IncomeType>;
+  handleIncomeTypePress: (item: IncomeType) => void;
+  widthOfYourPage: number;
+}
+
+const CategoryIncome: React.FC<Props> = ({
   incomeCategory,
   pressSelectCategory,
   handleMostUsedPress,
@@ -50,7 +67,12 @@ const CategoryIncome = ({
     <View
       style={[styles.ContainerCategory, {backgroundColor: color.background}]}>
       <View style={styles.selectedItemContainer}>
-        <Image source={{uri: urlCatetory}} style={styles.avatar} />
+        <Icon
+          name="hashtag"
+          size={30}
+          color={color.text}
+          style={styles.avatar}
+        />
         <Text
           style={[
             styles.inputAmount,
@@ -58,7 +80,10 @@ const CategoryIncome = ({
             {fontSize: 18},
             {color: color.text},
           ]}>
-          {incomeCategory?.income_source_name || translate('Select category')}
+          {location === 'vn'
+            ? incomeCategory?.income_source_name_vn
+            : incomeCategory?.income_source_name ||
+              translate('Select category')}
         </Text>
 
         <TouchableOpacity
@@ -70,12 +95,12 @@ const CategoryIncome = ({
                 color: color.text,
                 fontWeight: '600',
                 fontSize: 16,
-                marginRight: 5,
+                marginRight: 10,
               },
             ]}>
             {translate('View All')}
           </Text>
-          <Icon name="chevron-forward-outline" size={22} color={color.text} />
+          <Icon name="chevron-right" size={20} color={color.text} />
         </TouchableOpacity>
       </View>
       <View style={{height: 1, backgroundColor: color.background, bottom: 5}} />
@@ -84,14 +109,13 @@ const CategoryIncome = ({
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          // justifyContent: 'space-between',
         }}>
         <Text style={[styles.mostUsedButton, {marginRight: -10}]}>
           {translate('Most used')}{' '}
         </Text>
-        <EvilIcons
-          name={isScrollViewVisible ? 'chevron-down' : 'chevron-right'}
-          size={30}
+        <Icon
+          name={isScrollViewVisible ? 'sort-down' : 'caret-right'}
+          size={25}
           color="#878C9A"
         />
       </TouchableOpacity>
@@ -124,7 +148,9 @@ const CategoryIncome = ({
               scrollEnabled={false}
               renderItem={({item}) => {
                 const iconName =
-                  incomeCategoryIcons[item.income_source_name] || 'error';
+                  incomeCategoryIcons[
+                    item.income_source_name as keyof typeof incomeCategoryIcons
+                  ] || 'error';
 
                 return (
                   <TouchableOpacity onPress={() => handleIncomeTypePress(item)}>
@@ -153,26 +179,6 @@ const CategoryIncome = ({
               }}
             />
           </Animated.ScrollView>
-          {/* 
-          <View style={styles.pagination}>
-            <FlatList
-              data={Object.values(dataIncomeTypeToShow)}
-              keyExtractor={(item, index) => index.toString()}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              renderItem={({ index }) => (
-                <View
-                  style={[
-                    styles.dot,
-                    {
-                      backgroundColor: index === currentPage ? 'gray' : '#ccc',
-                    },
-                  ]}
-                />
-              )}
-            />
-          </View>
-          */}
         </>
       )}
     </View>

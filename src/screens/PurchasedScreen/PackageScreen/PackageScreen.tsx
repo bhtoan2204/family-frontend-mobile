@@ -50,7 +50,7 @@ const PackageScreen = ({navigation, route}: ViewAllPackageScreenProps) => {
             style={styles.closeButton}>
             <Icon name="close" size={30} color={color.text} />
           </TouchableOpacity>
-          <Text style={[styles.title, {color: color.text}]}>
+          <Text style={[styles.title, {color: color.text, marginRight: 60}]}>
             {translate('PACKAGE_TITLE')}
           </Text>
         </View>

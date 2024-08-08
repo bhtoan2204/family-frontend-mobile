@@ -25,6 +25,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {ExpenseServices} from 'src/services/apiclient';
 import {ExpenseType} from 'src/interface/expense/ExpenseType';
 import {
+  selectFamilyMembers,
   selectSelectedFamily,
   setSelectedMemberById,
 } from 'src/redux/slices/FamilySlice';
@@ -36,9 +37,9 @@ import {COLORS} from 'src/constants';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {Feather} from '@expo/vector-icons';
 import moment from 'moment';
-import {DailyExpense} from 'src/interface/expense/DailyExpense';
+import {DailyExpense, UtilitiesType} from 'src/interface/expense/DailyExpense';
 import {useThemeColors} from 'src/hooks/useThemeColor';
-import {getTranslate} from 'src/redux/slices/languageSlice';
+import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 import {Toast} from 'react-native-toast-notifications';
 import DeleteButton from 'src/components/Button/DeleteButton';
 import SaveButton from 'src/components/Button/SaveButton';
@@ -46,12 +47,33 @@ import CancelButton from 'src/components/Button/CancelButton';
 
 const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   const dispatch = useDispatch();
+  const location = useSelector(selectLocale);
+
   const expense: DailyExpense | null = useSelector(selectSelectedExpense);
   const [isEditing, setIsEditing] = useState(false);
   const [expenseType, setExpenseType] = useState<ExpenseType[]>([]);
+  const [utilityType, setUtilityType] = useState<UtilitiesType[]>([]);
+
+  const initialCategory =
+    location === 'vi'
+      ? expense?.financeExpenditureType?.expense_type_name_vn
+      : expense?.financeExpenditureType?.expense_type_name;
+
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
-    expense?.financeExpenditureType?.expense_type_name ?? undefined,
+    initialCategory ?? undefined,
   );
+
+  const initialUtilityCategory =
+    expense?.utilities && expense?.utilities?.utilitiesType
+      ? location === 'vi'
+        ? expense.utilities.utilitiesType.name_vn
+        : expense.utilities.utilitiesType.name_en
+      : undefined;
+
+  const [selectedUtilityCategory, setSelectedUtilityCategory] = useState<
+    string | undefined
+  >(initialUtilityCategory);
+
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [chosenDate, setChosenDate] = useState(new Date());
   const [editedDescription, setEditedDescription] = useState(
@@ -61,6 +83,9 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
     expense?.amount.toString() || '',
   );
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
+  const [showUtilityCategoryPicker, setShowUtilityCategoryPicker] =
+    useState(false);
+
   const [isEditingImage, setIsEditingImage] = useState(false);
   const [currentImageUri, setCurrentImageUri] = useState<string | undefined>(
     expense?.image_url,
@@ -78,10 +103,21 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   );
   const [selectedCategoryId, setSelectedCategoryId] = useState<
     number | undefined
-  >(undefined);
+  >(expense?.financeExpenditureType?.id_expenditure_type);
+
+  const initialUtilityCategoryId =
+    expense?.utilities && expense?.utilities?.utilitiesType
+      ? expense.utilities.utilitiesType.id_utilities_type
+      : undefined;
+
+  const [selectedUtilityCategoryId, setSelectedUtilityCategoryId] = useState<
+    number | undefined
+  >(initialUtilityCategoryId);
+  const members = useSelector(selectFamilyMembers);
 
   useEffect(() => {
     fetchExpenseType(family.id_family);
+    fetchUtilityType();
   }, []);
   const itemsPerPage = 10;
 
@@ -106,9 +142,23 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
       console.error('Error in getExpenseType:', error.message);
     }
   };
+  const fetchUtilityType = async () => {
+    try {
+      const response = await ExpenseServices.getUtilityType();
+
+      if (response) {
+        setUtilityType(response);
+      }
+    } catch (error: any) {
+      console.error('Error in fetchUtilityType:', error.message);
+    }
+  };
+
   const handleCancel = () => {
     setIsEditing(false);
     setCurrentImageUri(expense?.image_url);
+    setShowCategoryPicker(false);
+    setShowUtilityCategoryPicker(false);
   };
 
   const handleEdit = () => {
@@ -116,13 +166,48 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   };
   useEffect(() => {
     const id = expenseType.find(
-      item => item.expense_type_name === selectedCategory,
+      item =>
+        item.expense_type_name === selectedCategory ||
+        item.expense_type_name_vn === selectedCategory,
     )?.id_expenditure_type;
     setSelectedCategoryId(id);
   }, [selectedCategory, expenseType]);
 
+  useEffect(() => {
+    const id = utilityType.find(
+      item =>
+        item.name_en === selectedUtilityCategory ||
+        item.name_vn === selectedUtilityCategory,
+    )?.id_utilities_type;
+    setSelectedUtilityCategoryId(id);
+  }, [selectedUtilityCategory, utilityType]);
+
   const handleSave = async () => {
+    console.log(selectedUtilityCategoryId, selectedCategoryId);
     setLoading(true);
+
+    if (
+      selectedCategory === 'Utilities' ||
+      selectedCategory === 'Chi phí tiện ích'
+    ) {
+      if (expense?.utilities && expense?.utilities.id_utility) {
+        try {
+          console.log(
+            expense?.utilities.id_utility,
+            family?.id_family,
+            selectedUtilityCategoryId,
+          );
+          await ExpenseServices.updateUtility(
+            expense?.utilities.id_utility,
+            family?.id_family,
+            selectedUtilityCategoryId,
+          );
+        } catch (error) {
+          console.error('Error updating expense:', error);
+        }
+      }
+    }
+
     try {
       const amount = parseFloat(editedAmount || '0');
       if (isNaN(amount)) {
@@ -142,12 +227,15 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
           currentImageUri ? currentImageUri : expense?.image_url,
         );
         if (response) {
+          console.log(response);
           dispatch(updateExpense(response));
           Toast.show('Expense updated successfully', {
             type: 'success',
             duration: 3000,
           });
           setIsEditing(false);
+          setShowCategoryPicker(false);
+          setShowUtilityCategoryPicker(false);
         }
       } else {
         Toast.show('Selected category not found', {
@@ -199,10 +287,10 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
                 navigation.goBack();
               } catch (error) {
                 console.error(error);
-                Alert.alert(
-                  'Failed to delete expense',
-                  'Please try again later.',
-                );
+                Toast.show('Failed to delete expense', {
+                  type: 'danger',
+                  duration: 3000,
+                });
               }
             }
           },
@@ -221,7 +309,9 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   const handleCategoryChange = (itemValue: string | undefined) => {
     setSelectedCategory(itemValue);
   };
-
+  const handleUtilityCategoryChange = (itemValue: string | undefined) => {
+    setSelectedUtilityCategory(itemValue);
+  };
   const handleSelectImage = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -244,9 +334,7 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
             expense.description,
             result.assets[0].uri,
           );
-          dispatch(
-            updateExpense({...expense, image_url: result.assets[0].uri}),
-          );
+          dispatch(updateExpense(respone));
           Toast.show('Add receipt successfully', {
             type: 'success',
             duration: 3000,
@@ -282,8 +370,15 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   };
 
   const pressMember = (id_user?: string) => {
-    dispatch(setSelectedMemberById(id_user));
-    navigation.navigate('FamilyStack', {screen: 'MemberDetails'});
+    if (expense?.users && id_user) {
+      const memberExists = members.some(member => member.id_user === id_user);
+      if (memberExists) {
+        dispatch(setSelectedMemberById(id_user));
+        navigation.navigate('FamilyStack', {screen: 'MemberDetails'});
+      } else {
+        Alert.alert('Notice', 'This member is not in the family.');
+      }
+    }
   };
 
   const handleCloseModal = () => {
@@ -396,7 +491,9 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
                   {!isEditing ? (
                     expense?.financeExpenditureType ? (
                       <Text style={[styles.value, {color: color.text}]}>
-                        {expense.financeExpenditureType.expense_type_name}
+                        {location === 'vi'
+                          ? expense.financeExpenditureType.expense_type_name_vn
+                          : expense.financeExpenditureType.expense_type_name}
                       </Text>
                     ) : (
                       <Text style={[styles.value, {color: color.text}]}>
@@ -433,8 +530,16 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
                       {expenseType.map(item => (
                         <Picker.Item
                           key={item.id_expenditure_type}
-                          label={item.expense_type_name}
-                          value={item.expense_type_name}
+                          label={
+                            location === 'vi'
+                              ? item.expense_type_name_vn
+                              : item.expense_type_name
+                          }
+                          value={
+                            location === 'vi'
+                              ? item.expense_type_name_vn
+                              : item.expense_type_name
+                          }
                           color={color.text}
                         />
                       ))}
@@ -458,19 +563,21 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
                   />
                 )}
               </View>
-              <View style={styles.detailRow}>
-                <Text style={[styles.label, {color: color.text}]}>
-                  {translate('Create by')}:
-                </Text>
-                <TouchableOpacity
-                  onPress={() => pressMember(expense?.id_created_by)}>
-                  <Text style={styles.ValueName}>
-                    {expense?.users?.firstname
-                      ? `${expense.users.firstname} ${expense.users?.lastname || ''}`.trim()
-                      : 'No user data available'}
+              {expense?.id_created_by && (
+                <View style={styles.detailRow}>
+                  <Text style={[styles.label, {color: color.text}]}>
+                    {translate('Create by')}:
                   </Text>
-                </TouchableOpacity>
-              </View>
+                  <TouchableOpacity
+                    onPress={() => pressMember(expense?.id_created_by)}>
+                    <Text style={styles.ValueName}>
+                      {expense?.users?.firstname
+                        ? `${expense.users.firstname} ${expense.users?.lastname || ''}`.trim()
+                        : 'No user data available'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
               <View style={styles.detailRow}>
                 <Text style={[styles.label, {color: color.text}]}>
                   {translate('Date')}:
@@ -479,7 +586,7 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
                   <Text style={[styles.value, {color: color.text}]}>
                     {expense
                       ? moment(expense.expenditure_date).format(
-                          'MMMM DD YYYY, HH:mm',
+                          'MM-DD-YYYY, HH:mm',
                         )
                       : ''}
                   </Text>
@@ -496,6 +603,78 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
                 )}
               </View>
             </View>
+            {expense?.utilities &&
+              expense.utilities.utilitiesType &&
+              (selectedCategory === 'Utilities' ||
+                selectedCategory === 'Chi phí tiện ích') && (
+                <View style={[styles.card, {backgroundColor: color.white}]}>
+                  <View style={styles.detailRow}>
+                    <Text style={[styles.label, {color: color.text}]}>
+                      {translate('Category utility')}:
+                    </Text>
+                    <View style={styles.valueContainer}>
+                      {!isEditing ? (
+                        expense?.utilities &&
+                        expense?.utilities.utilitiesType ? (
+                          <Text style={[styles.value, {color: color.text}]}>
+                            {location === 'vi'
+                              ? expense.utilities.utilitiesType.name_vn
+                              : expense.utilities.utilitiesType.name_en}
+                          </Text>
+                        ) : (
+                          <Text style={[styles.value, {color: color.text}]}>
+                            {translate('Other')}
+                          </Text>
+                        )
+                      ) : (
+                        <TouchableOpacity
+                          onPress={() =>
+                            setShowUtilityCategoryPicker(
+                              !showUtilityCategoryPicker,
+                            )
+                          }>
+                          <View style={{flexDirection: 'row'}}>
+                            <Text style={[styles.value, {color: color.text}]}>
+                              {selectedUtilityCategory}{' '}
+                            </Text>
+                            <Icon
+                              name={
+                                showUtilityCategoryPicker
+                                  ? 'chevron-up'
+                                  : 'chevron-down'
+                              }
+                              size={20}
+                              color={color.text}
+                            />
+                          </View>
+                        </TouchableOpacity>
+                      )}
+
+                      {showUtilityCategoryPicker && (
+                        <Picker
+                          selectedValue={selectedUtilityCategory}
+                          style={[styles.picker, {color: color.text}]}
+                          onValueChange={itemValue =>
+                            handleUtilityCategoryChange(itemValue)
+                          }>
+                          {utilityType.map(item => (
+                            <Picker.Item
+                              key={item.id_utilities_type}
+                              label={
+                                location === 'vi' ? item.name_vn : item.name_en
+                              }
+                              value={
+                                location === 'vi' ? item.name_vn : item.name_en
+                              }
+                              color={color.text}
+                            />
+                          ))}
+                        </Picker>
+                      )}
+                    </View>
+                  </View>
+                </View>
+              )}
             <View style={[styles.card, {backgroundColor: color.white}]}>
               <View style={styles.imageContainer}>
                 <Text style={[styles.label, {color: color.text}]}>

@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   familyCard: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     padding: 15,
     backgroundColor: '#FFFFFF',
     marginBottom: 10,
@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   familyAvatar: {
-    width: 60,
-    height: 60,
+    width: 80,
+    height: 80,
     borderRadius: 10,
   },
   defaultAvatar: {
@@ -55,6 +55,9 @@ const styles = StyleSheet.create({
   },
   familyInfo: {
     flex: 1,
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
   },
   familyName: {
     fontSize: 18,
@@ -84,9 +87,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonContainerFamily: {
-    flexDirection: 'column',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+    width: '100%',
     marginTop: 10,
-    justifyContent: 'flex-end',
   },
   button: {
     paddingVertical: 8,
@@ -102,6 +107,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
   },
+  flexButton: {
+    flex: 1,
+  },
   buyServiceButton: {
     backgroundColor: 'lightblue',
     marginBottom: 10,
@@ -116,6 +124,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
     fontWeight: 'bold',
+    marginLeft: 12,
+    alignSelf: 'center',
   },
   headerText: {
     flex: 1,
@@ -185,20 +195,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 24,
     marginBottom: 16,
-    color: '#ccc',
   },
   familyList: {},
 
   buttonImage: {
-    height: 260,
-    width: 370,
+    height: 220,
+    width: 350,
+  },
+  imageWrapper: {
+    position: 'relative',
   },
   buttonAddFamily: {
-    height: 30,
-    width: 150,
-    alignSelf: 'flex-end',
-    marginTop: 10,
+    height: 55,
+    width: 55,
+    position: 'absolute',
+    top: 24,
+    right: 1,
   },
+
   settingsIconContainer: {
     position: 'absolute',
     top: 10,
@@ -237,6 +251,128 @@ const styles = StyleSheet.create({
   buttonContent: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  imageContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+    flexDirection: 'column',
+  },
+  imageButton: {
+    gap: 10,
+  },
+  imageSearch: {
+    width: 100,
+    height: 100,
+  },
+  noFamilyContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 100,
+    gap: 10,
+  },
+  noFamilyText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  noFamilyTextDescription: {
+    fontSize: 16,
+  },
+  modalBackground1: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  modalContainer1: {
+    width: '100%',
+    height: '40%',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  modalButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: 20,
+  },
+  modalButton: {
+    flex: 1,
+    padding: 10,
+    paddingVertical: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  modalButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  modalImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+    marginTop: 10,
+    borderRadius: 10,
+  },
+  button2: {
+    flex: 1,
+    padding: 10,
+    paddingVertical: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginHorizontal: 5,
+    borderWidth: 1.5,
+  },
+
+  closeButton: {
+    padding: 5,
+  },
+  familyItem: {},
+  familyItemContainer: {
+    flexDirection: 'column',
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+
+  familyItemText: {
+    fontSize: 18,
+    color: 'gray',
+    fontWeight: 'bold',
+  },
+  membersList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  memberItemContainer: {
+    alignItems: 'center',
+    marginRight: 5,
+  },
+  avatar: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+  },
+  avatarFamily: {
+    width: 60,
+    height: 60,
+    borderRadius: 10,
+    marginRight: 10,
+  },
+  selectedFamilyItem: {
+    backgroundColor: '#E0F7FA',
   },
 });
 

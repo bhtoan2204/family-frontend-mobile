@@ -1,11 +1,18 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from './styles';
-import { useSelector } from 'react-redux';
-import { getTranslate } from 'src/redux/slices/languageSlice';
-import { useThemeColors } from 'src/hooks/useThemeColor';
+import {useSelector} from 'react-redux';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {useThemeColors} from 'src/hooks/useThemeColor';
 
 const ImagePickerComponent = ({
   description,
@@ -17,9 +24,9 @@ const ImagePickerComponent = ({
   handleRemoveImage,
   handleOpenImageLibrary,
   handleTakePhoto,
-  selectedMenu
+  selectedMenu,
 }) => {
-  const translate= useSelector(getTranslate);
+  const translate = useSelector(getTranslate);
   const color = useThemeColors();
 
   return (
@@ -47,9 +54,13 @@ const ImagePickerComponent = ({
             name="calendar"
             size={25}
             color="black"
-            style={[styles.icon,{color: color.text}]}
+            style={[styles.icon, {color: color.text}]}
           />
-          <Text style={[styles.text, {marginRight: 90, right: 10, color: color.text}]}>
+          <Text
+            style={[
+              styles.text,
+              {marginRight: 90, right: 10, color: color.text},
+            ]}>
             {translate('Select Date')}
           </Text>
         </View>
@@ -60,43 +71,41 @@ const ImagePickerComponent = ({
           onChange={handleDateChange}
         />
       </View>
-    {selectedMenu !='Income' && (
-      <View style={[styles.imageContainer, {backgroundColor: color.background}]}>
-        <View style={styles.imageContainer1}>
-          <TouchableOpacity onPress={() => setShowLargeImage(true)}>
-            {uriImage && (
-              <View>
-                <Image source={{ uri: uriImage }} style={styles.image} />
-                <TouchableOpacity
-                  style={styles.removeIconContainer}
-                  onPress={handleRemoveImage}>
-                  <Icon name="close" size={20} color={color.text} />
-                </TouchableOpacity>
-              </View>
-            )}
-          </TouchableOpacity>
-        </View>
+      {selectedMenu != 'Income' && (
+        <View
+          style={[styles.imageContainer, {backgroundColor: color.background}]}>
+          <View style={styles.imageContainer1}>
+            <TouchableOpacity onPress={() => setShowLargeImage(true)}>
+              {uriImage && (
+                <View>
+                  <Image source={{uri: uriImage}} style={styles.image} />
+                  <TouchableOpacity
+                    style={styles.removeIconContainer}
+                    onPress={handleRemoveImage}>
+                    <Icon name="close" size={20} color={color.text} />
+                  </TouchableOpacity>
+                </View>
+              )}
+            </TouchableOpacity>
+          </View>
 
-        <View style={styles.imageContainer2}>
-          <TouchableOpacity onPress={() => handleOpenImageLibrary()}>
-            <Icon
-              name="image"
-              size={60}
-              color={color.text} 
-              style={styles.cameraButton}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleTakePhoto()}>
-            <Icon name="camera" size={60} color={color.text}  />
-          </TouchableOpacity>
+          <View style={styles.imageContainer2}>
+            <TouchableOpacity onPress={() => handleOpenImageLibrary()}>
+              <Icon
+                name="image"
+                size={60}
+                color={color.text}
+                style={styles.cameraButton}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleTakePhoto()}>
+              <Icon name="camera" size={60} color={color.text} />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    )}
-
+      )}
     </View>
   );
 };
-
-
 
 export default ImagePickerComponent;

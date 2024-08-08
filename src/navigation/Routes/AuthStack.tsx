@@ -15,6 +15,7 @@ import ResetPassword from 'src/screens/ForgotPassword/ResetPassword/ResetPasswor
 import FeedbackScreen from 'src/screens/FeedBack/FeedBack';
 import LanguageSelector from 'src/screens/Language/LanguageSelector';
 import VerifyCode from 'src/screens/VerifyCode';
+import LandingPageOld from 'src/screens/LandingPage/LandingPageOld';
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 const AuthStack = () => {
@@ -29,6 +30,7 @@ const AuthStack = () => {
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="SignupScreen" component={SignupScreen} />
       <Stack.Screen name="ForgotPasswordScreen" component={ForgotPassword} />
+      <Stack.Screen name="LandingPageOld" component={LandingPageOld} />
       <Stack.Screen name="LandingPage" component={LandingPage} />
       <Stack.Screen name="LandingPage2" component={LandingPage2} />
       <Stack.Screen name="LandingPage3" component={LandingPage3} />

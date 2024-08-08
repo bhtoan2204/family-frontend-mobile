@@ -110,14 +110,15 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
       <Text style={[styles.roleItemText, {color: color.text}]}>
         {local == 'vi' ? item.role_name_vn : item.role_name_en}
       </Text>
-      {item.id_family_role === member.familyRoles.id_family_role && (
-        <MaterialCommunityIcons
-          name="check"
-          color={COLORS.DenimBlue}
-          size={20}
-          style={styles.checkIcon}
-        />
-      )}
+      {member.familyRoles &&
+        item.id_family_role === member.familyRoles.id_family_role && (
+          <MaterialCommunityIcons
+            name="check"
+            color={COLORS.DenimBlue}
+            size={20}
+            style={styles.checkIcon}
+          />
+        )}
     </TouchableOpacity>
   );
 

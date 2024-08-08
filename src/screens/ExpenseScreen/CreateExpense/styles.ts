@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   avatar: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     borderRadius: 25,
     marginBottom: 5,
   },
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'white',
     width: '100%',
-    borderRadius: 20,
+    borderRadius: 0,
   },
   menuItem: {
     paddingVertical: 5,

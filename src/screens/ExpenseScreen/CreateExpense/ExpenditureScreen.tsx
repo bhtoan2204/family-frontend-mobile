@@ -15,6 +15,8 @@ import {
   Alert,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from './styles';
@@ -223,6 +225,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
       Toast.show('Transaction recorded', {
         type: 'success',
       });
+      setFormattedAmount('');
       setAmount(null);
       setDescription('');
       setUriImage(null);
@@ -358,7 +361,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
                 <Text style={[styles.headerText, {marginRight: 10}]}>
                   {translate(selectedMenu)}
                 </Text>
-                <Octicons name="triangle-down" size={35} color={color.text} />
+                <Octicons name="triangle-down" size={35} color="white" />
               </View>
             </TouchableOpacity>
           </LinearGradient>
@@ -366,7 +369,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
           <TouchableOpacity
             style={styles.chevronContainer}
             onPress={handleSubmit}>
-            <Icon name="checkmark-done-sharp" color={color.text} size={30} />
+            <Icon name="save" color={color.text} size={30} />
           </TouchableOpacity>
         </View>
         <View style={{flex: 1}}>
