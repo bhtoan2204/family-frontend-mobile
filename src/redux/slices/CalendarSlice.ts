@@ -5,6 +5,7 @@ import moment from 'moment';
 import {rrulestr} from 'rrule';
 import {addMonths, endOfMonth, format, startOfMonth, subMonths} from 'date-fns';
 import {AgendaSchedule} from 'react-native-calendars';
+import {TodoListItem} from 'src/interface/todo/todo';
 interface CalendarState {
   events: EventDetail[];
   allEvents: AgendaSchedule;
@@ -12,6 +13,7 @@ interface CalendarState {
   selectedDate: string;
   option: string | null;
   isOnly: boolean;
+  todoList: TodoListItem[];
 }
 
 const initialState: CalendarState = {
@@ -21,6 +23,7 @@ const initialState: CalendarState = {
   selectedDate: moment(new Date()).format('YYYY-MM-DD'),
   option: null,
   isOnly: false,
+  todoList: [],
 };
 
 const cleanRecurrenceRule = (rule: string) => {
@@ -101,6 +104,22 @@ const calendarSlice = createSlice({
       // });
 
       // state.allEvents = {groupedEvents};
+    },
+
+    setTodoList: (state, action: PayloadAction<TodoListItem[]>) => {
+      state.todoList = action.payload;
+    },
+
+    updateDoneTodoList: (state, action: PayloadAction<{id_item: number}>) => {
+      state.todoList = state.todoList.map(item => {
+        if (item.id_checklist === action.payload.id_item) {
+          return {
+            ...item,
+            is_completed: !item.is_completed,
+          };
+        }
+        return item;
+      });
     },
 
     addEvent(state, action: PayloadAction<EventDetail>) {
@@ -390,6 +409,8 @@ export const {
   deleteEvent,
   setSelectedEvent,
   setSelectedDate,
+  setTodoList,
+  updateDoneTodoList,
 } = calendarSlice.actions;
 
 export const selectEvents = (state: RootState) => state.calendar.events;
@@ -401,5 +422,6 @@ export const selectSelectedDate = (state: RootState) =>
   state.calendar.selectedDate;
 export const getOption = (state: RootState) => state.calendar.option;
 export const getOnly = (state: RootState) => state.calendar.isOnly;
+export const getChecklist = (state: RootState) => state.calendar.todoList;
 
 export default calendarSlice.reducer;

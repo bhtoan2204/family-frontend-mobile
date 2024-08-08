@@ -1,13 +1,23 @@
-import React, {useEffect} from 'react';
-import {View, Text, TouchableOpacity, Alert, FlatList} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  FlatList,
+  ScrollView,
+} from 'react-native';
 import {EventDetailsScreenProps} from 'src/navigation/NavigationTypes';
 import {useSelector, useDispatch} from 'react-redux';
 import {Feather} from '@expo/vector-icons';
 import {COLORS} from 'src/constants';
 import {
   deleteEventOnly,
+  getChecklist,
   selectSelectedEvent,
   setOnly,
+  setTodoList,
+  updateDoneTodoList,
   updateEvent,
 } from 'src/redux/slices/CalendarSlice';
 import {deleteEvent} from 'src/redux/slices/CalendarSlice';
@@ -22,6 +32,12 @@ import {RRule, rrulestr} from 'rrule';
 import {format} from 'date-fns';
 import {getExtraPackages} from 'src/redux/slices/FunctionSlice';
 import {selectSelectedFamily} from 'src/redux/slices/FamilySlice';
+import {TodoListItem} from 'src/interface/todo/todo';
+import {TodoListCategoryItem} from 'src/screens/TodoListScreen/TodoListCategory/TodoListCategoryScreen';
+import toast from 'react-native-toast-notifications/lib/typescript/toast';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import TodoListServices from 'src/services/apiclient/TodoListService';
+
 const formatEventDate = (start: Date, end: Date) => {
   const formattedStart = format(start, 'yyyy-MM-dd');
   const formattedEnd = format(end, 'yyyy-MM-dd');
@@ -56,8 +72,8 @@ const fakeEvent = {
 };
 const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
   const {id_family} = route.params;
-  //const event = useSelector(selectSelectedEvent);
-  const event = fakeEvent;
+  const event = useSelector(selectSelectedEvent);
+  //const event = fakeEvent;
   const dispatch = useDispatch();
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
@@ -67,12 +83,30 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
   const family = useSelector(selectSelectedFamily);
 
   const endDate = new Date(event.time_end);
+  const checkList = useSelector(getChecklist);
+
   const isSameDay =
     format(startDate, 'yyyy-MM-dd') === format(endDate, 'yyyy-MM-dd');
 
   useEffect(() => {
     console.log(event);
-  }, []);
+    fetchChecklist();
+  }, [event?.checklistType != null]);
+
+  const fetchChecklist = async () => {
+    try {
+      const data = await CalendarServices.getAllChecklist(
+        event?.id_checklist_type,
+        event.id_family,
+      );
+
+      if (data) {
+        dispatch(setTodoList(data));
+      }
+    } catch (error) {
+      console.error('Error fetching checklist:', error);
+    }
+  };
 
   const onUpdate = () => {
     if (event?.recurrence_rule) {
@@ -414,65 +448,121 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
     return `${dateFormat(startDate)} ${timeFormat(startDate)} - ${dateFormat(endDate)} ${timeFormat(endDate)}`;
   };
 
-  const renderChecklists = () => {
+  const handleNavigateItemDetail = (id_item: number) => {
+    navigation.navigate('TodoListStack', {
+      screen: 'TodoListItemDetail',
+      params: {
+        id_family: event.id_family,
+        id_category: event.id_checklist_type,
+        id_item: id_item,
+      },
+    });
+  };
+
+  const handleUpdateComplete = async (item: TodoListItem) => {
+    try {
+      const response = await TodoListServices.updateChecklist(
+        item.id_checklist,
+        item.id_family,
+        item.id_checklist_type,
+        item.task_name,
+        item.description,
+        item.due_date,
+        !item.is_completed,
+        item.checklistType.id_calendar,
+      );
+
+      if (response) {
+        dispatch(
+          updateDoneTodoList({
+            id_item: item.id_checklist,
+          }),
+        );
+        Toast.show('Update successful', {
+          type: 'success',
+        });
+      }
+    } catch (error) {
+      console.error('Error updating checklist:', error);
+      Toast.show('Update failed', {
+        type: 'danger',
+      });
+    }
+  };
+
+  const buildItems = () => {
     return (
-      <View style={[styles.container, {backgroundColor: color.white}]}>
-        <View style={{flexDirection: 'row'}}>
-          <Text style={[styles.header, {color: color.text}]}>
-            {translate('Check List')}
-          </Text>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('TodoListStack', {
-                screen: 'TodoList',
-                params: {id_family: event.id_family},
-              })
-            }>
-            <Text>View detail</Text>
-          </TouchableOpacity>
+      <ScrollView
+        contentContainerStyle={{paddingHorizontal: 16, paddingVertical: 0}}>
+        <View style={{marginVertical: 0}}>
+          {checkList.map((item, index) => {
+            return (
+              <React.Fragment key={index}>
+                <TodoListCategoryItem
+                  item={item}
+                  handleNavigateItemDetail={handleNavigateItemDetail}
+                  handleUpdateComplete={handleUpdateComplete}
+                />
+              </React.Fragment>
+            );
+          })}
         </View>
-        {event.checklist && event.checklist.length > 0 ? (
-          <FlatList
-            data={event.checklist}
-            renderItem={({item}) => (
-              <View
-                style={[styles.checklistItem, {backgroundColor: color.white}]}>
-                <Feather name="check-circle" size={24} color={color.text} />
-                <Text style={[styles.checklistText, {color: color.text}]}>
-                  {item}
-                </Text>
-              </View>
-            )}
-            keyExtractor={(item, index) => index.toString()}
-            // ListFooterComponent={
-            //   <TouchableOpacity
-            //     style={[styles.addButton, {backgroundColor: color.primary}]}
-            //     onPress={() =>
-            //       navigation.navigate('NewCheckList', {id_family})
-            //     }>
-            //     <Text style={styles.addButtonText}>
-            //       {translate('Add New Check List')}
-            //     </Text>
-            //   </TouchableOpacity>
-            // }
-          />
-        ) : (
-          <TouchableOpacity
-            style={[styles.addButton, {backgroundColor: color.white}]}
-            onPress={() =>
-              navigation.navigate('TodoListStack', {
-                screen: 'TodoList',
-                params: {id_family: event.id_family},
-              })
-            }>
-            <Text style={styles.addButtonText}>
-              {translate('New Check List')}
-            </Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      </ScrollView>
     );
   };
+
+  const renderChecklists = () => (
+    <View style={[styles.container, {backgroundColor: color.white}]}>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <Text
+          style={[
+            styles.header,
+            {
+              color: color.text,
+              fontSize: 16,
+              fontWeight: 'bold',
+              fontStyle: 'italic',
+            },
+          ]}>
+          {translate('Check List')}
+        </Text>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('TodoListStack', {
+              screen: 'TodoListCategory',
+              params: {
+                id_family: event.id_family,
+                id_category: event.id_checklist_type,
+              },
+            })
+          }
+          style={styles.header}>
+          <Text style={{color: color.BlueLight, fontWeight: '800'}}>
+            {translate('View detail')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      {checkList.length > 0 ? (
+        buildItems()
+      ) : (
+        <TouchableOpacity
+          style={[styles.addButton, {backgroundColor: color.white}]}
+          onPress={() =>
+            navigation.navigate('TodoListStack', {
+              screen: 'TodoListCategory',
+              params: {
+                id_family: event.id_family,
+                id_category: event.id_checklist_type,
+              },
+            })
+          }>
+          <Text style={styles.addButtonText}>
+            {translate('New Check List')}
+          </Text>
+        </TouchableOpacity>
+      )}
+    </View>
+  );
 
   const renderShoppingList = () => {
     return (
@@ -607,7 +697,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
           ? explainRecurrenceRule(event.recurrence_rule, language)
           : null}
       </View>
-      {!event.checklist ? (
+      {!event.checklistType ? (
         <TouchableOpacity
           style={[styles.button]}
           onPress={() =>

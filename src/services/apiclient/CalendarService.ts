@@ -6,6 +6,42 @@ import baseUrl from '../urls/baseUrl';
 import {date} from 'yup';
 
 const CalendarServices = {
+  getAllChecklist: async (
+    id_checklist_type?: number | null,
+    id_family: number | null,
+  ) => {
+    try {
+      const response: AxiosResponse = await instance.get(
+        '/api/v1/checklist/getAllChecklist',
+        {
+          params: {
+            page: 1,
+            itemsPerPage: 10,
+            sortBy: 'created_at',
+            sortDirection: 'DESC',
+            id_family,
+            id_checklist_type,
+          },
+        },
+      );
+
+      if (response.status === 200) {
+        return response.data.data;
+      } else {
+        console.error(
+          'Error in getAllChecklist: Unexpected response status',
+          response.status,
+        );
+      }
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        console.error('Error in getAllChecklist: Axios error', error.message);
+      } else {
+        console.error('Error in getAllChecklist: Unknown error', error);
+      }
+    }
+  },
+
   getAllCategoryEvent: async (id_family?: number) => {
     try {
       const response: AxiosResponse = await instance.get(
@@ -188,7 +224,6 @@ const CalendarServices = {
         const locationNames = response.data.geonames.map(
           (location: {name: string}) => location.name,
         );
-        console.log(locationNames);
         return locationNames;
       }
     } catch (error) {

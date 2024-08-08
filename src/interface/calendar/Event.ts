@@ -30,6 +30,8 @@ export interface CategoryEvent {
 export interface EventDetail {
   id_calendar: number;
   id_family: number;
+  id_checklist_type: number | null;
+
   category: number;
   title: string;
   description: string;
@@ -47,4 +49,14 @@ export interface EventDetail {
   updated_at: string;
   categoryEvent: CategoryEvent;
   checklist: ShoppingListCategoryInterface[] | null;
+  checklistType: ChecklistType;
+}
+
+interface ChecklistType {
+  id_checklist_type: number;
+  name_en: string;
+  name_vn: string;
+  id_family: number;
+  id_calendar: number;
+  icon_url: string;
 }
