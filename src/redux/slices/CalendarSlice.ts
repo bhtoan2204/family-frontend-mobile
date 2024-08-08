@@ -110,7 +110,7 @@ const calendarSlice = createSlice({
       state.todoList = action.payload;
     },
 
-    updateDoneTodoList: (state, action: PayloadAction<{id_item: number}>) => {
+    doneTodoList: (state, action: PayloadAction<{id_item: number}>) => {
       state.todoList = state.todoList.map(item => {
         if (item.id_checklist === action.payload.id_item) {
           return {
@@ -220,7 +220,7 @@ const calendarSlice = createSlice({
 
     updateEvent(state, action: PayloadAction<EventDetail>) {
       const {id_calendar} = action.payload;
-      console.log(action.payload);
+
       const index = state.events.findIndex(
         event => event.id_calendar === id_calendar,
       );
@@ -410,7 +410,7 @@ export const {
   setSelectedEvent,
   setSelectedDate,
   setTodoList,
-  updateDoneTodoList,
+  doneTodoList,
 } = calendarSlice.actions;
 
 export const selectEvents = (state: RootState) => state.calendar.events;

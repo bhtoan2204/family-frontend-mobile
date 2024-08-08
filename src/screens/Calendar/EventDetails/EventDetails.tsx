@@ -13,11 +13,11 @@ import {Feather} from '@expo/vector-icons';
 import {COLORS} from 'src/constants';
 import {
   deleteEventOnly,
+  doneTodoList,
   getChecklist,
   selectSelectedEvent,
   setOnly,
   setTodoList,
-  updateDoneTodoList,
   updateEvent,
 } from 'src/redux/slices/CalendarSlice';
 import {deleteEvent} from 'src/redux/slices/CalendarSlice';
@@ -37,6 +37,7 @@ import {TodoListCategoryItem} from 'src/screens/TodoListScreen/TodoListCategory/
 import toast from 'react-native-toast-notifications/lib/typescript/toast';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import TodoListServices from 'src/services/apiclient/TodoListService';
+import {updateDoneTodoList} from 'src/redux/slices/TodoListSlice';
 
 const formatEventDate = (start: Date, end: Date) => {
   const formattedStart = format(start, 'yyyy-MM-dd');
@@ -473,6 +474,11 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
       );
 
       if (response) {
+        dispatch(
+          doneTodoList({
+            id_item: item.id_checklist,
+          }),
+        );
         dispatch(
           updateDoneTodoList({
             id_item: item.id_checklist,

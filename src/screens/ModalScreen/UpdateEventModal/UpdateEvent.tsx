@@ -363,12 +363,15 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
       console.log(message);
       await dispatch(updateEvent(message));
       await dispatch(setSelectedEvent(message));
-      setSelectedDate(
-        moment(new Date(message.time_start)).format('YYYY-MM-DD'),
-      ),
-        navigation.navigate('EventDetailsScreen', {
-          forceUpdate: new Date().getTime(),
-        });
+      dispatch(
+        setSelectedDate(
+          moment(new Date(message.time_start)).format('YYYY-MM-DD'),
+        ),
+      );
+
+      navigation.navigate('EventDetailsScreen', {
+        forceUpdate: new Date().getTime(),
+      });
       Toast.show('Event updated successfully!', {
         type: 'success',
       });

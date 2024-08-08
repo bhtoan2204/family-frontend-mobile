@@ -61,6 +61,7 @@ import {styled, useColorScheme} from 'nativewind';
 import {updateDoneTodoList} from 'src/redux/slices/TodoListSlice';
 import {Toast, useToast} from 'react-native-toast-notifications';
 import TodoListServices from 'src/services/apiclient/TodoListService';
+import {doneTodoList} from 'src/redux/slices/CalendarSlice';
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -128,6 +129,11 @@ const TodoListCategoryScreen = ({
       if (response) {
         dispatch(
           updateDoneTodoList({
+            id_item: item.id_checklist,
+          }),
+        );
+        dispatch(
+          doneTodoList({
             id_item: item.id_checklist,
           }),
         );
