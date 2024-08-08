@@ -260,6 +260,7 @@ const ChatServices = {
   },
   removeMessage: async (receiver_id: string, id_message: string) => {
     try {
+      console.log(receiver_id, id_message);
       const response: AxiosResponse = await instance.get(
         `${baseUrl}/api/v1/chat/removeMessage/${receiver_id}/${id_message}`,
       );
@@ -273,6 +274,23 @@ const ChatServices = {
       console.error('Error in removeMessage:', error.message);
     }
   },
+  removeMessageFamily: async (id_family: string, id_message: string) => {
+    try {
+      console.log(id_family, id_message);
+      const response: AxiosResponse = await instance.get(
+        `${baseUrl}/api/v1/chat/removeFamilyMessage/${id_family}/${id_message}`,
+      );
+      if (response.status === 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error: any) {
+      return false;
+      console.error('Error in removeMessage:', error.message);
+    }
+  },
+
   sendVideoMessage: async (id_user: string | undefined, uri: string) => {
     try {
       const createFormData = (

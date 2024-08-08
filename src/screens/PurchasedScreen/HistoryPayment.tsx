@@ -7,55 +7,31 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Platform,
+  Image,
 } from 'react-native';
 import {PackageServices} from 'src/services/apiclient';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
-import Icon from 'react-native-vector-icons/Ionicons';
-import {PaymentHistoryScreennProps} from 'src/navigation/NavigationTypes';
-import {Feather} from '@expo/vector-icons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import moment from 'moment';
-
-export interface PaymentHistoryItem {
-  id_payment_history: number;
-  id_user: string;
-  id_order: string;
-  amount: number;
-  type: string;
-  payment_method: string;
-  created_at: string;
-  orders: {
-    id_order: string;
-    id_user: string;
-    id_family: number;
-    status: string;
-    id_package_main: number | null;
-    id_package_extra: number;
-    id_package_combo: number | null;
-    method: string;
-    bank_code: string;
-    price: string;
-    created_at: string;
-    updated_at: string;
-  };
-}
+import {Family, PaymentHistory} from 'src/interface/package/mainPackage';
+import {PaymentHistoryScreennProps} from 'src/navigation/NavigationTypes';
+import {setSelectedFamily} from 'src/redux/slices/FamilySlice';
 
 const PaymentHistoryScreen = ({
   route,
   navigation,
 }: PaymentHistoryScreennProps) => {
-  const [paymentHistory, setPaymentHistory] = useState<PaymentHistoryItem[]>(
-    [],
-  );
+  const [paymentHistory, setPaymentHistory] = useState<PaymentHistory[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
   const itemsPerPage = 10;
+  const dispatch = useDispatch();
 
   const fetchPaymentHistory = async (pageNumber: number) => {
     setLoading(true);
@@ -108,8 +84,18 @@ const PaymentHistoryScreen = ({
         return 'Unknown';
     }
   };
+
   const formatCurrency = (amount: any) => {
     return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+  };
+
+  const NavigateFamily = (family: Family) => {
+    dispatch(setSelectedFamily(family));
+
+    navigation.navigate('FamilyStack', {
+      screen: 'ViewFamily',
+      params: {id_family: family.id_family},
+    });
   };
 
   return (
@@ -137,39 +123,129 @@ const PaymentHistoryScreen = ({
         }}
         scrollEventThrottle={400}
         contentContainerStyle={styles.scrollViewContainer}>
-        {paymentHistory.map((item: PaymentHistoryItem, index: number) => (
+        {paymentHistory.map((item: PaymentHistory, index: number) => (
           <View
             key={index}
-            style={[styles.paymentItem, {backgroundColor: color.white}]}>
-            <Text style={[styles.paymentText, {color: color.text}]}>
-              Amount: {formatCurrency(item.amount)}
-            </Text>
-            <Text style={[styles.paymentText, {color: color.text}]}>
-              Type: {getTypeLabel(item.type)}
-            </Text>
-            <Text style={[styles.paymentText, {color: color.text}]}>
-              Payment Method: {item.payment_method}
-            </Text>
-            <Text style={[styles.paymentText, {color: color.text}]}>
-              Date: {moment(item.created_at).format('YYYY-MM-DD HH:mm')}
-            </Text>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={[styles.paymentText, {color: color.text}]}>
-                Order Status:
-              </Text>
-              <Text style={[{color: getStatusColor(item.orders.status)}]}>
-                {' '}
-                {item.orders.status}
-              </Text>
+            style={[styles.paymentItem, {backgroundColor: color.card}]}>
+            <View
+              style={[
+                styles.statusContainer,
+                {justifyContent: 'space-between'},
+              ]}>
+              <View>
+                <Text
+                  style={{color: color.text, fontWeight: 'bold', fontSize: 20}}>
+                  {' '}
+                  {formatCurrency(item.amount / 1000)}
+                </Text>
+              </View>
+              <View
+                style={{
+                  borderRadius: 50,
+                  borderWidth: 1,
+                  borderColor: '#ccc',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 100,
+                  height: 30,
+                }}>
+                <Text
+                  style={[
+                    {
+                      color: getStatusColor(item.orders.status),
+                      fontWeight: 'bold',
+                      fontSize: 16,
+                    },
+                  ]}>
+                  {item.orders.status}
+                </Text>
+              </View>
             </View>
+
+            <TouchableOpacity
+              style={styles.familyInfo}
+              onPress={() => {
+                NavigateFamily(item.orders.family);
+              }}>
+              <Image
+                source={
+                  item.orders.family.avatar
+                    ? {uri: item.orders.family.avatar}
+                    : require('../../assets/images/big-family_4441180.png')
+                }
+                style={styles.familyAvatar}
+              />
+              <Text
+                style={[
+                  styles.paymentText,
+                  {color: color.textSubdued, fontWeight: 'bold'},
+                ]}>
+                {item.orders.family.name}
+              </Text>
+            </TouchableOpacity>
+
+            <Text style={[styles.paymentText, {color: color.textSubdued}]}>
+              <Text style={styles.boldText}>Payment Method:</Text>{' '}
+              {item.payment_method}
+            </Text>
+            <Text style={[styles.paymentText, {color: color.textSubdued}]}>
+              <Text style={styles.boldText}>Date:</Text>{' '}
+              {moment(item.created_at).format('YYYY-MM-DD HH:mm')}
+            </Text>
+            {item.orders.packageMain && (
+              <View style={styles.packageDetail}>
+                <Text
+                  style={[
+                    styles.paymentText,
+                    {color: color.BlueLight, fontWeight: 'bold'},
+                  ]}>
+                  <Text style={[styles.boldText, {color: 'gray'}]}>
+                    Main Package:
+                  </Text>{' '}
+                  {item.orders.packageMain.name}
+                </Text>
+                <Text style={[styles.paymentText, {color: color.textSubdued}]}>
+                  <Text style={[styles.boldText, {color: 'gray'}]}>
+                    Duration (months):
+                  </Text>{' '}
+                  {item.orders.packageMain.duration_months}
+                </Text>
+              </View>
+            )}
+            {item.orders.packageExtra && (
+              <View style={styles.packageDetail}>
+                <Text
+                  style={[
+                    styles.paymentText,
+                    {color: color.BlueLight, fontWeight: 'bold'},
+                  ]}>
+                  <Text style={[styles.boldText, {color: 'gray'}]}>
+                    Extra Package:
+                  </Text>{' '}
+                  {item.orders.packageExtra.name}
+                </Text>
+              </View>
+            )}
+            {item.orders.packageCombo && (
+              <View style={styles.packageDetail}>
+                <Text
+                  style={[
+                    styles.paymentText,
+                    {color: color.BlueLight, fontWeight: 'bold'},
+                  ]}>
+                  <Text style={styles.boldText}>Combo Package:</Text>{' '}
+                  {item.orders.packageCombo.name}
+                </Text>
+              </View>
+            )}
           </View>
         ))}
-        {loading && <ActivityIndicator size="large" color={color.background} />}
-        {!hasMore && (
+        {loading && <ActivityIndicator size="large" color={color.primary} />}
+        {/* {!hasMore && (
           <Text style={[styles.noMoreDataText, {color: color.text}]}>
             {translate('NO_MORE_DATA')}
           </Text>
-        )}
+        )} */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -188,39 +264,63 @@ const styles = StyleSheet.create({
         paddingTop: 20, // Adjust padding for Android status bar
       },
     }),
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
   },
   backButton: {
     marginRight: 16,
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: '600',
   },
   scrollViewContainer: {
     padding: 16,
   },
   paymentItem: {
     padding: 16,
-    borderRadius: 8,
+    borderRadius: 12,
     marginBottom: 16,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   paymentText: {
     fontSize: 16,
-    marginBottom: 4,
+    marginBottom: 6,
+    color: '#ccc',
   },
-  separator: {
-    height: 1,
-    backgroundColor: '#ddd',
-    marginVertical: 10,
+  boldText: {
+    fontWeight: '600',
+    color: '#ccc',
+  },
+  packageDetail: {
+    marginTop: 12,
   },
   noMoreDataText: {
     textAlign: 'center',
     padding: 16,
+    fontSize: 16,
+    fontStyle: 'italic',
+  },
+  statusContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  familyInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  familyAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 8,
   },
 });
 
