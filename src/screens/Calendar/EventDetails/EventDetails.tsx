@@ -705,7 +705,10 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
       </View>
       {!event.checklistType ? (
         <TouchableOpacity
-          style={[styles.button]}
+          style={[
+            styles.button,
+            {backgroundColor: color.white, alignItems: 'center'},
+          ]}
           onPress={() =>
             navigation.navigate('TodoListStack', {
               screen: 'TodoList',
@@ -721,9 +724,17 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
       {!event.shoppingList ? (
         extraPackage.some(pkg => pkg.name === 'Shopping') ? (
           <TouchableOpacity
-            style={[styles.addButton, {backgroundColor: color.primary}]}
+            style={[
+              styles.button,
+              {
+                backgroundColor: color.white,
+                flexDirection: 'row',
+                alignItems: 'center',
+              },
+            ]}
             onPress={() => navigation.navigate('NewShoppingList', {id_family})}>
-            <Text style={[styles.addButtonText, {color: color.text}]}>
+            <Feather name="shopping-cart" size={24} color={color.text} />
+            <Text style={styles.buttonText}>
               {translate('Add New Shopping List')}
             </Text>
           </TouchableOpacity>
