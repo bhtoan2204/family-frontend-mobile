@@ -274,7 +274,8 @@ const ChatServices = {
       console.error('Error in removeMessage:', error.message);
     }
   },
-  removeMessageFamily: async (id_family: string, id_message: string) => {
+
+  removeMessageFamily: async (id_family: number, id_message: string) => {
     try {
       console.log(id_family, id_message);
       const response: AxiosResponse = await instance.get(
@@ -287,7 +288,7 @@ const ChatServices = {
       }
     } catch (error: any) {
       return false;
-      console.error('Error in removeMessage:', error.message);
+      console.error('Error in removeMessageFamily:', error.message);
     }
   },
 

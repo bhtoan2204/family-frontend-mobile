@@ -321,6 +321,51 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
       return 'Invalid date';
     }
   };
+
+  const onDeleteFamily = async (message: Message) => {
+    Alert.alert(
+      translate('confirmDelete'),
+      translate('confirmDeleteChat'),
+      [
+        {
+          text: translate('Cancel'),
+          style: 'cancel',
+        },
+        {
+          text: translate('Delete'),
+          onPress: async () => {
+            try {
+              const respone = await ChatServices.removeMessageFamily(
+                LastMessageFamily.familyId,
+                message._id,
+              );
+              if (respone) {
+                setMessages(prevMessages =>
+                  prevMessages.filter(msg => msg._id !== message._id),
+                );
+                Toast.show(translate('deleteSuccess'), {
+                  type: 'success',
+                  duration: 2000,
+                });
+              } else {
+                Toast.show(translate('deleteError'), {
+                  type: 'danger',
+                  duration: 2000,
+                });
+              }
+            } catch (error) {
+              console.error('Error deleting event:', error);
+              Toast.show('Delete deleteError', {
+                type: 'danger',
+                duration: 2000,
+              });
+            }
+          },
+        },
+      ],
+      {cancelable: true},
+    );
+  };
   return (
     <KeyboardAvoidingView
       behavior="padding"
@@ -405,6 +450,7 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
               onMessagePress={onMessagePress}
               isSelected={selectedMessageId === item._id}
               formatDateTime={formatDateTime}
+              onRemoveMessage={onDeleteFamily}
             />
           )}
           keyExtractor={(item, index) => index.toString()}

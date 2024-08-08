@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   Modal,
   TouchableWithoutFeedback,
   StyleSheet,
+  Dimensions,
+  Animated,
 } from 'react-native';
 import {Video} from 'expo-av';
 import {Message} from 'src/interface/chat/chat';
@@ -38,8 +40,11 @@ const MessageItem: React.FC<Props> = ({
   const isSender = item.senderId === profileId;
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalPosition, setModalPosition] = useState({top: 0, left: 0});
 
-  const handleLongPress = () => {
+  const handleLongPress = (event: any) => {
+    const {pageY, pageX} = event.nativeEvent;
+    setModalPosition({top: pageY, left: pageX});
     setIsModalVisible(true);
   };
 
@@ -69,7 +74,7 @@ const MessageItem: React.FC<Props> = ({
 
         <View style={{flex: 1, marginLeft: isSender ? 0 : 10}}>
           <TouchableOpacity
-            onPress={() => onMessagePress(item.id)}
+            onPress={() => onMessagePress(item)}
             onLongPress={handleLongPress}
             style={[
               isSender
@@ -131,7 +136,11 @@ const MessageItem: React.FC<Props> = ({
           visible={isModalVisible}
           onRequestClose={handleCloseModal}>
           <TouchableWithoutFeedback onPress={handleCloseModal}>
-            <View style={localStyles.modalOverlay}>
+            <View
+              style={[
+                localStyles.modalOverlay,
+                {top: modalPosition.top, left: modalPosition.left},
+              ]}>
               <View style={localStyles.modalContent}>
                 <TouchableOpacity
                   onPress={handleRemoveMessage}
@@ -154,17 +163,21 @@ const MessageItem: React.FC<Props> = ({
 
 const localStyles = StyleSheet.create({
   modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    position: 'absolute',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 10,
+    padding: 20,
   },
   modalContent: {
-    width: '80%',
     backgroundColor: 'white',
-    padding: 20,
+    padding: 15,
     borderRadius: 10,
     alignItems: 'center',
+  },
+  modalMessageText: {
+    marginBottom: 10,
+    fontSize: 16,
+    color: 'black',
   },
   modalOption: {
     paddingVertical: 10,
