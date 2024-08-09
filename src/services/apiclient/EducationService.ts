@@ -400,6 +400,47 @@ const EducationServices = {
       throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
+  updateComponentScoreData: async ({
+    id_subject,
+    id_education_progress,
+    id_family,
+    index,
+    component_name,
+    score,
+    target_score,
+    maximum_score,
+  }: {
+    id_subject: number;
+    id_education_progress: number;
+    id_family: number;
+    index: number;
+    component_name?: string;
+    score?: number;
+    target_score?: number;
+    maximum_score?: number;
+  }) => {
+    const body: any = {
+      id_subject,
+      id_education_progress,
+      id_family,
+      index,
+    };
+    if (component_name) body.component_name = component_name;
+    if (score) body.score = score;
+    if (target_score) body.target_score = target_score;
+    if (maximum_score) body.maximum_score = maximum_score;
+    try {
+      const res = await instance.put(EducationUrls.updateComponentScore, body);
+      if (res.status == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  },
 };
 
 export default EducationServices;

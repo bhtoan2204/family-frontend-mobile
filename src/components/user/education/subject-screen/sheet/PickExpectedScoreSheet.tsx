@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from 'src/redux/store';
 import { updateComponentScoreOfSubject, updateExpectedScoreOfSubject } from 'src/redux/slices/EducationSlice';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import EducationServices from 'src/services/apiclient/EducationService';
 
 interface PickExpectedScoreSheetProps {
     id_family: number;
@@ -32,7 +33,7 @@ const isNumberInRange = (numberString: string) => {
 
 
 
-const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, id_education_progress, id_subject,onSuccess }: PickExpectedScoreSheetProps) => {
+const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, id_education_progress, id_subject, onSuccess, onFailed }: PickExpectedScoreSheetProps) => {
 
     const [inputValue, setInputValue] = React.useState<string>(score?.toString() || '0')
     const [isFocus, setIsFocus] = React.useState<boolean>(false)
@@ -73,64 +74,59 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, 
             return "Invalid input";
         }
     };
-    const handleSave = () => {
+    const handleSaveApi = React.useCallback(async ({
+        id_subject,
+        id_education_progress,
+        target_score,
+        index
+    }: {
+        id_subject: number,
+        id_education_progress: number,
+        target_score: number,
+        index: number
+    }) => {
+        const res = await EducationServices.updateComponentScoreData({
+            id_subject: id_subject,
+            id_education_progress: id_education_progress,
+            id_family: id_family,
+            target_score: target_score,
+            index: index
+        })
+        if (res) {
+            onSuccess()
+        } else {
+            onFailed()
+        }
+    }, [])
+
+    const handleSave = React.useCallback(async ({
+        id_subject,
+        id_education_progress,
+        input,
+        index
+    }: {
+        id_subject: number,
+        id_education_progress: number,
+        input: string,
+        index: number
+    }) => {
         dispatch(updateExpectedScoreOfSubject({
             id_subject: id_subject!,
             id_education_progress: id_education_progress,
-            score: parseFloat(inputValue),
+            score: parseFloat(input),
             index: index
         }))
         setExpectedSheetRef.current?.close()
-        onSuccess()
-        // if (index === -1) {
-        //     dispatch(updateComponentScoreOfSubject({
-        //         id_subject: id_subject!,
-        //         id_education_progress: id_education_progress,
-        //         score: parseFloat(inputValue),
-        //         index: index
-        //     }))
-        //     setSubjectDetailData((prev) => {
-        //         return {
-        //             ...prev,
-        //             final_score: {
-        //                 ...prev.final_score,
-        //                 expected_score: parseFloat(inputValue)
-        //             }
-        //         }
-        //     })
-        // } else if (index === -2) {
-        //     setSubjectDetailData((prev) => {
-        //         return {
-        //             ...prev,
-        //             midterm_score: {
-        //                 ...prev.midterm_score,
-        //                 expected_score: parseFloat(inputValue)
-        //             }
-        //         }
-        //     })
-        // } else {
-        //     setSubjectDetailData((prev) => {
-        //         return {
-        //             ...prev,
-        //             component_scores: prev.component_scores.map((item, i) => {
-        //                 if (i === index) {
-        //                     return {
-        //                         ...item,
-        //                         expected_score: parseFloat(inputValue)
-        //                     }
-        //                 }
-        //                 return item
-        //             })
-        //         }
-        //     })
-
-        // }
-    }
+        await handleSaveApi({
+            id_subject: id_subject!,
+            id_education_progress: id_education_progress,
+            target_score: parseFloat(input),
+            index: index
+        })
+    }, [])
 
 
     return (
-
-
         <RBSheet
             ref={setExpectedSheetRef}
             closeOnPressBack
@@ -167,11 +163,8 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, 
                         }}>Cancel</Text> */}
                     </TouchableOpacity >
                     <Text className='text-base font-semibold '>Set expected score </Text>
-                    <TouchableOpacity onPress={() => {
-                        if (isNumberInRange(inputValue)) {
-                            handleSave()
-                            
-                        }
+                    <TouchableOpacity onPress={async () => {
+                        
                     }}>
                         {/* <Text className='text-base font-semibold'
                             style={{
@@ -208,11 +201,16 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, 
                                     console.log(isValid)
                                     setInputValue(text)
                                 }}
-                                
-                                onSubmitEditing={(event) => {
+
+                                onSubmitEditing={async (event) => {
                                     if (isNumberInRange(event.nativeEvent.text)) {
-                                        handleSave()
-                                        setExpectedSheetRef.current?.close()
+                                        await handleSave({
+                                            id_education_progress,
+                                            id_subject,
+                                            index,
+                                            input: inputValue
+                                        })
+                                        // setExpectedSheetRef.current?.close()
                                     }
                                 }}
                                 placeholderTextColor={!isDarkMode ? '#b0b0b0' : '#A6A6A6'}

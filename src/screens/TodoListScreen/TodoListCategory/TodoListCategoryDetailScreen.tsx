@@ -36,49 +36,37 @@ import UpdateDateItemSheet from 'src/components/user/shopping-todo/sheet/update-
 import UpdateDescriptionSheet from 'src/components/user/shopping-todo/sheet/update-description-sheet'
 import { useColorScheme } from 'nativewind'
 import { useToast } from 'react-native-toast-notifications'
+import { categoriesImage } from '../const/image'
+import TodoListServices from 'src/services/apiclient/TodoListService'
 
 const screenHeight = Dimensions.get('screen').height;
 
 
 const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailScreenProps) => {
     const { id_family, id_category, id_item } = route.params
-    // console.log('id_family', id_family, 'id_category', id_category)
     const dispatch = useDispatch<AppDispatch>()
-    // const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
-    const itemDetail = useSelector((state: RootState) => state.todoList).todoList.find(item => item.id_checklist == id_item)
+    const itemDetail = useSelector((state: RootState) => state.todoList).todoListType.find(item => item.id_checklist_type == id_category)?.checklists.find(item => item.id_checklist == id_item)
     const categoryDetail = useSelector((state: RootState) => state.todoList).todoListType.find(item => item.id_checklist_type == id_category)
 
     const updateDateBottomSheetRef = React.useRef<BottomSheet>(null)
-    const addInformationBottomSheetRef = React.useRef<BottomSheet>(null)
+    // const addInformationBottomSheetRef = React.useRef<BottomSheet>(null)
     const updateDescriptionBottomSheetRef = React.useRef<BottomSheet>(null)
     const { colorScheme } = useColorScheme()
     const toast = useToast()
 
 
-    useEffect(() => {
-        console.log("item", itemDetail)
+    // useEffect(() => {
+    //     console.log("item", itemDetail)
+    // }, [])
+
+    const getImage = React.useCallback((id_category: number) => {
+        return categoriesImage[id_category - 1] != undefined ? categoriesImage[id_category - 1] : categoriesImage[9]
     }, [])
 
-    const getImage = (id_category: number) => {
-        if (id_category === 1) {
-            return GroceryBgImage
-        }
-        if (id_category === 2) {
-            return ElectronicsBgImage
-        }
-        if (id_category === 3) {
-            return ClothingBgImage
-        }
-        if (id_category === 4) {
-            return FurnitureBgImage
-        }
-        if (id_category === 5) {
-            return PharmacyBgImage
-        }
-        return OtherBgImage
-    }
+    // const buildInfoBox = () => {
 
-    const buildInfoBox = () => {
+    // }
+    const buildInfoBox = React.useCallback(() => {
         return <View className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'>
             <View className='flex-row  items-center  w-full  py-2 '>
                 <View className=' flex-row mr-2 items-center'>
@@ -91,9 +79,9 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                         backgroundColor: itemDetail?.is_completed ? '#00AE00' : undefined,
                     }}
                         onPress={() => {
-                            console.log('hello')
                             dispatch(updateDoneTodoList({
-                                id_item: id_item,
+                                id_checklist: id_item,
+                                id_checklist_type: id_category,
                             }))
                             toast.show("Updated", {
                                 type: "success",
@@ -111,9 +99,9 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
 
             </View>
         </View>
-    }
+    }, [itemDetail?.is_completed, colorScheme])
 
-    const buildCalendarBox = () => {
+    const buildCalendarBox = React.useCallback(() => {
         return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]' onPress={() => {
             updateDateBottomSheetRef.current?.expand()
         }}>
@@ -127,18 +115,18 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                     />
                 </View>
 
-                <Text className='text-base text-[#2F2F34] dark:text-white'>{
-                    itemDetail?.due_date ? format(new Date(itemDetail?.due_date), 'dd/MM/yyyy') : 'Set reminder date'
-                }</Text>
+                <Text className='text-base text-[#2F2F34] dark:text-white'>
+                    {
+                        itemDetail?.due_date ? format(new Date(itemDetail?.due_date), 'dd/MM/yyyy') : 'Set reminder date'
+                    }
+                </Text>
             </View>
         </TouchableOpacity>
-    }
+    }, [itemDetail?.due_date, colorScheme])
 
-    const buildRepeatBox = () => {
+    const buildRepeatBox = React.useCallback(() => {
         return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'
             onPress={() => {
-                // addInformationBottomSheetRef.current?.expand()
-
             }}
         >
             <View className='flex-row  items-center  w-full  py-2 '>
@@ -152,29 +140,28 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                 <Text className='text-base text-[#2F2F34] dark:text-white'>Repeat</Text>
             </View>
         </TouchableOpacity>
-    }
+    }, [colorScheme])
 
-    const buildAddInfoBox = () => {
-        return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'
-            onPress={() => {
-                addInformationBottomSheetRef.current?.expand()
+    // const buildAddInfoBox = React.useCallback(() => {
+    //     return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'
+    //         onPress={() => {
+    //             addInformationBottomSheetRef.current?.expand()
+    //         }}
+    //     >
+    //         <View className='flex-row  items-center  w-full  py-2 '>
+    //             <View className='mr-2'>
 
-            }}
-        >
-            <View className='flex-row  items-center  w-full  py-2 '>
-                <View className='mr-2'>
+    //                 <Material name='information-outline' size={30} color={
+    //                     colorScheme == 'light' ? '#5D5D5D' : 'white'
+    //                 } />
+    //             </View>
 
-                    <Material name='information-outline' size={30} color={
-                        colorScheme == 'light' ? '#5D5D5D' : 'white'
-                    } />
-                </View>
+    //             <Text className='text-base text-[#2F2F34] dark:text-white'>Add more information</Text>
+    //         </View>
+    //     </TouchableOpacity>
+    // }, [colorScheme, itemDetail?.description])
 
-                <Text className='text-base text-[#2F2F34] dark:text-white'>Add more information</Text>
-            </View>
-        </TouchableOpacity>
-    }
-
-    const buildDescriptionBox = () => {
+    const buildDescriptionBox = React.useCallback(() => {
         return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'
             onPress={() => {
                 updateDescriptionBottomSheetRef.current?.expand()
@@ -193,21 +180,47 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                 }</Text>
             </View>
         </TouchableOpacity>
-    }
+    }, [itemDetail?.description, colorScheme])
 
-    const handleDeleteItem = () => {
+    const handleDeleteApi = React.useCallback(async () => {
+        const res = await TodoListServices.deleteItem({
+            id_family: id_family!,
+            id_checklist: id_item,
+            // id_checklist: id_item
+        })
+        if (res == true) {
+            toast.show("Deleted", {
+                type: "success",
+                duration: 2000,
+                icon: <Material name="check" size={24} color={"white"} />,
+            });
+        } else {
+            toast.show("Failed to delete", {
+                type: "error",
+                duration: 2000,
+                icon: <Material name="close" size={24} color={"white"} />,
+            });
+        }
+    }, [])
+
+    const handleDeleteItem = React.useCallback(() => {
         Alert.alert('Delete item', 'Are you sure you want to delete this item?', [
             {
                 text: 'Delete',
                 style: 'destructive',
-                onPress: () => {
+                onPress: async () => {
+                    await handleDeleteApi()
                     navigation.goBack()
-                    dispatch(deleteTodoList({ id_item: id_item }))
-                    toast.show("Deleted", {
-                        type: "success",
-                        duration: 2000,
-                        icon: <Material name="check" size={24} color={"white"} />,
-                    });
+                    dispatch(deleteTodoList({
+                        id_checklist: id_item,
+                        id_checklist_type: id_category,
+                    }))
+
+                    // toast.show("Deleted", {
+                    //     type: "success",
+                    //     duration: 2000,
+                    //     icon: <Material name="check" size={24} color={"white"} />,
+                    // });
                 }
             },
             {
@@ -217,7 +230,7 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                 }
             },
         ])
-    }
+    }, [])
 
     return (
         <View style={{
@@ -280,7 +293,7 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                                 {buildCalendarBox()}
                                 {buildRepeatBox()}
                                 {buildDescriptionBox()}
-                                {buildAddInfoBox()}
+                                {/* {buildAddInfoBox()} */}
                             </View>
 
                         </View>
@@ -292,6 +305,7 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                 bottomSheetRef={updateDateBottomSheetRef}
                 id_family={id_family!}
                 id_item={id_item}
+                id_list={id_category}
                 initialDate={itemDetail?.due_date ? itemDetail?.due_date : new Date().toISOString()}
                 onUpdateSuccess={
                     () => {
@@ -316,6 +330,7 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                 bottomSheetRef={updateDescriptionBottomSheetRef}
                 id_family={id_family!}
                 id_item={id_item}
+                id_list={id_category}
                 description={itemDetail?.description || ""}
                 onUpdateSuccess={
                     () => {
@@ -336,27 +351,6 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                     }
                 }
             />
-
-            {/* <UpdateDateItemSheet bottomSheetRef={updateDateBottomSheetRef} id_family={id_family!} id_list={id_shopping_list} id_item={id_item} initialDate={
-                itemDetail?.reminder_date ? itemDetail?.reminder_date : new Date().toISOString()
-            } />
-            <AddMoreInfoSheet
-                bottomSheetRef={addInformationBottomSheetRef} id_family={id_family!} id_list={id_shopping_list}
-                description={description}
-                price={itemDetail?.price ? convertToNumber(itemDetail?.price) : 0}
-                id_item={id_item}
-                id_shopping_list_type={id_list}
-            />
-            <UpdateDescriptionSheet bottomSheetRef={updateDescriptionBottomSheetRef} id_family={id_family!} id_list={id_shopping_list}
-                description={description}
-                id_item={id_item}
-                id_shopping_list_type={id_shopping_list}
-            />
-            <UpdatePriceSheet bottomSheetRef={updatePriceBottomSheetRef} id_family={id_family!} id_list={id_shopping_list}
-                price={itemDetail?.price ? convertToNumber(itemDetail?.price) : 0}
-                id_item={id_item}
-                id_shopping_list_type={id_shopping_list}
-            /> */}
         </View>
 
     )

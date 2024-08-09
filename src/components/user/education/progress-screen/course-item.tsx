@@ -50,6 +50,7 @@ const CourseItem = ({ data, onPress, index }: CourseItemProps) => {
                 })
 
             }
+            if (scoreCount == 0) return 0
             return parseFloat((totalScore / scoreCount).toPrecision(2))
 
         }
@@ -67,35 +68,6 @@ const CourseItem = ({ data, onPress, index }: CourseItemProps) => {
         return 0;
     }, [data])
 
-    // const calculateScore = (data: Subject) => {
-    //     let totalComponent = 0;
-    //     let total = 0
-
-
-    //     if (data.component_scores) {
-    //         data.component_scores.forEach((item) => {
-    //             if (item.score != null && item.score != 0) {
-    //                 total += parseFloat((item.score).toString())
-    //             }
-    //         })
-    //         return total / (data.component_scores.length);
-    //     }
-    //     return 0;
-    // }
-
-    // const calculateProgress = (data: Subject) => {
-
-    //     if (data.component_scores) {
-    //         let total = 0;
-    //         data.component_scores.forEach((item) => {
-    //             if (item.score && item.score != 0) total += 1;
-    //         })
-    //         const fin = (total) * 100 / (data.component_scores.length);
-    //         return Math.floor(fin)
-    //     }
-    //     return 0;
-
-    // }
 
     return (
         data && <TouchableOpacity className=' h-auto  mt-4 mx-5 ' onPress={onPress}>

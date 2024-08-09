@@ -7,54 +7,23 @@ import { ShoppingListScreenProps, TodoListScreenProps } from 'src/navigation/Nav
 import { AppDispatch, RootState } from 'src/redux/store'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import { COLORS } from 'src/constants'
-
-import GroceryImage from 'src/assets/images/shoppinglist_assets/grocery.png'
-import ElectronicsImage from 'src/assets/images/shoppinglist_assets/Electronics.png'
-import ClothingImage from 'src/assets/images/shoppinglist_assets/Clothing.png'
-import FurnitureImage from 'src/assets/images/shoppinglist_assets/Furniture.png'
-import PharmacyImage from 'src/assets/images/shoppinglist_assets/Pharmacy.png'
-import OtherImage from 'src/assets/images/shoppinglist_assets/Other.png'
 import { colors } from '../const/color'
-import { TodoListItem, TodoListType } from 'src/interface/todo/todo'
-import { useColorScheme } from 'nativewind'
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 import { setDateSelected } from 'src/redux/slices/TodoListSlice'
 import BottomSheet from '@gorhom/bottom-sheet'
 import AddListSheet from 'src/components/user/shopping-todo/sheet/add-list-sheet'
 import { ScreenHeight } from '@rneui/base'
+import { useToast } from 'react-native-toast-notifications'
+import TodoListTypeSkeleton from './skeleton'
 const screenHeight = Dimensions.get('screen').height;
-
-
-const mapTodoList = (todoList: TodoListItem[], todoListTypes: TodoListType[]): Map<string, TodoListItem[]> => {
-    const data: TodoListItem[] = JSON.parse(JSON.stringify(todoList))
-    const map: Map<string, TodoListItem[]> = new Map()
-    for (let i = 0; i < todoListTypes.length; i++) {
-        const type = todoListTypes[i]
-        if (!map.has(JSON.stringify(type))) {
-            map.set(JSON.stringify(type), [])
-        }
-    }
-
-
-    for (let i = 0; i < data.length; i++) {
-        const itemType = JSON.stringify(data[i].checklistType)
-        if (!map.has(JSON.stringify(data[i].checklistType))) {
-            const arr = [data[i]]
-            map.set(itemType, arr)
-        } else {
-            map.get(itemType)?.push(data[i])
-        }
-    }
-    return map
-}
 
 const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
     const { id_family, openSheet, id_calendar } = route.params
-    const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
     const [selectDate, setSelectDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
     const todoListTypes = useSelector((state: RootState) => state.todoList).todoListType
-    const todoList = useSelector((state: RootState) => state.todoList).todoList
-    const todosMap = mapTodoList(todoList, todoListTypes)
+    const toast = useToast()
+    // const todoList = useSelector((state: RootState) => state.todoList).todoList
+    // const todosMap = mapTodoList(todoList, todoListTypes)
     // const { colorScheme, setColorScheme } = useColorScheme();
     const [key, setKey] = useState(false);
     const isDarkMode = useSelector(getIsDarkMode)
@@ -62,23 +31,23 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
     const addListBottomSheetRef = React.useRef<BottomSheet>(null)
     const [isScrollDown, setIsScrollDown] = useState(false)
     const scrollYRef = React.useRef<any>(0)
-    
+    const loading = useSelector((state: RootState) => state.todoList).loading
     useEffect(() => {
         setKey((prev) => !prev)
     }, [isDarkMode])
 
-    
 
-    const loadItemsForMonth = (month: any) => {
-        console.log('trigger items loading');
-    }
-    const renderEmptyDate = () => {
-        return (
-            <View className='flex-1 justify-center items-center'>
-                <Text>No events for this day</Text>
-            </View>
-        );
-    };
+
+    // const loadItemsForMonth = (month: any) => {
+    //     console.log('trigger items loading');
+    // }
+    // const renderEmptyDate = () => {
+    //     return (
+    //         <View className='flex-1 justify-center items-center'>
+    //             <Text>No events for this day</Text>
+    //         </View>
+    //     );
+    // };
 
     const handleDayPress = (date: any) => {
         if (selectDate === date.dateString) {
@@ -91,8 +60,7 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
         }
     };
 
-
-    const buildDate = (dateString: string) => {
+    const buildDate = React.useCallback((dateString: string) => {
         const date: Date = new Date(dateString);
 
         if (isNaN(date.getTime())) {
@@ -109,10 +77,9 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
 
         const description: string = `${month} ${year}`;
         return description;
-    }
+    }, [])
 
-
-    const customCalendarHeader = () => {
+    const customCalendarHeader = React.useCallback(() => {
         return (
             <View className='flex-row justify-between items-center py-3 ' style={{
                 marginHorizontal: 10,
@@ -137,26 +104,27 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
                 </View>
             </View>
         )
-    }
+    }, [selectDate])
+
+
 
     const buildItems = React.useCallback(() => {
-        return Array.from(todosMap.entries()).map(([item, index]) => {
-            const type = JSON.parse(item) as TodoListType
-            return todosMap.get(item) && <React.Fragment key={item}>
-                <TodoListCategoryItem id_category={type.id_checklist_type} category_name={type.name_en} total_items={todosMap.get(item)!.length}
-                    handleNavigateCategory={(id_category: number) => {
-                        // console.log('navigate')
-                        navigation.navigate('TodoListCategory', {
-                            id_family: id_family,
-                            id_category: id_category
-                        })
-                    }}
-                    iconUrl={type.icon_url}
-                    isDarkMode={isDarkMode}
-                />
-            </React.Fragment>
+        return todoListTypes.map((type, index) => {
+            return <TodoListCategoryItem key={type.id_checklist_type}
+                id_category={type.id_checklist_type} category_name={type.name_en}
+                total_items={type.checklists.length}
+                handleNavigateCategory={(id_category: number) => {
+                    // console.log('navigate')
+                    navigation.navigate('TodoListCategory', {
+                        id_family: id_family,
+                        id_category: id_category
+                    })
+                }}
+                iconUrl={type.icon_url}
+                isDarkMode={isDarkMode}
+            />
         })
-    }, [todosMap])
+    }, [todoListTypes])
 
     return (
         <SafeAreaView style={{
@@ -247,7 +215,15 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
                         color: isDarkMode ? 'white' : '#292828',
                     }}>My checklist</Text>
                     {
-                        buildItems()
+                        loading ? <>
+                            <TodoListTypeSkeleton />
+                            <TodoListTypeSkeleton />
+                            <TodoListTypeSkeleton />
+                        </> : <>
+                            {
+                                buildItems()
+                            }
+                        </>
                     }
                 </View>
             </ScrollView>
@@ -267,10 +243,24 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
                 appearsOnIndex={openSheet != null ? openSheet : false}
                 id_family={id_family!}
                 onAddSuccess={(id_category: number) => {
+                    if (id_calendar) {
+                        navigation.setParams({
+                            id_calendar: undefined,
+                            openSheet: false,
+                            id_family: id_family
+                        })
+                    }
+                    toast.show("New list added", {
+                        type: 'success',
+                        duration: 3000,
+                        icon: <Material name='check' size={24} color='white' />
+
+                    })
                     navigation.navigate('TodoListCategory', {
                         id_family: id_family,
                         id_category: id_category
                     })
+
                 }}
                 onAddFailed={() => { }}
                 id_calendar={id_calendar}
@@ -289,7 +279,7 @@ interface TodoListCategoryItemProps {
 }
 
 const TodoListCategoryItem = ({ id_category, category_name, total_items, handleNavigateCategory, iconUrl, isDarkMode }: TodoListCategoryItemProps) => {
-    const buildTotal = (total_items: number) => {
+    const buildTotal = React.useCallback((total_items: number) => {
         if (total_items > 1) {
             return `${total_items} items`
         } else if (total_items === 1) {
@@ -297,7 +287,7 @@ const TodoListCategoryItem = ({ id_category, category_name, total_items, handleN
         } else if (total_items === 0) {
             return `No item`
         }
-    }
+    }, [])
 
     return <TouchableOpacity className='flex-row items-center mb-2  ' onPress={() => {
         handleNavigateCategory(id_category)

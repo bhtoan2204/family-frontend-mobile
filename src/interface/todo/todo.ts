@@ -3,6 +3,9 @@ export interface TodoListType {
   name_en: string;
   name_vn: string;
   icon_url: string;
+  id_calendar: number;
+  calendar: Event;
+  checklists: TodoListItem[];
 }
 
 // {
@@ -71,5 +74,5 @@ export interface TodoListItem {
   is_notified_on_due_date: boolean;
   created_at: string;
   updated_at: string;
-  checklistType: TodoListType;
+  // checklistType: TodoListType;
 }

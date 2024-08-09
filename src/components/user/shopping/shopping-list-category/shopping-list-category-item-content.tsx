@@ -11,7 +11,7 @@ interface ShoppingListCategoryItemContentProps {
     index: number,
     isLast: boolean,
     handleNavigateItemDetail: (id_item: number, id_list: number) => void
-    handleCompleteItem: (id_item: number, id_list: number) => void
+    handleCompleteItem: (id_item: number, item: ShoppingListItem) => void
     onPurchase: () => void
     onUnpurchase: () => void
 }
@@ -51,7 +51,7 @@ const ShoppingListCategoryItemContent = ({ item, index, isLast, handleNavigateIt
                         }}
                             onPress={() => {
                                 console.log('hello')
-                                handleCompleteItem(item.id_list, item.id_item)
+                                handleCompleteItem(item.id_list, item)
                                 if (item?.is_purchased) {
                                     onUnpurchase()
                                 } else {

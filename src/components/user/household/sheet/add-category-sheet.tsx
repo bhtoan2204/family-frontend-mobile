@@ -16,6 +16,7 @@ import OpenedFolder from 'src/assets/images/household_assets/OpenedFolder.png'
 import Camera from 'src/assets/images/household_assets/Camera.png'
 import { HouseHoldCategoryInterface } from 'src/interface/household/household_category';
 import { addCategories } from 'src/redux/slices/CategorySlice';
+import { handleRestore } from 'src/utils/sheet/func';
 
 interface AddRoomSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -60,8 +61,18 @@ const AddCategorySheet = ({
 
 
 
-    const handleSubmit = async () => {
+    const handleSubmit = React.useCallback(async ({
+        id_family,
+        text,
+        imageUri
+    }: {
+        id_family: number,
+        text: string,
+        imageUri: string
+    }) => {
         try {
+            Keyboard.dismiss();
+            await handleRestore()
             setLoading(true)
             console.log({ id_family, text, imageUri })
             // const newRoomDat = await HouseHoldService.createRoom(id_family, text, imageUri)
@@ -86,11 +97,9 @@ const AddCategorySheet = ({
             setShowError(true)
             setErrorText('Something went wrong')
         }
-        // console.log({ id_family: 1, room_name: text, room_image: image_uri })
-    }
+    }, [])
 
-    const handleTakePhoto = async () => {
-        console.log("Take photo")
+    const handleTakePhoto = React.useCallback(async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status === 'granted') {
             const result = await ImagePicker.launchCameraAsync({
@@ -115,9 +124,9 @@ const AddCategorySheet = ({
         } else {
             alert('Permission to access camera was denied');
         }
-    }
+    }, [])
 
-    const handlePickImage = async () => {
+    const handlePickImage = React.useCallback(async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status === 'granted') {
             const result = await ImagePicker.launchImageLibraryAsync({
@@ -143,7 +152,7 @@ const AddCategorySheet = ({
         else {
             alert('Permission to access camera was denied');
         }
-    }
+    }, [])
 
     return (
         <BottomSheet
@@ -166,9 +175,11 @@ const AddCategorySheet = ({
                     setImageUri('')
                 }
             }}
+            keyboardBehavior='interactive'
+            keyboardBlurBehavior='restore'
 
         >
-            {/* <>
+            <>
                 {
                     loading && <View className='flex-1 absolute w-full h-full bg-white opacity-50 z-10 items-center justify-center'>
                         <View className='items-center justify-center bg-black  rounded-lg'
@@ -181,7 +192,7 @@ const AddCategorySheet = ({
                         </View>
                     </View>
                 }
-            </> */}
+            </>
             <BottomSheetScrollView className='flex-1' automaticallyAdjustKeyboardInsets keyboardShouldPersistTaps='handled'
                 style={{
                     backgroundColor: '#f7f7f7',
@@ -254,15 +265,19 @@ const AddCategorySheet = ({
                         <TouchableOpacity className='items-center rounded-lg justify-center' style={{
                             width: screenWidth * 0.1,
                             height: screenWidth * 0.1,
-                            backgroundColor: text != '' && imageUri != "" ? COLORS.DenimBlue : iOSGrayColors.systemGray6.defaultLight,
+                            backgroundColor: text != '' ? COLORS.DenimBlue : iOSGrayColors.systemGray6.defaultLight,
                         }}
                             onPress={async () => {
-                                await handleSubmit()
+                                await handleSubmit({
+                                    id_family,
+                                    text,
+                                    imageUri
+                                })
                             }}
-                            disabled={text == '' || imageUri == ''}
+                            disabled={text == ''}
                         >
                             <Material name='arrow-right' size={24} color={
-                                text != '' && imageUri != "" ? 'white' : iOSGrayColors.systemGray.defaultDark
+                                text != '' ? 'white' : iOSGrayColors.systemGray.defaultDark
                             }
                             />
                         </TouchableOpacity>

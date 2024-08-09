@@ -13,6 +13,7 @@ interface ShoppingListSliceState {
   shoppingListType: ShoppingListType[];
   shoppingListItemType: ShoppingListItemType[];
   dateSelected: string;
+  loading: boolean;
 }
 
 const initialState: ShoppingListSliceState = {
@@ -20,12 +21,16 @@ const initialState: ShoppingListSliceState = {
   shoppingListType: [],
   shoppingListItemType: [],
   dateSelected: new Date().toISOString(),
+  loading: false,
 };
 
 const shoppingListSlice = createSlice({
   name: 'shoppinglist',
   initialState,
   reducers: {
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
+    },
     setShoppingList: (state, action: PayloadAction<ShoppingList[]>) => {
       state.shoppingList = action.payload;
     },
@@ -78,7 +83,7 @@ const shoppingListSlice = createSlice({
     },
     updatePriceItem: (
       state,
-      action: PayloadAction<{id_item: number; id_list: number; price: string}>,
+      action: PayloadAction<{id_item: number; id_list: number; price: number}>,
     ) => {
       const {id_item, id_list, price} = action.payload;
       const itemIndex = state.shoppingList.findIndex(
@@ -159,6 +164,7 @@ const shoppingListSlice = createSlice({
 });
 
 export const {
+  setLoading,
   setShoppingList,
   setShoppingListItemType,
   setShoppingListType,

@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'src/redux/store';
 import TodoListScreen from 'src/screens/TodoListScreen/TodoList/TodoListScreen';
 import TodoListServices from 'src/services/apiclient/TodoListService';
-import { setTodoList, setTodoListType } from 'src/redux/slices/TodoListSlice';
+import { setLoading, setTodoList, setTodoListType } from 'src/redux/slices/TodoListSlice';
 import TodoListCategoryScreen from 'src/screens/TodoListScreen/TodoListCategory/TodoListCategoryScreen';
 import TodoListCategoryDetailScreen from 'src/screens/TodoListScreen/TodoListCategory/TodoListCategoryDetailScreen';
 
@@ -20,7 +20,6 @@ const TodoListStack = ({ navigation, route }: TodoListStackProps) => {
     const dispatch = useDispatch<AppDispatch>()
 
     const { id_family } = route.params.params!
-    const [loading, setLoading] = React.useState(false)
 
 
     useEffect(() => {
@@ -35,10 +34,12 @@ const TodoListStack = ({ navigation, route }: TodoListStackProps) => {
             console.log('todo list items ', response)
         }
         const fetchAllDatas = async () => {
-            setLoading(true)
+            // setLoading(true)
+            dispatch(setLoading(true))
             await fetchTodoListType()
             await fetchTodoListItem()
-            setLoading(false)
+            dispatch(setLoading(false))
+            // setLoading(false)
         }
         fetchAllDatas()
     }, [])

@@ -17,13 +17,12 @@ import Icon13 from 'src/assets/images/todo_assets/icon/13.png'
 import { TodoListType } from 'src/interface/todo/todo';
 import TodoListServices from 'src/services/apiclient/TodoListService';
 import { addTodoListType } from 'src/redux/slices/TodoListSlice';
+import { addShoppingListType } from 'src/redux/slices/ShoppingListSlice';
 
 interface AddListSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
     id_family: number
     id_calendar?: number
-    // id_checklist_type: number
-    // checklistType: TodoListType
     appearsOnIndex: boolean
     onAddSuccess: (id_category: number) => void
     onAddFailed: () => void
@@ -84,40 +83,23 @@ const AddListSheet = ({
             return
         }
         else {
-            const newTodoListType = await TodoListServices.addTodoListType({
-                id_family: id_family,
-                name: inputName,
-                id_calendar: id_calendar ? id_calendar : 0,
-                icon_url: pickIcon
-            })
-            console.log("newTodoListType", newTodoListType)
-            if (newTodoListType) {
-                bottomSheetRef.current?.close()
-                dispatch(addTodoListType(newTodoListType))
-                onAddSuccess(newTodoListType.id_checklist_type)
-            } else {
-                bottomSheetRef.current?.close()
-                onAddFailed()
-            }
-
-            // const newTodoItem: TodoListItem = {
-            //     id_checklist: Math.floor(Math.random() * 1000) + 1,
-            //     id_checklist_type: id_checklist_type,
-            //     task_name: inputName,
+            // const newTodoListType = await TodoListServices.addTodoListType({
             //     id_family: id_family,
-            //     is_completed: false,
-            //     created_at: new Date().toISOString(),
-            //     updated_at: new Date().toISOString(),
-            //     checklistType: checklistType,
-            //     description: '',
-            //     due_date: new Date().toISOString(),
-            //     is_notified_1_day_before: false,
-            //     is_notified_3_days_before: false,
-            //     is_notified_on_due_date: false
+            //     name: inputName,
+            //     id_calendar: id_calendar ? id_calendar : 0,
+            //     icon_url: pickIcon
+            // })
+            // console.log("newTodoListType", newTodoListType)
+            // if (newTodoListType) {
+            //     bottomSheetRef.current?.close()
+            //     // dispatch(addShoppingListType(newTodoListType))
+            //     onAddSuccess(newTodoListType.id_checklist_type)
+            // } else {
+            //     bottomSheetRef.current?.close()
+            //     onAddFailed()
             // }
-            // dispatch(addTodoList(newTodoItem))
-            // bottomSheetRef.current?.close()
-            // onAddSuccess()
+
+
         }
     }
 

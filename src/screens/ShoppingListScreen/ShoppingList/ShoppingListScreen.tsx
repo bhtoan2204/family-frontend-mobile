@@ -17,15 +17,20 @@ import PharmacyImage from 'src/assets/images/shoppinglist_assets/Pharmacy.png'
 import OtherImage from 'src/assets/images/shoppinglist_assets/Other.png'
 import { useColorScheme } from 'nativewind'
 import { useToast } from 'react-native-toast-notifications'
-import { setDateSelected } from 'src/redux/slices/ShoppingListSlice'
+import { setDateSelected, setLoading, setShoppingList, setShoppingListItemType, setShoppingListType } from 'src/redux/slices/ShoppingListSlice'
 import { ScreenHeight } from '@rneui/base'
+import ShoppingListTypeSkeleton from './skeleton'
+import AddListSheet from 'src/components/user/shopping/sheet/add-list-sheet'
+import BottomSheet from '@gorhom/bottom-sheet'
+import ShoppingListServices from 'src/services/apiclient/ShoppingListServices'
 const screenHeight = Dimensions.get('screen').height;
 
 
 const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCategory }: ShoppingListScreenProps) => {
-    const { id_family } = route.params
+    const { id_family, openSheet, id_calendar } = route.params
     const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
     const [selectDate, setSelectDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
+    const loading = useSelector((state: RootState) => state.shoppinglist).loading
     const shoppingList = useSelector((state: RootState) => state.shoppinglist).shoppingList
     const shoppingListType = useSelector((state: RootState) => state.shoppinglist).shoppingListType
     const shoppingListFiltered = shoppingList.filter((item) => item.id_family === id_family)
@@ -33,15 +38,46 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
     const [key, setKey] = useState(false)
     const dispatch = useDispatch<AppDispatch>()
     const toast = useToast()
-    useEffect(() => {
-        // setColorScheme('dark')
-        // console.log(colorScheme)
-    }, [])
+    const addListBottomSheetRef = React.useRef<BottomSheet>(null)
+
     useEffect(() => {
         setKey((prev) => !prev)
     }, [colorScheme])
 
+    const fetchShoppingList = useCallback(async () => {
 
+        const data = await ShoppingListServices.getShoppingDetail(id_family!)
+        dispatch(setShoppingList(data))
+    }, [])
+    const fetchShoppingListType = useCallback(async () => {
+        const data = await ShoppingListServices.getShoppingListType()
+        dispatch(setShoppingListType(data))
+        console.log('list type data', data)
+    }, [])
+    const fetchItemTypes = useCallback(async () => {
+        const data = await ShoppingListServices.getShoppingItemType()
+        dispatch(setShoppingListItemType(data))
+        console.log('item type data', data)
+    }, [])
+    const fetchDatas = useCallback(async () => {
+        const fetchShoppingList = async () => {
+            const data = await ShoppingListServices.getShoppingDetail(id_family!)
+            dispatch(setShoppingList(data))
+        }
+        const fetchShoppingListType = async () => {
+            const data = await ShoppingListServices.getShoppingListType()
+            dispatch(setShoppingListType(data))
+        }
+        const fetchItemType = async () => {
+            const data = await ShoppingListServices.getShoppingItemType()
+            dispatch(setShoppingListItemType(data))
+        }
+        dispatch(setLoading(true))
+        await fetchShoppingList()
+        await fetchShoppingListType()
+        await fetchItemType()
+        dispatch(setLoading(false))
+    }, [])
     // console.log("gg", shoppingListType)
     // const loadItemsForMonth = (month: any) => {
     //     console.log('trigger items loading');
@@ -56,6 +92,7 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
     // const rowHasChanged = (r1: any, r2: any) => {
     //     return r1.id_calendar !== r2.id_calendar;
     // };
+
     const handleDayPress = (date: any) => {
         if (selectDate === date.dateString) {
             // setSelectDate(new Date); 
@@ -66,14 +103,13 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
 
         }
     };
-    const handleNavigateCategory = (id_category: number) => {
+    const handleNavigateCategory = React.useCallback((id_category: number) => {
         navigation.navigate('ShoppingListCategory', {
             id_family: id_family,
             id_category: id_category,
-            openSheet: false
         })
 
-    }
+    }, [])
 
     const buildDate = React.useCallback((dateString: string) => {
         const date: Date = new Date(dateString);
@@ -143,11 +179,13 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
                             , fontWeight: 'bold'
                         }}
                     >Shopping List</Text>
-                    <View className='flex-1 items-end'>
+                    <TouchableOpacity className='flex-1 items-end' onPress={async () => {
+                        await fetchDatas()
+                    }}>
                         <Material name='refresh' size={25} style={{
                             color: colorScheme === 'light' ? '#2A475E' : 'white',
                         }} />
-                    </View>
+                    </TouchableOpacity>
                 </View>
                 <View className='bg-[#F7F7F7] dark:bg-[#252D3B] rounded-lg'
                     style={{
@@ -173,22 +211,14 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
                         maxDate={'2026-06-10'}
                         disableAllTouchEventsForDisabledDays={true}
                         style={{
-                            // backgroundColor: colorScheme === 'light' ? '#f7f7f7' : COLORS.Rhino,
 
-                            // color: '',
 
 
                         }}
 
-                        // renderHeader={
-                        //     date =>{
-                        //         console.log(date)
-                        //     }
-                        // }
+
                         customHeader={customCalendarHeader}
-                    // disableArrowLeft={true}
-                    // // Disable right arrow. Default = false
-                    // disableArrowRight={true}
+
 
                     />
                 </View>
@@ -198,15 +228,25 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
                         color:
                             colorScheme === 'light' ? COLORS.Rhino : 'white',
                     }}>My shopping list</Text>
+
                     {
-                        shoppingListType.length > 0 && shoppingListType.map((item, index) => {
-                            const total_items = shoppingList.filter((shoppingItem) => shoppingItem.id_shopping_list_type === item.id_shopping_list_type)[0]?.items?.length || 0
-                            return <ShoppingListCategoryItem key={index} id_category={item.id_shopping_list_type} category_name={item.type_name_en} total_items={total_items}
-                                handleNavigateCategory={handleNavigateCategory}
-                                scheme={colorScheme}
-                            />
-                        })
+                        loading ? <>
+                            <ShoppingListTypeSkeleton />
+                            <ShoppingListTypeSkeleton />
+                            <ShoppingListTypeSkeleton />
+                        </> : <>
+                            {
+                                shoppingListType.length > 0 && shoppingListType.map((item, index) => {
+                                    const total_items = shoppingList.filter((shoppingItem) => shoppingItem.id_shopping_list_type === item.id_shopping_list_type)[0]?.items?.length || 0
+                                    return <ShoppingListCategoryItem key={index} id_category={item.id_shopping_list_type} category_name={item.type_name_en} total_items={total_items}
+                                        handleNavigateCategory={handleNavigateCategory}
+                                        scheme={colorScheme}
+                                    />
+                                })
+                            }
+                        </>
                     }
+
                 </View>
             </ScrollView>
             <TouchableOpacity className={`absolute rounded-full  bottom-5 right-5  bg-[#66C0F4] items-center justify-center transition duration-75`} style={{
@@ -220,19 +260,33 @@ const ShoppingListScreen = ({ navigation, route, handleNavigateShoppingListCateg
             >
                 <Material name='plus' size={30} color='white' />
             </TouchableOpacity>
-            {/* <AddListSheet
+            <AddListSheet
                 bottomSheetRef={addListBottomSheetRef}
                 appearsOnIndex={openSheet != null ? openSheet : false}
                 id_family={id_family!}
                 onAddSuccess={(id_category: number) => {
-                    navigation.navigate('TodoListCategory', {
+                    if (id_calendar) {
+                        navigation.setParams({
+                            id_calendar: undefined,
+                            openSheet: false,
+                            id_family: id_family
+                        })
+                    }
+                    toast.show("New list added", {
+                        type: 'success',
+                        duration: 3000,
+                        icon: <Material name='check' size={24} color='white' />
+
+                    })
+                    navigation.navigate('ShoppingListCategory', {
                         id_family: id_family,
                         id_category: id_category
                     })
+
                 }}
                 onAddFailed={() => { }}
                 id_calendar={id_calendar}
-            /> */}
+            />
         </SafeAreaView>
     )
 }
@@ -248,7 +302,7 @@ interface ShoppingListCategoryItemProps {
 const ShoppingListCategoryItem = ({ id_category, category_name, total_items, handleNavigateCategory, scheme }: ShoppingListCategoryItemProps) => {
 
 
-    const getImage = (id_category: number) => {
+    const getImage = React.useCallback((id_category: number) => {
         if (id_category === 1) {
             return GroceryImage
         }
@@ -265,8 +319,8 @@ const ShoppingListCategoryItem = ({ id_category, category_name, total_items, han
             return PharmacyImage
         }
         return OtherImage
-    }
-    const buildTotal = (total_items: number) => {
+    }, [])
+    const buildTotal = React.useCallback((total_items: number) => {
         if (total_items > 1) {
             return `${total_items} items`
         } else if (total_items === 1) {
@@ -274,7 +328,7 @@ const ShoppingListCategoryItem = ({ id_category, category_name, total_items, han
         } else if (total_items === 0) {
             return `No item`
         }
-    }
+    }, [])
 
     return <TouchableOpacity className='flex-row items-center mb-2  ' onPress={() => {
         handleNavigateCategory(id_category)

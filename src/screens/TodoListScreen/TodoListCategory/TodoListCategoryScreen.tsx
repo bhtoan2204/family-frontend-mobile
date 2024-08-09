@@ -1,6 +1,6 @@
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns'
 import React, { useCallback, useEffect, useState } from 'react'
-import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView, Appearance } from 'react-native'
+import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView, Appearance, ActivityIndicator, RefreshControl } from 'react-native'
 import { Agenda, AgendaSchedule, Calendar, CalendarList } from 'react-native-calendars'
 import { useDispatch, useSelector } from 'react-redux'
 import { ShoppingListCategoryScreenProps, TodoListCategoryScreenProps } from 'src/navigation/NavigationTypes'
@@ -38,8 +38,9 @@ import AddItemSheet from 'src/components/user/shopping-todo/sheet/add-item-sheet
 import { categoriesImage } from '../const/image'
 import { TodoListItem } from 'src/interface/todo/todo'
 import { styled, useColorScheme } from "nativewind";
-import { updateDoneTodoList } from 'src/redux/slices/TodoListSlice'
+import { setLoading, setTodoList, setTodoListType, updateDoneTodoList } from 'src/redux/slices/TodoListSlice'
 import { useToast } from 'react-native-toast-notifications'
+import TodoListServices from 'src/services/apiclient/TodoListService'
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -53,24 +54,39 @@ const screenHeight = Dimensions.get('screen').height;
 const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenProps) => {
     const { id_family, id_category } = route.params
     // console.log('id_family', id_family, 'id_category', id_category)
-    const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
 
     const dispatch = useDispatch<AppDispatch>();
     const todoCategories = useSelector((state: RootState) => state.todoList).todoListType
-    const todoListCategoryItems = useSelector((state: RootState) => state.todoList).todoList.filter((item) => item.id_checklist_type === id_category)
+    const todoListCategoryItems = useSelector((state: RootState) => state.todoList).todoListType.find((item) => item.id_checklist_type === id_category)?.checklists
     const todoListType = todoCategories.find(item => item.id_checklist_type == id_category)!
     const addItemBottomSheetRef = React.useRef<BottomSheet>(null)
-    const addCategoryBottomSheetRef = React.useRef<BottomSheet>(null)
-    const { colorScheme, toggleColorScheme } = useColorScheme();
+    const loading = useSelector((state: RootState) => state.todoList).loading
     const toast = useToast()
 
-    const getImage = (id_category: number) => {
-        return categoriesImage[id_category - 1] != undefined ? categoriesImage[id_category - 1] : categoriesImage[9]
-    }
+    const refetchData = useCallback(async () => {
+        const fetchTodoListType = async () => {
+            const response = await TodoListServices.getAllTodoListType(id_family!)
+            console.log('todo list types ', response)
+            dispatch(setTodoListType(response))
+        }
+        const fetchTodoListItem = async () => {
+            const response = await TodoListServices.getAllItemOfFamily(id_family!, 1, 100)
+            dispatch(setTodoList(response))
+            console.log('todo list items ', response)
+        }
+        dispatch(setLoading(true))
+        await fetchTodoListType()
+        await fetchTodoListItem()
+        dispatch(setLoading(false))
+    }, [])
 
-    const getCategoryName = (id_category: number) => {
+    const getImage = React.useCallback((id_category: number) => {
+        return categoriesImage[id_category - 1] != undefined ? categoriesImage[id_category - 1] : categoriesImage[9]
+    }, [])
+
+    const getCategoryName = React.useCallback(() => {
         return todoListType ? todoListType.name_en : "No name found"
-    }
+    }, [todoListType])
 
     const handleNavigateItemDetail = (id_item: number) => {
         console.log('id_item', id_item)
@@ -81,40 +97,70 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
         })
     }
 
-    const handleUpdateComplete = (id_item: number) => {
-        dispatch(updateDoneTodoList({
-            id_item: id_item,
-        }))
-        toast.show('Update successfully', {
-            duration: 2000,
-            icon: <Material name='check' size={24} color={'white'} />,
-            type: 'success',
+    const ApiCall = React.useCallback(async (item: TodoListItem) => {
+        const res = await TodoListServices.updateItem({
+            id_checklist: item.id_checklist,
+            id_checklist_type: id_category,
+            id_family: id_family!,
+            is_completed: !item.is_completed,
         })
-    }
+        if (res) {
+            return true
 
-    const buildEmptyList = () => {
+        } else {
+            return false
+        }
+    }, [])
+
+    const handleUpdateComplete = React.useCallback(async (item: TodoListItem) => {
+        dispatch(updateDoneTodoList({
+            id_checklist: item.id_checklist,
+            id_checklist_type: id_category,
+        }))
+        const res = await ApiCall(item)
+        if (res) {
+            toast.show('Update successfully', {
+                duration: 2000,
+                icon: <Material name='check' size={24} color={'white'} />,
+                type: 'success',
+            })
+        } else {
+            toast.show('Update failed', {
+                duration: 2000,
+                icon: <Material name='close' size={24} color={'white'} />,
+                type: 'error',
+            })
+        }
+
+    }, [])
+
+    const buildEmptyList = React.useCallback(() => {
         return (
             <View className='flex-1 justify-center items-center '>
-                <View className='justify-center items-center mt-[-4%]'>
-                    <View className='mb-4'>
-                        <Image source={EmptyListIcon} style={{
-                            height: screenHeight * 0.2,
-                            width: screenHeight * 0.2,
-                        }} />
+                <ScrollView className='flex-1' showsVerticalScrollIndicator={false} refreshControl={
+                    <RefreshControl refreshing={loading} onRefresh={refetchData} />
+                }>
+                    <View className='justify-center items-center mt-32'>
+                        <View className='mb-4'>
+                            <Image source={EmptyListIcon} style={{
+                                height: screenHeight * 0.2,
+                                width: screenHeight * 0.2,
+                            }} />
+                        </View>
+                        <Text className='text-[#747474] dark:text-[#8D94A5] my-2 font-bold text-lg'>Nothing to buy?</Text>
+                        <Text className='mx-[15%] text-center text-sm text-[#747474] dark:text-[#8D94A5]'>Tap on the button to add product to your shopping list</Text>
                     </View>
-                    <Text className='text-[#747474] dark:text-[#8D94A5] my-2 font-bold text-lg'>Nothing to buy?</Text>
-                    <Text className='mx-[15%] text-center text-sm text-[#747474] dark:text-[#8D94A5]'>Tap on the button to add product to your shopping list</Text>
-                </View>
+                </ScrollView>
             </View>
         )
-    }
+    }, [])
 
-    const buildItems = () => {
+    const buildItems = React.useCallback(() => {
         return (
             <View className='mx-8 my-4 '>
                 <View className='my-2'></View>
                 {
-                    todoListCategoryItems.map((item, index) => {
+                    todoListCategoryItems && todoListCategoryItems.map((item, index) => {
                         return (
                             <React.Fragment key={index}>
                                 <TodoListCategoryItem item={item} handleNavigateItemDetail={handleNavigateItemDetail}
@@ -124,11 +170,9 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
                         )
                     })
                 }
-                {/* <TodoListCategoryItem item={{}} handleNavigateItemDetail={handleNavigateItemDetail} />
-                <TodoListCategoryItem item={{}} handleNavigateItemDetail={handleNavigateItemDetail} /> */}
             </View>
         )
-    }
+    }, [todoListCategoryItems])
 
 
 
@@ -144,17 +188,11 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
                     }}>
                         <Material name='chevron-left' size={35} color={COLORS.Rhino} />
                     </TouchableOpacity>
-                    {/* <Text className='flex-1 text-center text-lg'
-                        style={{ color: COLORS.Rhino, fontWeight: 'bold' }}
-                    >Shopping List</Text> */}
                     <View className='absolute top-[200%] right-[-20] '>
                         <Image source={getImage(id_category)} style={{
                             height: screenHeight * 0.2,
                             width: screenHeight * 0.2,
                             transform: [{ rotate: '-20deg' }]
-
-                            // position: 'absolute',
-                            // right: 0,
                         }} />
                     </View>
                 </View>
@@ -164,7 +202,7 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
                         color: textColors[id_category - 1] != undefined ? textColors[id_category - 1] : textColors[9],
                         fontWeight: '600',
                     }}>{
-                            getCategoryName(id_category)
+                            getCategoryName()
                         }</Text>
                 </View>
             </View>
@@ -183,30 +221,45 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
                 </TouchableOpacity>
                 <View className='bg-white dark:bg-[#0A1220] flex-1 '>
                     {
-                        todoListCategoryItems && todoListCategoryItems.length > 0 ?
-                            <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
-                                <View style={{
-                                }} className='flex-1 py-4 '>
-                                    {/* <View className='my-4'></View> */}
-                                    {
-                                        buildItems()
-                                        // shoppingListInfo.map((item, index) => {
-                                        //     return (
-                                        //         <ShoppingListCategoryItem item={item} handleNavigateItemDetail={handleNavigateItemDetail} />
-
-                                        //     )
-                                        // })
-                                    }
+                        loading ? <>
+                            <View className='flex-1 absolute w-full h-full bg-white dark:bg-[#0A1220] opacity-50 z-10 items-center justify-center'>
+                                <View className='items-center justify-center bg-black  rounded-lg'
+                                    style={{
+                                        width: screenHeight * 0.1,
+                                        height: screenHeight * 0.1,
+                                    }}
+                                >
+                                    <ActivityIndicator size='small' color={'white'} />
                                 </View>
+                            </View>
 
-                            </ScrollView>
-                            : buildEmptyList()
+                        </> : <>
+                            {
+                                todoListCategoryItems && todoListCategoryItems.length > 0 ?
+                                    <ScrollView className='flex-1' showsVerticalScrollIndicator={false}
+                                        refreshControl={
+                                            <RefreshControl refreshing={loading} onRefresh={refetchData} />
+                                        }
+                                    >
+                                        <View style={{
+                                        }} className='flex-1 py-4 '>
+                                            {
+                                                buildItems()
+
+                                            }
+                                        </View>
+
+                                    </ScrollView>
+                                    : buildEmptyList()
+                            }
+                        </>
                     }
 
                 </View>
             </View>
             <AddItemSheet
-                bottomSheetRef={addItemBottomSheetRef} id_family={id_family!} id_checklist_type={id_category!} checklistType={todoListType}
+                bottomSheetRef={addItemBottomSheetRef} id_family={id_family!}
+                id_checklist_type={id_category!} checklistType={todoListType}
                 onAddSuccess={
                     () => {
                         toast.show("New item added", {
@@ -226,7 +279,7 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
                     }
                 }
             />
-            {/* <AddCategorySheet bottomSheetRef={addCategoryBottomSheetRef} id_family={id_family!} /> */}
+
 
         </View>
 
@@ -236,14 +289,13 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
 interface TodoListCategoryItemProps {
     item: TodoListItem
     handleNavigateItemDetail: (id_item: number) => void
-    handleUpdateComplete: (id_item: number) => void
+    handleUpdateComplete: (id_item: TodoListItem) => void
 }
 
 
 const TodoListCategoryItem = ({ item, handleNavigateItemDetail, handleUpdateComplete }: TodoListCategoryItemProps) => {
     return <TouchableOpacity className='flex-row justify-between items-center  w-full  py-4 '
         onPress={() => {
-            // console.log(item.id_item, item.id_list)
             handleNavigateItemDetail(item.id_checklist)
         }}
     >
@@ -256,10 +308,7 @@ const TodoListCategoryItem = ({ item, handleNavigateItemDetail, handleUpdateComp
             }}
                 onPress={() => {
                     console.log('hello')
-                    handleUpdateComplete(item.id_checklist)
-                    // dispatch(updateDoneTodoList({
-                    //     id_item: id_item,
-                    // }))
+                    handleUpdateComplete(item)
                 }}
             >
                 {
@@ -268,7 +317,6 @@ const TodoListCategoryItem = ({ item, handleNavigateItemDetail, handleUpdateComp
             </TouchableOpacity>
             <Text className='text-base text-[#2F2F34] dark:text-white'
                 numberOfLines={1}
-
             >{item.task_name || "name"}</Text>
         </View>
         <View className='justify-end '>

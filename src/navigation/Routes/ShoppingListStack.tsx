@@ -10,7 +10,7 @@ import ShoppingListCategoryDetailScreen from 'src/screens/ShoppingListScreen/Sho
 import ShoppingListServices from 'src/services/apiclient/ShoppingListServices';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'src/redux/store';
-import { setShoppingList, setShoppingListItemType, setShoppingListType } from 'src/redux/slices/ShoppingListSlice';
+import { setLoading, setShoppingList, setShoppingListItemType, setShoppingListType } from 'src/redux/slices/ShoppingListSlice';
 
 
 const Stack = createNativeStackNavigator();
@@ -37,9 +37,14 @@ const ShoppingListStack = ({ navigation, route }: ShoppingListStackProps) => {
             dispatch(setShoppingListItemType(data))
             console.log('item type data', data)
         }
-        fetchShoppingList()
-        fetchShoppingListType()
-        fetchItemType()
+        const fetchDatas = async () => {
+            dispatch(setLoading(true))
+            await fetchShoppingList()
+            await fetchShoppingListType()
+            await fetchItemType()
+            dispatch(setLoading(false))
+        }
+        fetchDatas()
         return () => {
             dispatch(setShoppingList([]))
             dispatch(setShoppingListType([]))

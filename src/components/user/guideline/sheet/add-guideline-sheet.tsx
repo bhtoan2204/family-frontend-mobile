@@ -22,7 +22,9 @@ import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 interface AddItemSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
     id_family: number;
+    id_household_item?: number;
     onAddSuccess: () => void;
+    onAddSuccessCallback?: (id_guide_item: number) => void;
     onAddFailed: () => void;
     appearsOnIndex: boolean;
 }
@@ -34,8 +36,10 @@ const AddGuidelineSheet = ({
     bottomSheetRef,
     id_family,
     appearsOnIndex,
+    id_household_item,
     onAddSuccess,
-    onAddFailed
+    onAddFailed,
+    onAddSuccessCallback
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
 
@@ -81,12 +85,18 @@ const AddGuidelineSheet = ({
         )
 
         try {
-            const newGuildline = await GuideLineService.addGuildLine(id_family!, inputName, inputDescription)
+            let id_household = id_household_item ? id_household_item : null
+            const newGuildline = await GuideLineService.addGuildLine(id_family!, inputName, inputDescription, id_household)
             console.log(newGuildline)
             if (newGuildline) {
                 dispatch(addGuideline(newGuildline))
                 bottomSheetRef.current?.close()
+
                 onAddSuccess()
+                if (onAddSuccessCallback) {
+                    console.log(newGuildline.id_guide_item)
+                    onAddSuccessCallback(newGuildline.id_guide_item)
+                }
             } else {
                 setShowError(true)
                 setErrorText('Failed to add new guideline')

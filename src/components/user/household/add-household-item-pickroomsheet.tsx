@@ -32,6 +32,8 @@ const AddHouseHoldItemPickRoomSheet = ({
         []
     );
     const [pickRoom, setPickRoom] = React.useState<number>(room)
+    const [key, setKey] = React.useState<boolean>(false)
+
     return (
         <BottomSheet
             ref={refRBSheet}
@@ -51,6 +53,9 @@ const AddHouseHoldItemPickRoomSheet = ({
                     if (pickRoom !== -1) {
                         setPickRoom(room)
                     }
+                    setKey(!key)
+                } else {
+                    setKey(!key)
                 }
             }}
 
@@ -82,7 +87,15 @@ const AddHouseHoldItemPickRoomSheet = ({
                 <BottomSheetScrollView snapToInterval={Dimensions.get('screen').width} showsHorizontalScrollIndicator={false} contentContainerStyle={{ minHeight: '100%' }}>
                     <View className='mt-5'>
 
-                        <ItemItems data={roomsData || []} addRoomSheetRef={addRoomSheetRef} onNavigateCreateRoom={onNavigateCreateRoom} pickRoom={pickRoom} setPickRoom={setPickRoom} onSetRoom={onSetRoom} />
+                        <ItemItems
+                            data={roomsData || []}
+                            addRoomSheetRef={addRoomSheetRef}
+                            onNavigateCreateRoom={onNavigateCreateRoom}
+                            pickRoom={pickRoom}
+                            setPickRoom={setPickRoom}
+                            onSetRoom={onSetRoom}
+                            k={key}
+                        />
 
                     </View>
                 </BottomSheetScrollView >
@@ -101,10 +114,11 @@ interface ItemItemsProps {
     pickRoom: number
     setPickRoom: (room: number) => void
     onSetRoom: (room: number) => void
+    k: boolean
     // handleNavigateHouseHoldDetail: (id_item: number) => void;
 }
 
-const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setPickRoom, onSetRoom }: ItemItemsProps) => {
+const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setPickRoom, onSetRoom, k }: ItemItemsProps) => {
     const addRoomObj: RoomInterface = {
         room_name: 'Add room',
         room_image: "",
@@ -114,7 +128,7 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
         updated_at: "",
     }
     const newData = [addRoomObj, ...data]
-    const renderItem = (item: RoomInterface, index: number) => {
+    const renderItem2 = React.useCallback((item: RoomInterface, index: number) => {
         return (
             item.id_room == -1 ? <>
                 <View className='items-center ' style={{
@@ -191,18 +205,102 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                 </View>
             </>
         )
-    }
+    }, [])
+    // const renderItem = (item: RoomInterface, index: number) => {
+    //     return (
+    //         item.id_room == -1 ? <>
+    //             <View className='items-center ' style={{
+    //                 // flex: 1,
+    //                 marginRight: index % 2 == 0 ? 10 : 0,
+    //                 marginLeft: index % 2 == 1 ? 10 : 0,
+    //                 marginBottom: 20,
+    //                 borderColor: iOSGrayColors.systemGray5.defaultLight,
+    //             }}>
+    //                 <TouchableOpacity onPress={() => {
+    //                     console.log('navigate')
+    //                     addRoomSheetRef?.current?.expand()
+    //                 }}>
+    //                     <View className='items-center justify-center' style={{
+    //                         // width: screenWidth * 0.3,
+    //                         backgroundColor: '#e1e1e1',
+    //                         width: '100%',
+    //                         height: undefined,
+    //                         borderRadius: 15,
+    //                         // height: screenHeight * 0.2,
+    //                         aspectRatio: 1,
+    //                     }}>
+    //                         <Material name='plus' size={screenWidth * 0.12} color={iOSGrayColors.systemGray.defaultLight} style={{
+    //                             textAlign: 'center',
+
+    //                         }} />
+    //                     </View>
+    //                     <Text style={{
+    //                         textAlign: 'center',
+    //                         color: COLORS.Rhino,
+    //                         fontSize: 16,
+    //                         fontWeight: 500,
+    //                         marginTop: 10,
+    //                     }}>Add new room</Text>
+    //                 </TouchableOpacity>
+    //             </View>
+    //         </> : <>
+    //             <View className='items-center ' style={{
+    //                 // flex: 1,
+    //                 marginRight: index % 2 == 0 ? 10 : 0,
+    //                 marginLeft: index % 2 == 1 ? 10 : 0,
+    //                 marginBottom: 20,
+    //                 borderColor: iOSGrayColors.systemGray5.defaultLight,
+    //             }}>
+    //                 <TouchableOpacity onPress={() => {
+    //                     setPickRoom(item.id_room)
+    //                     onSetRoom(item.id_room)
+    //                     addRoomSheetRef?.current?.close()
+    //                     // handleNavigateHouseHoldDetail(item.id_household_item)
+    //                 }}>
+    //                     <Image
+    //                         source={item.room_image ? { uri: item.room_image } : gradients_list[index - 1 % gradients_list.length]}
+    //                         style={{
+    //                             // width: screenWidth * 0.3,
+    //                             width: '100%',
+    //                             height: undefined,
+    //                             borderRadius: 15,
+    //                             // height: screenHeight * 0.2,
+    //                             aspectRatio: 1,
+    //                         }}
+    //                     />
+    //                     <Text style={{
+    //                         textAlign: 'center',
+    //                         color: item.id_room == pickRoom ? iOSColors.systemBlue.defaultLight : COLORS.Rhino,
+    //                         fontSize: 16,
+    //                         fontWeight: 500,
+    //                         marginTop: 10,
+
+    //                     }}>{item.room_name} {
+    //                             item.id_room == pickRoom ? <Material name='check' size={20} color={iOSColors.systemBlue.defaultLight} /> : null
+
+    //                         }</Text>
+    //                 </TouchableOpacity>
+    //             </View>
+    //         </>
+    //     )
+    // }
     return (
         <View className=' items-center flex-1  mx-[10%]'>
             <FlatGrid
+                key={k.toString()}
                 itemDimension={screenWidth * 0.35}
                 maxItemsPerRow={2}
                 data={newData}
 
                 spacing={0}
 
-                renderItem={({ item, index }) => renderItem(item, index)}
+                renderItem={({ item, index }) => renderItem2(item, index)}
                 scrollEnabled={false}
+                removeClippedSubviews={true}
+                initialNumToRender={2}
+                maxToRenderPerBatch={4}
+                updateCellsBatchingPeriod={100}
+                windowSize={7}
             />
         </View>
     )

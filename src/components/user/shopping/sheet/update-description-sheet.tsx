@@ -26,6 +26,7 @@ import { addShoppingList, addShoppingListItem, updateDescriptionItem } from 'src
 import { to_vietnamese } from 'src/utils/currency-str';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { handleRestore } from 'src/utils/sheet/func';
+import ShoppingListServices from 'src/services/apiclient/ShoppingListServices';
 
 
 
@@ -58,12 +59,8 @@ const UpdateDescriptionSheet = ({
 
     const [errorText, setErrorText] = React.useState('')
     const [showError, setShowError] = React.useState(false)
+    const [inputDescription, setInputDescription] = React.useState(description != "" ? description : '')
 
-
-    const [inputDescription, setInputDescription] = React.useState('')
-
-    const shoppingList = useSelector((state: RootState) => state.shoppinglist).shoppingList.filter(list => list.id_shopping_list_type == id_shopping_list_type)
-    const listType = useSelector((state: RootState) => state.shoppinglist).shoppingListType.find(listType => listType.id_shopping_list_type == id_shopping_list_type)
 
     const [isKeyboardFocused, setIsKeyboardFocused] = React.useState(false)
     const isDarkMode = useSelector(getIsDarkMode)
@@ -78,19 +75,40 @@ const UpdateDescriptionSheet = ({
 
     }, [showError])
 
+    useEffect(() => {
+        setInputDescription(description)
+    }, [description])
 
-    const handleSubmit = async () => {
+    const handleSubmitApi = React.useCallback(async (desc: string) => {
+        const res = await ShoppingListServices.updateShoppingListItem({
+            id_family: id_family,
+            id_list: id_list,
+            id_item: id_item,
+            description: desc,
+
+        })
+        if (res == true) {
+            onUpdateSuccess()
+        } else {
+            // onUpdateFailed()
+        }
+    }, [])
+
+    const handleSubmit = React.useCallback(async (desc: string) => {
+
         Keyboard.dismiss()
         await handleRestore();
-        //call api
         dispatch(updateDescriptionItem({
             id_list: id_list,
             id_item: id_item,
-            description: inputDescription
+            description: desc
         }))
         bottomSheetRef.current?.close()
-        onUpdateSuccess()
-    }
+        //call api
+        await handleSubmitApi(desc)
+
+        // onUpdateSuccess()
+    }, [])
 
     const renderBackdrop = React.useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} pressBehavior={
@@ -98,6 +116,8 @@ const UpdateDescriptionSheet = ({
         } />,
         []
     );
+
+
 
     const buildInputDescription = () => {
         return <View>
@@ -200,7 +220,7 @@ const UpdateDescriptionSheet = ({
                                     // await handleSubmit()
                                     // setSelectDate(new Date)
                                     // bottomSheetRef.current?.snapTo(0)
-                                    handleSubmit()
+                                    await handleSubmit(inputDescription)
                                 }}
                             >
                                 <Text className='text-white text-base font-semibold'>Save</Text>

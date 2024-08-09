@@ -26,6 +26,7 @@ import { addShoppingList, addShoppingListItem, updatePriceItem } from 'src/redux
 import { to_vietnamese } from 'src/utils/currency-str';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { handleRestore } from 'src/utils/sheet/func';
+import ShoppingListServices from 'src/services/apiclient/ShoppingListServices';
 
 
 
@@ -60,14 +61,12 @@ const UpdatePriceSheet = ({
     const [showError, setShowError] = React.useState(false)
 
 
-    const [inputPrice, setInputPrice] = React.useState<number>(price )
+    const [inputPrice, setInputPrice] = React.useState<number>(price)
 
-
-    const shoppingList = useSelector((state: RootState) => state.shoppinglist).shoppingList.filter(list => list.id_shopping_list_type == id_shopping_list_type)
-    const listType = useSelector((state: RootState) => state.shoppinglist).shoppingListType.find(listType => listType.id_shopping_list_type == id_shopping_list_type)
 
     const [isKeyboardFocused, setIsKeyboardFocused] = React.useState(false)
     const isDarkMode = useSelector(getIsDarkMode)
+
     useEffect(() => {
         if (showError) {
             setTimeout(() => {
@@ -78,7 +77,9 @@ const UpdatePriceSheet = ({
 
     }, [showError])
 
-
+    useEffect(() => {
+        setInputPrice(price)
+    }, [price])
 
     const renderBackdrop = React.useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} pressBehavior={
@@ -87,9 +88,10 @@ const UpdatePriceSheet = ({
         []
     );
 
-    const Capitalize = (str: string) => {
+    const Capitalize = React.useCallback((str: string) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
-    }
+    }, [])
+
 
 
     const buildInputPrice = () => {
@@ -145,17 +147,32 @@ const UpdatePriceSheet = ({
         </View>
     }
 
-    const handleSubmit = async () => {
+    const handleSubmitApi = React.useCallback(async (priceInput: number) => {
+        const res = await ShoppingListServices.updateShoppingListItem({
+            id_family: id_family,
+            id_list: id_list,
+            id_item: id_item,
+            price: priceInput,
+
+        })
+        if (res == true) {
+            onUpdateSuccess()
+        } else {
+            // onUpdateFailed()
+        }
+    }, [])
+
+    const handleSubmit = React.useCallback(async (priceInput: number) => {
         Keyboard.dismiss()
         await handleRestore();
         dispatch(updatePriceItem({
             id_list: id_list,
             id_item: id_item,
-            price: (inputPrice).toString(),
+            price: (priceInput),
         }))
         bottomSheetRef.current?.close()
-        onUpdateSuccess()
-    }
+        await handleSubmitApi(priceInput)
+    }, [])
 
     return (
         <BottomSheet
@@ -224,7 +241,7 @@ const UpdatePriceSheet = ({
                                     // await handleSubmit()
                                     // setSelectDate(new Date)
                                     // bottomSheetRef.current?.snapTo(0)
-                                    handleSubmit()
+                                    handleSubmit(inputPrice)
                                 }}
                             >
                                 <Text className='text-white text-base font-semibold'>Save</Text>

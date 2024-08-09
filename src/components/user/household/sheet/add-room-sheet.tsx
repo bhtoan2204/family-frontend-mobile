@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, Keyboard, Dimensions, Image, TouchableOpacity,  ActivityIndicator, ImageBackground } from 'react-native'
+import { View, Text, Keyboard, Dimensions, Image, TouchableOpacity, ActivityIndicator, ImageBackground } from 'react-native'
 import { COLORS } from 'src/constants'
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput, } from '@gorhom/bottom-sheet';
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
@@ -15,6 +15,7 @@ import { addRoom } from 'src/redux/slices/RoomSlice';
 import NewRoomImageSheet from 'src/assets/images/household_assets/new_room_image_sheet.png'
 import Camera from 'src/assets/images/household_assets/Camera.png'
 import Room2 from 'src/assets/images/household_assets/Room_2.png'
+import { handleRestore } from 'src/utils/sheet/func';
 
 interface AddRoomSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -66,8 +67,18 @@ const AddRoomSheet = ({
 
 
 
-    const handleSubmit = async () => {
+    const handleSubmit = React.useCallback(async ({
+        id_family,
+        text,
+        imageUri
+    }: {
+        id_family: number,
+        text: string,
+        imageUri: string
+    }) => {
         try {
+            Keyboard.dismiss();
+            await handleRestore()
             setLoading(true)
             console.log({ id_family, text, imageUri })
             const newRoomDat = await HouseHoldService.createRoom(id_family, text, imageUri)
@@ -87,11 +98,9 @@ const AddRoomSheet = ({
             setShowError(true)
             setErrorText('Something went wrong')
         }
-        // console.log({ id_family: 1, room_name: text, room_image: image_uri })
-    }
+    }, [])
 
-    const handleTakePhoto = async () => {
-        console.log("Take photo")
+    const handleTakePhoto = React.useCallback(async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status === 'granted') {
             const result = await ImagePicker.launchCameraAsync({
@@ -116,9 +125,9 @@ const AddRoomSheet = ({
         } else {
             alert('Permission to access camera was denied');
         }
-    }
+    }, [])
 
-    const handlePickImage = async () => {
+    const handlePickImage = React.useCallback(async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status === 'granted') {
             const result = await ImagePicker.launchImageLibraryAsync({
@@ -144,7 +153,10 @@ const AddRoomSheet = ({
         else {
             alert('Permission to access camera was denied');
         }
-    }
+    }, [])
+    // const handlePickImage = async () => {
+
+    // }
 
     return (
         <BottomSheet
@@ -168,6 +180,8 @@ const AddRoomSheet = ({
                     setStep(0)
                 }
             }}
+            keyboardBehavior='interactive'
+            keyboardBlurBehavior='restore'
 
         >
             <>
@@ -260,7 +274,11 @@ const AddRoomSheet = ({
                             backgroundColor: text != '' ? COLORS.DenimBlue : iOSGrayColors.systemGray6.defaultLight,
                         }}
                             onPress={async () => {
-                                await handleSubmit()
+                                await handleSubmit({
+                                    id_family,
+                                    text,
+                                    imageUri
+                                })
                             }}
                         >
                             <Material name='arrow-right' size={24} color={
