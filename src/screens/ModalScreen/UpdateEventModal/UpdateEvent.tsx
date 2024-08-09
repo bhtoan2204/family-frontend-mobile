@@ -208,21 +208,12 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
         eventDetails2.recurrence_rule,
       );
 
-      // Alert.alert('Inform', 'Successfully', [
-      //   {
-      //     text: 'OK',
-      //     onPress: () => {
-      //       navigation.goBack();
-      //     },
-      //   },
-      // ]);
+      await dispatch(addEvent(message1));
 
-      dispatch(addEvent(message1));
+      await dispatch(deleteEvent(message2.id_calendar));
+      await dispatch(addEvent(message2));
 
-      dispatch(deleteEvent(message2.id_calendar));
-      dispatch(addEvent(message2));
-
-      dispatch(setSelectedEvent(message1));
+      await dispatch(setSelectedEvent(message1));
 
       setSelectedDate(
         moment(new Date(message1.time_start)).format('YYYY-MM-DD'),
@@ -790,9 +781,9 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
 
           <ColorPicker
             navigation={navigation}
+            id_Family={id_family}
             selectedColorIndex={selectedColorIndex}
             setSelectedColorIndex={setSelectedColorIndex}
-            setColor={setColor}
             setEventCategory={setEventCategory}
           />
           <View style={[styles.formAction, {paddingVertical: 10}]}>

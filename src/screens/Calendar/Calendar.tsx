@@ -173,9 +173,15 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
       startDate.getFullYear() === endDate.getFullYear();
 
     return (
-      <TouchableOpacity onPress={() => handlePressEvent(item)}>
-        <View style={[styles.agendaItem, {backgroundColor}]}>
-          <Text style={[styles.agendaItemText, {color: textColor}]}>
+      <TouchableOpacity
+        onPress={() => handlePressEvent(item)}
+        style={{backgroundColor: color.background}}>
+        <View style={[styles.agendaItem, {backgroundColor: `${item.color}70`}]}>
+          <Text
+            style={[
+              styles.agendaItemText,
+              {color: item.color !== 'white' ? 'white' : 'black'},
+            ]}>
             {item.title}
           </Text>
           {isAllDay ? (

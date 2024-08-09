@@ -34,6 +34,7 @@ const ColorPicker = ({
     const fetchData = async () => {
       try {
         const result = await CalendarServices.getAllCategoryEvent(id_Family);
+        console.log(result);
         setAvailableColors(result);
       } catch (error) {
         console.log('Error fetching colors:', error);
@@ -53,6 +54,7 @@ const ColorPicker = ({
   }, [selectedColorIndex]);
 
   const handleColorSelect = (index: number, item: CategoryEvent) => {
+    console.log(item.id_category_event);
     setEventCategory(item);
     setSelectedColorIndex(selectedColorIndex === index ? null : index);
   };

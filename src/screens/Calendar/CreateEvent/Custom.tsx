@@ -246,7 +246,7 @@ const CustomRepeatScreen = ({isVisible, onClose, onSave}) => {
             {backgroundColor: color.background},
           ]}>
           <Text style={[styles.modalTitle, {color: color.text}]}>
-            Custom Repeat
+            {translate('Custom Repeat')}
           </Text>
 
           <View style={[styles.container1, {backgroundColor: color.white}]}>
@@ -311,7 +311,7 @@ const CustomRepeatScreen = ({isVisible, onClose, onSave}) => {
                 {translate('Every')}
               </Text>
               <Text style={[styles.label, {color: color.text}]}>
-                {number} {translate(getUnitLabel())}
+                {number} {getUnitLabel()}
               </Text>
             </TouchableOpacity>
 
@@ -331,7 +331,7 @@ const CustomRepeatScreen = ({isVisible, onClose, onSave}) => {
                   ))}
                 </Picker>
                 <Text style={[styles.unitLabel, {color: color.textSubdued}]}>
-                  {translate(getUnitLabel())}
+                  {getUnitLabel()}
                 </Text>
               </View>
             )}
