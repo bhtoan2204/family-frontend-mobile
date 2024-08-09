@@ -49,7 +49,7 @@ const ShoppingListPickCategorySheet = ({
     const [pickCategory, setPickCategory] = React.useState<number>(category)
     const addRoomSheetRef = useRef<BottomSheet>(null)
     const isDarkMode = useSelector(getIsDarkMode)
-
+    const [key, setKey] = React.useState(false)
     return (
         <BottomSheet
             ref={refRBSheet}
@@ -74,6 +74,9 @@ const ShoppingListPickCategorySheet = ({
                     if (pickCategory === -1) {
                         setPickCategory(-1)
                     }
+                    setKey(prev => !prev)
+                } else {
+                    setKey(prev => !prev)
                 }
             }}
         >
@@ -107,6 +110,7 @@ const ShoppingListPickCategorySheet = ({
                         <ItemItems
                             data={categories} addRoomSheetRef={addRoomSheetRef} onNavigateCreateRoom={onNavigateCreateCategory} pickRoom={pickCategory} setPickCategory={setPickCategory} onSetCategory={onSetCategory}
                             isDarkMode={isDarkMode}
+                            k={key}
                         />
 
                     </View>
@@ -127,10 +131,11 @@ interface ItemItemsProps {
     setPickCategory: (id: number) => void
     onSetCategory: (id: number) => void
     isDarkMode: boolean
+    k: boolean
     // handleNavigateHouseHoldDetail: (id_item: number) => void;
 }
 
-const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setPickCategory, onSetCategory, isDarkMode }: ItemItemsProps) => {
+const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setPickCategory, onSetCategory, isDarkMode, k }: ItemItemsProps) => {
     // const addRoomObj: ShoppingListItemType = {
     //     category_image: "",
     //     category_name: "",
@@ -226,14 +231,18 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
     return (
         <View className=' items-center flex-1  mx-[10%]'>
             <FlatGrid
+                key={k.toString()}
                 itemDimension={screenWidth * 0.35}
                 maxItemsPerRow={2}
                 data={data}
-
                 spacing={0}
-
                 renderItem={({ item, index }) => renderItem(item, index)}
                 scrollEnabled={false}
+                removeClippedSubviews={true}
+                initialNumToRender={2}
+                maxToRenderPerBatch={4}
+                updateCellsBatchingPeriod={100}
+                windowSize={7}
             />
         </View>
     )

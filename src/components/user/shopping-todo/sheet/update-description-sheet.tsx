@@ -28,6 +28,7 @@ import { updateDescription, updateDateTodoList } from 'src/redux/slices/TodoList
 import { to_vietnamese } from 'src/utils/currency-str';
 import { handleRestore } from 'src/utils/sheet/func';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import TodoListServices from 'src/services/apiclient/TodoListService';
 
 
 
@@ -36,6 +37,7 @@ interface AddItemSheetProps {
     id_family: number
     description: string
     id_item: number
+    id_list: number
     onUpdateSuccess: () => void
     onUpdateFailed: () => void
 }
@@ -48,6 +50,7 @@ const UpdateDescriptionSheet = ({
     id_family,
     description,
     id_item,
+    id_list,
     onUpdateSuccess,
     onUpdateFailed
 }: AddItemSheetProps) => {
@@ -74,23 +77,36 @@ const UpdateDescriptionSheet = ({
 
     }, [showError])
 
+    useEffect(() => {
+        setInputDescription(description)
+    }, [description])
 
-    const handleSubmit = async () => {
-        // dispatch(updateDescriptionItem({
-        //     id_list: id_list,
-        //     id_item: id_item,
-        //     description: inputDescription
-        // }))
+    const handleSubmitApi = React.useCallback(async (description: string) => {
+        Keyboard.dismiss()
+        const res = await TodoListServices.updateItem({
+            id_family: id_family,
+            id_checklist_type: id_list,
+            id_checklist: id_item,
+            description: description,
+        })
+        if (res == true) {
+            onUpdateSuccess()
+        } else {
+            onUpdateFailed()
+        }
+    }, [])
+    const handleSubmit = React.useCallback(async (description: string) => {
         Keyboard.dismiss()
         await handleRestore()
         dispatch(updateDescription({
-            id_item: id_item,
-            description: inputDescription
+            id_checklist: id_item,
+            id_checklist_type: id_list,
+            description: description
         }))
+        handleSubmitApi(description)
 
         bottomSheetRef.current?.close()
-        onUpdateSuccess()
-    }
+    }, [])
 
     const renderBackdrop = React.useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} pressBehavior={
@@ -99,7 +115,7 @@ const UpdateDescriptionSheet = ({
         []
     );
 
-    const buildInputDescription = () => {
+    const buildInputDescription = React.useCallback(() => {
         return <View>
 
             <BottomSheetTextInput
@@ -129,11 +145,8 @@ const UpdateDescriptionSheet = ({
                     color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
                 }}
             />
-
-
-
         </View>
-    }
+    }, [inputDescription, isDarkMode])
 
     return (
         <BottomSheet
@@ -155,8 +168,6 @@ const UpdateDescriptionSheet = ({
             }}
             onChange={(index) => {
                 if (index == -1) {
-
-
                 }
             }}
             keyboardBehavior="interactive"
@@ -197,7 +208,7 @@ const UpdateDescriptionSheet = ({
                                     // await handleSubmit()
                                     // setSelectDate(new Date)
                                     // bottomSheetRef.current?.snapTo(0)
-                                    handleSubmit()
+                                    await handleSubmit(inputDescription)
                                 }}
                             >
                                 <Text className='text-white text-base font-semibold'>Save</Text>

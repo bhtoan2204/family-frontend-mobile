@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
 import { View, Text, ScrollView, RefreshControl, Keyboard, Dimensions, Image, TouchableOpacity, TextInput, ActivityIndicator, KeyboardAvoidingView, Platform, StyleSheet, ImageBackground } from 'react-native'
 import { COLORS } from 'src/constants'
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
@@ -38,7 +38,6 @@ interface AddItemSheetProps {
     pickedCategory: number
     categories: ShoppingListItemType[],
     id_shopping_list_type: number,
-    appearOnIndex: boolean,
     onAddSuccess: () => void
     onAddFailed: () => void
 }
@@ -53,7 +52,6 @@ const AddItemSheet = ({
     pickedCategory,
     categories,
     id_shopping_list_type,
-    appearOnIndex,
     onAddSuccess,
     onAddFailed
 
@@ -92,8 +90,8 @@ const AddItemSheet = ({
         } />,
         []
     );
-    
-    const addItem = async (id_list: number) => {
+
+    const addItem = useCallback(async (id_list: number) => {
         try {
             const res = await ShoppingListServices.createShoppingListItem({
                 id_family: id_family,
@@ -134,9 +132,9 @@ const AddItemSheet = ({
             console.error('Error adding item:', error);
             onAddFailed();
         }
-    };
+    }, [id_family, pickedCategory, householdName, dispatch, categories, onAddFailed]);
 
-    const createAndAddToNewList = async () => {
+    const createAndAddToNewList = useCallback(async () => {
         try {
             const newList = await ShoppingListServices.createShoppingList({
                 id_family: id_family,
@@ -172,20 +170,21 @@ const AddItemSheet = ({
         } finally {
             // bottomSheetRef.current?.close();
         }
-    };
+    }, [id_family, id_shopping_list_type, dispatch, listType, addItem, onAddSuccess, onAddFailed]);
 
-    const addToExistingList = async (id_list: number) => {
+    const addToExistingList = useCallback(async (id_list: number) => {
         try {
-          await addItem(id_list);
-          onAddSuccess();
+            await addItem(id_list);
+            onAddSuccess();
         } catch (error) {
-          console.error('Error adding to existing list:', error);
-          onAddFailed();
+            console.error('Error adding to existing list:', error);
+            onAddFailed();
         } finally {
-        //   bottomSheetRef.current?.close();
+            //   bottomSheetRef.current?.close();
         }
-      };
-    const handleSubmit = async () => {
+    }, [addItem, onAddSuccess, onAddFailed]);
+
+    const handleSubmit = useCallback(async () => {
         Keyboard.dismiss()
         await handleRestore()
         if (householdName == '' || pickedCategory == -1) {
@@ -202,22 +201,23 @@ const AddItemSheet = ({
         }
         setLoading(false)
         bottomSheetRef.current?.close()
-    }
-    const onSetName = (name: string) => {
-        setHouseholdName(name)
-    }
+    }, [householdName, pickedCategory, shoppingList, createAndAddToNewList, addToExistingList, bottomSheetRef]);
 
-    const getCategoryName = (id_category: number) => {
+    const onSetName = useCallback((name: string) => {
+        setHouseholdName(name)
+    }, []);
+
+    const getCategoryName = useCallback((id_category: number) => {
         const category = categories.find(category => category.id_item_type == id_category)
         return category?.item_type_name_en
-    }
+    }, [categories]);
 
 
 
     return (
         <BottomSheet
             ref={bottomSheetRef}
-            index={appearOnIndex ? 0 : -1}
+            index={-1}
             enableOverDrag={true}
             enablePanDownToClose={loading ? false : true}
             snapPoints={snapPoints}

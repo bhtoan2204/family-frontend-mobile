@@ -6,6 +6,7 @@ const GuildlineUrl = {
   updateStepGuildLine: '/api/v1/guideline/updateStep',
   deleteGuideline: '/api/v1/guideline/deleteGuideline',
   getSharedGuideline: '/api/v1/guideline/getSharedGuideline',
-  getSharedGuidelineDetail: '/api/v1/guideline/getSharedGuidelineById',// /{id_guideline}
+  getSharedGuidelineDetail: '/api/v1/guideline/getSharedGuidelineById', // /{id_guideline}
+  shareGuideline: '/api/v1/guideline/markShared',
 };
 export default GuildlineUrl;

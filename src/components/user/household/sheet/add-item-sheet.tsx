@@ -19,6 +19,8 @@ import { HouseHoldCategoryInterface } from 'src/interface/household/household_ca
 import { HouseHoldItemInterface } from 'src/interface/household/household_item';
 import { addHouseholdItem } from 'src/redux/slices/HouseHoldSlice';
 import HouseHoldService from 'src/services/apiclient/HouseHoldService';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import { handleRestore } from 'src/utils/sheet/func';
 
 interface AddRoomSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -60,17 +62,10 @@ const AddItemSheet = ({
     const [showError, setShowError] = React.useState(false)
 
     const [householdName, setHouseholdName] = React.useState('')
-    // const [householdCategory, setHouseholdCategory] = React.useState(
-    //     addItemType == 0 ? -1 : addItemType == 1 ? pickedCategory : -1)
-    // const [householdRoom, setHouseholdRoom] = React.useState(
-    //     addItemType == 0 ? -1 : addItemType == 2 ? pickedRoom : -1
-    // )
     const [householdCategory, setHouseholdCategory] = React.useState(-1)
     const [householdRoom, setHouseholdRoom] = React.useState(-1)
     const [imageUri, setImageUri] = React.useState('')
-
-    // const rooms = useSelector((state: RootState) => state.room)
-    // const categories = useSelector((state: RootState) => state.category)
+    const isDarkMode = useSelector(getIsDarkMode)
 
     const pickImageSheetRef = useRef<any>(null)
 
@@ -106,8 +101,7 @@ const AddItemSheet = ({
         []
     );
 
-    const handleTakePhoto = async () => {
-        console.log("Take photo")
+    const handleTakePhoto = React.useCallback(async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status === 'granted') {
             const result = await ImagePicker.launchCameraAsync({
@@ -132,9 +126,9 @@ const AddItemSheet = ({
         } else {
             alert('Permission to access camera was denied');
         }
-    }
+    }, [])
 
-    const handlePickImage = async () => {
+    const handlePickImage = React.useCallback(async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status === 'granted') {
             const result = await ImagePicker.launchImageLibraryAsync({
@@ -160,17 +154,18 @@ const AddItemSheet = ({
         else {
             alert('Permission to access camera was denied');
         }
-    }
+    }, [])
 
-    const handleSubmit = async () => {
+    const handleSubmit = React.useCallback(async (
+        id_family: number,
+        imageUri: string,
+        householdName: string,
+        pickedCategory: number,
+        pickedRoom: number,
+    ) => {
         try {
-            console.log(
-                id_family,
-                householdName,
-                pickedCategory,
-                pickedRoom,
-                imageUri,
-            )
+            Keyboard.dismiss()
+            await handleRestore()
             const data = await HouseHoldService.createHouseholdItem(id_family, imageUri, householdName, pickedCategory, "", pickedRoom)
             if (data) {
                 const newItem: HouseHoldItemInterface = {
@@ -191,30 +186,27 @@ const AddItemSheet = ({
                 bottomSheetRef.current?.close()
 
             }
-
-
-            // }
         } catch (error) {
             console.log(error)
             setLoading(false)
             setShowError(true)
             setErrorText('Something went wrong')
         }
-        // console.log({ id_family: 1, room_name: text, room_image: image_uri })
-    }
-    const onSetName = (name: string) => {
+    }, [])
+
+    const onSetName = React.useCallback((name: string) => {
         setHouseholdName(name)
-    }
+    }, [])
 
-
-    const findRoomText = (id: number) => {
+    const findRoomText = React.useCallback((id: number) => {
         return rooms.find((room) => room.id_room === id)?.room_name
-    }
-    const findCategoryText = (id: number) => {
-        return categories.find((category) => category.id_household_item_category === id)?.category_name
-    }
+    }, [rooms])
 
-    const buildPickCategory = () => {
+    const findCategoryText = React.useCallback((id: number) => {
+        return categories.find((category) => category.id_household_item_category === id)?.category_name
+    }, [categories])
+
+    const buildPickCategory = React.useCallback(() => {
         return <TouchableOpacity className=' bg-white  mt-3 justify-center rounded-lg  ' style={{
             backgroundColor: '#f5f5f5',
             borderWidth: 1.4,
@@ -248,10 +240,15 @@ const AddItemSheet = ({
                 </View>
             </View>
         </TouchableOpacity>
-    }
+    }, [
+        pickCategorySheetRef,
+        pickedCategory,
+        findCategoryText,
+        isDarkMode
+    ])
 
-    const buildPickRoom = () => {
-        return <TouchableOpacity className=' bg-white  mt-3 justify-center rounded-lg  ' style={{
+    const buildPickRoom = React.useCallback(() => {
+        return <TouchableOpacity className=' bg-white mt-3 justify-center rounded-lg  ' style={{
             backgroundColor: '#f5f5f5',
             borderWidth: 1.4,
             borderColor: iOSGrayColors.systemGray6.defaultLight,
@@ -261,7 +258,6 @@ const AddItemSheet = ({
             paddingHorizontal: screenWidth * 0.05,
             marginHorizontal: screenWidth * 0.05,
         }} onPress={() => {
-            // roomPickRef.current?.expand()
             pickRoomSheetRef.current?.expand()
         }}>
             <View className='flex-row justify-between items-center'>
@@ -285,7 +281,49 @@ const AddItemSheet = ({
                 </View>
             </View>
         </TouchableOpacity>
-    }
+    }, [
+        pickRoomSheetRef,
+        pickedRoom,
+        findRoomText,
+        isDarkMode
+    ])
+
+    // const buildPickRoom = () => {
+    //     return <TouchableOpacity className=' bg-white dark:bg-[#] mt-3 justify-center rounded-lg  ' style={{
+    //         backgroundColor: '#f5f5f5',
+    //         borderWidth: 1.4,
+    //         borderColor: iOSGrayColors.systemGray6.defaultLight,
+    //         borderRadius: 10,
+    //         marginVertical: 10,
+    //         paddingVertical: screenHeight * 0.01,
+    //         paddingHorizontal: screenWidth * 0.05,
+    //         marginHorizontal: screenWidth * 0.05,
+    //     }} onPress={() => {
+    //         // roomPickRef.current?.expand()
+    //         pickRoomSheetRef.current?.expand()
+    //     }}>
+    //         <View className='flex-row justify-between items-center'>
+    //             <View className='flex-row items-center '>
+    //                 <Image source={Room2} style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} />
+    //                 <Text className='pl-4' style={{
+    //                     color: "#b0b0b0",
+    //                     fontSize: 15,
+    //                     // fontWeight: 500
+
+    //                 }}>Choose room</Text>
+    //             </View>
+    //             <View className=''>
+    //                 <Text style={{
+    //                     color: pickedRoom == -1 ? "#b0b0b0" : iOSColors.systemBlue.defaultLight,
+    //                     fontSize: 15,
+
+    //                 }}>{
+    //                         pickedRoom == -1 ? "Choose room" : findRoomText(pickedRoom)
+    //                     }</Text>
+    //             </View>
+    //         </View>
+    //     </TouchableOpacity>
+    // }
 
     return (
         <BottomSheet
@@ -298,6 +336,9 @@ const AddItemSheet = ({
 
             // handleComponent={null}
             handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
+            backgroundStyle={{
+                // backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7',
+            }}
             backdropComponent={renderBackdrop}
             onClose={() => {
                 Keyboard.dismiss()
@@ -318,6 +359,8 @@ const AddItemSheet = ({
                     }
                 }
             }}
+            keyboardBehavior='interactive'
+            keyboardBlurBehavior='restore'
 
         >
             <BottomSheetScrollView className='' showsVerticalScrollIndicator={false} automaticallyAdjustKeyboardInsets style={{
@@ -332,14 +375,6 @@ const AddItemSheet = ({
                         }}>
 
                             <View className="items-center justify-center w-full h-full ">
-                                {/* <View className='my-2'>
-                                    <Material name="camera-iris" size={30} style={{ color: "white", fontWeight: "bold" }} />
-                                </View>
-                                <Text style={{
-                                    fontSize: 20,
-                                    fontWeight: 'bold',
-                                    color: 'white'
-                                }}>Add Image</Text> */}
                                 <Image source={Camera} style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} />
                             </View>
                         </TouchableOpacity>
@@ -408,7 +443,13 @@ const AddItemSheet = ({
                         }}
                             onPress={async () => {
                                 if (householdName != '' && pickedCategory != -1 && pickedRoom != -1) {
-                                    await handleSubmit()
+                                    await handleSubmit(
+                                        id_family,
+                                        imageUri,
+                                        householdName,
+                                        pickedCategory,
+                                        pickedRoom,
+                                    )
                                 }
                             }}
                         >

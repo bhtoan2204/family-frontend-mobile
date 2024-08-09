@@ -8,6 +8,7 @@ export const colors = [
   '#DCEEF3', //appointments
   '#CBE1C9', //errands
   '#F0F0F0', //others
+  '#F7B5CA', //others-2
 ];
 
 export const textColors = [
@@ -20,4 +21,5 @@ export const textColors = [
   '#9DE1F4', //appointments
   '#9DC284', //errands
   '#B7B7B7', //others
+  '#FFEBD4', //others-2
 ];

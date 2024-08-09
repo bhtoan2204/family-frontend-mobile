@@ -51,7 +51,7 @@ const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress,
         setIsValid(isNumberInRange(inputValue))
     }, [inputValue])
 
-    const showText = (numberString: string) => {
+    const showText = React.useCallback((numberString: string) => {
         const number = parseFloat(numberString);
         if (!isNaN(number)) {
             if (number >= 0 && number <= 10) {
@@ -67,109 +67,67 @@ const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress,
         } else {
             return "Invalid input";
         }
-    };
-    const handleSave = async () => {
+    }, [])
+
+    const handleSaveApi = React.useCallback(async ({
+        id_subject,
+        id_education_progress,
+        score,
+        index
+    }: {
+        id_subject: number,
+        id_education_progress: number,
+        score: number,
+        index: number
+    }) => {
+        const res = await EducationServices.updateComponentScoreData({
+            id_subject: id_subject,
+            id_education_progress: id_education_progress,
+            id_family: id_family,
+            score: score,
+            index: index
+        })
+        console.log({
+            id_subject,
+            id_education_progress,
+            score,
+            index
+        })
+        if (res) {
+            onSuccess()
+        } else {
+            onFailed()
+        }
+    }, [])
+
+    const handleSave = React.useCallback(async ({
+        id_subject,
+        id_education_progress,
+        input,
+        index
+    }: {
+        id_subject: number,
+        id_education_progress: number,
+        input: string,
+        index: number
+    }) => {
 
         dispatch(updateComponentScoreOfSubject({
             id_subject: id_subject!,
             id_education_progress: id_education_progress,
-            score: parseFloat(inputValue),
+            score: parseFloat(input),
             index: index
         }))
         setScoreSheetRef.current?.close()
+        await handleSaveApi({
+            id_subject: id_subject!,
+            id_education_progress: id_education_progress,
+            score: parseFloat(input),
+            index: index
+        })
+        // onSuccess()
 
-        onSuccess()
-
-        // if (index === -1) {
-        //     // dispatch(updateComponentScoreOfSubject({
-
-        //     // }))
-        //     // setSubjectDetai  lData((prev) => {
-        //     //     return {
-        //     //         ...prev,
-        //     //         final_score: {
-        //     //             ...prev.final_score,
-        //     //             score: parseFloat(inputValue)
-        //     //         }
-        //     //     }
-        //     // })
-        //     const res = await EducationServices.modifyScore(id_subject, id_family, id_education_progress, null, parseFloat(inputValue), null)
-        //     if (res) {
-        //         dispatch(updateComponentScoreOfSubject({
-        //             id_subject: id_subject!,
-        //             id_education_progress: id_education_progress,
-        //             score: parseFloat(inputValue),
-        //             index: index
-        //         }))
-        //         setScoreSheetRef.current?.close()
-
-        //         onSuccess()
-        //     } else {
-        //         setScoreSheetRef.current?.close()
-
-        //         onFailed()
-        //     }
-
-        // } else if (index === -2) {
-        //     // setSubjectDetailData((prev) => {
-        //     //     return {
-        //     //         ...prev,
-        //     //         midterm_score: {
-        //     //             ...prev.midterm_score,
-        //     //             score: parseFloat(inputValue)
-        //     //         }
-        //     //     }
-        //     // })
-        //     const res = await EducationServices.modifyScore(id_subject, id_family, id_education_progress, parseFloat(inputValue), null, null)
-        //     if (res) {
-        //         dispatch(updateComponentScoreOfSubject({
-        //             id_subject: id_subject!,
-        //             id_education_progress: id_education_progress,
-        //             score: parseFloat(inputValue),
-        //             index: index
-        //         }))
-        //         setScoreSheetRef.current?.close()
-
-        //         onSuccess()
-        //     } else {
-        //         setScoreSheetRef.current?.close()
-
-        //         onFailed()
-        //     }
-
-        // } else {
-        //     // setSubjectDetailData((prev) => {
-        //     //     return {
-        //     //         ...prev,
-        //     //         component_scores: prev.component_scores.map((item, i) => {
-        //     //             if (i === index) {
-        //     //                 return {
-        //     //                     ...item,
-        //     //                     score: parseFloat(inputValue)
-        //     //                 }
-        //     //             }
-        //     //             return item
-        //     //         })
-        //     //     }
-        //     // })
-        //     const res = await EducationServices.updateComponentScore(id_subject, id_education_progress, id_family, index, parseFloat(inputValue))
-        //     if (res) {
-        //         dispatch(updateComponentScoreOfSubject({
-        //             id_subject: id_subject!,
-        //             id_education_progress: id_education_progress,
-        //             score: parseFloat(inputValue),
-        //             index: index
-        //         }))
-        //         setScoreSheetRef.current?.close()
-        //         onSuccess()
-        //     } else {
-        //         setScoreSheetRef.current?.close()
-        //         onFailed()
-        //     }
-
-        // }
-
-    }
+    }, [])
 
     return (
         <RBSheet
@@ -251,7 +209,14 @@ const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress,
                                 }}
                                 onSubmitEditing={async (event) => {
                                     if (isNumberInRange(event.nativeEvent.text)) {
-                                        await handleSave()
+                                        await handleSave(
+                                            {
+                                                id_subject: id_subject,
+                                                id_education_progress: id_education_progress,
+                                                input: event.nativeEvent.text,
+                                                index: index
+                                            }
+                                        )
                                     }
                                 }}
                                 style={{

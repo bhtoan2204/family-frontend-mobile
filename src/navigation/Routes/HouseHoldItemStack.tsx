@@ -77,8 +77,7 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
         return <ActivityIndicator size="small" color="#0000ff" />
     }
 
-    const handleTakePhoto = async () => {
-        console.log("Take photo")
+    const handleTakePhoto = React.useCallback(async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status === 'granted') {
             const result = await ImagePicker.launchCameraAsync({
@@ -108,9 +107,9 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
         } else {
             alert('Permission to access camera was denied');
         }
-    }
+    }, [])
 
-    const handlePickImage = async () => {
+    const handlePickImage = React.useCallback(async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status === 'granted') {
             const result = await ImagePicker.launchImageLibraryAsync({
@@ -140,7 +139,7 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
         else {
             alert('Permission to access camera was denied');
         }
-    }
+    }, [])
 
     const handlePickEditImage = () => {
         pickPhotoSheetRef.current?.open()

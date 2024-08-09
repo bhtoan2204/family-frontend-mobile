@@ -75,7 +75,7 @@ const AddCourseSheet = ({
     const [inputName, setInputName] = React.useState('')
     const [inputDescription, setInputDescription] = React.useState('')
     const isDarkMode = useSelector(getIsDarkMode)
-    console.log(isDarkMode)
+    // console.log(isDarkMode)
     useEffect(() => {
         if (showError) {
             setTimeout(() => {
@@ -108,6 +108,9 @@ const AddCourseSheet = ({
                 color: targets.find(t => t.id == parseInt(target))!.color
             }
         })
+        targetsArr.sort((a, b) => {
+            return a.id - b.id
+        })
         console.log(targetsArr)
         console.log({
             id_education_progress,
@@ -127,45 +130,31 @@ const AddCourseSheet = ({
         )
         setLoading(false)
         if (response) {
+            setInputName("")
             dispatch(addSubject(response))
             onAddSuccess()
+            bottomSheetRef.current?.close()
         } else {
             onAddFailed()
         }
-        // if (response) {
-        //     // console.log(response)
-        //     const newSubject: Subject = {
-        //         component_scores: response.component_scores,
-        //         id_education_progress: id_education_progress,
-        //         id_subject: response.id_subject,
-        //         subject_name: response.subject_name,
-        //         description: response.description,
-        //         final_score: {
-        //             score: response.final_score,
-        //             // expected_score: response.final_score.expected_score
-        //             component_name: "Final"
-        //         },
-        //         midterm_score: {
-        //             score: response.midterm_score,
-        //             // expected_score: response.midterm_score.expected_score
-        //             component_name: "Midterm"
 
-        //         },
-        //         bonus_score: response.bonus_score,
-        //         status: response.status
-        //     }
-        //     dispatch(addSubject(newSubject))
-        //     bottomSheetRef.current?.close()
-        //     onAddSuccess()
-        // }
-        // else {
-        //     console.log('error')
-        //     bottomSheetRef.current?.close()
-        //     onAddFailed()
-        // }
 
     }
-
+    const checkCondition = React.useCallback(({
+        inputValue,
+        pickedTargets
+    }: {
+        inputValue: string,
+        pickedTargets: string[]
+    }) => {
+        if (inputValue == '') {
+            return false;
+        }
+        if (pickedTargets.length == 0) {
+            return false;
+        }
+        return true
+    }, [])
     const buildInputName = React.useCallback(() => {
         return <BottomSheetTextInput
             placeholder='Give your new course a name'
@@ -233,6 +222,7 @@ const AddCourseSheet = ({
             marginHorizontal: screenWidth * 0.05,
             // fontWeight: 'bold',
         }} onPress={() => {
+            Keyboard.dismiss()
             pickTargetBottomSheetRef.current?.expand()
         }}>
             <View>
@@ -354,14 +344,15 @@ const AddCourseSheet = ({
                             <TouchableOpacity className='items-center rounded-lg justify-center' style={{
                                 width: screenWidth * 0.1,
                                 height: screenWidth * 0.1,
-                                backgroundColor: inputName != "" ? COLORS.DenimBlue : iOSGrayColors.systemGray6.defaultLight,
+                                backgroundColor: checkCondition({ inputValue: inputName, pickedTargets }) == true ? COLORS.DenimBlue : iOSGrayColors.systemGray6.defaultLight,
                             }}
+                                disabled={checkCondition({ inputValue: inputName, pickedTargets }) == false}
                                 onPress={async () => {
                                     await handleAddComponentScore()
                                 }}
                             >
                                 <Material name='arrow-right' size={24} color={
-                                    inputName != "" ? 'white' : iOSGrayColors.systemGray.defaultDark
+                                    checkCondition({ inputValue: inputName, pickedTargets }) == true ? 'white' : iOSGrayColors.systemGray.defaultDark
                                 }
                                 />
                             </TouchableOpacity>

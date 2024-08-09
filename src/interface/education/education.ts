@@ -61,8 +61,12 @@ export interface Education {
   school_info: string;
   created_at: string;
   updated_at: string;
+  is_shared: boolean;
   subjects: Subject[];
   users: {
+    idUser: string;
+    email: string;
+    phone: string;
     firstname: string;
     lastname: string;
     avatar: string;

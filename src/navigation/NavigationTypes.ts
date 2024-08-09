@@ -380,6 +380,7 @@ type GuidelineStackParamList = {
     id_family: number | undefined;
     id_household_item: number | undefined;
     openSheet: boolean;
+    onAddCallback?: (id: number) => void;
   };
   GuildLineDetail: {
     id_family: number | undefined;
@@ -492,6 +493,8 @@ type HouseHoldItemStackParamList = {
   HouseHoldItem: {
     id_item: number | undefined;
     id_family: number | undefined;
+    onUpdateSuccess: boolean | undefined;
+    // id_guide_item: number | undefined;
   };
 };
 
@@ -650,11 +653,13 @@ export interface CategoryDetailScreenProps {
 type ShoppingListStackParamList = {
   ShoppingList: {
     id_family: number | undefined;
+    id_calendar: number | undefined;
+    openSheet: boolean | undefined;
   };
   ShoppingListCategory: {
     id_family: number | undefined;
     id_category: number;
-    openSheet: boolean;
+    // openSheet: boolean;
   };
   ShoppingListDetail: {
     id_family: number | undefined;
@@ -708,6 +713,8 @@ export interface ShoppingListDetailScreenProps {
 type TodoListStackParamList = {
   TodoList: {
     id_family: number | undefined;
+    openSheet: boolean | undefined;
+    id_calendar: number | undefined;
   };
   TodoListCategory: {
     id_family: number | undefined;
@@ -715,7 +722,7 @@ type TodoListStackParamList = {
   };
   TodoListItemDetail: {
     id_family: number | undefined;
-    id_list: number;
+    // id_list: number;
     id_category: number;
     id_item: number;
   };
