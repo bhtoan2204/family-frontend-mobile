@@ -6,6 +6,7 @@ import {
   ShoppingListItemType,
   ShoppingListType,
 } from 'src/interface/shopping/shopping_list';
+import baseUrl from '../urls/baseUrl';
 const ShoppingListServices = {
   getShoppingListType: async () => {
     const url = ShoppingListUrls.getShoppingListType;
@@ -192,6 +193,30 @@ const ShoppingListServices = {
           created_at: string;
           updated_at: string;
         };
+      } else {
+        return null;
+      }
+    } catch (error: any) {
+      console.log(error.message);
+      return null;
+    }
+  },
+  getShoppingItem: async (id_family: number, id_list: number) => {
+    const url = `${baseUrl}/api/v1/shopping/getShoppingItem`;
+    try {
+      console.log(id_list, id_family);
+      const response = await instance.get(url, {
+        params: {
+          page: 1,
+          itemsPerPage: 10,
+          sortBy: 'created_at',
+          sortDirection: 'DESC',
+          id_family: id_family,
+          id_list: id_list,
+        },
+      });
+      if (response.status === 200) {
+        return response.data.data;
       } else {
         return null;
       }

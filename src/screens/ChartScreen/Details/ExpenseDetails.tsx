@@ -13,6 +13,7 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {ExpenseDetailScreenProps} from 'src/navigation/NavigationTypes';
@@ -35,7 +36,7 @@ import * as ImagePicker from 'expo-image-picker';
 import ImageView from 'react-native-image-viewing';
 import {COLORS} from 'src/constants';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {Feather} from '@expo/vector-icons';
+import {Feather, Ionicons} from '@expo/vector-icons';
 import moment from 'moment';
 import {DailyExpense, UtilitiesType} from 'src/interface/expense/DailyExpense';
 import {useThemeColors} from 'src/hooks/useThemeColor';
@@ -44,9 +45,17 @@ import {Toast} from 'react-native-toast-notifications';
 import DeleteButton from 'src/components/Button/DeleteButton';
 import SaveButton from 'src/components/Button/SaveButton';
 import CancelButton from 'src/components/Button/CancelButton';
+import ShoppingListServices from 'src/services/apiclient/ShoppingListServices';
+import {
+  ShoppingList,
+  ShoppingListItem,
+} from 'src/interface/shopping/shopping_list';
+import ShoppingListCategoryItem from 'src/components/user/shopping/shopping-list-category/shopping-list-category-item';
+import {updatePurchasedItem} from 'src/redux/slices/ShoppingListSlice';
+import {AppDispatch, RootState} from 'src/redux/store';
+import {styles} from './styles';
 
 const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
-  const dispatch = useDispatch();
   const location = useSelector(selectLocale);
 
   const expense: DailyExpense | null = useSelector(selectSelectedExpense);
@@ -104,6 +113,7 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<
     number | undefined
   >(expense?.financeExpenditureType?.id_expenditure_type);
+  const dispatch = useDispatch<AppDispatch>();
 
   const initialUtilityCategoryId =
     expense?.utilities && expense?.utilities?.utilitiesType
@@ -114,11 +124,13 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
     number | undefined
   >(initialUtilityCategoryId);
   const members = useSelector(selectFamilyMembers);
-
+  const [shoppingList, setShoppingList] = useState<ShoppingList[]>([]);
   useEffect(() => {
     fetchExpenseType(family.id_family);
+    fetchShoppingList();
     fetchUtilityType();
   }, []);
+
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -143,14 +155,38 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
     }
   };
   const fetchUtilityType = async () => {
-    try {
-      const response = await ExpenseServices.getUtilityType();
+    if (expense?.utilities) {
+      try {
+        const response = await ExpenseServices.getUtilityType();
 
-      if (response) {
-        setUtilityType(response);
+        if (response) {
+          setUtilityType(response);
+        }
+      } catch (error: any) {
+        console.error('Error in fetchUtilityType:', error.message);
+      }
+    } else {
+      setUtilityType([]);
+    }
+  };
+
+  const fetchShoppingList = async () => {
+    try {
+      if (expense?.shoppingLists) {
+        const response = await ShoppingListServices.getShoppingItem(
+          expense?.id_family,
+          expense?.shoppingLists.id_list,
+        );
+
+        if (response) {
+          console.log(response);
+          setShoppingList(response);
+        }
+      } else {
+        setShoppingList([]);
       }
     } catch (error: any) {
-      console.error('Error in fetchUtilityType:', error.message);
+      console.error('Error in fetchShoppingList:', error.message);
     }
   };
 
@@ -417,542 +453,480 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
       currency: 'VND',
     });
   };
+  const mapByItemType2 = (
+    items: ShoppingListItem[],
+  ): Map<string, ShoppingListItem[]> => {
+    const data: ShoppingListItem[] = JSON.parse(JSON.stringify(items));
+    const map = new Map<string, ShoppingListItem[]>();
+    for (let i = 0; i < data.length; i++) {
+      const itemType = JSON.stringify(data[i].itemType);
+      console.log('yuwu', data[i].itemType);
+      if (!map.has(JSON.stringify(data[i].itemType))) {
+        const arr = [data[i]];
+        map.set(itemType, arr);
+      } else {
+        console.log('?');
+        map.get(itemType)?.push(data[i]);
+      }
+    }
+    return map;
+  };
+
+  const renderShoppinglists = () => {
+    return (
+      <ScrollView
+        style={[styles.scrollView, {backgroundColor: color.white}]}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={true}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: 15,
+            marginTop: 10,
+          }}>
+          <Text
+            style={[
+              styles.header,
+              {
+                color: color.text,
+                fontSize: 16,
+                fontWeight: 'bold',
+                fontStyle: 'italic',
+              },
+            ]}>
+            {translate('Shopping List')}
+          </Text>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('TodoListStack', {
+                screen: 'TodoListCategory',
+                params: {
+                  id_family: event.id_family,
+                  id_category: event.id_checklist_type,
+                },
+              })
+            }
+            style={styles.header}>
+            <Text style={{color: color.BlueLight, fontWeight: '800'}}>
+              {translate('View detail')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {shoppingList && shoppingList.length > 0 ? (
+          shoppingList.map(item => (
+            <View key={item.id_item} style={styles.itemContainer}>
+              <View style={styles.itemHeader}>
+                <Image
+                  source={{uri: item.itemType.icon_url}}
+                  style={styles.itemIcon}
+                />
+                <View style={styles.itemInfo}>
+                  <Text style={styles.itemName}>{item.item_name}</Text>
+                  <Text style={styles.itemDescription}>{item.description}</Text>
+                </View>
+              </View>
+              <Text
+                style={
+                  styles.itemPrice
+                }>{`Price: ${item.price.toLocaleString()} VND`}</Text>
+              <Text
+                style={
+                  styles.itemQuantity
+                }>{`Quantity: ${item.quantity}`}</Text>
+
+              <View style={styles.statusContainer}>
+                <Text style={styles.itemStatus}>
+                  {item.is_purchased
+                    ? translate('Purchased')
+                    : translate('Not Purchased')}
+                </Text>
+                {item.is_purchased && (
+                  <Ionicons
+                    name="checkmark-circle-outline"
+                    size={24}
+                    color="green"
+                  />
+                )}
+              </View>
+            </View>
+          ))
+        ) : (
+          <TouchableOpacity
+            style={[styles.addButton, {backgroundColor: color.primary}]}
+            onPress={() => navigation.navigate('NewShoppingList', {id_family})}>
+            <Text style={styles.addButtonText}>
+              {translate('New Shopping List')}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </ScrollView>
+    );
+  };
+
   return (
     <SafeAreaView
       style={[styles.safeArea, {backgroundColor: color.background}]}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
-          <View style={[styles.container, {backgroundColor: color.background}]}>
-            <View
-              style={[
-                styles.headerContainer,
-                {backgroundColor: color.background},
-              ]}>
+      <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
+        <View style={[styles.container, {backgroundColor: color.background}]}>
+          <View
+            style={[
+              styles.headerContainer,
+              {backgroundColor: color.background},
+            ]}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.headerButton}>
+              <Icon
+                name="close-outline"
+                size={30}
+                style={[styles.backButton, {color: color.text}]}
+              />
+              <Text style={[styles.headerText, {color: color.text}]}>
+                {translate('Expense Details')}
+              </Text>
+            </TouchableOpacity>
+
+            {!isEditing && (
               <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={styles.headerButton}>
-                <Icon
-                  name="close-outline"
-                  size={30}
-                  style={[styles.backButton, {color: color.text}]}
-                />
-                <Text style={[styles.headerText, {color: color.text}]}>
-                  {translate('Expense Details')}
+                onPress={handleEdit}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: '#00adf5',
+                  padding: 15,
+                  borderRadius: 30,
+                  paddingHorizontal: 20,
+                  shadowColor: '#00adf5',
+                  shadowOffset: {width: 0, height: 4},
+                  shadowOpacity: 0.3,
+                  shadowRadius: 2,
+                }}>
+                <Feather name="edit" size={20} color="white" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontWeight: '700',
+                    color: 'white',
+                  }}>
+                  {translate('Edit')}
                 </Text>
               </TouchableOpacity>
-
-              {!isEditing && (
-                <TouchableOpacity
-                  onPress={handleEdit}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    backgroundColor: '#00adf5',
-                    padding: 15,
-                    borderRadius: 30,
-                    paddingHorizontal: 20,
-                    shadowColor: '#00adf5',
-                    shadowOffset: {width: 0, height: 4},
-                    shadowOpacity: 0.3,
-                    shadowRadius: 2,
-                  }}>
-                  <Feather name="edit" size={20} color="white" />
-                  <Text
-                    style={{marginLeft: 10, fontWeight: '700', color: 'white'}}>
-                    {translate('Edit')}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </View>
-            <View style={styles.amountContainer}>
-              {!isEditing ? (
-                <Text style={styles.valueAmount}>
-                  -{formatCurrency(expense?.amount.toString() || '0')}
-                </Text>
-              ) : (
-                <View style={{flexDirection: 'row'}}>
-                  <TextInput
-                    style={styles.valueAmount}
-                    keyboardType="numeric"
-                    value={formattedAmount}
-                    onChangeText={handleAmountChange}
-                  />
-                  <Text style={styles.valueAmount}> đ</Text>
-                </View>
-              )}
-            </View>
-
-            <View style={[styles.card, {backgroundColor: color.white}]}>
-              <View style={styles.detailRow}>
-                <Text style={[styles.label, {color: color.text}]}>
-                  {translate('Category')}:
-                </Text>
-                <View style={styles.valueContainer}>
-                  {!isEditing ? (
-                    expense?.financeExpenditureType ? (
-                      <Text style={[styles.value, {color: color.text}]}>
-                        {location === 'vi'
-                          ? expense.financeExpenditureType.expense_type_name_vn
-                          : expense.financeExpenditureType.expense_type_name}
-                      </Text>
-                    ) : (
-                      <Text style={[styles.value, {color: color.text}]}>
-                        {translate('Other')}
-                      </Text>
-                    )
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() =>
-                        setShowCategoryPicker(!showCategoryPicker)
-                      }>
-                      <View style={{flexDirection: 'row'}}>
-                        <Text style={[styles.value, {color: color.text}]}>
-                          {selectedCategory}{' '}
-                        </Text>
-                        <Icon
-                          name={
-                            showCategoryPicker ? 'chevron-up' : 'chevron-down'
-                          }
-                          size={20}
-                          color={color.text}
-                        />
-                      </View>
-                    </TouchableOpacity>
-                  )}
-
-                  {showCategoryPicker && (
-                    <Picker
-                      selectedValue={selectedCategory}
-                      style={[styles.picker, {color: color.text}]}
-                      onValueChange={itemValue =>
-                        handleCategoryChange(itemValue)
-                      }>
-                      {expenseType.map(item => (
-                        <Picker.Item
-                          key={item.id_expenditure_type}
-                          label={
-                            location === 'vi'
-                              ? item.expense_type_name_vn
-                              : item.expense_type_name
-                          }
-                          value={
-                            location === 'vi'
-                              ? item.expense_type_name_vn
-                              : item.expense_type_name
-                          }
-                          color={color.text}
-                        />
-                      ))}
-                    </Picker>
-                  )}
-                </View>
-              </View>
-              <View style={styles.detailRow}>
-                <Text style={[styles.label, {color: color.text}]}>
-                  {translate('Description')}:
-                </Text>
-                {!isEditing ? (
-                  <Text style={[styles.value, {color: color.text}]}>
-                    {expense?.description}
-                  </Text>
-                ) : (
-                  <TextInput
-                    style={[styles.input, {color: color.text}]}
-                    value={editedDescription}
-                    onChangeText={setEditedDescription}
-                  />
-                )}
-              </View>
-              {expense?.id_created_by && (
-                <View style={styles.detailRow}>
-                  <Text style={[styles.label, {color: color.text}]}>
-                    {translate('Create by')}:
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => pressMember(expense?.id_created_by)}>
-                    <Text style={styles.ValueName}>
-                      {expense?.users?.firstname
-                        ? `${expense.users.firstname} ${expense.users?.lastname || ''}`.trim()
-                        : 'No user data available'}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-              <View style={styles.detailRow}>
-                <Text style={[styles.label, {color: color.text}]}>
-                  {translate('Date')}:
-                </Text>
-                {!isEditing ? (
-                  <Text style={[styles.value, {color: color.text}]}>
-                    {expense
-                      ? moment(expense.expenditure_date).format(
-                          'MM-DD-YYYY, HH:mm',
-                        )
-                      : ''}
-                  </Text>
-                ) : (
-                  <>
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={chosenDate}
-                      mode="datetime"
-                      display="default"
-                      onChange={onChangeDate}
-                    />
-                  </>
-                )}
-              </View>
-            </View>
-            {expense?.utilities &&
-              expense.utilities.utilitiesType &&
-              (selectedCategory === 'Utilities' ||
-                selectedCategory === 'Chi phí tiện ích') && (
-                <View style={[styles.card, {backgroundColor: color.white}]}>
-                  <View style={styles.detailRow}>
-                    <Text style={[styles.label, {color: color.text}]}>
-                      {translate('Category utility')}:
-                    </Text>
-                    <View style={styles.valueContainer}>
-                      {!isEditing ? (
-                        expense?.utilities &&
-                        expense?.utilities.utilitiesType ? (
-                          <Text style={[styles.value, {color: color.text}]}>
-                            {location === 'vi'
-                              ? expense.utilities.utilitiesType.name_vn
-                              : expense.utilities.utilitiesType.name_en}
-                          </Text>
-                        ) : (
-                          <Text style={[styles.value, {color: color.text}]}>
-                            {translate('Other')}
-                          </Text>
-                        )
-                      ) : (
-                        <TouchableOpacity
-                          onPress={() =>
-                            setShowUtilityCategoryPicker(
-                              !showUtilityCategoryPicker,
-                            )
-                          }>
-                          <View style={{flexDirection: 'row'}}>
-                            <Text style={[styles.value, {color: color.text}]}>
-                              {selectedUtilityCategory}{' '}
-                            </Text>
-                            <Icon
-                              name={
-                                showUtilityCategoryPicker
-                                  ? 'chevron-up'
-                                  : 'chevron-down'
-                              }
-                              size={20}
-                              color={color.text}
-                            />
-                          </View>
-                        </TouchableOpacity>
-                      )}
-
-                      {showUtilityCategoryPicker && (
-                        <Picker
-                          selectedValue={selectedUtilityCategory}
-                          style={[styles.picker, {color: color.text}]}
-                          onValueChange={itemValue =>
-                            handleUtilityCategoryChange(itemValue)
-                          }>
-                          {utilityType.map(item => (
-                            <Picker.Item
-                              key={item.id_utilities_type}
-                              label={
-                                location === 'vi' ? item.name_vn : item.name_en
-                              }
-                              value={
-                                location === 'vi' ? item.name_vn : item.name_en
-                              }
-                              color={color.text}
-                            />
-                          ))}
-                        </Picker>
-                      )}
-                    </View>
-                  </View>
-                </View>
-              )}
-            <View style={[styles.card, {backgroundColor: color.white}]}>
-              <View style={styles.imageContainer}>
-                <Text style={[styles.label, {color: color.text}]}>
-                  {translate('Receipt')}:
-                </Text>
-                {currentImageUri ? (
-                  <View>
-                    <TouchableOpacity
-                      style={styles.imageWrapper}
-                      onPress={handleImagePress}>
-                      <Image
-                        source={{
-                          uri: isEditing ? currentImageUri : expense?.image_url,
-                        }}
-                        style={styles.image}
-                        resizeMode="contain"
-                      />
-                    </TouchableOpacity>
-                    {isEditing && (
-                      <TouchableOpacity
-                        style={styles.changeImageButton}
-                        onPress={handleSelectImageEdit}>
-                        <Text style={styles.changeImageText}>
-                          {translate('Change receipt')}
-                        </Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                ) : isEditing ? (
-                  <TouchableOpacity
-                    onPress={handleSelectImageEdit}
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text style={{color: COLORS.Azure, fontSize: 16}}>
-                      {translate('Add receipt')}
-                    </Text>
-                    <Icon
-                      name="add-circle-sharp"
-                      size={36}
-                      style={{color: COLORS.Azure}}
-                    />
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    onPress={handleSelectImage}
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text style={{color: COLORS.Azure, fontSize: 16}}>
-                      {translate('Add receipt')}
-                    </Text>
-                    <Icon
-                      name="add-circle-sharp"
-                      size={36}
-                      style={{color: COLORS.Azure}}
-                    />
-                  </TouchableOpacity>
-                )}
-              </View>
-            </View>
-
-            {loading && (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#007BFF" />
+            )}
+          </View>
+          <View style={styles.amountContainer}>
+            {!isEditing ? (
+              <Text style={styles.valueAmount}>
+                -{formatCurrency(expense?.amount.toString() || '0')}
+              </Text>
+            ) : (
+              <View style={{flexDirection: 'row'}}>
+                <TextInput
+                  style={styles.valueAmount}
+                  keyboardType="numeric"
+                  value={formattedAmount}
+                  onChangeText={handleAmountChange}
+                />
+                <Text style={styles.valueAmount}> đ</Text>
               </View>
             )}
           </View>
 
-          {isEditing && (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingHorizontal: 10,
-              }}>
-              <CancelButton onPress={handleCancel} />
-              <SaveButton onPress={handleSave} />
+          <View style={[styles.card, {backgroundColor: color.white}]}>
+            <View style={styles.detailRow}>
+              <Text style={[styles.label, {color: color.text}]}>
+                {translate('Category')}:
+              </Text>
+              <View style={styles.valueContainer}>
+                {!isEditing ? (
+                  expense?.financeExpenditureType ? (
+                    <Text style={[styles.value, {color: color.text}]}>
+                      {location === 'vi'
+                        ? expense.financeExpenditureType.expense_type_name_vn
+                        : expense.financeExpenditureType.expense_type_name}
+                    </Text>
+                  ) : (
+                    <Text style={[styles.value, {color: color.text}]}>
+                      {translate('Other')}
+                    </Text>
+                  )
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => setShowCategoryPicker(!showCategoryPicker)}>
+                    <View style={{flexDirection: 'row'}}>
+                      <Text style={[styles.value, {color: color.text}]}>
+                        {selectedCategory}{' '}
+                      </Text>
+                      <Icon
+                        name={
+                          showCategoryPicker ? 'chevron-up' : 'chevron-down'
+                        }
+                        size={20}
+                        color={color.text}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                )}
+
+                {showCategoryPicker && (
+                  <Picker
+                    selectedValue={selectedCategory}
+                    style={[styles.picker, {color: color.text}]}
+                    onValueChange={itemValue =>
+                      handleCategoryChange(itemValue)
+                    }>
+                    {expenseType.map(item => (
+                      <Picker.Item
+                        key={item.id_expenditure_type}
+                        label={
+                          location === 'vi'
+                            ? item.expense_type_name_vn
+                            : item.expense_type_name
+                        }
+                        value={
+                          location === 'vi'
+                            ? item.expense_type_name_vn
+                            : item.expense_type_name
+                        }
+                        color={color.text}
+                      />
+                    ))}
+                  </Picker>
+                )}
+              </View>
+            </View>
+            <View style={styles.detailRow}>
+              <Text style={[styles.label, {color: color.text}]}>
+                {translate('Description')}:
+              </Text>
+              {!isEditing ? (
+                <Text style={[styles.value, {color: color.text}]}>
+                  {expense?.description}
+                </Text>
+              ) : (
+                <TextInput
+                  style={[styles.input, {color: color.text}]}
+                  value={editedDescription}
+                  onChangeText={setEditedDescription}
+                />
+              )}
+            </View>
+            {expense?.id_created_by && (
+              <View style={styles.detailRow}>
+                <Text style={[styles.label, {color: color.text}]}>
+                  {translate('Create by')}:
+                </Text>
+                <TouchableOpacity
+                  onPress={() => pressMember(expense?.id_created_by)}>
+                  <Text style={styles.ValueName}>
+                    {expense?.users?.firstname
+                      ? `${expense.users.firstname} ${expense.users?.lastname || ''}`.trim()
+                      : 'No user data available'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            <View style={styles.detailRow}>
+              <Text style={[styles.label, {color: color.text}]}>
+                {translate('Date')}:
+              </Text>
+              {!isEditing ? (
+                <Text style={[styles.value, {color: color.text}]}>
+                  {expense
+                    ? moment(expense.expenditure_date).format(
+                        'MM-DD-YYYY, HH:mm',
+                      )
+                    : ''}
+                </Text>
+              ) : (
+                <>
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={chosenDate}
+                    mode="datetime"
+                    display="default"
+                    onChange={onChangeDate}
+                  />
+                </>
+              )}
+            </View>
+          </View>
+
+          {expense?.utilities &&
+            expense.utilities.utilitiesType &&
+            (selectedCategory === 'Utilities' ||
+              selectedCategory === 'Chi phí tiện ích') && (
+              <View style={[styles.card, {backgroundColor: color.white}]}>
+                <View style={styles.detailRow}>
+                  <Text style={[styles.label, {color: color.text}]}>
+                    {translate('Category utility')}:
+                  </Text>
+                  <View style={styles.valueContainer}>
+                    {!isEditing ? (
+                      expense?.utilities && expense?.utilities.utilitiesType ? (
+                        <Text style={[styles.value, {color: color.text}]}>
+                          {location === 'vi'
+                            ? expense.utilities.utilitiesType.name_vn
+                            : expense.utilities.utilitiesType.name_en}
+                        </Text>
+                      ) : (
+                        <Text style={[styles.value, {color: color.text}]}>
+                          {translate('Other')}
+                        </Text>
+                      )
+                    ) : (
+                      <TouchableOpacity
+                        onPress={() =>
+                          setShowUtilityCategoryPicker(
+                            !showUtilityCategoryPicker,
+                          )
+                        }>
+                        <View style={{flexDirection: 'row'}}>
+                          <Text style={[styles.value, {color: color.text}]}>
+                            {selectedUtilityCategory}{' '}
+                          </Text>
+                          <Icon
+                            name={
+                              showUtilityCategoryPicker
+                                ? 'chevron-up'
+                                : 'chevron-down'
+                            }
+                            size={20}
+                            color={color.text}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    )}
+
+                    {showUtilityCategoryPicker && (
+                      <Picker
+                        selectedValue={selectedUtilityCategory}
+                        style={[styles.picker, {color: color.text}]}
+                        onValueChange={itemValue =>
+                          handleUtilityCategoryChange(itemValue)
+                        }>
+                        {utilityType.map(item => (
+                          <Picker.Item
+                            key={item.id_utilities_type}
+                            label={
+                              location === 'vi' ? item.name_vn : item.name_en
+                            }
+                            value={
+                              location === 'vi' ? item.name_vn : item.name_en
+                            }
+                            color={color.text}
+                          />
+                        ))}
+                      </Picker>
+                    )}
+                  </View>
+                </View>
+              </View>
+            )}
+
+          {expense?.shoppingLists && renderShoppinglists()}
+
+          <View
+            style={[
+              styles.card,
+              {backgroundColor: color.white, marginTop: 20},
+            ]}>
+            <View style={styles.imageContainer}>
+              <Text style={[styles.label, {color: color.text}]}>
+                {translate('Receipt')}:
+              </Text>
+              {currentImageUri ? (
+                <View>
+                  <TouchableOpacity
+                    style={styles.imageWrapper}
+                    onPress={handleImagePress}>
+                    <Image
+                      source={{
+                        uri: isEditing ? currentImageUri : expense?.image_url,
+                      }}
+                      style={styles.image}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                  {isEditing && (
+                    <TouchableOpacity
+                      style={styles.changeImageButton}
+                      onPress={handleSelectImageEdit}>
+                      <Text style={styles.changeImageText}>
+                        {translate('Change receipt')}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              ) : isEditing ? (
+                <TouchableOpacity
+                  onPress={handleSelectImageEdit}
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text style={{color: COLORS.Azure, fontSize: 16}}>
+                    {translate('Add receipt')}
+                  </Text>
+                  <Icon
+                    name="add-circle-sharp"
+                    size={36}
+                    style={{color: COLORS.Azure}}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={handleSelectImage}
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text style={{color: COLORS.Azure, fontSize: 16}}>
+                    {translate('Add receipt')}
+                  </Text>
+                  <Icon
+                    name="add-circle-sharp"
+                    size={36}
+                    style={{color: COLORS.Azure}}
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+
+          {loading && (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#007BFF" />
             </View>
           )}
+        </View>
 
-          {!isEditing && <DeleteButton onPress={handleDelete} />}
+        {isEditing && (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingHorizontal: 10,
+            }}>
+            <CancelButton onPress={handleCancel} />
+            <SaveButton onPress={handleSave} />
+          </View>
+        )}
 
-          <ImageView
-            images={[{uri: currentImageUri}]}
-            imageIndex={selectedImageIndex || 0}
-            visible={selectedImageIndex !== null}
-            onRequestClose={handleCloseModal}
-            backgroundColor="rgba(0, 0, 0, 0.8)"
-          />
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
+        {!isEditing && <DeleteButton onPress={handleDelete} />}
+
+        <ImageView
+          images={[{uri: currentImageUri}]}
+          imageIndex={selectedImageIndex || 0}
+          visible={selectedImageIndex !== null}
+          onRequestClose={handleCloseModal}
+          backgroundColor="rgba(0, 0, 0, 0.8)"
+        />
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  editButtonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'lightblue',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 20,
-  },
-  inner: {
-    flex: 1,
-  },
-  editIcon: {
-    color: 'gray',
-    marginRight: 5,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#f9f9f9',
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-    justifyContent: 'space-between',
-  },
-  headerButton: {
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'center',
-  },
-  backButton: {
-    color: '#333',
-  },
-  headerTitleContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  headerText: {
-    fontSize: 16,
-    color: '#333',
-    fontWeight: 'bold',
-  },
-  editContainer: {
-    backgroundColor: 'lightblue',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  deleteButton: {
-    backgroundColor: '#00adf5',
-    borderWidth: 1,
-    borderColor: '#f0f0f0',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 100,
-    borderRadius: 10,
-    marginTop: 10,
-    alignSelf: 'center',
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'gray',
-  },
-
-  editButton: {
-    color: '#333',
-    marginRight: 5,
-  },
-  editText: {
-    color: 'gray',
-    fontSize: 18,
-  },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5,
-    marginBottom: 20,
-  },
-  amountContainer: {
-    alignItems: 'center',
-    paddingBottom: 20,
-  },
-  valueAmount: {
-    color: 'red',
-    fontSize: 40,
-    fontWeight: 'bold',
-  },
-  detailRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 15,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#555',
-  },
-  valueContainer: {
-    flexDirection: 'column',
-  },
-  value: {
-    fontSize: 16,
-    color: '#333',
-  },
-  ValueName: {
-    fontSize: 16,
-    color: COLORS.DenimBlue,
-  },
-  input: {
-    fontSize: 16,
-    color: '#333',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    paddingBottom: 2,
-  },
-  picker: {
-    color: '#333',
-    width: 200,
-    justifyContent: 'space-between',
-  },
-  imageContainer: {
-    flexDirection: 'column',
-    marginTop: 10,
-  },
-  imageWrapper: {
-    alignItems: 'center',
-  },
-  image: {
-    width: '90%',
-    height: 200,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  changeImageButton: {
-    marginBottom: 5,
-  },
-  changeImageText: {
-    color: '#007BFF',
-    fontSize: 16,
-  },
-  deleteImageButton: {
-    marginBottom: 5,
-  },
-  deleteText: {
-    color: 'white',
-    fontSize: 17,
-    borderRadius: 10,
-  },
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 80,
-    borderRadius: 10,
-    marginTop: 10,
-    alignSelf: 'center',
-  },
-
-  saveButton: {
-    backgroundColor: '#4CAF50',
-  },
-});
 
 export default ExpenseDetailScreen;
