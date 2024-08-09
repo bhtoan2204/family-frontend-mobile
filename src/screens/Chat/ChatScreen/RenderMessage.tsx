@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import {
   TouchableWithoutFeedback,
   StyleSheet,
   Dimensions,
-  Animated,
 } from 'react-native';
 import {Video} from 'expo-av';
 import {Message} from 'src/interface/chat/chat';
@@ -136,12 +135,12 @@ const MessageItem: React.FC<Props> = ({
           visible={isModalVisible}
           onRequestClose={handleCloseModal}>
           <TouchableWithoutFeedback onPress={handleCloseModal}>
-            <View
-              style={[
-                localStyles.modalOverlay,
-                {top: modalPosition.top, left: modalPosition.left},
-              ]}>
-              <View style={localStyles.modalContent}>
+            <View style={localStyles.modalOverlay}>
+              <View
+                style={[
+                  localStyles.modalContent,
+                  {top: modalPosition.top, left: modalPosition.left},
+                ]}>
                 <TouchableOpacity
                   onPress={handleRemoveMessage}
                   style={localStyles.modalOption}>
@@ -164,20 +163,19 @@ const MessageItem: React.FC<Props> = ({
 const localStyles = StyleSheet.create({
   modalOverlay: {
     position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 10,
-    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalContent: {
     backgroundColor: 'white',
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalMessageText: {
-    marginBottom: 10,
-    fontSize: 16,
-    color: 'black',
+    position: 'absolute',
   },
   modalOption: {
     paddingVertical: 10,
