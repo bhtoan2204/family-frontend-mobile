@@ -10,11 +10,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import Ingredients from 'src/assets/images/household_assets/Ingredients.png'
 import OpenedFolder from 'src/assets/images/household_assets/OpenedFolder.png'
 
-import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interface/shopping/shopping_list';
 import { addShoppingList, addShoppingListItem } from 'src/redux/slices/ShoppingListSlice';
 import { TodoListItem, TodoListType } from 'src/interface/todo/todo';
-import { addTodoList } from 'src/redux/slices/TodoListSlice';
+import { addTodoListItem } from 'src/redux/slices/TodoListSlice';
 import { useColorScheme } from 'nativewind';
+import TodoListService from 'src/services/apiclient/TodoListService';
 
 
 interface AddItemSheetProps {
@@ -83,24 +83,39 @@ const AddItemSheet = ({
             return
         }
         else {
-            const newTodoItem: TodoListItem = {
-                id_checklist: Math.floor(Math.random() * 1000) + 1,
-                id_checklist_type: id_checklist_type,
-                task_name: inputName,
+            const newItem = await TodoListService.addItem({
                 id_family: id_family,
-                is_completed: false,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-                checklistType: checklistType,
+                id_checklist_type: id_checklist_type,
                 description: '',
                 due_date: new Date().toISOString(),
-                is_notified_1_day_before: false,
-                is_notified_3_days_before: false,
-                is_notified_on_due_date: false
+                task_name: inputName
+            })
+            // const res_example:TodoListItem = {
+            //     "id_family": 96,
+            //     "id_checklist_type": 1,
+            //     "task_name": "Du lich",
+            //     "description": "",
+            //     "due_date": "2024-06-06T00:00:00.000Z",
+            //     "id_checklist": 52,
+            //     "is_completed": false,
+            //     "is_notified_3_days_before": false,
+            //     "is_notified_1_day_before": false,
+            //     "is_notified_on_due_date": false,
+            //     "created_at": "2024-08-08T19:36:55.425Z",
+            //     "updated_at": "2024-08-08T19:36:55.425Z"
+            // }
+            if (newItem) {
+                dispatch(addTodoListItem({
+                    id_checklist_type: id_checklist_type,
+                    item: newItem
+                }))
+                bottomSheetRef.current?.close()
+                onAddSuccess()
+            } else {
+                setErrorText('Server error please try again')
+                setShowError(true)
+                onAddFailed()
             }
-            dispatch(addTodoList(newTodoItem))
-            bottomSheetRef.current?.close()
-            onAddSuccess()
         }
 
     }

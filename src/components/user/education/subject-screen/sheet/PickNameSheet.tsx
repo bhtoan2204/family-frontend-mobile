@@ -9,6 +9,7 @@ import { AppDispatch } from 'src/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateComponentScoreOfSubject, updateNameOfComponentScore } from 'src/redux/slices/EducationSlice';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import EducationServices from 'src/services/apiclient/EducationService';
 interface PickScoreSheetProps {
     setNameSheetRef: React.RefObject<any>;
     // setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>;
@@ -51,74 +52,56 @@ const PickNameSheet = ({ setNameSheetRef, name, index, id_education_progress, id
         setIsValid(isNumberInRange(inputValue))
     }, [inputValue])
 
-    const showText = (numberString: string) => {
-        const number = parseFloat(numberString);
-        if (!isNaN(number)) {
-            if (number >= 0 && number <= 10) {
-                if (number % 1 === 0) {
-                    return `Actual ${number}.0`;
-                } else {
-                    return `Actual ${number}`;
-                }
-            }
-            else {
-                return "Invalid input";
-            }
+    const handleSaveApi = React.useCallback(async ({
+        id_subject,
+        id_education_progress,
+        name,
+        index
+    }: {
+        id_subject: number,
+        id_education_progress: number,
+        name: string,
+        index: number
+    }) => {
+        const res = await EducationServices.updateComponentScoreData({
+            id_subject: id_subject,
+            id_education_progress: id_education_progress,
+            id_family: id_family,
+            component_name: name,
+            index: index
+        })
+        if (res) {
+            onSuccess()
         } else {
-            return "Invalid input";
+            onFailed()
         }
-    };
-    const handleSave = () => {
+    }, [])
+
+    const handleSave = React.useCallback(async ({
+        id_subject,
+        id_education_progress,
+        name,
+        index
+    }: {
+        id_subject: number,
+        id_education_progress: number,
+        name: string,
+        index: number
+    }) => {
         dispatch(updateNameOfComponentScore({
             id_subject: id_subject!,
             id_education_progress: id_education_progress,
-            name: inputValue,
+            name: name,
             index: index
         }))
         setNameSheetRef.current?.close()
-        onSuccess();
-        if (index === -1) {
-            // dispatch(updateComponentScoreOfSubject({
-
-            // }))
-            // setSubjectDetai  lData((prev) => {
-            //     return {
-            //         ...prev,
-            //         final_score: {
-            //             ...prev.final_score,
-            //             score: parseFloat(inputValue)
-            //         }
-            //     }
-            // })
-
-        } else if (index === -2) {
-            // setSubjectDetailData((prev) => {
-            //     return {
-            //         ...prev,
-            //         midterm_score: {
-            //             ...prev.midterm_score,
-            //             score: parseFloat(inputValue)
-            //         }
-            //     }
-            // })
-        } else {
-            // setSubjectDetailData((prev) => {
-            //     return {
-            //         ...prev,
-            //         component_scores: prev.component_scores.map((item, i) => {
-            //             if (i === index) {
-            //                 return {
-            //                     ...item,
-            //                     score: parseFloat(inputValue)
-            //                 }
-            //             }
-            //             return item
-            //         })
-            //     }
-            // })
-
-        }
-    }
+        await handleSaveApi({
+            id_subject: id_subject!,
+            id_education_progress: id_education_progress,
+            name: name,
+            index: index
+        })
+    }, [])
 
     return (
         <RBSheet
@@ -199,9 +182,15 @@ const PickNameSheet = ({ setNameSheetRef, name, index, id_education_progress, id
                                     console.log(parseFloat(text) <= 10 && parseFloat(text) >= 0)
                                     setInputValue(text)
                                 }}
-                                onSubmitEditing={(event) => {
+                                onSubmitEditing={async (event) => {
                                     if (inputValue != "") {
-                                        handleSave()
+                                        await handleSave({
+                                            id_subject,
+                                            id_education_progress,
+                                            index,
+                                            name: inputValue
+
+                                        })
                                     }
                                 }}
                                 style={{

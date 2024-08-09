@@ -104,6 +104,9 @@ const householdItemDetailSlice = createSlice({
     updateDescription(state, action: PayloadAction<string>) {
       state.description = action.payload;
     },
+    updateGuidelineId(state, action: PayloadAction<number>) {
+      state.id_guide_item = action.payload;
+    },
   },
 });
 
@@ -116,6 +119,7 @@ export const {
   updateDescription,
   updateImage,
   updateImageProp,
+  updateGuidelineId,
 } = householdItemDetailSlice.actions;
 
 export default householdItemDetailSlice.reducer;

@@ -1,16 +1,11 @@
 import React, { useEffect, useRef } from 'react'
-import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, ActivityIndicator, Image, KeyboardAvoidingView, Keyboard } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, ActivityIndicator, Image, KeyboardAvoidingView, Keyboard, RefreshControl } from 'react-native'
 import { EducationScreenProps, HouseHoldScreenProps, ProgressScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/redux/store';
-
-// import AccordionItem from 'src/components/AccordionItem/accordion-item';
-
-import EducationScreenHeader from 'src/components/user/education/education-screen/education-screen-header';
-import EducationScreenSearchBar from 'src/components/user/education/education-screen/search-bar';
 import { Education, Subject } from 'src/interface/education/education';
 import DefaultAvatar from 'src/assets/images/education_assets/default_avatar.png';
 import { ScreenHeight } from '@rneui/base';
@@ -23,22 +18,24 @@ import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSh
 import AddCourseSheet from 'src/components/user/education/progress-screen/sheet/add-course-sheet';
 import { useToast } from 'react-native-toast-notifications';
 import { goal_data } from 'src/components/user/education/progress-screen/const/color';
-import AddComponentScoreSheet from 'src/components/user/education/subject-screen/sheet/AddComponentScoreSheet';
 import AddComponentScoreSheet1 from 'src/components/user/education/subject-screen/sheet/add-component-score-sheet-1';
 import AddComponentScoreSheet2 from 'src/components/user/education/subject-screen/sheet/add-component-score-sheet2';
+import EducationServices from 'src/services/apiclient/EducationService';
+import { setEducation, setLoading } from 'src/redux/slices/EducationSlice';
+import EmptyListIcon from 'src/assets/images/education_assets/no_member.png';
+
 const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) => {
     const { id_family, id_progress } = route.params
-    console.log('id_family', id_family)
-    console.log('id_progress', id_progress)
     const dispatch = useDispatch<AppDispatch>()
+    const loading = useSelector((state: RootState) => state.educations).loading
     const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
     const [choosenTab, setChoosenTab] = React.useState<number>(0)
-    const toast = useToast();
 
-    const progressData = useSelector((state: RootState) => state.educations).find(item => {
+    const progressData = useSelector((state: RootState) => state.educations).educations.find(item => {
         return item.id_education_progress == id_progress
     })
-    console.log(progressData)
+    const toast = useToast();
+    // console.log(progressData)
 
     const [pickedTargets, setPickedTargets] = React.useState<string[]>([])
 
@@ -52,6 +49,17 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
     const addCourseBottomSheetRef = useRef<BottomSheet>(null)
     const pickedTargetsBottomSheetRef = useRef<BottomSheet>(null)
     const addGoalBottomSheetRef = useRef<BottomSheet>(null)
+
+    const fetchDatas = React.useCallback(async () => {
+        const handleFetchEducation = async () => {
+            const educationsData = await EducationServices.getAllEducation(id_family!, 1, 100);
+            dispatch(setEducation(educationsData))
+        }
+        dispatch(setLoading(true))
+        await handleFetchEducation()
+        dispatch(setLoading(false))
+    }, [])
+
     useEffect(() => {
         if (progressData) {
             const subjects = progressData.subjects
@@ -69,48 +77,60 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
         }
     }, [choosenTab, progressData])
 
-    const buildListEmpty = () => {
-        return <TouchableOpacity className='flex-1 z-10 items-center justify-center bg-[#F7F7F7] dark:bg-[#0A1220]' activeOpacity={1.0} onPress={() => {
-            Keyboard.dismiss()
-        }}>
-            <Text className='text-center text-lg text-gray-500'>No Education Found</Text>
-        </TouchableOpacity>
-    }
+    const buildListEmpty = React.useCallback(() => {
+        return <View className='flex-1 justify-center items-center '>
+            <ScrollView className='flex-1' showsVerticalScrollIndicator={false} refreshControl={
+                <RefreshControl refreshing={loading} onRefresh={fetchDatas} />
+            }>
+                <View className='justify-center items-center mt-32'>
+                    <View className='mb-4'>
+                        <Image source={EmptyListIcon} style={{
+                            height: ScreenHeight * 0.2,
+                            width: ScreenHeight * 0.2,
+                        }} />
+                    </View>
+                    <Text className='text-[#747474] dark:text-[#8D94A5] my-2 font-bold text-lg'>Nothing here</Text>
+                    <Text className='mx-[15%] text-center text-sm text-[#747474] dark:text-[#8D94A5]'>{
+                        choosenTab == 0 ? "No subject added yet" : choosenTab == 1 ? "No in progress subject" : "No completed subject"
+                    }</Text>
+                </View>
+            </ScrollView>
+        </View>
+    }, [loading, choosenTab])
 
 
-    const buildList = () => {
+    const buildList = React.useCallback(() => {
         return <ScrollView className='flex-1 z-10 mt-5 bg-[#F7F7F7] dark:bg-[#0A1220]'
             showsVerticalScrollIndicator={false}
-        >
-            {
-                filteredData.map((item, index) => {
-                    return <React.Fragment key={index}>
-                        <CourseItem data={item} onPress={() => {
-                            navigation.navigate('SubjectScreen', {
-                                id_progress: item.id_education_progress,
-                                id_family,
-                                id_subject: item.id_subject
-                            })
-                        }}
-                            index={index}
-                        />
-                    </React.Fragment>
-                })
+            refreshControl={
+                <RefreshControl refreshing={loading} onRefresh={fetchDatas} />
             }
+        >
+            <>
+                {
+                    filteredData.map((item, index) => {
+                        return <React.Fragment key={index}>
+                            <CourseItem data={item} onPress={() => {
+                                navigation.navigate('SubjectScreen', {
+                                    id_progress: item.id_education_progress,
+                                    id_family,
+                                    id_subject: item.id_subject
+                                })
+                            }}
+                                index={index}
+                            />
+                        </React.Fragment>
+                    })
+                }
+                <View className='my-2'>
+
+                </View>
+            </>
         </ScrollView>
-    }
+    }, [filteredData, loading])
 
     return (
         <View className="flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]">
-            {/* <TouchableOpacity activeOpacity={1.0} className='flex-1 bg-transparent' onPress={() => {
-                console.log('pressed')
-                Keyboard.dismiss()
-            }}
-                disabled={isKeyboardVisible == false}
-            >
-                
-
-            </TouchableOpacity> */}
             <ProgressScreenHeader navigationBack={() => navigation.goBack()}
                 idFamily={id_family!}
                 imageUrl={familyInfo!.avatar || undefined}
@@ -126,10 +146,25 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
 
             <View className='flex-1'>
                 {
-                    filteredData.length > 0 ? <>
-                        {buildList()}
+                    loading ? <>
+                        <View className='flex-1 absolute w-full h-full bg-white dark:bg-[#0A1220] opacity-50 z-10 items-center justify-center'>
+                            <View className='items-center justify-center bg-black  rounded-lg'
+                                style={{
+                                    width: ScreenHeight * 0.1,
+                                    height: ScreenHeight * 0.1,
+                                }}
+                            >
+                                <ActivityIndicator size='small' color={'white'} />
+                            </View>
+                        </View>
                     </> : <>
-                        {buildListEmpty()}
+                        {
+                            filteredData.length > 0 ? <>
+                                {buildList()}
+                            </> : <>
+                                {buildListEmpty()}
+                            </>
+                        }
                     </>
                 }
             </View>

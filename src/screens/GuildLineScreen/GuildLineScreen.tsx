@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react'
-import { View, Text, TouchableOpacity, Image, ActivityIndicator, FlatList, TextInput, Dimensions, SafeAreaView, StatusBar, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, FlatList, TextInput, Dimensions, SafeAreaView, StatusBar, ScrollView, LogBox } from 'react-native'
 import { Guildline } from 'src/interface/guideline/guideline'
 import { GuildLineScreenProps } from 'src/navigation/NavigationTypes'
 import GuildLineService from 'src/services/apiclient/GuildLineService'
-import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants'
 
-import RBSheet from 'react-native-raw-bottom-sheet'
 
 import GuildlineItem from './GuildlineItem/GuildlineItem'
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color'
@@ -22,33 +20,23 @@ import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 import { ScreenHeight } from 'react-native-elements/dist/helpers'
 import { useToast } from 'react-native-toast-notifications'
 import { getTranslate } from 'src/redux/slices/languageSlice'
-// id_item: number;
-//   name: string;
-//   description: string;
-//   created_at: string;
-//   updated_at: string;
-const guildLineData: Guildline = {
-    id_guide_item: 1,
-    id_family: 96,
-    name: 'Shared guideline',
-    description: 'This is the shared guideline',
-    created_at: '2024-04-30T08:59:03.177Z',
-    updated_at: '2024-04-30T08:59:03.177Z',
-    is_shared: false,
-}
+import { updateGuidelineId } from 'src/redux/slices/HouseHoldDetailSlice'
+
+LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+]);
 
 
 
 const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) => {
-    const { id_family, id_household_item, openSheet } = route.params
+    const { id_family, id_household_item, openSheet, onAddCallback } = route.params
     // const [guidelines, setGuidelines] = React.useState<Guildline[]>([]);
     const dispatch = useDispatch<AppDispatch>();
     const translate = useSelector(getTranslate);
 
     const guidelines = useSelector((state: RootState) => state.guidelines)
-    const publicguidelines = guidelines.filter((item) => item.is_shared)
+    // const publicguidelines = guidelines.filter((item) => item.is_shared)
     const [loading, setLoading] = React.useState(true);
-    const refRBSheet = React.useRef<any>(null);
     const [tab, setTab] = React.useState(0);
     const addGuidelineBottomSheetRef = React.useRef<BottomSheet>(null);
     const updateGuidelineBottomSheetRef = React.useRef<BottomSheet>(null);
@@ -62,11 +50,15 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
     const scrollYRef = React.useRef<any>(0);
     const toast = useToast()
 
+    const publicGuidelines = React.useMemo(() => {
+        return guidelines.filter((item) => item.is_shared)
+    }, [guidelines])
+
     useEffect(() => {
         const fetchGuidelines = async () => {
             try {
                 const response = await GuildLineService.getAllGuideLine(id_family!); // API call to fetch all guidelines
-                console.log(response)
+                // console.log(response)
                 if (response) {
                     dispatch(setGuideline(response));
                     // setGuidelines(response);
@@ -78,7 +70,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                 // setGuidelines(response);
                 setLoading(false);
 
-                console.log('Guidelines:', response)
+                // console.log('Guidelines:', response)
             } catch (error) {
                 console.error('Error fetching guidelines:', error);
                 setLoading(false);
@@ -92,15 +84,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
         }
     }, []);
 
-
-
-    if (loading) {
-        return <View className='flex-1 justify-center items-center bg-[#fff] dark:bg-[#0A1220]'>
-            <ActivityIndicator style={{ justifyContent: 'center' }} size="small" />
-        </View>;
-    }
-
-    const renderEmptyGuideline = () => {
+    const renderEmptyGuideline = React.useCallback(() => {
         const emptyGuidelineName = 'Add a guideline';
         const emptyGuidelineDescription = 'Tap here to add a guideline';
         const emptyGuideline: Guildline = {
@@ -119,7 +103,16 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
             }}
             onUpdate={() => { }}
         />
+    }, [])
+
+
+    if (loading) {
+        return <View className='flex-1 justify-center items-center bg-[#fff] dark:bg-[#0A1220]'>
+            <ActivityIndicator style={{ justifyContent: 'center' }} size="small" />
+        </View>;
     }
+
+
 
     return (
         <View className="flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]">
@@ -220,7 +213,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                         {
                             tab == 1 && <>
                                 {
-                                    publicguidelines.map((item, index) => {
+                                    publicGuidelines.map((item, index) => {
                                         return <React.Fragment key={index}>
                                             <GuildlineItem item={item}
                                                 index={index}
@@ -262,8 +255,16 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                 appearsOnIndex={openSheet}
                 bottomSheetRef={addGuidelineBottomSheetRef}
                 id_family={id_family!}
+                id_household_item={id_household_item}
                 onAddSuccess={
                     () => {
+                        if (id_household_item) {
+                            //reset id_household_item and openSheet to null
+                            navigation.setParams({ id_household_item: undefined, openSheet: false })
+
+                            // onUpdateSuccess()
+                            navigation.goBack()
+                        }
                         toast.show("New guideline added", {
                             type: "success",
                             duration: 2000,
@@ -271,6 +272,13 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
                         });
                     }
                 }
+                onAddSuccessCallback={(id_guide_item: number) => {
+                    if (id_household_item) {
+                        // route.params.onGoBack(id_guide_item);
+                        dispatch(updateGuidelineId(id_guide_item))
+                        // onAddCallback(id_guide_item)
+                    }
+                }}
                 onAddFailed={
                     () => {
                         toast.show("Failed to add new guideline", {

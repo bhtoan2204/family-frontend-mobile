@@ -1,4 +1,4 @@
-import { ImageSourcePropType } from "react-native";
+import {ImageSourcePropType} from 'react-native';
 
 export interface HouseHoldItemDetailInterface {
   id_household_item: number;
@@ -6,6 +6,7 @@ export interface HouseHoldItemDetailInterface {
   item_name: string;
   item_imageurl: string | null;
   item_image?: ImageSourcePropType | null;
+  id_guide_item?: number | null;
   description: string | null;
   id_category: number;
   id_room: number;

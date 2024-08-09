@@ -70,7 +70,17 @@ const guidelineSlice = createSlice({
         state[index] = action.payload;
       }
     },
-
+    updateMarkShareGuideline(
+      state,
+      action: PayloadAction<{id_guide_item: number; is_share: boolean}>,
+    ) {
+      const index = state.findIndex(
+        guideline => guideline.id_guide_item === action.payload.id_guide_item,
+      );
+      if (index !== -1) {
+        state[index].is_shared = action.payload.is_share;
+      }
+    },
   },
 });
 
@@ -82,7 +92,7 @@ export const {
   updateGuideline,
   updateGuidelineData,
   updateGuidelineTitleAndDescription,
-  
+  updateMarkShareGuideline,
 } = guidelineSlice.actions;
 
 export default guidelineSlice.reducer;

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView, StatusBar } from 'react-native'
+import { View, Text, Dimensions, SafeAreaView, TouchableOpacity, Image, ScrollView, StatusBar, ActivityIndicator, RefreshControl } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { ShoppingListCategoryScreenProps } from 'src/navigation/NavigationTypes'
 import { AppDispatch, RootState } from 'src/redux/store'
@@ -25,7 +25,8 @@ import ShoppingListPickCategorySheet from 'src/components/user/shopping/sheet/ad
 import { useColorScheme } from 'nativewind'
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 import { useToast } from 'react-native-toast-notifications'
-import { updatePurchasedItem } from 'src/redux/slices/ShoppingListSlice'
+import { setLoading, setShoppingList, setShoppingListItemType, setShoppingListType, updatePurchasedItem } from 'src/redux/slices/ShoppingListSlice'
+import ShoppingListServices from 'src/services/apiclient/ShoppingListServices'
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -35,24 +36,24 @@ const screenHeight = Dimensions.get('screen').height;
 
 // tạo item với list có rồi với param id_list, id_family,item_name,id_item_type
 
-const mapByItemType = (items: ShoppingListItem[]): Map<ShoppingListItemType, ShoppingListItem[]> => {
-    const data: ShoppingListItem[] = JSON.parse(JSON.stringify(items))
-    return data.reduce((map, item) => {
-        const itemType = item.itemType;
+// const mapByItemType = (items: ShoppingListItem[]): Map<ShoppingListItemType, ShoppingListItem[]> => {
+//     const data: ShoppingListItem[] = JSON.parse(JSON.stringify(items))
+//     return data.reduce((map, item) => {
+//         const itemType = item.itemType;
 
-        // Nếu chưa có entry cho itemType này, tạo một entry mới
-        if (!map.has(itemType)) {
-            map.set(itemType, []);
-        }
+//         // Nếu chưa có entry cho itemType này, tạo một entry mới
+//         if (!map.has(itemType)) {
+//             map.set(itemType, []);
+//         }
 
-        // Thêm id_item vào mảng tương ứng
-        map.get(itemType)?.push(item);
+//         // Thêm id_item vào mảng tương ứng
+//         map.get(itemType)?.push(item);
 
-        return map;
-    }, new Map<ShoppingListItemType, ShoppingListItem[]>());
-}
+//         return map;
+//     }, new Map<ShoppingListItemType, ShoppingListItem[]>());
+// }
 
-const mapByItemType2 = (items: ShoppingListItem[]): Map<string, ShoppingListItem[]> => {
+const mapByItemType = (items: ShoppingListItem[]): Map<string, ShoppingListItem[]> => {
     const data: ShoppingListItem[] = JSON.parse(JSON.stringify(items))
     const map = new Map<string, ShoppingListItem[]>()
     for (let i = 0; i < data.length; i++) {
@@ -70,34 +71,46 @@ const mapByItemType2 = (items: ShoppingListItem[]): Map<string, ShoppingListItem
 }
 
 const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryScreenProps) => {
-    const { id_family, id_category, openSheet } = route.params
-    console.log(openSheet)
-    // console.log('id_family', id_family, 'id_category', id_category)
-    const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
+    const { id_family, id_category } = route.params
+    console.log(id_family, id_category)
+    const loading = useSelector((state: RootState) => state.shoppinglist).loading
     const shoppingListInfo = useSelector((state: RootState) => state.shoppinglist).shoppingList.filter((item) => item.id_shopping_list_type === id_category)
-    const [mapItems, setMapItems] = useState<Map<ShoppingListItemType, ShoppingListItem[]>>(new Map())
-    console.log('cout', shoppingListInfo)
-    const items: Map<string, ShoppingListItem[]> = mapByItemType2(
+    const shoppingListType = useSelector((state: RootState) => state.shoppinglist).shoppingListType
+    console.log(shoppingListInfo)
+    const items: Map<string, ShoppingListItem[]> = mapByItemType(
         shoppingListInfo[0]?.items || []
     )
     const categories = useSelector((state: RootState) => state.shoppinglist).shoppingListItemType
     const addItemBottomSheetRef = React.useRef<BottomSheet>(null)
     const addCategoryBottomSheetRef = React.useRef<BottomSheet>(null)
     const [pickedCategory, setPickedCategory] = useState<number>(-1)
+
     const dispatch = useDispatch<AppDispatch>()
 
     const isDarkMode = useSelector(getIsDarkMode)
     const toast = useToast()
 
-    // const items: ShoppingListItem[] = []
-    // useEffect(() => {
-    //     console.log("shopping list", shoppingListInfo)
-    //     console.log(items)
-    // }, [shoppingListInfo])
+    const fetchDatas = useCallback(async () => {
+        const fetchShoppingList = async () => {
+            const data = await ShoppingListServices.getShoppingDetail(id_family!)
+            dispatch(setShoppingList(data))
+        }
+        const fetchShoppingListType = async () => {
+            const data = await ShoppingListServices.getShoppingListType()
+            dispatch(setShoppingListType(data))
+        }
+        const fetchItemType = async () => {
+            const data = await ShoppingListServices.getShoppingItemType()
+            dispatch(setShoppingListItemType(data))
+        }
+        dispatch(setLoading(true))
+        await fetchShoppingList()
+        await fetchShoppingListType()
+        await fetchItemType()
+        dispatch(setLoading(false))
+    }, [])
 
-
-
-    const getImage = (id_category: number) => {
+    const getImage = React.useCallback((id_category: number) => {
         if (id_category === 1) {
             return GroceryBgImage
         }
@@ -114,28 +127,19 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
             return PharmacyBgImage
         }
         return OtherBgImage
-    }
+    }, [])
 
-    const getCategoryName = (id_category: number) => {
-        if (id_category === 1) {
-            return 'Grocery'
+    const getCategoryName = React.useCallback((id_category: number) => {
+        const category = shoppingListType.find((item) => item.id_shopping_list_type === id_category)
+        if (category) {
+            return category.type_name_en
+        } else {
+            return "Other"
         }
-        if (id_category === 2) {
-            return 'Electronics'
-        }
-        if (id_category === 3) {
-            return 'Clothing'
-        }
-        if (id_category === 4) {
-            return 'Furniture'
-        }
-        if (id_category === 5) {
-            return 'Pharmacy'
-        }
-        return 'Other'
-    }
 
-    const handleNavigateItemDetail = (id_list: number, id_item: number) => {
+    }, [shoppingListType])
+
+    const handleNavigateItemDetail = React.useCallback((id_list: number, id_item: number) => {
         console.log('id_list', id_list, 'id_item', id_item)
         navigation.navigate('ShoppingListDetail', {
             id_family: id_family,
@@ -143,17 +147,47 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
             id_category: id_category,
             id_item: id_item,
         })
-    }
+    }, [])
 
-    const handleCompleteItem = (id_list: number, id_item: number) => {
-        console.log('id_list', id_list, 'id_item', id_item)
+    const ApiCall = React.useCallback(async (item: ShoppingListItem) => {
+        const res = await ShoppingListServices.updateShoppingListItem({
+            id_family: id_family!,
+            id_item: item.id_item,
+            id_list: item.id_list,
+            is_purchased: !item.is_purchased
+        })
+        if (res) {
+            return true
+
+        } else {
+            return false
+        }
+    }, [])
+
+    const handleCompleteItem = React.useCallback(async (id_list: number, item: ShoppingListItem) => {
         dispatch(updatePurchasedItem({
-            id_item: id_item,
+            id_item: item.id_item,
             id_list: id_list,
         }))
-    }
+        const res = await ApiCall(item)
+        if (res) {
+            toast.show('Purchase', {
+                duration: 2000,
+                icon: <Material name='check' size={24} color={'white'} />,
+                type: 'success',
+            })
+        } else {
+            toast.show('Un-purchased', {
+                duration: 2000,
+                icon: <Material name='close' size={24} color={'white'} />,
+                type: 'error',
+            })
+        }
+        // console.log('id_list', id_list, 'id_item', id_item)
 
-    const buildEmptyList = () => {
+    }, [])
+
+    const buildEmptyList = React.useCallback(() => {
         return (
             <View className='flex-1 justify-center items-center bg-white dark:bg-[#0A1220] '>
                 <View className='justify-center items-center mt-[-4%]'>
@@ -168,39 +202,30 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
                 </View>
             </View>
         )
-    }
+    }, [])
 
-    const buildItems = () => {
+    const buildItems = React.useCallback(() => {
         return (
             Array.from(items.entries()).map(([item, index]) => {
                 return (
                     <React.Fragment key={item}>
                         <ShoppingListCategoryItem
-                            item_type={JSON.parse(item)} items={
+                            item_type={JSON.parse(item)}
+                            items={
                                 items.get(item) || []
                             }
                             handleNavigateItemDetail={handleNavigateItemDetail}
                             handleCompleteItem={handleCompleteItem}
                             onPurchase={() => {
-                                toast.show("Purchased", {
-                                    type: "success",
-                                    duration: 2000,
-                                    icon: <Material name="check" size={24} color={"white"} />,
-                                })
                             }}
                             onUnpurchase={() => {
-                                toast.show("Unpurchased", {
-                                    type: "success",
-                                    duration: 2000,
-                                    icon: <Material name="close" size={24} color={"white"} />,
-                                })
                             }}
                         />
                     </React.Fragment>
                 )
             })
         )
-    }
+    }, [items])
 
 
 
@@ -217,17 +242,13 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
                     }}>
                         <Material name='chevron-left' size={35} color={COLORS.Rhino} />
                     </TouchableOpacity>
-                    {/* <Text className='flex-1 text-center text-lg'
-                        style={{ color: COLORS.Rhino, fontWeight: 'bold' }}
-                    >Shopping List</Text> */}
+
                     <View className='absolute top-[200%] right-[-20] '>
                         <Image source={getImage(id_category)} style={{
                             height: screenHeight * 0.2,
                             width: screenHeight * 0.2,
                             transform: [{ rotate: '-20deg' }]
 
-                            // position: 'absolute',
-                            // right: 0,
                         }} />
                     </View>
                 </View>
@@ -256,24 +277,37 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
                 </TouchableOpacity>
                 <View className='bg-white flex-1 '>
                     {
-                        items && items.size > 0 ?
-                            <ScrollView className='flex-1 bg-white dark:bg-[#0A1220]' showsVerticalScrollIndicator={false}>
-                                <View style={{
-                                }} className='flex-1 py-4 '>
-                                    {/* <View className='my-4'></View> */}
-                                    {
-                                        buildItems()
-                                        // shoppingListInfo.map((item, index) => {
-                                        //     return (
-                                        //         <ShoppingListCategoryItem item={item} handleNavigateItemDetail={handleNavigateItemDetail} />
-
-                                        //     )
-                                        // })
-                                    }
+                        loading ? <>
+                            <View className='flex-1 absolute w-full h-full bg-white dark:bg-[#0A1220] opacity-50 z-10 items-center justify-center'>
+                                <View className='items-center justify-center bg-black  rounded-lg'
+                                    style={{
+                                        width: screenHeight * 0.1,
+                                        height: screenHeight * 0.1,
+                                    }}
+                                >
+                                    <ActivityIndicator size='small' color={'white'} />
                                 </View>
+                            </View>
+                        </> : <>
+                            {
+                                items && items.size > 0 ?
+                                    <ScrollView className='flex-1 bg-white dark:bg-[#0A1220]' showsVerticalScrollIndicator={false}
+                                        refreshControl={
+                                            <RefreshControl refreshing={loading} onRefresh={fetchDatas} />
+                                        }
+                                    >
+                                        <View style={{
+                                        }} className='flex-1 py-4 '>
+                                            {/* <View className='my-4'></View> */}
+                                            {
+                                                buildItems()
+                                            }
+                                        </View>
 
-                            </ScrollView>
-                            : buildEmptyList()
+                                    </ScrollView>
+                                    : buildEmptyList()
+                            }
+                        </>
                     }
 
                 </View>
@@ -285,7 +319,6 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
                 pickedCategory={pickedCategory}
                 categories={categories}
                 id_shopping_list_type={id_category!}
-                appearOnIndex={openSheet}
                 onAddSuccess={
                     () => {
                         toast.show("New shopping item added", {
@@ -305,7 +338,6 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
                     }
                 }
             />
-            {/* <AddCategorySheet bottomSheetRef={addCategoryBottomSheetRef} id_family={id_family!} /> */}
             <ShoppingListPickCategorySheet refRBSheet={addCategoryBottomSheetRef}
                 categories={categories}
                 onSetCategory={(id_category) => {

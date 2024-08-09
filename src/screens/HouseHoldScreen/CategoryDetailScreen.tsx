@@ -27,10 +27,10 @@ const CategoryDetailScreen = ({ navigation, route,setAddItemType,setPickedCatego
         }, 2000);
     }, []);
     React.useEffect(() => {
-        setAddItemType(1)
+        // setAddItemType(1)
         setPickedCategory(id_category!)
         return () => {
-            setAddItemType(0)
+            // setAddItemType(0)
             setPickedCategory(-1)
         }
     })

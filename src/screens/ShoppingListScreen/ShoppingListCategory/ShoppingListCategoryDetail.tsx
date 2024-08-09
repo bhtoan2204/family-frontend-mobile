@@ -36,6 +36,7 @@ import UpdatePriceSheet from 'src/components/user/shopping/sheet/update-price-sh
 import { convertToNumber } from 'src/utils/currency/convertPriceFromDB'
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 import { useToast } from 'react-native-toast-notifications'
+import ShoppingListServices from 'src/services/apiclient/ShoppingListServices'
 
 
 const screenHeight = Dimensions.get('screen').height;
@@ -61,12 +62,12 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
     const isDarkMode = useSelector(getIsDarkMode)
     const toast = useToast()
 
-    useEffect(() => {
-        console.log("items", item)
-        console.log("item detail", itemDetail)
-    }, [])
+    // useEffect(() => {
+    //     console.log("items", item)
+    //     console.log("item detail", itemDetail)
+    // }, [])
 
-    const getImage = (id_category: number) => {
+    const getImage = React.useCallback((id_category: number) => {
         if (id_category === 1) {
             return GroceryBgImage
         }
@@ -83,7 +84,7 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
             return PharmacyBgImage
         }
         return OtherBgImage
-    }
+    }, [])
 
     // const buildInfoBox = () => {
     //     return <View className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'>
@@ -115,7 +116,7 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
     //         </View>
     //     </View>
     // }
-    const buildInfoBox = () => {
+    const buildInfoBox = React.useCallback(() => {
         return <View className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'>
             <View className='flex-row  items-center  w-full  py-2 '>
                 <View className=' flex-row  items-center '>
@@ -128,7 +129,7 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                         backgroundColor: itemDetail?.is_purchased ? '#00AE00' : undefined,
                     }}
                         onPress={() => {
-                            console.log('hello')
+                            // console.log('hello')
                             dispatch(updatePurchasedItem({
                                 id_item: id_item,
                                 id_list: id_shopping_list
@@ -159,8 +160,9 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
 
             </View>
         </View>
-    }
-    const buildCalendarBox = () => {
+    }, [itemDetail?.is_purchased, itemDetail?.item_name])
+
+    const buildCalendarBox = React.useCallback(() => {
         return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]' onPress={() => {
             updateDateBottomSheetRef.current?.expand()
         }}>
@@ -177,9 +179,9 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                 }</Text>
             </View>
         </TouchableOpacity>
-    }
+    }, [itemDetail?.reminder_date])
 
-    const buildRepeatBox = () => {
+    const buildRepeatBox = React.useCallback(() => {
         return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'
             onPress={() => {
                 // addInformationBottomSheetRef.current?.expand()
@@ -197,29 +199,29 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                 <Text className='text-base text-[#2F2F34] dark:text-white'>Repeat</Text>
             </View>
         </TouchableOpacity>
-    }
+    }, [])
 
-    const buildAddInfoBox = () => {
-        return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'
-            onPress={() => {
-                addInformationBottomSheetRef.current?.expand()
+    // const buildAddInfoBox = () => {
+    //     return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'
+    //         onPress={() => {
+    //             addInformationBottomSheetRef.current?.expand()
 
-            }}
-        >
-            <View className='flex-row  items-center  w-full  py-2 '>
-                <View className='mr-2'>
+    //         }}
+    //     >
+    //         <View className='flex-row  items-center  w-full  py-2 '>
+    //             <View className='mr-2'>
 
-                    <Material name='information-outline' size={30} color={
-                        !isDarkMode ? '#5D5D5D' : 'white'
-                    } />
-                </View>
+    //                 <Material name='information-outline' size={30} color={
+    //                     !isDarkMode ? '#5D5D5D' : 'white'
+    //                 } />
+    //             </View>
 
-                <Text className='text-base text-[#2F2F34] dark:text-white'>Add more information</Text>
-            </View>
-        </TouchableOpacity>
-    }
+    //             <Text className='text-base text-[#2F2F34] dark:text-white'>Add more information</Text>
+    //         </View>
+    //     </TouchableOpacity>
+    // }
 
-    const buildDescriptionBox = () => {
+    const buildDescriptionBox = React.useCallback(() => {
         return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'
             onPress={() => {
                 updateDescriptionBottomSheetRef.current?.expand()
@@ -238,9 +240,9 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                 }</Text>
             </View>
         </TouchableOpacity>
-    }
+    }, [itemDetail?.description])
 
-    const buildPriceBox = () => {
+    const buildPriceBox = React.useCallback(() => {
         return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'
             onPress={() => {
                 updatePriceBottomSheetRef.current?.expand()
@@ -259,21 +261,39 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                 }</Text>
             </View>
         </TouchableOpacity>
-    }
-    const handleDeleteItem = () => {
+    }, [itemDetail?.price])
+
+    const handleDelete = React.useCallback(async (id_family: number, id_list: number, id_item: number) => {
+        const res = await ShoppingListServices.deleteShoppingListItem({
+            id_family: id_family!,
+            id_list: id_list,
+            id_item: id_item
+        })
+        if (res == true) {
+            toast.show("Item deleted", {
+                type: "success",
+                duration: 2000,
+                icon: <Material name="close" size={24} color={"white"} />,
+            })
+            navigation.goBack()
+        } else {
+            toast.show("Failed to delete item", {
+                type: "error",
+                duration: 2000,
+                icon: <Material name="close" size={24} color={"white"} />,
+            })
+        }
+    }, [])
+
+    const handleDeleteItem = React.useCallback(async (id_family: number, id_list: number, id_item: number) => {
         Alert.alert('Delete item', 'Are you sure you want to delete this item?', [
             {
                 text: 'Delete',
                 style: 'destructive',
-                onPress: () => {
-                    navigation.goBack()
-                    dispatch(deleteItem({ id_item: id_item, id_list: id_shopping_list }))
-                    toast.show("Item deleted", {
-                        type: "success",
-                        duration: 2000,
-                        icon: <Material name="close" size={24} color={"white"} />,
-                    })
-                    // dispatch(deleteTodoList({ id_item: id_item }))
+                onPress: async () => {
+                    await handleDelete(id_family!, id_list, id_item)
+                    dispatch(deleteItem({ id_item: id_item, id_list: id_list }))
+
                 }
             },
             {
@@ -287,7 +307,8 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
 
 
         )
-    }
+    }, [])
+
     return (
         <View style={{
             flex: 1,
@@ -305,7 +326,11 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                             <Material name='chevron-left' size={35} color={COLORS.Rhino} />
                         </TouchableOpacity>
                         <TouchableOpacity className='' onPress={() => {
-                            handleDeleteItem()
+                            handleDeleteItem(
+                                id_family!,
+                                id_shopping_list,
+                                id_item
+                            )
                         }}>
                             <Material name='delete-outline' size={35} color={COLORS.Rhino} />
                         </TouchableOpacity>
@@ -374,7 +399,7 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                         })
                     }}
             />
-            <AddMoreInfoSheet
+            {/* <AddMoreInfoSheet
                 bottomSheetRef={addInformationBottomSheetRef} id_family={id_family!} id_list={id_shopping_list}
                 description={description}
                 price={itemDetail?.price ? itemDetail?.price : 0}
@@ -389,9 +414,9 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                         })
                     }
                 }
-            />
+            /> */}
             <UpdateDescriptionSheet bottomSheetRef={updateDescriptionBottomSheetRef} id_family={id_family!} id_list={id_shopping_list}
-                description={description}
+                description={itemDetail?.description ? itemDetail?.description : ""}
                 id_item={id_item}
                 id_shopping_list_type={id_shopping_list}
                 onUpdateSuccess={

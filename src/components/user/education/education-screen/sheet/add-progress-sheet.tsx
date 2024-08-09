@@ -117,11 +117,15 @@ const AddProgressSheet = ({
                 id_user: pickedIdUser,
                 created_at: res.created_at,
                 updated_at: res.updated_at,
+                is_shared: res.is_shared,
                 title: res.title,
                 progress_notes: res.progress_notes,
                 school_info: res.school_info,
                 subjects: [],
                 users: {
+                    idUser: memberData?.id_user || '',
+                    email: memberData?.user.email || '',
+                    phone: memberData?.user.phone || '',
                     avatar: memberData?.user.avatar || '',
                     birthdate: memberData?.user.birthdate || null,
                     firstname: memberData?.user.firstname || '',
@@ -220,50 +224,6 @@ const AddProgressSheet = ({
 
     }
 
-    const buildPickMember = () => {
-        return <TouchableOpacity className=' bg-white  mt-3 justify-center rounded-lg  ' style={{
-            backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
-            borderWidth: !isDarkMode ? 1 : 1.5,
-            borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
-            borderRadius: 10,
-            marginVertical: 10,
-            paddingVertical: screenHeight * 0.008,
-            paddingHorizontal: screenWidth * 0.05,
-            marginHorizontal: screenWidth * 0.05,
-            // fontWeight: 'bold',
-        }} onPress={() => {
-            // pickCategorySheetRef.current?.expand()
-            // addRoomSheetRef.current?.expand()
-            // pickMemberBottomSheetRef.current?.expand()
-        }}>
-            <View className='flex-row justify-between items-center'>
-                <View className='flex-row  items-center '>
-                    <Image source={
-                        pickedIdUser == "" ? OpenedFolder : { uri: getMemberAvatar(pickedIdUser) }
-                    } style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} />
-                    <Text className='pl-4' style={{
-                        color: "#b0b0b0",
-                        fontSize: 15,
-                        // fontWeight: 500
-
-                    }}>{
-                            pickedIdUser == "" ? 'Pick a member' : getMemberName(pickedIdUser)
-
-                        }</Text>
-                </View>
-                {/* <View className=''>
-                    <Text style={{
-                        color: pickedIdUser == "" ? "#b0b0b0" : iOSColors.systemBlue.defaultLight,
-                        fontSize: 15,
-
-                    }}>{
-                            pickedIdUser == "" ? 'Pick a category' : getMemberName(pickedIdUser)
-
-                        }</Text>
-                </View> */}
-            </View>
-        </TouchableOpacity>
-    }
 
     return (
         <BottomSheet
@@ -285,10 +245,7 @@ const AddProgressSheet = ({
                 Keyboard.dismiss()
             }}
             onChange={(index) => {
-                console.log(index)
-                if (index == -1) {
-
-                }
+                
             }}
         // keyboardBehavior="extend"
         // keyboardBlurBehavior="restore"

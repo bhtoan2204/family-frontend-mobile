@@ -11,6 +11,7 @@ import { deleteGuideline } from 'src/redux/slices/GuidelineSlice';
 import ImageComponent from 'src/components/Image/Image';
 import { Guildline } from 'src/interface/guideline/guideline';
 import { shared_guideline_img } from 'src/assets/images/guideline_assets/item';
+import GuildLineService from 'src/services/apiclient/GuildLineService';
 
 interface GuildlineItemProps {
     item: Guildline;
@@ -25,8 +26,8 @@ const screenWidth = Dimensions.get('screen').width
 const GuildlineItem = ({ item, onPress, onUpdate, index }: GuildlineItemProps) => {
     const dispatch = useDispatch<AppDispatch>();
     const itemRef = React.useRef<Swipeable>(null);
-    const handleDelete = () => {
-        // console.log("Deleting item with id:", item.id_item);
+    const handleDelete = async () => {
+        await GuildLineService.deleteGuideline(item.id_family, item.id_guide_item)
         dispatch(deleteGuideline(item.id_guide_item))
         itemRef.current?.close();
     };
@@ -36,7 +37,7 @@ const GuildlineItem = ({ item, onPress, onUpdate, index }: GuildlineItemProps) =
             "Are you sure you want to delete this guideline?",
             [
 
-                { text: "Confirm", onPress: () => handleDelete() },
+                { text: "Confirm", onPress: async () => await handleDelete() },
                 {
                     text: "Cancel",
                     onPress: () => console.log("Cancel Pressed"),

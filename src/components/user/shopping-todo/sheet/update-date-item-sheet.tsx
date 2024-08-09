@@ -29,6 +29,7 @@ import { addMonths, format, subMonths } from 'date-fns';
 import { Calendar } from 'react-native-calendars';
 import { updateDescription, updateDateTodoList } from 'src/redux/slices/TodoListSlice';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import TodoListServices from 'src/services/apiclient/TodoListService';
 
 
 
@@ -36,26 +37,24 @@ interface AddItemSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
     id_family: number
     id_item: number
+    id_list: number
     initialDate: string,
     onUpdateSuccess: () => void
     onUpdateFailed: () => void
 }
 
-const screenHeight = Dimensions.get('window').height;
-const screenWidth = Dimensions.get('window').width;
 
 const UpdateDateItemSheet = ({
     bottomSheetRef,
     id_family,
     id_item,
+    id_list,
     initialDate,
     onUpdateSuccess,
     onUpdateFailed
 
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
-    const [text, setText] = React.useState('')
-    const [step, setStep] = React.useState(0)
     const [loading, setLoading] = React.useState(false)
     const dispatch = useDispatch<AppDispatch>()
 
@@ -71,7 +70,7 @@ const UpdateDateItemSheet = ({
     }, [isDarkMode])
     // console.log('hello dcmm', format(new Date('2024-07-05T19:26:03.642Z'), 'yyyy-MM-dd'))
 
-    const buildDate = (dateString: string) => {
+    const buildDate = React.useCallback((dateString: string) => {
         const date: Date = new Date(dateString);
 
         if (isNaN(date.getTime())) {
@@ -88,7 +87,7 @@ const UpdateDateItemSheet = ({
 
         const description: string = `${month} ${year}`;
         return description;
-    }
+    }, [])
 
 
     const renderBackdrop = React.useCallback(
@@ -116,7 +115,7 @@ const UpdateDateItemSheet = ({
     };
 
 
-    const customCalendarHeader = () => {
+    const customCalendarHeader = React.useCallback(() => {
         return (
             <View className='flex-row justify-between items-center py-3 ' style={{
                 marginHorizontal: 10,
@@ -141,21 +140,32 @@ const UpdateDateItemSheet = ({
                 </View>
             </View>
         )
-    }
+    }, [selectDate, isDarkMode])
 
-    const handleSubmit = async () => {
-        // dispatch(updateReminderDateItem({
-        //     id_item: id_item,
-        //     id_list: id_list,
-        //     reminder_date: selectDate
-        // }))
+    const handleSubmitApi = React.useCallback(async (dueDate: string) => {
+        Keyboard.dismiss()
+        const res = await TodoListServices.updateItem({
+            id_family: id_family,
+            id_checklist_type: id_list,
+            id_checklist: id_item,
+            due_date: dueDate
+        })
+        if (res == true) {
+            onUpdateSuccess()
+        } else {
+            onUpdateFailed()
+        }
+    }, [])
+
+    const handleSubmit = React.useCallback(async (selectDate: string) => {
         dispatch(updateDateTodoList({
-            id_item: id_item,
+            id_checklist: id_item,
+            id_checklist_type: id_list,
             date: selectDate
         }))
+        handleSubmitApi(selectDate)
         bottomSheetRef.current?.close()
-        onUpdateSuccess()
-    }
+    }, [])
 
     return (
         <BottomSheet
@@ -193,7 +203,6 @@ const UpdateDateItemSheet = ({
                         }}
                         initialDate={selectDate}
                         theme={{
-                            // calendarBackground: colorScheme === 'light' ? '#f7f7f7' : '#1A1A1A',
                             calendarBackground: 'transparent',
                             dayTextColor: !isDarkMode ? '#000000' : 'white',
                             textDisabledColor: !isDarkMode ? '#7C7C7C' : '#92969D',
@@ -216,7 +225,7 @@ const UpdateDateItemSheet = ({
                     }} className=' py-4 rounded-full items-center justify-center'
                         onPress={async () => {
                             console.log(selectDate)
-                            await handleSubmit()
+                            await handleSubmit(selectDate)
                             // setSelectDate(new Date)
                             // bottomSheetRef.current?.snapTo(0)
                         }}

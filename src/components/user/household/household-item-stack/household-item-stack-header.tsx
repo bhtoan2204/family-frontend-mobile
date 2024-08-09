@@ -18,6 +18,7 @@ import { BlurView } from 'expo-blur'
 import ImageComponent from 'src/components/Image/Image'
 import FamilyImage from 'src/assets/images/household_assets/add_room.png'
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
+import { gradients_list } from 'src/assets/images/gradients'
 
 
 interface HouseHoldItemStackHeaderProps {
@@ -40,15 +41,34 @@ const Divider = () => {
 const HouseHoldItemStackHeader = ({
     data, handleEditImage, handleEditTitle, handleDeleteItem, navigationBack
 }: HouseHoldItemStackHeaderProps) => {
-    // const image = useSelector((state: RootState) => state.householdItems).find(item => item.id_household_item === data.id_household_item)?.item_image!
-    // console.log(data.)
+    const items = useSelector((state: RootState) => state.householdItems)
+    console.log(data.id_household_item)
+    const [key, setKey] = React.useState(false)
     const isDarkMode = useSelector(getIsDarkMode)
+
+    const getIndex = React.useCallback(() => {
+        if (data.id_household_item == -1) {
+            return 0
+        } else {
+            // setKey(!key)
+            const index = items.findIndex((item) => {
+                return item.id_household_item == data.id_household_item
+            })
+            // console.log(index)
+            return index
+        }
+    }, [items, data])
+    React.useEffect(() => {
+        setKey(!key)
+    }, [data])
+
     return (
         <TouchableOpacity activeOpacity={1.0} onPress={() => {
             Keyboard.dismiss()
         }}>
             <ImageBackground
-                source={data.item_imageurl ? { uri: data.item_imageurl } : data.item_image!}
+                key={key.toString()}
+                source={data.item_imageurl ? { uri: data.item_imageurl } : gradients_list[getIndex() % gradients_list.length]}
                 style={{ width: screenWidth, height: screenHeight * 0.3 }}
             >
                 <View className='w-full absolute z-10 flex-row justify-between items-center py-3 mt-5' >
@@ -60,9 +80,15 @@ const HouseHoldItemStackHeader = ({
 
                     </BlurView>
 
-                    <BlurView intensity={35} tint='dark' className='px-3 overflow-hidden rounded-lg '>
+                    <BlurView intensity={35} tint='dark' className='px-3 overflow-hidden rounded-lg max-w-10'>
                         <View >
-                            <Text className='text-lg font-semibold text-white' >{data.item_name}</Text>
+                            <Text className='text-lg font-semibold text-white ' numberOfLines={1}
+                                style={{
+                                    maxWidth: screenWidth * 0.3,
+                                }}
+                            >
+                                {data.item_name}
+                            </Text>
                         </View>
                     </BlurView>
 
