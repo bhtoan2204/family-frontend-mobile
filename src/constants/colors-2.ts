@@ -60,9 +60,11 @@ const COLORS = {
     blackQuestion: '#000000',
     whiteBackground: '#fff',
     button: '#2A475E',
+    textInModal: '#ACACAC',
   },
 
   dark: {
+    textInModal: '#8D94A5',
     button: '#66C0F4',
     whiteBackground: '#0A1220',
     blackQuestion: '#fff',

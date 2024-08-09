@@ -266,6 +266,11 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
                   styles.modalContainer1,
                   {backgroundColor: color.background},
                 ]}>
+                <Image
+                  source={require('../../assets/images/cat.png')}
+                  style={styles.catImage}
+                  resizeMode="contain"
+                />
                 {selectedFamily && (
                   <>
                     <Image
@@ -281,7 +286,7 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
                       {selectedFamily.name}
                     </Text>
                     <Text
-                      style={[styles.modalText, {color: color.textSubdued}]}>
+                      style={[styles.modalText, {color: color.textInModal}]}>
                       {translate('FAMILY_MEMBERS')}: {selectedFamily.quantity}
                     </Text>
                     <View
@@ -291,7 +296,7 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
                         alignItems: 'center',
                         marginBottom: 10,
                       }}>
-                      <Text style={[{color: color.textSubdued, fontSize: 16}]}>
+                      <Text style={[{color: color.textInModal, fontSize: 16}]}>
                         {translate('EXPIRED_AT')}:{' '}
                       </Text>
                       <Text style={{color: COLORS.BlueLight, fontSize: 16}}>
@@ -301,7 +306,7 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
                       </Text>
                     </View>
                     <Text
-                      style={[styles.modalText, {color: color.textSubdued}]}>
+                      style={[styles.modalText, {color: color.textInModal}]}>
                       {translate('DAYS_LEFT')}:{' '}
                       {calculateDaysLeft(selectedFamily.expired_at)}{' '}
                       {translate('days')}

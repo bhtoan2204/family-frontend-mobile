@@ -280,6 +280,7 @@ const styles = StyleSheet.create({
   modalBackground1: {
     flex: 1,
     justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     alignItems: 'center',
   },
   modalContainer1: {
@@ -303,7 +304,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    marginTop: 20,
+    marginTop: 10,
   },
   modalButton: {
     flex: 1,
@@ -373,6 +374,14 @@ const styles = StyleSheet.create({
   },
   selectedFamilyItem: {
     backgroundColor: '#E0F7FA',
+  },
+  catImage: {
+    position: 'absolute',
+    top: -110, // Adjust this value to position the cat image correctly
+    left: 210,
+    // Center the image horizontally
+    width: 150, // Adjust the width as needed
+    height: 150, // Adjust the height as needed
   },
 });
 
