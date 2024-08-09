@@ -326,7 +326,12 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
                 marginTop: 20,
               }}>
               <View style={[styles.row, {marginBottom: 20}]}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('CalendarScreen', {
+                      forceUpdate: new Date().getTime(),
+                    })
+                  }>
                   <Icon name="chevron-back" size={30} color="#fff" />
                 </TouchableOpacity>
                 <Text style={[styles.headerTitle, {color: '#fff'}]}>

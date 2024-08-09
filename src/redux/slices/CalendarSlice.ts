@@ -37,6 +37,7 @@ const calendarSlice = createSlice({
   reducers: {
     setEvents(state, action: PayloadAction<EventDetail[]>) {
       state.events = action.payload;
+      state.allEvents = {};
     },
 
     setTodoList: (state, action: PayloadAction<TodoListItem[]>) => {
@@ -151,6 +152,7 @@ const calendarSlice = createSlice({
           );
         }
       }
+      state.selectedEvent = action.payload;
     },
 
     updateEvent(state, action: PayloadAction<EventDetail>) {
@@ -204,6 +206,7 @@ const calendarSlice = createSlice({
         );
       });
     },
+
     deleteEventOnly(
       state,
       action: PayloadAction<{id_calendar: string; recurrence_rule: string}>,
@@ -361,5 +364,5 @@ export const selectAllEvent = (state: RootState) => state.calendar.allEvents;
 export const selectOption = (state: RootState) => state.calendar.option;
 export const selectIsOnly = (state: RootState) => state.calendar.isOnly;
 export const selectTodoList = (state: RootState) => state.calendar.todoList;
-
+export const getOnly = (state: RootState) => state.calendar.isOnly;
 export default calendarSlice.reducer;

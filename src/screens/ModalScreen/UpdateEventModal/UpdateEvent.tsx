@@ -21,6 +21,7 @@ import ColorPicker from './ColorPicker';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   addEvent,
+  deleteEvent,
   getOnly,
   selectSelectedEvent,
   setSelectedDate,
@@ -148,7 +149,7 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
       description: event?.description,
       color: event?.color,
       is_all_day: event?.is_all_day,
-      category: selectedColorIndex,
+      category: event?.category,
       location: event?.location,
       recurrence_exception: formatDateToString(updatedRecurrenceException),
       recurrence_id: event?.recurrence_id,
@@ -205,8 +206,6 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
         eventDetails2.recurrence_exception,
         eventDetails2.recurrence_id,
         eventDetails2.recurrence_rule,
-        eventDetails2.start_timezone,
-        eventDetails2.end_timezone,
       );
 
       // Alert.alert('Inform', 'Successfully', [
@@ -217,11 +216,14 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
       //     },
       //   },
       // ]);
-      dispatch(updateEvent(message2));
-      console.log(message1);
-      dispatch(setSelectedEvent(message1));
 
       dispatch(addEvent(message1));
+
+      dispatch(deleteEvent(message2.id_calendar));
+      dispatch(addEvent(message2));
+
+      dispatch(setSelectedEvent(message1));
+
       setSelectedDate(
         moment(new Date(message1.time_start)).format('YYYY-MM-DD'),
       ),
@@ -332,9 +334,9 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
       time_start: chosenDateStart,
       time_end: chosenDateEnd,
       description: description,
-      color: color,
+      color: eventCategory?.color,
       is_all_day: isAllDay,
-      category: selectedColorIndex,
+      category: eventCategory?.id_category_event,
       location: location,
       recurrence_exception: null,
       recurrence_id: event?.recurrence_id,
@@ -357,11 +359,11 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
         eventDetails.recurrence_exception,
         eventDetails.recurrence_id,
         eventDetails.recurrence_rule,
-        eventDetails.start_timezone,
-        eventDetails.end_timezone,
       );
       console.log(message);
-      await dispatch(updateEvent(message));
+      await dispatch(deleteEvent(message.id_calendar));
+      await dispatch(addEvent(message));
+
       await dispatch(setSelectedEvent(message));
       dispatch(
         setSelectedDate(

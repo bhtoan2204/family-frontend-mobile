@@ -20,6 +20,8 @@ import {
   setSelectedDate,
   setTodoList,
   updateEvent,
+  addEvent,
+  setSelectedEvent,
 } from 'src/redux/slices/CalendarSlice';
 import {deleteEvent} from 'src/redux/slices/CalendarSlice';
 import moment from 'moment';
@@ -213,9 +215,16 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                   event.recurrence_rule,
                 );
                 if (data) {
-                  await dispatch(
-                    deleteEventOnly(data.id_calendar, data.recurrence_rule),
+                  await dispatch(deleteEvent(data.id_calendar));
+                  await dispatch(addEvent(data));
+
+                  await dispatch(setSelectedEvent(data));
+                  dispatch(
+                    setSelectedDate(
+                      moment(new Date(data.time_start)).format('YYYY-MM-DD'),
+                    ),
                   );
+
                   //await dispatch(setSelectedDate(data.time_start));
                   Toast.show(translate('Event has been deleted successfully'), {
                     type: 'success',
@@ -760,7 +769,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
         ) : (
           renderChecklists()
         )}
-        {!event.shoppingList ? (
+        {/* {!event.shoppingList ? (
           extraPackage.some(pkg => pkg.name === 'Shopping') ? (
             <TouchableOpacity
               style={[
@@ -811,7 +820,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
           )
         ) : (
           renderShoppingList()
-        )}
+        )} */}
       </ScrollView>
       <View
         style={[

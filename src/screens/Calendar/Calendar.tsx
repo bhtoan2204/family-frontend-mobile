@@ -63,26 +63,9 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
   const [key, setKey] = useState(Date.now());
   const socket = getSocket();
 
-  const handleNewNotification = async (item: Noti) => {
-    switch (item.type) {
-      case 'CALENDAR':
-        fetchEvent();
-
-        break;
-    }
-  };
   useEffect(() => {
     fetchEvent();
-    if (socket) {
-      socket.on('onNewNotification', handleNewNotification);
-
-      return () => {
-        if (socket) {
-          socket.off('onNewNotification', handleNewNotification);
-        }
-      };
-    }
-  }, []);
+  }, [route.params?.forceUpdate]);
 
   useEffect(() => {
     LocaleConfig.defaultLocale = location;
