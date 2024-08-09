@@ -104,7 +104,7 @@ const PaymentHistoryScreen = ({
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}>
-          <Material name="close" size={30} style={{color: color.text}} />
+          <Material name="chevron-left" size={40} style={{color: color.text}} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, {color: color.text}]}>
           {translate('PAYMENT_HISTORY')}
@@ -264,14 +264,13 @@ const styles = StyleSheet.create({
         paddingTop: 20, // Adjust padding for Android status bar
       },
     }),
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    justifyContent: 'space-between',
   },
   backButton: {
     marginRight: 16,
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: '600',
   },
   scrollViewContainer: {
