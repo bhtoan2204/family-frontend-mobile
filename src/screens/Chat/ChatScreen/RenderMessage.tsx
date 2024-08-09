@@ -40,10 +40,17 @@ const MessageItem: React.FC<Props> = ({
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalPosition, setModalPosition] = useState({top: 0, left: 0});
+  const [isLeftSide, setIsLeftSide] = useState(false);
 
   const handleLongPress = (event: any) => {
     const {pageY, pageX} = event.nativeEvent;
     setModalPosition({top: pageY, left: pageX});
+
+    // Kiểm tra vị trí để xác định xem modal nên xuất hiện bên trái hay bên phải
+    const screenWidth = Dimensions.get('window').width;
+    const isLeft = pageX > screenWidth / 2;
+
+    setIsLeftSide(isLeft); // Cập nhật trạng thái isLeftSide
     setIsModalVisible(true);
   };
 
@@ -63,7 +70,6 @@ const MessageItem: React.FC<Props> = ({
           flexDirection: 'row',
           alignItems: 'flex-start',
           marginVertical: 0,
-          opacity: isModalVisible ? 0.5 : 1,
         }}>
         {item.userInfo &&
           item.userInfo.avatar &&
@@ -139,17 +145,17 @@ const MessageItem: React.FC<Props> = ({
               <View
                 style={[
                   localStyles.modalContent,
-                  {top: modalPosition.top, left: modalPosition.left},
+                  {
+                    top: modalPosition.top,
+                    left: isLeftSide
+                      ? modalPosition.left - 150 // Dịch modal qua trái nếu bấm vào tin nhắn bên phải
+                      : modalPosition.left,
+                  },
                 ]}>
                 <TouchableOpacity
                   onPress={handleRemoveMessage}
                   style={localStyles.modalOption}>
                   <Text style={localStyles.modalOptionText}>Gỡ tin nhắn</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={handleCloseModal}
-                  style={localStyles.modalOption}>
-                  <Text style={localStyles.modalOptionText}>Hủy</Text>
                 </TouchableOpacity>
               </View>
             </View>
