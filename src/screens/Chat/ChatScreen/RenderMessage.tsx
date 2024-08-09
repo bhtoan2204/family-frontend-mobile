@@ -16,6 +16,8 @@ import {COLORS} from 'src/constants';
 import {useThemeColors} from 'src/hooks/useThemeColor';
 import {useSelector} from 'react-redux';
 import {selectProfile} from 'src/redux/slices/ProfileSclice';
+import {getTranslate} from 'src/redux/slices/languageSlice';
+import {MaterialIcons} from '@expo/vector-icons';
 
 interface Props {
   item: Message;
@@ -37,7 +39,7 @@ const MessageItem: React.FC<Props> = ({
   const color = useThemeColors();
   const profile = useSelector(selectProfile);
   const isSender = item.senderId === profileId;
-
+  const translate = useSelector(getTranslate);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalPosition, setModalPosition] = useState({top: 0, left: 0});
   const [isLeftSide, setIsLeftSide] = useState(false);
@@ -155,7 +157,22 @@ const MessageItem: React.FC<Props> = ({
                 <TouchableOpacity
                   onPress={handleRemoveMessage}
                   style={localStyles.modalOption}>
-                  <Text style={localStyles.modalOptionText}>Gỡ tin nhắn</Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={[localStyles.modalOptionText, {color: 'red'}]}>
+                      {translate('DeleteMessage')}
+                    </Text>
+                    <MaterialIcons
+                      name="delete"
+                      size={20}
+                      color="red"
+                      style={{marginLeft: 10}}
+                    />
+                  </View>
                 </TouchableOpacity>
               </View>
             </View>
@@ -190,7 +207,6 @@ const localStyles = StyleSheet.create({
   },
   modalOptionText: {
     fontSize: 16,
-    color: COLORS.primary,
   },
 });
 
