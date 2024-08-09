@@ -14,7 +14,7 @@ import GuildLineHeader from './GuildLineHeader';
 import StepIndicator from './StepIndicator';
 import { AppDispatch, RootState } from 'src/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteGuideline } from 'src/redux/slices/GuidelineSlice';
+import { deleteGuideline, updateMarkShareGuideline } from 'src/redux/slices/GuidelineSlice';
 import { GuildLineDetailScreenProps } from 'src/navigation/NavigationTypes';
 import GuildlineDetailInfo from './GuildlineDetailDescriptionInfo';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
@@ -84,30 +84,39 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
   }, [])
 
 
-  const nextStep = () => {
-    setCurrentStep(currentStep + 1)
-  }
+  const nextStep = React.useCallback(() => {
+    setCurrentStep((prev) => {
+      return prev + 1
+    })
+  }, [])
 
-  const prevStep = () => {
-    setCurrentStep(currentStep <= 0 ? 0 : currentStep - 1)
-  }
+  const prevStep = React.useCallback(() => {
+    //currentStep <= 0 ? 0 : currentStep - 1
+    setCurrentStep((prev) => {
+      if (prev <= 0) {
+        return 0
+      } else {
+        return prev - 1
+      }
+    })
+  }, [])
 
-  const onSucess = () => {
+  const onSucess = React.useCallback(() => {
     toast.show("Update success", {
       type: "success",
       duration: 2000,
       icon: <Material name="check" size={24} color={"white"} />,
     });
 
-  }
+  }, [])
 
-  const onFailed = () => {
+  const onFailed = React.useCallback(() => {
     toast.show("Failed to update", {
       type: "error",
       duration: 2000,
       icon: <Material name="close" size={24} color={"white"} />,
     });
-  }
+  }, [])
 
   const handleIsAddingStep = async () => {
     const newStep: Step = {
@@ -341,12 +350,17 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
       //   }
       // } else if (result.action === Share.dismissedAction) {
       // }
+      dispatch(updateMarkShareGuideline({
+        id_guide_item: id_item!,
+        is_share: !guildLineDetail?.is_shared
+      }))
       setGuildLineDetail((prev) => {
         return {
           ...prev!,
           is_shared: !prev?.is_shared
         }
       })
+      await GuildLineService.shareGuideline(id_family!, id_item!)
       if (guildLineDetail?.is_shared) {
         toast.show("Guideline unshared", {
           type: "success",

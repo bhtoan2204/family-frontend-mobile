@@ -6,7 +6,6 @@ import {
   ShoppingListItemType,
   ShoppingListType,
 } from 'src/interface/shopping/shopping_list';
-import baseUrl from '../urls/baseUrl';
 const ShoppingListServices = {
   getShoppingListType: async () => {
     const url = ShoppingListUrls.getShoppingListType;
@@ -143,7 +142,7 @@ const ShoppingListServices = {
       return null;
     }
   },
-
+  
   createShoppingListItem: async ({
     id_family,
     id_list,
@@ -201,28 +200,100 @@ const ShoppingListServices = {
       return null;
     }
   },
-  getShoppingItem: async (id_family: number, id_list: number) => {
-    const url = `${baseUrl}/api/v1/shopping/getShoppingItem`;
+  updateShoppingListItem: async ({
+    id_family,
+    id_item,
+    id_list,
+    item_name,
+    quantity,
+    is_purchased,
+    priority_level,
+    price,
+    description,
+    id_item_type,
+    reminder_date,
+  }: {
+    id_family: number;
+    id_item: number;
+    id_list: number;
+    item_name?: string;
+    quantity?: number;
+    is_purchased?: boolean;
+    priority_level?: number;
+    price?: number;
+    description?: string;
+    id_item_type?: number;
+    reminder_date?: string;
+  }) => {
+    const body: any = {
+      id_family,
+      id_list,
+      id_item,
+    };
+    if (item_name) {
+      body.item_name = item_name;
+    }
+    if (quantity) {
+      body.quantity = quantity;
+    }
+    if (is_purchased) {
+      body.is_purchased = is_purchased;
+    }
+    if (priority_level) {
+      body.priority_level = priority_level;
+    }
+    if (price) {
+      body.price = price;
+    }
+    if (description) {
+      body.description = description;
+    }
+    if (id_item_type) {
+      body.id_item_type = id_item_type;
+    }
+    if (reminder_date) {
+      body.reminder_date = reminder_date;
+    }
+    const url = ShoppingListUrls.updateShoppingListItem;
     try {
-      console.log(id_list, id_family);
-      const response = await instance.get(url, {
-        params: {
-          page: 1,
-          itemsPerPage: 10,
-          sortBy: 'created_at',
-          sortDirection: 'DESC',
-          id_family: id_family,
-          id_list: id_list,
-        },
-      });
+      const response = await instance.put(url, body);
       if (response.status === 200) {
-        return response.data.data;
+        return true;
       } else {
-        return null;
+        return false;
       }
     } catch (error: any) {
       console.log(error.message);
-      return null;
+      return false;
+    }
+  },
+  deleteShoppingListItem: async ({
+    id_family,
+    id_list,
+    id_item,
+  }: {
+    id_family: number;
+    id_list: number;
+    id_item: number;
+  }) => {
+    const url =
+      ShoppingListUrls.deleteShoppingListItem +
+      '/' +
+      id_family +
+      '/' +
+      id_list +
+      '/' +
+      id_item;
+    try {
+      const response = await instance.delete(url);
+      if (response.status === 204) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error: any) {
+      console.log(error.message);
+      return false;
     }
   },
 };

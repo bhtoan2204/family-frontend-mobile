@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Image, TextInput } from 'react-native'
+import { View, Text, Image, TextInput, Keyboard } from 'react-native'
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color'
 import { HouseHoldItemDetailInterface } from 'src/interface/household/household_item_detail'
 import { COLORS } from 'src/constants'
@@ -29,24 +29,17 @@ const Divider = () => {
 const ConsumableInfo = ({ data }: ConsumableInfoProps) => {
     const [value, setValue] = React.useState<string>('')
     const [remindValue, setRemindValue] = React.useState<string>('days')
+    const isDarkMode = useSelector(getIsDarkMode)
+
     const buildDate = React.useCallback((date: string) => {
         const dateObj = new Date(date)
-        // console.log(dateObj)
-        // const text = `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`
-        // console.log(text)
         return `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`
     }, [])
-    // const buildDate = (date: string) => {
-    //     const dateObj = new Date(date)
-    //     return `${dateObj.getDate()}/${dateObj.getMonth()}/${dateObj.getFullYear()}`
-    // }
-    const isDarkMode = useSelector(getIsDarkMode)
-    if (data.id_household_item == -1) {
-        return <ConsumableSkeleton data={data} />
-    }
+
     const handleChangeRemindValue = React.useCallback(async (value: string) => {
         setRemindValue(value)
     }, [])
+
     const handleChangeText = React.useCallback((value: string) => {
         // setValue(value)
         if (!value || value.trim() === '') {
@@ -56,6 +49,7 @@ const ConsumableInfo = ({ data }: ConsumableInfoProps) => {
         const processedValue = value.replace(/^0+/, '');
         return processedValue === '' ? '0' : processedValue;
     }, [])
+
 
     const buildRemindDate = React.useCallback(() => {
         if (remindValue == 'days') {
@@ -81,6 +75,9 @@ const ConsumableInfo = ({ data }: ConsumableInfoProps) => {
         }
     }, [remindValue, value])
 
+    if (data.id_household_item == -1) {
+        return <ConsumableSkeleton data={data} />
+    }
     return (
         data.consumableItem ? <>
             <View className='py-3 px-3 '>
@@ -128,6 +125,10 @@ const ConsumableInfo = ({ data }: ConsumableInfoProps) => {
                                 setValue(handleChangeText(e))
                             }}
                             placeholder={'0'}
+                            returnKeyType='done'
+                            onSubmitEditing={() => {
+                                Keyboard.dismiss()
+                            }}
 
                         />
                         <View className=' pl-1'>
@@ -135,6 +136,7 @@ const ConsumableInfo = ({ data }: ConsumableInfoProps) => {
                                 {
                                     buildRemindDate()
                                 }
+                                {/* Month */}
                             </Text>
                         </View>
                         <View>

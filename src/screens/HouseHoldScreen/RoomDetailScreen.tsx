@@ -12,6 +12,7 @@ import { updateImageProp } from 'src/redux/slices/HouseHoldDetailSlice'
 
 const RoomDetailScreen = ({ navigation, route, setAddItemType, setPickedRoom, addItemSheetRef }: RoomDetailScreenProps) => {
     const { id_room, id_family } = route.params
+    const data = useSelector((state: RootState) => state.householdItems)
     const householdItems = useSelector((state: RootState) => state.householdItems).filter(item => item.id_room == id_room)
     const roomInfo = useSelector((state: RootState) => state.room).find(room => room.id_room == id_room)
     const [refreshing, setRefreshing] = React.useState(false);
@@ -25,10 +26,10 @@ const RoomDetailScreen = ({ navigation, route, setAddItemType, setPickedRoom, ad
     }, []);
 
     React.useEffect(() => {
-        setAddItemType(2)
+        // setAddItemType(2)
         setPickedRoom(id_room!)
         return () => {
-            setAddItemType(0)
+            // setAddItemType(0)
             setPickedRoom(-1)
         }
     })
@@ -40,20 +41,18 @@ const RoomDetailScreen = ({ navigation, route, setAddItemType, setPickedRoom, ad
             refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
-            className='flex-1'
+            className='flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]'
             showsVerticalScrollIndicator={false}
 
         >
             <View>
-                <View className='py-4 flex-row items-center justify-between border-b-[1.5px] mx-[10%]'
+                <View className='py-4 flex-row items-center justify-between border-b-[1.5px] mx-[10%] bg-[#f7f7f7] dark:bg-[#0A1220]'
                     style={{
                         borderColor: iOSGrayColors.systemGray4.defaultLight,
                     }}
                 >
-                    <Text className='text-lg'
-                        style={{
-                            color: COLORS.Rhino,
-                        }}
+                    <Text className='text-lg text-[#2A475E] dark:text-white'
+
                     >
                         {roomInfo?.room_name}
                     </Text>
@@ -69,10 +68,8 @@ const RoomDetailScreen = ({ navigation, route, setAddItemType, setPickedRoom, ad
                 <View className='py-4 flex-row items-center justify-between px-[10%]'
 
                 >
-                    <Text className='text-sm'
-                        style={{
-                            color: COLORS.Rhino,
-                        }}
+                    <Text className='text-sm text-[#434343] dark:text-[#8D94A5]'
+
                     >{householdItems.length} {householdItems.length > 1 ? "items" :
                         "item"} add</Text>
 
@@ -90,11 +87,14 @@ const RoomDetailScreen = ({ navigation, route, setAddItemType, setPickedRoom, ad
                 </View>
                 <ItemItems data={householdItems}
                     handleNavigateHouseHoldDetail={(id: number) => {
-                        const img = householdItems.find(item => item.id_household_item === id)!.item_image!
-                        console.log(img, id)
-                        dispatch(updateImageProp(
-                            householdItems.find(item => item.id_household_item === id)!.item_image!
-                        ))
+                        // const index = householdItems.findIndex(item => item.id_household_item === id)!
+                        // if (index != -1) {
+                        //     if (data[index])
+                        // }
+                        // console.log(img, id)
+                        // dispatch(updateImageProp(
+                        //     householdItems.find(item => item.id_household_item === id)!.item_image!
+                        // ))
                         navigation.navigate('HouseHoldItemStack', {
                             screen: 'HouseHoldItem',
                             params: {

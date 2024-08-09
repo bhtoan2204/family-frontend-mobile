@@ -34,9 +34,8 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
     const { id_progress, id_family, id_subject } = route.params
     const dispatch = useDispatch<AppDispatch>()
     const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
-    const [searchQuery, setSearchQuery] = React.useState<string>('')
 
-    const subjectDetailData = useSelector((state: RootState) => state.educations).find((item) => item.id_education_progress === id_progress)!.subjects.find((item) => item.id_subject === id_subject)!
+    const subjectDetailData = useSelector((state: RootState) => state.educations).educations.find((item) => item.id_education_progress === id_progress)!.subjects.find((item) => item.id_subject === id_subject)!
     const [expectedGrade, setExpectedGrade] = React.useState<number>(0)
     const [currentGrade, setCurrentGrade] = React.useState<number>(0)
     const addComponentScoreSheetRef = React.useRef<BottomSheet>(null)
@@ -82,31 +81,6 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
     }, [subjectDetailData])
 
     useEffect(() => {
-        // const handleCalculateScore = () => {
-        //     let totalScore = 0
-        //     let totalExpectedScore = 0
-        //     let scoreCount = 0
-        //     let expectedCount = 0
-
-        //     if (subjectDetailData) {
-
-        //         if (subjectDetailData.component_scores != null) {
-        //             subjectDetailData.component_scores.map((item) => {
-        //                 if (item.score != null) {
-        //                     scoreCount += 1
-        //                     totalScore += parseFloat((item.score).toString())
-        //                 }
-        //                 if (item.expected_score != null) {
-        //                     expectedCount += 1
-        //                     totalExpectedScore += parseFloat((item.expected_score).toString())
-        //                 }
-        //             })
-
-        //         }
-        //         setCurrentGrade(parseFloat((totalScore / scoreCount).toPrecision(2)) || 0)
-        //         setExpectedGrade(parseFloat((totalExpectedScore / expectedCount).toPrecision(2)) || 0)
-        //     }
-        // }
         handleCalculateScore()
     }, [subjectDetailData])
 
@@ -140,25 +114,6 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
                     </View>
                 </View>
                 <ScrollView className=' ' >
-                    {/* <View className='my-3'>
-                        <Text className='ml-4 mb-3 text-lg font-medium'>Final & Mid</Text>
-                        <SubjectItem
-                            isGraded={subjectDetailData.midterm_score?.score != null} subjectComponentData={subjectDetailData.final_score}
-                            index={-1}
-                            id_education_progress={id_progress}
-                            id_subject={id_subject}
-                            id_family={id_family!}
-                            isFirst={true}
-                        />
-                        <SubjectItem
-                            isGraded={subjectDetailData.midterm_score?.score != null} subjectComponentData={subjectDetailData.midterm_score}
-                            index={-2}
-                            id_education_progress={id_progress}
-                            id_subject={id_subject}
-                            id_family={id_family!}
-                        />
-                    </View> */}
-
                     <View className='my-3'>
                         <Text className='ml-4 mb-3 text-lg font-medium text-black dark:text-white'>Component scores</Text>
 
@@ -193,36 +148,8 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
 
 
                 </ScrollView>
-                {/* <AddComponentScoreSheet refRBSheet={addComponentScoreSheetRef}
-                    id_education_progress={id_progress}
-                    id_subject={id_subject}
-                    id_family={id_family!}
-                /> */}
-            </View>
-            {/* <AddComponentScoreSheet bottomSheetRef={addComponentScoreSheetRef}
-                id_education_progress={id_progress}
-                id_subject={id_subject}
-                id_family={id_family}
-                onAddSuccess={
-                    () => {
-                        toast.show("New component added for subject", {
-                            type: "success",
-                            duration: 2000,
-                            icon: <Material name="check" size={24} color={"white"} />,
-                        });
-                    }
-                }
-                onAddFailed={
-                    () => {
-                        toast.show("Failed to add new component for subject", {
-                            type: "error",
-                            duration: 2000,
-                            icon: <Material name="close" size={24} color={"white"} />,
-                        });
-                    }
-                }
-            /> */}
 
+            </View>
 
         </View>
 

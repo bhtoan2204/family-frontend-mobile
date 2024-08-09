@@ -3,31 +3,18 @@ import { View, Text, ScrollView, RefreshControl, Keyboard, Dimensions, Image, To
 import { COLORS } from 'src/constants'
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
-import RoomIcon from 'src/assets/images/household_assets/room.png';
-import ImageIcon from 'src/assets/images/household_assets/image.png';
+
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import * as ImagePicker from 'expo-image-picker';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import HouseHoldService from 'src/services/apiclient/HouseHoldService';
-import { AppDispatch, RootState } from 'src/redux/store';
+
+import { AppDispatch } from 'src/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { addRoom } from 'src/redux/slices/RoomSlice';
-import { HouseHoldItemInterface } from 'src/interface/household/household_item';
-import * as Animatable from 'react-native-animatable';
-import CategoryIcon from 'src/assets/images/household_assets/category.png';
 
-import NewItemImageSheet from 'src/assets/images/household_assets/new_item_image_sheet.png'
-import Camera from 'src/assets/images/household_assets/Camera.png'
-import Ingredients from 'src/assets/images/household_assets/Ingredients.png'
-import OpenedFolder from 'src/assets/images/household_assets/OpenedFolder.png'
-import Room2 from 'src/assets/images/household_assets/Room_2.png'
 
-import { BlurView } from 'expo-blur';
-import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interface/shopping/shopping_list';
-import { addShoppingList, addShoppingListItem, updateReminderDateItem } from 'src/redux/slices/ShoppingListSlice';
+import { updateReminderDateItem } from 'src/redux/slices/ShoppingListSlice';
 import { addMonths, format, subMonths } from 'date-fns';
 import { Calendar } from 'react-native-calendars';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import ShoppingListServices from 'src/services/apiclient/ShoppingListServices';
 
 
 
@@ -40,8 +27,6 @@ interface AddItemSheetProps {
     onUpdateSuccess: () => void
 }
 
-const screenHeight = Dimensions.get('window').height;
-const screenWidth = Dimensions.get('window').width;
 
 const UpdateDateItemSheet = ({
     bottomSheetRef,
@@ -69,7 +54,7 @@ const UpdateDateItemSheet = ({
 
     // console.log('hello dcmm', format(new Date('2024-07-05T19:26:03.642Z'), 'yyyy-MM-dd'))
 
-    const buildDate = (dateString: string) => {
+    const buildDate = React.useCallback((dateString: string) => {
         const date: Date = new Date(dateString);
 
         if (isNaN(date.getTime())) {
@@ -86,7 +71,7 @@ const UpdateDateItemSheet = ({
 
         const description: string = `${month} ${year}`;
         return description;
-    }
+    }, []);
 
 
     const renderBackdrop = React.useCallback(
@@ -140,16 +125,29 @@ const UpdateDateItemSheet = ({
             </View>
         )
     }
+    const handleSubmitApi = React.useCallback(async (date: string) => {
+        const res = await ShoppingListServices.updateShoppingListItem({
+            id_family: id_family,
+            id_list: id_list,
+            id_item: id_item,
+            reminder_date: date
 
-    const handleSubmit = async () => {
+        })
+        if (res == true) {
+            onUpdateSuccess()
+        } else {
+            // onUpdateFailed()
+        }
+    }, [])
+    const handleSubmit = React.useCallback(async (date: string) => {
         dispatch(updateReminderDateItem({
             id_item: id_item,
             id_list: id_list,
-            reminder_date: selectDate
+            reminder_date: date
         }))
         bottomSheetRef.current?.close()
-        onUpdateSuccess()
-    }
+        await handleSubmitApi(date)
+    }, [])
 
     return (
         <BottomSheet
@@ -232,7 +230,7 @@ const UpdateDateItemSheet = ({
                     }} className=' py-4 rounded-full items-center justify-center'
                         onPress={async () => {
                             console.log(selectDate)
-                            await handleSubmit()
+                            await handleSubmit(selectDate)
                             // setSelectDate(new Date)
                             // bottomSheetRef.current?.snapTo(0)
                         }}

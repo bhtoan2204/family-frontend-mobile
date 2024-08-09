@@ -4,9 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { CategoryDetailScreenProps, CategoryScreenProps, HouseHoldScreenProps, HouseHoldStackProps, ItemScreenProps, RoomDetailScreenProps, } from '../NavigationTypes';
 
 import HouseHoldScreen from 'src/screens/HouseHoldScreen/HouseHoldScreen';
-import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { gradients_list } from 'src/assets/images/gradients';
-import React, { useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import HouseHoldTab from 'src/components/user/household/household-tab';
 
 import ItemScreen from 'src/screens/HouseHoldScreen/ItemScreen';
@@ -30,8 +29,18 @@ import { COLORS } from 'src/constants';
 import HouseHoldStackHeader from 'src/components/user/household/household-stack/household-stack-header';
 const Stack = createNativeStackNavigator();
 
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
+const LazyLoadedHouseholdScreen = React.lazy(() => import('src/screens/HouseHoldScreen/HouseHoldScreen'))
+const LazyLoadedItemScreen = React.lazy(() => import('src/screens/HouseHoldScreen/ItemScreen'))
+const LazyLoadedCategoryScreen = React.lazy(() => import('src/screens/HouseHoldScreen/CategoryScreen'))
+const LazyLoadedRoomDetailScreen = React.lazy(() => import('src/screens/HouseHoldScreen/RoomDetailScreen'))
+const LazyLoadedCategoryDetailScreen = React.lazy(() => import('src/screens/HouseHoldScreen/CategoryDetailScreen'))
+
+
+const LoadingFallback = () => {
+    return <View className='justify-center items-center flex-1 bg-white dark:bg-[#0A1220]'>
+        <ActivityIndicator size="small" color={COLORS.AuroMetalSaurus} />
+    </View>
+}
 
 const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
     const [choosenTab, setChoosenTab] = React.useState<number>(0)
@@ -80,9 +89,6 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
         }
         console.log('fetching data...')
         fetchAllHouseholdData()
-        // fetchRoom()
-        // fetchHouseholdData()
-        // fetchCategory()
         console.log('done fetching data...')
         return () => {
             console.log("HouseHoldScreen unmounting clearing store...")
@@ -95,10 +101,13 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
     useEffect(() => {
         if (currScreen == 'HouseHoldScreen') {
             setChoosenTab(0)
+            setAddItemType(1)
         } else if (currScreen == 'ItemScreen') {
             setChoosenTab(1)
+            setAddItemType(0)
         } else if (currScreen == 'CategoryScreen') {
             setChoosenTab(2)
+            setAddItemType(2)
         }
     }, [currScreen])
 
@@ -111,36 +120,6 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
     return (
         <>
             <View className="flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]">
-                {/* <View style={{ width: screenWidth, height: screenHeight * 0.25 }}>
-                    <View className='w-full absolute z-10 flex-row justify-between items-center py-3'>
-                        <TouchableOpacity onPress={() => navigation.goBack()} className=' flex-row items-center'>
-                            <Material name="chevron-left" size={30} style={{ color: "white", fontWeight: "bold" }} />
-                            
-                        </TouchableOpacity>
-
-                        <View >
-                            <Text className='text-lg font-semibold text-white' >HouseHold</Text>
-                        </View>
-                        <View className='mr-1'>
-                            <TouchableOpacity onPress={() => {
-                                // refRBSheet.current?.open()
-                                // navigation.navigate('AddHouseHoldItem', {
-                                //   id_family
-                                // })
-
-                            }} >
-                                <Material name="dots-horizontal" size={24} style={{ color: 'white', fontWeight: "bold" }} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <Image
-                        source={familyInfo!.avatar ? { uri: familyInfo!.avatar } : gradients_list[familyInfo!.id_family % gradients_list.length]}
-                        style={{ width: screenWidth, height: screenHeight * 0.25 }}
-                        resizeMethod='resize'
-                        resizeMode='cover'
-                    />
-
-                </View> */}
                 <HouseHoldStackHeader navigationBack={() => navigation.goBack()}
                     idFamily={id_family!}
                     imageUrl={familyInfo!.avatar || undefined}
@@ -185,24 +164,46 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
                                 gestureEnabled: false,
 
                             }}
-                        >{(props: any) => <HouseHoldScreen {...props as HouseHoldScreenProps} addRoomRef={addRoomSheetRef}
-                        />}</Stack.Screen>
+                        >
+                            {/* <HouseHoldScreen {...props as HouseHoldScreenProps} addRoomRef={addRoomSheetRef}
+                                /> */}
+                            {(props: any) => (
+                                <Suspense fallback={<LoadingFallback />}>
+                                    <LazyLoadedHouseholdScreen {...props as HouseHoldScreenProps} addRoomRef={addRoomSheetRef} />
+
+                                </Suspense>
+                            )
+                            }
+                        </Stack.Screen>
+
                         <Stack.Screen name="ItemScreen"
                             options={{
                                 animationTypeForReplace: 'pop',
                                 gestureEnabled: false,
 
                             }}
-                        >{(props: any) => <ItemScreen {...props as ItemScreenProps} addItemRef={addItemSheetRef} addRoomRef={addRoomSheetRef} />}</Stack.Screen>
+                        >
+                            {(props: any) => (
+                                <Suspense fallback={<LoadingFallback />}>
+                                    <LazyLoadedItemScreen {...props as ItemScreenProps} addItemRef={addItemSheetRef} addRoomRef={addRoomSheetRef} />
+                                </Suspense>
+                            )}
+                        </Stack.Screen>
+
                         <Stack.Screen name="CategoryScreen"
                             options={{
                                 animationTypeForReplace: 'pop',
                                 gestureEnabled: false,
                             }}
 
-                        >{(props: any) => <CategoryScreen {...props as CategoryScreenProps}
-                            addCategoryRef={addCategorySheetRef}
-                        />}</Stack.Screen>
+                        >
+                            {(props: any) => (
+                                <Suspense fallback={<LoadingFallback />}>
+                                    <LazyLoadedCategoryScreen {...props as CategoryScreenProps}
+                                        addCategoryRef={addCategorySheetRef} />
+                                </Suspense>
+                            )}
+                        </Stack.Screen>
 
 
                         <Stack.Screen name="RoomDetail"
@@ -210,30 +211,45 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
                                 gestureEnabled: false,
                                 animationTypeForReplace: 'pop',
                             }}
-                        >{(props: any) => <RoomDetailScreen {...props as RoomDetailScreenProps}
-                            setAddItemType={(type: number) => {
-                                setAddItemType(type)
-                            }}
-                            setPickedRoom={(room: number) => {
-                                setPickedRoom(room)
-                            }}
-                            addItemSheetRef={addItemSheetRef}
-                        />}</Stack.Screen>
+                        >
+                            {(props: any) => (
+                                <Suspense fallback={<LoadingFallback />}>
+                                    <LazyLoadedRoomDetailScreen
+                                        {...props as RoomDetailScreenProps}
+                                        setAddItemType={(type: number) => {
+                                            // setAddItemType(type)
+                                        }}
+                                        setPickedRoom={(room: number) => {
+                                            setPickedRoom(room)
+                                        }}
+                                        addItemSheetRef={addItemSheetRef}
+                                    />
+                                </Suspense>
+                            )}
+                        </Stack.Screen>
+
                         <Stack.Screen name="CategoryDetail"
                             options={{
                                 gestureEnabled: false,
                                 animationTypeForReplace: 'pop',
                             }}
-                        >{(props: any) => <CategoryDetailScreen {...props as CategoryDetailScreenProps}
-                            setAddItemType={(type: number) => {
-                                setAddItemType(type)
-                            }}
-                            setPickedCategory={(category: number) => {
-                                setPickedCategory(category)
-                            }}
-                            addItemSheetRef={addItemSheetRef}
+                        >
+                            {(props: any) => (
+                                <Suspense fallback={<LoadingFallback />}>
+                                    <LazyLoadedCategoryDetailScreen
+                                        {...props as CategoryDetailScreenProps}
+                                        setAddItemType={(type: number) => {
+                                            // setAddItemType(type)
+                                        }}
+                                        setPickedCategory={(category: number) => {
+                                            setPickedCategory(category)
+                                        }}
+                                        addItemSheetRef={addItemSheetRef}
+                                    />
 
-                        />}</Stack.Screen>
+                                </Suspense>
+                            )}
+                        </Stack.Screen>
 
 
 

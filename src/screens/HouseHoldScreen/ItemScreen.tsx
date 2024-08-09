@@ -65,5 +65,4 @@ const ItemScreen: React.FC<ItemScreenProps> = ({ navigation, route, addItemRef, 
     )
 }
 
-
 export default ItemScreen

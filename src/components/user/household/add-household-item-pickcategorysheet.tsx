@@ -43,6 +43,7 @@ const AddHouseHoldItemPickCategorySheet = ({
 
     const [pickCategory, setPickCategory] = React.useState<number>(category)
     const addRoomSheetRef = useRef<BottomSheet>(null)
+    const [key, setKey] = React.useState(false)
     return (
         <BottomSheet
             ref={refRBSheet}
@@ -64,6 +65,9 @@ const AddHouseHoldItemPickCategorySheet = ({
                     if (pickCategory !== -1) {
                         setPickCategory(-1)
                     }
+                    setKey(prev => !prev)
+                } else {
+                    setKey(prev => !prev)
                 }
             }}
         >
@@ -91,11 +95,13 @@ const AddHouseHoldItemPickCategorySheet = ({
                 </View>
                 <BottomSheetScrollView snapToInterval={Dimensions.get('screen').width} showsHorizontalScrollIndicator={false} contentContainerStyle={{ minHeight: '100%' }}>
                     <View className='mt-5'>
-                        <ItemItems data={categories} addRoomSheetRef={addCategorySheetRef} onNavigateCreateRoom={onNavigateCreateCategory} pickRoom={pickCategory} setPickCategory={setPickCategory} onSetCategory={onSetCategory} />
+                        <ItemItems data={categories} addRoomSheetRef={addCategorySheetRef} onNavigateCreateRoom={onNavigateCreateCategory} pickRoom={pickCategory} setPickCategory={setPickCategory} onSetCategory={onSetCategory}
+                            k={key}
+                        />
 
                     </View>
                 </BottomSheetScrollView >
-                
+
 
             </View>
             <AddRoomSheet refRBSheet={addRoomSheetRef} />
@@ -110,17 +116,18 @@ interface ItemItemsProps {
     pickRoom: number
     setPickCategory: (id: number) => void
     onSetCategory: (id: number) => void
+    k: boolean
     // handleNavigateHouseHoldDetail: (id_item: number) => void;
 }
 
-const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setPickCategory, onSetCategory }: ItemItemsProps) => {
+const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setPickCategory, onSetCategory, k }: ItemItemsProps) => {
     const addRoomObj: HouseHoldCategoryInterface = {
         category_image: "",
         category_name: "",
         id_household_item_category: -1,
     }
     const newData = [addRoomObj, ...data]
-    const renderItem = (item: HouseHoldCategoryInterface, index: number) => {
+    const renderItem2 = React.useCallback((item: HouseHoldCategoryInterface, index: number) => {
         return (
             item.id_household_item_category == -1 ? <>
                 <View className='items-center ' style={{
@@ -130,9 +137,9 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                     marginBottom: 20,
                     borderColor: iOSGrayColors.systemGray5.defaultLight,
                 }}>
-                    <TouchableOpacity onPress={()=>{
+                    <TouchableOpacity onPress={() => {
                         addRoomSheetRef?.current?.expand()
-                    
+
                     }}>
                         <View className='items-center justify-center' style={{
                             // width: screenWidth * 0.3,
@@ -197,18 +204,102 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                 </View>
             </>
         )
-    }
+    }, [pickRoom])
+    // const renderItem = (item: HouseHoldCategoryInterface, index: number) => {
+    //     return (
+    //         item.id_household_item_category == -1 ? <>
+    //             <View className='items-center ' style={{
+    //                 // flex: 1,
+    //                 marginRight: index % 2 == 0 ? 10 : 0,
+    //                 marginLeft: index % 2 == 1 ? 10 : 0,
+    //                 marginBottom: 20,
+    //                 borderColor: iOSGrayColors.systemGray5.defaultLight,
+    //             }}>
+    //                 <TouchableOpacity onPress={() => {
+    //                     addRoomSheetRef?.current?.expand()
+
+    //                 }}>
+    //                     <View className='items-center justify-center' style={{
+    //                         // width: screenWidth * 0.3,
+    //                         backgroundColor: '#e1e1e1',
+    //                         width: '100%',
+    //                         height: undefined,
+    //                         borderRadius: 15,
+    //                         // height: screenHeight * 0.2,
+    //                         aspectRatio: 1,
+    //                     }}>
+    //                         <Material name='plus' size={screenWidth * 0.12} color={iOSGrayColors.systemGray.defaultLight} style={{
+    //                             textAlign: 'center',
+
+    //                         }} />
+    //                     </View>
+    //                     <Text style={{
+    //                         textAlign: 'center',
+    //                         color: COLORS.Rhino,
+    //                         fontSize: 16,
+    //                         fontWeight: 500,
+    //                         marginTop: 10,
+    //                     }}>Add new category</Text>
+    //                 </TouchableOpacity>
+    //             </View>
+    //         </> : <>
+    //             <View className='items-center ' style={{
+    //                 // flex: 1,
+    //                 marginRight: index % 2 == 0 ? 10 : 0,
+    //                 marginLeft: index % 2 == 1 ? 10 : 0,
+    //                 marginBottom: 20,
+    //                 borderColor: iOSGrayColors.systemGray5.defaultLight,
+    //             }}>
+    //                 <TouchableOpacity onPress={() => {
+    //                     setPickCategory(item.id_household_item_category)
+    //                     onSetCategory(item.id_household_item_category)
+    //                     addRoomSheetRef?.current?.close()
+    //                     // handleNavigateHouseHoldDetail(item.id_household_item)
+    //                 }}>
+    //                     <Image
+    //                         source={item.category_image ? { uri: item.category_image } : gradients_list[index - 1 % gradients_list.length]}
+    //                         style={{
+    //                             // width: screenWidth * 0.3,
+    //                             width: '100%',
+    //                             height: undefined,
+    //                             borderRadius: 15,
+    //                             // height: screenHeight * 0.2,
+    //                             aspectRatio: 1,
+    //                         }}
+    //                     />
+    //                     <Text style={{
+    //                         textAlign: 'center',
+    //                         color: item.id_household_item_category == pickRoom ? iOSColors.systemBlue.defaultLight : COLORS.Rhino,
+    //                         fontSize: 16,
+    //                         fontWeight: 500,
+    //                         marginTop: 10,
+
+    //                     }}>{item.category_name} {
+    //                             item.id_household_item_category == pickRoom ? <Material name='check' size={20} color={iOSColors.systemBlue.defaultLight} /> : null
+
+    //                         }</Text>
+    //                 </TouchableOpacity>
+    //             </View>
+    //         </>
+    //     )
+    // }
     return (
         <View className=' items-center flex-1  mx-[10%]'>
             <FlatGrid
+                key={k.toString()}
                 itemDimension={screenWidth * 0.35}
                 maxItemsPerRow={2}
                 data={newData}
 
                 spacing={0}
 
-                renderItem={({ item, index }) => renderItem(item, index)}
+                renderItem={({ item, index }) => renderItem2(item, index)}
                 scrollEnabled={false}
+                removeClippedSubviews={true}
+                initialNumToRender={2}
+                maxToRenderPerBatch={4}
+                updateCellsBatchingPeriod={100}
+                windowSize={7}
             />
         </View>
     )

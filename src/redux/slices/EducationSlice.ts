@@ -7,25 +7,36 @@ import {
   ComponentScore,
 } from 'src/interface/education/education';
 
-const initialState: Education[] = [];
+const initialState: {
+  loading: boolean;
+  educations: Education[];
+} = {
+  loading: false,
+  educations: [],
+};
 
 const educationSlice = createSlice({
   name: 'educations',
   initialState,
   reducers: {
+    setLoading(state, action: PayloadAction<boolean>) {
+      state.loading = action.payload;
+    },
     setEducation(state, action: PayloadAction<Education[]>) {
-      return action.payload;
+      // return action.payload;
+      state.educations = action.payload;
     },
     clearEducation(state) {
-      return [];
+      // return [];
+      state.educations = [];
     },
     deleteEducation(state, action: PayloadAction<number>) {
-      return state.filter(
+      state.educations = state.educations.filter(
         education => education.id_education_progress !== action.payload,
       );
     },
     addEducation(state, action: PayloadAction<Education>) {
-      state.push(action.payload);
+      state.educations.push(action.payload);
     },
     updateEducation(
       state,
@@ -37,14 +48,14 @@ const educationSlice = createSlice({
         school_info: string;
       }>,
     ) {
-      const index = state.findIndex(
+      const index = state.educations.findIndex(
         education =>
           education.id_education_progress ===
           action.payload.id_education_progress,
       );
       if (index !== -1) {
-        state[index] = {
-          ...state[index],
+        state.educations[index] = {
+          ...state.educations[index],
           title: action.payload.title,
           progress_notes: action.payload.progress_notes,
           school_info: action.payload.school_info,
@@ -52,24 +63,13 @@ const educationSlice = createSlice({
       }
     },
     addSubject(state, action: PayloadAction<Subject>) {
-      const index = state.findIndex(
+      const index = state.educations.findIndex(
         education =>
           education.id_education_progress ===
           action.payload.id_education_progress,
       );
       if (index !== -1) {
-        // const newSubject: Subject = {
-        //   id_subject: action.payload.id_subject,
-        //   id_education_progress: action.payload.id_education_progress,
-        //   subject_name: action.payload.subject_name,
-        //   description: action.payload.description,
-        //   component_scores: [],
-        //   midterm_score: null,
-        //   final_score: null,
-        //   bonus_score: null,
-        //   status: 'in_progress',
-        // };
-        state[index].subjects.push(action.payload);
+        state.educations[index].subjects.push(action.payload);
       }
     },
     deleteSubject(
@@ -80,13 +80,15 @@ const educationSlice = createSlice({
         id_family: number;
       }>,
     ) {
-      const index = state.findIndex(
+      const index = state.educations.findIndex(
         education =>
           education.id_education_progress ===
           action.payload.id_education_progress,
       );
       if (index !== -1) {
-        state[index].subjects = state[index].subjects.filter(
+        state.educations[index].subjects = state.educations[
+          index
+        ].subjects.filter(
           subject => subject.id_subject !== action.payload.id_subject,
         );
       }
@@ -101,13 +103,13 @@ const educationSlice = createSlice({
         id_education_progress: number;
       }>,
     ) {
-      const index = state.findIndex(
+      const index = state.educations.findIndex(
         education =>
           education.id_education_progress ===
           action.payload.id_education_progress,
       );
       if (index !== -1) {
-        const subjectIndex = state[index].subjects.findIndex(
+        const subjectIndex = state.educations[index].subjects.findIndex(
           subject => subject.id_subject === action.payload.id_subject,
         );
         if (subjectIndex !== -1) {
@@ -115,10 +117,14 @@ const educationSlice = createSlice({
             component_name: action.payload.component_name,
             score: action.payload.score,
           };
-          if (state[index].subjects[subjectIndex].component_scores === null) {
-            state[index].subjects[subjectIndex].component_scores = [];
+          if (
+            state.educations[index].subjects[subjectIndex].component_scores ===
+            null
+          ) {
+            state.educations[index].subjects[subjectIndex].component_scores =
+              [];
           }
-          state[index].subjects[subjectIndex].component_scores.push(
+          state.educations[index].subjects[subjectIndex].component_scores.push(
             newComponentScore,
           );
         }
@@ -133,21 +139,21 @@ const educationSlice = createSlice({
         index: number;
       }>,
     ) {
-      const index = state.findIndex(
+      const index = state.educations.findIndex(
         education =>
           education.id_education_progress ===
           action.payload.id_education_progress,
       );
       if (index !== -1) {
-        const subjectIndex = state[index].subjects.findIndex(
+        const subjectIndex = state.educations[index].subjects.findIndex(
           subject => subject.id_subject === action.payload.id_subject,
         );
         if (subjectIndex !== -1) {
-          state[index].subjects[subjectIndex].component_scores[
+          state.educations[index].subjects[subjectIndex].component_scores[
             action.payload.index
           ] = {
             // component_name: action.payload.component_name,
-            ...state[index].subjects[subjectIndex].component_scores[
+            ...state.educations[index].subjects[subjectIndex].component_scores[
               action.payload.index
             ],
             score: action.payload.score,
@@ -164,20 +170,20 @@ const educationSlice = createSlice({
         index: number;
       }>,
     ) {
-      const index = state.findIndex(
+      const index = state.educations.findIndex(
         education =>
           education.id_education_progress ===
           action.payload.id_education_progress,
       );
       if (index !== -1) {
-        const subjectIndex = state[index].subjects.findIndex(
+        const subjectIndex = state.educations[index].subjects.findIndex(
           subject => subject.id_subject === action.payload.id_subject,
         );
         if (subjectIndex !== -1) {
-          state[index].subjects[subjectIndex].component_scores[
+          state.educations[index].subjects[subjectIndex].component_scores[
             action.payload.index
           ] = {
-            ...state[index].subjects[subjectIndex].component_scores[
+            ...state.educations[index].subjects[subjectIndex].component_scores[
               action.payload.index
             ],
             // component_name: action.payload.component_name,
@@ -195,20 +201,20 @@ const educationSlice = createSlice({
         name: string;
       }>,
     ) {
-      const index = state.findIndex(
+      const index = state.educations.findIndex(
         education =>
           education.id_education_progress ===
           action.payload.id_education_progress,
       );
       if (index !== -1) {
-        const subjectIndex = state[index].subjects.findIndex(
+        const subjectIndex = state.educations[index].subjects.findIndex(
           subject => subject.id_subject === action.payload.id_subject,
         );
         if (subjectIndex !== -1) {
-          state[index].subjects[subjectIndex].component_scores[
+          state.educations[index].subjects[subjectIndex].component_scores[
             action.payload.index
           ] = {
-            ...state[index].subjects[subjectIndex].component_scores[
+            ...state.educations[index].subjects[subjectIndex].component_scores[
               action.payload.index
             ],
             component_name: action.payload.name,
@@ -224,21 +230,20 @@ const educationSlice = createSlice({
         index: number;
       }>,
     ) {
-      const index = state.findIndex(
+      const index = state.educations.findIndex(
         education =>
           education.id_education_progress ===
           action.payload.id_education_progress,
       );
       if (index !== -1) {
-        const subjectIndex = state[index].subjects.findIndex(
+        const subjectIndex = state.educations[index].subjects.findIndex(
           subject => subject.id_subject === action.payload.id_subject,
         );
         if (subjectIndex !== -1) {
-          state[index].subjects[subjectIndex].component_scores = state[
-            index
-          ].subjects[subjectIndex].component_scores.filter(
-            (_, i) => i !== action.payload.index,
-          );
+          state.educations[index].subjects[subjectIndex].component_scores =
+            state.educations[index].subjects[
+              subjectIndex
+            ].component_scores.filter((_, i) => i !== action.payload.index);
         }
       }
     },
@@ -251,20 +256,20 @@ const educationSlice = createSlice({
         index: number;
       }>,
     ) {
-      const index = state.findIndex(
+      const index = state.educations.findIndex(
         education =>
           education.id_education_progress ===
           action.payload.id_education_progress,
       );
       if (index !== -1) {
-        const subjectIndex = state[index].subjects.findIndex(
+        const subjectIndex = state.educations[index].subjects.findIndex(
           subject => subject.id_subject === action.payload.id_subject,
         );
         if (subjectIndex !== -1) {
-          state[index].subjects[subjectIndex].component_scores[
+          state.educations[index].subjects[subjectIndex].component_scores[
             action.payload.index
           ] = {
-            ...state[index].subjects[subjectIndex].component_scores[
+            ...state.educations[index].subjects[subjectIndex].component_scores[
               action.payload.index
             ],
             expected_score: null,
@@ -277,6 +282,7 @@ const educationSlice = createSlice({
 });
 
 export const {
+  setLoading,
   setEducation,
   clearEducation,
   deleteEducation,
