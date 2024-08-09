@@ -10,7 +10,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: screenHeight * 0.03,
-    color: COLORS.Rhino,
     textAlign: 'center',
     marginBottom: screenHeight * 0.02,
     lineHeight: screenHeight * 0.045,
@@ -25,7 +24,6 @@ const styles = StyleSheet.create({
   },
   /** Hero */
   hero: {
-    backgroundColor: COLORS.PaleAqua,
     margin: screenHeight * 0.02,
     borderRadius: 16,
     padding: screenHeight * 0.02,

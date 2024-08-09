@@ -26,7 +26,7 @@ const LandingPage2 = ({navigation}: CombinedScreenProps) => {
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: color.background}]}>
-      <View style={styles.hero}>
+      <View style={[styles.hero, {backgroundColor: color.textSubdued}]}>
         <Image
           source={{uri: 'https://assets.withfra.me/Landing.3.png'}}
           style={styles.heroImage}
@@ -35,7 +35,7 @@ const LandingPage2 = ({navigation}: CombinedScreenProps) => {
       </View>
       <View style={styles.content}>
         <View style={styles.contentHeader}>
-          <Text style={styles.title}>
+          <Text style={[styles.title, {color: color.text}]}>
             {t('plan_your_day')}{' '}
             <View style={styles.appName}>
               <Text style={styles.appNameText}>{t('app_name')}</Text>
