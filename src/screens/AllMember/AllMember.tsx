@@ -68,11 +68,14 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
 
   return (
     <View style={{flex: 1}}>
-      <Image
-        source={{uri: family?.avatar}}
-        resizeMode="contain"
-        style={{width: '100%', height: '35%', borderRadius: 0}}
-      />
+      <View style={styles.imageContainer}>
+        <Image
+          source={{uri: family?.avatar}}
+          resizeMode="contain"
+          style={styles.image}
+        />
+        <View style={styles.overlay} />
+      </View>
       <View style={{flex: 1, marginTop: -40}}>
         <View
           style={{

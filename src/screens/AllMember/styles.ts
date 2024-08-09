@@ -196,6 +196,20 @@ const styles = StyleSheet.create({
     borderRadius: 5, // Adjust this to change the roundness of the button corners
     padding: 10, // Adjust this to change the size of the button
   },
+  imageContainer: {
+    position: 'relative',
+    width: '100%',
+    height: '35%',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 0,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Adjust the opacity as needed
+  },
 });
 
 export default styles;
