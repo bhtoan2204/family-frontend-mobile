@@ -317,9 +317,8 @@ const LineChartScreen: React.FC<LineChartScreenProps> = ({id_family}) => {
                 }
 
                 return (
-                  <View>
+                  <View key={`dot-content-${index}`}>
                     <Text
-                      key={index}
                       style={{
                         position: 'absolute',
                         left: x - 15,

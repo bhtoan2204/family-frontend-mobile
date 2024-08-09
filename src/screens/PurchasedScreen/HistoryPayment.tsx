@@ -136,7 +136,7 @@ const PaymentHistoryScreen = ({
                 <Text
                   style={{color: color.text, fontWeight: 'bold', fontSize: 20}}>
                   {' '}
-                  {formatCurrency(item.amount / 1000)}
+                  {formatCurrency(item.amount)}
                 </Text>
               </View>
               <View

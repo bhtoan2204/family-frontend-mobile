@@ -189,6 +189,13 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
         navigation.navigate('ExpenseStack', {screen: 'CategoryExpense'});
 
         break;
+      case 'HOUSEHOLD':
+        navigation.navigate('HouseHoldStack', {
+          screen: 'HouseHoldScreen',
+          params: {id_family: item!.id_family},
+        });
+
+        break;
       default:
         console.log(`Unhandled notification type: ${item.type}`);
     }

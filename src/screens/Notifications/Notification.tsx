@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import * as Notifications from 'expo-notifications';
 import {getSocket} from '../../services/apiclient/Socket';
 import {AxiosResponse} from 'axios';
-import {FamilyServices} from '../../services/apiclient';
+import {AuthServices, FamilyServices} from '../../services/apiclient';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectProfile} from '../../redux/slices/ProfileSclice';
 import {Message, setUserMessage} from 'src/redux/slices/MessageUser';
@@ -91,6 +91,15 @@ const Notification = ({navigation}) => {
     }
   };
 
+  const onLogout = async (message: any) => {
+    try {
+      await AuthServices.Logout();
+      navigation.navigate('LoginScreen');
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
   const handleNewMessageFamily = async (message: any) => {
     console.log(message);
     if (message.senderId != profile.id_user) {
@@ -146,13 +155,14 @@ const Notification = ({navigation}) => {
       socket.on('onNewMessage', handleNewMessage);
       socket.on('onNewFamilyMessage', handleNewMessageFamily);
       socket.on('onNewNotification', handleNewNotification);
+      socket.on('onLogout', onLogout);
     }
 
     return () => {
       if (socket) {
         socket.off('onNewMessage', handleNewMessage);
         socket.off('onNewFamilyMessage', handleNewMessageFamily);
-        socket.off('onNewNotification', handleNewNotification);
+        socket.off('onLogout', onLogout);
       }
     };
   }, []);

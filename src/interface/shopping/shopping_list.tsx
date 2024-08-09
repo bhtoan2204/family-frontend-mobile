@@ -1,16 +1,15 @@
 export interface ShoppingListType {
-    id_shopping_list_type: number;
-    type_name_en: string;
-    type_name_vn: string;
-    icon_url: string;
+  id_shopping_list_type: number;
+  type_name_en: string;
+  type_name_vn: string;
+  icon_url: string;
 }
 
-
 export interface ShoppingListItemType {
-    id_item_type: number;
-    item_type_name_en: string;
-    item_type_name_vn: string;
-    icon_url: string;
+  id_item_type: number;
+  item_type_name_en: string;
+  item_type_name_vn: string;
+  icon_url: string;
 }
 
 // {
@@ -31,16 +30,16 @@ export interface ShoppingListItemType {
 //   }
 
 export interface ShoppingList {
-    id_list: number;
-    id_family: number;
-    id_shopping_list_type: number;
-    title: string;
-    description: string;
-    status: string | null;
-    created_at: string;
-    updated_at: string;
-    listType: ShoppingListType;
-    items?: ShoppingListItem[];
+  id_list: number;
+  id_family: number;
+  id_shopping_list_type: number;
+  title: string;
+  description: string;
+  status: string | null;
+  created_at: string;
+  updated_at: string;
+  listType: ShoppingListType;
+  items?: ShoppingListItem[];
 }
 
 // {
@@ -75,18 +74,18 @@ export interface ShoppingList {
 //   }
 
 export interface ShoppingListItem {
-    id_item: number;
-    id_list: number;
-    id_item_type: number;
-    item_name: string;
-    description: string;
-    quantity: number;
-    is_purchased: boolean;
-    priority_level: number;
-    reminder_date: string;
-    price: number;
-    created_at: string;
-    updated_at: string;
-    itemType: ShoppingListItemType;
-    // shoppingList: ShoppingList;
+  id_item: number;
+  id_list: number;
+  id_item_type: number;
+  item_name: string;
+  description: string;
+  quantity: number;
+  is_purchased: boolean;
+  priority_level: number;
+  reminder_date: string;
+  price: number;
+  created_at: string;
+  updated_at: string;
+  itemType: ShoppingListItemType;
+  // shoppingList: ShoppingList;
 }

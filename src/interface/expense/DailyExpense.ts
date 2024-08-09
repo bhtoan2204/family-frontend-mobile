@@ -1,3 +1,5 @@
+import {ShoppingList} from '../shopping/shopping_list';
+
 export interface UtilitiesType {
   id_utilities_type: number;
   name_en: string;
@@ -63,4 +65,5 @@ export interface DailyExpense {
     is_banned: boolean;
   };
   utilities: Utilities;
+  shoppingLists: ShoppingList;
 }

@@ -160,10 +160,9 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
     const startDate = new Date(item.time_start);
     const endDate = new Date(item.time_end);
     const isAllDay = item.is_all_day;
+    const isPastDate = isBefore(startOfDay(startDate), startOfDay(new Date()));
 
-    const backgroundColor = isPastDate(startDate)
-      ? 'lightgray'
-      : `${item.color}90`;
+    const backgroundColor = isPastDate ? 'lightgray' : `${item.color}90`;
 
     const textColor = item.color !== 'white' ? 'white' : 'black';
 
@@ -176,12 +175,8 @@ const CalendarScreen = ({route, navigation}: CalendarScreenProps) => {
       <TouchableOpacity
         onPress={() => handlePressEvent(item)}
         style={{backgroundColor: color.background}}>
-        <View style={[styles.agendaItem, {backgroundColor: `${item.color}70`}]}>
-          <Text
-            style={[
-              styles.agendaItemText,
-              {color: item.color !== 'white' ? 'white' : 'black'},
-            ]}>
+        <View style={[styles.agendaItem, {backgroundColor}]}>
+          <Text style={[styles.agendaItemText, {color: textColor}]}>
             {item.title}
           </Text>
           {isAllDay ? (

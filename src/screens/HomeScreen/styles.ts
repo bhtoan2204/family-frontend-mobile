@@ -377,9 +377,9 @@ const styles = StyleSheet.create({
     opacity: 0.33,
   },
   imageCombo: {
-     width: screenWidth * 0.8, 
-    height: screenWidth * 0.5, 
-     marginRight: 20,
+    width: screenWidth * 0.8,
+    height: screenWidth * 0.5,
+    marginRight: 20,
   },
   scrollViewContainer: {
     marginLeft: 20,
