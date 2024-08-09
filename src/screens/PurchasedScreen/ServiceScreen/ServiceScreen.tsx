@@ -70,7 +70,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
       const data = await FamilyServices.getAllFamily();
       if (data && data.length > 0) {
         setFamily(data);
-        if (!familySelected) {
+        if (familySelected === null) {
           setFamilySelected(data[0]);
         }
         fetchServiceOfFamily(familySelected?.id_family);

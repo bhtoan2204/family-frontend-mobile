@@ -357,7 +357,7 @@ export type PackStackParamList = {
     id_family: number | null;
   };
   ViewAllService: {
-    families: Family;
+    families: Family | null;
   };
 
   BankInfoScreen: {

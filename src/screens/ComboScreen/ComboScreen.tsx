@@ -16,10 +16,17 @@ import styles from './styles';
 import CustomButton from 'src/components/Button';
 import {TouchableOpacity} from '@gorhom/bottom-sheet';
 import {PurchasedScreenProps} from 'src/navigation/NavigationTypes';
+import {OrNull} from 'react-native-modal/dist/types';
+import {useSelector} from 'react-redux';
+import {selectFamilies} from 'src/redux/slices/FamilySlice';
 
 const ComboScreen = ({navigation}: PurchasedScreenProps) => {
+  const family = useSelector(selectFamilies);
   const handleViewService = () => {
-    navigation.navigate('PackStack', {screen: 'ViewAllService'});
+    navigation.navigate('PackStack', {
+      screen: 'ViewAllService',
+      params: {families: family[0]},
+    });
   };
   return (
     <ScrollView>
