@@ -56,7 +56,7 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
     navigation.navigate('AddEditFamilyMember', {id_family, phone});
   };
 
-  const handlePressMember = async (member: Member) => {
+  const handlePressMember = async (member: any) => {
     await dispatch(setSelectedMemberById(member.id_user));
     navigation.navigate('MemberDetails');
   };

@@ -53,9 +53,6 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
   const translate = useSelector(getTranslate);
   const color = useThemeColors();
 
-  useEffect(() => {
-    console.log(member);
-  }, []);
   const handlePhonePress = () => {
     Linking.openURL(`tel:${member?.user.phone}`);
   };
@@ -190,7 +187,7 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
           bottom: 10,
           paddingHorizontal: 20,
         }}>
-        <Header
+        {/* <Header
           leftComponent={{
             icon: 'arrow-back',
             color: 'white',
@@ -207,7 +204,21 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
             justifyContent: 'space-around',
             borderBottomWidth: 0,
           }}
-        />
+        /> */}
+        <View style={styles.headerContainer}>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() =>
+              navigation.navigate('AllMember', {
+                id_family: family?.id_family,
+                forceUpdate: new Date().getTime(),
+              })
+            }>
+            <Text style={styles.iconText}>{'←'}</Text>
+          </TouchableOpacity>
+
+          <View style={styles.centerComponent}></View>
+        </View>
 
         <View style={styles.avatarContainer}>
           <View>
@@ -476,6 +487,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingTop: 10,
   },
+  headerContainer: {
+    backgroundColor: 'transparent',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    height: 60,
+    borderBottomWidth: 0,
+    paddingTop: 35,
+  },
+  iconButton: {},
+  iconText: {
+    color: 'white',
+    fontSize: 30,
+  },
+  centerComponent: {},
   name: {
     fontSize: 28,
     fontWeight: 'bold',
