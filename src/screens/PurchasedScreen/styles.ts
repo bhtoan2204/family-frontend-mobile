@@ -58,6 +58,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
+    gap: 10,
+    marginTop: 15,
   },
   familyName: {
     fontSize: 18,
@@ -344,6 +346,8 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 20,
     marginBottom: 10,
+    borderRadius: 10,
+    alignContent: 'center',
   },
 
   familyItemText: {
@@ -356,6 +360,8 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'flex-end',
     alignItems: 'center',
+    gap: 5,
+    marginBottom: 5,
   },
   memberItemContainer: {
     alignItems: 'center',
@@ -367,8 +373,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   avatarFamily: {
-    width: 60,
-    height: 60,
+    width: 80,
+    height: 80,
     borderRadius: 10,
     marginRight: 10,
   },
