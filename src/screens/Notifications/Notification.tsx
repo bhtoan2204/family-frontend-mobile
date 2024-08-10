@@ -30,8 +30,7 @@ const Notification = ({navigation}) => {
   const language = useSelector(selectLocale);
 
   const handleNewMessage = async (message: Message) => {
-    console.log(message);
-    if (message.senderId != profile.id_user) {
+    if (message.senderId != profile?.id_user) {
       let notificationBody = '';
       switch (message.type) {
         case 'photo':

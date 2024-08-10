@@ -402,8 +402,9 @@ const ChatFamilyLastScreen = ({
           right: 0,
           backgroundColor: color.white,
         }}>
-        <View style={[styles.header, {backgroundColor: color.white}]}>
-          <View style={[styles.receiverInfo, {backgroundColor: color.white}]}>
+        <View style={[styles.header, {backgroundColor: color.background}]}>
+          <View
+            style={[styles.receiverInfo, {backgroundColor: color.background}]}>
             <View
               style={{
                 flexDirection: 'row',
@@ -462,10 +463,13 @@ const ChatFamilyLastScreen = ({
         </View>
         {messages ? (
           <FlatList
-            style={[styles.messagesContainer, {backgroundColor: color.white}]}
+            style={[
+              styles.messagesContainer,
+              {backgroundColor: color.background},
+            ]}
             contentContainerStyle={[
               styles.contentContainer,
-              {backgroundColor: color.white},
+              {backgroundColor: color.background},
             ]}
             data={messages}
             inverted
@@ -496,7 +500,10 @@ const ChatFamilyLastScreen = ({
             }}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View
-                style={[styles.introContainer, {backgroundColor: color.white}]}>
+                style={[
+                  styles.introContainer,
+                  {backgroundColor: color.background},
+                ]}>
                 {LastMessageFamily && (
                   <>
                     <View
@@ -537,7 +544,7 @@ const ChatFamilyLastScreen = ({
         <View
           style={[
             styles.inputContainer,
-            {backgroundColor: color.white},
+            {backgroundColor: color.background},
             keyboardIsOpen && {paddingBottom: 20},
           ]}>
           <TouchableOpacity
@@ -549,7 +556,7 @@ const ChatFamilyLastScreen = ({
             <TextInput
               style={[
                 styles.input,
-                {backgroundColor: color.background, color: color.text},
+                {backgroundColor: color.white, color: color.text},
                 {flex: 1},
               ]}
               value={message}

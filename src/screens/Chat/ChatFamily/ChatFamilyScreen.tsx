@@ -377,8 +377,9 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
         left: 0,
         right: 0,
       }}>
-      <View style={[styles.header, {backgroundColor: color.white}]}>
-        <View style={[styles.receiverInfo, {backgroundColor: color.white}]}>
+      <View style={[styles.header, {backgroundColor: color.background}]}>
+        <View
+          style={[styles.receiverInfo, {backgroundColor: color.background}]}>
           <View
             style={{
               flexDirection: 'row',
@@ -503,7 +504,7 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
       <View
         style={[
           styles.inputContainer,
-          {backgroundColor: color.white},
+          {backgroundColor: color.background},
           keyboardIsOpen && {paddingBottom: 20},
         ]}>
         <TouchableOpacity
@@ -515,7 +516,7 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
           <TextInput
             style={[
               styles.input,
-              {backgroundColor: color.background, color: color.text},
+              {backgroundColor: color.white, color: color.text},
               {flex: 1},
             ]}
             value={message}

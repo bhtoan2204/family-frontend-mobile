@@ -137,6 +137,9 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
   };
 
   const fetchNewMessages = (newMessage: Message) => {
+    if (newMessage.type === 'photo') {
+      setImages(prevImages => [...prevImages, newMessage.content]);
+    }
     setMessages(prevMessages => [newMessage, ...prevMessages]);
   };
 
@@ -215,9 +218,6 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
           ) {
             await handleSendImage(compressedImage.uri);
           } else {
-            Alert.alert(
-              'Selected file size exceeds the limit or could not determine file size',
-            );
           }
         } else if (asset.type === 'video') {
           const savedAsset = await MediaLibrary.createAssetAsync(uri);
@@ -239,18 +239,12 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
             ) {
               await sendVideoMessage(uri);
             } else {
-              Alert.alert(
-                'Selected file size exceeds the limit or could not determine file size',
-              );
             }
           } else {
-            Alert.alert('Error', 'Failed to retrieve local URI for the video.');
           }
         } else {
-          Alert.alert('Unsupported file type');
         }
       } else {
-        Alert.alert('Error', 'No valid assets returned from ImagePicker');
       }
     } catch (error) {
       Alert.alert('Error. Please try again.');
@@ -372,13 +366,14 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
           style: 'cancel',
         },
         {
-          text: translate('Cancel'),
+          text: translate('Delete'),
           onPress: async () => {
             try {
               const respone = await ChatServices.removeMessage(
                 message.receiverId,
                 message._id,
               );
+              console.log(respone);
               if (respone) {
                 setMessages(prevMessages =>
                   prevMessages.filter(msg => msg._id !== message._id),
