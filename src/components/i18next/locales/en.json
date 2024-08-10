@@ -668,5 +668,16 @@
   "shopping_list_cat_detail_add_item_placeholder": "Give your item a description",
   "shopping_list_cat_detail_add_item_price_description": "Enter price for your item",
   "shopping_list_cat_detail_delete_item": "Delete item",
-  "shopping_list_cat_detail_delete_item_description": "Are you sure you want to delete this item?"
+  "shopping_list_cat_detail_delete_item_description": "Are you sure you want to delete this item?",
+  "My checklist": "My checklist",
+  "Set reminder date": "Set reminder date",
+  "Add description": "Add description",
+  "Nothing to buy": "Nothing to buy",
+  "Tap on the button to add product to your shopping list": "Tap on the button to add product to your shopping list",
+  "No name found": "No name found",
+  "name": "name",
+  "Pick a category and named for your new item": "Pick a category and named for your new item",
+  "Name of the item": "Name of the item",
+  "Pick Icon": "Pick Icon",
+  "Icon": "Icon"
 }

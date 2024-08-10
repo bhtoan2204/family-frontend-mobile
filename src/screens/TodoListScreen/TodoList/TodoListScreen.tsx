@@ -32,6 +32,7 @@ import AddListSheet from 'src/components/user/shopping-todo/sheet/add-list-sheet
 import {ScreenHeight} from '@rneui/base';
 import {useToast} from 'react-native-toast-notifications';
 import TodoListTypeSkeleton from './skeleton';
+import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 const screenHeight = Dimensions.get('screen').height;
 
 const TodoListScreen = ({navigation, route}: TodoListScreenProps) => {
@@ -57,6 +58,9 @@ const TodoListScreen = ({navigation, route}: TodoListScreenProps) => {
   const [isScrollDown, setIsScrollDown] = useState(false);
   const scrollYRef = React.useRef<any>(0);
   const loading = useSelector((state: RootState) => state.todoList).loading;
+  const translate = useSelector(getTranslate);
+  const location = useSelector(selectLocale);
+
   useEffect(() => {
     setKey(prev => !prev);
   }, [isDarkMode]);
@@ -107,7 +111,7 @@ const TodoListScreen = ({navigation, route}: TodoListScreenProps) => {
     const month: string = monthNames[date.getMonth()];
     const year: number = date.getFullYear();
 
-    const description: string = `${month} ${year}`;
+    const description: string = translate(month) + ` / ${year}`;
     return description;
   }, []);
 
@@ -155,7 +159,7 @@ const TodoListScreen = ({navigation, route}: TodoListScreenProps) => {
         <TodoListCategoryItem
           key={type.id_checklist_type}
           id_category={type.id_checklist_type}
-          category_name={type.name_en}
+          category_name={location === 'vi' ? type.name_vn : type.name_en}
           total_items={type.checklists ? type.checklists.length : 0}
           handleNavigateCategory={(id_category: number) => {
             // console.log('navigate')
@@ -211,7 +215,7 @@ const TodoListScreen = ({navigation, route}: TodoListScreenProps) => {
               color: !isDarkMode ? COLORS.Rhino : 'white',
               fontWeight: 'bold',
             }}>
-            CheckList
+            {translate('Checklist')}
           </Text>
           <View className="flex-1 items-end">
             <Material
@@ -247,6 +251,7 @@ const TodoListScreen = ({navigation, route}: TodoListScreenProps) => {
             maxDate={'2026-06-10'}
             disableAllTouchEventsForDisabledDays={true}
             customHeader={customCalendarHeader}
+            locale="vi"
           />
         </View>
 
@@ -256,7 +261,7 @@ const TodoListScreen = ({navigation, route}: TodoListScreenProps) => {
             style={{
               color: isDarkMode ? 'white' : '#292828',
             }}>
-            My checklist
+            {translate('My checklist')}
           </Text>
           {loading ? (
             <>

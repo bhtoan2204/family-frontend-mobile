@@ -57,7 +57,7 @@ const BarChartScreen: React.FC<BarChartScreenProps> = ({
         dispatch(setExpenses(response));
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
+      //console.error('Error fetching data:', error);
     }
   };
 
