@@ -97,7 +97,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
         setPurchasedServices(purchasedIds);
       }
     } catch (error) {
-      console.log('Fetch fetchServiceOfFamily error:', error);
+      //console.log('Fetch fetchServiceOfFamily error:', error);
     } finally {
       setLoading(false);
     }
