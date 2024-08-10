@@ -104,7 +104,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         setCurrentIndex(currentIndex + 1);
       }
     } catch (error) {
-      console.error('Error fetching messages:', error);
+      //console.error('Error fetching messages:', error);
     } finally {
       setLoading(false);
     }
@@ -121,7 +121,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         receiverId: receiverId,
       });
     } catch (error) {
-      console.error('Error sending messages:', error);
+      //console.error('Error sending messages:', error);
     }
   };
 
@@ -132,7 +132,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
         receiverId: receiverId,
       });
     } catch (error) {
-      console.error('Error sendImage:', error);
+      //console.error('Error sendImage:', error);
     }
   };
 

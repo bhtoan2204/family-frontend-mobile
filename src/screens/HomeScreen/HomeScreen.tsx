@@ -207,7 +207,7 @@ const HomeScreen = ({
 
       dispatch(setFamilyMembers(membersObject));
     } catch (error) {
-      console.error('Error fetching families or members:', error);
+      //console.error('Error fetching families or members:', error);
     }
   };
 

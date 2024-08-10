@@ -48,10 +48,10 @@ const CalendarServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error('Error in getAllCategoryEvent');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getAllCategoryEvent', error.message);
+      return null;
     }
   },
 
@@ -72,10 +72,10 @@ const CalendarServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        console.error('Error in createCategoryEvent');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in createCategoryEvent', error.message);
+      return null;
     }
   },
 
@@ -96,10 +96,10 @@ const CalendarServices = {
       if (response.status === 204) {
         return true;
       } else {
-        //console.error('Error in deleteCategoryEvent');
+        return null;
       }
     } catch (error: any) {
-      //console.error('Error in deleteCategoryEvent', error.message);
+      return null;
     }
   },
   updateCategoryEvent: async (
@@ -121,10 +121,10 @@ const CalendarServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        console.error('Error in updateCategoryEvent');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in updateCategoryEvent', error.message);
+      return null;
     }
   },
 
@@ -140,10 +140,10 @@ const CalendarServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error('Error in getCalendar');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getCalendar', error.message);
+      return null;
     }
   },
 
@@ -160,10 +160,10 @@ const CalendarServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error('Error in getCalendarDetail');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getCalendarDetail', error.message);
+      return null;
     }
   },
 
@@ -182,13 +182,13 @@ const CalendarServices = {
           console.log(response.data.data);
           return response.data.data;
         } else {
-          console.error('Error in getEventOnDate');
+          return null;
         }
       } else {
-        console.error('Error: No response received');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getEventOnDate', error.message);
+      return null;
     }
   },
 
@@ -220,7 +220,6 @@ const CalendarServices = {
         return locationNames;
       }
     } catch (error) {
-      console.error('Failed to fetch locations:', error);
       return [];
     }
   },
@@ -265,7 +264,7 @@ const CalendarServices = {
         return response.data.data;
       }
     } catch (error: any) {
-      console.log(error);
+      return null;
     }
   },
 
@@ -300,7 +299,6 @@ const CalendarServices = {
         recurrence_id: recurrence_id || null,
         recurrence_rule: recurrence_rule || null,
       };
-      console.log(requestData);
       const response: AxiosResponse = await instance.put(
         CalendarUrls.updateCalender,
         requestData,
@@ -309,11 +307,10 @@ const CalendarServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        throw new Error(`Unexpected status code: ${response.status}`);
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in UpdateEvent:', error.message);
-      throw new Error(`UpdateEvent failed: ${error.message}`);
+      return null;
     }
   },
 };

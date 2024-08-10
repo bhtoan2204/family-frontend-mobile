@@ -35,12 +35,10 @@ const ChatServices = {
       if (response && response.status === 200) {
         return response.data;
       } else {
-        console.error(
-          'Error in getFamilyMessages: Unexpected response or status code is not 200',
-        );
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getFamilyMessages:', error.message);
+      return null;
     }
   },
   GetMessages: async ({id_user, index}: {id_user?: string; index: number}) => {
@@ -50,10 +48,10 @@ const ChatServices = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return [];
       }
     } catch (error: any) {
-      console.error('Error in getMessages:', error.message);
+      return [];
     }
   },
 
@@ -77,7 +75,7 @@ const ChatServices = {
         return response.data;
       }
     } catch (error: any) {
-      console.error('Error in sendMessages:', error.message);
+      return null;
     }
   },
   sendFamilyMessage: async ({
@@ -100,7 +98,7 @@ const ChatServices = {
         return response.data;
       }
     } catch (error: any) {
-      console.error('Error in sendFamilyMessage:', error.message);
+      return null;
     }
   },
   sendImageMessage: async ({
@@ -142,7 +140,7 @@ const ChatServices = {
         return response.data;
       }
     } catch (error: any) {
-      console.error('Error in sendImageMessage:', error.message);
+      return null;
     }
   },
   sendFamilyImage: async ({
@@ -184,7 +182,7 @@ const ChatServices = {
         return response.data;
       }
     } catch (error: any) {
-      console.error('Error in sendFamilyImage:', error.message);
+      return null;
     }
   },
 
@@ -198,7 +196,7 @@ const ChatServices = {
         return response.data;
       }
     } catch (error: any) {
-      console.error('Error in getUsersChat:', error.message);
+      return null;
     }
   },
 
@@ -212,7 +210,7 @@ const ChatServices = {
         return response.data.roomId;
       }
     } catch (error: any) {
-      console.error('Error in createRoom:', error.message);
+      return null;
     }
   },
   getFamilyChats: async () => {
@@ -225,7 +223,7 @@ const ChatServices = {
         return response.data;
       }
     } catch (error: any) {
-      console.error('Error in getFamilyChats:', error.message);
+      return null;
     }
   },
   markSeenMessage: async ({receiver_id}: {receiver_id?: string}) => {
@@ -238,7 +236,7 @@ const ChatServices = {
         return response.data;
       }
     } catch (error: any) {
-      console.error('Error in markSeenMessage:', error.message);
+      return null;
     }
   },
   GetAllUser: async ({search}: {search: string}) => {
@@ -255,7 +253,7 @@ const ChatServices = {
         return response.data;
       }
     } catch (error: any) {
-      console.error('Error in getAllUser:', error.message);
+      return null;
     }
   },
   removeMessage: async (receiver_id: string, id_message: string) => {
@@ -271,7 +269,6 @@ const ChatServices = {
       }
     } catch (error: any) {
       return false;
-      console.error('Error in removeMessage:', error.message);
     }
   },
 
@@ -288,7 +285,6 @@ const ChatServices = {
       }
     } catch (error: any) {
       return false;
-      console.error('Error in removeMessageFamily:', error.message);
     }
   },
 
@@ -325,11 +321,10 @@ const ChatServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+        return null;
       }
     } catch (error: any) {
-      console.log('Update Error', error);
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      return null;
     }
   },
   sendFamilyVideo: async (familyId: number | undefined, uri: string) => {
@@ -361,11 +356,10 @@ const ChatServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+        return null;
       }
     } catch (error: any) {
-      console.log('Update Error', error);
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      return null;
     }
   },
 };

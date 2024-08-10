@@ -117,11 +117,10 @@ const FamilyServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.FAMILY_NOT_FOUND);
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getAllFamily:', error.message);
-      throw new Error(ERROR_TEXTS.FAMILY_NOT_FOUND);
+      return null;
     }
   },
 
@@ -136,10 +135,10 @@ const FamilyServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.FAMILY_NOT_FOUND);
+        return null;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.FAMILY_NOT_FOUND);
+      return null;
     }
   },
   checkphone: async ({phone}: {phone?: string}) => {
@@ -181,11 +180,10 @@ const FamilyServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.CREATE_FAMILY_ERROR);
+        return null;
       }
     } catch (error) {
-      console.error(error);
-      throw new Error(ERROR_TEXTS.CREATE_FAMILY_ERROR);
+      return null;
     }
   },
 
@@ -210,10 +208,10 @@ const FamilyServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.UPDATE_FAMILY_ERROR);
+        return null;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.UPDATE_FAMILY_ERROR);
+      return null;
     }
   },
 
@@ -234,12 +232,10 @@ const FamilyServices = {
       if (response.status === 200) {
         return response;
       } else {
-        console.error('Error in deleteFamily: response is', response);
-        throw new Error(ERROR_TEXTS.DELETE_FAMILY_ERROR);
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in deleteFamily:', error.message);
-      throw new Error(ERROR_TEXTS.DELETE_FAMILY_ERROR);
+      return null;
     }
   },
 
@@ -258,11 +254,10 @@ const FamilyServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        return familyErrorDat;
+        return null;
       }
     } catch (error) {
-      return familyErrorDat;
-      throw new Error(ERROR_TEXTS.MEMBER_NOT_FOUND);
+      return null;
     }
   },
 
@@ -276,10 +271,10 @@ const FamilyServices = {
       if (response) {
         return response;
       } else {
-        throw new Error(ERROR_TEXTS.MEMBER_NOT_FOUND);
+        return null;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.MEMBER_NOT_FOUND);
+      return null;
     }
   },
   //da xong
@@ -304,7 +299,7 @@ const FamilyServices = {
         return false;
       }
     } catch (error) {
-      //console.error('Error in addMember:', error);
+      return false;
     }
   },
 
@@ -320,12 +315,12 @@ const FamilyServices = {
         },
       );
       if (response.status === 204) {
-        return 'Successful';
+        return true;
       } else {
-        throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
+        return false;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
+      return false;
     }
   },
 
@@ -341,12 +336,12 @@ const FamilyServices = {
       );
 
       if (response.status === 204) {
-        return 'Successful';
+        return true;
       } else {
-        throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
+        return false;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
+      return false;
     }
   },
   inviteMember: async (familyId?: number) => {
@@ -362,10 +357,10 @@ const FamilyServices = {
       if (response.status === 201) {
         return response.data.data;
       } else {
-        throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
+        return false;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.DELETE_MEMBER_ERROR);
+      return false;
     }
   },
   changeAvatar: async (id_family: number | undefined, uri: string) => {
@@ -394,15 +389,13 @@ const FamilyServices = {
           },
         },
       );
-      console.log(response);
       if (response.status === 200) {
         return response.data.data;
       } else {
-        throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+        return null;
       }
     } catch (error: any) {
-      console.log('Update Error', error);
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      return null;
     }
   },
 };

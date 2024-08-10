@@ -191,7 +191,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
             });
           }
         } catch (error) {
-          console.error('Error updating avatar:', error);
+          //console.error('Error updating avatar:', error);
           Toast.show(translate('Failed to change family avatar.'), {
             type: 'danger',
             duration: 3000,
@@ -308,7 +308,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         duration: 3000,
       });
     } catch (error: any) {
-      console.error('Leave family failed:', error);
+      //console.error('Leave family failed:', error);
       Toast.show(translate('Fail to leave family'), {
         type: 'danger',
         duration: 3000,

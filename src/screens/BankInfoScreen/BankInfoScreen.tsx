@@ -123,7 +123,7 @@ const BankInfoScreen = ({route, navigation}: BankInfoScreenProps) => {
       console.log('Amount:', amount);
       console.log('Bank Code:', bankCode);
     } catch (error) {
-      console.error('Error parsing URL:', error);
+      //console.error('Error parsing URL:', error);
     }
   };
 

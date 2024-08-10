@@ -69,11 +69,11 @@ const calendarSlice = createSlice({
       const timeEnd = new Date(newEvent.time_end);
 
       if (isNaN(timeStart.getTime()) || isNaN(timeEnd.getTime())) {
-        console.error(
-          'Invalid time_start or time_end:',
-          newEvent.time_start,
-          newEvent.time_end,
-        );
+        // console.error(
+        //   'Invalid time_start or time_end:',
+        //   newEvent.time_start,
+        //   newEvent.time_end,
+        // );
         return;
       }
 
@@ -147,15 +147,15 @@ const calendarSlice = createSlice({
                 id: `${newEvent.id_calendar}-${recurrenceDateKey}`, // Unique identifier for recurring events
               });
             } else {
-              console.error('Invalid date:', date);
+              //console.error('Invalid date:', date);
             }
           });
         } catch (recurrenceError) {
-          console.error(
-            'Error parsing cleaned recurrence rule:',
-            recurrenceError,
-            cleanedRecurrenceRule,
-          );
+          // console.error(
+          //   'Error parsing cleaned recurrence rule:',
+          //   recurrenceError,
+          //   cleanedRecurrenceRule,
+          // );
         }
       }
       state.selectedEvent = action.payload;
@@ -232,7 +232,7 @@ const calendarSlice = createSlice({
 
         state.selectedEvent = null;
       } else {
-        console.error('No selected event to delete');
+        // console.error('No selected event to delete');
       }
     },
 
@@ -330,15 +330,15 @@ const calendarSlice = createSlice({
                   id: `${event.id_calendar}-${recurrenceDateKey}`, // Unique identifier for recurring events
                 });
               } else {
-                console.error('Invalid date:', date);
+                //console.error('Invalid date:', date);
               }
             });
           } catch (recurrenceError) {
-            console.error(
-              'Error parsing cleaned recurrence rule:',
-              recurrenceError,
-              cleanedRecurrenceRule,
-            );
+            // console.error(
+            //   'Error parsing cleaned recurrence rule:',
+            //   recurrenceError,
+            //   cleanedRecurrenceRule,
+            // );
           }
         }
       });

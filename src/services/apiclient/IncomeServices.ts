@@ -13,7 +13,7 @@ const IncomeServices = {
         return response.data.data;
       }
     } catch (error: any) {
-      console.error('Error in getUtilityTypes:', error.message);
+      return null;
     }
   },
   createUtility: async (
@@ -61,7 +61,7 @@ const IncomeServices = {
         return response.data.data;
       }
     } catch (error: any) {
-      console.error('Error in createUtility:', error.message);
+      return null;
     }
   },
 
@@ -73,10 +73,10 @@ const IncomeServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error('Error in getIncomeSource');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getIncomeSource:', error.message);
+      return null;
     }
   },
   createIncomeType: async (
@@ -94,10 +94,10 @@ const IncomeServices = {
       if (response.status === 201) {
         return response.data.data;
       } else {
-        //console.error('Error in createIncomeType');
+        return null;
       }
     } catch (error: any) {
-      //console.error('Error in createIncomeType:', error.message);
+      return null;
     }
   },
   deleteIncomeSource: async (
@@ -112,10 +112,9 @@ const IncomeServices = {
         return true;
       } else {
         return false;
-        //console.error('Error in deleteIncomeSource');
       }
     } catch (error: any) {
-      //console.error('Error in deleteIncomeSource:', error.message);
+      return false;
     }
   },
 
@@ -133,10 +132,10 @@ const IncomeServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error('Error in getIncomeByYear');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getIncomeByYear:', error.message);
+      return null;
     }
   },
   getIncomeByMonth: async (month: number, year: number, id_family?: number) => {
@@ -153,10 +152,10 @@ const IncomeServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error('Error in getIncomeByMonth');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getIncomeByMonth:', error.message);
+      return null;
     }
   },
   getIncomeByDate: async (date: string, id_family?: number) => {
@@ -172,10 +171,10 @@ const IncomeServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error('Error in getIncomeByDate');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getIncomeByDate:', error.message);
+      return null;
     }
   },
   getIncomeByDateRange: async (
@@ -203,10 +202,10 @@ const IncomeServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        console.error('Error in getIncomeByDateRange');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getIncomeByDateRange:', error.message);
+      return null;
     }
   },
   createIncome: async (
@@ -233,7 +232,7 @@ const IncomeServices = {
         return response.data.data;
       }
     } catch (error: any) {
-      console.error('Error in createIncome:', error.message);
+      return null;
     }
   },
 
@@ -271,7 +270,7 @@ const IncomeServices = {
         return response.data.data;
       }
     } catch (error: any) {
-      console.error('Error in updateIncome:', error.message);
+      return null;
     }
   },
   deleteIncome: async (id_income?: number, id_family?: number) => {

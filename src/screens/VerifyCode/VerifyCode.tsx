@@ -44,7 +44,7 @@ const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
       console.log('OTP sent successfully:', result);
       return result;
     } catch (error) {
-      console.error('Error in handleSendOTPVerify:', error);
+      //console.error('Error in handleSendOTPVerify:', error);
       throw error;
     }
   };
@@ -70,16 +70,16 @@ const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
       );
     } catch (error) {
       if (error instanceof Error) {
-        console.error('Error in handleVerifyOTP:', error.message);
-        console.error('Error stack trace:', error.stack);
+        // console.error('Error in handleVerifyOTP:', error.message);
+        // console.error('Error stack trace:', error.stack);
         if ((error as any).response) {
           const response = (error as any).response;
-          console.error('Error response data:', response.data);
-          console.error('Error response status:', response.status);
-          console.error('Error response headers:', response.headers);
+          // console.error('Error response data:', response.data);
+          // console.error('Error response status:', response.status);
+          // console.error('Error response headers:', response.headers);
         }
       } else {
-        console.error('Unexpected error:', error);
+        //console.error('Unexpected error:', error);
       }
       Alert.alert('Error', 'Verification failed. Please try again.');
     }

@@ -173,7 +173,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                 });
                 navigation.goBack();
               } catch (error) {
-                console.error('Error deleting event:', error);
+                //console.error('Error deleting event:', error);
                 Toast.show(
                   translate('An error occurred while deleting the event.'),
                   {
@@ -239,7 +239,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                   console.log('hi');
                 }
               } catch (error) {
-                console.error('Error deleting event:', error);
+                //console.error('Error deleting event:', error);
                 Toast.show(
                   translate('An error occurred while deleting the event.'),
                   {
@@ -263,7 +263,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                 });
                 navigation.goBack();
               } catch (error) {
-                console.error('Error deleting event:', error);
+                //console.error('Error deleting event:', error);
                 Toast.show(
                   translate('An error occurred while deleting the event.'),
                   {
@@ -425,7 +425,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
         </Text>
       );
     } catch (error) {
-      console.error('Error explaining recurrence rule:', error);
+      //console.error('Error explaining recurrence rule:', error);
       return (
         <View style={styles.recurrenceContainer}>
           <Text style={[styles.recurrenceText, {color: color.text}]}>
@@ -503,7 +503,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
         });
       }
     } catch (error) {
-      console.error('Error updating checklist:', error);
+      //console.error('Error updating checklist:', error);
       Toast.show('Update failed', {
         type: 'danger',
       });

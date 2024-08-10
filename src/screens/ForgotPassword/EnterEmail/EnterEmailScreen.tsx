@@ -75,7 +75,7 @@ const EnterEmailScreen = ({navigation}: ForgotPasswordScreenProps) => {
         );
       }
     } catch (error) {
-      console.error(error);
+      //console.error(error);
       Alert.alert(translate('Error'), translate('NetworkErrorMessage'));
     }
   };

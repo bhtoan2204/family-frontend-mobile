@@ -24,10 +24,10 @@ const ExpenseServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error('Error in getExpenseType');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getExpenseType:', error.message);
+      return null;
     }
   },
   getUtilityType: async () => {
@@ -39,10 +39,10 @@ const ExpenseServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error('Error in getUtilityType');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getUtilityType:', error.message);
+      return null;
     }
   },
 
@@ -64,10 +64,10 @@ const ExpenseServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error('Error in updateUtility');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in updateUtility:', error.message);
+      return null;
     }
   },
 
@@ -95,10 +95,10 @@ const ExpenseServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error('Error in getAsset');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getAsset:', error.message);
+      return null;
     }
   },
 
@@ -149,8 +149,7 @@ const ExpenseServices = {
         return response.data;
       }
     } catch (error: any) {
-      console.error('Error in createAsset:', error.message);
-      throw error;
+      return null;
     }
   },
   updateAsset: async (
@@ -202,8 +201,7 @@ const ExpenseServices = {
         return response.data.data;
       }
     } catch (error: any) {
-      console.error('Error in updateAsset:', error.message);
-      throw error;
+      return null;
     }
   },
   deleteAsset: async (id_family?: number, id_asset?: number) => {
@@ -213,10 +211,10 @@ const ExpenseServices = {
       );
 
       if (response.status === 204) {
-        return;
+        return true;
       }
     } catch (error: any) {
-      console.error('Error in deleteAsset:', error.message);
+      return false;
     }
   },
 
@@ -235,8 +233,11 @@ const ExpenseServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
+        return null;
       }
-    } catch (error: any) {}
+    } catch (error: any) {
+      return null;
+    }
   },
   deleteExpenseType: async (
     id_family: number | null,
@@ -253,6 +254,7 @@ const ExpenseServices = {
         //console.error('Error in deleteExpenseType');
       }
     } catch (error: any) {
+      return false;
       //console.error('Error in deleteExpenseType:', error.message);
     }
   },
@@ -271,10 +273,10 @@ const ExpenseServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error('Error in getExpenseByYear');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getExpenseByYear:', error.message);
+      return null;
     }
   },
   getExpenseByMonth: async (
@@ -295,10 +297,10 @@ const ExpenseServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error('Error in getExpenseByMonth');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getExpenseByMonth:', error.message);
+      return null;
     }
   },
   getExpenseByDate: async (date: string, id_family?: number) => {
@@ -315,10 +317,10 @@ const ExpenseServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error('Error in getExpenseByDate');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getExpenseByDate:', error.message);
+      return null;
     }
   },
   getExpenseByDateRange: async (
@@ -347,10 +349,10 @@ const ExpenseServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        console.error('Error in getExpenseByDateRange');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getExpenseByDateRange:', error.message);
+      return null;
     }
   },
   createExpense: async (
@@ -401,7 +403,7 @@ const ExpenseServices = {
         return response.data.data;
       }
     } catch (error: any) {
-      console.error('Error in createExpense:', error.message);
+      return null;
     }
   },
   updateIncome: async (
@@ -439,7 +441,7 @@ const ExpenseServices = {
         return response.data.data;
       }
     } catch (error: any) {
-      console.error('Error in updateIncome:', error.message);
+      return null;
     }
   },
   deleteExpense: async (id_family: number, id_expenditure: number) => {
@@ -451,7 +453,7 @@ const ExpenseServices = {
         return response.data;
       }
     } catch (error: any) {
-      console.error('Error in deleteExpense:', error.message);
+      return null;
     }
   },
 
@@ -531,7 +533,7 @@ const ExpenseServices = {
         return response.data.data;
       }
     } catch (error: any) {
-      console.error('Error in updateExpense:', error.message);
+      return null;
     }
   },
 

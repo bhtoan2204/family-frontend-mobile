@@ -226,7 +226,7 @@ const UpdateEventScreen: React.FC<UpdateEventScreenProps> = ({
       try {
         await CalendarServices.DeleteEvent(eventDetails2.id_calendar);
       } catch (rollbackError: any) {
-        console.error('Rollback failed:', rollbackError.message);
+        //console.error('Rollback failed:', rollbackError.message);
       }
 
       Toast.show(

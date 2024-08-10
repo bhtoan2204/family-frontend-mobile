@@ -60,7 +60,7 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
         setHasMore(false);
       }
     } catch (error) {
-      console.error('Error fetchNotification:', error);
+      //console.error('Error fetchNotification:', error);
     } finally {
       setIsFetching(false);
       setLoading(false);
@@ -77,7 +77,7 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
       setNotifications(updatedNotifications);
       dispatch(setUnreadCount(0));
     } catch (error) {
-      console.error('Error marking all notifications as read:', error);
+      //console.error('Error marking all notifications as read:', error);
     }
   };
 
@@ -90,7 +90,7 @@ const NotificationScreen = ({navigation}: ViewFamilyScreenProps) => {
       typeof dateTime === 'string' ? new Date(dateTime) : dateTime;
 
     if (!(dateObj instanceof Date && !isNaN(dateObj.getTime()))) {
-      console.error('Invalid dateTime:', dateTime);
+      //console.error('Invalid dateTime:', dateTime);
       return '';
     }
 

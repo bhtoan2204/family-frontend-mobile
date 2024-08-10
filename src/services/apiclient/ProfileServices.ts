@@ -14,10 +14,14 @@ const ProfileServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+        return null;
+
+        //throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      return null;
+
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   getNotification: async (index: number) => {
@@ -29,10 +33,14 @@ const ProfileServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+        return null;
+
+        //throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      return null;
+
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   markAllRead: async () => {
@@ -63,8 +71,12 @@ const ProfileServices = {
 
       if (response.status === 200) {
         return response.data.data;
+      } else {
+        return null;
       }
-    } catch (error) {}
+    } catch (error) {
+      return null;
+    }
   },
   getUserInfoByEmail: async (email: string) => {
     try {
@@ -83,7 +95,7 @@ const ProfileServices = {
         return null;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      return null;
     }
   },
   markRead: async (index: string) => {
@@ -95,10 +107,10 @@ const ProfileServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+        return null;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      return null;
     }
   },
   createFeedback: async (rating: number, comment: string) => {
@@ -114,10 +126,10 @@ const ProfileServices = {
       if (response.status === 201) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+        return null;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      return null;
     }
   },
 
@@ -146,11 +158,11 @@ const ProfileServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+        return null;
       }
     } catch (error: any) {
       console.log('Update Error', error);
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      return null;
     }
   },
 
@@ -228,11 +240,11 @@ const ProfileServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+        return null;
       }
     } catch (error: any) {
       console.log('Update Error', error);
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      return null;
     }
   },
 };

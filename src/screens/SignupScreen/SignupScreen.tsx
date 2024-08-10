@@ -145,10 +145,10 @@ const SignupScreen = ({navigation}: LoginScreenProps) => {
       });
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error('Signup error:', error.message);
+        //console.error('Signup error:', error.message);
         setErrors({submit: error.message});
       } else {
-        console.error('Signup error:', error);
+        //console.error('Signup error:', error);
         setErrors({submit: 'An unknown error occurred'});
       }
     }

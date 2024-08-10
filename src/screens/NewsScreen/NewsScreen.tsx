@@ -44,7 +44,7 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
         setRefreshing(false);
         setNewsCategory(data);
       } catch (error) {
-        console.error('Error fetching news:', error);
+        //console.error('Error fetching news:', error);
       }
     };
     fetchCategoryNews();
@@ -69,7 +69,7 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
       setTotalItems(data.count);
       setRefreshing(false);
     } catch (error) {
-      console.error('Error fetching news:', error);
+      //console.error('Error fetching news:', error);
       setLoading(false);
       setRefreshing(false);
     }

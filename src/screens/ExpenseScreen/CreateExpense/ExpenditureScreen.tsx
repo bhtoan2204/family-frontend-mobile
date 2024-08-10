@@ -125,11 +125,11 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
         const clonedResponse = {...response};
         await dispatch(setExpenseTypes(clonedResponse));
       } else {
-        console.error('Error in getExpenseType: response is undefined');
+        //console.error('Error in getExpenseType: response is undefined');
       }
       setLoading(false);
     } catch (error: any) {
-      console.error('Error in getExpenseType:', error.message);
+      //console.error('Error in getExpenseType:', error.message);
     }
   };
 
@@ -142,7 +142,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
       }
       setLoading(false);
     } catch (error: any) {
-      console.error('Error in fetchIncomeType:', error.message);
+      //console.error('Error in fetchIncomeType:', error.message);
     }
   };
 
@@ -278,7 +278,7 @@ const ExpenditureScreen = ({navigation}: ExpenditureScreenProps) => {
         setUriImage(result.assets[0].uri);
       }
     } catch (error) {
-      console.error('Error opening image library:', error);
+      //console.error('Error opening image library:', error);
     }
   };
   const pressSelectCategory = () => {

@@ -115,7 +115,7 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
         setMembers(response);
       }
     } catch (error) {
-      console.error('Error fetching member:', error);
+      //console.error('Error fetching member:', error);
     }
   };
 
@@ -135,7 +135,7 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
         setMessages(prevMessages => [...prevMessages, ...newMessages]);
       }
     } catch (error) {
-      console.error('Error fetching messages:', error);
+      //('Error fetching messages:', error);
     }
   }, [currentIndex]);
 
@@ -154,7 +154,7 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
         familyId: family.id_family,
       });
     } catch (error) {
-      console.error('Error sendImage:', error);
+      //console.error('Error sendImage:', error);
     }
   };
 
@@ -165,7 +165,7 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
         familyId: family.id_family,
       });
     } catch (error) {
-      console.error('Error sending messages:', error);
+      //console.error('Error sending messages:', error);
     }
   };
 
@@ -354,7 +354,7 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
                 });
               }
             } catch (error) {
-              console.error('Error deleting event:', error);
+              //console.error('Error deleting event:', error);
               Toast.show('Delete deleteError', {
                 type: 'danger',
                 duration: 2000,

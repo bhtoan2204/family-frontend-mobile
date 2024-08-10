@@ -111,7 +111,7 @@ const PieChartComponent: React.FC<PieChartScreenProps> = ({id_family}) => {
         setDailyData(response);
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
+      //console.error('Error fetching data:', error);
     }
   };
 

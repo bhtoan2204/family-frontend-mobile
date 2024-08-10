@@ -41,14 +41,10 @@ const connectSocket = async () => {
       }
     });
 
-    socket.on('connect_error', error => {
-      console.error('Connection error:', error);
-    });
+    socket.on('connect_error', error => {});
 
     socket.connect();
-  } catch (error) {
-    console.error('Socket connection error:', error);
-  }
+  } catch (error) {}
 };
 
 const closeSocketConnection = () => {
@@ -67,7 +63,6 @@ const backgroundFetchHandler = async (taskId: any) => {
     await connectSocket();
     return 'newData';
   } catch (error) {
-    console.error('Background fetch error:', error);
     return 'failed';
   }
 };
@@ -82,8 +77,6 @@ BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK_NAME, {
   .then(() => {
     console.log('Background fetch task registered successfully.');
   })
-  .catch(error => {
-    console.error('Background fetch registration error:', error);
-  });
+  .catch(error => {});
 
 export {connectSocket, closeSocketConnection, getSocket};

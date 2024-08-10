@@ -76,7 +76,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
         setLoading(false);
       } catch (error) {
 
-        console.error('Error fetching guildline detail:', error);
+        //console.error('Error fetching guildline detail:', error);
 
       }
     };

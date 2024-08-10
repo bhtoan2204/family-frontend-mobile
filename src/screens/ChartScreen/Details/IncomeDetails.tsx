@@ -109,7 +109,7 @@ const IncomeDetailScreen = ({navigation}: IncomeDetailScreenProps) => {
       console.log('Fetched income types:', response);
       setincomeType(response);
     } catch (error: any) {
-      console.error('Error in getincomeType:', error.message);
+      //console.error('Error in getincomeType:', error.message);
     }
   };
 
@@ -151,7 +151,7 @@ const IncomeDetailScreen = ({navigation}: IncomeDetailScreenProps) => {
         });
       }
     } catch (error) {
-      console.error('Error updating income:', error);
+      //console.error('Error updating income:', error);
       Toast.show('An error occurred while updating income', {
         type: 'danger',
         duration: 3000,

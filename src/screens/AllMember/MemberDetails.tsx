@@ -141,21 +141,29 @@ const MemberDetailsScreen = ({route, navigation}: MemberDetailsScreenProps) => {
           onPress: async () => {
             setIsLoading(true);
             try {
-              await FamilyServices.kickMember(
+              const respone = await FamilyServices.kickMember(
                 member.id_user,
                 member?.id_family,
               );
-              Toast.show(translate('memberRemovedSuccess'), {
-                type: 'success',
-                duration: 3000,
-              });
-              await dispatch(removeMember(member?.id_family, member?.id_user));
-              navigation.navigate('AllMember', {
-                id_family: family?.id_family,
-                forceUpdate: new Date().getTime(),
-              });
+              if (respone) {
+                Toast.show(translate('memberRemovedSuccess'), {
+                  type: 'success',
+                  duration: 3000,
+                });
+                await dispatch(
+                  removeMember(member?.id_family, member?.id_user),
+                );
+                navigation.navigate('AllMember', {
+                  id_family: family?.id_family,
+                  forceUpdate: new Date().getTime(),
+                });
+              } else {
+                Toast.show(translate('memberRemovedFail'), {
+                  type: 'danger',
+                  duration: 3000,
+                });
+              }
             } catch (error) {
-              console.log(error);
               Toast.show(translate('memberRemovedFail'), {
                 type: 'danger',
                 duration: 3000,

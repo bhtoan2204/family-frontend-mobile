@@ -21,8 +21,8 @@ const GuildLineService = {
       return {guidelineData, total};
       // return res.data.data as Guildline[];
     } catch (error) {
-      console.error('Error fetching shared guidelines:', error);
-      throw error;
+      // console.error('Error fetching shared guidelines:', error);
+      // throw error;
     }
   },
   getSharedGuidelineDetail: async (id_item: number) => {},

@@ -74,7 +74,7 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
                   });
                 }
               } catch (error) {
-                console.error('Error fetching user info:', error);
+                //console.error('Error fetching user info:', error);
               }
             }
           }
@@ -82,7 +82,7 @@ const ContactListScreen: React.FC<ContactScreenProps> = ({
           console.log('Permission to access contacts denied');
         }
       } catch (error) {
-        console.error('Error fetching contacts:', error);
+        //console.error('Error fetching contacts:', error);
       } finally {
         setIsLoading(false);
       }

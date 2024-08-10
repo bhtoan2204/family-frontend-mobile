@@ -137,9 +137,7 @@ const ChatFamilyLastScreen = ({
         setCurrentIndex(currentIndex + 1);
         console.log(currentIndex);
       }
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-    }
+    } catch (error) {}
   }, [currentIndex]);
 
   const fetchNewMessages = (newMessage: Message) => {
@@ -158,7 +156,7 @@ const ChatFamilyLastScreen = ({
         familyId: LastMessageFamily.familyId,
       });
     } catch (error) {
-      console.error('Error sendImage:', error);
+      //console.error('Error sendImage:', error);
       setIsLoading(false);
     } finally {
       setIsLoading(false);
@@ -174,7 +172,7 @@ const ChatFamilyLastScreen = ({
         familyId: LastMessageFamily.familyId,
       });
     } catch (error) {
-      console.error('Error sending messages:', error);
+      //console.error('Error sending messages:', error);
       setIsLoading(false);
     } finally {
       setIsLoading(false);
@@ -379,7 +377,7 @@ const ChatFamilyLastScreen = ({
                 });
               }
             } catch (error) {
-              console.error('Error deleting event:', error);
+              //console.error('Error deleting event:', error);
               Toast.show('Delete deleteError', {
                 type: 'danger',
                 duration: 2000,

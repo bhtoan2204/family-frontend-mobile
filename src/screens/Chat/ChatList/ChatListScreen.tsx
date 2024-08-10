@@ -94,7 +94,7 @@ const ChatListScreen = ({
       console.log(response);
       setChatsFamily(response);
     } catch (error) {
-      console.error('Error in getFamilyChats:', error.message);
+      //console.error('Error in getFamilyChats:', error.message);
     }
   };
 
@@ -150,11 +150,11 @@ const ChatListScreen = ({
         };
         setChats(prevChats => [...prevChats, formattedResponse]);
       } else {
-        console.error('Unexpected response format:', response);
+        //console.error('Unexpected response format:', response);
         Alert.alert('Error', 'Unexpected response format. Please try again.');
       }
     } catch (error) {
-      console.error('Error fetching chat data:', error);
+      //console.error('Error fetching chat data:', error);
       Alert.alert('Error', 'Failed to fetch user data. Please try again.');
     } finally {
       setLoading(false);
@@ -221,7 +221,7 @@ const ChatListScreen = ({
                 });
               }
             } catch (error) {
-              console.error('Error deleting event:', error);
+              //console.error('Error deleting event:', error);
               Toast.show('Delete deleteError', {
                 type: 'danger',
                 duration: 2000,
@@ -264,7 +264,7 @@ const ChatListScreen = ({
                 });
               }
             } catch (error) {
-              console.error('Error deleting event:', error);
+              //console.error('Error deleting event:', error);
               Toast.show('Delete deleteError', {
                 type: 'danger',
                 duration: 2000,

@@ -20,11 +20,10 @@ const PackageServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.USER_NOT_FOUND);
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getProfile:', error.message);
-      throw new Error(ERROR_TEXTS.USER_NOT_FOUND);
+      return null;
     }
   },
 
@@ -40,11 +39,10 @@ const PackageServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.BANK_INFO_NOT_FOUND);
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getBankInfo:', error.message);
-      throw new Error(ERROR_TEXTS.BANK_INFO_NOT_FOUND);
+      return null;
     }
   },
 
@@ -63,11 +61,10 @@ const PackageServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.BANK_INFO_NOT_FOUND);
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getPaymentMethod:', error.message);
-      throw new Error(ERROR_TEXTS.BANK_INFO_NOT_FOUND);
+      return null;
     }
   },
 
@@ -79,11 +76,10 @@ const PackageServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+        return null;
       }
     } catch (error: any) {
-      // console.error('Error in getAllPackages:', error.message);
-      // throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+      return null;
     }
   },
 
@@ -95,11 +91,10 @@ const PackageServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+        return null;
       }
     } catch (error: any) {
-      // console.error('Error in getAllPackages:', error.message);
-      // throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+      return null;
     }
   },
 
@@ -111,11 +106,10 @@ const PackageServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+        return null;
       }
     } catch (error: any) {
-      // console.error('Error in getAllPackages:', error.message);
-      // throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+      return null;
     }
   },
 
@@ -127,11 +121,10 @@ const PackageServices = {
       if (response.status === 200) {
         return response.data.data.extra_packages;
       } else {
-        throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+        return null;
       }
     } catch (error: any) {
-      // console.error('Error in getAllPackages:', error.message);
-      // throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+      return null;
     }
   },
 
@@ -163,11 +156,10 @@ const PackageServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.CREATE_ORDER_ERROR);
+        return null;
       }
     } catch (error) {
-      console.error(error);
-      throw new Error(ERROR_TEXTS.CREATE_ORDER_ERROR);
+      return null;
     }
   },
 
@@ -179,17 +171,12 @@ const PackageServices = {
         `${baseUrl}/payment/vnpay_return`,
       );
       if (response.status === 200) {
-        console.log('ReturnURL:', response.data); // Log message từ server
+        console.log('ReturnURL:', response.data);
       } else {
-        throw new Error('Error: Data not found');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in getUrl:', error.message);
-      if (error.code === 'ECONNABORTED') {
-        console.error('Request timed out. Please try again.');
-      } else {
-        throw new Error('Error: Data not found');
-      }
+      return null;
     }
   },
   paymentHistory: async (itemsPerPage: number, page: number) => {
@@ -208,11 +195,10 @@ const PackageServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in paymentHistory:', error.message);
-      throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+      return null;
     }
   },
   // getUrl: () => {

@@ -151,7 +151,7 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
         setPage(page + 1);
       }
     } catch (error: any) {
-      console.error('Error in getExpenseType:', error.message);
+      //console.error('Error in getExpenseType:', error.message);
     }
   };
   const fetchUtilityType = async () => {
@@ -163,7 +163,7 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
           setUtilityType(response);
         }
       } catch (error: any) {
-        console.error('Error in fetchUtilityType:', error.message);
+        //console.error('Error in fetchUtilityType:', error.message);
       }
     } else {
       setUtilityType([]);
@@ -186,7 +186,7 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
         setShoppingList([]);
       }
     } catch (error: any) {
-      console.error('Error in fetchShoppingList:', error.message);
+      //console.error('Error in fetchShoppingList:', error.message);
     }
   };
 
@@ -239,7 +239,7 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
             selectedUtilityCategoryId,
           );
         } catch (error) {
-          console.error('Error updating expense:', error);
+          //console.error('Error updating expense:', error);
         }
       }
     }
@@ -281,7 +281,7 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
       }
       setLoading(false);
     } catch (error) {
-      console.error('Error updating expense:', error);
+      //console.error('Error updating expense:', error);
       Toast.show('An error occurred while updating expense', {
         type: 'danger',
         duration: 3000,
@@ -322,7 +322,7 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
 
                 navigation.goBack();
               } catch (error) {
-                console.error(error);
+                //console.error(error);
                 Toast.show('Failed to delete expense', {
                   type: 'danger',
                   duration: 3000,
@@ -380,7 +380,7 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
         setLoading(false);
       }
     } catch (error) {
-      console.error('Error opening image library:', error);
+      //console.error('Error opening image library:', error);
       setLoading(false);
     }
   };
@@ -400,7 +400,7 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
         setLoading(false);
       }
     } catch (error) {
-      console.error('Error opening image library:', error);
+      //console.error('Error opening image library:', error);
       setLoading(false);
     }
   };

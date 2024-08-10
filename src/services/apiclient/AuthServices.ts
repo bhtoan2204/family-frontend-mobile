@@ -18,10 +18,10 @@ const AuthServices = {
       if (response.status === 200) {
         return userData;
       } else {
-        throw new Error(ERROR_TEXTS.USER_NOT_FOUND);
+        return null;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.USER_NOT_FOUND);
+      return null;
     }
   },
 
@@ -40,7 +40,7 @@ const AuthServices = {
     lastname: string;
     phone: string;
     genre: string;
-    birthdate: string; // Giữ dưới dạng chuỗi
+    birthdate: string;
   }) => {
     try {
       const response: AxiosResponse = await axios.post(AuthUrl.signup, {
@@ -50,7 +50,7 @@ const AuthServices = {
         firstname,
         lastname,
         genre,
-        birthdate, // Gửi dưới dạng chuỗi
+        birthdate,
       });
       const userData = response.data;
       if (response.status === 200) {
@@ -59,8 +59,7 @@ const AuthServices = {
         throw new Error(`Signup error: ${response.statusText}`);
       }
     } catch (error) {
-      console.error('Signup API error:', error);
-      throw new Error(ERROR_TEXTS.SIGNUP_ERROR);
+      return null;
     }
   },
 
@@ -78,20 +77,10 @@ const AuthServices = {
       if (response.status === 200) {
         return userData;
       } else {
-        throw new Error(ERROR_TEXTS.SEND_OTP_ERROR);
+        return null;
       }
     } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        console.error(
-          'sendOTPVerify API error:',
-          error.response?.data || error.message,
-        );
-      } else if (error instanceof Error) {
-        console.error('sendOTPVerify API error:', error.message);
-      } else {
-        console.error('sendOTPVerify API error:', error);
-      }
-      throw new Error(ERROR_TEXTS.SEND_OTP_ERROR);
+      return null;
     }
   },
 
@@ -111,7 +100,6 @@ const AuthServices = {
         code,
       };
 
-      // Remove undefined properties from payload
       Object.keys(payload).forEach(key => {
         if (payload[key as keyof typeof payload] === undefined) {
           delete payload[key as keyof typeof payload];
@@ -128,18 +116,10 @@ const AuthServices = {
       if (response.status === 200) {
         return userData;
       } else {
-        throw new Error(ERROR_TEXTS.VERIFY_OTP_ERROR);
+        return null;
       }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Axios error:', error.response?.data);
-        throw new Error(
-          error.response?.data?.message || ERROR_TEXTS.VERIFY_OTP_ERROR,
-        );
-      } else {
-        console.error('Unexpected error:', error);
-        throw new Error(ERROR_TEXTS.VERIFY_OTP_ERROR);
-      }
+      return null;
     }
   },
 
@@ -168,21 +148,16 @@ const AuthServices = {
         payload.phone = phone;
       }
 
-      console.log('Reset Password Payload:', payload);
-
       const response: AxiosResponse = await axios.post(
         AuthUrl.resetPassword,
         payload,
       );
 
-      console.log('Reset Response:', response);
-
       if (response.status === 200) {
         return response.data;
       }
     } catch (error) {
-      console.error('Reset Password Error:', error);
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      return null;
     }
   },
 
@@ -220,7 +195,7 @@ const AuthServices = {
         }
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      return null;
     }
   },
 
@@ -248,7 +223,7 @@ const AuthServices = {
         }
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      return null;
     }
   },
 
@@ -262,10 +237,10 @@ const AuthServices = {
           refreshToken: tokenData.refreshToken,
         };
       } else {
-        throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+        return null;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      return null;
     }
   },
   googleLogin: async () => {
@@ -275,10 +250,10 @@ const AuthServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.API_ERROR);
+        return null;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+      return null;
     }
   },
   facebookLogin: async () => {
@@ -288,11 +263,10 @@ const AuthServices = {
       if (response.status === 200) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.API_ERROR);
+        return null;
       }
     } catch (error: any) {
-      console.log(error);
-      throw new Error(ERROR_TEXTS.RESPONSE_ERROR);
+      return null;
     }
   },
   Logout: async () => {
