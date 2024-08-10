@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContainer: {
     flexGrow: 1,
-    marginTop: 30,
+    marginTop: 0,
   },
 
   scrollViewContent: {

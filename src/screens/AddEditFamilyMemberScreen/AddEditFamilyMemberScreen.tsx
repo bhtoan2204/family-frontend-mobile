@@ -182,7 +182,7 @@ const AddMemberScreen: React.FC<AddEditFamilyMemberScreenProps> = ({
       <KeyboardAvoidingView
         style={styles.keyboardView}
         behavior="padding"
-        keyboardVerticalOffset={100}>
+        keyboardVerticalOffset={50}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView contentContainerStyle={styles.scrollViewContainer}>
             <View style={styles.header}>
