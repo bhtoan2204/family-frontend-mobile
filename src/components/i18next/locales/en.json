@@ -537,7 +537,6 @@
   "edu_screen_item_public_text": "Share",
   "edu_screen_item_private_text": "Private",
 
-
   "progress_screen": "progress_screen",
   "progress_screen_all_courses": "All",
   "progress_screen_on_progress": "On Progress",
@@ -635,11 +634,10 @@
   "household_detail_description_placeholder": "Input description",
   "household_detail_view_guideline": "View guideline",
   "household_detail_create_guideline": "Create guideline",
-  
-  "household_detail_update_title_title" : "Change Title",
-  "household_detail_update_title_description" : "Change your item's title",
-  "household_detail_update_title_placeholder" : "Input new title",
-  
+
+  "household_detail_update_title_title": "Change Title",
+  "household_detail_update_title_description": "Change your item's title",
+  "household_detail_update_title_placeholder": "Input new title",
 
   "checklist_screen": "checklist_screen",
   "checklist_screen_my_checklist": "My Checklist",
