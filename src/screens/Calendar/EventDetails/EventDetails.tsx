@@ -294,7 +294,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
       const rule = rrulestr(cleanedRecurrenceRule);
 
       if (!rule || !rule.options) {
-        throw new Error('RRule or RRule options are undefined or not valid.');
+        // new Error('RRule or RRule options are undefined or not valid.');
       }
 
       const options = rule.options;

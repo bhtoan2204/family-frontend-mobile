@@ -197,10 +197,10 @@ const ChatFamilyLastScreen = ({
       const data = await response.json();
       if (response) {
       } else {
-        throw new Error('Failed to send video');
+        //throw new Error('Failed to send video');
       }
     } catch (error) {
-      throw new Error('API request failed');
+      //throw new Error('API request failed');
       setIsLoading(false);
     } finally {
       setIsLoading(false);

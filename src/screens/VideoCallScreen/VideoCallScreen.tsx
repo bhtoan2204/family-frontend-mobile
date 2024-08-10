@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { View, Button, StyleSheet, Alert } from 'react-native';
-import { Camera } from 'expo-camera';
-import { Audio } from 'expo-av';
-import { WebView } from 'react-native-webview';
-import { ChatServices } from 'src/services/apiclient';
+import React, {useEffect, useState} from 'react';
+import {View, Button, StyleSheet, Alert} from 'react-native';
+import {Camera} from 'expo-camera';
+import {Audio} from 'expo-av';
+import {WebView} from 'react-native-webview';
+import {ChatServices} from 'src/services/apiclient';
 import LocalStorage from 'src/store/localstorage';
 
 const VideoCallScreen = () => {
@@ -14,20 +14,26 @@ const VideoCallScreen = () => {
   const [cameraVisible, setCameraVisible] = useState(true); // State to control camera visibility
 
   const requestPermissions = async () => {
-    const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
-    const { status: audioStatus } = await Audio.requestPermissionsAsync();
+    const {status: cameraStatus} = await Camera.requestCameraPermissionsAsync();
+    const {status: audioStatus} = await Audio.requestPermissionsAsync();
 
     setCameraPermission(cameraStatus === 'granted');
     setAudioPermission(audioStatus === 'granted');
 
     if (!cameraStatus === 'granted' || !audioStatus === 'granted') {
-      Alert.alert('Permission required', 'Camera and microphone permissions are required.');
+      Alert.alert(
+        'Permission required',
+        'Camera and microphone permissions are required.',
+      );
     }
   };
 
   const startCall = async () => {
     if (!cameraPermission || !audioPermission) {
-      Alert.alert('Permissions error', 'Please grant camera and microphone permissions to make a call.');
+      Alert.alert(
+        'Permissions error',
+        'Please grant camera and microphone permissions to make a call.',
+      );
       return;
     }
 
@@ -41,7 +47,7 @@ const VideoCallScreen = () => {
         Alert.alert('Error', 'Failed to create or join the room.');
       }
     } catch (error) {
-      console.error('Error starting call:', error);
+      //console.error('Error starting call:', error);
       Alert.alert('Error', 'An error occurred while starting the call.');
     }
   };
@@ -96,14 +102,11 @@ const VideoCallScreen = () => {
 `;
 
   return (
-
-
-        <WebView
-          originWhitelist={['*']}
-          source={{ html: htmlContent }}
-          style={styles.webview}
-        />
-      
+    <WebView
+      originWhitelist={['*']}
+      source={{html: htmlContent}}
+      style={styles.webview}
+    />
   );
 };
 

@@ -72,7 +72,7 @@ const ChatScreen = ({navigation, route}: ChatScreenProps) => {
     try {
       await ChatServices.markSeenMessage({receiver_id: receiverId});
     } catch (error) {
-      console.error('Error markSeenMessage:', error);
+      //console.error('Error markSeenMessage:', error);
     }
   };
 

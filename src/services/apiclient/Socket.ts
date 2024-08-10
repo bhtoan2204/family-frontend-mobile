@@ -16,7 +16,7 @@ const connectSocket = async () => {
 
     const accessToken = await LocalStorage.GetAccessToken();
     if (!accessToken) {
-      throw new Error('Access token is missing.');
+      // throw new Error('Access token is missing.');
     }
     socket = io(`${baseUrl}/chat`, {
       autoConnect: false,

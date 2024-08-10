@@ -164,7 +164,7 @@ const AddItemSheet = ({
             }),
           );
         } else {
-          throw new Error('Failed to add item');
+          //throw new Error('Failed to add item');
         }
       } catch (error) {
         //console.error('Error adding item:', error);

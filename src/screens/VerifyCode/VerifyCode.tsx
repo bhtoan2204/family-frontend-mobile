@@ -45,7 +45,7 @@ const VerifyCode = ({navigation, route}: VerifyCodeProps) => {
       return result;
     } catch (error) {
       //console.error('Error in handleSendOTPVerify:', error);
-      throw error;
+      //throw error;
     }
   };
 

@@ -42,10 +42,10 @@ const GuildLineService = {
         return [];
       }
     } catch (error: any) {
-      console.error('Error fetching guidelines:', error);
+      //console.error('Error fetching guidelines:', error);
       console.log('error', error.message);
       return [];
-      throw error;
+      //throw error;
     }
   },
   getGuildLineDetail: async (id_family: number, id_item: number) => {

@@ -71,7 +71,7 @@ const UpdateExpiredDateItemSheet = ({
         const date: Date = new Date(dateString);
 
         if (isNaN(date.getTime())) {
-            throw new Error('Invalid date string');
+            //throw new Error('Invalid date string');
         }
 
         const monthNames: string[] = [

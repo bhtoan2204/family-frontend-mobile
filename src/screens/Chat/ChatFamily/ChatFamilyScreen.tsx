@@ -185,7 +185,7 @@ const ChatFamilyScreen = ({navigation, route}: ChatFamilyScreenProps) => {
         uri,
       );
     } catch (error) {
-      throw new Error('API request failed');
+      //throw new Error('API request failed');
     }
   };
 

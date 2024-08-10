@@ -21,7 +21,7 @@ const CheckListServices = {
         return [];
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   getShoppingListByFamilyId: async (familyId: number) => {
@@ -57,7 +57,7 @@ const CheckListServices = {
         return [];
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   getShoppingListItems: async (listId: number) => {
@@ -72,7 +72,7 @@ const CheckListServices = {
         return [];
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   addNewShoppingList: async (
@@ -102,7 +102,7 @@ const CheckListServices = {
         return null;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   addItemToShoppingList: async (
@@ -136,7 +136,7 @@ const CheckListServices = {
         return null;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   updateShoppingListItem: async (
@@ -176,7 +176,7 @@ const CheckListServices = {
       }
     } catch (error: any) {
       console.log(error.message);
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
 };
