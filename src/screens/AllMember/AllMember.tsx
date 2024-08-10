@@ -70,10 +70,15 @@ const ViewAllMemberScreen = ({navigation, route}: AllMemberScreenProps) => {
     <View style={{flex: 1}}>
       <View style={styles.imageContainer}>
         <Image
-          source={{uri: family?.avatar}}
+          source={
+            family?.avatar
+              ? {uri: family.avatar}
+              : require('../../assets/images/big-family_4441180.png')
+          }
           resizeMode="contain"
           style={styles.image}
         />
+
         <View style={styles.overlay} />
       </View>
       <View style={{flex: 1, marginTop: -40}}>

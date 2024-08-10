@@ -105,7 +105,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const source =
     selectedFamily?.avatar && selectedFamily.avatar !== '[NULL]'
       ? {uri: selectedFamily.avatar}
-      : require('../../assets/images/default_ava.png');
+      : require('../../assets/images/big-family_4441180.png');
   const [functions, setFunctions] = useState<Service[]>([]);
 
   useEffect(() => {

@@ -562,12 +562,17 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
                 <Text
                   style={[
                     styles.itemStatus,
-                    {color: 'green', fontWeight: 'bold', marginLeft: 8},
+                    {
+                      color: item.is_purchased ? 'green' : 'red',
+                      fontWeight: 'bold',
+                      marginLeft: 8,
+                    },
                   ]}>
                   {item.is_purchased
                     ? translate('Purchased')
                     : translate('Not Purchased')}
                 </Text>
+
                 {item.is_purchased && (
                   <Ionicons
                     name="checkmark-circle-outline"
