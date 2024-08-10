@@ -36,11 +36,11 @@ import {format} from 'date-fns';
 import {getExtraPackages} from 'src/redux/slices/FunctionSlice';
 import {selectSelectedFamily} from 'src/redux/slices/FamilySlice';
 import {TodoListItem} from 'src/interface/todo/todo';
-import {TodoListCategoryItem} from 'src/screens/TodoListScreen/TodoListCategory/TodoListCategoryScreen';
 import toast from 'react-native-toast-notifications/lib/typescript/toast';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import TodoListServices from 'src/services/apiclient/TodoListService';
 import {updateDoneTodoList} from 'src/redux/slices/TodoListSlice';
+import {TodoListCategoryItem} from 'src/screens/TodoListScreen/TodoListCategory/TodoListCategoryScreen';
 
 const formatEventDate = (start: Date, end: Date) => {
   const formattedStart = format(start, 'yyyy-MM-dd');
@@ -94,20 +94,25 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
 
   useEffect(() => {
     fetchChecklist();
-  }, [event?.checklistType != null]);
+  }, []);
 
   const fetchChecklist = async () => {
-    try {
-      const data = await CalendarServices.getAllChecklist(
-        event?.id_checklist_type,
-        event.id_family,
-      );
+    if (event?.checklistType) {
+      try {
+        const data = await CalendarServices.getAllChecklist(
+          event?.id_checklist_type,
+          event.id_family,
+        );
 
-      if (data) {
-        dispatch(setTodoList(data));
+        if (data) {
+          dispatch(setTodoList(data));
+        }
+      } catch (error) {
+        dispatch(setTodoList([]));
+        //console.error('Error fetching checklist:', error);
       }
-    } catch (error) {
-      console.error('Error fetching checklist:', error);
+    } else {
+      dispatch(setTodoList([]));
     }
   };
 
@@ -471,16 +476,15 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
 
   const handleUpdateComplete = async (item: TodoListItem) => {
     try {
-      const response = await TodoListServices.updateChecklist(
-        item.id_checklist,
-        item.id_family,
-        item.id_checklist_type,
-        item.task_name,
-        item.description,
-        item.due_date,
-        !item.is_completed,
-        item.checklistType.id_calendar,
-      );
+      const response = await TodoListServices.updateItem({
+        id_checklist: item.id_checklist,
+        id_family: item.id_family,
+        id_checklist_type: item.id_checklist_type,
+        task_name: item.task_name,
+        description: item.description,
+        due_date: item.due_date,
+        is_completed: !item.is_completed,
+      });
 
       if (response) {
         dispatch(
@@ -490,7 +494,8 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
         );
         dispatch(
           updateDoneTodoList({
-            id_item: item.id_checklist,
+            id_checklist: item.id_checklist,
+            id_checklist_type: item.id_checklist_type,
           }),
         );
         Toast.show('Update successful', {
@@ -577,10 +582,11 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
           style={[styles.addButton, {backgroundColor: color.white}]}
           onPress={() =>
             navigation.navigate('TodoListStack', {
-              screen: 'TodoListCategory',
+              screen: 'TodoList',
               params: {
                 id_family: event.id_family,
-                id_category: event.id_checklist_type,
+                openSheet: true,
+                id_calendar: event.id_calendar,
               },
             })
           }>
@@ -592,70 +598,70 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
     </View>
   );
 
-  const renderShoppingList = () => {
-    return (
-      <TouchableOpacity
-        style={[
-          styles.container,
-          {
-            backgroundColor: color.white,
-            borderRadius: 10,
-            shadowColor: color.text,
-            shadowOffset: {width: 0, height: 4},
-            shadowOpacity: 0.2,
-            shadowRadius: 8,
+  // const renderShoppingList = () => {
+  //   return (
+  //     <TouchableOpacity
+  //       style={[
+  //         styles.container,
+  //         {
+  //           backgroundColor: color.white,
+  //           borderRadius: 10,
+  //           shadowColor: color.text,
+  //           shadowOffset: {width: 0, height: 4},
+  //           shadowOpacity: 0.2,
+  //           shadowRadius: 8,
 
-            elevation: 5,
-          },
-        ]}>
-        <Text
-          style={[
-            styles.header,
-            {color: color.text, backgroundColor: color.white},
-          ]}>
-          {translate('Shopping List')}
-        </Text>
-        {event.shoppingList && event.shoppingList.length > 0 ? (
-          <FlatList
-            data={event.shoppingList}
-            renderItem={({item}) => (
-              <View style={styles.shoppingListItem}>
-                <Feather name="shopping-cart" size={24} color={color.text} />
-                <Text style={[styles.shoppingListText, {color: color.text}]}>
-                  {item}
-                </Text>
-              </View>
-            )}
-            keyExtractor={(item, index) => index.toString()}
-            ListFooterComponent={
-              <TouchableOpacity
-                style={[styles.addButton, {backgroundColor: color.primary}]}
-                onPress={() =>
-                  navigation.navigate('ShoppingListDetail', {id_family})
-                }>
-                <Text style={styles.addButtonText}>
-                  {translate('Add New Shopping List')}
-                </Text>
-              </TouchableOpacity>
-            }
-          />
-        ) : (
-          <TouchableOpacity
-            style={[styles.addButton, {backgroundColor: color.primary}]}
-            onPress={() => navigation.navigate('NewShoppingList', {id_family})}>
-            <Text style={styles.addButtonText}>
-              {translate('New Shopping List')}
-            </Text>
-          </TouchableOpacity>
-        )}
-      </TouchableOpacity>
-    );
-  };
+  //           elevation: 5,
+  //         },
+  //       ]}>
+  //       <Text
+  //         style={[
+  //           styles.header,
+  //           {color: color.text, backgroundColor: color.white},
+  //         ]}>
+  //         {translate('Shopping List')}
+  //       </Text>
+  //       {event.shoppingList && event.shoppingList.length > 0 ? (
+  //         <FlatList
+  //           data={event.shoppingList}
+  //           renderItem={({item}) => (
+  //             <View style={styles.shoppingListItem}>
+  //               <Feather name="shopping-cart" size={24} color={color.text} />
+  //               <Text style={[styles.shoppingListText, {color: color.text}]}>
+  //                 {item}
+  //               </Text>
+  //             </View>
+  //           )}
+  //           keyExtractor={(item, index) => index.toString()}
+  //           ListFooterComponent={
+  //             <TouchableOpacity
+  //               style={[styles.addButton, {backgroundColor: color.primary}]}
+  //               onPress={() =>
+  //                 navigation.navigate('ShoppingListDetail', {id_family})
+  //               }>
+  //               <Text style={styles.addButtonText}>
+  //                 {translate('Add New Shopping List')}
+  //               </Text>
+  //             </TouchableOpacity>
+  //           }
+  //         />
+  //       ) : (
+  //         <TouchableOpacity
+  //           style={[styles.addButton, {backgroundColor: color.primary}]}
+  //           onPress={() => navigation.navigate('NewShoppingList', {id_family})}>
+  //           <Text style={styles.addButtonText}>
+  //             {translate('New Shopping List')}
+  //           </Text>
+  //         </TouchableOpacity>
+  //       )}
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: color.background}]}>
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={[styles.header, {backgroundColor: color.background}]}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Feather name="arrow-left" size={20} color={color.text} />
@@ -760,7 +766,11 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
             onPress={() =>
               navigation.navigate('TodoListStack', {
                 screen: 'TodoList',
-                params: {id_family: event.id_family},
+                params: {
+                  id_family: event.id_family,
+                  openSheet: true,
+                  id_calendar: event.id_calendar,
+                },
               })
             }>
             <Feather name="list" size={24} color={color.text} />

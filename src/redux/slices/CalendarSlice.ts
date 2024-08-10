@@ -43,7 +43,9 @@ const calendarSlice = createSlice({
     setTodoList: (state, action: PayloadAction<TodoListItem[]>) => {
       state.todoList = action.payload;
     },
-
+    addTodoList: (state, action: PayloadAction<TodoListItem>) => {
+      state.todoList.push(action.payload);
+    },
     doneTodoList: (state, action: PayloadAction<{id_item: number}>) => {
       state.todoList = state.todoList.map(item => {
         if (item.id_checklist === action.payload.id_item) {
@@ -55,7 +57,11 @@ const calendarSlice = createSlice({
         return item;
       });
     },
-
+    deleteTodoLists: (state, action: PayloadAction<{id_item: number}>) => {
+      state.todoList = state.todoList.filter(
+        item => item.id_checklist !== action.payload.id_item,
+      );
+    },
     addEvent(state, action: PayloadAction<EventDetail>) {
       const newEvent = action.payload;
 
@@ -353,6 +359,8 @@ export const {
   setSelectedDate,
   setTodoList,
   doneTodoList,
+  addTodoList,
+  deleteTodoLists,
 } = calendarSlice.actions;
 
 export const selectEvents = (state: RootState) => state.calendar.events;

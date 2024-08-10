@@ -499,11 +499,11 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
           </Text>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate('TodoListStack', {
-                screen: 'TodoListCategory',
+              navigation.navigate('ShoppingListStack', {
+                screen: 'ShoppingListCategory',
                 params: {
-                  id_family: event.id_family,
-                  id_category: event.id_checklist_type,
+                  id_family: expense?.id_family,
+                  id_category: expense?.shoppingLists.id_shopping_list_type,
                 },
               })
             }
@@ -535,8 +535,13 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
                   styles.itemQuantity
                 }>{`Quantity: ${item.quantity}`}</Text>
 
-              <View style={styles.statusContainer}>
-                <Text style={styles.itemStatus}>
+              <View
+                style={{flexDirection: 'row-reverse', alignItems: 'center'}}>
+                <Text
+                  style={[
+                    styles.itemStatus,
+                    {color: 'green', fontWeight: 'bold', marginLeft: 8},
+                  ]}>
                   {item.is_purchased
                     ? translate('Purchased')
                     : translate('Not Purchased')}
@@ -553,8 +558,17 @@ const ExpenseDetailScreen = ({navigation}: ExpenseDetailScreenProps) => {
           ))
         ) : (
           <TouchableOpacity
-            style={[styles.addButton, {backgroundColor: color.primary}]}
-            onPress={() => navigation.navigate('NewShoppingList', {id_family})}>
+            style={[styles.addButton, {backgroundColor: color.white}]}
+            onPress={() =>
+              navigation.navigate('ShoppingListStack', {
+                screen: 'ShoppingListCategory',
+                params: {
+                  id_family: expense?.id_family,
+                  openSheet: true,
+                  id_calendar: null,
+                },
+              })
+            }>
             <Text style={styles.addButtonText}>
               {translate('New Shopping List')}
             </Text>

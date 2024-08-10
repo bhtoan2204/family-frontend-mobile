@@ -28,17 +28,10 @@ const CalendarServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        console.error(
-          'Error in getAllChecklist: Unexpected response status',
-          response.status,
-        );
+        return [];
       }
     } catch (error: any) {
-      if (axios.isAxiosError(error)) {
-        console.error('Error in getAllChecklist: Axios error', error.message);
-      } else {
-        console.error('Error in getAllChecklist: Unknown error', error);
-      }
+      return [];
     }
   },
 

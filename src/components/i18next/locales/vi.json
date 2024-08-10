@@ -481,5 +481,7 @@
   "PAYMENT_HISTORY": "Lịch sử thanh toán",
   "Mark All Read": "Đánh dấu tất cả đã đọc",
   "View detail": "Xem chi tiết",
-  "DeleteMessage": "Xóa tin nhắn"
+  "DeleteMessage": "Xóa tin nhắn",
+  "Purchased": "Đã mua",
+  "Not Purchased": "Chưa mua"
 }

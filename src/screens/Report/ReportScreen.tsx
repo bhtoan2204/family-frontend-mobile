@@ -409,7 +409,8 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
   );
 
   const renderAsset = () => (
-    // navigation.navigate('ExpenseStack', {screen: 'AssetScreen'});
+    //navigation.navigate('ExpenseStack', {screen: 'AssetScreen'});
+
     <View style={{flex: 1}}>
       <View style={{marginTop: 35, marginLeft: 15}}>
         <Text
@@ -463,6 +464,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
       </TouchableOpacity>
     </View>
   );
+
   const renderScreen = () => {
     switch (currentScreen) {
       case 'expenseAnalysis':
@@ -472,7 +474,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
       case 'expenseIncome':
         return renderExVsInScreen();
       case 'asset':
-        return navigation.navigate('ExpenseStack', {screen: 'AssetScreen'});
+        return renderAsset();
     }
   };
 
@@ -636,9 +638,7 @@ const ReportScreen = ({navigation}: ExpenditureScreenProps) => {
         </View>
 
         {isLoading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={COLORS.primary} />
-          </View>
+          <ActivityIndicator size="large" color={color.primary} />
         ) : (
           renderScreen()
         )}
