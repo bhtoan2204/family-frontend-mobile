@@ -15,10 +15,10 @@ const ChatServices = {
       if (response.status === 200) {
         return response.message;
       } else {
-        console.error('Error in saveFCMToken');
+        return null;
       }
     } catch (error: any) {
-      console.error('Error in saveFCMToken:', error.message);
+      return null;
     }
   },
   GetFamilyMessages: async ({
@@ -48,7 +48,7 @@ const ChatServices = {
       );
 
       if (response.status === 200) {
-        return [];
+        return response.data;
       }
     } catch (error: any) {
       return [];

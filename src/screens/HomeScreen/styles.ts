@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
   },
   text2: {
     color: '#fff',
-    fontSize: 50,
+    fontSize: 40,
     fontWeight: 'bold',
     //marginRight: 10,
     //marginTop: 10,

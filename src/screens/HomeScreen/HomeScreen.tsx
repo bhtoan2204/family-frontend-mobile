@@ -245,7 +245,9 @@ const HomeScreen = ({
   const views = [
     <View style={[styles.pictureBox, {backgroundColor: '#9572A7'}]}>
       <View style={styles.columnStyle}>
-        <Text style={styles.text}>Managing anything is now easier</Text>
+        <Text style={styles.text}>
+          {translate('Managing anything is now easier')}
+        </Text>
         <Image
           source={require('../../assets/images/family-picture.png')}
           resizeMode="stretch"
@@ -256,7 +258,7 @@ const HomeScreen = ({
     <View style={[styles.pictureBox2, {backgroundColor: '#84C9FE'}]}>
       <View style={styles.rowStyle2}>
         <Text style={[styles.text2, {maxWidth: '68%'}]}>
-          Time managed dreams realized
+          {translate('Time managed dreams realized')}
         </Text>
         <View style={{flex: 1}}>
           <Image
@@ -274,7 +276,9 @@ const HomeScreen = ({
           resizeMode="stretch"
           style={styles.familyImage3}
         />
-        <Text style={styles.text}>Managing your finances work</Text>
+        <Text style={[styles.text, {marginRight: 10, paddingBottom: 200}]}>
+          {translate('Managing your finances work')}
+        </Text>
       </View>
     </View>,
   ];
@@ -355,16 +359,16 @@ const HomeScreen = ({
         navigation.navigate('FamilyStack', {screen: 'LanguageSelector'});
       },
     },
-    {
-      icon: 'theme',
-      label: translate('Theme'),
-      // onPress: () => {
-      //   console.log('Theme pressed');
-      // },
-      onPress: () => {
-        navigation.navigate('FamilyStack', {screen: 'ThemeSwitcher'});
-      },
-    },
+    // {
+    //   icon: 'theme',
+    //   label: translate('Theme'),
+    //   // onPress: () => {
+    //   //   console.log('Theme pressed');
+    //   // },
+    //   onPress: () => {
+    //     navigation.navigate('FamilyStack', {screen: 'ThemeSwitcher'});
+    //   },
+    // },
   ];
   const isDarkMode = useSelector(getIsDarkMode);
   const color = useThemeColors();
@@ -455,7 +459,7 @@ const HomeScreen = ({
                       pagingEnabled
                       style={{flex: 1}}>
                       {viewsWithFake.map((view, index) => (
-                        <View key={index} style={{width, height: 300}}>
+                        <View key={index} style={{width, height: 400}}>
                           {view}
                         </View>
                       ))}
@@ -545,24 +549,48 @@ const HomeScreen = ({
                 horizontal={true}
                 style={styles.scrollViewContainer}
                 showsHorizontalScrollIndicator={false}>
-                <View>
-                  <Image
-                    source={require('../../assets/images/special-combo-1.png')}
-                    style={styles.imageCombo}
-                  />
-                </View>
-                <View>
-                  <Image
-                    source={require('../../assets/images/special-combo-2.png')}
-                    style={styles.imageCombo}
-                  />
-                </View>
-                <View>
-                  <Image
-                    source={require('../../assets/images/special-combo-3.png')}
-                    style={styles.imageCombo}
-                  />
-                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('PackStack', {
+                      screen: 'ViewAllService',
+                      params: {families: null},
+                    });
+                  }}>
+                  <View>
+                    <Image
+                      source={require('../../assets/images/special-combo-1.png')}
+                      style={styles.imageCombo}
+                    />
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('PackStack', {
+                      screen: 'ViewAllService',
+                      params: {families: null},
+                    });
+                  }}>
+                  <View>
+                    <Image
+                      source={require('../../assets/images/special-combo-2.png')}
+                      style={styles.imageCombo}
+                    />
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('PackStack', {
+                      screen: 'ViewAllService',
+                      params: {families: null},
+                    });
+                  }}>
+                  <View>
+                    <Image
+                      source={require('../../assets/images/special-combo-3.png')}
+                      style={styles.imageCombo}
+                    />
+                  </View>
+                </TouchableOpacity>
               </ScrollView>
             </View>
             {/* {
