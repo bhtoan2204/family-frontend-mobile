@@ -464,6 +464,9 @@
   "Mark All Read": "Mark all read",
   "View detail": "View detail",
   "DeleteMessage": "Delete",
-  "Purchased": "Purchased",
-  "Not Purchased": "Not Purchased"
+  "LetStartWithService": "Let's Start with Services",
+  "FamFundCombo": "FamFund's Combo",
+  "ManagingFamily": "Managing anything is now easier",
+  "COMBO": "Combo",
+  "SERVICE": "Service"
 }

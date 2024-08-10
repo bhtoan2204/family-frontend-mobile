@@ -61,9 +61,15 @@ const COLORS = {
     whiteBackground: '#fff',
     button: '#2A475E',
     textInModal: '#ACACAC',
+    purchaseHeader: '#2A475E',
+    purchaseHeaderText: '#fff',
+    iconPurchase: '#66C0F4',
   },
 
   dark: {
+    iconPurchase: '#fff',
+    purchaseHeaderText: '#fff',
+    purchaseHeader: '#66C0F4',
     textInModal: '#8D94A5',
     button: '#66C0F4',
     whiteBackground: '#0A1220',
