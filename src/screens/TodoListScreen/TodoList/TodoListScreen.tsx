@@ -26,20 +26,21 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants';
 import { colors } from '../const/color';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
-import { setDateSelected } from 'src/redux/slices/TodoListSlice';
+import { setDateSelected, setLoading, setTodoList, setTodoListType } from 'src/redux/slices/TodoListSlice';
 import BottomSheet from '@gorhom/bottom-sheet';
 import AddListSheet from 'src/components/user/shopping-todo/sheet/add-list-sheet';
 import { ScreenHeight } from '@rneui/base';
 import { useToast } from 'react-native-toast-notifications';
 import TodoListTypeSkeleton from './skeleton';
+import TodoListServices from 'src/services/apiclient/TodoListService';
 const screenHeight = Dimensions.get('screen').height;
 
 const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
   const { id_family, openSheet, id_calendar } = route.params;
 
-  useEffect(() => {
-    console.log(id_family, openSheet, id_calendar);
-  });
+  // useEffect(() => {
+  //   console.log(id_family, openSheet, id_calendar);
+  // });
   const [selectDate, setSelectDate] = useState<string>(
     format(new Date(), 'yyyy-MM-dd'),
   );
@@ -60,7 +61,22 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
   useEffect(() => {
     setKey(prev => !prev);
   }, [isDarkMode]);
-
+  const refetchData = useCallback(async () => {
+    const fetchTodoListType = async () => {
+      const response = await TodoListServices.getAllTodoListType(id_family!)
+      console.log('todo list types ', response)
+      dispatch(setTodoListType(response))
+    }
+    const fetchTodoListItem = async () => {
+      const response = await TodoListServices.getAllItemOfFamily(id_family!, 1, 100)
+      dispatch(setTodoList(response))
+      console.log('todo list items ', response)
+    }
+    dispatch(setLoading(true))
+    await fetchTodoListType()
+    await fetchTodoListItem()
+    dispatch(setLoading(false))
+  }, [id_family])
   // const loadItemsForMonth = (month: any) => {
   //     console.log('trigger items loading');
   // }
@@ -218,7 +234,8 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
               name="refresh"
               size={25}
               color={!isDarkMode ? COLORS.DenimBlue : 'white'}
-              onPress={() => {
+              onPress={async () => {
+                await refetchData()
                 // toggleColorScheme()
               }}
             />

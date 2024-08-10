@@ -37,6 +37,8 @@ import { convertToNumber } from 'src/utils/currency/convertPriceFromDB'
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 import { useToast } from 'react-native-toast-notifications'
 import ShoppingListServices from 'src/services/apiclient/ShoppingListServices'
+import { ShoppingListItem } from 'src/interface/shopping/shopping_list'
+import SuggestItemSheet from 'src/components/user/shopping/sheet/suggestion-item-sheet'
 
 
 const screenHeight = Dimensions.get('screen').height;
@@ -44,20 +46,17 @@ const screenHeight = Dimensions.get('screen').height;
 
 const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDetailScreenProps) => {
     const { id_family, id_category, id_item, id_shopping_list } = route.params
-    console.log(route.params)
-    // console.log('id_family', id_family, 'id_category', id_category)
+
     const dispatch = useDispatch<AppDispatch>()
-    const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
+
     const itemDetail = useSelector((state: RootState) => state.shoppinglist).shoppingList.find(item => item.id_shopping_list_type === id_category)!.items!.find(item => item.id_item === id_item)
-    const item = useSelector((state: RootState) => state.shoppinglist).shoppingList.find(item => item.id_shopping_list_type === id_category)!.items
+    // const item = useSelector((state: RootState) => state.shoppinglist).shoppingList.find(item => item.id_shopping_list_type === id_category)!.items
 
     const updateDateBottomSheetRef = React.useRef<BottomSheet>(null)
-    const addInformationBottomSheetRef = React.useRef<BottomSheet>(null)
+    // const addInformationBottomSheetRef = React.useRef<BottomSheet>(null)
     const updateDescriptionBottomSheetRef = React.useRef<BottomSheet>(null)
     const updatePriceBottomSheetRef = React.useRef<BottomSheet>(null)
-
-    const [price, setPrice] = useState<number>(0)
-    const [description, setDescription] = useState<string>('')
+    const suggestItemBottomSheetRef = React.useRef<BottomSheet>(null)
 
     const isDarkMode = useSelector(getIsDarkMode)
     const toast = useToast()
@@ -86,36 +85,35 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
         return OtherBgImage
     }, [])
 
-    // const buildInfoBox = () => {
-    //     return <View className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'>
-    //         <View className='flex-row  items-center  w-full  py-2 '>
-    //             <View className=' flex-row mr-2 items-center'>
+    const ApiCall = React.useCallback(async (item: ShoppingListItem) => {
+        const res = await ShoppingListServices.updateShoppingListItem({
+            id_family: id_family!,
+            id_item: item.id_item,
+            id_list: item.id_list,
+            is_purchased: !item.is_purchased,
+            description: item.description,
+            id_item_type: item.id_item_type,
+            item_name: item.item_name,
+            price: item.price,
+            priority_level: item.priority_level,
+            quantity: item.quantity,
+            reminder_date: item.reminder_date
+        })
+        const updateShoppingList = await ShoppingListServices.updateCompleteShoppingList({
+            id_family: id_family!,
+            id_list: id_shopping_list,
+            id_shopping_list_type: id_category,
+            status: "COMPLETED",
+        })
 
-    //                 <TouchableOpacity className=' rounded-full mr-2  items-center justify-center' style={{
-    //                     height: screenHeight * 0.04,
-    //                     width: screenHeight * 0.04,
-    //                     borderWidth: itemDetail?.is_purchased ? 0 : 2,
-    //                     borderColor: itemDetail?.is_purchased ? 'transparent' : '#CBCBCB',
-    //                     backgroundColor: itemDetail?.is_purchased ? '#00AE00' : undefined,
-    //                 }}
-    //                     onPress={() => {
-    //                         console.log('hello')
-    //                         dispatch(updatePurchasedItem(
-    //                             {
-    //                                 id_item: id_item,
-    //                                 id_list: id_shopping_list
-    //                             }
-    //                         ))
-    //                     }}
-    //                 >
-    //                     <Material name='check' size={24} color={'white'} />
-    //                 </TouchableOpacity>
-    //                 <Text className='text-base text-[#2F2F34]'>{itemDetail?.item_name}</Text>
-    //             </View>
+        if (res && updateShoppingList) {
+            return true
 
-    //         </View>
-    //     </View>
-    // }
+        } else {
+            return false
+        }
+    }, [id_category, id_family, id_shopping_list,])
+
     const buildInfoBox = React.useCallback(() => {
         return <View className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'>
             <View className='flex-row  items-center  w-full  py-2 '>
@@ -128,17 +126,18 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                         borderColor: itemDetail?.is_purchased ? 'transparent' : '#CBCBCB',
                         backgroundColor: itemDetail?.is_purchased ? '#00AE00' : undefined,
                     }}
-                        onPress={() => {
+                        onPress={async () => {
                             // console.log('hello')
                             dispatch(updatePurchasedItem({
                                 id_item: id_item,
                                 id_list: id_shopping_list
                             }))
-                            if (itemDetail?.is_purchased) {
-                                toast.show("Item is marked as not purchased", {
+                            const res = await ApiCall(itemDetail!)
+                            if (res) {
+                                toast.show("Item is marked as purchased", {
                                     type: "success",
                                     duration: 2000,
-                                    icon: <Material name="close" size={24} color={"white"} />,
+                                    icon: <Material name="check" size={24} color={"white"} />,
                                 });
                             } else {
                                 toast.show("Item is marked as purchased", {
@@ -181,45 +180,27 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
         </TouchableOpacity>
     }, [itemDetail?.reminder_date])
 
-    const buildRepeatBox = React.useCallback(() => {
-        return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'
+    const buildSuggestion = React.useCallback(() => {
+        return <TouchableOpacity className='mx-10 mt-3'
             onPress={() => {
-                // addInformationBottomSheetRef.current?.expand()
+                suggestItemBottomSheetRef.current?.expand()
 
             }}
         >
             <View className='flex-row  items-center  w-full  py-2 '>
                 <View className='mr-2'>
+                    <Image source={{ uri: "https://i.gyazo.com/1dffc5c8d5bb54808d3a6e30502043c1.png", cache: "force-cache" }} style={{ width: 30, height: 30 }} />
 
-                    <Material name='repeat' size={30} color={
-                        !isDarkMode ? '#5D5D5D' : 'white'
-                    } />
                 </View>
 
-                <Text className='text-base text-[#2F2F34] dark:text-white'>Repeat</Text>
+                <View>
+                    <Text className='text-base text-[#2F2F34] dark:text-white italic underline underline-offset-4 decoration-black dark:decoration-white'
+
+                    >You probably need it</Text>
+                </View>
             </View>
         </TouchableOpacity>
     }, [])
-
-    // const buildAddInfoBox = () => {
-    //     return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'
-    //         onPress={() => {
-    //             addInformationBottomSheetRef.current?.expand()
-
-    //         }}
-    //     >
-    //         <View className='flex-row  items-center  w-full  py-2 '>
-    //             <View className='mr-2'>
-
-    //                 <Material name='information-outline' size={30} color={
-    //                     !isDarkMode ? '#5D5D5D' : 'white'
-    //                 } />
-    //             </View>
-
-    //             <Text className='text-base text-[#2F2F34] dark:text-white'>Add more information</Text>
-    //         </View>
-    //     </TouchableOpacity>
-    // }
 
     const buildDescriptionBox = React.useCallback(() => {
         return <TouchableOpacity className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'
@@ -372,10 +353,13 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                             <View>
                                 {buildInfoBox()}
                                 {buildCalendarBox()}
-                                {buildRepeatBox()}
+                                {/* {buildRepeatBox()} */}
                                 {buildDescriptionBox()}
                                 {
                                     buildPriceBox()
+                                }
+                                {
+                                    buildSuggestion()
                                 }
                                 {/* {
                                     itemDetail && itemDetail.description == "" && itemDetail.price == "$0.00" && buildAddInfoBox()
@@ -399,6 +383,7 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                         })
                     }}
             />
+
             {/* <AddMoreInfoSheet
                 bottomSheetRef={addInformationBottomSheetRef} id_family={id_family!} id_list={id_shopping_list}
                 description={description}
@@ -443,6 +428,16 @@ const ShoppingListCategoryDetailScreen = ({ navigation, route }: ShoppingListDet
                     }
                 }
 
+            />
+            <SuggestItemSheet
+                bottomSheetRef={suggestItemBottomSheetRef}
+                id_list={id_shopping_list}
+                id_item={id_item}
+                id_family={id_family!}
+                onAddFailed={() => { }}
+                onAddSuccess={() => { }}
+                id_item_type={itemDetail?.id_item_type!}
+                itemType={itemDetail?.itemType!}
             />
         </View>
 

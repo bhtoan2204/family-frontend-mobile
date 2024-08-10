@@ -18,6 +18,11 @@ const screenWidth = Dimensions.get('window').width;
 
 const CategoryItems = ({ data, handleNavigateHouseHoldDetail }: CategoryItemInterface) => {
     const loading = useSelector((state: RootState) => state.household).loading
+    const [k, setK] = React.useState(false)
+
+    React.useEffect(() => {
+        setK(prev => !prev)
+    }, [data])
 
     const renderItem2 = React.useCallback((item: HouseHoldCategoryInterface, index: number) => {
         return (
@@ -70,7 +75,7 @@ const CategoryItems = ({ data, handleNavigateHouseHoldDetail }: CategoryItemInte
                             itemDimension={screenWidth * 0.35}
                             maxItemsPerRow={2}
                             data={data}
-
+                            key={k.toString()}
                             spacing={0}
 
                             renderItem={({ item, index }) => renderItem2(item, index)}

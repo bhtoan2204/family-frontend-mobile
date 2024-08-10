@@ -22,4 +22,15 @@ export interface HouseHoldItemInterface {
     created_at: string;
     updated_at: string;
   };
+  consumableItem?: {
+    // id_consumable_item: number;
+    id_household_item: number;
+    quantity: number;
+    threshold: number;
+    expired_date: string | null;
+  };
+  durableItem?: {
+    id_household_item: number;
+    condition: string;
+  };
 }

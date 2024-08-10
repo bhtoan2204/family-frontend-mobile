@@ -1,5 +1,5 @@
 import React, { useEffect, lazy } from 'react'
-import { View, Text, TouchableOpacity, Image, ActivityIndicator, FlatList, TextInput, Dimensions, SafeAreaView, StatusBar, ScrollView, LogBox } from 'react-native'
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, FlatList, TextInput, Dimensions, SafeAreaView, StatusBar, ScrollView, LogBox, RefreshControl } from 'react-native'
 import { Guildline } from 'src/interface/guideline/guideline'
 import { GuildLineScreenProps } from 'src/navigation/NavigationTypes'
 import GuildLineService from 'src/services/apiclient/GuildLineService'
@@ -54,23 +54,23 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
   const publicGuidelines = React.useMemo(() => {
     return guidelines.filter((item) => item.is_shared)
   }, [guidelines])
-
-  useEffect(() => {
-    const fetchGuidelines = async () => {
-      try {
-        const response = await GuildLineService.getAllGuideLine(id_family!); // API call to fetch all guidelines
-        if (response) {
-          dispatch(setGuideline(response));
-        }
-        else {
-          dispatch(setGuideline([]));
-        }
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching guidelines:', error);
-        setLoading(false);
+  const fetchGuidelines = React.useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await GuildLineService.getAllGuideLine(id_family!); // API call to fetch all guidelines
+      if (response) {
+        dispatch(setGuideline(response));
       }
-    };
+      else {
+        dispatch(setGuideline([]));
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching guidelines:', error);
+      setLoading(false);
+    }
+  }, [id_family]);
+  useEffect(() => {
     fetchGuidelines();
 
     return () => {
@@ -101,11 +101,11 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
   }, [])
 
 
-  if (loading) {
-    return <View className='flex-1 justify-center items-center bg-[#fff] dark:bg-[#0A1220]'>
-      <ActivityIndicator style={{ justifyContent: 'center' }} size="small" />
-    </View>;
-  }
+  // if (loading) {
+  //   return <View className='flex-1 justify-center items-center bg-[#fff] dark:bg-[#0A1220]'>
+  //     <ActivityIndicator style={{ justifyContent: 'center' }} size="small" />
+  //   </View>;
+  // }
 
 
 
@@ -121,7 +121,8 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
 
       </View>
 
-      <ScrollView className='pt-2' showsVerticalScrollIndicator={false}
+      <ScrollView className='pt-2'
+        showsVerticalScrollIndicator={false}
         ref={scrollYRef}
         onScroll={(event) => {
           const currentYPosition = event.nativeEvent.contentOffset.y
@@ -134,6 +135,12 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
           }
           scrollYRef.current = currentYPosition
         }}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={fetchGuidelines}
+          />
+        }
       >
         <View className='flex-row px-3 py-2'>
           <TouchableOpacity className='flex-1 py-3 items-center justify-center ' style={{
@@ -149,7 +156,7 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
               fontWeight: 'bold'
             }}>{
                 translate('guideline_screen_guideline_text')
-            }</Text>
+              }</Text>
           </TouchableOpacity>
           <TouchableOpacity className='flex-1  py-3 items-center justify-center ' style={{
             borderBottomColor: tab == 1 ? (isDarkMode ? 'white' : 'black') : undefined,
@@ -161,58 +168,63 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
               fontWeight: 'bold'
             }}>{
                 translate('guideline_screen_shared_guideline_text')
-            }</Text>
+              }</Text>
           </TouchableOpacity>
         </View>
-        <View className='' style={{
+        {
+          loading ? <View className='flex-1 justify-center items-center h-full mt-14'>
+            <ActivityIndicator style={{ justifyContent: 'center' }} size="small" />
+          </View>
+            :
+            <View className='' style={{
 
-        }}>
-          <>
-
-            {
-              tab == 0 && <>
+            }}>
+              <>
                 {
-                  guidelines.length > 0 ? <MapGuidelines
-                    data={guidelines}
-                    onPress={(item: Guildline) => {
-                      navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_guide_item })
-                    }}
-                    onUpdate={(item: Guildline) => {
-                      setPickedIdGuideline(item.id_guide_item);
-                      setPickedNameGuideline(item.name);
-                      setPickedDescriptionGuideline(item.description);
-                      updateGuidelineBottomSheetRef.current?.expand()
+                  tab == 0 && <>
+                    {
+                      guidelines.length > 0 ? <MapGuidelines
+                        data={guidelines}
+                        onPress={(item: Guildline) => {
+                          navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_guide_item })
+                        }}
+                        onUpdate={(item: Guildline) => {
+                          setPickedIdGuideline(item.id_guide_item);
+                          setPickedNameGuideline(item.name);
+                          setPickedDescriptionGuideline(item.description);
+                          updateGuidelineBottomSheetRef.current?.expand()
 
-                    }}
+                        }}
 
-                  /> : renderEmptyGuideline()
+                      /> : renderEmptyGuideline()
+                    }
+                  </>
                 }
               </>
-            }
-          </>
-          <>
-            {
-              tab == 1 && <>
+              <>
                 {
-                  <MapGuidelines
-                    data={publicGuidelines}
-                    onPress={(item: Guildline) => {
-                      navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_guide_item })
-                    }}
-                    onUpdate={(item: Guildline) => {
-                      setPickedIdGuideline(item.id_guide_item);
-                      setPickedNameGuideline(item.name);
-                      setPickedDescriptionGuideline(item.description);
-                      updateGuidelineBottomSheetRef.current?.expand()
+                  tab == 1 && <>
+                    {
+                      <MapGuidelines
+                        data={publicGuidelines}
+                        onPress={(item: Guildline) => {
+                          navigation.navigate('GuildLineDetail', { id_family: id_family, id_item: item.id_guide_item })
+                        }}
+                        onUpdate={(item: Guildline) => {
+                          setPickedIdGuideline(item.id_guide_item);
+                          setPickedNameGuideline(item.name);
+                          setPickedDescriptionGuideline(item.description);
+                          updateGuidelineBottomSheetRef.current?.expand()
 
-                    }}
+                        }}
 
-                  />
+                      />
+                    }
+                  </>
                 }
               </>
-            }
-          </>
-        </View>
+            </View>
+        }
       </ScrollView>
       <TouchableOpacity className={`absolute rounded-full  bottom-5 right-5  bg-[#66C0F4] items-center justify-center transition ${isScrollDown ? "opacity-30" : ""}`} style={{
         width: ScreenHeight * 0.085,

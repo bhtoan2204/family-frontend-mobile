@@ -21,6 +21,11 @@ const screenWidth = Dimensions.get('window').width;
 
 const RoomItems = ({ data, handleNavigateRoomDetail }: RoomItemsProps) => {
     const loading = useSelector((state: RootState) => state.household).loading
+    const [k, setK] = React.useState(false)
+
+    React.useEffect(() => {
+        setK(prev => !prev)
+    }, [data])
 
     const renderItem2 = React.useCallback((item: RoomInterface, index: number) => {
         return (
@@ -77,7 +82,7 @@ const RoomItems = ({ data, handleNavigateRoomDetail }: RoomItemsProps) => {
                             itemDimension={screenWidth * 0.35}
                             maxItemsPerRow={2}
                             data={data}
-
+                            key={k.toString()}
                             spacing={0}
 
                             renderItem={({ item, index }) => renderItem2(item, index)}

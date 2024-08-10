@@ -1,3 +1,4 @@
+import {updateDurableItem} from 'src/redux/slices/HouseHoldDetailSlice';
 import baseUrl from './baseUrl';
 
 const HouseHoldUrls = {
@@ -8,6 +9,7 @@ const HouseHoldUrls = {
   updateHouseHoldItem: baseUrl + '/api/v1/household/updateHouseholdItem',
   updateConsumableItem:
     baseUrl + '/api/v1/household/inputHouseholdConsumableItem',
+  updateDurableItem: baseUrl + '/api/v1/household/inputHouseholdDurableItem',
   getAllRoom: baseUrl + '/api/v1/room/getRooms', // /{id_family}
   createRoom: baseUrl + '/api/v1/room/createRoom',
   updateRoom: baseUrl + '/api/v1/room/updateRoom',

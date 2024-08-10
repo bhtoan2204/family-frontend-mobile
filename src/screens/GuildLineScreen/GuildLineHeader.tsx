@@ -23,8 +23,8 @@ interface GuildLineHeaderProps {
     setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
     handleCancelAddStep: () => void;
     handleCancelEdit: () => void;
-    handleSaveAddStep: () => void;
-    handleSaveEdit: () => void;
+    handleSaveAddStep: () => Promise<void>;
+    handleSaveEdit: () => Promise<void>;
     navigationBack: () => void;
     handleIsAddingStep: () => void;
     handleShareGuideline: () => Promise<void>
@@ -93,12 +93,12 @@ const GuildLineHeader = ({
             <View className='mr-3'>
                 {
                     isAdding || isEditing
-                        ? <TouchableOpacity onPress={() => {
+                        ? <TouchableOpacity onPress={async () => {
                             if (isAdding) {
-                                handleSaveAddStep()
+                                await handleSaveAddStep()
                             }
                             else {
-                                handleSaveEdit()
+                                await handleSaveEdit()
                             }
                         }}>
                             <Text className=' text-lg ' style={{ color: iOSColors.systemBlue.accessibleLight }}>{

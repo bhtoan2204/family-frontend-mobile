@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { AppDispatch, RootState } from 'src/redux/store';
 import HouseHoldService from 'src/services/apiclient/HouseHoldService';
-import { setLoading, setRoom, setTotalRoom } from 'src/redux/slices/HouseHoldDataSlice';
+import { setLoading, setRoom, setTotalRoom, addRooms } from 'src/redux/slices/HouseHoldDataSlice';
 import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface RoomComponentProps {
@@ -20,10 +20,11 @@ interface RoomComponentProps {
     id_family: number
 }
 
-// const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }: any) => {
-//     const paddingToBottom = 20; // Adjust this value as needed
-//     return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
-// };
+const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }: any) => {
+    const paddingToBottom = 20;
+    return layoutMeasurement.height + contentOffset.y >=
+        contentSize.height - paddingToBottom;
+};
 
 
 const RoomComponent = ({ data, handleNavigateRoomDetail, addRoomSheetRef, id_family }: RoomComponentProps) => {
@@ -31,14 +32,22 @@ const RoomComponent = ({ data, handleNavigateRoomDetail, addRoomSheetRef, id_fam
     const loading = useSelector((state: RootState) => state.household).loading
     // const total = useSelector((state: RootState) => state.household).totalRoom
     // const [refreshing, setRefreshing] = React.useState(false);
-    // const [page, setPage] = React.useState(1)
-    // const [loadingMore, setLoadingMore] = React.useState(false);
+    const [page, setPage] = React.useState(1)
+    const [hasMore, setHasMore] = React.useState(false);
+    const [isLoadingMore, setIsLoadingMore] = React.useState(false);
 
     const dispatch = useDispatch<AppDispatch>();
     const translate = useSelector(getTranslate)
     const refetchData = React.useCallback(async () => {
+        console.log("calling refetch")
         const fetchRooms = async () => {
-            const roomData = await HouseHoldService.getAllRoom(id_family!, 1, 100)
+            const roomData = await HouseHoldService.getAllRoom(id_family!, 1, 10)
+            if (roomData.data.length < 10) {
+                setHasMore(false)
+            } else {
+                setHasMore(true)
+                setPage(prev => prev + 1)
+            }
             dispatch(setRoom(roomData.data))
             dispatch(setTotalRoom(roomData.total))
         }
@@ -47,6 +56,30 @@ const RoomComponent = ({ data, handleNavigateRoomDetail, addRoomSheetRef, id_fam
         dispatch(setLoading(false))
     }, [])
 
+    const fetchMoreData = React.useCallback(async () => {
+        if (!isLoadingMore  && hasMore) {
+            console.log("calling fetchMoreData")
+            const fetchRooms = async () => {
+                const roomData = await HouseHoldService.getAllRoom(id_family!, page, 10)
+                if (roomData.data.length < 10) {
+                    setHasMore(false)
+                } else {
+                    setHasMore(true)
+                }
+                dispatch(addRooms(roomData.data))
+                dispatch(setTotalRoom(roomData.total))
+            }
+
+            await fetchRooms()
+        }
+    }, [id_family, page])
+
+    const handleReachBottom = async () => {
+        setIsLoadingMore(true)
+        await fetchMoreData()
+        setIsLoadingMore(false)
+        setPage(page + 1)
+    }
 
 
 
@@ -58,7 +91,13 @@ const RoomComponent = ({ data, handleNavigateRoomDetail, addRoomSheetRef, id_fam
             }
             className='flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]'
             showsVerticalScrollIndicator={false}
-
+            onScroll={async ({ nativeEvent }) => {
+                if (isCloseToBottom(nativeEvent)) {
+                    // console.log('end')
+                    await handleReachBottom()
+                }
+            }}
+            scrollEventThrottle={400}
 
         >
             <View>
@@ -68,8 +107,8 @@ const RoomComponent = ({ data, handleNavigateRoomDetail, addRoomSheetRef, id_fam
                     <Text className='text-lg text-[#2A475E] dark:text-white '
 
                     >{
-                        translate('household_room_text')
-                    }</Text>
+                            translate('household_room_text')
+                        }</Text>
 
                     <View className=' p-1 border-[1px] rounded-lg border-[#DEDCDC] dark:border-[#232A3D]'
                     // style={{
@@ -87,8 +126,8 @@ const RoomComponent = ({ data, handleNavigateRoomDetail, addRoomSheetRef, id_fam
                     <Text className='text-sm text-[#2A475E] dark:text-[#8D94A5]'
 
                     >{data.length} {
-                        translate('item_added_text')
-                    }</Text>
+                            translate('item_added_text')
+                        }</Text>
 
 
                     <Text className='text-sm font-semibold'
@@ -100,8 +139,8 @@ const RoomComponent = ({ data, handleNavigateRoomDetail, addRoomSheetRef, id_fam
                             addRoomSheetRef.current?.expand()
                         }}
                     >{
-                        translate('add_item_text')
-                    }</Text>
+                            translate('add_item_text')
+                        }</Text>
 
                 </View>
                 <RoomItems data={data}

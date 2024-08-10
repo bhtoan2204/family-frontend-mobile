@@ -307,7 +307,7 @@ const ShoppingListScreen = ({
           )}
         </View>
       </ScrollView>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         className={`absolute rounded-full  bottom-5 right-5  bg-[#66C0F4] items-center justify-center transition duration-75`}
         style={{
           width: ScreenHeight * 0.085,
@@ -318,8 +318,8 @@ const ShoppingListScreen = ({
           // addGuidelineBottomSheetRef.current?.expand()
         }}>
         <Material name="plus" size={30} color="white" />
-      </TouchableOpacity>
-      <AddListSheet
+      </TouchableOpacity> */}
+      {/* <AddListSheet
         bottomSheetRef={addListBottomSheetRef}
         appearsOnIndex={openSheet != null ? openSheet : false}
         id_family={id_family!}
@@ -343,7 +343,7 @@ const ShoppingListScreen = ({
         }}
         onAddFailed={() => {}}
         id_calendar={id_calendar}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

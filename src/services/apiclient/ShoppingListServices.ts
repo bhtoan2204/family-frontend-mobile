@@ -280,9 +280,9 @@ const ShoppingListServices = {
     id_list: number;
     id_family: number;
     id_shopping_list_type: number;
-    title: string;
-    description: string;
-    status: number;
+    title?: string;
+    description?: string;
+    status: string;
   }) => {
     const url = ShoppingListUrls.updateShoppingList;
     try {
@@ -334,6 +334,56 @@ const ShoppingListServices = {
       return false;
     }
   },
+  getSuggestion: async ({
+    id_family,
+    id_item,
+    id_list,
+  }: {
+    id_family: number;
+    id_list: number;
+    id_item: number;
+  }) => {
+    const url =
+      'https://api.famfund.io.vn/api/v1/shopping/getSuggestions' +
+      '/' +
+      id_family +
+      '/' +
+      id_list +
+      '/' +
+      id_item;
+    const res = await instance.get(url);
+    if (res.status === 200) {
+      const data = res.data.data.shopping as {
+        title: string;
+        source: string;
+        link?: string;
+        price: string;
+        delivery: string;
+        imageUrl: string;
+        position?: number;
+      }[];
+      return data.slice(0, 5);
+    } else {
+      return [];
+    }
+  },
 };
 
 export default ShoppingListServices;
+
+// {
+//   title: string;
+//     source: string;
+//     link: string;
+//     price: string;
+//     delivery: string;
+//     imageUrl: string;
+//     position: number;
+// }
+// "title": "Cua Thịt Cà Mau",
+// "source": "Đảo Hải Sản",
+// "link": "https://daohaisan.vn/products/cua-thit-ca-mau-size-3-con-kg",
+// "price": "199.000 ₫",
+// "delivery": " 30.000 ₫ phí giao hàng",
+// "imageUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTAzoVrDN4Cc3ztTdG0hYWVMWOCEVWI82JyLXx3s0lL7w42PzZcF_PMB9G21bSGP5AnmmPkN58QbV-71ezpMUlKkkCgjc5fjtiX_AsUEEYtIbU_p-oIyQ&usqp=CAE",
+// "position": 1

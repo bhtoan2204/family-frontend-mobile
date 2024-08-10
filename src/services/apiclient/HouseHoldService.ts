@@ -40,7 +40,7 @@ const HouseHoldService = {
   ) => {
     try {
       const token = await LocalStorage.GetAccessToken();
-      console.log('token', token);
+      // console.log('token', token);
       const url =
         HouseHoldUrls.getHouseHoldItem +
         '?id_family=' +
@@ -79,6 +79,7 @@ const HouseHoldService = {
     id_category: number,
     item_description: string,
     id_room: number,
+    item_type: string,
   ) => {
     const url = HouseHoldUrls.createHouseHoldItem;
     const createFormData = (uri: string): FormData => {
@@ -98,8 +99,8 @@ const HouseHoldService = {
       formData.append('item_name', item_name);
       formData.append('id_category', id_category.toString());
       formData.append('item_description', item_description);
-      formData.append('item_type', 'durable');
       formData.append('id_room', id_room.toString());
+      formData.append('item_type', item_type);
       return formData;
     };
 
@@ -227,6 +228,32 @@ const HouseHoldService = {
         quantity: quantity,
         threshold: threshhold,
         expired_date: expiry_date,
+      });
+      if (res.status === 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log('Error updating consumable item:', error);
+    }
+  },
+  updateDurableItem: async (
+    id_item: number,
+    id_family: number,
+    condition: string,
+  ) => {
+    const url = HouseHoldUrls.updateDurableItem;
+    try {
+      console.log({
+        id_item: id_item,
+        id_family: id_family,
+        condition: condition,
+      });
+      const res = await instance.put(url, {
+        id_family: id_family,
+        id_item: id_item,
+        condition: condition,
       });
       if (res.status === 200) {
         return true;

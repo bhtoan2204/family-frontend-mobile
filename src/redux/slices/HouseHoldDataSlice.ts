@@ -43,6 +43,9 @@ const householdSlice = createSlice({
     setHouseholdItems(state, action: PayloadAction<HouseHoldItemInterface[]>) {
       state.items = action.payload;
     },
+    addHouseholdItems(state, action: PayloadAction<HouseHoldItemInterface[]>) {
+      state.items = [...state.items, ...action.payload];
+    },
     clearHouseholdData(state) {
       return {
         loading: false,
@@ -72,6 +75,9 @@ const householdSlice = createSlice({
     },
     setRoom(state, action: PayloadAction<RoomInterface[]>) {
       state.rooms = action.payload;
+    },
+    addRooms(state, action: PayloadAction<RoomInterface[]>) {
+      state.rooms = [...state.rooms, ...action.payload];
     },
     clearRoom(state) {
       state.rooms = [];
@@ -123,6 +129,35 @@ const householdSlice = createSlice({
         state.categories[index].category_name = action.payload.category_name;
       }
     },
+    updateTitle(
+      state,
+      action: PayloadAction<{
+        id_household_item: number;
+        title: string;
+      }>,
+    ) {
+      const index = state.items.findIndex(
+        item => item.id_household_item === action.payload.id_household_item,
+      );
+      if (index !== -1) {
+        state.items[index].item_name = action.payload.title;
+      }
+    },
+
+    updateGuideItem(
+      state,
+      action: PayloadAction<{
+        id_household_item: number;
+        id_guide_item: number;
+      }>,
+    ) {
+      const index = state.items.findIndex(
+        item => item.id_household_item === action.payload.id_household_item,
+      );
+      if (index !== -1) {
+        state.items[index].id_guide_item = action.payload.id_guide_item;
+      }
+    },
   },
 });
 
@@ -143,6 +178,10 @@ export const {
   setTotalCategory,
   setTotalItem,
   setTotalRoom,
+  updateTitle,
+  updateGuideItem,
+  addHouseholdItems,
+  addRooms,
 } = householdSlice.actions;
 
 export default householdSlice.reducer;

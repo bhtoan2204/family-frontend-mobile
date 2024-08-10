@@ -16,6 +16,7 @@ import Camera from 'src/assets/images/household_assets/Camera.png'
 import Room2 from 'src/assets/images/household_assets/Room_2.png'
 import EditConsumableImage from 'src/assets/images/household_assets/edit_consumable_sheet_img.png'
 import { updateComsumableItem, updateTitle } from 'src/redux/slices/HouseHoldDetailSlice';
+import { updateTitle as updateTitleHousehold } from 'src/redux/slices/HouseHoldDataSlice'
 import { handleRestore } from 'src/utils/sheet/func';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { useToast } from 'react-native-toast-notifications';
@@ -114,6 +115,11 @@ const EditTitleSheet = ({
             dispatch(updateTitle(
                 inputDescription
             ))
+            dispatch(updateTitleHousehold({
+                id_household_item: id_item,
+                title: inputDescription
+            }))
+
             await CallApi({
                 id_family: id_family,
                 id_household_item: id_item,
@@ -221,8 +227,8 @@ const EditTitleSheet = ({
                             translate('household_detail_update_title_title')
                         }</Text>
                         <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >{
-                              translate('household_detail_update_title_description')  
-                            }</Text>
+                            translate('household_detail_update_title_description')
+                        }</Text>
                     </View>
                     {
                         buildAddDesc()

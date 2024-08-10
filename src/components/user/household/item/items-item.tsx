@@ -18,6 +18,11 @@ interface ItemItemsProps {
 const screenWidth = Dimensions.get('window').width;
 const ItemItems = ({ data, handleNavigateHouseHoldDetail }: ItemItemsProps) => {
     const loading = useSelector((state: RootState) => state.household).loading
+    const [k, setK] = React.useState(false)
+
+    React.useEffect(() => {
+        setK(prev => !prev)
+    }, [data])
 
     const renderItem2 = React.useCallback((item: HouseHoldItemInterface, index: number) => {
         return (
@@ -58,7 +63,7 @@ const ItemItems = ({ data, handleNavigateHouseHoldDetail }: ItemItemsProps) => {
                 </TouchableOpacity>
             </View>
         )
-    }, [])
+    }, [data])
 
     return (
         <View className=' items-center flex-1  mx-[10%]'>
@@ -69,6 +74,7 @@ const ItemItems = ({ data, handleNavigateHouseHoldDetail }: ItemItemsProps) => {
                     {
                         data.length > 0 ? (
                             <FlatGrid
+                                key={k.toString()}
                                 itemDimension={screenWidth * 0.35}
                                 maxItemsPerRow={2}
                                 data={data}

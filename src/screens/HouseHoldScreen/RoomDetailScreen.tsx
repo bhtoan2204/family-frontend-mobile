@@ -17,7 +17,7 @@ import { getTranslate } from 'src/redux/slices/languageSlice'
 const RoomDetailScreen = ({ navigation, route, setAddItemType, setPickedRoom, addItemSheetRef }: RoomDetailScreenProps) => {
     const { id_room, id_family } = route.params
     const householdItems = useSelector((state: RootState) => state.household).items.filter(item => item.id_room == id_room)
-    const roomInfo = useSelector((state: RootState) => state.household).rooms.find(room => room.id_room == id_room)
+const roomInfo = useSelector((state: RootState) => state.household).rooms.find(room => room.id_room == id_room)
     const dispatch = useDispatch<AppDispatch>()
     const loading = useSelector((state: RootState) => state.household).loading
     const translate = useSelector(getTranslate)

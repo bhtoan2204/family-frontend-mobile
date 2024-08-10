@@ -85,7 +85,7 @@ const AddItemSheet = ({
                 id_list: id_list,
                 id_item_type: pickedCategory,
                 item_name: householdName,
-                description: '',
+                description: householdName,
                 quantity: 1,
                 priority_level: 0,
                 reminder_date: new Date().toISOString(),
@@ -113,13 +113,13 @@ const AddItemSheet = ({
                     })
                 );
             } else {
-                throw new Error('Failed to add item');
+                onAddFailed();
             }
         } catch (error) {
             console.error('Error adding item:', error);
             onAddFailed();
         }
-    }, [id_family, pickedCategory, householdName, dispatch, categories, onAddFailed]);
+    }, [id_family, pickedCategory, householdName, categories, onAddFailed, id_shopping_list_type]);
 
     const createAndAddToNewList = useCallback(async () => {
         try {
@@ -137,7 +137,7 @@ const AddItemSheet = ({
                         id_family: id_family,
                         id_shopping_list_type: id_shopping_list_type,
                         title: 'Shopping List ' + id_shopping_list_type,
-                        description: '',
+                        description: 'Shopping List ' + id_shopping_list_type,
                         status: '',
                         created_at: new Date().toISOString(),
                         updated_at: new Date().toISOString(),

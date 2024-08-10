@@ -37,7 +37,7 @@ const AddHouseHoldItemPickCategorySheet = ({
     refRBSheet, onNavigateCreateCategory, category, onSetCategory, categories, addCategorySheetRef
 }: AddHouseHoldItemPickCategorySheetProps) => {
     const snapPoints = useMemo(() => ['95%'], []);
-    console.log(categories)
+    // console.log(categories)
     const renderBackdrop = useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />,
         []
@@ -194,13 +194,11 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                         // handleNavigateHouseHoldDetail(item.id_household_item)
                     }}>
                         <Image
-                            source={item.category_image ? { uri: item.category_image } : gradients_list[index - 1 % gradients_list.length]}
+                            source={item.category_image ? { uri: item.category_image, cache: 'force-cache' } : gradients_list[index - 1 % gradients_list.length]}
                             style={{
-                                // width: screenWidth * 0.3,
                                 width: '100%',
                                 height: undefined,
                                 borderRadius: 15,
-                                // height: screenHeight * 0.2,
                                 aspectRatio: 1,
                             }}
                         />

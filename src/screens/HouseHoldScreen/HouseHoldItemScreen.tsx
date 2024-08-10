@@ -11,7 +11,8 @@ import DescriptionInfo from 'src/components/user/household/household-detail/desc
 import DescriptionIcon from 'src/assets/images/household_assets/description_iccon.png';
 import ConsumableIcon from 'src/assets/images/household_assets/consumable_icon.png';
 import HouseHoldService from 'src/services/apiclient/HouseHoldService';
-import { setHouseholdItemDetail, updateGuidelineId } from 'src/redux/slices/HouseHoldDetailSlice';
+import { clearHouseholdItems, setHouseholdItemDetail, updateGuidelineId } from 'src/redux/slices/HouseHoldDetailSlice';
+import DurableInfo from 'src/components/user/household/household-detail/durable-info';
 
 const HouseHoldItemScreen: React.FC<HouseHoldItemScreenProps> = ({ navigation, route, addEditConsumableItemSheetRef, addEditDescriptionSheetRef }) => {
     const { id_family, id_item } = route.params
@@ -20,14 +21,18 @@ const HouseHoldItemScreen: React.FC<HouseHoldItemScreenProps> = ({ navigation, r
     console.log(id_family, id_item)
     const [loading, setLoading] = React.useState(false)
     const householdItems = useSelector((state: RootState) => state.householdItemDetail)
-    console.log(householdItems.id_guide_item)
+    // const [durableData, setDurableData] = React.useState(durableDat)
     const refetchData = React.useCallback(async () => {
-        setLoading(true)
+        dispatch(clearHouseholdItems())
         const data = await HouseHoldService.getHouseHoldItemDetail(id_item!, id_family!)
         if (data) {
             dispatch(setHouseholdItemDetail(data))
         }
-        setLoading(false)
+
+    }, [id_item, id_family])
+
+    useEffect(() => {
+        refetchData()
     }, [])
 
     return (
@@ -42,16 +47,34 @@ const HouseHoldItemScreen: React.FC<HouseHoldItemScreenProps> = ({ navigation, r
             >
                 <View className='items-center'>
 
-                    <HouseHoldItemInfoBox id={householdItems.id_household_item} title="Consumable Item"
-                        onPress={() => {
-                            addEditConsumableItemSheetRef && addEditConsumableItemSheetRef.current?.expand()
-                        }}
-                        iconImage={ConsumableIcon}
+                    {
+                        householdItems.consumableItem && <>
+                            <HouseHoldItemInfoBox id={householdItems.id_household_item} title="Consumable Item"
+                                onPress={() => {
+                                    addEditConsumableItemSheetRef && addEditConsumableItemSheetRef.current?.expand()
+                                }}
+                                iconImage={ConsumableIcon}
 
-                    >
-                        <ConsumableInfo data={householdItems} />
-                    </HouseHoldItemInfoBox>
-                    <View className='my-2'></View>
+                            >
+                                <ConsumableInfo data={householdItems} />
+                            </HouseHoldItemInfoBox>
+                            <View className='my-2'></View>
+                        </>
+                    }
+                    {
+                        householdItems.durableItem && <>
+                            <HouseHoldItemInfoBox id={householdItems.id_household_item} title="Durable item"
+                                onPress={() => {
+                                    // addEditConsumableItemSheetRef && addEditConsumableItemSheetRef.current?.expand()
+                                }}
+                                iconImage={ConsumableIcon}
+
+                            >
+                                <DurableInfo data={householdItems} id_family={id_family!} />
+                            </HouseHoldItemInfoBox>
+                            <View className='my-2'></View>
+                        </>
+                    }
                     <HouseHoldItemInfoBox id={householdItems.id_household_item} title="Description"
                         onPress={() => {
                             // navigation.navigate('EditDescription', {

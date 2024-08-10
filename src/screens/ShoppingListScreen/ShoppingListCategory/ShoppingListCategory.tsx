@@ -72,14 +72,14 @@ const mapByItemType = (items: ShoppingListItem[]): Map<string, ShoppingListItem[
 
 const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryScreenProps) => {
     const { id_family, id_category } = route.params
-    console.log(id_family, id_category)
+    // console.log(id_family, id_category)
     const loading = useSelector((state: RootState) => state.shoppinglist).loading
     const shoppingListInfo = useSelector((state: RootState) => state.shoppinglist).shoppingList.filter((item) => item.id_shopping_list_type === id_category)
     const shoppingListType = useSelector((state: RootState) => state.shoppinglist).shoppingListType
     console.log(shoppingListInfo)
-    const items: Map<string, ShoppingListItem[]> = mapByItemType(
+    const items: Map<string, ShoppingListItem[]> = React.useMemo(() => mapByItemType(
         shoppingListInfo[0]?.items || []
-    )
+    ), [shoppingListInfo])
     const categories = useSelector((state: RootState) => state.shoppinglist).shoppingListItemType
     const addItemBottomSheetRef = React.useRef<BottomSheet>(null)
     const addCategoryBottomSheetRef = React.useRef<BottomSheet>(null)
@@ -164,7 +164,19 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
             quantity: item.quantity,
             reminder_date: item.reminder_date
         })
-        if (res) {
+        console.log({
+            id_family: id_family!,
+            id_list: item.id_list,
+            id_shopping_list_type: id_category,
+            status: "COMPLETED",
+        })
+        const updateShoppingList = await ShoppingListServices.updateCompleteShoppingList({
+            id_family: id_family!,
+            id_list: item.id_list,
+            id_shopping_list_type: id_category,
+            status: "COMPLETED",
+        })
+        if (res && updateShoppingList) {
             return true
 
         } else {

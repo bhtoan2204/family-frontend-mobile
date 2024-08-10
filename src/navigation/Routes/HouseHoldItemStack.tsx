@@ -97,6 +97,7 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
                     houseHoldItemInfo.description)
 
                 dispatch(updateImage(result.assets[0].uri))
+                
                 // setHouseHoldItemData({
                 //     ...houseHoldItemData,
                 //     item_imageurl: result.assets[0].uri

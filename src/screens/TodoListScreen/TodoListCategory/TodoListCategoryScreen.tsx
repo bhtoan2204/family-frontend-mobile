@@ -1,5 +1,5 @@
-import {addMonths, endOfMonth, format, startOfMonth, subMonths} from 'date-fns';
-import React, {useCallback, useEffect, useState} from 'react';
+import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -18,15 +18,15 @@ import {
   Calendar,
   CalendarList,
 } from 'react-native-calendars';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   ShoppingListCategoryScreenProps,
   TodoListCategoryScreenProps,
 } from 'src/navigation/NavigationTypes';
-import {AppDispatch, RootState} from 'src/redux/store';
+import { AppDispatch, RootState } from 'src/redux/store';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import {COLORS} from 'src/constants';
-import {colors, textColors} from '../const/color';
+import { COLORS } from 'src/constants';
+import { colors, textColors } from '../const/color';
 
 import GroceryImage from 'src/assets/images/shoppinglist_assets/grocery.png';
 import ElectronicsImage from 'src/assets/images/shoppinglist_assets/Electronics.png';
@@ -43,10 +43,10 @@ import OtherBgImage from 'src/assets/images/shoppinglist_assets/other_bg_image.p
 import GamingIcon from 'src/assets/images/shoppinglist_assets/gaming_icon.png';
 import EmptyListIcon from 'src/assets/images/shoppinglist_assets/empty_list_icon.png';
 
-import {ListItem} from '@rneui/themed';
-import {gradients_list} from 'src/assets/images/gradients';
-import {ScreenWidth} from '@rneui/base';
-import {ShoppingListItemInterface} from 'src/interface/checklist/checklist';
+import { ListItem } from '@rneui/themed';
+import { gradients_list } from 'src/assets/images/gradients';
+import { ScreenWidth } from '@rneui/base';
+import { ShoppingListItemInterface } from 'src/interface/checklist/checklist';
 import ShoppingListServices from 'src/services/apiclient/ShoppingListServices';
 import {
   ShoppingList,
@@ -57,16 +57,16 @@ import ShoppingListCategoryItem from 'src/components/user/shopping/shopping-list
 import BottomSheet from '@gorhom/bottom-sheet';
 import AddItemSheet from 'src/components/user/shopping-todo/sheet/add-item-sheet';
 
-import {categoriesImage} from '../const/image';
-import {TodoListItem} from 'src/interface/todo/todo';
-import {styled, useColorScheme} from 'nativewind';
+import { categoriesImage } from '../const/image';
+import { TodoListItem } from 'src/interface/todo/todo';
+import { styled, useColorScheme } from 'nativewind';
 import {
   setLoading,
   setTodoList,
   setTodoListType,
   updateDoneTodoList,
 } from 'src/redux/slices/TodoListSlice';
-import {useToast} from 'react-native-toast-notifications';
+import { useToast } from 'react-native-toast-notifications';
 import TodoListServices from 'src/services/apiclient/TodoListService';
 
 const screenHeight = Dimensions.get('screen').height;
@@ -81,7 +81,7 @@ const TodoListCategoryScreen = ({
   navigation,
   route,
 }: TodoListCategoryScreenProps) => {
-  const {id_family, id_category} = route.params;
+  const { id_family, id_category } = route.params;
   // console.log('id_family', id_family, 'id_category', id_category)
 
   const dispatch = useDispatch<AppDispatch>();
@@ -119,6 +119,13 @@ const TodoListCategoryScreen = ({
     await fetchTodoListType();
     await fetchTodoListItem();
     dispatch(setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (!todoListCategoryItems) {
+      refetchData();
+    }
+    // refetchData();
   }, []);
 
   const getImage = React.useCallback((id_category: number) => {
@@ -242,7 +249,7 @@ const TodoListCategoryScreen = ({
   }, [todoListCategoryItems]);
 
   return (
-    <View style={{flex: 1, backgroundColor: '#f7f7f7'}}>
+    <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
       <View
         className="py-6 h-[29%] "
         style={{
@@ -265,7 +272,7 @@ const TodoListCategoryScreen = ({
               style={{
                 height: screenHeight * 0.2,
                 width: screenHeight * 0.2,
-                transform: [{rotate: '-20deg'}],
+                transform: [{ rotate: '-20deg' }],
               }}
             />
           </View>

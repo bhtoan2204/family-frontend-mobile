@@ -201,15 +201,13 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                         // handleNavigateHouseHoldDetail(item.id_household_item)
                     }}>
                         <Image
-                            source={item.room_image ? { uri: item.room_image } : gradients_list[index - 1 % gradients_list.length]}
+                            source={item.room_image ? { uri: item.room_image, cache: 'force-cache' } : gradients_list[index - 1 % gradients_list.length]}
                             style={{
-                                // width: screenWidth * 0.3,
                                 width: '100%',
                                 height: undefined,
                                 borderRadius: 15,
                                 borderWidth: 1,
                                 borderColor: !isDark ? '#DEDCDC' : '#66C0F4',
-                                // height: screenHeight * 0.2,
                                 aspectRatio: 1,
                             }}
                         />

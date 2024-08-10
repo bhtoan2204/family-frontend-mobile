@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { View, Text, Keyboard, Dimensions, Image, TouchableOpacity, ImageBackground } from 'react-native'
+import { View, Text, Keyboard, Dimensions, Image, TouchableOpacity, ImageBackground, ActivityIndicator } from 'react-native'
 import { COLORS } from 'src/constants'
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
@@ -17,11 +17,12 @@ import Room2 from 'src/assets/images/household_assets/Room_2.png'
 import { RoomInterface } from 'src/interface/household/room';
 import { HouseHoldCategoryInterface } from 'src/interface/household/household_category';
 import { HouseHoldItemInterface } from 'src/interface/household/household_item';
-import { addHouseholdItem } from 'src/redux/slices/HouseHoldSlice';
+// import { addHouseholdItem } from 'src/redux/slices/HouseHoldSlice';
 import HouseHoldService from 'src/services/apiclient/HouseHoldService';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { handleRestore } from 'src/utils/sheet/func';
 import { getTranslate } from 'src/redux/slices/languageSlice';
+import { addHouseholdItem } from 'src/redux/slices/HouseHoldDataSlice';
 
 interface AddRoomSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -33,8 +34,8 @@ interface AddRoomSheetProps {
     pickedCategory: number
     rooms: RoomInterface[]
     categories: HouseHoldCategoryInterface[]
-    type: "consumable" | "durable"
-    setPickedType: (type: "consumable" | "durable") => void
+    resetPickedRoom: () => void
+    resetPickedCategory: () => void
     // addRoomSheetRef: React.RefObject<BottomSheet>
 }
 
@@ -53,14 +54,17 @@ const AddItemSheet = ({
     pickedRoom,
     rooms,
     categories,
-    type,
-    setPickedType,
+    resetPickedRoom,
+    resetPickedCategory,
+
+    // type,
+    // setPickedType,
     // addRoomSheetRef
 }: AddRoomSheetProps) => {
     const snapPoints = React.useMemo(() => ['95%'], []);
 
-    const [loading, setLoading] = React.useState(false)
     const dispatch = useDispatch<AppDispatch>()
+    const [loading, setLoading] = React.useState(false)
 
 
     const [errorText, setErrorText] = React.useState('')
@@ -69,7 +73,7 @@ const AddItemSheet = ({
     const [householdName, setHouseholdName] = React.useState('')
     const [householdCategory, setHouseholdCategory] = React.useState(-1)
     const [householdRoom, setHouseholdRoom] = React.useState(-1)
-    const [householdType, setHouseholdType] = React.useState(-1)
+    const [householdType, setHouseholdType] = React.useState<"consumable" | "durable">("consumable")
     const [isExpanded, setIsExpanded] = React.useState(false)
 
     const [imageUri, setImageUri] = React.useState('')
@@ -164,17 +168,28 @@ const AddItemSheet = ({
         }
     }, [])
 
-    const handleSubmit = React.useCallback(async (
+    const handleSubmit = async (
         id_family: number,
         imageUri: string,
         householdName: string,
         pickedCategory: number,
         pickedRoom: number,
+        pickedType: "consumable" | "durable"
     ) => {
         try {
             Keyboard.dismiss()
             await handleRestore()
-            const data = await HouseHoldService.createHouseholdItem(id_family, imageUri, householdName, pickedCategory, "", pickedRoom)
+            setLoading(true)
+            console.log("submitting")
+            console.log("id_family", id_family)
+            console.log("imageUri", imageUri)
+            console.log("householdName", householdName)
+            console.log("pickedCategory", pickedCategory)
+            console.log("pickedRoom", pickedRoom)
+            console.log("pickedType", pickedType)
+
+
+            const data = await HouseHoldService.createHouseholdItem(id_family, imageUri, householdName, pickedCategory, "", pickedRoom, pickedType)
             if (data) {
                 const newItem: HouseHoldItemInterface = {
                     id_household_item: data.id_household_item,
@@ -186,8 +201,32 @@ const AddItemSheet = ({
                     category: categories.find((category) => category.id_household_item_category === pickedCategory),
                     description: '',
                     id_family: id_family,
+                    durableItem: pickedType == 'durable' ? {
+                        id_household_item: data.id_household_item,
+                        condition: "good"
+                    } : undefined,
+                    consumableItem: pickedType == 'consumable' ? {
+                        id_household_item: data.id_household_item,
+                        quantity: 0,
+                        threshold: 0,
+                        expired_date: null
+                    } : undefined
                 }
+                if (addItemType == 0) {
+                    setHouseholdCategory(-1)
+                    setHouseholdRoom(-1)
+                } else if (addItemType == 1) {
+                    setHouseholdRoom(-1)
+                    resetPickedRoom()
+                    setHouseholdCategory(pickedCategory)
+                } else if (addItemType == 2) {
+                    setHouseholdCategory(-1)
+                    resetPickedCategory()
+                    setHouseholdRoom(pickedRoom)
+                }
+                console.log("new item ne", newItem)
                 dispatch(addHouseholdItem(newItem))
+                setLoading(false)
                 bottomSheetRef.current?.close()
 
             } else {
@@ -200,7 +239,7 @@ const AddItemSheet = ({
             setShowError(true)
             setErrorText('Something went wrong')
         }
-    }, [])
+    }
 
     const onSetName = React.useCallback((name: string) => {
         setHouseholdName(name)
@@ -316,15 +355,16 @@ const AddItemSheet = ({
                 marginHorizontal: screenWidth * 0.05,
             }} onPress={() => {
                 setIsExpanded(prev => !prev)
+                console.log(householdType)
             }}>
                 <View className='flex-row justify-between items-center'>
-                    <View className='flex-row  items-center '>
-                        <Image source={OpenedFolder} style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} />
-                        <Text className='pl-4' style={{
+                    <View className='flex-row  items-center py-3'>
+                        {/* <Image source={OpenedFolder} style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} /> */}
+                        <Text className='' style={{
                             color: "#b0b0b0",
                             fontSize: 15,
 
-                        }}>Type</Text>
+                        }}>Item Type</Text>
                     </View>
                     <View className=''>
                         <Text style={{
@@ -332,13 +372,13 @@ const AddItemSheet = ({
                             fontSize: 15,
 
                         }}>{
-
+                                householdType == 'consumable' ? 'Consumable' : 'Durable'
                             }</Text>
                     </View>
                 </View>
             </TouchableOpacity>
             {
-                isExpanded && <View className=' bg-white  mt-3 justify-center rounded-lg  ' style={{
+                isExpanded && <View className=' bg-white  mt-3 justify-center rounded-lg py-4 ' style={{
                     backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
                     borderWidth: !isDarkMode ? 1 : 1.5,
                     borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
@@ -348,10 +388,23 @@ const AddItemSheet = ({
                     paddingHorizontal: screenWidth * 0.05,
                     marginHorizontal: screenWidth * 0.05,
                 }}>
-                    <TouchableOpacity>
-                        <Text>{
-                            type == 'consumable' ? 'Durable' : 'Consumable'
-                        }</Text>
+                    <TouchableOpacity onPress={() => {
+                        const type = householdType == 'consumable' ? 'durable' : 'consumable'
+                        console.log(type)
+                        setHouseholdType(type)
+                        // setHouseholdType((prev) => {
+                        //     console.log(prev)
+                        //     return prev == 'consumable' ? 'durable' : 'consumable'
+
+                        // },)
+                        setIsExpanded(false)
+                    }}>
+                        <Text className='' style={{
+                            color: iOSColors.systemBlue.defaultLight,
+                            fontSize: 15,
+                        }}>{
+                                householdType == 'consumable' ? 'Durable' : 'Consumable'
+                            }</Text>
                     </TouchableOpacity>
                 </View>
             }
@@ -385,6 +438,8 @@ const AddItemSheet = ({
             onChange={(index) => {
                 console.log(householdCategory, householdRoom, householdName)
                 if (index == -1) {
+                    setImageUri('')
+                    setHouseholdName('')
                     if (addItemType == 0) {
                         setHouseholdName('')
                         setHouseholdCategory(-1)
@@ -402,6 +457,20 @@ const AddItemSheet = ({
             keyboardBlurBehavior='restore'
 
         >
+            <>
+                {
+                    loading && <View className='flex-1 absolute w-full h-full bg-white opacity-50 z-10 items-center justify-center'>
+                        <View className='items-center justify-center bg-black  rounded-lg'
+                            style={{
+                                width: screenHeight * 0.1,
+                                height: screenHeight * 0.1,
+                            }}
+                        >
+                            <ActivityIndicator size='small' color={'white'} />
+                        </View>
+                    </View>
+                }
+            </>
             <BottomSheetScrollView className='' showsVerticalScrollIndicator={false} automaticallyAdjustKeyboardInsets style={{
                 backgroundColor: !isDarkMode ? '#f7f7f7' : '#0A1220',
             }}>
@@ -488,6 +557,7 @@ const AddItemSheet = ({
                                         householdName,
                                         pickedCategory,
                                         pickedRoom,
+                                        householdType
                                     )
                                 }
                             }}

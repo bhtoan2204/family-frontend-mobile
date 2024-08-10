@@ -64,7 +64,7 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
     const categories = useSelector((state: RootState) => state.household).categories
     const [pickedRoom, setPickedRoom] = React.useState<number>(-1)
     const [pickedCategory, setPickedCategory] = React.useState<number>(-1)
-    const [pickedType, setPickedType] = React.useState<"consumable"|"durable">("consumable")
+    const [pickedType, setPickedType] = React.useState<"consumable" | "durable">("consumable")
     // const [loading, setLoading] = React.useState<boolean>(true)
     const [addItemType, setAddItemType] = React.useState<number>(0) // 0 for room + category, 1 category, 2 room
 
@@ -285,9 +285,11 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
                 pickedCategory={pickedCategory}
                 rooms={rooms}
                 categories={categories}
-                type={pickedType}
-                setPickedType={(type: "consumable"|"durable") => {
-                    setPickedType(type)
+                resetPickedRoom={() => {
+                    setPickedRoom(-1)
+                }}
+                resetPickedCategory={() => {
+                    setPickedCategory(-1)
                 }}
             />
             <AddHouseHoldItemPickRoomSheet
