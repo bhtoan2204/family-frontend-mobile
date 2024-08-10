@@ -65,7 +65,7 @@ const HouseHoldService = {
         };
       }
     } catch (error) {
-      throw new Error();
+      //throw new Error();
     }
   },
   createHouseholdItem: async (
@@ -143,7 +143,7 @@ const HouseHoldService = {
         return null;
       }
     } catch (error) {
-      throw new Error();
+      //throw new Error();
     }
   },
   updateHouseHoldItem: async (
@@ -258,7 +258,7 @@ const HouseHoldService = {
         };
       }
     } catch (error) {
-      throw new Error();
+      //throw new Error();
     }
   },
   createRoom: async (

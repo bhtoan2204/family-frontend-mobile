@@ -56,7 +56,7 @@ const AuthServices = {
       if (response.status === 200) {
         return userData;
       } else {
-        throw new Error(`Signup error: ${response.statusText}`);
+        //throw new Error(`Signup error: ${response.statusText}`);
       }
     } catch (error) {
       return null;

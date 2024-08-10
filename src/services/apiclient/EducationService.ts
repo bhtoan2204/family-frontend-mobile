@@ -45,10 +45,10 @@ const EducationServices = {
         //   }
         // }
       } else {
-        throw new Error(ERROR_TEXTS.API_ERROR);
+        //throw new Error(ERROR_TEXTS.API_ERROR);
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
 
@@ -72,7 +72,7 @@ const EducationServices = {
         return [];
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   getEducationDetail: async (
@@ -94,7 +94,7 @@ const EducationServices = {
         return null;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   updateEducation: async (
@@ -124,10 +124,10 @@ const EducationServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        throw new Error(ERROR_TEXTS.API_ERROR);
+        //throw new Error(ERROR_TEXTS.API_ERROR);
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   deleteEducation: async (id_education_progress: number, id_family: number) => {
@@ -143,10 +143,10 @@ const EducationServices = {
       if (response.status === 204) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.API_ERROR);
+        //throw new Error(ERROR_TEXTS.API_ERROR);
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   createSubject: async (
@@ -187,7 +187,7 @@ const EducationServices = {
       }
     } catch (error: any) {
       console.log(error.message);
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   createSubjectAndComponentScores: async (
@@ -235,7 +235,7 @@ const EducationServices = {
       }
     } catch (error: any) {
       console.log(error.message);
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   updateSubject: async (
@@ -260,10 +260,10 @@ const EducationServices = {
       if (response.status === 200) {
         return response.data.data as Subject;
       } else {
-        throw new Error(ERROR_TEXTS.API_ERROR);
+        //throw new Error(ERROR_TEXTS.API_ERROR);
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   deleteSubject: async (
@@ -285,10 +285,10 @@ const EducationServices = {
       if (response.status === 204) {
         return response.data;
       } else {
-        throw new Error(ERROR_TEXTS.API_ERROR);
+        //throw new Error(ERROR_TEXTS.API_ERROR);
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   addComponentScore: async (
@@ -317,7 +317,7 @@ const EducationServices = {
       }
     } catch (error: any) {
       console.log(error.message);
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   updateComponentScore: async (
@@ -342,10 +342,10 @@ const EducationServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        throw new Error(ERROR_TEXTS.API_ERROR);
+        //throw new Error(ERROR_TEXTS.API_ERROR);
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   deleteComponentScore: async (
@@ -372,7 +372,7 @@ const EducationServices = {
         return null;
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   modifyScore: async (
@@ -399,10 +399,10 @@ const EducationServices = {
       if (response.status === 200) {
         return response.data.data;
       } else {
-        throw new Error(ERROR_TEXTS.API_ERROR);
+        //throw new Error(ERROR_TEXTS.API_ERROR);
       }
     } catch (error) {
-      throw new Error(ERROR_TEXTS.API_ERROR);
+      //throw new Error(ERROR_TEXTS.API_ERROR);
     }
   },
   updateComponentScoreData: async ({
