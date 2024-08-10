@@ -99,7 +99,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   const rotateAnimation = useRef(new Animated.Value(0)).current;
   const [isOptionsModalVisible, setIsOptionsModalVisible] = useState(false);
   const screenHeight = Dimensions.get('screen').height;
-  const secondBottomSheetRef = useRef(null);
+  const secondBottomSheetRef = useRef<RBSheet>(null);
   const color = useThemeColors();
   const translate = useSelector(getTranslate);
   const source =
@@ -113,7 +113,9 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   }, []);
 
   useEffect(() => {
-    secondBottomSheetRef.current!.open();
+    if (secondBottomSheetRef.current) {
+      secondBottomSheetRef.current.open();
+    }
   }, []);
 
   useEffect(() => {
@@ -183,6 +185,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
             selectedFamily!.id_family,
             uri,
           );
+          console.log(fileUrl);
           if (fileUrl) {
             dispatch(updateFamily({...selectedFamily!, avatar: fileUrl}));
             Toast.show(translate('Family avatar changed successfully'), {
@@ -435,16 +438,23 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         <ScrollView showsVerticalScrollIndicator={false} style={{}}>
           <View style={styles.container}>
             {cards.map(card => {
-              const isFunctionAvailable = functions.some(
+              // Đảm bảo functions luôn là một mảng
+              const availableFunctions = functions || [];
+
+              // Kiểm tra nếu chức năng có mặt trong availableFunctions
+              const isFunctionAvailable = availableFunctions.some(
                 func => func.name === card.title,
               );
-              const hasShoppingAndChecklist = functions.some(
+
+              // Kiểm tra nếu có chức năng 'Calendar' và thẻ là 'Check List'
+              const hasShoppingAndChecklist = availableFunctions.some(
                 func => func.name === 'Calendar' && card.title === 'Check List',
               );
 
+              // Luôn hiển thị 'Members' và thẻ nếu có trong availableFunctions
               if (
-                isFunctionAvailable ||
                 card.title === 'Members' ||
+                isFunctionAvailable ||
                 hasShoppingAndChecklist
               ) {
                 return (
@@ -466,7 +476,6 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
               return null;
             })}
           </View>
-          <View style={{height: 600}}></View>
         </ScrollView>
       </View>
       <OptionsModal
@@ -507,7 +516,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         />
         <TouchableOpacity
           style={styles.explore}
-          onPress={() => secondBottomSheetRef.current.close()}>
+          onPress={() => secondBottomSheetRef.current?.close()}>
           <Image
             source={require('../../assets/images/explore.png')}
             resizeMode="stretch"
