@@ -50,8 +50,8 @@ const GuildlineDetailInfo = ({
 
                     }
                 </View>
-                <View className='px-4 mb-8'>
-                    <Text className='text-base text-center'>{text}</Text>
+                <View className='px-4 mb-8 '>
+                    <Text className='text-base text-center text-black dark:text-white'>{text}</Text>
                 </View>
                 <TouchableOpacity activeOpacity={0.65} className='w-[50%] h-[13%] border-[1px] rounded-lg justify-center items-center' style={{
                     borderColor: iOSColors.systemBlue.defaultLight

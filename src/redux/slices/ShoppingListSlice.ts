@@ -77,7 +77,8 @@ const shoppingListSlice = createSlice({
           item => item.id_item === id_item,
         );
         if (item) {
-          item.is_purchased = !item.is_purchased;
+          // item.is_purchased = !item.is_purchased;
+          item.is_purchased = true;
         }
       }
     },

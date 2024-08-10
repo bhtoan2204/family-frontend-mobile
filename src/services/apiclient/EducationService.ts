@@ -62,7 +62,7 @@ const EducationServices = {
         EducationUrls.getAll +
         '?id_family=' +
         id_family +
-        `&page=${page}&itemsPerPage=${itemPerPage}&sortBy=created_at&sortDirection=ASC`;
+        `&page=${page}&itemsPerPage=${itemPerPage}&sortBy=created_at&sortDirection=DESC`;
       console.log(url);
       const response: AxiosResponse = await instance.get(url);
 
@@ -103,17 +103,22 @@ const EducationServices = {
     title: string,
     progress_notes: string,
     school_info: string,
+    is_shared: boolean | null,
   ) => {
     try {
+      const body: any = {
+        id_education_progress,
+        id_family,
+        title,
+        progress_notes,
+        school_info,
+      };
+      if (is_shared !== null) {
+        body.is_shared = is_shared;
+      }
       const response: AxiosResponse = await instance.put(
         EducationUrls.updateEducation,
-        {
-          id_education_progress,
-          id_family,
-          title,
-          progress_notes,
-          school_info,
-        },
+        body,
       );
 
       if (response.status === 200) {

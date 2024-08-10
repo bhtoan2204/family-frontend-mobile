@@ -7,54 +7,42 @@ import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
 import HouseHoldService from 'src/services/apiclient/HouseHoldService';
-import { AppDispatch } from 'src/redux/store';
+import { AppDispatch, RootState } from 'src/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { addRoom } from 'src/redux/slices/RoomSlice';
 
 import NewRoomImageSheet from 'src/assets/images/household_assets/new_room_image_sheet.png'
 import Camera from 'src/assets/images/household_assets/Camera.png'
 import Room2 from 'src/assets/images/household_assets/Room_2.png'
-import EditConsumableImage from 'src/assets/images/household_assets/edit_consumable_sheet_img.png'
-import { updateComsumableItem } from 'src/redux/slices/HouseHoldDetailSlice';
+import EditDescriptionImage from 'src/assets/images/household_assets/edit_description_sheet_img.png'
+import { updateDescription } from 'src/redux/slices/HouseHoldDetailSlice';
 import { handleRestore } from 'src/utils/sheet/func';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { useToast } from 'react-native-toast-notifications';
+import { updateRoom } from 'src/redux/slices/HouseHoldDataSlice';
 
-interface AddEditConsumableSheetProps {
+interface AddEditDescriptionSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
     id_family: number,
-    id_item: number,
-    updateExpiredDateSheet: React.RefObject<BottomSheet>
-    consumableItem: {
-        id_household_item: number;
-        quantity: number;
-        threshold: number;
-        expired_date: string;
-    } | null,
-    expired_date: string
+    id_room: number,
+
 }
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
-const AddEditConsumableSheet = ({
+const EditRoomNameSheet = ({
     bottomSheetRef,
     id_family,
-    id_item,
-    updateExpiredDateSheet,
-    consumableItem,
-    expired_date
-}: AddEditConsumableSheetProps) => {
-    const snapPoints = React.useMemo(() => ['95%'], []);
+    id_room,
+}: AddEditDescriptionSheetProps) => {
     const [loading, setLoading] = React.useState(false)
     const dispatch = useDispatch<AppDispatch>()
-
+    const toast = useToast()
     const [errorText, setErrorText] = React.useState('')
     const [showError, setShowError] = React.useState(false)
-
-    const [quantity, setQuantity] = React.useState(consumableItem ? consumableItem.quantity : 0)
-    const [threshhold, setThreshhold] = React.useState(consumableItem ? consumableItem.threshold : 0)
+    const householdItem = useSelector((state: RootState) => state.household).rooms.find(room => room.id_room == id_room)
+    const [inputName, setInputName] = React.useState(householdItem?.room_name ? householdItem.room_name ? householdItem.room_name : '' : '')
     const isDarkMode = useSelector(getIsDarkMode)
-    const toast = useToast()
 
     useEffect(() => {
         if (showError) {
@@ -67,11 +55,12 @@ const AddEditConsumableSheet = ({
     }, [showError])
 
     useEffect(() => {
-        // setInputDescription(title)
-        setQuantity(consumableItem ? consumableItem.quantity : 0)
-        setThreshhold(consumableItem ? consumableItem.threshold : 0)
-    }, [consumableItem])
-
+        if (id_room != -1) {
+            setInputName(
+                householdItem?.room_name ? householdItem.room_name ? householdItem.room_name : '' : ''
+            )
+        }
+    }, [id_room])
 
     const renderBackdrop = React.useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} pressBehavior={
@@ -83,26 +72,24 @@ const AddEditConsumableSheet = ({
     const CallApi = async ({
         id_household_item,
         id_family,
-        quantity,
-        threshold,
-        expired_date
+        room_name,
+        uri
     }: {
         id_household_item: number,
         id_family: number,
-        quantity: number,
-        threshold: number,
-        expired_date: string
+        room_name: string,
+        uri: string | null
     }) => {
-        // console.log("CallApi", id_household_item, id_family, image_uri, title, description)
-        console.log("CallApi", id_household_item, id_family, quantity, threshold, expired_date)
-        const res = await HouseHoldService.updateConsumableItem(
-            id_household_item,
+        console.log("CallApi", id_household_item, id_family, room_name)
+        // await HouseHoldService.updateRoom(idFamily, pickedRoom, null, uri)
+        const res = await HouseHoldService.updateRoom(
             id_family,
-            quantity,
-            expired_date,
-            threshold,
+            id_room,
+            room_name,
+            uri
         )
         if (res) {
+
             toast.show('Update successfully', {
                 type: 'success',
                 duration: 3000,
@@ -110,54 +97,51 @@ const AddEditConsumableSheet = ({
             })
             bottomSheetRef.current?.close()
         } else {
-            // toast.show('Update failed', {
-            //     type: 'error',
-            //     duration: 3000,
-            //     icon: <Material name='close' size={24} color='white' />
-            // })
+            toast.show('Update failed', {
+                type: 'error',
+                duration: 3000,
+                icon: <Material name='close' size={24} color='white' />
+            })
         }
     }
+
 
     const handleSubmit = async () => {
         Keyboard.dismiss()
         await handleRestore()
         try {
 
-            dispatch(updateComsumableItem({
-                id_household_item: id_item,
-                quantity: quantity,
-                threshold: threshhold,
-                expired_date: expired_date
-            }))
             setLoading(true)
             await CallApi({
-                id_household_item: id_item,
-                id_family: id_family,
-                quantity: quantity,
-                threshold: threshhold,
-                expired_date: expired_date
+                id_family: id_family!,
+                id_household_item: id_room!,
+                room_name: inputName,
+                uri: null
             })
+            dispatch(updateRoom(
+                {
+                    id_family: id_family!,
+                    id_room: id_room!,
+                    room_name: inputName,
+                }
+            ))
             setLoading(false)
-            bottomSheetRef.current?.close()
+
+
         } catch (error) {
             console.log(error)
             setLoading(false)
             setShowError(true)
             setErrorText('Something went wrong')
         }
-        // console.log({ id_family: 1, room_name: text, room_image: image_uri })
     }
 
-    const buildAddQuantity = () => {
+    const buildAddDesc = () => {
         return <BottomSheetTextInput
-            placeholder={consumableItem ? 'Edit quantity' : 'How many items do you have?'}
-            keyboardType='numeric'
-            value={quantity.toString()}
+            placeholder='Give your item a description'
+            value={inputName}
             onChangeText={(text) => {
-                if (isNaN(parseInt(text))) {
-                    setQuantity(0)
-                }
-                else setQuantity(parseInt(text))
+                setInputName(text)
             }}
             // className='rounded-lg'
             style={{
@@ -176,72 +160,14 @@ const AddEditConsumableSheet = ({
         />
     }
 
-    const buildAddThreshhold = () => {
-        return <BottomSheetTextInput
-            placeholder={consumableItem ? 'Edit threshold' : 'How many items do you want to be notified?'}
-            keyboardType='numeric'
-            value={threshhold.toString()}
-            onChangeText={(text) => {
-                if (isNaN(parseInt(text))) {
-                    setThreshhold(0)
-                }
-                else setThreshhold(parseInt(text))
-            }}
-            // className='rounded-lg'
-            style={{
-                backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
-                borderWidth: !isDarkMode ? 1 : 1.5,
-                borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
-                borderRadius: 10,
-                marginVertical: 10,
-                paddingVertical: screenHeight * 0.02,
-                paddingHorizontal: screenWidth * 0.05,
-                marginHorizontal: screenWidth * 0.05,
-                // fontWeight: 'bold',
-                fontSize: 15,
-                color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
-            }}
-        />
-    }
 
-    const buildAddExpiredDate = () => {
-        return <TouchableOpacity className=' bg-white  mt-3 justify-center rounded-lg  ' style={{
-            backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
-            borderWidth: !isDarkMode ? 1 : 1.5,
-            borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
-            borderRadius: 10,
-            marginVertical: 10,
-            paddingVertical: screenHeight * 0.02,
-            paddingHorizontal: screenWidth * 0.05,
-            marginHorizontal: screenWidth * 0.05,
-        }} onPress={() => {
-            Keyboard.dismiss()
-            updateExpiredDateSheet.current?.expand()
-            // roomPickRef.current?.expand()
-            // pickRoomSheetRef.current?.expand()
-        }}>
-            <View className='flex-row justify-between items-center'>
-                <View className='flex-row items-center '>
-                    <Text className='' style={{
-                        color: "#b0b0b0",
-                        fontSize: 15,
-                        // fontWeight: 500
-
-                    }}>{
-                            expired_date ? expired_date : 'Give your item a expired date'
-                        }</Text>
-                </View>
-
-            </View>
-        </TouchableOpacity>
-    }
 
     return (
         <BottomSheet
             ref={bottomSheetRef}
             index={-1}
             enableOverDrag={true}
-            // enablePanDownToClose={loading ? false : true}
+            enablePanDownToClose={loading ? false : true}
             enableDynamicSizing={true}
             // snapPoints={snapPoints}
 
@@ -258,10 +184,6 @@ const AddEditConsumableSheet = ({
                 Keyboard.dismiss()
             }}
             onChange={(index) => {
-                console.log(index)
-                if (index == -1) {
-
-                }
             }}
 
         >
@@ -280,34 +202,25 @@ const AddEditConsumableSheet = ({
                 }
             </>
 
-            <BottomSheetScrollView className='flex-1 ' automaticallyAdjustKeyboardInsets
+            <BottomSheetScrollView className='flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]'
+                automaticallyAdjustKeyboardInsets
                 keyboardShouldPersistTaps='handled'
                 style={{
                     backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7',
                 }}
             >
-                <View className='flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]'>
+                <View className='flex-1 '>
                     <View className='my-3 items-center'>
-                        <Image source={EditConsumableImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
+                        <Image source={EditDescriptionImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                     </View>
                     <View className=' items-center'>
-                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >{
-                            consumableItem ? 'Edit consumable item' : 'Add Comsumable Item'
-                        }
-                        </Text>
-                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >{
-                            consumableItem ? 'Change your consumable item information' : 'Fill in the consumable information for your item'
-                        }</Text>
+                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >Add Description</Text>
+                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >Type in the new description for your item</Text>
                     </View>
                     {
-                        buildAddQuantity()
+                        buildAddDesc()
                     }
-                    {
-                        buildAddThreshhold()
-                    }
-                    {
-                        buildAddExpiredDate()
-                    }
+
                     <View>
                         {
                             showError ? <Text className='text-center text-base text-red-500 py-3'>{errorText}</Text> : <></>
@@ -317,14 +230,14 @@ const AddEditConsumableSheet = ({
                         <TouchableOpacity className='items-center rounded-lg justify-center' style={{
                             width: screenWidth * 0.1,
                             height: screenWidth * 0.1,
-                            backgroundColor: COLORS.DenimBlue,
+                            backgroundColor: inputName != '' ? COLORS.DenimBlue : iOSGrayColors.systemGray6.defaultLight,
                         }}
                             onPress={async () => {
                                 await handleSubmit()
                             }}
                         >
                             <Material name='arrow-right' size={24} color={
-                                'white'
+                                inputName != '' ? 'white' : iOSGrayColors.systemGray.defaultDark
                             }
                             />
                         </TouchableOpacity>
@@ -337,4 +250,4 @@ const AddEditConsumableSheet = ({
 }
 
 
-export default AddEditConsumableSheet
+export default EditRoomNameSheet

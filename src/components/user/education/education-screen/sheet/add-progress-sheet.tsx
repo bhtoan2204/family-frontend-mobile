@@ -29,7 +29,7 @@ interface AddItemSheetProps {
     members: Member[];
     pickedIdUser: string;
     setPickedIdUser: (id: string) => void;
-    onAddSuccess: () => void;
+    onAddSuccess: (id_progress: number) => void;
     onAddFailed: () => void;
     // pickMemberBottomSheetRef: React.RefObject<BottomSheet>
 }
@@ -102,7 +102,6 @@ const AddProgressSheet = ({
         console.log('add')
         Keyboard.dismiss()
         await handleRestore()
-        const memberData = members.find(member => member.id_user === pickedIdUser)
         const res = await EducationServices.createEducation(
             id_family!,
             pickedIdUser,
@@ -111,10 +110,11 @@ const AddProgressSheet = ({
             inputSchoolInfo
         )
         if (res) {
+            const memberData = members.find(member => member.id_user === res.id_user)
             const newEducation: Education = {
                 id_education_progress: res.id_education_progress,
                 id_family: id_family!,
-                id_user: pickedIdUser,
+                id_user: res.id_user,
                 created_at: res.created_at,
                 updated_at: res.updated_at,
                 is_shared: res.is_shared,
@@ -135,7 +135,7 @@ const AddProgressSheet = ({
             }
             dispatch(addEducation(newEducation))
             bottomSheetRef.current?.close()
-            onAddSuccess()
+            onAddSuccess(res.id_education_progress)
         } else {
             console.log("error")
             bottomSheetRef.current?.close()
@@ -245,7 +245,7 @@ const AddProgressSheet = ({
                 Keyboard.dismiss()
             }}
             onChange={(index) => {
-                
+
             }}
         // keyboardBehavior="extend"
         // keyboardBlurBehavior="restore"

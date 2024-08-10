@@ -49,6 +49,7 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
     const addCourseBottomSheetRef = useRef<BottomSheet>(null)
     const pickedTargetsBottomSheetRef = useRef<BottomSheet>(null)
     const addGoalBottomSheetRef = useRef<BottomSheet>(null)
+    const scrollViewRef = useRef<any>(null)
 
     const fetchDatas = React.useCallback(async () => {
         const handleFetchEducation = async () => {
@@ -79,7 +80,7 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
 
     const buildListEmpty = React.useCallback(() => {
         return <View className='flex-1 justify-center items-center '>
-            <ScrollView className='flex-1' showsVerticalScrollIndicator={false} refreshControl={
+            <ScrollView className='flex-1' ref={scrollViewRef} showsVerticalScrollIndicator={false} refreshControl={
                 <RefreshControl refreshing={loading} onRefresh={fetchDatas} />
             }>
                 <View className='justify-center items-center mt-32'>
@@ -139,7 +140,11 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
 
             <View className=' bg-[#f7f7f7] dark:bg-[#0A1220] mt-[-3%]  rounded-tl-xl rounded-tr-xl h-[4%]'>
                 <View className='mt-[-5%] bg-transparent justify-center items-center  '>
-                    <ProgressTab choosenTab={choosenTab} setChoosenTab={setChoosenTab} />
+                    <ProgressTab choosenTab={choosenTab} setChoosenTab={(tab: number) => {
+                        setChoosenTab(tab)
+                        scrollViewRef.current?.scrollTo({ y: 0, animated: true })
+
+                    }} />
                 </View>
 
             </View>

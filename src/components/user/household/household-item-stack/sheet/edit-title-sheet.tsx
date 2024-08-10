@@ -18,6 +18,7 @@ import EditConsumableImage from 'src/assets/images/household_assets/edit_consuma
 import { updateComsumableItem, updateTitle } from 'src/redux/slices/HouseHoldDetailSlice';
 import { handleRestore } from 'src/utils/sheet/func';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import { useToast } from 'react-native-toast-notifications';
 
 interface EditTitleSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -43,7 +44,7 @@ const EditTitleSheet = ({
 
     const [inputDescription, setInputDescription] = React.useState(title ? title : '')
     const isDarkMode = useSelector(getIsDarkMode)
-
+    const toast = useToast()
 
     useEffect(() => {
         if (showError) {
@@ -66,7 +67,42 @@ const EditTitleSheet = ({
         []
     );
 
-
+    const CallApi = React.useCallback(async ({
+        id_household_item,
+        id_family,
+        image_uri,
+        title,
+        description
+    }: {
+        id_household_item: number,
+        id_family: number,
+        image_uri: string | null,
+        title: string | null,
+        description: string | null
+    }) => {
+        console.log("CallApi", id_household_item, id_family, image_uri, title, description)
+        const res = await HouseHoldService.updateHouseHoldItem(
+            id_household_item,
+            id_family,
+            null,
+            title,
+            null,
+        )
+        if (res) {
+            toast.show('Update successfully', {
+                type: 'success',
+                duration: 3000,
+                icon: <Material name='check' size={24} color='white' />
+            })
+            bottomSheetRef.current?.close()
+        } else {
+            toast.show('Update failed', {
+                type: 'error',
+                duration: 3000,
+                icon: <Material name='close' size={24} color='white' />
+            })
+        }
+    }, [])
 
     const handleSubmit = async () => {
         Keyboard.dismiss()
@@ -76,6 +112,13 @@ const EditTitleSheet = ({
             dispatch(updateTitle(
                 inputDescription
             ))
+            await CallApi({
+                id_family: id_family,
+                id_household_item: id_item,
+                image_uri: null,
+                title: inputDescription,
+                description: null
+            })
             // dispatch(updateComsumableItem({
             //     id_household_item: id_item,
             //     quantity: quantity,
@@ -83,7 +126,7 @@ const EditTitleSheet = ({
             //     expired_date: expired_date
             // }))
             setLoading(false)
-            bottomSheetRef.current?.close()
+            // bottomSheetRef.current?.close()
         } catch (error) {
             console.log(error)
             setLoading(false)

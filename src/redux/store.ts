@@ -25,7 +25,7 @@ import expenseReducer from './slices/ExpenseAnalysis';
 import incomeReducer from './slices/IncomeAnalysis';
 
 import categorySlice from './slices/CategorySlice';
-import HouseHoldRefSlice from './slices/HouseHoldRefSlice';
+import HouseHoldSlice from './slices/HouseHoldDataSlice';
 import TodoListSlice from './slices/TodoListSlice';
 import DarkModeSlice from './slices/DarkModeSlice';
 import localizationReducer from './slices/languageSlice';
@@ -51,7 +51,7 @@ export const store = configureStore({
     householdItems: householdItemSlice,
     householdItemDetail: HouseHoldDetailSlice,
     category: categorySlice,
-    householdRef: HouseHoldRefSlice,
+    household: HouseHoldSlice,
     //education
     educations: educationSlice,
     members: memberSlice,

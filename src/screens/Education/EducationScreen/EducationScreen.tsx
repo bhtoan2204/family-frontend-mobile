@@ -27,7 +27,7 @@ import {
 } from 'react-native-popup-menu';
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
 import UpdateProgressSheet from 'src/components/user/education/education-screen/sheet/update-progress-sheet';
-import { clearEducation, deleteEducation, setEducation, setLoading } from 'src/redux/slices/EducationSlice';
+import { clearEducation, deleteEducation, setEducation, setLoading, updateEducation } from 'src/redux/slices/EducationSlice';
 import EducationServices from 'src/services/apiclient/EducationService';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { useToast } from "react-native-toast-notifications";
@@ -111,18 +111,21 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                 setFilteredData(filtered)
             }
         } else {
+
             const filtered = educationData.filter(item => {
                 return item.title.toLowerCase().includes(searchQuery.toLowerCase())
             })
             if (choosenTab == 0) {
                 const filtered2 = filtered.filter(item => {
-                    return item.is_shared == true
+                    return item.is_shared == true || item.id_user == profile?.id_user
                 })
+
                 setFilteredData(filtered2)
             } else if (choosenTab == 1) {
                 const filtered2 = filtered.filter(item => {
                     return item.id_user == profile?.id_user
                 })
+
                 setFilteredData(filtered2)
             }
         }
@@ -131,17 +134,16 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     const handleNavigateProgress = React.useCallback((id_progress: number) => {
         navigation.navigate('ProgressScreen', { id_family: id_family, id_progress: id_progress })
     }, [])
-    // const handleNavigateProgress = (id_progress: number) => {
-    //     navigation.navigate('ProgressScreen', { id_family: id_family, id_progress: id_progress })
-    // }
 
-    const openUpdateProgressSheet = (id_progress: number, title: string, school_info: string, progress_notes: string) => {
+    const openUpdateProgressSheet = React.useCallback((id_progress: number, title: string, school_info: string, progress_notes: string) => {
         setPickedIdProgress(id_progress)
         setTitleUpdate(title)
         setSchoolInfoUpdate(school_info)
         setProgressNotesUpdate(progress_notes)
         updateEducationSheetRef.current?.expand()
-    }
+    }, [])
+
+
     const onDeleteItem = async (id_progress: number) => {
         dispatch(deleteEducation(id_progress))
         toast.show("Deleted", {
@@ -158,6 +160,31 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
         }
     }
 
+    const handleShareEdu = React.useCallback(async (item: Education) => {
+        const res = await EducationServices.updateEducation(item.id_education_progress, id_family, item.title, item.progress_notes, item.school_info, !item.is_shared)
+        if (res) {
+            dispatch(updateEducation({
+                id_education_progress: item.id_education_progress,
+                id_family: id_family!,
+                title: item.title,
+                progress_notes: item.progress_notes,
+                school_info: item.school_info,
+                is_shared: !item.is_shared
+            }))
+            toast.show("Updated", {
+                type: "success",
+                duration: 2000,
+                icon: <Material name="check" size={24} color={"white"} />,
+            });
+        } else {
+            toast.show("Failed to update", {
+                type: "error",
+                duration: 2000,
+                icon: <Material name="close" size={24} color={"white"} />,
+            });
+        }
+    }, [])
+
 
 
     const buildListEmpty = React.useCallback(() => {
@@ -172,8 +199,8 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                             width: ScreenHeight * 0.2,
                         }} />
                     </View>
-                    <Text className='text-[#747474] dark:text-[#8D94A5] my-2 font-bold text-lg'>Nothing to buy?</Text>
-                    <Text className='mx-[15%] text-center text-sm text-[#747474] dark:text-[#8D94A5]'>Tap on the button to add product to your shopping list</Text>
+                    <Text className='text-[#747474] dark:text-[#8D94A5] my-2 font-bold text-lg'>Nothing here?</Text>
+                    <Text className='mx-[15%] text-center text-sm text-[#747474] dark:text-[#8D94A5]'>Tap on the button to add education</Text>
                 </View>
             </ScrollView>
         </View>
@@ -192,12 +219,16 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                             item={item}
                             handleNavigateProgress={handleNavigateProgress}
                             openUpdateProgressSheet={openUpdateProgressSheet}
+                            handleShareEdu={handleShareEdu}
                             onDeleteItem={onDeleteItem}
                             isMe={profile?.id_user == item.id_user}
                         />
                     </React.Fragment>
                 })
             }
+            <View className='my-3'>
+
+            </View>
         </ScrollView>
     }, [filteredData, loading])
 
@@ -252,8 +283,9 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                     setPickedIdUser(id_user)
                 }}
                 onAddSuccess={
-                    () => {
+                    (id_progress: number) => {
                         setChoosenTab(1)
+                        navigation.navigate('ProgressScreen', { id_family: id_family, id_progress: id_progress })
                         toast.show("New progress added for family", {
                             type: "success",
                             duration: 2000,
@@ -321,11 +353,12 @@ interface EducationItemProps {
     item: Education,
     handleNavigateProgress: (id_progress: number) => void
     openUpdateProgressSheet: (id_progress: number, title: string, school_info: string, progress_notes: string) => void
+    handleShareEdu: (item: Education) => Promise<void>
     onDeleteItem: (id_progress: number) => Promise<void>
     isMe: boolean
 }
 
-const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, onDeleteItem, isMe }: EducationItemProps) => {
+const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, onDeleteItem, isMe, handleShareEdu }: EducationItemProps) => {
     const isDarkMode = useSelector(getIsDarkMode)
     return <TouchableOpacity className='flex-row mx-6 items-center my-2 py-3  bg-white dark:bg-[#252D3B] shadow-lg rounded-lg'
         onPress={() => {
@@ -377,9 +410,8 @@ const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, 
                                 <Divider />
                                 {
                                     isMe && <>
-                                        <MenuOption onSelect={() => {
-                                            // setIsEditing(true)
-                                            openUpdateProgressSheet(item.id_education_progress, item.title, item.school_info, item.progress_notes)
+                                        <MenuOption onSelect={async () => {
+                                            await handleShareEdu(item)
                                         }} >
                                             {
                                                 item.is_shared ?

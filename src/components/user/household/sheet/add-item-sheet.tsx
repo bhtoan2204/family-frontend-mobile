@@ -208,9 +208,9 @@ const AddItemSheet = ({
 
     const buildPickCategory = React.useCallback(() => {
         return <TouchableOpacity className=' bg-white  mt-3 justify-center rounded-lg  ' style={{
-            backgroundColor: '#f5f5f5',
-            borderWidth: 1.4,
-            borderColor: iOSGrayColors.systemGray6.defaultLight,
+            backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
+            borderWidth: !isDarkMode ? 1 : 1.5,
+            borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
             borderRadius: 10,
             marginVertical: 10,
             paddingVertical: screenHeight * 0.01,
@@ -249,9 +249,9 @@ const AddItemSheet = ({
 
     const buildPickRoom = React.useCallback(() => {
         return <TouchableOpacity className=' bg-white mt-3 justify-center rounded-lg  ' style={{
-            backgroundColor: '#f5f5f5',
-            borderWidth: 1.4,
-            borderColor: iOSGrayColors.systemGray6.defaultLight,
+            backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
+            borderWidth: !isDarkMode ? 1 : 1.5,
+            borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
             borderRadius: 10,
             marginVertical: 10,
             paddingVertical: screenHeight * 0.01,
@@ -288,43 +288,6 @@ const AddItemSheet = ({
         isDarkMode
     ])
 
-    // const buildPickRoom = () => {
-    //     return <TouchableOpacity className=' bg-white dark:bg-[#] mt-3 justify-center rounded-lg  ' style={{
-    //         backgroundColor: '#f5f5f5',
-    //         borderWidth: 1.4,
-    //         borderColor: iOSGrayColors.systemGray6.defaultLight,
-    //         borderRadius: 10,
-    //         marginVertical: 10,
-    //         paddingVertical: screenHeight * 0.01,
-    //         paddingHorizontal: screenWidth * 0.05,
-    //         marginHorizontal: screenWidth * 0.05,
-    //     }} onPress={() => {
-    //         // roomPickRef.current?.expand()
-    //         pickRoomSheetRef.current?.expand()
-    //     }}>
-    //         <View className='flex-row justify-between items-center'>
-    //             <View className='flex-row items-center '>
-    //                 <Image source={Room2} style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} />
-    //                 <Text className='pl-4' style={{
-    //                     color: "#b0b0b0",
-    //                     fontSize: 15,
-    //                     // fontWeight: 500
-
-    //                 }}>Choose room</Text>
-    //             </View>
-    //             <View className=''>
-    //                 <Text style={{
-    //                     color: pickedRoom == -1 ? "#b0b0b0" : iOSColors.systemBlue.defaultLight,
-    //                     fontSize: 15,
-
-    //                 }}>{
-    //                         pickedRoom == -1 ? "Choose room" : findRoomText(pickedRoom)
-    //                     }</Text>
-    //             </View>
-    //         </View>
-    //     </TouchableOpacity>
-    // }
-
     return (
         <BottomSheet
 
@@ -335,10 +298,10 @@ const AddItemSheet = ({
             snapPoints={snapPoints}
 
             // handleComponent={null}
-            handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
             backgroundStyle={{
-                // backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7',
+                backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7'
             }}
+            handleIndicatorStyle={{ backgroundColor: isDarkMode ? '#D9D9D9' : '#D9D9D9', }}
             backdropComponent={renderBackdrop}
             onClose={() => {
                 Keyboard.dismiss()
@@ -364,7 +327,7 @@ const AddItemSheet = ({
 
         >
             <BottomSheetScrollView className='' showsVerticalScrollIndicator={false} automaticallyAdjustKeyboardInsets style={{
-
+                backgroundColor: !isDarkMode ? '#f7f7f7' : '#0A1220',
             }}>
                 <View className=''>
                     <ImageBackground source={
@@ -385,14 +348,8 @@ const AddItemSheet = ({
                         <Image source={Ingredients} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                     </View>
                     <View className=' items-center'>
-                        <Text className='text-base font-semibold' style={{
-                            color: iOSGrayColors.systemGray6.accessibleDark
-
-                        }}>Add New Item</Text>
-                        <Text className='text-sm my-3' style={{
-                            color: iOSGrayColors.systemGray6.accessibleDark
-
-                        }}>Pick a room and category for your new item</Text>
+                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >Add New Item</Text>
+                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >Pick a room and category for your new item</Text>
                     </View>
                     <BottomSheetTextInput
                         placeholder='Name of the item'
@@ -402,9 +359,9 @@ const AddItemSheet = ({
                         }}
                         // className='rounded-lg'
                         style={{
-                            backgroundColor: '#f5f5f5',
-                            borderWidth: 1.4,
-                            borderColor: iOSGrayColors.systemGray6.defaultLight,
+                            backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
+                            borderWidth: !isDarkMode ? 1 : 1.5,
+                            borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
                             borderRadius: 10,
                             marginVertical: 10,
                             paddingVertical: screenHeight * 0.02,

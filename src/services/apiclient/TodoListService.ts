@@ -112,18 +112,19 @@ const TodoListServices = {
       id_family,
       id_checklist_type,
     };
-    if (task_name) {
+    if (task_name != undefined) {
       body['task_name'] = task_name;
     }
-    if (description) {
+    if (description != undefined) {
       body['description'] = description;
     }
-    if (due_date) {
+    if (due_date != undefined) {
       body['due_date'] = due_date;
     }
-    if (is_completed) {
+    if (is_completed != undefined) {
       body['is_completed'] = is_completed;
     }
+    console.log(body);
     const res = await instance.put(TodoListUrls.updateTodoList, body);
     if (res.status === 200) {
       return true;

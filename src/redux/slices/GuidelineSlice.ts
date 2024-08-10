@@ -20,7 +20,7 @@ const guidelineSlice = createSlice({
       );
     },
     addGuideline(state, action: PayloadAction<Guildline>) {
-      state.push(action.payload);
+      state.unshift(action.payload);
     },
     updateGuideline(state, action: PayloadAction<Guildline>) {
       const index = state.findIndex(

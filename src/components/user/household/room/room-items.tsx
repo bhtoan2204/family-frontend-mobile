@@ -7,20 +7,24 @@ import { gradients_list } from 'src/assets/images/gradients'
 import { RoomInterface } from 'src/interface/household/room'
 import { useSelector } from 'react-redux'
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
+import { RootState } from 'src/redux/store'
+import HouseholdItemSkeleton from './skeleton'
+import AddRoomIcon from 'src/assets/images/household_assets/add_room.png'
+
+
 interface RoomItemsProps {
     data: RoomInterface[],
     handleNavigateRoomDetail: (id_room: number) => void;
 }
 
 const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
+
 const RoomItems = ({ data, handleNavigateRoomDetail }: RoomItemsProps) => {
-    // const isDarkMode = useSelector(getIsDarkMode)
-    // console.log(isDarkMode)
+    const loading = useSelector((state: RootState) => state.household).loading
+
     const renderItem2 = React.useCallback((item: RoomInterface, index: number) => {
         return (
             <View className='items-center ' style={{
-                // flex: 1,
                 marginRight: index % 2 == 0 ? 10 : 0,
                 marginLeft: index % 2 == 1 ? 10 : 0,
                 marginBottom: 20,
@@ -35,15 +39,18 @@ const RoomItems = ({ data, handleNavigateRoomDetail }: RoomItemsProps) => {
                         }}
                     >
                         <Image
-                            source={item.room_image ? { uri: item.room_image } : gradients_list[index % gradients_list.length]}
+                            source={item.room_image ? {
+                                uri: item.room_image,
+                                cache: 'force-cache',
+                            }
+                                : gradients_list[index % gradients_list.length]}
                             style={{
-                                // width: screenWidth * 0.3,
                                 width: '100%',
                                 height: undefined,
                                 borderRadius: 15,
-                                // height: screenHeight * 0.2,
                                 aspectRatio: 1,
                             }}
+
                         />
                     </View>
                     <Text className='text-[#2A475E] dark:text-white' style={{
@@ -58,63 +65,37 @@ const RoomItems = ({ data, handleNavigateRoomDetail }: RoomItemsProps) => {
         )
 
     }, [])
-    // const renderItem = (item: RoomInterface, index: number) => {
-    //     return (
-    //         <View className='items-center ' style={{
-    //             // flex: 1,
-    //             marginRight: index % 2 == 0 ? 10 : 0,
-    //             marginLeft: index % 2 == 1 ? 10 : 0,
-    //             marginBottom: 20,
-    //             borderColor: iOSGrayColors.systemGray5.defaultLight,
-    //         }}>
-    //             <TouchableOpacity onPress={() => {
-    //                 handleNavigateRoomDetail(item.id_room)
-    //             }}>
-    //                 <View className={`border-[1px] border-[#DEDCDC] dark:border-[#232A3D] `}
-    //                     style={{
-    //                         borderRadius: 15,
-    //                     }}
-    //                 >
-    //                     <Image
-    //                         source={item.room_image ? { uri: item.room_image } : gradients_list[index % gradients_list.length]}
-    //                         style={{
-    //                             // width: screenWidth * 0.3,
-    //                             width: '100%',
-    //                             height: undefined,
-    //                             borderRadius: 15,
-    //                             // height: screenHeight * 0.2,
-    //                             aspectRatio: 1,
-    //                         }}
-    //                     />
-    //                 </View>
-    //                 <Text className='text-[#2A475E] dark:text-white' style={{
-    //                     textAlign: 'center',
 
-    //                     fontSize: 16,
-    //                     fontWeight: 500,
-    //                     marginTop: 10,
-    //                 }}>{item.room_name}</Text>
-    //             </TouchableOpacity>
-    //         </View>
-    //     )
-    // }
     return (
         <View className=' items-center flex-1  mx-[10%]'>
-            <FlatGrid
-                itemDimension={screenWidth * 0.35}
-                maxItemsPerRow={2}
-                data={data}
+            {
+                loading ? <>
+                    <HouseholdItemSkeleton />
+                </> : <>
+                    {
+                        data.length > 0 ? <FlatGrid
+                            itemDimension={screenWidth * 0.35}
+                            maxItemsPerRow={2}
+                            data={data}
 
-                spacing={0}
+                            spacing={0}
 
-                renderItem={({ item, index }) => renderItem2(item, index)}
-                scrollEnabled={false}
-                removeClippedSubviews={true}
-                initialNumToRender={2}
-                maxToRenderPerBatch={4}
-                updateCellsBatchingPeriod={100}
-                windowSize={7}
-            />
+                            renderItem={({ item, index }) => renderItem2(item, index)}
+                            scrollEnabled={false}
+                            removeClippedSubviews={true}
+                            initialNumToRender={2}
+                            maxToRenderPerBatch={4}
+                            updateCellsBatchingPeriod={100}
+                            windowSize={7}
+                        /> : <>
+                            <View className='items-center my-2'>
+                                <Image source={AddRoomIcon} className='w-20 h-20 my-5' />
+                                <Text className='text-base text-black dark:text-white'>Add some item !!</Text>
+                            </View>
+                        </>
+                    }
+                </>
+            }
         </View>
     )
 }

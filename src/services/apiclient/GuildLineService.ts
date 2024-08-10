@@ -83,11 +83,12 @@ const GuildLineService = {
       id_family: id_family,
       name: name,
       description: description,
-      id_household_item: id_household_item,
+      id_household_item: id_household_item ? id_household_item : null,
     };
     try {
       const res = await instance.post(url, data);
-      const dataRes = res.data.data as Guildline;
+      console.log(res.data.data.newGuideItem);
+      const dataRes = res.data.data.newGuideItem as Guildline;
       return dataRes;
     } catch (error) {
       console.log('Error adding guildline:', error);

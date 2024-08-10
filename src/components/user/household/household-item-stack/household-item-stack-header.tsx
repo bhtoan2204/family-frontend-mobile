@@ -25,7 +25,7 @@ interface HouseHoldItemStackHeaderProps {
     data: HouseHoldItemDetailInterface
     handleEditImage: () => void
     handleEditTitle?: () => void
-    handleDeleteItem?: () => void
+    handleDeleteItem?: () => Promise<void>
     navigationBack?: () => void
 }
 
@@ -41,7 +41,7 @@ const Divider = () => {
 const HouseHoldItemStackHeader = ({
     data, handleEditImage, handleEditTitle, handleDeleteItem, navigationBack
 }: HouseHoldItemStackHeaderProps) => {
-    const items = useSelector((state: RootState) => state.householdItems)
+    const items = useSelector((state: RootState) => state.household).items
     console.log(data.id_household_item)
     const [key, setKey] = React.useState(false)
     const isDarkMode = useSelector(getIsDarkMode)
@@ -133,7 +133,7 @@ const HouseHoldItemStackHeader = ({
 
                                 <Divider />
                                 <MenuOption onSelect={async () => {
-                                    handleDeleteItem!()
+                                    handleDeleteItem && await handleDeleteItem()
                                 }} >
 
                                     <View className='flex-row items-center justify-between'>

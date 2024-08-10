@@ -8,28 +8,38 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import { iOSGrayColors } from 'src/constants/ios-color'
 import { COLORS } from 'src/constants'
 import { updateImageProp } from 'src/redux/slices/HouseHoldDetailSlice'
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
+import HouseHoldService from 'src/services/apiclient/HouseHoldService'
+import { setHouseholdItems, setLoading, setRoom, setTotalItem, setTotalRoom } from 'src/redux/slices/HouseHoldDataSlice'
 
 
 const RoomDetailScreen = ({ navigation, route, setAddItemType, setPickedRoom, addItemSheetRef }: RoomDetailScreenProps) => {
     const { id_room, id_family } = route.params
-    const data = useSelector((state: RootState) => state.householdItems)
-    const householdItems = useSelector((state: RootState) => state.householdItems).filter(item => item.id_room == id_room)
-    const roomInfo = useSelector((state: RootState) => state.room).find(room => room.id_room == id_room)
-    const [refreshing, setRefreshing] = React.useState(false);
-
+    const householdItems = useSelector((state: RootState) => state.household).items.filter(item => item.id_room == id_room)
+    const roomInfo = useSelector((state: RootState) => state.household).rooms.find(room => room.id_room == id_room)
     const dispatch = useDispatch<AppDispatch>()
-    const onRefresh = React.useCallback(() => {
-        setRefreshing(true);
-        setTimeout(() => {
-            setRefreshing(false);
-        }, 2000);
-    }, []);
+    const loading = useSelector((state: RootState) => state.household).loading
+
+    const refetchData = React.useCallback(async () => {
+        const fetchData = async () => {
+            const roomData = await HouseHoldService.getAllRoom(id_family!, 1, 100)
+            dispatch(setRoom(roomData.data))
+            dispatch(setTotalRoom(roomData.total))
+        }
+        const fetchItems = async () => {
+            const itemData = await HouseHoldService.getHouseHoldItems(id_family!, 1, 12)
+            dispatch(setHouseholdItems(itemData.data))
+            dispatch(setTotalItem(itemData.total))
+        }
+        dispatch(setLoading(true))
+        await fetchData()
+        await fetchItems()
+        dispatch(setLoading(false))
+    }, [])
 
     React.useEffect(() => {
-        // setAddItemType(2)
         setPickedRoom(id_room!)
         return () => {
-            // setAddItemType(0)
             setPickedRoom(-1)
         }
     })
@@ -39,7 +49,7 @@ const RoomDetailScreen = ({ navigation, route, setAddItemType, setPickedRoom, ad
     return (
         <ScrollView
             refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                <RefreshControl refreshing={loading} onRefresh={refetchData} />
             }
             className='flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]'
             showsVerticalScrollIndicator={false}

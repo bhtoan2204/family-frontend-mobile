@@ -9,7 +9,7 @@ export interface HouseHoldItemInterface {
   id_category: number;
   id_room?: number | null;
   id_guide_item?: number | null;
-  // item_image?: ImageSourcePropType | null;
+  item_image?: ImageSourcePropType | null;
 
   category?: {
     id_household_item_category: number;

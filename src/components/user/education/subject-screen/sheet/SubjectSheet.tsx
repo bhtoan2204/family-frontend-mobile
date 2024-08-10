@@ -120,6 +120,7 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                 setScoreSheetRef={setScoreSheetRef}
                 index={index}
                 score={subjectComponentData.score!}
+                targetScore={subjectComponentData.target_score || 0}
                 onSuccess={
                     () => {
                         bottomSheetRef.current?.close()
@@ -149,6 +150,7 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                     setNameSheetRef={setNameSheetRef}
                     index={index}
                     name={subjectComponentData.component_name || ""}
+                    targetScore={subjectComponentData.target_score || 0}
                     onSuccess={
                         () => {
                             toast.show("Component score updated", {

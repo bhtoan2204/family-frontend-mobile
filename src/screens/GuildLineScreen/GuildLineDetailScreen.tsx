@@ -22,6 +22,7 @@ import { useToast } from 'react-native-toast-notifications';
 const screenWidth = Dimensions.get('window').width;
 const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps) => {
   const { id_item, id_family } = route.params
+  console.log(id_item,id_family)
   const [currentStep, setCurrentStep] = useState(0)
   const [guildLineDetail, setGuildLineDetail] = useState<GuildLineDetail>()
   const [guildLineSteps, setGuildLineSteps] = useState<Step[]>()
@@ -396,6 +397,9 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
   if (!guildLineDetail) {
     return <View className='flex-1 bg-[#f7f7f7] dark:bg-[#0A1220]  justify-center items-center'>
       <Text className='text-2xl font-bold mt-5 text-black dark:text-white'>No data found</Text>
+      <TouchableOpacity onPress={() => navigation.goBack()} className='mt-5 border-[1px] px-4 py-2 rounded-lg'>
+        <Text className='text-base font-bold text-[#0A1220] dark:text-white'>Back</Text>
+      </TouchableOpacity>
     </View>
   }
   return (

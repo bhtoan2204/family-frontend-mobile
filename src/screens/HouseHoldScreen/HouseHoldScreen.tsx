@@ -15,19 +15,14 @@ import RoomComponent from 'src/components/user/household/room/room-component';
 
 const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route, addRoomRef }) => {
   const { id_family } = route.params
-  const refRBSheet = React.useRef<any>(null);
+  const roomItems = useSelector((state: RootState) => state.household).rooms
+  // const [choosenCategoryIndex, setChoosenCategoryIndex] = React.useState<number>(0)
+  // const [searchText, setSearchText] = React.useState<string>('')
+  // const [choosenTab, setChoosenTab] = React.useState<number>(0)
 
-  const roomItems = useSelector((state: RootState) => state.room)
-  const [choosenCategoryIndex, setChoosenCategoryIndex] = React.useState<number>(0)
-  const [searchText, setSearchText] = React.useState<string>('')
-  const [choosenTab, setChoosenTab] = React.useState<number>(0)
-  const dispatch = useDispatch<AppDispatch>()
-
-
-
-  if (!roomItems) {
-    return <ActivityIndicator size="large" color={COLORS.AuroMetalSaurus} />
-  }
+  // if (loading) {
+  //   return <ActivityIndicator size="large" color={COLORS.AuroMetalSaurus} />
+  // }
 
   return (
     <RoomComponent
@@ -41,6 +36,7 @@ const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route, ad
         })
       }}
       addRoomSheetRef={addRoomRef!}
+      id_family={id_family!}
     />
   )
 }

@@ -128,34 +128,17 @@ const UpdateProgressSheet = ({
             id_family!,
             inputTitle,
             inputProgressNotes,
-            inputSchoolInfo
+            inputSchoolInfo,
+            null
         )
         if (res) {
-            // const newEducation: Education = {
-            //     id_education_progress: res.id_education_progress,
-            //     id_family: id_family!,
-            //     id_user: pickedIdUser,
-            //     created_at: res.created_at,
-            //     updated_at: res.updated_at,
-            //     title: res.title,
-            //     progress_notes: res.progress_notes,
-            //     school_info: res.school_info,
-            //     subjects: [],
-            //     user: {
-            //         avatar: memberData?.user.avatar || '',
-            //         birthdate: memberData?.user.birthdate || null,
-            //         firstname: memberData?.user.firstname || '',
-            //         lastname: memberData?.user.lastname || '',
-            //         genre: memberData?.user.genre || '',
-            //     }
-            // }
-            // dispatch(addEducation(newEducation))
             dispatch(updateEducation({
                 id_education_progress: id_progress,
                 id_family: id_family!,
                 title: inputTitle,
                 progress_notes: inputProgressNotes,
                 school_info: inputSchoolInfo,
+                is_shared: null
             }))
             bottomSheetRef.current?.close()
             onUpdateSuccess()

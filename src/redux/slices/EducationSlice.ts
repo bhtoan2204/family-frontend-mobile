@@ -36,7 +36,7 @@ const educationSlice = createSlice({
       );
     },
     addEducation(state, action: PayloadAction<Education>) {
-      state.educations.push(action.payload);
+      state.educations.unshift(action.payload);
     },
     updateEducation(
       state,
@@ -46,6 +46,7 @@ const educationSlice = createSlice({
         title: string;
         progress_notes: string;
         school_info: string;
+        is_shared: boolean | null;
       }>,
     ) {
       const index = state.educations.findIndex(
@@ -59,6 +60,9 @@ const educationSlice = createSlice({
           title: action.payload.title,
           progress_notes: action.payload.progress_notes,
           school_info: action.payload.school_info,
+          is_shared: action.payload.is_shared
+            ? action.payload.is_shared
+            : state.educations[index].is_shared,
         };
       }
     },
@@ -69,7 +73,7 @@ const educationSlice = createSlice({
           action.payload.id_education_progress,
       );
       if (index !== -1) {
-        state.educations[index].subjects.push(action.payload);
+        state.educations[index].subjects.unshift(action.payload);
       }
     },
     deleteSubject(

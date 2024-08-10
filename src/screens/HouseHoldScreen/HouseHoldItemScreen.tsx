@@ -30,10 +30,6 @@ const HouseHoldItemScreen: React.FC<HouseHoldItemScreenProps> = ({ navigation, r
         setLoading(false)
     }, [])
 
-    const onAddGuideline = React.useCallback((id_guide_item: number) => {
-        dispatch(updateGuidelineId(id_guide_item))
-    }, [])
-
     return (
         <View className='flex-1 pt-5 rounded-tl-lg rounded-tr-lg bg-[#f7f7f7] dark:bg-[#0A1220]'>
             <ScrollView className='flex-1'
@@ -48,11 +44,6 @@ const HouseHoldItemScreen: React.FC<HouseHoldItemScreenProps> = ({ navigation, r
 
                     <HouseHoldItemInfoBox id={householdItems.id_household_item} title="Consumable Item"
                         onPress={() => {
-                            // navigation.navigate('AddConsumableItem', {
-                            //     id_family: id_family,
-                            //     id_item: householdItems.id_household_item,
-                            //     id_category: householdItems.id_category
-                            // })
                             addEditConsumableItemSheetRef && addEditConsumableItemSheetRef.current?.expand()
                         }}
                         iconImage={ConsumableIcon}
@@ -77,21 +68,7 @@ const HouseHoldItemScreen: React.FC<HouseHoldItemScreenProps> = ({ navigation, r
                         <DescriptionInfo data={householdItems} />
                     </HouseHoldItemInfoBox>
                     <View className='my-2'></View>
-                    <HouseHoldItemInfoBox id={householdItems.id_household_item} title="Room"
-                        onPress={() => {
-                            // navigation.navigate('EditDescription', {
-                            //     id_family: id_family,
-                            //     id_item: householdItems.id_household_item,
-                            //     id_category: householdItems.id_category,
-                            //     description: householdItems.description || ""
-                            // })
-                            addEditDescriptionSheetRef && addEditDescriptionSheetRef.current?.expand()
 
-                        }}
-                        iconImage={DescriptionIcon}
-                    >
-                        <DescriptionInfo data={householdItems} />
-                    </HouseHoldItemInfoBox>
                     <TouchableOpacity activeOpacity={0.65} className={`mb-4 mt-7 w-[65%] h-12 bg-[#66C0F4]  self-center rounded-lg justify-center align-center `}
                         onPress={() => {
                             if (householdItems.id_guide_item == null) {
@@ -112,7 +89,7 @@ const HouseHoldItemScreen: React.FC<HouseHoldItemScreenProps> = ({ navigation, r
                                     screen: 'GuildLineDetail',
                                     params: {
                                         id_family: id_family,
-                                        id_item: householdItems.id_household_item,
+                                        id_item: householdItems.id_guide_item,
                                     }
                                 })
                             }
