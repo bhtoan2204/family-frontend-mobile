@@ -218,7 +218,7 @@ const CustomRepeatScreen = ({isVisible, onClose, onSave}) => {
       bymonthday: bymonthday.length > 0 ? bymonthday : null,
       bymonth: bymonth.length > 0 ? bymonth : null,
     });
-
+    console.log(selectedDays);
     onSave(unit, number, selectedDays, selectedMonths, selectedYears);
   };
 

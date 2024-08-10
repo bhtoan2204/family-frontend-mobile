@@ -20,6 +20,7 @@ import {Article, ArticleCategory} from 'src/interface/news/news';
 import {useSelector} from 'react-redux';
 import {getIsDarkMode} from 'src/redux/slices/DarkModeSlice';
 import {ScreenWidth} from '@rneui/base';
+import {getTranslate} from 'src/redux/slices/languageSlice';
 
 const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
   const [newsCategory, setNewsCategory] = React.useState<ArticleCategory[]>([]);
@@ -36,6 +37,7 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
   const ITEMS_PER_PAGE = 10;
   const [totalItems, setTotalItems] = React.useState<number>(0);
   const isDarkMode = useSelector(getIsDarkMode);
+  const t = useSelector(getTranslate);
 
   useEffect(() => {
     const fetchCategoryNews = async () => {
@@ -43,6 +45,7 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
         const data = await NewsService.categories();
         setRefreshing(false);
         setNewsCategory(data);
+        console.log(data);
       } catch (error) {
         //console.error('Error fetching news:', error);
       }
@@ -80,7 +83,8 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
   }, [choosenCategoryIndex, currentPage]);
 
   const capitalizeFirstLetter = (str: string) => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
+    const name = t(str);
+    return name.charAt(0).toUpperCase() + name.slice(1);
   };
 
   const buildDateDiff = (pubDate: string) => {
@@ -94,21 +98,21 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
     const diffYears = Math.ceil(diffDays / 365);
 
     if (diffDays === 1) {
-      return '1 day ago';
+      return t('1 day ago');
     } else if (diffDays < 7) {
-      return `${diffDays} days ago`;
+      return `${diffDays} ${t('days ago')}`;
     } else if (diffWeeks === 1) {
-      return '1 week ago';
+      return t('1 week ago');
     } else if (diffWeeks < 4) {
-      return `${diffWeeks} weeks ago`;
+      return `${diffWeeks} ${t('weeks ago')}`;
     } else if (diffMonths === 1) {
-      return '1 month ago';
+      return t('1 month ago');
     } else if (diffMonths < 12) {
-      return `${diffMonths} months ago`;
+      return `${diffMonths} ${t('months ago')}`;
     } else if (diffYears === 1) {
-      return '1 year ago';
+      return t('1 year ago');
     } else {
-      return `${diffYears} years ago`;
+      return `${diffYears} ${t('years ago')}`;
     }
   };
 
@@ -116,7 +120,7 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
     const wordsPerMinute = 200;
     const minutes = length / wordsPerMinute;
     const readTime = Math.ceil(minutes);
-    return `${readTime} minutes of reading`;
+    return `${readTime} ${t('minutes of reading')}`;
   };
 
   const handleNextPage = () => {
@@ -272,7 +276,7 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
           disabled={currentPage === 1}
           style={{paddingHorizontal: 10}}>
           <Text style={{color: currentPage === 1 ? COLORS.gray : 'black'}}>
-            Prev
+            {t('Prev')}
           </Text>
         </TouchableOpacity>
         <Text>
@@ -284,7 +288,7 @@ const NewsScreen: React.FC<NewsScreenProps> = ({navigation, route}) => {
           style={{paddingHorizontal: 10}}>
           <Text
             style={{color: currentPage === totalPages ? COLORS.gray : 'black'}}>
-            Next
+            {t('Next')}
           </Text>
         </TouchableOpacity>
       </View>

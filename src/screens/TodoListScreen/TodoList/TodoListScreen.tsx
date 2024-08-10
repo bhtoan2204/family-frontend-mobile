@@ -319,7 +319,7 @@ interface TodoListCategoryItemProps {
   isDarkMode: boolean;
 }
 
-const TodoListCategoryItem = ({
+export const TodoListCategoryItem = ({
   id_category,
   category_name,
   total_items,

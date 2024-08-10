@@ -20,8 +20,6 @@ import {
   setSelectedDate,
   setTodoList,
   updateEvent,
-  addEvent,
-  setSelectedEvent,
 } from 'src/redux/slices/CalendarSlice';
 import {deleteEvent} from 'src/redux/slices/CalendarSlice';
 import moment from 'moment';
@@ -43,8 +41,8 @@ import {updateDoneTodoList} from 'src/redux/slices/TodoListSlice';
 import {TodoListCategoryItem} from 'src/screens/TodoListScreen/TodoListCategory/TodoListCategoryScreen';
 
 const formatEventDate = (start: Date, end: Date) => {
-  const formattedStart = format(start, 'yyyy-MM-dd');
-  const formattedEnd = format(end, 'yyyy-MM-dd');
+  const formattedStart = format(start, 'yyyy/MM/dd');
+  const formattedEnd = format(end, 'yyyy/MM/dd');
   return formattedStart === formattedEnd
     ? formattedStart + ` All day`
     : `${formattedStart} - ${formattedEnd} All day`;
@@ -94,25 +92,20 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
 
   useEffect(() => {
     fetchChecklist();
-  }, []);
+  }, [event?.checklistType != null]);
 
   const fetchChecklist = async () => {
-    if (event?.checklistType) {
-      try {
-        const data = await CalendarServices.getAllChecklist(
-          event?.id_checklist_type,
-          event.id_family,
-        );
+    try {
+      const data = await CalendarServices.getAllChecklist(
+        event?.id_checklist_type,
+        event.id_family,
+      );
 
-        if (data) {
-          dispatch(setTodoList(data));
-        }
-      } catch (error) {
-        dispatch(setTodoList([]));
-        //console.error('Error fetching checklist:', error);
+      if (data) {
+        dispatch(setTodoList(data));
       }
-    } else {
-      dispatch(setTodoList([]));
+    } catch (error) {
+      console.error('Error fetching checklist:', error);
     }
   };
 
@@ -173,7 +166,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                 });
                 navigation.goBack();
               } catch (error) {
-                //console.error('Error deleting event:', error);
+                console.error('Error deleting event:', error);
                 Toast.show(
                   translate('An error occurred while deleting the event.'),
                   {
@@ -220,16 +213,9 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                   event.recurrence_rule,
                 );
                 if (data) {
-                  await dispatch(deleteEvent(data.id_calendar));
-                  await dispatch(addEvent(data));
-
-                  await dispatch(setSelectedEvent(data));
-                  dispatch(
-                    setSelectedDate(
-                      moment(new Date(data.time_start)).format('YYYY-MM-DD'),
-                    ),
+                  await dispatch(
+                    deleteEventOnly(data.id_calendar, data.recurrence_rule),
                   );
-
                   //await dispatch(setSelectedDate(data.time_start));
                   Toast.show(translate('Event has been deleted successfully'), {
                     type: 'success',
@@ -239,7 +225,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                   console.log('hi');
                 }
               } catch (error) {
-                //console.error('Error deleting event:', error);
+                console.error('Error deleting event:', error);
                 Toast.show(
                   translate('An error occurred while deleting the event.'),
                   {
@@ -263,7 +249,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                 });
                 navigation.goBack();
               } catch (error) {
-                //console.error('Error deleting event:', error);
+                console.error('Error deleting event:', error);
                 Toast.show(
                   translate('An error occurred while deleting the event.'),
                   {
@@ -283,18 +269,31 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
     return null;
   }
   const cleanRecurrenceRule = (rule: string) => {
-    return rule.replace(/\s+/g, '').replace(/;$/, '');
+    if (rule !== null && rule != '') {
+      return rule.replace(/\s+/g, '').replace(/;$/, '');
+    }
   };
 
   const explainRecurrenceRule = (ruleString: string, language: 'en' | 'vi') => {
-    const cleanedRecurrenceRule = cleanRecurrenceRule(ruleString);
+    const cleanedRecurrenceRule: string | undefined =
+      cleanRecurrenceRule(ruleString);
     //console.log('Cleaned Rule String:', cleanedRecurrenceRule);
 
     try {
-      const rule = rrulestr(cleanedRecurrenceRule);
+      console.log(ruleString);
+      let rule: RRule | null = null;
+
+      if (cleanedRecurrenceRule && cleanedRecurrenceRule.trim() !== '') {
+        try {
+          rule = rrulestr(cleanedRecurrenceRule);
+        } catch (error) {
+          //console.error('Error parsing recurrence rule:', error);
+          // Handle parsing error
+        }
+      }
 
       if (!rule || !rule.options) {
-        // new Error('RRule or RRule options are undefined or not valid.');
+        //throw new Error('RRule or RRule options are undefined or not valid.');
       }
 
       const options = rule.options;
@@ -380,7 +379,8 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
               : '',
         },
         vi: {
-          frequency: `Lặp lại ${freq.toLowerCase()} mỗi ${interval} ${interval > 1 ? 'lần' : 'lần'}.`,
+          frequency: `Lặp lại ${translate(freq.toLowerCase())} mỗi ${interval} ${interval > 1 ? 'lần' : 'lần'}.`,
+
           count: count ? `Tổng số lần lặp lại: ${count}.` : '',
           until: until ? `Kết thúc vào ngày ${until}.` : '',
           bymonth:
@@ -393,7 +393,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
               : '',
           byweekday:
             byweekday.length > 0
-              ? `Xảy ra vào các ngày trong tuần: ${byweekday.map(day => weekdaysMap[day] || 'Unknown').join(', ')}.`
+              ? `Xảy ra vào các ngày trong tuần: ${byweekday.map(day => translate(weekdaysMap[day]) || translate('Unknown')).join(', ')}.`
               : '',
           byyearday:
             byyearday.length > 0
@@ -406,35 +406,22 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
         },
       };
 
-      const explanationParts = [
-        explanations[language].frequency,
-        explanations[language].count,
-        explanations[language].until,
-        explanations[language].bymonth,
-        explanations[language].bymonthday,
-        explanations[language].byweekday,
-        explanations[language].byyearday,
-        explanations[language].bysetpos,
-      ];
-
-      const explanation = explanationParts.filter(part => part).join('\n');
-
-      return (
-        <Text style={[styles.recurrenceText, {color: color.textSubdued}]}>
-          {explanation}
-        </Text>
-      );
+      return Object.values(explanations[language])
+        .filter(line => line)
+        .join(' ');
     } catch (error) {
-      //console.error('Error explaining recurrence rule:', error);
-      return (
-        <View style={styles.recurrenceContainer}>
-          <Text style={[styles.recurrenceText, {color: color.text}]}>
-            {translate('Unknown')}
-          </Text>
-        </View>
-      );
+      //console.error('Error parsing recurrence rule:', error);
+      return language === 'vi'
+        ? 'Có lỗi khi phân tích quy tắc lặp lại.'
+        : 'Error parsing recurrence rule.';
     }
   };
+
+  const recurrenceDescription = explainRecurrenceRule(
+    event.recurrence_rule,
+    language,
+  );
+
   const formatEventTime = (
     startTime: Date | string,
     endTime: Date | string,
@@ -498,24 +485,23 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
             id_checklist_type: item.id_checklist_type,
           }),
         );
-        Toast.show('Update successful', {
+        Toast.show(translate('Update successful'), {
           type: 'success',
         });
       }
     } catch (error) {
       //console.error('Error updating checklist:', error);
-      Toast.show('Update failed', {
+      Toast.show(translate('Update failed'), {
         type: 'danger',
       });
     }
   };
 
-  const buildItems = () => {
+  const buildItems = React.useCallback(() => {
     return (
-      <ScrollView
-        contentContainerStyle={{paddingHorizontal: 16, paddingVertical: 0}}>
-        <View style={{marginVertical: 0}}>
-          {checkList.map((item, index) => {
+      <View className="mx-2 my-2 ">
+        {checkList &&
+          checkList.map((item, index) => {
             return (
               <React.Fragment key={index}>
                 <TodoListCategoryItem
@@ -526,10 +512,9 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
               </React.Fragment>
             );
           })}
-        </View>
-      </ScrollView>
+      </View>
     );
-  };
+  }, [checkList]);
 
   const renderChecklists = () => (
     <View
@@ -575,18 +560,17 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
           </Text>
         </TouchableOpacity>
       </View>
-      {checkList.length > 0 ? (
+      {checkList && checkList.length > 0 ? (
         buildItems()
       ) : (
         <TouchableOpacity
           style={[styles.addButton, {backgroundColor: color.white}]}
           onPress={() =>
             navigation.navigate('TodoListStack', {
-              screen: 'TodoList',
+              screen: 'TodoListCategory',
               params: {
                 id_family: event.id_family,
-                openSheet: true,
-                id_calendar: event.id_calendar,
+                id_category: event.id_checklist_type,
               },
             })
           }>
@@ -598,70 +582,10 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
     </View>
   );
 
-  // const renderShoppingList = () => {
-  //   return (
-  //     <TouchableOpacity
-  //       style={[
-  //         styles.container,
-  //         {
-  //           backgroundColor: color.white,
-  //           borderRadius: 10,
-  //           shadowColor: color.text,
-  //           shadowOffset: {width: 0, height: 4},
-  //           shadowOpacity: 0.2,
-  //           shadowRadius: 8,
-
-  //           elevation: 5,
-  //         },
-  //       ]}>
-  //       <Text
-  //         style={[
-  //           styles.header,
-  //           {color: color.text, backgroundColor: color.white},
-  //         ]}>
-  //         {translate('Shopping List')}
-  //       </Text>
-  //       {event.shoppingList && event.shoppingList.length > 0 ? (
-  //         <FlatList
-  //           data={event.shoppingList}
-  //           renderItem={({item}) => (
-  //             <View style={styles.shoppingListItem}>
-  //               <Feather name="shopping-cart" size={24} color={color.text} />
-  //               <Text style={[styles.shoppingListText, {color: color.text}]}>
-  //                 {item}
-  //               </Text>
-  //             </View>
-  //           )}
-  //           keyExtractor={(item, index) => index.toString()}
-  //           ListFooterComponent={
-  //             <TouchableOpacity
-  //               style={[styles.addButton, {backgroundColor: color.primary}]}
-  //               onPress={() =>
-  //                 navigation.navigate('ShoppingListDetail', {id_family})
-  //               }>
-  //               <Text style={styles.addButtonText}>
-  //                 {translate('Add New Shopping List')}
-  //               </Text>
-  //             </TouchableOpacity>
-  //           }
-  //         />
-  //       ) : (
-  //         <TouchableOpacity
-  //           style={[styles.addButton, {backgroundColor: color.primary}]}
-  //           onPress={() => navigation.navigate('NewShoppingList', {id_family})}>
-  //           <Text style={styles.addButtonText}>
-  //             {translate('New Shopping List')}
-  //           </Text>
-  //         </TouchableOpacity>
-  //       )}
-  //     </TouchableOpacity>
-  //   );
-  // };
-
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: color.background}]}>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView>
         <View style={[styles.header, {backgroundColor: color.background}]}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Feather name="arrow-left" size={20} color={color.text} />
@@ -743,9 +667,11 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
             </Text>
           </View>
 
-          {event.recurrence_rule
-            ? explainRecurrenceRule(event.recurrence_rule, language)
-            : null}
+          {event && event.recurrence_rule !== null && (
+            <Text style={[styles.detail, {color: color.text}]}>
+              {recurrenceDescription}
+            </Text>
+          )}
         </View>
         {!event.checklistType ? (
           <TouchableOpacity
@@ -773,64 +699,34 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                 },
               })
             }>
-            <Feather name="list" size={24} color={color.text} />
-            <Text style={styles.buttonText}>{translate('New Check List')}</Text>
+            <View
+              style={{
+                justifyContent: 'space-between',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Feather name="list" size={24} color={color.text} />
+                <Text style={[styles.buttonText, {color: color.text}]}>
+                  {translate('New Check List')}
+                </Text>
+              </View>
+
+              <Feather
+                name="arrow-right"
+                size={24}
+                color={color.text}
+                style={{marginLeft: 'auto'}}
+              />
+            </View>
           </TouchableOpacity>
         ) : (
           renderChecklists()
         )}
-        {/* {!event.shoppingList ? (
-          extraPackage.some(pkg => pkg.name === 'Shopping') ? (
-            <TouchableOpacity
-              style={[
-                styles.button,
-                {
-                  backgroundColor: color.white,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginTop: 20,
-                  borderRadius: 10,
-                  paddingHorizontal: 15,
-                  shadowColor: color.text,
-                  shadowOffset: {width: 0, height: 4},
-                  shadowOpacity: 0.2,
-                  shadowRadius: 8,
-
-                  elevation: 5,
-                },
-              ]}
-              onPress={() =>
-                navigation.navigate('NewShoppingList', {id_family})
-              }>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Feather name="shopping-cart" size={24} color={color.text} />
-                <Text style={styles.buttonText}>
-                  {translate('Add New Shopping List')}
-                </Text>
-              </View>
-              <Feather name="arrow-right" size={24} color={color.text} />
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={[
-                styles.addButton,
-                {backgroundColor: color.white, borderRadius: 10, marginTop: 20},
-              ]}
-              onPress={() =>
-                navigation.navigate('PackStack', {
-                  screen: 'ViewAllService',
-                  params: {families: family},
-                })
-              }>
-              <Text style={[styles.addButtonText, {color: color.text}]}>
-                {translate('Buy Service Shopping List')}
-              </Text>
-            </TouchableOpacity>
-          )
-        ) : (
-          renderShoppingList()
-        )} */}
       </ScrollView>
       <View
         style={[

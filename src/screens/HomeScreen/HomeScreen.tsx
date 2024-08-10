@@ -474,7 +474,7 @@ const HomeScreen = ({
                     </View>
                     <View style={{flexDirection: 'column'}}>
                       <Text style={[styles.title, {color: color.text}]}>
-                        Let's Start with Service
+                        {translate('Lets Start with Service')}
                       </Text>
                       <View style={{flexDirection: 'row'}}></View>
                     </View>
@@ -539,7 +539,7 @@ const HomeScreen = ({
 
             <View style={styles.comboContainer}>
               <Text style={[styles.textCombo, {color: color.text}]}>
-                FamFund's Combo
+                {translate('FamFunds Combo')}
               </Text>
               <ScrollView
                 horizontal={true}

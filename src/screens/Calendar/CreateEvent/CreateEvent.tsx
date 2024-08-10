@@ -114,6 +114,7 @@ const CreateEventScreen: React.FC<CreateEventScreenProps> = ({
   };
 
   const handleSubmit = async () => {
+    console.log(selectedDays);
     const timeStart = chosenDateStart;
     const timeEnd = chosenDateEnd;
     const frequency = selectedOptionRepeat.toUpperCase();
