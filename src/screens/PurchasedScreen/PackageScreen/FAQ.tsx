@@ -25,7 +25,7 @@ const FAQ = () => {
     {
       question: 'What’s included in Package?',
       answer:
-        'The package includes various features such as a fixed duration subscription, and offers two free functionalities: finance and guideline.',
+        'The package includes various features such as a fixed duration subscription, and offers two free functionalities: finance and guideline shared.',
       icon: Question1,
     },
     {

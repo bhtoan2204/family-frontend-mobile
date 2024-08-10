@@ -26,7 +26,7 @@ import styles from './style';
 import {Family} from 'src/interface/family/family';
 import {Avatar} from 'react-native-elements';
 import {Service, ComboPackage} from 'src/interface/package/mainPackage';
-import {TEXTS} from 'src/constants';
+import {COLORS, TEXTS} from 'src/constants';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {getTranslate} from 'src/redux/slices/languageSlice';
 import {useThemeColors} from 'src/hooks/useThemeColor';
@@ -48,6 +48,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
   const color = useThemeColors();
   const dispatch = useDispatch<AppDispatch>();
   const [combo, setCombo] = useState<ComboPackage[]>([]);
+  const [selectedTab, setSelectedTab] = useState('combo');
 
   const handleGetService = async () => {
     try {
@@ -97,7 +98,7 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
         setPurchasedServices(purchasedIds);
       }
     } catch (error) {
-      //console.log('Fetch fetchServiceOfFamily error:', error);
+      console.log('Fetch fetchServiceOfFamily error:', error);
     } finally {
       setLoading(false);
     }
@@ -171,30 +172,93 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
     });
   };
 
+  const imageMapping = {
+    Calendar: require('../../../assets/images/service_image/calendar.png'),
+    Guideline: require('../../../assets/images/service_image/guideline.png'),
+    Education: require('../../../assets/images/service_image/education.png'),
+    Finance: require('../../../assets/images/service_image/finance.png'),
+    Shopping: require('../../../assets/images/service_image/shopping.png'),
+    Household: require('../../../assets/images/service_image/household.png'),
+  };
+
   return (
-    <SafeAreaView
-      style={[styles.container, {backgroundColor: color.background}]}>
-      <ScrollView>
+    <View>
+      <View
+        style={[styles.headerContainer, {backgroundColor: color.background}]}>
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => navigation.navigate('ViewAllPurchased')}>
-            <Icon name="arrow-back" size={24} color={color.text} />
+            <Icon name="close" size={28} color={color.text} />
           </TouchableOpacity>
         </View>
-        <View style={[styles.searchContainer, {backgroundColor: color.white}]}>
-          <Icon
-            name="search"
-            size={20}
-            color={color.text}
-            style={{marginRight: 5}}
-          />
+        {/* <View style={[styles.searchContainer, {borderBottomColor: color.text}]}>
           <TextInput
-            style={[styles.headerSearchInput]}
+            style={[styles.headerSearchInput, {color: color.text}]}
             placeholder={translate('SEARCH')}
             placeholderTextColor={color.text}
           />
-        </View>
+          <View
+            style={[
+              styles.searchIconContainer,
+              {backgroundColor: color.iconPurchase},
+            ]}>
+            <Icon
+              name="search"
+              size={20}
+              color={color.background}
+              style={[styles.searchIcon, {color: color.text}]}
+            />
+          </View>
+        </View> */}
+      </View>
 
+      {/* <ScrollView
+        style={[styles.mainContainer, {backgroundColor: color.background}]}>
+        
+      </ScrollView> */}
+      <View style={[styles.mainContainer, {backgroundColor: color.background}]}>
+        <View style={[styles.buttonGroup, {backgroundColor: color.card}]}>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              selectedTab === 'combo' && styles.buttonActive,
+              {
+                flex: 1,
+                borderBottomWidth: selectedTab === 'combo' ? 3 : 0,
+                borderBottomColor: '#FDB129',
+              },
+            ]}
+            onPress={() => setSelectedTab('combo')}>
+            <Image
+              source={require('../../../assets/images/combo-icon.png')}
+              resizeMode="contain"
+              style={{width: 30, height: 30}}
+            />
+            <Text style={[styles.buttonText, {color: color.text}]}>
+              {translate('COMBO')}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              selectedTab === 'service' && styles.buttonActive,
+              {
+                flex: 1,
+                borderBottomWidth: selectedTab === 'service' ? 3 : 0,
+                borderBottomColor: '#17C9C9',
+              },
+            ]}
+            onPress={() => setSelectedTab('service')}>
+            <Image
+              source={require('../../../assets/images/service-icon.png')}
+              resizeMode="contain"
+              style={{width: 30, height: 30}}
+            />
+            <Text style={[styles.buttonText, {color: color.text}]}>
+              {translate('SERVICE')}
+            </Text>
+          </TouchableOpacity>
+        </View>
         <Text style={styles.yourFamily}>{translate('YOUR_FAMILIES')}</Text>
         <View style={{flexDirection: 'row'}}>
           <FlatList
@@ -230,102 +294,137 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
           />
         </View>
 
-        <View style={[styles.comboList]}>
-          <Text style={styles.title}>{translate('COMBO_TITLE')}</Text>
-          {combo.map((pkg, index) => (
-            <TouchableOpacity
-              key={pkg.id_combo_package}
-              onPress={() => handleSelectService(pkg)}
-              style={[styles.serviceItem, {backgroundColor: color.white}]}>
-              <Text style={[styles.serviceName, {color: color.text}]}>
-                {pkg.name}
-              </Text>
-              <Text style={styles.servicePrice}>
-                {pkg.price.toLocaleString('vi-VN', {
-                  style: 'currency',
-                  currency: 'VND',
-                })}
-              </Text>
-              {/* <Text
-                style={[styles.serviceDescription, {color: color.textSubdued}]}>
-                {pkg.description}
-              </Text> */}
-
-              <View style={styles.serviceActions}>
+        {selectedTab === 'combo' ? (
+          <View style={[styles.comboList]}>
+            <Text style={styles.title}>{translate('COMBO_TITLE')}</Text>
+            <FlatList
+              data={combo}
+              keyExtractor={pkg => pkg.id_combo_package.toString()}
+              renderItem={({item: pkg}) => (
                 <TouchableOpacity
-                  style={styles.purchaseButton}
-                  onPress={() => handleBuyCombo(pkg)}>
-                  <Text style={styles.purchaseButtonText}>
-                    {translate('BUY_NOW')}
-                  </Text>
-                  <FeatherIcon color="white" name="shopping-cart" size={17} />
+                  onPress={() => handleSelectService(pkg)}
+                  style={[styles.serviceItem1, {backgroundColor: color.white}]}>
+                  <Image
+                    source={require('../../../assets/images/combo-service.png')}
+                    resizeMode="stretch"
+                    style={{width: 130, height: 120}}
+                  />
+                  <View>
+                    <Text style={[styles.serviceName, {color: color.text}]}>
+                      {pkg.name}
+                    </Text>
+                    <View style={[styles.serviceActions, {top: 30}]}>
+                      <Text style={styles.servicePrice}>
+                        {pkg.price.toLocaleString('vi-VN', {
+                          style: 'currency',
+                          currency: 'VND',
+                        })}
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.purchaseButton}
+                        onPress={() => handleBuyCombo(pkg)}>
+                        <Text style={styles.purchaseButtonText}>
+                          {translate('BUY_NOW')}
+                        </Text>
+                        <FeatherIcon
+                          color="white"
+                          name="shopping-cart"
+                          size={17}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                 </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <View style={[styles.serviceList]}>
-          <Text style={styles.title}>{translate('SERVICE_TITLE')}</Text>
-          {service.map((pkg, index) => (
-            <TouchableOpacity
-              key={pkg.id_extra_package}
-              onPress={() => handleSelectService(pkg)}
-              style={[
-                styles.serviceItem,
-                {backgroundColor: color.white},
-                // selectedService?.id_extra_package === pkg.id_extra_package &&
-                // styles.serviceItemActive,
-              ]}>
-              <Text
-                style={[
-                  purchasedServices.includes(pkg.id_extra_package) &&
-                    styles.serviceNamePur,
-                  styles.serviceName,
-                  {color: color.text},
-                ]}>
-                {pkg.name}
-              </Text>
-              <Text style={styles.servicePrice}>
-                {pkg.price.toLocaleString('vi-VN', {
-                  style: 'currency',
-                  currency: 'VND',
-                })}
-              </Text>
-              <Text
-                style={[styles.serviceDescription, {color: color.textSubdued}]}>
-                {pkg.description}
-              </Text>
-
-              <View style={styles.serviceActions}>
-                {purchasedServices &&
-                purchasedServices.includes(pkg.id_extra_package) ? (
-                  <TouchableOpacity
-                    style={[
-                      styles.purchaseButton,
-                      {backgroundColor: color.white},
-                    ]}>
-                    <Text
-                      style={[styles.purchaseButtonText, {color: color.text}]}>
-                      {translate('purchased')}
-                    </Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    style={styles.purchaseButton}
-                    onPress={() => handleBuyService(pkg)}>
-                    <Text style={styles.purchaseButtonText}>
-                      {translate('BUY_NOW')}
-                    </Text>
-                    <FeatherIcon color="white" name="shopping-cart" size={17} />
-                  </TouchableOpacity>
-                )}
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+              )}
+            />
+          </View>
+        ) : (
+          <View style={[styles.serviceList]}>
+            <Text style={styles.title}>{translate('SERVICE_TITLE')}</Text>
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              style={{height: 400}}
+              data={service}
+              keyExtractor={pkg => pkg.id_extra_package.toString()}
+              renderItem={({item: pkg}) => (
+                <TouchableOpacity
+                  onPress={() => handleSelectService(pkg)}
+                  style={[styles.serviceItem, {backgroundColor: color.white}]}>
+                  <View style={styles.serviceContainer}>
+                    <Image
+                      source={imageMapping[pkg.name]}
+                      resizeMode="stretch"
+                      style={{width: 130, height: 120}}
+                    />
+                    <View style={styles.rightSideService}>
+                      <Text
+                        style={[
+                          purchasedServices.includes(pkg.id_extra_package) &&
+                            styles.serviceNamePur,
+                          styles.serviceName,
+                          {color: color.text},
+                        ]}>
+                        {translate(pkg.name)}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.serviceDescription,
+                          {
+                            color: color.textSubdued,
+                            flexWrap: 'wrap',
+                            width: '100%',
+                          },
+                        ]}>
+                        {translate(pkg.description)}
+                      </Text>
+                      <View
+                        style={[
+                          styles.serviceActions,
+                          {
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                          },
+                        ]}>
+                        <Text style={styles.servicePrice}>
+                          {pkg.price.toLocaleString('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND',
+                          })}
+                        </Text>
+                        {purchasedServices &&
+                        purchasedServices.includes(pkg.id_extra_package) ? (
+                          <Text
+                            style={[
+                              styles.purchaseButtonText1,
+                              {color: color.text},
+                            ]}>
+                            {translate('purchased')}
+                          </Text>
+                        ) : (
+                          <TouchableOpacity
+                            style={styles.purchaseButton}
+                            onPress={() => handleBuyService(pkg)}>
+                            <Text style={styles.purchaseButtonText}>
+                              {translate('BUY_NOW')}
+                            </Text>
+                            <FeatherIcon
+                              color="white"
+                              name="shopping-cart"
+                              size={17}
+                            />
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        )}
+      </View>
+    </View>
   );
 };
 

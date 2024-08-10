@@ -24,7 +24,7 @@ import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 import {setUserMessage} from 'src/redux/slices/MessageUser';
 import {RootState} from 'src/redux/store';
 import IconL from 'react-native-vector-icons/Ionicons';
-
+import {Ionicons} from '@expo/vector-icons';
 const screenHeight = Dimensions.get('screen').height;
 
 const ProfileDetailsScreen = ({
@@ -71,20 +71,15 @@ const ProfileDetailsScreen = ({
           bottom: 10,
           paddingHorizontal: 20,
         }}>
-        <Header
-          leftComponent={{
-            icon: 'close',
-            color: 'white',
-            size: 30,
-            onPress: () => navigation.navigate('HomeTab', {screen: 'Profile'}),
-          }}
-          centerComponent={{}}
-          containerStyle={{
-            backgroundColor: 'transparent',
-            justifyContent: 'space-around',
-            borderBottomWidth: 0,
-          }}
-        />
+        <View style={styles.headerContainer}>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => navigation.goBack()}>
+            <Ionicons name="close" size={24} color={color.text} />
+          </TouchableOpacity>
+
+          <View style={styles.centerComponent}></View>
+        </View>
 
         <View style={styles.avatarContainer}>
           <View>
@@ -357,6 +352,22 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   },
+  headerContainer: {
+    backgroundColor: 'transparent',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    height: 60,
+    borderBottomWidth: 0,
+    paddingTop: 35,
+  },
+  iconButton: {},
+  iconText: {
+    color: 'white',
+    fontSize: 30,
+  },
+  centerComponent: {},
 });
 
 export default ProfileDetailsScreen;

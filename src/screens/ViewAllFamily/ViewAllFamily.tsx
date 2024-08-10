@@ -126,7 +126,7 @@ const ViewAllFamilyScreen: React.FC<ViewAllFamilyScreenProps> = ({
         setFamilies(allFamilies);
         setMembersMap(membersObject);
       } catch (error) {
-        console.log('Error fetching families or members:', error);
+        // console.log('Error fetching families or members:', error);
       }
     };
     handleGetAllFamily();
