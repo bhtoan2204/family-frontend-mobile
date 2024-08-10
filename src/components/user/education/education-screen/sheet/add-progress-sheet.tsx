@@ -18,6 +18,7 @@ import { Education, Subject } from 'src/interface/education/education';
 import { Member } from 'src/interface/member/member';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { handleRestore } from 'src/utils/sheet/func';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 
 const screenHeight = Dimensions.get('window').height;
@@ -48,8 +49,6 @@ const AddProgressSheet = ({
 
     const [loading, setLoading] = React.useState(false)
     const dispatch = useDispatch<AppDispatch>()
-
-
     const [errorText, setErrorText] = React.useState('')
     const [showError, setShowError] = React.useState(false)
 
@@ -57,6 +56,8 @@ const AddProgressSheet = ({
     const [inputProgressNotes, setInputProgressNotes] = React.useState('')
     const [inputSchoolInfo, setInputSchoolInfo] = React.useState('')
     const isDarkMode = useSelector(getIsDarkMode)
+    const translate = useSelector(getTranslate)
+
     useEffect(() => {
         if (showError) {
             setTimeout(() => {
@@ -145,7 +146,7 @@ const AddProgressSheet = ({
 
     const buildInputTitle = () => {
         return <BottomSheetTextInput
-            placeholder='Give your new progress a title'
+            placeholder={translate('edu_screen_new_progress_title_placeholder')}
             value={inputTitle}
             onChangeText={(text) => {
                 setInputTitle(text)
@@ -171,7 +172,7 @@ const AddProgressSheet = ({
 
     const buildInputSchoolInfo = () => {
         return <BottomSheetTextInput
-            placeholder='Give this progress some school info'
+            placeholder={translate('edu_screen_new_progress_school_info_placeholder')}
             value={inputSchoolInfo}
             onChangeText={(text) => {
                 setInputSchoolInfo(text)
@@ -198,7 +199,7 @@ const AddProgressSheet = ({
     }
     const buildInputProgressNote = () => {
         return <BottomSheetTextInput
-            placeholder='Give your progress a note'
+            placeholder={translate('edu_screen_new_progress_note_placeholder')}
             value={inputProgressNotes}
             onChangeText={(text) => {
                 setInputProgressNotes(text)
@@ -259,16 +260,12 @@ const AddProgressSheet = ({
                             <Image source={AddProgressImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                         </View>
                         <View className=' items-center'>
-                            <Text className='text-base font-semibold text-[#2A475E] dark:text-white' style={{
-
-
-                            }}>Add New Education Progress for {
-                                    pickedIdUser == "" ? 'Member' : getMemberName(pickedIdUser)
+                            <Text className='text-base font-semibold text-[#2A475E] dark:text-white'>{
+                                translate("edu_screen_new_progress_title")
                                 }</Text>
-                            <Text className='text-sm my-3 mx-5 text-center text-[#2A475E] dark:text-[#8D94A5]' style={{
-
-
-                            }}>Give your education progress a name and some description</Text>
+                            <Text className='text-sm my-3 mx-5 text-center text-[#2A475E] dark:text-[#8D94A5]'>{
+                                translate("edu_screen_new_progress_description")
+                                }</Text>
                         </View>
 
                         {

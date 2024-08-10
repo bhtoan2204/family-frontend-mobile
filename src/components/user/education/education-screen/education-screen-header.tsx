@@ -19,6 +19,7 @@ import ImageComponent from 'src/components/Image/Image'
 import FamilyImage from 'src/assets/images/household_assets/add_room.png'
 import { gradients_list } from 'src/assets/images/gradients'
 import BottomSheet from '@gorhom/bottom-sheet'
+import { getTranslate } from 'src/redux/slices/languageSlice'
 
 
 interface EducationScreenHeaderProps {
@@ -44,7 +45,7 @@ const Divider = () => {
 const EducationScreenHeader = ({
     imageUrl, idFamily, handleEditImage, handleEditTitle, handleDeleteItem, navigationBack, addProgressBottomSheetRef, pickMemberBottomSheetRef
 }: EducationScreenHeaderProps) => {
-
+    const translate = useSelector(getTranslate)
 
     return (
         <>
@@ -67,7 +68,7 @@ const EducationScreenHeader = ({
 
                         <BlurView intensity={35} tint='dark' className='px-3 overflow-hidden rounded-lg '>
                             <View >
-                                <Text className='text-lg font-semibold text-white' >Education</Text>
+                                <Text className='text-lg font-semibold text-white' >{translate("Education")}</Text>
                             </View>
                         </BlurView>
 

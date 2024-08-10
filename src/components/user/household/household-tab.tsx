@@ -1,7 +1,9 @@
 import React from 'react'
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { useSelector } from 'react-redux';
 import { COLORS } from 'src/constants';
 import { iOSGrayColors } from 'src/constants/ios-color';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface HouseHoldTabProps {
     choosenTab: number;
@@ -14,6 +16,7 @@ const HouseHoldTab = ({
     setChoosenTab
 }: HouseHoldTabProps
 ) => {
+    const translate = useSelector(getTranslate)
     return (
         <View className=' items-center  rounded-2xl mx-[7%]  bg-[#f7f7f7] dark:bg-[#252D3B]'
             style={{
@@ -30,7 +33,9 @@ const HouseHoldTab = ({
 
                         >
                             <Text className={`text-center  text-sm font-semibold ${choosenTab == 0 ? 'text-white ' : 'text-[#2A475E] dark:text-white'}`}
-                            >Areas</Text>
+                            >{
+                                translate("household_area_text")
+                            }</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity className=' flex-1' onPress={() => {
@@ -42,7 +47,9 @@ const HouseHoldTab = ({
                             <Text className={`text-center  text-sm font-semibold ${choosenTab == 1 ? 'text-white ' : 'text-[#2A475E] dark:text-white'}`}
 
 
-                            >Items</Text>
+                            >{
+                                translate("household_items_text")
+                            }</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity className=' flex-1' onPress={() => {
@@ -53,7 +60,9 @@ const HouseHoldTab = ({
                             <Text className={`text-center  text-sm font-semibold ${choosenTab == 2 ? 'text-white ' : 'text-[#2A475E] dark:text-white'}`}
                                
 
-                            >Categories</Text>
+                            >{
+                                translate("household_categories_text")
+                            }</Text>
                         </View>
                     </TouchableOpacity>
                 </View>

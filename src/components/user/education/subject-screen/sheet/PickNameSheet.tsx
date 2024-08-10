@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateComponentScoreOfSubject, updateNameOfComponentScore } from 'src/redux/slices/EducationSlice';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import EducationServices from 'src/services/apiclient/EducationService';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 interface PickScoreSheetProps {
     setNameSheetRef: React.RefObject<any>;
     // setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>;
@@ -40,7 +41,7 @@ const PickNameSheet = ({ setNameSheetRef, name, targetScore, index, id_education
     const inputRef = React.useRef<TextInput>(null)
     const dispatch = useDispatch<AppDispatch>();
     const isDarkMode = useSelector(getIsDarkMode)
-
+    const translate = useSelector(getTranslate)
     const handleFocus = () => {
         setIsFocus(true)
     }
@@ -143,7 +144,9 @@ const PickNameSheet = ({ setNameSheetRef, name, targetScore, index, id_education
                             color: iOSColors.systemRed.defaultDark
                         }}>Cancel</Text> */}
                     </TouchableOpacity >
-                    <Text className='text-base font-semibold text-black dark:text-white'>Update name </Text>
+                    <Text className='text-base font-semibold text-black dark:text-white'>{
+                        translate("subject_screen_update_name")
+                    }</Text>
                     <TouchableOpacity onPress={() => {
                         // if (isNumberInRange(inputValue)) {
                         //     handleSave()
@@ -179,7 +182,7 @@ const PickNameSheet = ({ setNameSheetRef, name, targetScore, index, id_education
                                 autoFocus
                                 editable
                                 placeholderTextColor={!isDarkMode ? '#b0b0b0' : '#A6A6A6'}
-                                placeholder={`Update new name. Old name: ${name}`}
+                                placeholder={`${translate('subject_screen_update_name_placeholder')} ${name}`}
                                 multiline={false}
                                 onChangeText={(text) => {
                                     console.log(parseFloat(text) <= 10 && parseFloat(text) >= 0)
@@ -218,7 +221,10 @@ const PickNameSheet = ({ setNameSheetRef, name, targetScore, index, id_education
                                 }}>
                                     <Text style={{
                                         color: iOSColors.systemRed.defaultDark
-                                    }}>Name cannot be empty</Text>
+                                    }}>{
+                                            translate("subject_screen_invalid_name")
+
+                                        }</Text>
                                 </Text>
                             }
                         </View>

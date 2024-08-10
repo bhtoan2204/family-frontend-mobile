@@ -24,6 +24,7 @@ import PickImageSheet from '../household-item-stack/pick-image-sheet'
 import { updateRoom } from 'src/redux/slices/HouseHoldDataSlice'
 import BottomSheet from '@gorhom/bottom-sheet'
 import { useToast } from 'react-native-toast-notifications'
+import { getTranslate } from 'src/redux/slices/languageSlice'
 
 interface HouseHoldStackHeaderProps {
     imageUrl?: string
@@ -55,6 +56,7 @@ const HouseHoldStackHeader = ({
 }: HouseHoldStackHeaderProps) => {
     console.log("type", type)
     const pickPhotoSheetRef = React.useRef<any>()
+    const translate = useSelector(getTranslate)
     const dispatch = useDispatch<AppDispatch>()
     const toast = useToast()
     console.log(pickedCategory, pickedRoom)
@@ -67,7 +69,6 @@ const HouseHoldStackHeader = ({
             })
             console.log(1)
             const res = await HouseHoldService.updateRoom(idFamily, pickedRoom, null, uri)
-            // console.log(2)
             if (res) {
                 dispatch(updateRoom({
                     id_family: idFamily,
@@ -153,7 +154,9 @@ const HouseHoldStackHeader = ({
 
                     <BlurView intensity={35} tint='dark' className='px-3 overflow-hidden rounded-lg '>
                         <View >
-                            <Text className='text-lg font-semibold text-white' >HouseHold</Text>
+                            <Text className='text-lg font-semibold text-white' >{
+                                translate("Household")
+                            }</Text>
                         </View>
                     </BlurView>
 
@@ -175,7 +178,9 @@ const HouseHoldStackHeader = ({
                                         }} >
 
                                             <View className='flex-row items-center justify-between'>
-                                                <Text className='text-base' style={{ color: iOSGrayColors.systemGray.defaultLight }}>Edit Image</Text>
+                                                <Text className='text-base' style={{ color: iOSGrayColors.systemGray.defaultLight }}>{
+                                                    translate('edit_image_text')
+                                                }</Text>
                                                 <Material name="pencil" size={20} style={{ color: iOSGrayColors.systemGray.defaultLight, fontWeight: "bold" }} />
                                             </View>
                                         </MenuOption>
@@ -189,7 +194,9 @@ const HouseHoldStackHeader = ({
                                             handleOpenUpdateSheet()
                                         }} >
                                             <View className='flex-row items-center justify-between'>
-                                                <Text className='text-base' style={{ color: iOSGrayColors.systemGray.defaultLight }}>Edit name</Text>
+                                                <Text className='text-base' style={{ color: iOSGrayColors.systemGray.defaultLight }}>{
+                                                    translate('edit_name_text')
+                                                    }</Text>
                                                 <Material name="pencil" size={20} style={{ color: iOSGrayColors.systemGray.defaultLight, fontWeight: "bold" }} />
                                             </View>
                                         </MenuOption>
@@ -202,7 +209,9 @@ const HouseHoldStackHeader = ({
                                         <MenuOption onSelect={async () => {
                                         }} >
                                             <View className='flex-row items-center justify-between'>
-                                                <Text className='text-base ' style={{ color: iOSColors.systemRed.defaultLight }}>Delete</Text>
+                                                <Text className='text-base ' style={{ color: iOSColors.systemRed.defaultLight }}>{
+                                                    translate('delete')
+                                                    }</Text>
                                                 <Material name="trash-can-outline" size={20} style={{ color: iOSColors.systemRed.defaultLight, fontWeight: "bold" }} />
                                             </View>
                                         </MenuOption>

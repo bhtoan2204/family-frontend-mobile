@@ -1,7 +1,9 @@
 import React from 'react'
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { useSelector } from 'react-redux';
 import { COLORS } from 'src/constants';
 import { iOSGrayColors } from 'src/constants/ios-color';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface ProgressTabProps {
     choosenTab: number;
@@ -14,6 +16,7 @@ const ProgressTab = ({
     setChoosenTab
 }: ProgressTabProps
 ) => {
+    const translate = useSelector(getTranslate)
     return (
         <View className=' items-center  rounded-2xl mx-[7%]  bg-[#f7f7f7] dark:bg-[#252D3B] border-[1px] dark:border-[0px]'
             style={{
@@ -31,11 +34,13 @@ const ProgressTab = ({
                                 // backgroundColor: choosenTab == 0 ? COLORS.Rhino : 'transparent',
                             }}>
                             <Text className={`text-center  text-sm font-semibold ${choosenTab == 0 ? 'text-white ' : 'text-[#2A475E] dark:text-white'}`}
-                                // style={{
-                                //     color: choosenTab == 0 ? 'white' : COLORS.Rhino
-                                // }}
+                            // style={{
+                            //     color: choosenTab == 0 ? 'white' : COLORS.Rhino
+                            // }}
 
-                            >All</Text>
+                            >{
+                                    translate("progress_screen_all_courses")
+                                }</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity className=' flex-1' onPress={() => {
@@ -46,11 +51,13 @@ const ProgressTab = ({
                                 // backgroundColor: choosenTab == 1 ? COLORS.Rhino : 'transparent',
                             }}>
                             <Text className={`text-center  text-sm font-semibold ${choosenTab == 1 ? 'text-white ' : 'text-[#2A475E] dark:text-white'}`}
-                                // style={{
-                                //     color: choosenTab == 1 ? 'white' : COLORS.Rhino
-                                // }}
+                            // style={{
+                            //     color: choosenTab == 1 ? 'white' : COLORS.Rhino
+                            // }}
 
-                            >On Progress</Text>
+                            >{
+                                    translate("progress_screen_on_progress")
+                                }</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity className=' flex-1' onPress={() => {
@@ -61,11 +68,13 @@ const ProgressTab = ({
                                 // backgroundColor: choosenTab == 2 ? COLORS.Rhino : 'transparent',
                             }}>
                             <Text className={`text-center  text-sm font-semibold ${choosenTab == 2 ? 'text-white ' : 'text-[#2A475E] dark:text-white'}`}
-                                // style={{
-                                //     color: choosenTab == 2 ? 'white' : COLORS.Rhino
-                                // }}
+                            // style={{
+                            //     color: choosenTab == 2 ? 'white' : COLORS.Rhino
+                            // }}
 
-                            >Completed</Text>
+                            >{
+                                    translate("progress_screen_completed")
+                                }</Text>
                         </View>
                     </TouchableOpacity>
                 </View>

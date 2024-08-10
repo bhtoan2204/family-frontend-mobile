@@ -21,6 +21,7 @@ import { addHouseholdItem } from 'src/redux/slices/HouseHoldSlice';
 import HouseHoldService from 'src/services/apiclient/HouseHoldService';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { handleRestore } from 'src/utils/sheet/func';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface AddRoomSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -32,6 +33,8 @@ interface AddRoomSheetProps {
     pickedCategory: number
     rooms: RoomInterface[]
     categories: HouseHoldCategoryInterface[]
+    type: "consumable" | "durable"
+    setPickedType: (type: "consumable" | "durable") => void
     // addRoomSheetRef: React.RefObject<BottomSheet>
 }
 
@@ -49,7 +52,9 @@ const AddItemSheet = ({
     pickedCategory,
     pickedRoom,
     rooms,
-    categories
+    categories,
+    type,
+    setPickedType,
     // addRoomSheetRef
 }: AddRoomSheetProps) => {
     const snapPoints = React.useMemo(() => ['95%'], []);
@@ -64,9 +69,12 @@ const AddItemSheet = ({
     const [householdName, setHouseholdName] = React.useState('')
     const [householdCategory, setHouseholdCategory] = React.useState(-1)
     const [householdRoom, setHouseholdRoom] = React.useState(-1)
+    const [householdType, setHouseholdType] = React.useState(-1)
+    const [isExpanded, setIsExpanded] = React.useState(false)
+
     const [imageUri, setImageUri] = React.useState('')
     const isDarkMode = useSelector(getIsDarkMode)
-
+    const translate = useSelector(getTranslate)
     const pickImageSheetRef = useRef<any>(null)
 
     useEffect(() => {
@@ -227,7 +235,9 @@ const AddItemSheet = ({
                         fontSize: 15,
                         // fontWeight: 500
 
-                    }}>Category</Text>
+                    }}>{
+                            translate('Category')
+                        }</Text>
                 </View>
                 <View className=''>
                     <Text style={{
@@ -235,7 +245,7 @@ const AddItemSheet = ({
                         fontSize: 15,
 
                     }}>{
-                            pickedCategory == -1 ? "Choose category" : findCategoryText(pickedCategory)
+                            pickedCategory == -1 ? translate('choose_category_text') : findCategoryText(pickedCategory)
                         }</Text>
                 </View>
             </View>
@@ -244,8 +254,10 @@ const AddItemSheet = ({
         pickCategorySheetRef,
         pickedCategory,
         findCategoryText,
-        isDarkMode
+        isDarkMode,
+        translate
     ])
+
 
     const buildPickRoom = React.useCallback(() => {
         return <TouchableOpacity className=' bg-white mt-3 justify-center rounded-lg  ' style={{
@@ -268,7 +280,9 @@ const AddItemSheet = ({
                         fontSize: 15,
                         // fontWeight: 500
 
-                    }}>Choose room</Text>
+                    }}>{
+                            translate('household_room_text')
+                        }</Text>
                 </View>
                 <View className=''>
                     <Text style={{
@@ -276,16 +290,78 @@ const AddItemSheet = ({
                         fontSize: 15,
 
                     }}>{
-                            pickedRoom == -1 ? "Choose room" : findRoomText(pickedRoom)
+                            pickedRoom == -1 ? translate('choose_room_text') : findRoomText(pickedRoom)
                         }</Text>
                 </View>
             </View>
         </TouchableOpacity>
     }, [
-        pickRoomSheetRef,
+        isDarkMode,
+        translate,
         pickedRoom,
         findRoomText,
-        isDarkMode
+    ])
+
+
+    const buildPickType = React.useCallback(() => {
+        return <>
+            <TouchableOpacity className=' bg-white  mt-3 justify-center rounded-lg  ' style={{
+                backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
+                borderWidth: !isDarkMode ? 1 : 1.5,
+                borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
+                borderRadius: 10,
+                marginVertical: 10,
+                paddingVertical: screenHeight * 0.01,
+                paddingHorizontal: screenWidth * 0.05,
+                marginHorizontal: screenWidth * 0.05,
+            }} onPress={() => {
+                setIsExpanded(prev => !prev)
+            }}>
+                <View className='flex-row justify-between items-center'>
+                    <View className='flex-row  items-center '>
+                        <Image source={OpenedFolder} style={{ width: screenWidth * 0.1, height: screenWidth * 0.1 }} />
+                        <Text className='pl-4' style={{
+                            color: "#b0b0b0",
+                            fontSize: 15,
+
+                        }}>Type</Text>
+                    </View>
+                    <View className=''>
+                        <Text style={{
+                            color: iOSColors.systemBlue.defaultLight,
+                            fontSize: 15,
+
+                        }}>{
+
+                            }</Text>
+                    </View>
+                </View>
+            </TouchableOpacity>
+            {
+                isExpanded && <View className=' bg-white  mt-3 justify-center rounded-lg  ' style={{
+                    backgroundColor: !isDarkMode ? '#f5f5f5' : '#171A21',
+                    borderWidth: !isDarkMode ? 1 : 1.5,
+                    borderColor: !isDarkMode ? '#DEDCDC' : '#66C0F4',
+                    borderRadius: 10,
+                    marginVertical: 10,
+                    paddingVertical: screenHeight * 0.01,
+                    paddingHorizontal: screenWidth * 0.05,
+                    marginHorizontal: screenWidth * 0.05,
+                }}>
+                    <TouchableOpacity>
+                        <Text>{
+                            type == 'consumable' ? 'Durable' : 'Consumable'
+                        }</Text>
+                    </TouchableOpacity>
+                </View>
+            }
+
+        </>
+    }, [
+        isDarkMode,
+        translate,
+        householdType,
+        isExpanded
     ])
 
     return (
@@ -348,11 +424,15 @@ const AddItemSheet = ({
                         <Image source={Ingredients} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                     </View>
                     <View className=' items-center'>
-                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >Add New Item</Text>
-                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >Pick a room and category for your new item</Text>
+                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >{
+                            translate('household_add_item_title')
+                        }</Text>
+                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >{
+                            translate('household_add_item_description')
+                        }</Text>
                     </View>
                     <BottomSheetTextInput
-                        placeholder='Name of the item'
+                        placeholder={translate('household_add_category_placeholder')}
                         value={householdName}
                         onChangeText={(text) => {
                             onSetName(text)
@@ -372,7 +452,9 @@ const AddItemSheet = ({
                             color: '#b0b0b0'
                         }}
                     />
-
+                    {
+                        buildPickType()
+                    }
                     {
                         addItemType == 0
                             ? buildPickCategory()

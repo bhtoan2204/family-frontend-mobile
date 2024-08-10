@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, ActivityIndicator, Image, KeyboardAvoidingView, Keyboard, RefreshControl } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, ActivityIndicator, Image, KeyboardAvoidingView, Keyboard, RefreshControl, FlatList } from 'react-native'
 import { EducationScreenProps, HouseHoldScreenProps, ProgressScreenProps } from 'src/navigation/NavigationTypes'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from 'src/constants';
@@ -23,6 +23,7 @@ import AddComponentScoreSheet2 from 'src/components/user/education/subject-scree
 import EducationServices from 'src/services/apiclient/EducationService';
 import { setEducation, setLoading } from 'src/redux/slices/EducationSlice';
 import EmptyListIcon from 'src/assets/images/education_assets/no_member.png';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) => {
     const { id_family, id_progress } = route.params
@@ -30,25 +31,25 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
     const loading = useSelector((state: RootState) => state.educations).loading
     const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
     const [choosenTab, setChoosenTab] = React.useState<number>(0)
-
     const progressData = useSelector((state: RootState) => state.educations).educations.find(item => {
         return item.id_education_progress == id_progress
     })
     const toast = useToast();
-    // console.log(progressData)
 
     const [pickedTargets, setPickedTargets] = React.useState<string[]>([])
-
     const [goalData, setGoalData] = React.useState<{
         id: number,
         title: string,
         color: string,
     }[]>(goal_data)
+
     const [filteredData, setFilteredData] = React.useState<Subject[]>([])
 
     const addCourseBottomSheetRef = useRef<BottomSheet>(null)
     const pickedTargetsBottomSheetRef = useRef<BottomSheet>(null)
     const addGoalBottomSheetRef = useRef<BottomSheet>(null)
+    const translate = useSelector(getTranslate)
+
     const scrollViewRef = useRef<any>(null)
 
     const fetchDatas = React.useCallback(async () => {
@@ -90,9 +91,11 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
                             width: ScreenHeight * 0.2,
                         }} />
                     </View>
-                    <Text className='text-[#747474] dark:text-[#8D94A5] my-2 font-bold text-lg'>Nothing here</Text>
+                    <Text className='text-[#747474] dark:text-[#8D94A5] my-2 font-bold text-lg'>{
+                        translate('edu_screen_empty_title')
+                    }</Text>
                     <Text className='mx-[15%] text-center text-sm text-[#747474] dark:text-[#8D94A5]'>{
-                        choosenTab == 0 ? "No subject added yet" : choosenTab == 1 ? "No in progress subject" : "No completed subject"
+                        choosenTab == 0 ? translate("No subject added yet") : choosenTab == 1 ? translate("No in progress subject") : translate("No completed subject")
                     }</Text>
                 </View>
             </ScrollView>
@@ -100,41 +103,66 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ navigation, route }) =>
     }, [loading, choosenTab])
 
 
+    // const buildList = React.useCallback(() => {
+    //     return <ScrollView className='flex-1 z-10 mt-5 bg-[#F7F7F7] dark:bg-[#0A1220]'
+    //         showsVerticalScrollIndicator={false}
+    //         refreshControl={
+    //             <RefreshControl refreshing={loading} onRefresh={fetchDatas} />
+    //         }
+    //     >
+    //         <>
+    //             {
+    //                 filteredData.map((item, index) => {
+    //                     return <React.Fragment key={index}>
+    //                         <CourseItem data={item} onPress={() => {
+    //                             navigation.navigate('SubjectScreen', {
+    //                                 id_progress: item.id_education_progress,
+    //                                 id_family,
+    //                                 id_subject: item.id_subject
+    //                             })
+    //                         }}
+    //                             index={index}
+    //                         />
+    //                     </React.Fragment>
+    //                 })
+    //             }
+    //             <View className='my-2'>
+
+    //             </View>
+    //         </>
+    //     </ScrollView>
+    // }, [filteredData, loading])
     const buildList = React.useCallback(() => {
-        return <ScrollView className='flex-1 z-10 mt-5 bg-[#F7F7F7] dark:bg-[#0A1220]'
+        return <FlatList className='flex-1 z-10 mt-5 bg-[#F7F7F7] dark:bg-[#0A1220]'
             showsVerticalScrollIndicator={false}
             refreshControl={
                 <RefreshControl refreshing={loading} onRefresh={fetchDatas} />
             }
-        >
-            <>
-                {
-                    filteredData.map((item, index) => {
-                        return <React.Fragment key={index}>
-                            <CourseItem data={item} onPress={() => {
-                                navigation.navigate('SubjectScreen', {
-                                    id_progress: item.id_education_progress,
-                                    id_family,
-                                    id_subject: item.id_subject
-                                })
-                            }}
-                                index={index}
-                            />
-                        </React.Fragment>
+            data={filteredData}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => {
+                return <CourseItem data={item} onPress={() => {
+                    navigation.navigate('SubjectScreen', {
+                        id_progress: item.id_education_progress,
+                        id_family,
+                        id_subject: item.id_subject
                     })
-                }
-                <View className='my-2'>
+                }}
+                    index={index}
+                />
+            }}
+            initialNumToRender={4}
+            maxToRenderPerBatch={4}
+            
+        />
 
-                </View>
-            </>
-        </ScrollView>
     }, [filteredData, loading])
 
     return (
         <View className="flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]">
             <ProgressScreenHeader navigationBack={() => navigation.goBack()}
                 idFamily={id_family!}
-                imageUrl={familyInfo!.avatar || undefined}
+                imageUrl={familyInfo?.avatar || undefined}
                 addCourseBottomSheetRef={addCourseBottomSheetRef}
             />
 

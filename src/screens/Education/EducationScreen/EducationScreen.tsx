@@ -35,6 +35,7 @@ import FamilyServices from 'src/services/apiclient/FamilyServices';
 import { Member } from 'src/interface/member/member';
 import EducationTab from 'src/components/user/education/education-screen/education-tab';
 import EmptyListIcon from 'src/assets/images/education_assets/no_member.png';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) => {
     const { id_family } = route.params
@@ -50,7 +51,8 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
     const [members, setFamilyMembers] = React.useState<Member[]>([])
 
     const [pickedIdUser, setPickedIdUser] = React.useState<string>("")
-    const { colorScheme, setColorScheme } = useColorScheme()
+    const translate = useSelector(getTranslate);
+
     const updateEducationSheetRef = useRef<BottomSheet>(null)
     const [titleUpdate, setTitleUpdate] = React.useState<string>("")
     const [schoolInfoUpdate, setSchoolInfoUpdate] = React.useState<string>("")
@@ -199,8 +201,12 @@ const EducationScreen: React.FC<EducationScreenProps> = ({ navigation, route }) 
                             width: ScreenHeight * 0.2,
                         }} />
                     </View>
-                    <Text className='text-[#747474] dark:text-[#8D94A5] my-2 font-bold text-lg'>Nothing here?</Text>
-                    <Text className='mx-[15%] text-center text-sm text-[#747474] dark:text-[#8D94A5]'>Tap on the button to add education</Text>
+                    <Text className='text-[#747474] dark:text-[#8D94A5] my-2 font-bold text-lg'>{
+                        translate('edu_screen_empty_title')
+                    }</Text>
+                    <Text className='mx-[15%] text-center text-sm text-[#747474] dark:text-[#8D94A5]'>{
+                        translate('edu_screen_empty_description')
+                    }</Text>
                 </View>
             </ScrollView>
         </View>
@@ -360,6 +366,8 @@ interface EducationItemProps {
 
 const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, onDeleteItem, isMe, handleShareEdu }: EducationItemProps) => {
     const isDarkMode = useSelector(getIsDarkMode)
+    const translate = useSelector(getTranslate)
+
     return <TouchableOpacity className='flex-row mx-6 items-center my-2 py-3  bg-white dark:bg-[#252D3B] shadow-lg rounded-lg'
         onPress={() => {
             handleNavigateProgress(item.id_education_progress)
@@ -403,7 +411,7 @@ const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, 
                                 }} >
 
                                     <View className='flex-row items-center justify-between'>
-                                        <Text className='text-base' style={{ color: iOSColors.systemBlue.defaultLight }}>Update</Text>
+                                        <Text className='text-base' style={{ color: iOSColors.systemBlue.defaultLight }}>{translate('Update')}</Text>
                                         <Material name="pencil" size={20} style={{ color: iOSColors.systemBlue.defaultLight, fontWeight: "bold" }} />
                                     </View>
                                 </MenuOption>
@@ -416,11 +424,11 @@ const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, 
                                             {
                                                 item.is_shared ?
                                                     <View className='flex-row items-center justify-between'>
-                                                        <Text className='text-base' style={{ color: iOSColors.systemBlue.defaultLight }}>Private</Text>
+                                                        <Text className='text-base' style={{ color: iOSColors.systemBlue.defaultLight }}>{translate("edu_screen_item_private_text")}</Text>
                                                         <Material name="publish-off" size={20} style={{ color: iOSColors.systemBlue.defaultLight, fontWeight: "bold" }} />
                                                     </View>
                                                     : <View className='flex-row items-center justify-between'>
-                                                        <Text className='text-base' style={{ color: iOSColors.systemBlue.defaultLight }}>Public</Text>
+                                                        <Text className='text-base' style={{ color: iOSColors.systemBlue.defaultLight }}>{translate("edu_screen_item_public_text")}</Text>
                                                         <Material name="publish" size={20} style={{ color: iOSColors.systemBlue.defaultLight, fontWeight: "bold" }} />
                                                     </View>
                                             }
@@ -434,7 +442,7 @@ const EducationItem = ({ item, handleNavigateProgress, openUpdateProgressSheet, 
                                 }} >
 
                                     <View className='flex-row items-center justify-between'>
-                                        <Text className='text-base ' style={{ color: iOSColors.systemRed.defaultLight }}>Delete</Text>
+                                        <Text className='text-base ' style={{ color: iOSColors.systemRed.defaultLight }}>{translate("Delete")}</Text>
                                         <Material name="trash-can-outline" size={20} style={{ color: iOSColors.systemRed.defaultLight, fontWeight: "bold" }} />
                                     </View>
                                 </MenuOption>

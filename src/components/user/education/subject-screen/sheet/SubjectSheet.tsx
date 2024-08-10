@@ -8,11 +8,12 @@ import AutoHeightRBSheet from 'src/components/AutoHeightRBSheet/AutoHeightRBShee
 import PickExpectedScoreSheet from './PickExpectedScoreSheet';
 import PickScoreSheet from './PickScoreSheet';
 import { AppDispatch } from 'src/redux/store';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearScoreOfSubject, deleteComponentScoreOfSubject } from 'src/redux/slices/EducationSlice';
 import PickNameSheet from './PickNameSheet';
 import { useToast } from 'react-native-toast-notifications';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 interface SubjectSheetProps {
     bottomSheetRef: React.RefObject<any>,
     subjectComponentData: ComponentScore,
@@ -28,8 +29,8 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
     const setExpectedSheetRef = React.useRef<any>(null);
     const setScoreSheetRef = React.useRef<any>(null);
     const setNameSheetRef = React.useRef<any>(null);
-    const [selectedLanguage, setSelectedLanguage] = React.useState();
     const dispatch = useDispatch<AppDispatch>();
+    const translate = useSelector(getTranslate)
     const toast = useToast();
 
     return (
@@ -55,7 +56,9 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                     // await handleTakePhoto()
 
                 }}>
-                    <Text className='text-lg font-semibold text-black dark:text-white'>Set score</Text>
+                    <Text className='text-lg font-semibold text-black dark:text-white'>{
+                        translate("subject_screen_set_score")
+                        }</Text>
                 </TouchableOpacity>
                 <TouchableOpacity className='h-16 mb-6 flex-row items-center justify-center border-[1px] border-[#d1d1d1] dark:border-[#232A3D] rounded-lg shadow-sm bg-white dark:bg-[#232A3D]' onPress={async () => {
                     // dispatch(clearScoreOfSubject({
@@ -68,7 +71,9 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                 }}>
                     <Text className='text-lg font-semibold' style={{
                         color: iOSColors.systemBlue.defaultLight
-                    }}>Update name</Text>
+                    }}>{
+                        translate("subject_screen_update_name")
+                    }</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity className='h-16 flex-row items-center justify-center border-[1px] border-[#d1d1d1] dark:border-[#232A3D]  rounded-lg shadow-sm bg-white dark:bg-[#232A3D]' onPress={async () => {
@@ -81,7 +86,9 @@ const SubjectSheet = ({ bottomSheetRef, subjectComponentData, index, id_subject,
                 }}>
                     <Text className='text-lg font-semibold' style={{
                         color: iOSColors.systemRed.defaultDark
-                    }}>Delete component score</Text>
+                    }}>{
+                        translate("subject_screen_delete_component_score")
+                    }</Text>
                 </TouchableOpacity>
             </View>
             <PickExpectedScoreSheet

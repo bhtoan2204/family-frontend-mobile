@@ -19,6 +19,7 @@ import { updateComsumableItem } from 'src/redux/slices/HouseHoldDetailSlice';
 import { handleRestore } from 'src/utils/sheet/func';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { useToast } from 'react-native-toast-notifications';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface AddEditConsumableSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -54,6 +55,8 @@ const AddEditConsumableSheet = ({
     const [quantity, setQuantity] = React.useState(consumableItem ? consumableItem.quantity : 0)
     const [threshhold, setThreshhold] = React.useState(consumableItem ? consumableItem.threshold : 0)
     const isDarkMode = useSelector(getIsDarkMode)
+    const translate = useSelector(getTranslate)
+
     const toast = useToast()
 
     useEffect(() => {
@@ -150,7 +153,7 @@ const AddEditConsumableSheet = ({
 
     const buildAddQuantity = () => {
         return <BottomSheetTextInput
-            placeholder={consumableItem ? 'Edit quantity' : 'How many items do you have?'}
+            placeholder={consumableItem ? 'Edit' + translate('household_detail_quantity_text') : translate('household_detail_quantity_text')}
             keyboardType='numeric'
             value={quantity.toString()}
             onChangeText={(text) => {
@@ -178,7 +181,7 @@ const AddEditConsumableSheet = ({
 
     const buildAddThreshhold = () => {
         return <BottomSheetTextInput
-            placeholder={consumableItem ? 'Edit threshold' : 'How many items do you want to be notified?'}
+            placeholder={consumableItem ? 'Edit' + translate('household_detail_threshold_text') : translate('household_detail_threshold_text')}
             keyboardType='numeric'
             value={threshhold.toString()}
             onChangeText={(text) => {
@@ -292,11 +295,11 @@ const AddEditConsumableSheet = ({
                     </View>
                     <View className=' items-center'>
                         <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >{
-                            consumableItem ? 'Edit consumable item' : 'Add Comsumable Item'
+                            consumableItem ? translate('household_detail_edit_consumable_title') : translate('household_detail_add_consumable_title')
                         }
                         </Text>
                         <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >{
-                            consumableItem ? 'Change your consumable item information' : 'Fill in the consumable information for your item'
+                            consumableItem ? translate('household_detail_edit_consumable_description') : translate('household_detail_add_consumable_description')
                         }</Text>
                     </View>
                     {
