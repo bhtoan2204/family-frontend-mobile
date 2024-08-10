@@ -481,5 +481,10 @@
   "PAYMENT_HISTORY": "Lịch sử thanh toán",
   "Mark All Read": "Đánh dấu tất cả đã đọc",
   "View detail": "Xem chi tiết",
-  "DeleteMessage": "Xóa tin nhắn"
+  "DeleteMessage": "Xóa tin nhắn",
+  "LetStartWithService": "Bắt đầu với các dịch vụ",
+  "FamFundCombo": "Các gói của FamFund",
+  "ManagingFamily": "Quản lý gia đình giờg đã đơn giản hơn",
+  "COMBO": "Combo",
+  "SERVICE": "Dịch vụ"
 }

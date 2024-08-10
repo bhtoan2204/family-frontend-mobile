@@ -4,13 +4,21 @@ import {COLORS} from 'src/constants';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f7f7f7',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 10,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    height: 160,
+    paddingTop: 20,
+    paddingBottom: 40,
   },
   comboList: {
     marginBottom: 20,
@@ -66,6 +74,11 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 10,
   },
+  avatarSelected: {
+    width: 170,
+    height: 170,
+    borderRadius: 10,
+  },
   familyName: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -93,12 +106,22 @@ const styles = StyleSheet.create({
     color: '#ccc',
   },
   serviceItem: {
-    marginBottom: 15,
     padding: 15,
     backgroundColor: '#fff',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#f0f0f0',
+  },
+  serviceItem1: {
+    padding: 15,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 10,
   },
   serviceItemActive: {
     borderColor: '#007bff',
@@ -108,14 +131,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   serviceNamePur: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     color: 'gray',
   },
   servicePrice: {
     fontSize: 14,
     color: COLORS.DenimBlue,
-    marginTop: 5,
   },
   serviceDescription: {
     fontSize: 14,
@@ -123,9 +145,8 @@ const styles = StyleSheet.create({
   },
   serviceActions: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 10,
   },
   purchasedIndicator: {
     color: '#28a745',
@@ -137,11 +158,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 5,
     flexDirection: 'row',
+    marginLeft: 40,
+    gap: 8,
+  },
+  purchaseButtonText1: {
+    color: '#fff',
+    fontWeight: 'bold',
+    marginLeft: 75,
   },
   purchaseButtonText: {
     color: '#fff',
     fontWeight: 'bold',
-    marginRight: 10,
   },
   loadingContainer: {
     flex: 1,
@@ -150,16 +177,23 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent background
   },
   searchContainer: {
-    width: '90%',
+    width: '50%',
     alignSelf: 'center',
-    backgroundColor: '#fff',
-    padding: 15,
+    padding: 10,
     borderRadius: 10,
     flexDirection: 'row',
-    marginBottom: 10,
+    gap: 10,
+    borderBottomWidth: 1,
+    backgroundColor: 'transparent',
   },
+  searchIconContainer: {
+    borderRadius: 10,
+  },
+  searchIcon: {padding: 10},
   headerSearchInput: {
     flex: 1,
+    padding: 10,
+    fontSize: 16,
   },
   yourFamily: {
     fontSize: 20,
@@ -176,6 +210,49 @@ const styles = StyleSheet.create({
     marginTop: 10, // Khoảng cách từ hình ảnh đến tên
     fontWeight: 'bold',
     color: '#5E5D5D',
+  },
+  mainContainer: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginTop: -20,
+    paddingHorizontal: 5,
+    paddingVertical: 20,
+    height: '100%',
+  },
+  buttonGroup: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    bottom: 20,
+    width: 415,
+    alignSelf: 'center',
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
+  },
+  button: {
+    padding: 10,
+    marginHorizontal: 5,
+    alignItems: 'center',
+    gap: 10,
+  },
+  buttonActive: {
+    borderBottomWidth: 4,
+  },
+  buttonText: {
+    fontWeight: 'bold',
+  },
+  serviceContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 10,
+  },
+  rightSideService: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '60%',
+    gap: 5,
   },
 });
 

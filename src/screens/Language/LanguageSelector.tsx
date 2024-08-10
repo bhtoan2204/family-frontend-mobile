@@ -42,7 +42,7 @@ const HomeScreen = ({navigation}) => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.headerButton}>
-          <Icon name="close" size={30} color={color.text} />
+          <Icon name="chevron-back" size={30} color={color.text} />
         </TouchableOpacity>
         <Text style={[styles.headerText, {color: color.text}]}>
           {translate('Language')}

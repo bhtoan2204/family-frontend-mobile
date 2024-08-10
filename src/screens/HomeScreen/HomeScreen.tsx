@@ -245,7 +245,7 @@ const HomeScreen = ({
   const views = [
     <View style={[styles.pictureBox, {backgroundColor: '#9572A7'}]}>
       <View style={styles.columnStyle}>
-        <Text style={styles.text}>Managing anything is now easier</Text>
+        <Text style={styles.text}>{translate('ManagingFamily')}</Text>
         <Image
           source={require('../../assets/images/family-picture.png')}
           resizeMode="stretch"
@@ -474,7 +474,7 @@ const HomeScreen = ({
                     </View>
                     <View style={{flexDirection: 'column'}}>
                       <Text style={[styles.title, {color: color.text}]}>
-                        Let's Start with Service
+                        {translate('LetStartWithService')}
                       </Text>
                       <View style={{flexDirection: 'row'}}></View>
                     </View>
@@ -495,11 +495,11 @@ const HomeScreen = ({
                         height: 70,
                         aspectRatio: 1,
                         padding: 10,
-                        borderRadius: 30,
+                        borderRadius: 20,
                         backgroundColor: color.white,
                         alignItems: 'center',
                         justifyContent: 'center',
-                        shadowColor: '#000',
+                        shadowColor: COLORS.Rhino,
                         shadowOffset: {width: 0, height: 1},
                         shadowOpacity: 0.2,
                         shadowRadius: 5,
@@ -539,7 +539,7 @@ const HomeScreen = ({
 
             <View style={styles.comboContainer}>
               <Text style={[styles.textCombo, {color: color.text}]}>
-                FamFund's Combo
+                {translate('FamFundCombo')}
               </Text>
               <ScrollView
                 horizontal={true}

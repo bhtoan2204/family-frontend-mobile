@@ -463,5 +463,10 @@
   "PAYMENT_HISTORY": "Payment history",
   "Mark All Read": "Mark all read",
   "View detail": "View detail",
-  "DeleteMessage": "Delete"
+  "DeleteMessage": "Delete",
+  "LetStartWithService": "Let's Start with Services",
+  "FamFundCombo": "FamFund's Combo",
+  "ManagingFamily": "Managing anything is now easier",
+  "COMBO": "Combo",
+  "SERVICE": "Service"
 }
