@@ -180,7 +180,12 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
     Shopping: require('../../../assets/images/service_image/shopping.png'),
     Household: require('../../../assets/images/service_image/household.png'),
   };
-
+  const getDescription = (description: string) => {
+    if (description && description.endsWith('.')) {
+      return description.slice(0, -1);
+    }
+    return description;
+  };
   return (
     <View>
       <View
@@ -366,17 +371,20 @@ const ServiceScreen = ({navigation, route}: ViewAllServiceProps) => {
                         ]}>
                         {translate(pkg.name)}
                       </Text>
-                      <Text
-                        style={[
-                          styles.serviceDescription,
-                          {
-                            color: color.textSubdued,
-                            flexWrap: 'wrap',
-                            width: '100%',
-                          },
-                        ]}>
-                        {translate(pkg.description)}
-                      </Text>
+                      {pkg.description && (
+                        <Text
+                          style={[
+                            styles.serviceDescription,
+                            {
+                              color: color.textSubdued,
+                              flexWrap: 'wrap',
+                              width: '100%',
+                            },
+                          ]}>
+                          {translate(getDescription(pkg.description))}
+                        </Text>
+                      )}
+
                       <View
                         style={[
                           styles.serviceActions,

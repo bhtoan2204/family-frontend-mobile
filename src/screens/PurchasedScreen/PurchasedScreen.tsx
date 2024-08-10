@@ -161,7 +161,9 @@ const PurchasedScreen = ({navigation}: PurchasedScreenProps) => {
                 )}
               </>
             ) : (
-              <Text>{translate('No members found')}</Text>
+              <Text style={{color: color.text}}>
+                {translate('No members found')}
+              </Text>
             )}
           </View>
         </View>

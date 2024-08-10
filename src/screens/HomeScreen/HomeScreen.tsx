@@ -33,6 +33,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {UserProfile} from 'src/interface/user/userProfile';
 import {RootState} from 'src/redux/store';
 import {
+  selectSelectedFamily,
   setFamilies,
   setFamilyMembers,
   setSelectedFamily,
@@ -132,6 +133,7 @@ const HomeScreen = ({
   const profile = useSelector((state: RootState) => state.profile.profile);
   const screenWidth = Dimensions.get('screen').width;
   const locale = useSelector(selectLocale);
+  const selectedFamily = useSelector(selectSelectedFamily);
 
   const source =
     profile?.avatar && profile?.avatar !== '[NULL]'
@@ -162,9 +164,15 @@ const HomeScreen = ({
     });
   };
   const handleFamily = () => {
-    navigation.navigate('FamilyTab', {
-      screen: 'Family',
-    });
+    if (selectedFamily) {
+      navigation.navigate('FamilyTab', {
+        screen: 'Family',
+      });
+    } else {
+      navigation.navigate('PackStack', {
+        screen: 'ViewAllPurchased',
+      });
+    }
   };
   useEffect(() => {
     fetchFamiliesAndMembers();

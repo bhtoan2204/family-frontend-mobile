@@ -18,10 +18,10 @@ const AuthServices = {
       if (response.status === 200) {
         return userData;
       } else {
-        return null;
+        throw new Error(ERROR_TEXTS.USER_NOT_FOUND);
       }
     } catch (error) {
-      return null;
+      throw new Error(ERROR_TEXTS.USER_NOT_FOUND);
     }
   },
 

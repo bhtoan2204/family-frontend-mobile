@@ -438,20 +438,16 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
         <ScrollView showsVerticalScrollIndicator={false} style={{}}>
           <View style={styles.container}>
             {cards.map(card => {
-              // Đảm bảo functions luôn là một mảng
               const availableFunctions = functions || [];
 
-              // Kiểm tra nếu chức năng có mặt trong availableFunctions
               const isFunctionAvailable = availableFunctions.some(
                 func => func.name === card.title,
               );
 
-              // Kiểm tra nếu có chức năng 'Calendar' và thẻ là 'Check List'
               const hasShoppingAndChecklist = availableFunctions.some(
                 func => func.name === 'Calendar' && card.title === 'Check List',
               );
 
-              // Luôn hiển thị 'Members' và thẻ nếu có trong availableFunctions
               if (
                 card.title === 'Members' ||
                 isFunctionAvailable ||
@@ -476,6 +472,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
               return null;
             })}
           </View>
+          <View style={{height: 600}}></View>
         </ScrollView>
       </View>
       <OptionsModal
