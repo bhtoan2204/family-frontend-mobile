@@ -482,9 +482,6 @@
   "Mark All Read": "Đánh dấu tất cả đã đọc",
   "View detail": "Xem chi tiết",
   "DeleteMessage": "Xóa tin nhắn",
-  "LetStartWithService": "Bắt đầu với các dịch vụ",
-  "FamFundCombo": "Các gói của FamFund",
-  "ManagingFamily": "Quản lý gia đình giờg đã đơn giản hơn",
-  "COMBO": "Combo",
-  "SERVICE": "Dịch vụ"
+  "Purchased": "Đã mua",
+  "Not Purchased": "Chưa mua"
 }

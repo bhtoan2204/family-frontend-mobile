@@ -207,7 +207,7 @@ const HomeScreen = ({
 
       dispatch(setFamilyMembers(membersObject));
     } catch (error) {
-      // console.error('Error fetching families or members:', error);
+      console.error('Error fetching families or members:', error);
     }
   };
 
@@ -245,7 +245,7 @@ const HomeScreen = ({
   const views = [
     <View style={[styles.pictureBox, {backgroundColor: '#9572A7'}]}>
       <View style={styles.columnStyle}>
-        <Text style={styles.text}>{translate('ManagingFamily')}</Text>
+        <Text style={styles.text}>Managing anything is now easier</Text>
         <Image
           source={require('../../assets/images/family-picture.png')}
           resizeMode="stretch"
@@ -474,7 +474,7 @@ const HomeScreen = ({
                     </View>
                     <View style={{flexDirection: 'column'}}>
                       <Text style={[styles.title, {color: color.text}]}>
-                        {translate('LetStartWithService')}
+                        Let's Start with Service
                       </Text>
                       <View style={{flexDirection: 'row'}}></View>
                     </View>
@@ -495,11 +495,11 @@ const HomeScreen = ({
                         height: 70,
                         aspectRatio: 1,
                         padding: 10,
-                        borderRadius: 20,
+                        borderRadius: 30,
                         backgroundColor: color.white,
                         alignItems: 'center',
                         justifyContent: 'center',
-                        shadowColor: COLORS.Rhino,
+                        shadowColor: '#000',
                         shadowOffset: {width: 0, height: 1},
                         shadowOpacity: 0.2,
                         shadowRadius: 5,
@@ -539,7 +539,7 @@ const HomeScreen = ({
 
             <View style={styles.comboContainer}>
               <Text style={[styles.textCombo, {color: color.text}]}>
-                {translate('FamFundCombo')}
+                FamFund's Combo
               </Text>
               <ScrollView
                 horizontal={true}

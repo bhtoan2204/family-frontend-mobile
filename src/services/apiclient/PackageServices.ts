@@ -82,8 +82,8 @@ const PackageServices = {
         throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
       }
     } catch (error: any) {
-      // console.error('Error in getAllPackages:', error.message);
-      // throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+      console.error('Error in getAllPackages:', error.message);
+      throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
     }
   },
 
@@ -98,8 +98,8 @@ const PackageServices = {
         throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
       }
     } catch (error: any) {
-      // console.error('Error in getAllPackages:', error.message);
-      // throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+      console.error('Error in getAllPackages:', error.message);
+      throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
     }
   },
 
@@ -114,8 +114,8 @@ const PackageServices = {
         throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
       }
     } catch (error: any) {
-      // console.error('Error in getAllPackages:', error.message);
-      // throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+      console.error('Error in getAllPackages:', error.message);
+      throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
     }
   },
 
@@ -130,8 +130,8 @@ const PackageServices = {
         throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
       }
     } catch (error: any) {
-      // console.error('Error in getAllPackages:', error.message);
-      // throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
+      console.error('Error in getAllPackages:', error.message);
+      throw new Error(ERROR_TEXTS.PACKAGE_NOT_FOUND);
     }
   },
 
