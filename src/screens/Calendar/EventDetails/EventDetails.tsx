@@ -6,6 +6,7 @@ import {
   Alert,
   FlatList,
   ScrollView,
+  Image,
 } from 'react-native';
 import {EventDetailsScreenProps} from 'src/navigation/NavigationTypes';
 import {useSelector, useDispatch} from 'react-redux';
@@ -531,19 +532,31 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
           elevation: 5,
         },
       ]}>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text
-          style={[
-            styles.header,
-            {
-              color: color.text,
-              fontSize: 16,
-              fontWeight: 'bold',
-              fontStyle: 'italic',
-            },
-          ]}>
-          {translate('Check List')}
-        </Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginTop: 10,
+        }}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Image
+            source={require('../../../assets/images/pen.png')}
+            resizeMode="stretch"
+            style={{width: 25, height: 25}}
+          />
+          <Text
+            style={[
+              styles.header,
+              {
+                color: color.text,
+                fontSize: 16,
+                fontWeight: 'bold',
+                fontStyle: 'italic',
+              },
+            ]}>
+            {translate('ReminderPoint')}
+          </Text>
+        </View>
         <TouchableOpacity
           onPress={() =>
             navigation.navigate('TodoListStack', {
@@ -555,9 +568,18 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
             })
           }
           style={styles.header}>
-          <Text style={{color: color.BlueLight, fontWeight: '800'}}>
-            {translate('View detail')}
-          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              left: 15,
+            }}>
+            <Text
+              style={{color: color.BlueLight, fontWeight: '800', fontSize: 13}}>
+              {translate('View More')}
+            </Text>
+            <Feather name="chevron-right" size={20} color={color.BlueLight} />
+          </View>
         </TouchableOpacity>
       </View>
       {checkList && checkList.length > 0 ? (
@@ -674,7 +696,7 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
           )}
         </View>
         {!event.checklistType ? (
-          <TouchableOpacity
+          <View
             style={[
               styles.button,
               {
@@ -685,20 +707,10 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                 shadowOffset: {width: 0, height: 4},
                 shadowOpacity: 0.2,
                 shadowRadius: 8,
-
                 elevation: 5,
+                flexDirection: 'column',
               },
-            ]}
-            onPress={() =>
-              navigation.navigate('TodoListStack', {
-                screen: 'TodoList',
-                params: {
-                  id_family: event.id_family,
-                  openSheet: true,
-                  id_calendar: event.id_calendar,
-                },
-              })
-            }>
+            ]}>
             <View
               style={{
                 justifyContent: 'space-between',
@@ -709,21 +721,76 @@ const EventDetailsScreen = ({route, navigation}: EventDetailsScreenProps) => {
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
+                  flex: 1,
                 }}>
-                <Feather name="list" size={24} color={color.text} />
-                <Text style={[styles.buttonText, {color: color.text}]}>
-                  {translate('New Check List')}
+                <Image
+                  source={require('../../../assets/images/pen.png')}
+                  resizeMode="stretch"
+                  style={{width: 25, height: 25}}
+                />
+                <Text
+                  style={[
+                    styles.header,
+                    {
+                      color: color.text,
+                      fontSize: 16,
+                      fontWeight: 'bold',
+                      fontStyle: 'italic',
+                    },
+                  ]}>
+                  {translate('ReminderPoint')}
                 </Text>
               </View>
-
-              <Feather
-                name="arrow-right"
-                size={24}
-                color={color.text}
-                style={{marginLeft: 'auto'}}
-              />
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('TodoListStack', {
+                    screen: 'TodoList',
+                    params: {
+                      id_family: event.id_family,
+                      openSheet: true,
+                      id_calendar: event.id_calendar,
+                    },
+                  })
+                }>
+                <Feather
+                  name="plus"
+                  size={28}
+                  color={color.text}
+                  style={{marginLeft: 'auto'}}
+                />
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
+            <View
+              style={{
+                alignItems: 'center',
+                width: '80%',
+                gap: 10,
+                marginVertical: 20,
+              }}>
+              <Image
+                source={require('../../../assets/images/free.png')}
+                resizeMode="stretch"
+                style={{width: 95, height: 160, right: 10}}
+              />
+              <Text
+                style={{
+                  color: color.text,
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                }}>
+                {translate('FreeAsBird')}
+              </Text>
+              <Text
+                style={{
+                  color: color.text,
+                  fontSize: 13,
+                  fontStyle: 'italic',
+                  textAlign: 'center',
+                }}>
+                {translate('FreeAsBirdDetail')}
+              </Text>
+            </View>
+          </View>
         ) : (
           renderChecklists()
         )}
