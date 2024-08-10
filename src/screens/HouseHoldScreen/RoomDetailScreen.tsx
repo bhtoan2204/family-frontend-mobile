@@ -11,6 +11,7 @@ import { updateImageProp } from 'src/redux/slices/HouseHoldDetailSlice'
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 import HouseHoldService from 'src/services/apiclient/HouseHoldService'
 import { setHouseholdItems, setLoading, setRoom, setTotalItem, setTotalRoom } from 'src/redux/slices/HouseHoldDataSlice'
+import { getTranslate } from 'src/redux/slices/languageSlice'
 
 
 const RoomDetailScreen = ({ navigation, route, setAddItemType, setPickedRoom, addItemSheetRef }: RoomDetailScreenProps) => {
@@ -19,7 +20,7 @@ const RoomDetailScreen = ({ navigation, route, setAddItemType, setPickedRoom, ad
     const roomInfo = useSelector((state: RootState) => state.household).rooms.find(room => room.id_room == id_room)
     const dispatch = useDispatch<AppDispatch>()
     const loading = useSelector((state: RootState) => state.household).loading
-
+    const translate = useSelector(getTranslate)
     const refetchData = React.useCallback(async () => {
         const fetchData = async () => {
             const roomData = await HouseHoldService.getAllRoom(id_family!, 1, 100)
@@ -80,8 +81,9 @@ const RoomDetailScreen = ({ navigation, route, setAddItemType, setPickedRoom, ad
                 >
                     <Text className='text-sm text-[#434343] dark:text-[#8D94A5]'
 
-                    >{householdItems.length} {householdItems.length > 1 ? "items" :
-                        "item"} add</Text>
+                    >{householdItems.length} {
+                            translate('item_added_text')
+                        }</Text>
 
 
                     <Text className='text-sm font-semibold'
@@ -92,7 +94,9 @@ const RoomDetailScreen = ({ navigation, route, setAddItemType, setPickedRoom, ad
                             // console.log('add item')
                             addItemSheetRef!.current?.expand()
                         }}
-                    >Add item</Text>
+                    >{
+                            translate('add_item_text')
+                        }</Text>
 
                 </View>
                 <ItemItems data={householdItems}

@@ -59,7 +59,10 @@ const TodoListServices = {
       icon_url,
     });
     if (res.status === 201) {
-      return res.data.data as TodoListType;
+      return {
+        ...res.data.data,
+        checklists: [],
+      } as TodoListType;
     } else {
       return null;
     }

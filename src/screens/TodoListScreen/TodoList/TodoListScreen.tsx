@@ -1,5 +1,5 @@
-import {addMonths, endOfMonth, format, startOfMonth, subMonths} from 'date-fns';
-import React, {useCallback, useEffect, useState} from 'react';
+import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -16,26 +16,26 @@ import {
   Calendar,
   CalendarList,
 } from 'react-native-calendars';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   ShoppingListScreenProps,
   TodoListScreenProps,
 } from 'src/navigation/NavigationTypes';
-import {AppDispatch, RootState} from 'src/redux/store';
+import { AppDispatch, RootState } from 'src/redux/store';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import {COLORS} from 'src/constants';
-import {colors} from '../const/color';
-import {getIsDarkMode} from 'src/redux/slices/DarkModeSlice';
-import {setDateSelected} from 'src/redux/slices/TodoListSlice';
+import { COLORS } from 'src/constants';
+import { colors } from '../const/color';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import { setDateSelected } from 'src/redux/slices/TodoListSlice';
 import BottomSheet from '@gorhom/bottom-sheet';
 import AddListSheet from 'src/components/user/shopping-todo/sheet/add-list-sheet';
-import {ScreenHeight} from '@rneui/base';
-import {useToast} from 'react-native-toast-notifications';
+import { ScreenHeight } from '@rneui/base';
+import { useToast } from 'react-native-toast-notifications';
 import TodoListTypeSkeleton from './skeleton';
 const screenHeight = Dimensions.get('screen').height;
 
-const TodoListScreen = ({navigation, route}: TodoListScreenProps) => {
-  const {id_family, openSheet, id_calendar} = route.params;
+const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
+  const { id_family, openSheet, id_calendar } = route.params;
 
   useEffect(() => {
     console.log(id_family, openSheet, id_calendar);
@@ -121,7 +121,7 @@ const TodoListScreen = ({navigation, route}: TodoListScreenProps) => {
         <View className="">
           <Text
             className="flex-1 text-center text-base text-[#2A475E] dark:text-[#fff]"
-            style={{fontWeight: 'bold'}}>
+            style={{ fontWeight: 'bold' }}>
             {buildDate(selectDate)}
           </Text>
         </View>
@@ -156,7 +156,7 @@ const TodoListScreen = ({navigation, route}: TodoListScreenProps) => {
           key={type.id_checklist_type}
           id_category={type.id_checklist_type}
           category_name={type.name_en}
-          total_items={type.checklists.length}
+          total_items={type.checklists ? type.checklists.length : 0}
           handleNavigateCategory={(id_category: number) => {
             // console.log('navigate')
             navigation.navigate('TodoListCategory', {
@@ -234,7 +234,7 @@ const TodoListScreen = ({navigation, route}: TodoListScreenProps) => {
             key={key.toString()}
             onDayPress={handleDayPress}
             markedDates={{
-              [selectDate]: {selected: true, selectedColor: COLORS.DenimBlue},
+              [selectDate]: { selected: true, selectedColor: COLORS.DenimBlue },
             }}
             initialDate={selectDate}
             theme={{
@@ -303,7 +303,7 @@ const TodoListScreen = ({navigation, route}: TodoListScreenProps) => {
             id_category: id_category,
           });
         }}
-        onAddFailed={() => {}}
+        onAddFailed={() => { }}
         id_calendar={id_calendar}
       />
     </SafeAreaView>
@@ -354,7 +354,7 @@ const TodoListCategoryItem = ({
                   : colors[9],
             }}>
             <Image
-              source={{uri: iconUrl}}
+              source={{ uri: iconUrl }}
               style={{
                 width: screenHeight * 0.04,
                 height: screenHeight * 0.04,

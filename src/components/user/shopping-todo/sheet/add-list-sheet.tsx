@@ -87,7 +87,7 @@ const AddListSheet = ({
             const newTodoListType = await TodoListServices.addTodoListType({
                 id_family: id_family,
                 name: inputName,
-                id_calendar: id_calendar ? id_calendar : 0,
+                id_calendar: id_calendar ? id_calendar : null,
                 icon_url: pickIcon
             })
             console.log("newTodoListType", newTodoListType)

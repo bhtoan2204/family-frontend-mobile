@@ -17,6 +17,7 @@ import Room2 from 'src/assets/images/household_assets/Room_2.png'
 import { handleRestore } from 'src/utils/sheet/func';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { addRoom } from 'src/redux/slices/HouseHoldDataSlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface AddRoomSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -38,6 +39,7 @@ const AddRoomSheet = ({
     const [errorText, setErrorText] = React.useState('')
     const [showError, setShowError] = React.useState(false)
     const isDarkMode = useSelector(getIsDarkMode)
+    const translate = useSelector(getTranslate)
     const pickImageSheetRef = React.useRef<any>(null)
 
     useEffect(() => {
@@ -233,11 +235,15 @@ const AddRoomSheet = ({
                         <Image source={Room2} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                     </View>
                     <View className=' items-center'>
-                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white'>Add New Room</Text>
-                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]'>Type in the new room for your rooms list</Text>
+                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white'>{
+                            translate('household_add_room_title')
+                        }</Text>
+                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]'>{
+                            translate('household_add_room_description')
+                        }</Text>
                     </View>
                     <BottomSheetTextInput
-                        placeholder='Give your new room a name'
+                        placeholder={translate('household_add_room_placeholder')}
                         value={text}
                         onChangeText={(text) => {
                             setText(text)

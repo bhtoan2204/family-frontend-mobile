@@ -15,6 +15,7 @@ import AddComponentScoreImage from 'src/assets/images/education_assets/add_compo
 import TargetImage from 'src/assets/images/education_assets/target.png';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { handleRestore } from 'src/utils/sheet/func';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface AddItemSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -60,6 +61,7 @@ const AddComponentScoreSheet1 = ({
 
     // const [inputName, setInputName] = React.useState('')
     const isDarkMode = useSelector(getIsDarkMode)
+    const translate = useSelector(getTranslate)
     useEffect(() => {
         if (showError) {
             setTimeout(() => {
@@ -125,7 +127,9 @@ const AddComponentScoreSheet1 = ({
                             <Image source={TargetImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                         </View>
                         <View className=' items-center'>
-                            <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >Choose a targets</Text>
+                            <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >{
+                                translate('progress_screen_new_course_choose_targets')
+                                }</Text>
                             {/* <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]'>Give your new component score a name</Text> */}
                         </View>
                         <View className='items-center flex-1 justify-center  my-3'>
@@ -192,7 +196,9 @@ const AddComponentScoreSheet1 = ({
                             // console.log('ok')
                             // bottomSheetRef.current?.close()
                             addComponentSheet2Ref.current?.expand()
-                        }}>Can't find the goal you're looking for? Let's create a new one! </Text>
+                        }}>{
+                            translate('progress_screen_cant_find_target')
+                        }</Text>
 
 
 

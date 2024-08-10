@@ -11,6 +11,7 @@ import { updateImageProp } from 'src/redux/slices/HouseHoldDetailSlice'
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 import HouseHoldService from 'src/services/apiclient/HouseHoldService'
 import { setHouseholdItems, setLoading, setTotalItem } from 'src/redux/slices/HouseHoldDataSlice'
+import { getTranslate } from 'src/redux/slices/languageSlice'
 
 
 const CategoryDetailScreen = ({ navigation, route, setAddItemType, setPickedCategory, addItemSheetRef }: CategoryDetailScreenProps) => {
@@ -19,9 +20,9 @@ const CategoryDetailScreen = ({ navigation, route, setAddItemType, setPickedCate
     const householdItems = useSelector((state: RootState) => state.household).items.filter(item => item.id_category == id_category)
     const categoryInfo = useSelector((state: RootState) => state.household).categories.find(category => category.id_household_item_category == id_category)
     const isDarkMode = useSelector(getIsDarkMode)
-    const dispatch = useDispatch<AppDispatch>()
     const loading = useSelector((state: RootState) => state.household).loading
-
+    const dispatch = useDispatch<AppDispatch>()
+    const translate = useSelector(getTranslate)
     const refetchData = React.useCallback(async () => {
         const fetchData = async () => {
             const roomData = await HouseHoldService.getHouseHoldItems(id_family!, 1, 12)
@@ -78,8 +79,10 @@ const CategoryDetailScreen = ({ navigation, route, setAddItemType, setPickedCate
                 >
                     <Text className='text-sm text-[#2A475E] dark:text-[#8D94A5]'
 
-                    >{householdItems.length} {householdItems.length > 1 ? "items" :
-                        "item"} add</Text>
+                    >{householdItems.length}{
+                            translate('item_added_text')
+
+                        }</Text>
 
 
                     <Text className='text-sm font-semibold'
@@ -89,7 +92,9 @@ const CategoryDetailScreen = ({ navigation, route, setAddItemType, setPickedCate
                         onPress={() => {
                             addItemSheetRef!.current?.expand()
                         }}
-                    >Add item</Text>
+                    >{
+                            translate('add_item_text')
+                        }</Text>
 
                 </View>
                 <ItemItems data={householdItems}

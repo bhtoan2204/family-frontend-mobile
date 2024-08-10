@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateComponentScoreOfSubject } from 'src/redux/slices/EducationSlice';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import EducationServices from 'src/services/apiclient/EducationService';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 interface PickScoreSheetProps {
     setScoreSheetRef: React.RefObject<any>;
     // setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>;
@@ -40,6 +41,7 @@ const PickScoreSheet = ({ setScoreSheetRef, score, targetScore, index, id_educat
     const inputRef = React.useRef<TextInput>(null)
     const dispatch = useDispatch<AppDispatch>();
     const isDarkMode = useSelector(getIsDarkMode)
+    const translate = useSelector(getTranslate)
     const handleFocus = () => {
         setIsFocus(true)
     }
@@ -57,16 +59,16 @@ const PickScoreSheet = ({ setScoreSheetRef, score, targetScore, index, id_educat
         if (!isNaN(number)) {
             if (number >= 0 && number <= 10) {
                 if (number % 1 === 0) {
-                    return `Actual ${number}.0`;
+                    return `${translate('score')} ${number}.0`;
                 } else {
-                    return `Actual ${number}`;
+                    return `${translate('score')} ${number}`;
                 }
             }
             else {
-                return "Invalid input";
+                return translate('subject_screen_invalid_score');
             }
         } else {
-            return "Invalid input";
+            return translate('subject_screen_invalid_score');
         }
     }, [])
 
@@ -167,7 +169,9 @@ const PickScoreSheet = ({ setScoreSheetRef, score, targetScore, index, id_educat
                             color: iOSColors.systemRed.defaultDark
                         }}>Cancel</Text> */}
                     </TouchableOpacity >
-                    <Text className='text-base font-semibold '>Set score </Text>
+                    <Text className='text-base font-semibold '>{
+                        translate('subject_screen_set_score')
+                        }</Text>
                     <TouchableOpacity onPress={() => {
                         // if (isNumberInRange(inputValue)) {
                         //     handleSave()
@@ -192,8 +196,11 @@ const PickScoreSheet = ({ setScoreSheetRef, score, targetScore, index, id_educat
                                 fontWeight: '500',
                                 marginBottom: 10,
                                 marginLeft: 5,
-                                fontSize: 16
-                            }}>Score {'( 0 - 10 )'}</Text>
+                                fontSize: 16,
+                                textTransform: 'capitalize'
+                            }}>{
+                                translate('score') 
+                            } {'( 0 - 10 )'}</Text>
                             <TextInput
                                 returnKeyType={isValid ? "done" : 'next'}
                                 keyboardType='numeric'
@@ -202,7 +209,7 @@ const PickScoreSheet = ({ setScoreSheetRef, score, targetScore, index, id_educat
                                 onBlur={handleBlur}
                                 autoFocus
                                 editable
-                                placeholder="Input actual score"
+                                placeholder={translate('subject_screen_set_score_placeholder')}
                                 multiline={false}
                                 placeholderTextColor={!isDarkMode ? '#b0b0b0' : '#A6A6A6'}
                                 onChangeText={(text) => {
@@ -241,7 +248,8 @@ const PickScoreSheet = ({ setScoreSheetRef, score, targetScore, index, id_educat
                                 fontSize: 15
                             }}>
                                 <Text style={{
-                                    color: !isValid ? iOSColors.systemRed.defaultDark : (isDarkMode ? 'white' : 'black')
+                                    color: !isValid ? iOSColors.systemRed.defaultDark : (isDarkMode ? 'white' : 'black'),
+                                    textTransform: 'capitalize',
                                 }}>{showText(inputValue)}</Text>
                             </Text>
                         </View>

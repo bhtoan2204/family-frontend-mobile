@@ -38,7 +38,7 @@ const ImageComponent: React.FC<ImageProps> = ({ imageUrl, defaultImage, style, c
         />;
     }
 
-    return <Image source={{ uri: imageUrl }} style={style} resizeMode={resizeMode} resizeMethod={resizeMethod} blurRadius={blurRadius} />;
+    return <Image source={{ uri: imageUrl, cache: 'force-cache' }} style={style} resizeMode={resizeMode} resizeMethod={resizeMethod} blurRadius={blurRadius} />;
 }
 
 export default ImageComponent

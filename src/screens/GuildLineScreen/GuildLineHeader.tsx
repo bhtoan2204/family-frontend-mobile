@@ -14,6 +14,7 @@ import { iOSGrayColors, iOSColors } from 'src/constants/ios-color';
 import { GuildLineDetail } from 'src/interface/guideline/guideline';
 import { useSelector } from 'react-redux';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface GuildLineHeaderProps {
     isAdding: boolean;
@@ -60,6 +61,7 @@ const GuildLineHeader = ({
 }: GuildLineHeaderProps
 ) => {
     const isDarkMode = useSelector(getIsDarkMode)
+    const translate = useSelector(getTranslate)
     console.log(item)
     return (
         <View className='w-full  flex-row justify-between items-center py-3 z-10 mt-7 bg-[#f7f7f7] dark:bg-[#0A1220]' >
@@ -73,7 +75,9 @@ const GuildLineHeader = ({
                                 handleCancelEdit()
                             }
                         }}
-                    ><Text className='text-red-600 text-lg ml-3'>Cancel</Text>
+                    ><Text className='text-red-600 text-lg ml-3'>{
+                        translate("Cancel")
+                    }</Text>
                     </TouchableOpacity>
                     : <TouchableOpacity onPress={navigationBack} className=' flex-row items-center'>
                         <Material name="chevron-left" size={30} style={{ color: iOSGrayColors.systemGray.defaultLight, fontWeight: "bold" }} />
@@ -97,7 +101,9 @@ const GuildLineHeader = ({
                                 handleSaveEdit()
                             }
                         }}>
-                            <Text className=' text-lg ' style={{ color: iOSColors.systemBlue.accessibleLight }}>Save</Text>
+                            <Text className=' text-lg ' style={{ color: iOSColors.systemBlue.accessibleLight }}>{
+                                translate("update")
+                            }</Text>
                         </TouchableOpacity>
 
                         : <View className='flex-row items-center'>
@@ -121,7 +127,9 @@ const GuildLineHeader = ({
                                     }} >
 
                                         <View className='flex-row items-center justify-between'>
-                                            <Text className='text-base' style={{ color: iOSGrayColors.systemGray.defaultLight }}>Add</Text>
+                                            <Text className='text-base' style={{ color: iOSGrayColors.systemGray.defaultLight }}>{
+                                                translate('guideline_detail_add_step')
+                                            }</Text>
                                             <Material name="plus" size={20} style={{ color: iOSGrayColors.systemGray.defaultLight, fontWeight: "bold" }} className='font-semibold' />
                                         </View>
                                     </MenuOption>
@@ -132,7 +140,9 @@ const GuildLineHeader = ({
                                     }} >
 
                                         <View className='flex-row items-center justify-between'>
-                                            <Text className='text-base' style={{ color: iOSGrayColors.systemGray.defaultLight }}>Update</Text>
+                                            <Text className='text-base' style={{ color: iOSGrayColors.systemGray.defaultLight }}>{
+                                                translate('update')
+                                            }</Text>
                                             <Material name="pencil" size={20} style={{ color: iOSGrayColors.systemGray.defaultLight, fontWeight: "bold" }} className='font-semibold' />
                                         </View>
                                     </MenuOption>
@@ -144,7 +154,9 @@ const GuildLineHeader = ({
                                             }} >
 
                                                 <View className='flex-row items-center justify-between'>
-                                                    <Text className='text-base ' style={{ color: iOSColors.systemBlue.defaultLight }}>Un-share</Text>
+                                                    <Text className='text-base ' style={{ color: iOSColors.systemBlue.defaultLight }}>{
+                                                        translate('guideline_detail_unshare_guideline')
+                                                    }</Text>
                                                     <Material name="share-off-outline" size={20} style={{ color: iOSColors.systemBlue.defaultLight, fontWeight: "bold" }} />
                                                 </View>
                                             </MenuOption>
@@ -155,7 +167,9 @@ const GuildLineHeader = ({
                                             }} >
 
                                                 <View className='flex-row items-center justify-between'>
-                                                    <Text className='text-base ' style={{ color: '#248046' }}>Share</Text>
+                                                    <Text className='text-base ' style={{ color: '#248046' }}>{
+                                                        translate('guideline_detail_share_guideline')
+                                                    }</Text>
                                                     <Material name="share-all-outline" size={20} style={{ color: '#248046', fontWeight: "bold" }} />
                                                 </View>
                                             </MenuOption>
@@ -166,7 +180,9 @@ const GuildLineHeader = ({
                                     }} >
 
                                         <View className='flex-row items-center justify-between'>
-                                            <Text className='text-base ' style={{ color: iOSColors.systemRed.defaultLight }}>Delete this step</Text>
+                                            <Text className='text-base ' style={{ color: iOSColors.systemRed.defaultLight }}>{
+                                                translate('guideline_detail_delete_current_step')
+                                            }</Text>
                                             <Material name="debug-step-over" size={20} style={{ color: iOSColors.systemRed.defaultLight, fontWeight: "bold" }} className='font-semibold' />
                                         </View>
                                     </MenuOption>
@@ -176,7 +192,9 @@ const GuildLineHeader = ({
                                     }} >
 
                                         <View className='flex-row items-center justify-between'>
-                                            <Text className='text-base ' style={{ color: iOSColors.systemRed.defaultLight }}>Delete</Text>
+                                            <Text className='text-base ' style={{ color: iOSColors.systemRed.defaultLight, textTransform: 'capitalize' }}>{
+                                                translate('delete')
+                                            }</Text>
                                             <Material name="trash-can-outline" size={20} style={{ color: iOSColors.systemRed.defaultLight, fontWeight: "bold" }} className='font-semibold' />
                                         </View>
                                     </MenuOption>

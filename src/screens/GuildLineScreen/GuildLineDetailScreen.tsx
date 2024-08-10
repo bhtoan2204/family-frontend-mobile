@@ -19,6 +19,7 @@ import { GuildLineDetailScreenProps } from 'src/navigation/NavigationTypes';
 import GuildlineDetailInfo from './GuildlineDetailDescriptionInfo';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { useToast } from 'react-native-toast-notifications';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 const screenWidth = Dimensions.get('window').width;
 const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps) => {
   const { id_item, id_family } = route.params
@@ -46,10 +47,8 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
     text: "",
     type: 1
   });
-
-
   const dispatch = useDispatch<AppDispatch>();
-
+  const translate = useSelector(getTranslate)
   useEffect(() => {
     const fetchGuildLineDetail = async () => {
       try {
@@ -61,7 +60,6 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
           setGuildLineSteps(response.steps)
           setCurrentStep(0)
         } else {
-          console.log("cc")
           setGuildLineSteps(
             [
               {
@@ -92,7 +90,6 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
   }, [])
 
   const prevStep = React.useCallback(() => {
-    //currentStep <= 0 ? 0 : currentStep - 1
     setCurrentStep((prev) => {
       if (prev <= 0) {
         return 0
@@ -339,18 +336,6 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
 
   const handleShareGuideline = async () => {
     try {
-      // const result = await Share.share({
-      //   message: 'Check out this guideline!',
-      //   url: 'https://example.com',
-      //   title: 'Guideline'
-
-      // })
-      // if (result.action === Share.sharedAction) {
-      //   if (result.activityType) {
-      //   } else {
-      //   }
-      // } else if (result.action === Share.dismissedAction) {
-      // }
       dispatch(updateMarkShareGuideline({
         id_guide_item: id_item!,
         is_share: !guildLineDetail?.is_shared
@@ -452,13 +437,14 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
 
 
                     }}>
-                      <Text className='text-center px-4 text-2xl font-bold mt-5 ' numberOfLines={2} style={{ color: COLORS.AuroMetalSaurus }}>Step {currentStep + 1}: {guildLineSteps[currentStep].name != ""
+                      <Text className='text-center px-4 text-2xl font-bold mt-5 ' numberOfLines={2} style={{ color: COLORS.AuroMetalSaurus }}>{
+                          translate("guideline_detail_step_text")
+                        } {currentStep + 1}: {guildLineSteps[currentStep].name != ""
                         &&
                         guildLineSteps[currentStep].name != null
-                        ? guildLineSteps[currentStep].name : "Add name"}</Text>
+                        ? guildLineSteps[currentStep].name : translate("guideline_detail_empty_step_title_text")}</Text>
                     </TouchableOpacity>
                     : <TextInput className='text-center px-4 text-2xl font-bold mt-5 ' style={{ color: COLORS.AuroMetalSaurus }} placeholder='Enter name of step' autoFocus maxLength={50} onChangeText={(text) => {
-                      console.log("name step", text)
                       setInputName(text)
                     }
                     }
@@ -479,7 +465,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
                       detailSheetRef.current?.expand()
 
                     }}>
-                      <Text className='text-center px-4 text-lg mt-5 text-[#a1a1a1]' numberOfLines={2} >{guildLineSteps[currentStep].description != "" && guildLineSteps[currentStep].description != null ? guildLineSteps[currentStep].description : "Add description"}</Text>
+                      <Text className='text-center px-4 text-lg mt-5 text-[#a1a1a1]' numberOfLines={2} >{guildLineSteps[currentStep].description != "" && guildLineSteps[currentStep].description != null ? guildLineSteps[currentStep].description : translate("guideline_detail_empty_step_description_text")}</Text>
                     </TouchableOpacity>
                     :
                     <TextInput className='text-center px-4 text-lg mt-5 ' maxLength={50} placeholder='Enter description (optional)' onChangeText={(text) => {

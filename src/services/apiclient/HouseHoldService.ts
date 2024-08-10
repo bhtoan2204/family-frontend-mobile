@@ -65,6 +65,10 @@ const HouseHoldService = {
         };
       }
     } catch (error) {
+      return {
+        data: [],
+        total: 0,
+      };
       //throw new Error();
     }
   },
@@ -258,6 +262,10 @@ const HouseHoldService = {
         };
       }
     } catch (error) {
+      return {
+        data: [],
+        total: 0,
+      };
       //throw new Error();
     }
   },

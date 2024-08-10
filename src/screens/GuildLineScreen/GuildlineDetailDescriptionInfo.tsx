@@ -4,6 +4,7 @@ import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTex
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
 import { useSelector } from 'react-redux';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface GuildlineDetailInfoProps {
     bottomSheetRef: React.RefObject<BottomSheet>;
@@ -22,7 +23,7 @@ const GuildlineDetailInfo = ({
         []
     );
     const isDarkMode = useSelector(getIsDarkMode)
-
+    const translate = useSelector(getTranslate)
     return (
         <BottomSheet
             ref={bottomSheetRef}
@@ -46,7 +47,12 @@ const GuildlineDetailInfo = ({
             <View className='flex-1 items-center '>
                 <View className='p-4'>
                     {
-                        type == 1 ? <Text className='text-2xl font-bold text-black dark:text-white'>Title</Text> : <Text className='text-2xl font-bold text-black dark:text-white'>Description</Text>
+                        type == 1 ? <Text className='text-2xl font-bold text-black dark:text-white'>{
+                            translate("title")
+                        }</Text> : <Text className='text-2xl font-bold text-black dark:text-white'>{
+                            translate("description")
+
+                        }</Text>
 
                     }
                 </View>
@@ -65,11 +71,16 @@ const GuildlineDetailInfo = ({
                         text == '' ?
                             <Text className='text-base font-medium' style={{
                                 color: iOSColors.systemBlue.defaultLight
-                            }}>Add {type == 1 ? "title" : "description"}</Text>
+                            }}>{
+                                    translate('guideline_detail_add_step')
+
+                                } {type == 1 ? "title" : "description"}</Text>
                             :
                             <Text className='text-base font-medium' style={{
                                 color: iOSColors.systemBlue.defaultLight
-                            }}>Adjust</Text>
+                            }}>{
+                                translate('update')
+                            }</Text>
                     }
                 </TouchableOpacity>
             </View>

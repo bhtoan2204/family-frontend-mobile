@@ -11,6 +11,7 @@ import { AppDispatch } from 'src/redux/store';
 import { updateComponentScoreOfSubject, updateExpectedScoreOfSubject } from 'src/redux/slices/EducationSlice';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import EducationServices from 'src/services/apiclient/EducationService';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface PickExpectedScoreSheetProps {
     id_family: number;
@@ -41,7 +42,6 @@ const PickExpectedScoreSheet = ({ setExpectedSheetRef, score, index, id_family, 
     const inputRef = React.useRef<TextInput>(null)
     const dispatch = useDispatch<AppDispatch>();
     const isDarkMode = useSelector(getIsDarkMode)
-
 
     useEffect(() => {
         setIsValid(isNumberInRange(inputValue))

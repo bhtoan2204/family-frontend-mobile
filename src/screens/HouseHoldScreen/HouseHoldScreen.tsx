@@ -12,17 +12,9 @@ import { AppDispatch, RootState } from 'src/redux/store';
 import RoomComponent from 'src/components/user/household/room/room-component';
 
 
-
 const HouseHoldScreen: React.FC<HouseHoldScreenProps> = ({ navigation, route, addRoomRef }) => {
   const { id_family } = route.params
   const roomItems = useSelector((state: RootState) => state.household).rooms
-  // const [choosenCategoryIndex, setChoosenCategoryIndex] = React.useState<number>(0)
-  // const [searchText, setSearchText] = React.useState<string>('')
-  // const [choosenTab, setChoosenTab] = React.useState<number>(0)
-
-  // if (loading) {
-  //   return <ActivityIndicator size="large" color={COLORS.AuroMetalSaurus} />
-  // }
 
   return (
     <RoomComponent

@@ -11,6 +11,7 @@ import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 import HouseHoldService from 'src/services/apiclient/HouseHoldService'
 import { AppDispatch, RootState } from 'src/redux/store'
 import { setHouseholdItems, setLoading, setTotalItem } from 'src/redux/slices/HouseHoldDataSlice'
+import { getTranslate } from 'src/redux/slices/languageSlice'
 interface ItemComponentProps {
     items: HouseHoldItemInterface[]
     handleNavigateItemDetail: (id_item: number) => void
@@ -26,6 +27,7 @@ const ItemComponent = ({
     const isDarkMode = useSelector(getIsDarkMode)
 
     const dispatch = useDispatch<AppDispatch>()
+    const translate = useSelector(getTranslate)
 
     const refetchData = React.useCallback(async () => {
         const fetchData = async () => {
@@ -37,6 +39,7 @@ const ItemComponent = ({
         await fetchData()
         dispatch(setLoading(false))
     }, [])
+
     return (
         <ScrollView
             refreshControl={
@@ -65,7 +68,9 @@ const ItemComponent = ({
                 >
                     <Text className='text-sm text-[#2A475E] dark:text-[#8D94A5]'
 
-                    >{items.length} items add</Text>
+                    >{items.length} {
+                            translate('item_added_text')
+                        }</Text>
 
 
                     <Text className='text-sm font-semibold'
@@ -76,7 +81,9 @@ const ItemComponent = ({
                             addItemSheetRef.current?.expand()
                             console.log('add item')
                         }}
-                    >Add item</Text>
+                    >{
+                            translate('add_item_text')
+                        }</Text>
 
                 </View>
                 <ItemItems data={items} handleNavigateHouseHoldDetail={handleNavigateItemDetail} />

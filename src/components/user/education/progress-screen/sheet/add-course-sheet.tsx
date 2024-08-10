@@ -32,6 +32,7 @@ import TargetImage from 'src/assets/images/education_assets/target.png'
 import { Subject } from 'src/interface/education/education';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { handleRestore } from 'src/utils/sheet/func';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 
 interface AddItemSheetProps {
@@ -75,7 +76,8 @@ const AddCourseSheet = ({
     const [inputName, setInputName] = React.useState('')
     const [inputDescription, setInputDescription] = React.useState('')
     const isDarkMode = useSelector(getIsDarkMode)
-    // console.log(isDarkMode)
+    const translate = useSelector(getTranslate)
+
     useEffect(() => {
         if (showError) {
             setTimeout(() => {
@@ -157,7 +159,7 @@ const AddCourseSheet = ({
     }, [])
     const buildInputName = React.useCallback(() => {
         return <BottomSheetTextInput
-            placeholder='Give your new course a name'
+            placeholder={translate('progress_screen_new_course_title_placeholder')}
             value={inputName}
             onChangeText={(text) => {
                 setInputName(text)
@@ -178,12 +180,12 @@ const AddCourseSheet = ({
                 color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
             }}
         />
-    }, [isDarkMode, inputName])
+    }, [isDarkMode, inputName, translate])
 
 
     const buildInputDescription = React.useCallback(() => {
         return <BottomSheetTextInput
-            placeholder='Give your new course some description'
+            placeholder={translate('progress_screen_new_course_description_placeholder')}
             value={inputDescription}
             onChangeText={(text) => {
                 setInputDescription(text)
@@ -204,7 +206,7 @@ const AddCourseSheet = ({
                 color: !isDarkMode ? '#b0b0b0' : '#A6A6A6'
             }}
         />
-    }, [isDarkMode, inputDescription])
+    }, [isDarkMode, inputDescription, translate])
 
     const findTargetById = React.useCallback((id: number) => {
         return targets.find(target => target.id == id)
@@ -236,12 +238,14 @@ const AddCourseSheet = ({
                             // fontWeight: 500
 
                         }}>{
-                                "Targets"
+                                translate("Targets")
 
                             }</Text>
                     </View>
                     <View className=''>
-                        <Text className='text-[#b0b0b0] dark:text-white'>Choose target</Text>
+                        <Text className='text-[#b0b0b0] dark:text-white'>{
+                            translate("progress_screen_new_course_choose_targets")
+                        }</Text>
                     </View>
 
                 </View>
@@ -258,7 +262,7 @@ const AddCourseSheet = ({
                 }
             </View>
         </TouchableOpacity>
-    }, [isDarkMode, pickedTargets])
+    }, [isDarkMode, pickedTargets, translate])
 
 
     return (
@@ -315,10 +319,16 @@ const AddCourseSheet = ({
                         <View className=' items-center'>
                             <Text className='text-base font-semibold text-[#2A475E] dark:text-white' style={{
 
-                            }}>Add New Course</Text>
+                            }}>
+                                {
+                                    translate("progress_screen_new_course_title")
+                                }
+                            </Text>
                             <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' style={{
 
-                            }}>Give your course a name and some description</Text>
+                            }}>{
+                                    translate("progress_screen_new_course_description")
+                                }</Text>
                         </View>
 
                         {

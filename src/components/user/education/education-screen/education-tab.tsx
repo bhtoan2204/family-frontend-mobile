@@ -3,6 +3,8 @@ import { View, Text, ScrollView, TouchableOpacity, Animated, Easing, TextInput }
 import { COLORS } from 'src/constants';
 import { iOSGrayColors } from 'src/constants/ios-color';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import { getTranslate } from 'src/redux/slices/languageSlice';
+import { useSelector } from 'react-redux';
 interface EducationTabProps {
     choosenTab: number;
     setChoosenTab: (tab: number) => void;
@@ -19,6 +21,7 @@ const EducationTab = ({
 ) => {
     const [isSearchVisible, setIsSearchVisible] = React.useState(false)
     const [searchAnimation] = React.useState(new Animated.Value(0));
+    const translate = useSelector(getTranslate)
 
     React.useEffect(() => {
         Animated.timing(searchAnimation, {
@@ -57,7 +60,9 @@ const EducationTab = ({
                             //     color: choosenTab == 0 ? 'white' : COLORS.Rhino
                             // }}
 
-                            >Public</Text>
+                            >{
+                                    translate("edu_screen_public_text")
+                            }</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity className=' flex-1' onPress={() => {
@@ -72,7 +77,9 @@ const EducationTab = ({
                             //     color: choosenTab == 1 ? 'white' : COLORS.Rhino
                             // }}
 
-                            >You</Text>
+                            >{
+                                translate("edu_screen_private_text")
+                            }</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity className=' flex-1' onPress={() => {

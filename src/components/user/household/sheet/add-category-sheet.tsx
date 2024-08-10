@@ -16,6 +16,7 @@ import { HouseHoldCategoryInterface } from 'src/interface/household/household_ca
 import { addCategories } from 'src/redux/slices/CategorySlice';
 import { handleRestore } from 'src/utils/sheet/func';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface AddRoomSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -37,6 +38,7 @@ const AddCategorySheet = ({
     const [errorText, setErrorText] = React.useState('')
     const [showError, setShowError] = React.useState(false)
     const isDarkMode = useSelector(getIsDarkMode)
+    const translate = useSelector(getTranslate)
 
     const pickImageSheetRef = React.useRef<any>(null)
 
@@ -228,11 +230,15 @@ const AddCategorySheet = ({
                         <Image source={OpenedFolder} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                     </View>
                     <View className=' items-center'>
-                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white'>Add New Category</Text>
-                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >Type in the new category for your categories list</Text>
+                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white'>{
+                            translate('household_add_category_title')
+                        }</Text>
+                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >{
+                            translate('household_add_category_description')
+                        }</Text>
                     </View>
                     <BottomSheetTextInput
-                        placeholder='Give your new category a name'
+                        placeholder={translate("household_add_category_placeholder")}
                         value={text}
                         onChangeText={(text) => {
                             setText(text)

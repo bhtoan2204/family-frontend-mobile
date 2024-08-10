@@ -19,6 +19,7 @@ import { updateDescription } from 'src/redux/slices/HouseHoldDetailSlice';
 import { handleRestore } from 'src/utils/sheet/func';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { useToast } from 'react-native-toast-notifications';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface AddEditDescriptionSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -43,7 +44,7 @@ const AddEditDescriptionSheet = ({
     const householdItem = useSelector((state: RootState) => state.householdItemDetail)
     const [inputDescription, setInputDescription] = React.useState(description ? description : '')
     const isDarkMode = useSelector(getIsDarkMode)
-
+    const translate = useSelector(getTranslate)
     useEffect(() => {
         if (showError) {
             setTimeout(() => {
@@ -133,7 +134,7 @@ const AddEditDescriptionSheet = ({
 
     const buildAddDesc = () => {
         return <BottomSheetTextInput
-            placeholder='Give your item a description'
+            placeholder={translate('household_detail_add_description_title')}
             value={inputDescription}
             onChangeText={(text) => {
                 setInputDescription(text)
@@ -209,8 +210,12 @@ const AddEditDescriptionSheet = ({
                         <Image source={EditDescriptionImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                     </View>
                     <View className=' items-center'>
-                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >Add Description</Text>
-                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >Type in the new description for your item</Text>
+                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >{
+                            translate('household_detail_add_description_title')
+                        }</Text>
+                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >{
+                            translate('household_detail_add_description_description')
+                        }</Text>
                     </View>
                     {
                         buildAddDesc()

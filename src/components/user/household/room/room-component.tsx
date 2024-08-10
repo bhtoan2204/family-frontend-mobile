@@ -11,6 +11,7 @@ import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { AppDispatch, RootState } from 'src/redux/store';
 import HouseHoldService from 'src/services/apiclient/HouseHoldService';
 import { setLoading, setRoom, setTotalRoom } from 'src/redux/slices/HouseHoldDataSlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface RoomComponentProps {
     data: RoomInterface[],
@@ -34,7 +35,7 @@ const RoomComponent = ({ data, handleNavigateRoomDetail, addRoomSheetRef, id_fam
     // const [loadingMore, setLoadingMore] = React.useState(false);
 
     const dispatch = useDispatch<AppDispatch>();
-
+    const translate = useSelector(getTranslate)
     const refetchData = React.useCallback(async () => {
         const fetchRooms = async () => {
             const roomData = await HouseHoldService.getAllRoom(id_family!, 1, 100)
@@ -66,7 +67,9 @@ const RoomComponent = ({ data, handleNavigateRoomDetail, addRoomSheetRef, id_fam
                 >
                     <Text className='text-lg text-[#2A475E] dark:text-white '
 
-                    >Rooms</Text>
+                    >{
+                        translate('household_room_text')
+                    }</Text>
 
                     <View className=' p-1 border-[1px] rounded-lg border-[#DEDCDC] dark:border-[#232A3D]'
                     // style={{
@@ -83,7 +86,9 @@ const RoomComponent = ({ data, handleNavigateRoomDetail, addRoomSheetRef, id_fam
                 >
                     <Text className='text-sm text-[#2A475E] dark:text-[#8D94A5]'
 
-                    >{data.length} items add</Text>
+                    >{data.length} {
+                        translate('item_added_text')
+                    }</Text>
 
 
                     <Text className='text-sm font-semibold'
@@ -94,7 +99,9 @@ const RoomComponent = ({ data, handleNavigateRoomDetail, addRoomSheetRef, id_fam
                             console.log('add item')
                             addRoomSheetRef.current?.expand()
                         }}
-                    >Add item</Text>
+                    >{
+                        translate('add_item_text')
+                    }</Text>
 
                 </View>
                 <RoomItems data={data}

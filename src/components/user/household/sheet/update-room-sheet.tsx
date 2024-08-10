@@ -20,6 +20,7 @@ import { handleRestore } from 'src/utils/sheet/func';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { useToast } from 'react-native-toast-notifications';
 import { updateRoom } from 'src/redux/slices/HouseHoldDataSlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 interface AddEditDescriptionSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -43,6 +44,7 @@ const EditRoomNameSheet = ({
     const householdItem = useSelector((state: RootState) => state.household).rooms.find(room => room.id_room == id_room)
     const [inputName, setInputName] = React.useState(householdItem?.room_name ? householdItem.room_name ? householdItem.room_name : '' : '')
     const isDarkMode = useSelector(getIsDarkMode)
+    const translate = useSelector(getTranslate)
 
     useEffect(() => {
         if (showError) {
@@ -86,7 +88,7 @@ const EditRoomNameSheet = ({
             id_family,
             id_room,
             room_name,
-            uri
+            null
         )
         if (res) {
 
@@ -214,8 +216,12 @@ const EditRoomNameSheet = ({
                         <Image source={EditDescriptionImage} style={{ width: screenWidth * 0.2, height: screenWidth * 0.2 }} />
                     </View>
                     <View className=' items-center'>
-                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >Add Description</Text>
-                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >Type in the new description for your item</Text>
+                        <Text className='text-base font-semibold text-[#2A475E] dark:text-white' >{
+                            translate('household_detail_edit_description_title')
+                        }</Text>
+                        <Text className='text-sm my-3 text-[#2A475E] dark:text-[#8D94A5]' >{
+                            translate('household_detail_edit_description_description')
+                        }</Text>
                     </View>
                     {
                         buildAddDesc()

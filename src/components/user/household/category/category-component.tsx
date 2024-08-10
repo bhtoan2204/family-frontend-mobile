@@ -10,6 +10,7 @@ import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
 import { AppDispatch, RootState } from 'src/redux/store'
 import HouseHoldService from 'src/services/apiclient/HouseHoldService'
 import { setCategories, setLoading, setTotalCategory } from 'src/redux/slices/HouseHoldDataSlice'
+import { getTranslate } from 'src/redux/slices/languageSlice'
 interface ItemComponentProps {
     items: HouseHoldCategoryInterface[]
     handleNavigateCategoryDetail: (id_household_item_category: number) => void
@@ -25,7 +26,7 @@ const CategoryComponent = ({
     const loading = useSelector((state: RootState) => state.household).loading
 
     const dispatch = useDispatch<AppDispatch>()
-
+    const translate = useSelector(getTranslate)
     const refetchData = React.useCallback(async () => {
         const fetchData = async () => {
             const data = await HouseHoldService.getAllHouseHoldCategory()
@@ -52,7 +53,9 @@ const CategoryComponent = ({
                 >
                     <Text className='text-lg text-[#2A475E] dark:text-white'
 
-                    >Categories</Text>
+                    >{
+                            translate('household_categories_text')
+                        }</Text>
 
                     <View className=' p-1 border-[1px] rounded-lg border-[#DEDCDC] dark:border-[#232A3D]'
 
@@ -67,7 +70,10 @@ const CategoryComponent = ({
                 >
                     <Text className='text-sm text-[#2A475E] dark:text-[#8D94A5]'
 
-                    >{items.length} items add</Text>
+                    >{items.length} {
+                            translate('item_added_text')
+
+                        }</Text>
 
 
                     <Text className='text-sm font-semibold'
@@ -78,7 +84,9 @@ const CategoryComponent = ({
                             addCategorySheetRef.current?.expand()
                             console.log('add item')
                         }}
-                    >Add item</Text>
+                    >{
+                            translate('add_item_text')
+                        }</Text>
 
                 </View>
                 <CategoryItems data={items} handleNavigateHouseHoldDetail={handleNavigateCategoryDetail} />

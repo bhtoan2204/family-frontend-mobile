@@ -113,7 +113,7 @@ const ViewFamilyScreen = ({navigation, route}: ViewFamilyScreenProps) => {
   }, []);
 
   useEffect(() => {
-    secondBottomSheetRef.current!.open();
+    secondBottomSheetRef.current?.open();
   }, []);
 
   useEffect(() => {

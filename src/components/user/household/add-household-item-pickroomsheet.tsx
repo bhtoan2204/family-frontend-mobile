@@ -11,6 +11,7 @@ import { COLORS } from 'src/constants';
 import { RoomInterface } from 'src/interface/household/room';
 import { useSelector } from 'react-redux';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 
 
@@ -36,6 +37,7 @@ const AddHouseHoldItemPickRoomSheet = ({
     );
     const [pickRoom, setPickRoom] = React.useState<number>(room)
     const isDarkMode = useSelector(getIsDarkMode)
+    const translate = useSelector(getTranslate)
     const [key, setKey] = React.useState<boolean>(false)
 
     return (
@@ -80,7 +82,9 @@ const AddHouseHoldItemPickRoomSheet = ({
                     </View>
                     <Text className=' font-bold text-black dark:text-white ' style={{
                         fontSize: 18,
-                    }}>Pick room for item</Text>
+                    }}>{
+                            translate('pick_room_for_item')
+                        }</Text>
                     <TouchableOpacity style={{
                         height: 50,
                         width: 50,
@@ -131,8 +135,9 @@ interface ItemItemsProps {
 }
 
 const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setPickRoom, onSetRoom, k, isDark }: ItemItemsProps) => {
+    const translate = useSelector(getTranslate)
     const addRoomObj: RoomInterface = {
-        room_name: 'Add room',
+        room_name: "",
         room_image: "",
         id_family: -1,
         id_room: -1,
@@ -176,7 +181,9 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                             fontSize: 16,
                             fontWeight: 500,
                             marginTop: 10,
-                        }}>Add new room</Text>
+                        }}>{
+                                translate('add_new_room_text')
+                            }</Text>
                     </TouchableOpacity>
                 </View>
             </> : <>

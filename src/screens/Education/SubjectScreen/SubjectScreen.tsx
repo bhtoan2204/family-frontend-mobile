@@ -7,27 +7,13 @@ import { COLORS } from 'src/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/redux/store';
 
-// import AccordionItem from 'src/components/AccordionItem/accordion-item';
-
-import EducationScreenHeader from 'src/components/user/education/education-screen/education-screen-header';
-import EducationScreenSearchBar from 'src/components/user/education/education-screen/search-bar';
-import { Education, Subject } from 'src/interface/education/education';
-import DefaultAvatar from 'src/assets/images/education_assets/default_avatar.png';
-import { ScreenHeight } from '@rneui/base';
-import { useKeyboardVisible } from 'src/hooks/useKeyboardVisible';
-import ProgressScreenHeader from 'src/components/user/education/progress-screen/progress-screen-header';
-import ProgressTab from 'src/components/user/education/progress-screen/progress-tab';
-import { calculateProgress, calculateScore } from 'src/utils/education/util';
-import CourseItem from 'src/components/user/education/progress-screen/course-item';
-// import SubjectItem from 'src/screens/EducationScreen/SubjectItem/SubjectItem';
-// import SubjectItemEmpty from 'src/screens/EducationScreen/SubjectItem/SubjectItemEmp';
-// import AddComponentScoreSheet from 'src/screens/EducationScreen/SubjectSheet/AddComponentScoreSheet';
 import SubjectScreenHeader from 'src/components/user/education/subject-screen/subject-screen-header';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import AddComponentScoreSheet from 'src/components/user/education/subject-screen/sheet/add-component-score-sheet';
 import { useToast } from 'react-native-toast-notifications';
 import SubjectItem from 'src/components/user/education/subject-screen/SubjectItem';
 import SubjectItemEmpty from 'src/components/user/education/subject-screen/SubjectItemEmp';
+import { getTranslate } from 'src/redux/slices/languageSlice';
 
 
 const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
@@ -39,8 +25,7 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
     const [expectedGrade, setExpectedGrade] = React.useState<number>(0)
     const [currentGrade, setCurrentGrade] = React.useState<number>(0)
     const addComponentScoreSheetRef = React.useRef<BottomSheet>(null)
-    const toast = useToast();
-
+    const translate = useSelector(getTranslate)
     const getFirstLetterSubject = React.useCallback((subject: string) => {
         var str = subject.split(" ");
         return str[0]
@@ -92,7 +77,7 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
         <View className="flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]">
             <SubjectScreenHeader navigationBack={() => navigation.goBack()}
                 idFamily={id_family!}
-                imageUrl={familyInfo!.avatar || undefined}
+                imageUrl={familyInfo?.avatar || undefined}
                 title={getFirstLetterSubject(subjectDetailData.subject_name)}
                 addComponentScoreSheetRef={addComponentScoreSheetRef}
             />
@@ -100,13 +85,19 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
                 <View className='h-28 bg-white dark:bg-[#0A1220] border-b-[1px] border-gray-200 dark:border-[#232A3D]'>
                     <View className='flex-row h-full p-2 bg-[#FFFFFE] dark:bg-[#0A1220]'>
                         <View className='flex-1 border-r-[1px] border-gray-200 dark:border-[#232A3D]  flex-col  items-center'>
-                            <Text className='text-base  text-opacity-0 font-medium text-[#2F2F34] dark:text-white'  >Current grades</Text>
+                            <Text className='text-base  text-opacity-0 font-medium text-[#2F2F34] dark:text-white'  >{
+                                    translate("subject_screen_current_grades")
+                                }</Text>
                             <View className='mt-2'>
                                 <Text className='text-4xl font-light text-[#2F2F34] dark:text-white'  >{currentGrade}</Text>
                             </View>
                         </View>
                         <View className='flex-1   flex-col  items-center'>
-                            <Text className='text-base  font-medium text-[#2F2F34] dark:text-white'  >Target grades</Text>
+                            <Text className='text-base  font-medium text-[#2F2F34] dark:text-white'  >{
+                                translate("subject_screen_target_grades")
+                                }
+
+                            </Text>
                             <View className='border-b-[1px] mt-2 border-[#56409e] dark:border-white'>
                                 <Text className='text-4xl font-light text-[#2F2F34] dark:text-white' >{expectedGrade}</Text>
                             </View>
@@ -115,7 +106,9 @@ const SubjectScreen: React.FC<SubjectScreenProps> = ({ navigation, route }) => {
                 </View>
                 <ScrollView className=' ' >
                     <View className='my-3'>
-                        <Text className='ml-4 mb-3 text-lg font-medium text-black dark:text-white'>Component scores</Text>
+                        <Text className='ml-4 mb-3 text-lg font-medium text-black dark:text-white'>{
+                                translate("Component_Scores")
+                            }</Text>
 
                         {
                             subjectDetailData.component_scores && subjectDetailData.component_scores.map((item, index) => {
