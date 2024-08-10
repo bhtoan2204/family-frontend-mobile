@@ -6,31 +6,41 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons'
 import { iOSGrayColors } from 'src/constants/ios-color'
 import ItemItems from './items-item'
 import BottomSheet from '@gorhom/bottom-sheet'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice'
+import HouseHoldService from 'src/services/apiclient/HouseHoldService'
+import { AppDispatch, RootState } from 'src/redux/store'
+import { setHouseholdItems, setLoading, setTotalItem } from 'src/redux/slices/HouseHoldDataSlice'
 interface ItemComponentProps {
     items: HouseHoldItemInterface[]
     handleNavigateItemDetail: (id_item: number) => void
     addItemSheetRef: React.RefObject<BottomSheet>
     addRoomSheetRef: React.RefObject<BottomSheet>
+    id_family: number
 }
 
 const ItemComponent = ({
-    items, handleNavigateItemDetail, addItemSheetRef
+    items, handleNavigateItemDetail, addItemSheetRef, id_family
 }: ItemComponentProps) => {
-    const [refreshing, setRefreshing] = React.useState(false);
+    const loading = useSelector((state: RootState) => state.household).loading
     const isDarkMode = useSelector(getIsDarkMode)
 
-    const onRefresh = React.useCallback(() => {
-        setRefreshing(true);
-        setTimeout(() => {
-            setRefreshing(false);
-        }, 2000);
-    }, []);
+    const dispatch = useDispatch<AppDispatch>()
+
+    const refetchData = React.useCallback(async () => {
+        const fetchData = async () => {
+            const roomData = await HouseHoldService.getHouseHoldItems(id_family!, 1, 12)
+            dispatch(setHouseholdItems(roomData.data))
+            dispatch(setTotalItem(roomData.total))
+        }
+        dispatch(setLoading(true))
+        await fetchData()
+        dispatch(setLoading(false))
+    }, [])
     return (
         <ScrollView
             refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                <RefreshControl refreshing={loading} onRefresh={refetchData} />
             }
             className='flex-1 bg-[#F7F7F7] dark:bg-[#0A1220]'
             showsVerticalScrollIndicator={false}
@@ -38,17 +48,12 @@ const ItemComponent = ({
         >
             <View>
                 <View className='py-4 flex-row items-center justify-between border-b-[1.5px] mx-[10%] border-[#DEDCDC] dark:border-[#232A3D]'
-                // style={{
-                //     borderColor: iOSGrayColors.systemGray4.defaultLight,
-                // }}
+
                 >
                     <Text className='text-lg text-[#2A475E] dark:text-white'
                     >Items</Text>
 
                     <View className=' p-1 border-[1px] rounded-lg border-[#DEDCDC] dark:border-[#232A3D]'
-                    // style={{
-                    //     borderColor: iOSGrayColors.systemGray4.defaultLight,
-                    // }}
                     >
                         <Material name='magnify' size={24} color={
                             isDarkMode ? '#909093' : COLORS.Rhino
@@ -59,7 +64,7 @@ const ItemComponent = ({
 
                 >
                     <Text className='text-sm text-[#2A475E] dark:text-[#8D94A5]'
-                        
+
                     >{items.length} items add</Text>
 
 

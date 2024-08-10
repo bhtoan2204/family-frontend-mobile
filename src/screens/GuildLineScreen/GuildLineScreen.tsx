@@ -24,6 +24,7 @@ import { updateGuidelineId } from 'src/redux/slices/HouseHoldDetailSlice'
 
 LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
+    'source.uri should not be an empty string',
 ]);
 
 
@@ -58,19 +59,13 @@ const GuildLineScreen: React.FC<GuildLineScreenProps> = ({ navigation, route }) 
         const fetchGuidelines = async () => {
             try {
                 const response = await GuildLineService.getAllGuideLine(id_family!); // API call to fetch all guidelines
-                // console.log(response)
                 if (response) {
                     dispatch(setGuideline(response));
-                    // setGuidelines(response);
                 }
                 else {
                     dispatch(setGuideline([]));
-                    // setGuidelines([]);
                 }
-                // setGuidelines(response);
                 setLoading(false);
-
-                // console.log('Guidelines:', response)
             } catch (error) {
                 console.error('Error fetching guidelines:', error);
                 setLoading(false);

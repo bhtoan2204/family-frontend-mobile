@@ -14,6 +14,7 @@ interface PickScoreSheetProps {
     setNameSheetRef: React.RefObject<any>;
     // setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>;
     name: string;
+    targetScore: number | null;
     index: number;
     id_family: number;
     id_education_progress: number;
@@ -30,7 +31,7 @@ const isNumberInRange = (numberString: string) => {
     return number >= 0 && number <= 10;
 };
 
-const PickNameSheet = ({ setNameSheetRef, name, index, id_education_progress, id_family, id_subject, onFailed, onSuccess }: PickScoreSheetProps) => {
+const PickNameSheet = ({ setNameSheetRef, name, targetScore, index, id_education_progress, id_family, id_subject, onFailed, onSuccess }: PickScoreSheetProps) => {
 
 
     const [inputValue, setInputValue] = React.useState<string>(name || '0')
@@ -68,6 +69,8 @@ const PickNameSheet = ({ setNameSheetRef, name, index, id_education_progress, id
             id_education_progress: id_education_progress,
             id_family: id_family,
             component_name: name,
+            target_score: targetScore !== null ? targetScore : 0,
+            // target_score: 
             index: index
         })
         if (res) {

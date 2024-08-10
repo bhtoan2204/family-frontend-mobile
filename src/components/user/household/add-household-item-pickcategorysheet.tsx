@@ -10,6 +10,8 @@ import { COLORS } from 'src/constants';
 import { gradients_list } from 'src/assets/images/gradients';
 import { HouseHoldCategoryInterface } from 'src/interface/household/household_category';
 import { FlatGrid } from 'react-native-super-grid';
+import { useSelector } from 'react-redux';
+import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 
 
 const screenWidth = Dimensions.get('screen').width
@@ -44,6 +46,8 @@ const AddHouseHoldItemPickCategorySheet = ({
     const [pickCategory, setPickCategory] = React.useState<number>(category)
     const addRoomSheetRef = useRef<BottomSheet>(null)
     const [key, setKey] = React.useState(false)
+    const isDarkMode = useSelector(getIsDarkMode)
+
     return (
         <BottomSheet
             ref={refRBSheet}
@@ -52,7 +56,10 @@ const AddHouseHoldItemPickCategorySheet = ({
             index={-1}
             snapPoints={snapPoints}
             enablePanDownToClose={true}
-            handleIndicatorStyle={{ backgroundColor: iOSGrayColors.systemGray6.defaultLight, }}
+            backgroundStyle={{
+                backgroundColor: isDarkMode ? '#0A1220' : '#F7F7F7'
+            }}
+            handleIndicatorStyle={{ backgroundColor: isDarkMode ? '#D9D9D9' : '#D9D9D9', }}
             backdropComponent={renderBackdrop}
 
             onClose={() => {
@@ -71,7 +78,7 @@ const AddHouseHoldItemPickCategorySheet = ({
                 }
             }}
         >
-            <View className='flex-1 items-center bg-[#f7f7f7]'>
+            <View className='flex-1 items-center bg-[#f7f7f7] dark:bg-[#0A1220]'>
                 <View className='py-4'>
                 </View>
                 <View className='flex-row justify-between  w-full'>
@@ -81,7 +88,7 @@ const AddHouseHoldItemPickCategorySheet = ({
                     }} className=''>
 
                     </View>
-                    <Text className=' font-bold ' style={{
+                    <Text className=' font-bold text-black dark:text-white' style={{
                         fontSize: 18,
                     }}>Pick category for item</Text>
                     <TouchableOpacity style={{
@@ -95,8 +102,13 @@ const AddHouseHoldItemPickCategorySheet = ({
                 </View>
                 <BottomSheetScrollView snapToInterval={Dimensions.get('screen').width} showsHorizontalScrollIndicator={false} contentContainerStyle={{ minHeight: '100%' }}>
                     <View className='mt-5'>
-                        <ItemItems data={categories} addRoomSheetRef={addCategorySheetRef} onNavigateCreateRoom={onNavigateCreateCategory} pickRoom={pickCategory} setPickCategory={setPickCategory} onSetCategory={onSetCategory}
+                        <ItemItems data={categories} addRoomSheetRef={addCategorySheetRef} onNavigateCreateRoom={onNavigateCreateCategory} pickRoom={pickCategory} setPickCategory={setPickCategory}
+                            onSetCategory={(id: number) => {
+                                onSetCategory(id)
+                                refRBSheet.current?.close()
+                            }}
                             k={key}
+                            isDark={isDarkMode}
                         />
 
                     </View>
@@ -117,10 +129,11 @@ interface ItemItemsProps {
     setPickCategory: (id: number) => void
     onSetCategory: (id: number) => void
     k: boolean
+    isDark: boolean
     // handleNavigateHouseHoldDetail: (id_item: number) => void;
 }
 
-const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setPickCategory, onSetCategory, k }: ItemItemsProps) => {
+const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setPickCategory, onSetCategory, k, isDark }: ItemItemsProps) => {
     const addRoomObj: HouseHoldCategoryInterface = {
         category_image: "",
         category_name: "",
@@ -143,10 +156,12 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                     }}>
                         <View className='items-center justify-center' style={{
                             // width: screenWidth * 0.3,
-                            backgroundColor: '#e1e1e1',
+                            backgroundColor: isDark ? '#0A1220' : '#e1e1e1',
                             width: '100%',
                             height: undefined,
                             borderRadius: 15,
+                            borderWidth: 1,
+                            borderColor: !isDark ? '#DEDCDC' : '#66C0F4',
                             // height: screenHeight * 0.2,
                             aspectRatio: 1,
                         }}>
@@ -157,7 +172,7 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                         </View>
                         <Text style={{
                             textAlign: 'center',
-                            color: COLORS.Rhino,
+                            color: isDark ? 'white' : COLORS.Rhino,
                             fontSize: 16,
                             fontWeight: 500,
                             marginTop: 10,
@@ -191,7 +206,7 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                         />
                         <Text style={{
                             textAlign: 'center',
-                            color: item.id_household_item_category == pickRoom ? iOSColors.systemBlue.defaultLight : COLORS.Rhino,
+                            color: item.id_household_item_category == pickRoom ? iOSColors.systemBlue.defaultLight : (isDark ? 'white' : COLORS.Rhino),
                             fontSize: 16,
                             fontWeight: 500,
                             marginTop: 10,
@@ -204,85 +219,7 @@ const ItemItems = ({ data, addRoomSheetRef, onNavigateCreateRoom, pickRoom, setP
                 </View>
             </>
         )
-    }, [pickRoom])
-    // const renderItem = (item: HouseHoldCategoryInterface, index: number) => {
-    //     return (
-    //         item.id_household_item_category == -1 ? <>
-    //             <View className='items-center ' style={{
-    //                 // flex: 1,
-    //                 marginRight: index % 2 == 0 ? 10 : 0,
-    //                 marginLeft: index % 2 == 1 ? 10 : 0,
-    //                 marginBottom: 20,
-    //                 borderColor: iOSGrayColors.systemGray5.defaultLight,
-    //             }}>
-    //                 <TouchableOpacity onPress={() => {
-    //                     addRoomSheetRef?.current?.expand()
-
-    //                 }}>
-    //                     <View className='items-center justify-center' style={{
-    //                         // width: screenWidth * 0.3,
-    //                         backgroundColor: '#e1e1e1',
-    //                         width: '100%',
-    //                         height: undefined,
-    //                         borderRadius: 15,
-    //                         // height: screenHeight * 0.2,
-    //                         aspectRatio: 1,
-    //                     }}>
-    //                         <Material name='plus' size={screenWidth * 0.12} color={iOSGrayColors.systemGray.defaultLight} style={{
-    //                             textAlign: 'center',
-
-    //                         }} />
-    //                     </View>
-    //                     <Text style={{
-    //                         textAlign: 'center',
-    //                         color: COLORS.Rhino,
-    //                         fontSize: 16,
-    //                         fontWeight: 500,
-    //                         marginTop: 10,
-    //                     }}>Add new category</Text>
-    //                 </TouchableOpacity>
-    //             </View>
-    //         </> : <>
-    //             <View className='items-center ' style={{
-    //                 // flex: 1,
-    //                 marginRight: index % 2 == 0 ? 10 : 0,
-    //                 marginLeft: index % 2 == 1 ? 10 : 0,
-    //                 marginBottom: 20,
-    //                 borderColor: iOSGrayColors.systemGray5.defaultLight,
-    //             }}>
-    //                 <TouchableOpacity onPress={() => {
-    //                     setPickCategory(item.id_household_item_category)
-    //                     onSetCategory(item.id_household_item_category)
-    //                     addRoomSheetRef?.current?.close()
-    //                     // handleNavigateHouseHoldDetail(item.id_household_item)
-    //                 }}>
-    //                     <Image
-    //                         source={item.category_image ? { uri: item.category_image } : gradients_list[index - 1 % gradients_list.length]}
-    //                         style={{
-    //                             // width: screenWidth * 0.3,
-    //                             width: '100%',
-    //                             height: undefined,
-    //                             borderRadius: 15,
-    //                             // height: screenHeight * 0.2,
-    //                             aspectRatio: 1,
-    //                         }}
-    //                     />
-    //                     <Text style={{
-    //                         textAlign: 'center',
-    //                         color: item.id_household_item_category == pickRoom ? iOSColors.systemBlue.defaultLight : COLORS.Rhino,
-    //                         fontSize: 16,
-    //                         fontWeight: 500,
-    //                         marginTop: 10,
-
-    //                     }}>{item.category_name} {
-    //                             item.id_household_item_category == pickRoom ? <Material name='check' size={20} color={iOSColors.systemBlue.defaultLight} /> : null
-
-    //                         }</Text>
-    //                 </TouchableOpacity>
-    //             </View>
-    //         </>
-    //     )
-    // }
+    }, [pickRoom, isDark])
     return (
         <View className=' items-center flex-1  mx-[10%]'>
             <FlatGrid

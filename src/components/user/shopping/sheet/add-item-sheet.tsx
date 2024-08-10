@@ -3,27 +3,15 @@ import { View, Text, ScrollView, RefreshControl, Keyboard, Dimensions, Image, To
 import { COLORS } from 'src/constants'
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
 import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
-import RoomIcon from 'src/assets/images/household_assets/room.png';
-import ImageIcon from 'src/assets/images/household_assets/image.png';
+
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import * as ImagePicker from 'expo-image-picker';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import HouseHoldService from 'src/services/apiclient/HouseHoldService';
+
 import { AppDispatch, RootState } from 'src/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { addRoom } from 'src/redux/slices/RoomSlice';
-import { HouseHoldItemInterface } from 'src/interface/household/household_item';
-import * as Animatable from 'react-native-animatable';
-import CategoryIcon from 'src/assets/images/household_assets/category.png';
-
-import NewItemImageSheet from 'src/assets/images/household_assets/new_item_image_sheet.png'
-import Camera from 'src/assets/images/household_assets/Camera.png'
 import Ingredients from 'src/assets/images/household_assets/Ingredients.png'
 import OpenedFolder from 'src/assets/images/household_assets/OpenedFolder.png'
-import Room2 from 'src/assets/images/household_assets/Room_2.png'
 
-import { BlurView } from 'expo-blur';
-import { ShoppingList, ShoppingListItem, ShoppingListItemType } from 'src/interface/shopping/shopping_list';
+import { ShoppingListItemType } from 'src/interface/shopping/shopping_list';
 import { addShoppingList, addShoppingListItem } from 'src/redux/slices/ShoppingListSlice';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
 import { handleRestore } from 'src/utils/sheet/func';
@@ -58,8 +46,7 @@ const AddItemSheet = ({
 
 }: AddItemSheetProps) => {
     const snapPoints = React.useMemo(() => ['75%'], []);
-    const [text, setText] = React.useState('')
-    const [step, setStep] = React.useState(0)
+
     const [loading, setLoading] = React.useState(false)
     const dispatch = useDispatch<AppDispatch>()
 
@@ -235,7 +222,6 @@ const AddItemSheet = ({
             onChange={(index) => {
                 console.log(index)
                 if (index == -1) {
-                    setStep(0)
                     setHouseholdName('')
                     setHouseholdCategory(-1)
                 }

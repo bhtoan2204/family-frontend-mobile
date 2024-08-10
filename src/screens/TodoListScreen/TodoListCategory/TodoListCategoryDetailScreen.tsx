@@ -38,6 +38,7 @@ import { useColorScheme } from 'nativewind'
 import { useToast } from 'react-native-toast-notifications'
 import { categoriesImage } from '../const/image'
 import TodoListServices from 'src/services/apiclient/TodoListService'
+import { TodoListItem } from 'src/interface/todo/todo'
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -62,10 +63,54 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
     const getImage = React.useCallback((id_category: number) => {
         return categoriesImage[id_category - 1] != undefined ? categoriesImage[id_category - 1] : categoriesImage[9]
     }, [])
+    const ApiCall = async (item: TodoListItem) => {
+        console.log({
+            id_checklist: item.id_checklist,
+            id_checklist_type: id_category,
+            id_family: id_family!,
+            is_completed: !item.is_completed,
+            description: item.description,
+            task_name: item.task_name,
+            due_date: item.due_date,
+        })
+        const res = await TodoListServices.updateItem({
+            id_checklist: item.id_checklist,
+            id_checklist_type: id_category,
+            id_family: id_family!,
+            is_completed: !item.is_completed,
+            description: item.description,
+            task_name: item.task_name,
+            due_date: item.due_date,
+        })
+        if (res) {
+            return true
 
-    // const buildInfoBox = () => {
+        } else {
+            return false
+        }
+    }
+    const handleUpdateComplete = async (item: TodoListItem) => {
+        dispatch(updateDoneTodoList({
+            id_checklist: item.id_checklist,
+            id_checklist_type: id_category,
+        }))
+        const res = await ApiCall(item)
+        if (res) {
+            toast.show('Update successfully', {
+                duration: 2000,
+                icon: <Material name='check' size={24} color={'white'} />,
+                type: 'success',
+            })
 
-    // }
+        } else {
+            toast.show('Update failed', {
+                duration: 2000,
+                icon: <Material name='close' size={24} color={'white'} />,
+                type: 'error',
+            })
+        }
+
+    }
     const buildInfoBox = React.useCallback(() => {
         return <View className='mx-10 py-4 border-b-[1px] border-[#CFCFCF]'>
             <View className='flex-row  items-center  w-full  py-2 '>
@@ -78,16 +123,12 @@ const TodoListCategoryDetailScreen = ({ navigation, route }: TodoListItemDetailS
                         borderColor: itemDetail?.is_completed ? 'transparent' : '#CBCBCB',
                         backgroundColor: itemDetail?.is_completed ? '#00AE00' : undefined,
                     }}
-                        onPress={() => {
-                            dispatch(updateDoneTodoList({
-                                id_checklist: id_item,
-                                id_checklist_type: id_category,
-                            }))
-                            toast.show("Updated", {
-                                type: "success",
-                                duration: 2000,
-                                icon: <Material name="check" size={24} color={"white"} />,
-                            });
+                        onPress={async () => {
+                            await handleUpdateComplete(itemDetail!)
+                            // dispatch(updateDoneTodoList({
+                            //     id_checklist: id_item,
+                            //     id_checklist_type: id_category,
+                            // }))
                         }}
                     >
                         {

@@ -15,13 +15,22 @@ const HouseHoldService = {
       const url = HouseHoldUrls.getHouseHoldCategory;
       const response = await instance.get(url);
       if (response.status === 200) {
-        return response.data.data as HouseHoldCategoryInterface[];
+        return {
+          data: response.data.data as HouseHoldCategoryInterface[],
+          total: response.data.total || 0,
+        };
       } else {
-        return [];
+        return {
+          data: [],
+          total: 0,
+        };
       }
     } catch (error: any) {
       console.log(error.message);
-      return [];
+      return {
+        data: [],
+        total: 0,
+      };
     }
   },
   getHouseHoldItems: async (
@@ -40,14 +49,20 @@ const HouseHoldService = {
         page +
         '&itemsPerPage=' +
         itemsPerPage +
-        '&sortBy=created_at&sortDirection=ASC';
+        '&sortBy=created_at&sortDirection=DESC';
       console.log(url);
       const response = await instance.get(url);
       if (response.status === 200) {
         console.log(response.data);
-        return response.data.data as HouseHoldItemInterface[];
+        return {
+          data: response.data.data as HouseHoldItemInterface[],
+          total: response.data.total,
+        };
       } else {
-        return [];
+        return {
+          data: [],
+          total: 0,
+        };
       }
     } catch (error) {
       throw new Error();
@@ -138,7 +153,7 @@ const HouseHoldService = {
     item_name: string | null,
     description: string | null,
   ) => {
-    const url = baseUrl + HouseHoldUrls.updateHouseHoldItem;
+    const url = HouseHoldUrls.updateHouseHoldItem;
     const createFormData = (uri: string): FormData => {
       let formData = new FormData();
       if (uri != null && uri != '') {
@@ -151,15 +166,23 @@ const HouseHoldService = {
           type,
         };
         formData.append('item_image', file);
+      } else {
+        formData.append('item_image', '');
       }
       formData.append('id_family', id_family.toString());
       formData.append('id_item', id_item.toString());
       if (item_name) {
         formData.append('item_name', item_name);
+      } else {
+        formData.append('item_name', '');
       }
       if (description) {
         formData.append('item_description', description);
+      } else {
+        formData.append('item_description', '');
       }
+      formData.append('id_room', '');
+      formData.append('id_category', '');
       return formData;
     };
     try {
@@ -185,14 +208,21 @@ const HouseHoldService = {
     expiry_date: string | null,
     threshhold: number | null,
   ) => {
-    const url = baseUrl + HouseHoldUrls.updateConsumableItem;
+    const url = HouseHoldUrls.updateConsumableItem;
     try {
+      console.log({
+        id_family: id_family,
+        id_item: id_item,
+        quantity: quantity,
+        threshold: threshhold,
+        expired_date: expiry_date,
+      });
       const res = await instance.put(url, {
-        id_family,
-        id_item,
-        quantity,
-        threshhold,
-        expiry_date,
+        id_family: id_family,
+        id_item: id_item,
+        quantity: quantity,
+        threshold: threshhold,
+        expired_date: expiry_date,
       });
       if (res.status === 200) {
         return true;
@@ -213,13 +243,19 @@ const HouseHoldService = {
         page +
         '&itemsPerPage=' +
         itemsPerPage +
-        '&sortBy=created_at&sortDirection=ASC';
+        '&sortBy=created_at&sortDirection=DESC';
       const response = await instance.get(url);
       if (response.status === 200) {
         console.log('uwu', response.data.data);
-        return response.data.data as RoomInterface[];
+        return {
+          data: response.data.data as RoomInterface[],
+          total: response.data.total,
+        };
       } else {
-        return [];
+        return {
+          data: [],
+          total: 0,
+        };
       }
     } catch (error) {
       throw new Error();
@@ -282,12 +318,19 @@ const HouseHoldService = {
   updateRoom: async (
     id_family: number,
     id_room: number,
-    room_name: string,
+    room_name: string | null,
     room_image: string | null,
   ) => {
-    const url = baseUrl + HouseHoldUrls.updateRoom;
+    const url = HouseHoldUrls.updateRoom;
     const createFormData = (uri: string): FormData => {
       let formData = new FormData();
+      formData.append('id_family', id_family.toString());
+      formData.append('id_room', id_room.toString());
+      if (room_name) {
+        formData.append('room_name', room_name);
+      } else {
+        formData.append('room_name', '');
+      }
       if (uri != null && uri != '') {
         let filename = uri.split('/').pop()!;
         let match = /\.(\w+)$/.exec(filename);
@@ -299,9 +342,7 @@ const HouseHoldService = {
         };
         formData.append('image', file);
       }
-      formData.append('id_family', id_family.toString());
-      formData.append('id_room', id_room.toString());
-      formData.append('room_name', room_name);
+      console.log(formData);
       return formData;
     };
     try {

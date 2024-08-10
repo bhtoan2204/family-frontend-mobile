@@ -25,10 +25,10 @@ const screenWidth = Dimensions.get('screen').width
 
 const SharedGuildlineItem = ({ item, onPress, onUpdate, index }: GuildlineItemProps) => {
     const isDarkMode = useSelector(getIsDarkMode)
-    const buildCreatedAt = () => {
+    const buildCreatedAt = React.useCallback(() => {
         const date = new Date(item.created_at)
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
-    }
+    }, [item.created_at])
     return (
         <View className='mx-4 '>
             <TouchableOpacity
@@ -38,7 +38,7 @@ const SharedGuildlineItem = ({ item, onPress, onUpdate, index }: GuildlineItemPr
                 }}
                 style={{
                     borderWidth: 1,
-                    borderColor: isDarkMode ? '#232A3D': "#CFCFCF",
+                    borderColor: isDarkMode ? '#232A3D' : "#CFCFCF",
                 }}
             >
                 {/* <Image
@@ -68,7 +68,7 @@ const SharedGuildlineItem = ({ item, onPress, onUpdate, index }: GuildlineItemPr
                         <Text className="text-xl font-bold flex-1 flex-wrap text-[#292828] dark:text-white" numberOfLines={1} >{item.name}</Text>
                     </View>
                     <View className='flex-1 flex-row mr-2'>
-                        <Text className="text-sm  flex-1 flex-wrap text-[#5C5C5C] dark:text-[#8D94A5]" numberOfLines={1} >{item.description}</Text>
+                        <Text className="text-sm  flex-1 flex-wrap text-[#5C5C5C] dark:text-[#8D94A5] ml-1" numberOfLines={1} >{item.description != "" ? item.description : "Empty"}</Text>
                     </View>
                     <View className='flex-1 flex-row mr-2 items-center'>
                         <View className='mr-2'>
@@ -80,8 +80,6 @@ const SharedGuildlineItem = ({ item, onPress, onUpdate, index }: GuildlineItemPr
                         <Text className="text-sm  flex-1 flex-wrap text-[#5C5C5C] dark:text-[#8D94A5]" numberOfLines={1} >{buildCreatedAt()}</Text>
                     </View>
                 </View>
-                {/* <Icon name="chevron-forward" size={20} color={"grey"} /> */}
-
 
             </TouchableOpacity>
         </View>

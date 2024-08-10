@@ -3,7 +3,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { CategoryDetailScreenProps, CategoryScreenProps, HouseHoldScreenProps, HouseHoldStackProps, ItemScreenProps, RoomDetailScreenProps, } from '../NavigationTypes';
 
-import HouseHoldScreen from 'src/screens/HouseHoldScreen/HouseHoldScreen';
 import { gradients_list } from 'src/assets/images/gradients';
 import React, { Suspense, useEffect } from 'react';
 import HouseHoldTab from 'src/components/user/household/household-tab';
@@ -12,11 +11,11 @@ import ItemScreen from 'src/screens/HouseHoldScreen/ItemScreen';
 import CategoryScreen from 'src/screens/HouseHoldScreen/CategoryScreen';
 import { AppDispatch, RootState } from 'src/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearHouseholdItems, setHouseholdItems } from 'src/redux/slices/HouseHoldSlice';
+// import { clearHouseholdItems, setHouseholdItems } from 'src/redux/slices/HouseHoldSlice';
 import HouseHoldService from 'src/services/apiclient/HouseHoldService';
-import { clearRoom, setRoom } from 'src/redux/slices/RoomSlice';
+// import { clearRoom, setRoom } from 'src/redux/slices/RoomSlice';
 import { HouseHoldItemInterface } from 'src/interface/household/household_item';
-import { clearCategories, setCategories } from 'src/redux/slices/CategorySlice';
+// import { clearCategories, setCategories } from 'src/redux/slices/CategorySlice';
 import RoomDetailScreen from 'src/screens/HouseHoldScreen/RoomDetailScreen';
 import BottomSheet from '@gorhom/bottom-sheet';
 import AddRoomSheet from 'src/components/user/household/sheet/add-room-sheet';
@@ -27,6 +26,8 @@ import AddHouseHoldItemPickRoomSheet from 'src/components/user/household/add-hou
 import AddHouseHoldItemPickCategorySheet from 'src/components/user/household/add-household-item-pickcategorysheet';
 import { COLORS } from 'src/constants';
 import HouseHoldStackHeader from 'src/components/user/household/household-stack/household-stack-header';
+import { setCategories, setHouseholdItems, setLoading, setRoom, setTotalCategory, setTotalItem, setTotalRoom } from 'src/redux/slices/HouseHoldDataSlice';
+import EditRoomNameSheet from 'src/components/user/household/sheet/update-room-sheet';
 const Stack = createNativeStackNavigator();
 
 const LazyLoadedHouseholdScreen = React.lazy(() => import('src/screens/HouseHoldScreen/HouseHoldScreen'))
@@ -51,31 +52,33 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
     const addCategorySheetRef = React.useRef<BottomSheet>(null)
     const addRoomSheetRef = React.useRef<BottomSheet>(null)
     const addItemSheetRef = React.useRef<BottomSheet>(null)
+    const updateRoomSheetRef = React.useRef<BottomSheet>(null)
+    const updateCategorySheetRef = React.useRef<BottomSheet>(null)
 
-
-
-    // console.log("curr ", route)
     const currScreen = route.params?.screen
     const id_family = route.params?.params?.id_family
     const dispatch = useDispatch<AppDispatch>()
     const familyInfo = useSelector((state: RootState) => state.family).selectedFamily
 
-    const rooms = useSelector((state: RootState) => state.room)
-    const categories = useSelector((state: RootState) => state.category)
+    const rooms = useSelector((state: RootState) => state.household).rooms
+    const categories = useSelector((state: RootState) => state.household).categories
     const [pickedRoom, setPickedRoom] = React.useState<number>(-1)
     const [pickedCategory, setPickedCategory] = React.useState<number>(-1)
-    const [loading, setLoading] = React.useState<boolean>(true)
+    // const [loading, setLoading] = React.useState<boolean>(true)
     const [addItemType, setAddItemType] = React.useState<number>(0) // 0 for room + category, 1 category, 2 room
+
     useEffect(() => {
-        const fetchAllHouseholdData = async () => {
-            setLoading(true)
-            const roomData = await HouseHoldService.getAllRoom(id_family!, 1, 100)
-            dispatch(setRoom(roomData))
+        const fetchRooms = async () => {
+            const roomData = await HouseHoldService.getAllRoom(id_family!, 1, 12)
+            dispatch(setRoom(roomData.data))
+            dispatch(setTotalRoom(roomData.total))
+        }
+        const fetchHouseholdItems = async () => {
             const householdItemData = await HouseHoldService.getHouseHoldItems(
                 id_family!,
-                1, 100
+                1, 12
             )
-            const newHouseholdItems: HouseHoldItemInterface[] = householdItemData.map((item, index) => {
+            const newHouseholdItems: HouseHoldItemInterface[] = householdItemData.data.map((item, index) => {
                 const gradient = gradients_list[Math.floor(index % gradients_list.length)]
                 return {
                     ...item,
@@ -83,39 +86,49 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
                 }
             })
             dispatch(setHouseholdItems(newHouseholdItems))
-            const data = await HouseHoldService.getAllHouseHoldCategory()
-            dispatch(setCategories(data))
-            setLoading(false)
+            dispatch(setTotalItem(householdItemData.total))
         }
-        console.log('fetching data...')
-        fetchAllHouseholdData()
-        console.log('done fetching data...')
+        const fetchCategories = async () => {
+            const data = await HouseHoldService.getAllHouseHoldCategory()
+            dispatch(setCategories(data.data))
+            dispatch(setTotalCategory(data.total))
+        }
+        const fetchAllData = async () => {
+            dispatch(setLoading(true))
+            await fetchRooms()
+            await fetchHouseholdItems()
+            await fetchCategories()
+            dispatch(setLoading(false))
+        }
+        fetchAllData()
+
         return () => {
             console.log("HouseHoldScreen unmounting clearing store...")
-            dispatch(clearHouseholdItems())
-            dispatch(clearRoom())
-            dispatch(clearCategories())
+
         }
     }, [])
 
     useEffect(() => {
         if (currScreen == 'HouseHoldScreen') {
             setChoosenTab(0)
-            setAddItemType(1)
+            setAddItemType(2)
         } else if (currScreen == 'ItemScreen') {
             setChoosenTab(1)
             setAddItemType(0)
         } else if (currScreen == 'CategoryScreen') {
             setChoosenTab(2)
-            setAddItemType(2)
+            setAddItemType(1)
         }
     }, [currScreen])
 
-    if (loading) {
-        return <View className='justify-center items-center flex-1 bg-white dark:bg-[#0A1220]'>
-            <ActivityIndicator size="small" color={COLORS.AuroMetalSaurus} />
-        </View>
-    }
+    useEffect(() => {
+        console.log("pickedRoom", pickedRoom)
+        console.log("pickedCategory", pickedCategory)
+
+    }, [
+        pickedRoom,
+        pickedCategory
+    ])
 
     return (
         <>
@@ -123,6 +136,10 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
                 <HouseHoldStackHeader navigationBack={() => navigation.goBack()}
                     idFamily={id_family!}
                     imageUrl={familyInfo!.avatar || undefined}
+                    type={addItemType}
+                    pickedRoom={pickedRoom}
+                    pickedCategory={pickedCategory}
+                    editRoomNameSheetRef={updateRoomSheetRef}
                 />
 
                 <View className='flex-1 bg-[#f7f7f7] dark:bg-[#0A1220]  mt-[-3%]  rounded-tl-xl rounded-tr-xl '>
@@ -131,9 +148,6 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
                             // setChoosenTab(num)
 
                             if (num == 0) {
-                                // if (currScreen == 'HouseHoldScreen') {
-                                //     return
-                                // }
                                 navigation.navigate('HouseHoldStack', {
                                     screen: 'HouseHoldScreen',
                                     params: { id_family: id_family },
@@ -291,6 +305,9 @@ const HouseHoldStack = ({ navigation, route }: HouseHoldStackProps) => {
             />
             <AddCategorySheet bottomSheetRef={addCategorySheetRef} id_family={id_family!} />
             <AddRoomSheet bottomSheetRef={addRoomSheetRef} id_family={id_family!} />
+            {
+                pickedRoom && <EditRoomNameSheet bottomSheetRef={updateRoomSheetRef} id_family={id_family!} id_room={pickedRoom} />
+            }
         </>
 
     );

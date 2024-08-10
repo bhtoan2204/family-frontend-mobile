@@ -27,7 +27,7 @@ import EditTitleSheet from 'src/components/user/household/household-item-stack/s
 import { useToast } from 'react-native-toast-notifications';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { deleteHouseholdItem } from 'src/redux/slices/HouseHoldSlice';
-
+import { deleteHouseholdItem as deleteHouseholdItem2 } from 'src/redux/slices/HouseHoldDataSlice'
 
 const Stack = createNativeStackNavigator();
 
@@ -107,7 +107,7 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
         } else {
             alert('Permission to access camera was denied');
         }
-    }, [])
+    }, [houseHoldItemInfo, id_family])
 
     const handlePickImage = React.useCallback(async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -139,7 +139,7 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
         else {
             alert('Permission to access camera was denied');
         }
-    }, [])
+    }, [houseHoldItemInfo, id_family])
 
     const handlePickEditImage = () => {
         pickPhotoSheetRef.current?.open()
@@ -150,6 +150,8 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
         if (res == true) {
             navigation.goBack()
             dispatch(deleteHouseholdItem(id_item!))
+            dispatch(deleteHouseholdItem2(id_item!))
+            // dispatch(deleteItem)
             toast.show("Delete successfully", {
                 type: "success",
                 duration: 2000,
@@ -168,8 +170,8 @@ const HouseHoldItemStack = ({ navigation, route }: HouseHoldItemStackProps) => {
         <View className="flex-1 bg-[#F7F7F7]">
             <HouseHoldItemStackHeader data={houseHoldItemInfo} navigationBack={() => navigation.goBack()}
                 handleEditImage={handlePickEditImage}
-                handleDeleteItem={() => {
-                    handleDeleteItem()
+                handleDeleteItem={async () => {
+                    await handleDeleteItem()
                 }}
                 handleEditTitle={() => {
                     editTitleSheetRef.current?.expand()

@@ -11,7 +11,7 @@ interface ShoppingListCategoryItemContentProps {
     index: number,
     isLast: boolean,
     handleNavigateItemDetail: (id_item: number, id_list: number) => void
-    handleCompleteItem: (id_item: number, item: ShoppingListItem) => void
+    handleCompleteItem: (id_item: number, item: ShoppingListItem) => Promise<void>
     onPurchase: () => void
     onUnpurchase: () => void
 }
@@ -49,13 +49,12 @@ const ShoppingListCategoryItemContent = ({ item, index, isLast, handleNavigateIt
                             borderColor: item?.is_purchased ? 'transparent' : '#CBCBCB',
                             backgroundColor: item?.is_purchased ? '#00AE00' : undefined,
                         }}
-                            onPress={() => {
-                                console.log('hello')
-                                handleCompleteItem(item.id_list, item)
-                                if (item?.is_purchased) {
+                            onPress={async () => {
+                                if (!item?.is_purchased) {
+                                    console.log('hello')
+                                    await handleCompleteItem(item.id_list, item)
                                     onUnpurchase()
-                                } else {
-                                    onPurchase()
+
                                 }
                                 // handleUpdateComplete(item.id_checklist)
 

@@ -7,7 +7,7 @@ import { iOSColors, iOSGrayColors } from 'src/constants/ios-color';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
 import HouseHoldService from 'src/services/apiclient/HouseHoldService';
-import { AppDispatch } from 'src/redux/store';
+import { AppDispatch, RootState } from 'src/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { addRoom } from 'src/redux/slices/RoomSlice';
 
@@ -18,6 +18,7 @@ import EditDescriptionImage from 'src/assets/images/household_assets/edit_descri
 import { updateDescription } from 'src/redux/slices/HouseHoldDetailSlice';
 import { handleRestore } from 'src/utils/sheet/func';
 import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
+import { useToast } from 'react-native-toast-notifications';
 
 interface AddEditDescriptionSheetProps {
     bottomSheetRef: React.RefObject<BottomSheet>
@@ -36,10 +37,10 @@ const AddEditDescriptionSheet = ({
 }: AddEditDescriptionSheetProps) => {
     const [loading, setLoading] = React.useState(false)
     const dispatch = useDispatch<AppDispatch>()
-
+    const toast = useToast()
     const [errorText, setErrorText] = React.useState('')
     const [showError, setShowError] = React.useState(false)
-
+    const householdItem = useSelector((state: RootState) => state.householdItemDetail)
     const [inputDescription, setInputDescription] = React.useState(description ? description : '')
     const isDarkMode = useSelector(getIsDarkMode)
 
@@ -66,19 +67,62 @@ const AddEditDescriptionSheet = ({
         []
     );
 
+    const CallApi = React.useCallback(async ({
+        id_household_item,
+        id_family,
+        image_uri,
+        title,
+        description
+    }: {
+        id_household_item: number,
+        id_family: number,
+        image_uri: string | null,
+        title: string | null,
+        description: string | null
+    }) => {
+        console.log("CallApi", id_household_item, id_family, image_uri, title, description)
+        const res = await HouseHoldService.updateHouseHoldItem(
+            id_household_item,
+            id_family,
+            image_uri,
+            title,
+            description
+        )
+        if (res) {
+            toast.show('Update successfully', {
+                type: 'success',
+                duration: 3000,
+                icon: <Material name='check' size={24} color='white' />
+            })
+            bottomSheetRef.current?.close()
+        } else {
+            toast.show('Update failed', {
+                type: 'error',
+                duration: 3000,
+                icon: <Material name='close' size={24} color='white' />
+            })
+        }
+    }, [])
 
 
     const handleSubmit = async () => {
         Keyboard.dismiss()
         await handleRestore()
         try {
-            setLoading(true)
             dispatch(updateDescription(
                 inputDescription
             ))
+            setLoading(true)
+            await CallApi({
+                id_household_item: id_item,
+                id_family: id_family,
+                image_uri: null,
+                title: null,
+                description: inputDescription
+            })
             setLoading(false)
 
-            bottomSheetRef.current?.close()
+
         } catch (error) {
             console.log(error)
             setLoading(false)

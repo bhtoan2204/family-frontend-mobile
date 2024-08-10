@@ -14,6 +14,7 @@ interface PickScoreSheetProps {
     setScoreSheetRef: React.RefObject<any>;
     // setSubjectDetailData: React.Dispatch<React.SetStateAction<Subject>>;
     score: number | null;
+    targetScore: number | null;
     index: number;
     id_family: number;
     id_education_progress: number;
@@ -30,7 +31,7 @@ const isNumberInRange = (numberString: string) => {
     return number >= 0 && number <= 10;
 };
 
-const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress, id_family, id_subject, onSuccess, onFailed }: PickScoreSheetProps) => {
+const PickScoreSheet = ({ setScoreSheetRef, score, targetScore, index, id_education_progress, id_family, id_subject, onSuccess, onFailed }: PickScoreSheetProps) => {
 
 
     const [inputValue, setInputValue] = React.useState<string>(score?.toString() || '0')
@@ -85,6 +86,7 @@ const PickScoreSheet = ({ setScoreSheetRef, score, index, id_education_progress,
             id_education_progress: id_education_progress,
             id_family: id_family,
             score: score,
+            target_score: targetScore !== null ? targetScore : 0,
             index: index
         })
         console.log({

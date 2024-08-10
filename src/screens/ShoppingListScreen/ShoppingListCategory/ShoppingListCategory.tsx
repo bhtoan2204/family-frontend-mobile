@@ -150,11 +150,19 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
     }, [])
 
     const ApiCall = React.useCallback(async (item: ShoppingListItem) => {
+
         const res = await ShoppingListServices.updateShoppingListItem({
             id_family: id_family!,
             id_item: item.id_item,
             id_list: item.id_list,
-            is_purchased: !item.is_purchased
+            is_purchased: !item.is_purchased,
+            description: item.description,
+            id_item_type: item.id_item_type,
+            item_name: item.item_name,
+            price: item.price,
+            priority_level: item.priority_level,
+            quantity: item.quantity,
+            reminder_date: item.reminder_date
         })
         if (res) {
             return true
@@ -165,17 +173,26 @@ const ShoppingListCategoryScreen = ({ navigation, route }: ShoppingListCategoryS
     }, [])
 
     const handleCompleteItem = React.useCallback(async (id_list: number, item: ShoppingListItem) => {
-        dispatch(updatePurchasedItem({
-            id_item: item.id_item,
-            id_list: id_list,
-        }))
+
         const res = await ApiCall(item)
         if (res) {
-            toast.show('Purchase', {
-                duration: 2000,
-                icon: <Material name='check' size={24} color={'white'} />,
-                type: 'success',
-            })
+            if (item.is_purchased) {
+                toast.show('Un-Purchase', {
+                    duration: 2000,
+                    icon: <Material name='check' size={24} color={'white'} />,
+                    type: 'success',
+                })
+            } else {
+                toast.show('Purchased', {
+                    duration: 2000,
+                    icon: <Material name='check' size={24} color={'white'} />,
+                    type: 'success',
+                })
+            }
+            dispatch(updatePurchasedItem({
+                id_item: item.id_item,
+                id_list: id_list,
+            }))
         } else {
             toast.show('Un-purchased', {
                 duration: 2000,

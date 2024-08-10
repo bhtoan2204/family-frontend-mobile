@@ -48,10 +48,16 @@ const GuildlineItem = ({ item, onPress, onUpdate, index }: GuildlineItemProps) =
         )
     }
     const handleUpdate = () => {
-        // itemRef.current?.close();
         onUpdate();
     }
-    const renderLeftActions = () => (
+    const isImageValid = React.useCallback((item: Guildline) => {
+        return item.steps == null
+            ? ""
+            : item.steps.length == 0
+                ? ""
+                : item.steps[0].imageUrl || ""
+    }, [])
+    const renderLeftActions = React.useCallback(() => (
         <View className='mb-3 flex-row items-center w-[40%]'>
             <TouchableOpacity onPress={handleUpdate} style={{ backgroundColor: iOSColors.systemOrange.accessibleDark, width: "auto" }} className='flex-1 flex-row items-center h-full py-6 justify-center border-r-[1px] border-white dark:border-[#0A1220]' >
                 {/* py-6 px-2  mb-3 */}
@@ -70,7 +76,7 @@ const GuildlineItem = ({ item, onPress, onUpdate, index }: GuildlineItemProps) =
             </TouchableOpacity>
 
         </View>
-    );
+    ), [])
     return (
         <View className='mx-2'>
             <Swipeable
@@ -92,7 +98,7 @@ const GuildlineItem = ({ item, onPress, onUpdate, index }: GuildlineItemProps) =
                         height={70}
                         className="w-16 h-16 mr-4 ml-1 "
                     /> */}
-                    <ImageComponent defaultImage={shared_guideline_img[index % shared_guideline_img.length]}
+                    {/* <ImageComponent defaultImage={shared_guideline_img[index % shared_guideline_img.length]}
                         imageUrl={
                             item.steps == null
                                 ? ""
@@ -105,14 +111,20 @@ const GuildlineItem = ({ item, onPress, onUpdate, index }: GuildlineItemProps) =
                             height: screenHeight * 0.1,
                         }}
                         className="w-16 h-16 mr-4 ml-1 "
-                    />
+                    /> */}
+                    <Image source={
+                        isImageValid(item) != "" ? { uri: item.steps![0].imageUrl!, cache: 'force-cache' } : shared_guideline_img[index % shared_guideline_img.length]
+                    } style={{
+                        width: screenHeight * 0.1,
+                        height: screenHeight * 0.1,
+                    }} className="w-16 h-16 mr-4 ml-1 " />
 
                     <View className="flex-grow">
                         <View className='flex-1 flex-row my-2'>
                             <Text className="text-xl font-bold flex-1 flex-wrap text-[#2A475E] dark:text-white" numberOfLines={1} >{item.name}</Text>
                         </View>
                         <View className='flex-1 flex-row'>
-                            <Text className="text-sm  flex-1 flex-wrap text-[#2A475E] dark:text-white" numberOfLines={2} >{item.description}</Text>
+                            <Text className="text-sm  flex-1 flex-wrap text-[#2A475E] dark:text-white" numberOfLines={2} >{item.description != "" ? item.description : "Empty description"}</Text>
                         </View>
                     </View>
                     <Icon name="chevron-forward" size={20} color={"grey"} />

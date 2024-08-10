@@ -13,7 +13,7 @@ interface ShoppingListCategoryItemProps {
     item_type: ShoppingListItemType,
     items: ShoppingListItem[],
     handleNavigateItemDetail: (id_item: number, id_list: number) => void
-    handleCompleteItem: (id_item: number, item: ShoppingListItem) => void
+    handleCompleteItem: (id_item: number, item: ShoppingListItem) => Promise<void>
     onPurchase: () => void
     onUnpurchase: () => void
 }

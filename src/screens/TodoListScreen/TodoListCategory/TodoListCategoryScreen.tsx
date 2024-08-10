@@ -97,12 +97,25 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
     })
   }
 
-  const ApiCall = React.useCallback(async (item: TodoListItem) => {
+  const ApiCall = async (item: TodoListItem) => {
+    // console.log(item.is_completed)
+    console.log({
+      id_checklist: item.id_checklist,
+      id_checklist_type: id_category,
+      id_family: id_family!,
+      is_completed: !item.is_completed,
+      description: item.description,
+      task_name: item.task_name,
+      due_date: item.due_date,
+    })
     const res = await TodoListServices.updateItem({
       id_checklist: item.id_checklist,
       id_checklist_type: id_category,
       id_family: id_family!,
       is_completed: !item.is_completed,
+      description: item.description,
+      task_name: item.task_name,
+      due_date: item.due_date,
     })
     if (res) {
       return true
@@ -110,13 +123,10 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
     } else {
       return false
     }
-  }, [])
+  }
 
-  const handleUpdateComplete = React.useCallback(async (item: TodoListItem) => {
-    dispatch(updateDoneTodoList({
-      id_checklist: item.id_checklist,
-      id_checklist_type: id_category,
-    }))
+  const handleUpdateComplete = async (item: TodoListItem) => {
+
     const res = await ApiCall(item)
     if (res) {
       toast.show('Update successfully', {
@@ -124,6 +134,10 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
         icon: <Material name='check' size={24} color={'white'} />,
         type: 'success',
       })
+      dispatch(updateDoneTodoList({
+        id_checklist: item.id_checklist,
+        id_checklist_type: id_category,
+      }))
     } else {
       toast.show('Update failed', {
         duration: 2000,
@@ -132,7 +146,7 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
       })
     }
 
-  }, [])
+  }
 
   const buildEmptyList = React.useCallback(() => {
     return (
@@ -289,7 +303,7 @@ const TodoListCategoryScreen = ({ navigation, route }: TodoListCategoryScreenPro
 interface TodoListCategoryItemProps {
   item: TodoListItem
   handleNavigateItemDetail: (id_item: number) => void
-  handleUpdateComplete: (id_item: TodoListItem) => void
+  handleUpdateComplete: (id_item: TodoListItem) => Promise<void>
 }
 
 
@@ -306,9 +320,9 @@ const TodoListCategoryItem = ({ item, handleNavigateItemDetail, handleUpdateComp
         borderColor: item?.is_completed ? 'transparent' : '#CBCBCB',
         backgroundColor: item?.is_completed ? '#00AE00' : undefined,
       }}
-        onPress={() => {
+        onPress={async () => {
           console.log('hello')
-          handleUpdateComplete(item)
+          await handleUpdateComplete(item)
         }}
       >
         {
