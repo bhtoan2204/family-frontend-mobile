@@ -354,16 +354,20 @@ const EventListScreen = ({route, navigation}: EventListScreenProps) => {
           <ExpandableCalendar
             firstDay={1}
             markedDates={formatMarkedDates(eventTL)}
-            onDayPress={days => onDayPress(days)}
-            hideExtraDays={true}
+            onDayPress={onDayPress}
             theme={{
               backgroundColor: color.background,
               calendarBackground: color.white,
               monthTextColor: color.text,
               dayTextColor: color.text,
             }}
-            dayNamesShort={LocaleConfig.locales[location].dayNamesShort}
-            monthNames={LocaleConfig.locales[location].monthNames}
+            dayNamesShort={LocaleConfig.locales['en'].dayNamesShort}
+            monthNames={LocaleConfig.locales['en'].monthNames}
+            initialPosition={ExpandableCalendar.positions.CLOSED}
+            onCalendarToggled={isOpen => setShowTimeline(isOpen)}
+            hideKnob={false}
+            allowShadow={true}
+            closeOnDayPress={true}
           />
 
           <TimelineList
