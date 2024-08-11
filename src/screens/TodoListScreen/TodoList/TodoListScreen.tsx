@@ -1,5 +1,5 @@
-import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
-import React, { useCallback, useEffect, useState } from 'react';
+import {addMonths, endOfMonth, format, startOfMonth, subMonths} from 'date-fns';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -16,31 +16,31 @@ import {
   Calendar,
   CalendarList,
 } from 'react-native-calendars';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   ShoppingListScreenProps,
   TodoListScreenProps,
 } from 'src/navigation/NavigationTypes';
-import { AppDispatch, RootState } from 'src/redux/store';
+import {AppDispatch, RootState} from 'src/redux/store';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import { COLORS } from 'src/constants';
-import { colors } from '../const/color';
-import { getIsDarkMode } from 'src/redux/slices/DarkModeSlice';
-import { setDateSelected, setLoading, setTodoList, setTodoListType } from 'src/redux/slices/TodoListSlice';
+import {COLORS} from 'src/constants';
+import {colors} from '../const/color';
+import {getIsDarkMode} from 'src/redux/slices/DarkModeSlice';
+import {setDateSelected} from 'src/redux/slices/TodoListSlice';
 import BottomSheet from '@gorhom/bottom-sheet';
 import AddListSheet from 'src/components/user/shopping-todo/sheet/add-list-sheet';
-import { ScreenHeight } from '@rneui/base';
-import { useToast } from 'react-native-toast-notifications';
+import {ScreenHeight} from '@rneui/base';
+import {useToast} from 'react-native-toast-notifications';
 import TodoListTypeSkeleton from './skeleton';
-import TodoListServices from 'src/services/apiclient/TodoListService';
+import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 const screenHeight = Dimensions.get('screen').height;
 
-const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
-  const { id_family, openSheet, id_calendar } = route.params;
+const TodoListScreen = ({navigation, route}: TodoListScreenProps) => {
+  const {id_family, openSheet, id_calendar} = route.params;
 
-  // useEffect(() => {
-  //   console.log(id_family, openSheet, id_calendar);
-  // });
+  useEffect(() => {
+    console.log(id_family, openSheet, id_calendar);
+  });
   const [selectDate, setSelectDate] = useState<string>(
     format(new Date(), 'yyyy-MM-dd'),
   );
@@ -58,25 +58,13 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
   const [isScrollDown, setIsScrollDown] = useState(false);
   const scrollYRef = React.useRef<any>(0);
   const loading = useSelector((state: RootState) => state.todoList).loading;
+  const translate = useSelector(getTranslate);
+  const location = useSelector(selectLocale);
+
   useEffect(() => {
     setKey(prev => !prev);
   }, [isDarkMode]);
-  const refetchData = useCallback(async () => {
-    const fetchTodoListType = async () => {
-      const response = await TodoListServices.getAllTodoListType(id_family!)
-      console.log('todo list types ', response)
-      dispatch(setTodoListType(response))
-    }
-    const fetchTodoListItem = async () => {
-      const response = await TodoListServices.getAllItemOfFamily(id_family!, 1, 100)
-      dispatch(setTodoList(response))
-      console.log('todo list items ', response)
-    }
-    dispatch(setLoading(true))
-    await fetchTodoListType()
-    await fetchTodoListItem()
-    dispatch(setLoading(false))
-  }, [id_family])
+
   // const loadItemsForMonth = (month: any) => {
   //     console.log('trigger items loading');
   // }
@@ -123,7 +111,7 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
     const month: string = monthNames[date.getMonth()];
     const year: number = date.getFullYear();
 
-    const description: string = `${month} ${year}`;
+    const description: string = translate(month) + ` / ${year}`;
     return description;
   }, []);
 
@@ -137,7 +125,7 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
         <View className="">
           <Text
             className="flex-1 text-center text-base text-[#2A475E] dark:text-[#fff]"
-            style={{ fontWeight: 'bold' }}>
+            style={{fontWeight: 'bold'}}>
             {buildDate(selectDate)}
           </Text>
         </View>
@@ -171,7 +159,7 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
         <TodoListCategoryItem
           key={type.id_checklist_type}
           id_category={type.id_checklist_type}
-          category_name={type.name_en}
+          category_name={location === 'vi' ? type.name_vn : type.name_en}
           total_items={type.checklists ? type.checklists.length : 0}
           handleNavigateCategory={(id_category: number) => {
             // console.log('navigate')
@@ -227,15 +215,14 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
               color: !isDarkMode ? COLORS.Rhino : 'white',
               fontWeight: 'bold',
             }}>
-            CheckList
+            {translate('Checklist')}
           </Text>
           <View className="flex-1 items-end">
             <Material
               name="refresh"
               size={25}
               color={!isDarkMode ? COLORS.DenimBlue : 'white'}
-              onPress={async () => {
-                await refetchData()
+              onPress={() => {
                 // toggleColorScheme()
               }}
             />
@@ -251,7 +238,7 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
             key={key.toString()}
             onDayPress={handleDayPress}
             markedDates={{
-              [selectDate]: { selected: true, selectedColor: COLORS.DenimBlue },
+              [selectDate]: {selected: true, selectedColor: COLORS.DenimBlue},
             }}
             initialDate={selectDate}
             theme={{
@@ -264,6 +251,7 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
             maxDate={'2026-06-10'}
             disableAllTouchEventsForDisabledDays={true}
             customHeader={customCalendarHeader}
+            locale="vi"
           />
         </View>
 
@@ -273,7 +261,7 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
             style={{
               color: isDarkMode ? 'white' : '#292828',
             }}>
-            My checklist
+            {translate('My checklist')}
           </Text>
           {loading ? (
             <>
@@ -320,7 +308,7 @@ const TodoListScreen = ({ navigation, route }: TodoListScreenProps) => {
             id_category: id_category,
           });
         }}
-        onAddFailed={() => { }}
+        onAddFailed={() => {}}
         id_calendar={id_calendar}
       />
     </SafeAreaView>
@@ -371,7 +359,7 @@ export const TodoListCategoryItem = ({
                   : colors[9],
             }}>
             <Image
-              source={{ uri: iconUrl }}
+              source={{uri: iconUrl}}
               style={{
                 width: screenHeight * 0.04,
                 height: screenHeight * 0.04,
