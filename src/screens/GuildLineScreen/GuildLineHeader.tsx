@@ -33,6 +33,7 @@ interface GuildLineHeaderProps {
     handleEditGuildline: () => void;
     // bottomSheetRef: React.RefObject<any>;
     item: GuildLineDetail;
+    currentStep: number;
 }
 
 const Divider = () => {
@@ -56,13 +57,14 @@ const GuildLineHeader = ({
     handleDeleteCurrentStep,
     handleDeleteGuideline,
     handleEditGuildline,
-    item
+    item,
+    currentStep,
     // bottomSheetRef
 }: GuildLineHeaderProps
 ) => {
     const isDarkMode = useSelector(getIsDarkMode)
     const translate = useSelector(getTranslate)
-    console.log(item)
+    // console.log(item)
     return (
         <View className='w-full  flex-row justify-between items-center py-3 z-10 mt-7 bg-[#f7f7f7] dark:bg-[#0A1220]' >
             {
@@ -95,9 +97,11 @@ const GuildLineHeader = ({
                     isAdding || isEditing
                         ? <TouchableOpacity onPress={async () => {
                             if (isAdding) {
+                                console.log('add step')
                                 await handleSaveAddStep()
                             }
                             else {
+                                console.log('edit step')
                                 await handleSaveEdit()
                             }
                         }}>
@@ -175,20 +179,24 @@ const GuildLineHeader = ({
                                             </MenuOption>
                                             <Divider /></>
                                     }
-                                    <MenuOption onSelect={async () => {
-                                        handleDeleteCurrentStep()
-                                    }} >
+                                    {
+                                        currentStep != 0 && <>
+                                            <MenuOption onSelect={async () => {
+                                                await handleDeleteCurrentStep()
+                                            }} >
 
-                                        <View className='flex-row items-center justify-between'>
-                                            <Text className='text-base ' style={{ color: iOSColors.systemRed.defaultLight }}>{
-                                                translate('guideline_detail_delete_current_step')
-                                            }</Text>
-                                            <Material name="debug-step-over" size={20} style={{ color: iOSColors.systemRed.defaultLight, fontWeight: "bold" }} className='font-semibold' />
-                                        </View>
-                                    </MenuOption>
-                                    <Divider />
+                                                <View className='flex-row items-center justify-between'>
+                                                    <Text className='text-base ' style={{ color: iOSColors.systemRed.defaultLight }}>{
+                                                        translate('guideline_detail_delete_current_step')
+                                                    }</Text>
+                                                    <Material name="debug-step-over" size={20} style={{ color: iOSColors.systemRed.defaultLight, fontWeight: "bold" }} className='font-semibold' />
+                                                </View>
+                                            </MenuOption>
+                                            <Divider />
+                                        </>
+                                    }
                                     <MenuOption onSelect={async () => {
-                                        handleDeleteGuideline()
+                                        await handleDeleteGuideline()
                                     }} >
 
                                         <View className='flex-row items-center justify-between'>
