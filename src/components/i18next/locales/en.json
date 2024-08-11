@@ -537,6 +537,7 @@
   "edu_screen_item_public_text": "Share",
   "edu_screen_item_private_text": "Private",
 
+
   "progress_screen": "progress_screen",
   "progress_screen_all_courses": "All",
   "progress_screen_on_progress": "On Progress",
@@ -634,10 +635,11 @@
   "household_detail_description_placeholder": "Input description",
   "household_detail_view_guideline": "View guideline",
   "household_detail_create_guideline": "Create guideline",
-
-  "household_detail_update_title_title": "Change Title",
-  "household_detail_update_title_description": "Change your item's title",
-  "household_detail_update_title_placeholder": "Input new title",
+  
+  "household_detail_update_title_title" : "Change Title",
+  "household_detail_update_title_description" : "Change your item's title",
+  "household_detail_update_title_placeholder" : "Input new title",
+  
 
   "checklist_screen": "checklist_screen",
   "checklist_screen_my_checklist": "My Checklist",
@@ -649,7 +651,7 @@
   "checklist_category_add_item_description": "Type in the new item name for your item list",
   "checklist_category_add_item_placeholder": "Name of the item",
   "checklist_cat_detail_screen": "checklist_cat_detail_screen",
-  "checklist_cat_detail_add_item_title": "{translate('checklist_cat_detail_add_item_title')}",
+  "checklist_cat_detail_add_item_title": "Add Item Information",
   "checklist_cat_detail_add_item_description": "Enter description for your item",
   "checklist_cat_detail_add_item_placeholder": "Give your item a description",
   "checklist_cat_detail_delete_item": "Delete item",
@@ -663,29 +665,10 @@
   "shopping_list_cat_add_item_pick_cat": "Pick a category",
   "pick_category_for_shopping_item": "Pick category for item",
   "shopping_list_cat_detail_screen": "shopping_list_cat_detail_screen",
-  "shopping_list_cat_detail_add_item_title": "{translate('checklist_cat_detail_add_item_title')}",
+  "shopping_list_cat_detail_add_item_title": "Add Item Information",
   "shopping_list_cat_detail_add_item_description_description": "Enter description for your item",
   "shopping_list_cat_detail_add_item_placeholder": "Give your item a description",
   "shopping_list_cat_detail_add_item_price_description": "Enter price for your item",
   "shopping_list_cat_detail_delete_item": "Delete item",
-  "shopping_list_cat_detail_delete_item_description": "Are you sure you want to delete this item?",
-  "My checklist": "My checklist",
-  "Set reminder date": "Set reminder date",
-  "Add description": "Add description",
-  "Nothing to buy": "Nothing to buy",
-  "Tap on the button to add product to your shopping list": "Tap on the button to add product to your shopping list",
-  "No name found": "No name found",
-  "name": "name",
-  "Pick a category and named for your new item": "Pick a category and named for your new item",
-  "Name of the item": "Name of the item",
-  "Pick Icon": "Pick Icon",
-  "Icon": "Icon",
-  "Give your new checklist a name": "Give your new checklist a name",
-  "Give a name for your new list": "Give a name for your new list",
-  "Enter price and description for your item": "Enter price and description for your item",
-  "Checklist name": "Checklist name",
-  "Reminder": "Reminder",
-  "Enter and description for your item": "Enter and description for your item",
-  "CheckListItemSheetAdjust": "CheckListItemSheetAdjust",
-  "Add sub task": "Add sub task"
+  "shopping_list_cat_detail_delete_item_description": "Are you sure you want to delete this item?"
 }

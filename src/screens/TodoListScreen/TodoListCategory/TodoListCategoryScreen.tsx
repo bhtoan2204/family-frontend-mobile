@@ -68,7 +68,6 @@ import {
 } from 'src/redux/slices/TodoListSlice';
 import { useToast } from 'react-native-toast-notifications';
 import TodoListServices from 'src/services/apiclient/TodoListService';
-import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -100,8 +99,6 @@ const TodoListCategoryScreen = ({
   const addItemBottomSheetRef = React.useRef<BottomSheet>(null);
   const loading = useSelector((state: RootState) => state.todoList).loading;
   const toast = useToast();
-  const translate = useSelector(getTranslate);
-  const location = useSelector(selectLocale);
 
   const refetchData = useCallback(async () => {
     const fetchTodoListType = async () => {
@@ -138,11 +135,7 @@ const TodoListCategoryScreen = ({
   }, []);
 
   const getCategoryName = React.useCallback(() => {
-    if (location === 'en') {
-      return todoListType ? todoListType.name_en : translate('No name found');
-    } else {
-      return todoListType ? todoListType.name_vn : translate('No name found');
-    }
+    return todoListType ? todoListType.name_en : 'No name found';
   }, [todoListType]);
 
   const handleNavigateItemDetail = (id_item: number) => {
@@ -224,12 +217,10 @@ const TodoListCategoryScreen = ({
               />
             </View>
             <Text className="text-[#747474] dark:text-[#8D94A5] my-2 font-bold text-lg">
-              {translate('Nothing to buy')}?
+              Nothing to buy?
             </Text>
             <Text className="mx-[15%] text-center text-sm text-[#747474] dark:text-[#8D94A5]">
-              {translate(
-                'Tap on the button to add product to your shopping list',
-              )}
+              Tap on the button to add product to your shopping list
             </Text>
           </View>
         </ScrollView>

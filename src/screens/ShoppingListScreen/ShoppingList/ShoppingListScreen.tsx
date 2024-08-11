@@ -43,7 +43,6 @@ import ShoppingListTypeSkeleton from './skeleton';
 import AddListSheet from 'src/components/user/shopping/sheet/add-list-sheet';
 import BottomSheet from '@gorhom/bottom-sheet';
 import ShoppingListServices from 'src/services/apiclient/ShoppingListServices';
-import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 const screenHeight = Dimensions.get('screen').height;
 
 const ShoppingListScreen = ({
@@ -71,8 +70,6 @@ const ShoppingListScreen = ({
   const dispatch = useDispatch<AppDispatch>();
   const toast = useToast();
   const addListBottomSheetRef = React.useRef<BottomSheet>(null);
-  const translate = useSelector(getTranslate);
-  const location = useSelector(selectLocale);
 
   useEffect(() => {
     setKey(prev => !prev);
@@ -153,7 +150,7 @@ const ShoppingListScreen = ({
     const month: string = monthNames[date.getMonth()];
     const year: number = date.getFullYear();
 
-    const description: string = translate(month) + ` / ${year}`;
+    const description: string = `${month} ${year}`;
     return description;
   }, []);
 

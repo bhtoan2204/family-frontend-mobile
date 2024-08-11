@@ -34,7 +34,6 @@ import {addMonths, format, subMonths} from 'date-fns';
 import {Calendar} from 'react-native-calendars';
 import {getIsDarkMode} from 'src/redux/slices/DarkModeSlice';
 import ShoppingListServices from 'src/services/apiclient/ShoppingListServices';
-import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 
 interface AddItemSheetProps {
   bottomSheetRef: React.RefObject<BottomSheet>;
@@ -64,8 +63,7 @@ const UpdateDateItemSheet = ({
   );
   const [key, setKey] = useState(false);
   const isDarkMode = useSelector(getIsDarkMode);
-  const translate = useSelector(getTranslate);
-  const location = useSelector(selectLocale);
+
   useEffect(() => {
     setKey(prev => !prev);
   }, [isDarkMode]);
@@ -97,7 +95,7 @@ const UpdateDateItemSheet = ({
     const month: string = monthNames[date.getMonth()];
     const year: number = date.getFullYear();
 
-    const description: string = translate(month) + ` / ${year}`;
+    const description: string = `${month} ${year}`;
     return description;
   }, []);
 

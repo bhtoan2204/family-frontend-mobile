@@ -37,7 +37,6 @@ import {addTodoListItem} from 'src/redux/slices/TodoListSlice';
 import {useColorScheme} from 'nativewind';
 import TodoListService from 'src/services/apiclient/TodoListService';
 import {addTodoList} from 'src/redux/slices/CalendarSlice';
-import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 
 interface AddItemSheetProps {
   bottomSheetRef: React.RefObject<BottomSheet>;
@@ -69,8 +68,6 @@ const AddItemSheet = ({
 
   const [inputName, setInputName] = React.useState('');
   const {colorScheme} = useColorScheme();
-  const location = useSelector(selectLocale);
-  const translate = useSelector(getTranslate);
 
   useEffect(() => {
     if (showError) {
@@ -192,14 +189,14 @@ const AddItemSheet = ({
             </View>
             <View className=" items-center">
               <Text className="text-base font-semibold text-[#2A475E] dark:text-white">
-                {translate('household_add_item_title')}
+                Add New Item
               </Text>
               <Text className="text-sm my-3  text-[#2A475E] dark:text-[#8D94A5]">
-                {translate('Pick a category and named for your new item')}
+                Pick a category and named for your new item
               </Text>
             </View>
             <BottomSheetTextInput
-              placeholder={translate('household_add_item_name_placeholder')}
+              placeholder="Name of the item"
               value={inputName}
               onChangeText={text => {
                 setInputName(text);
