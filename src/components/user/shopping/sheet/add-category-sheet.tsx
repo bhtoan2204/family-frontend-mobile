@@ -294,7 +294,7 @@ const ItemItems = ({
                 fontWeight: '500',
                 marginTop: 10,
               }}>
-              {location === 'vi'
+              {(location as unknown as string) === 'vi'
                 ? item.item_type_name_vi
                 : item.item_type_name_en}{' '}
               {item.id_item_type === pickRoom ? (

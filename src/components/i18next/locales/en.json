@@ -649,7 +649,7 @@
   "checklist_category_add_item_description": "Type in the new item name for your item list",
   "checklist_category_add_item_placeholder": "Name of the item",
   "checklist_cat_detail_screen": "checklist_cat_detail_screen",
-  "checklist_cat_detail_add_item_title": "Add Item Information",
+  "checklist_cat_detail_add_item_title": "{translate('checklist_cat_detail_add_item_title')}",
   "checklist_cat_detail_add_item_description": "Enter description for your item",
   "checklist_cat_detail_add_item_placeholder": "Give your item a description",
   "checklist_cat_detail_delete_item": "Delete item",
@@ -663,7 +663,7 @@
   "shopping_list_cat_add_item_pick_cat": "Pick a category",
   "pick_category_for_shopping_item": "Pick category for item",
   "shopping_list_cat_detail_screen": "shopping_list_cat_detail_screen",
-  "shopping_list_cat_detail_add_item_title": "Add Item Information",
+  "shopping_list_cat_detail_add_item_title": "{translate('checklist_cat_detail_add_item_title')}",
   "shopping_list_cat_detail_add_item_description_description": "Enter description for your item",
   "shopping_list_cat_detail_add_item_placeholder": "Give your item a description",
   "shopping_list_cat_detail_add_item_price_description": "Enter price for your item",
@@ -679,5 +679,13 @@
   "Pick a category and named for your new item": "Pick a category and named for your new item",
   "Name of the item": "Name of the item",
   "Pick Icon": "Pick Icon",
-  "Icon": "Icon"
+  "Icon": "Icon",
+  "Give your new checklist a name": "Give your new checklist a name",
+  "Give a name for your new list": "Give a name for your new list",
+  "Enter price and description for your item": "Enter price and description for your item",
+  "Checklist name": "Checklist name",
+  "Reminder": "Reminder",
+  "Enter and description for your item": "Enter and description for your item",
+  "CheckListItemSheetAdjust": "CheckListItemSheetAdjust",
+  "Add sub task": "Add sub task"
 }

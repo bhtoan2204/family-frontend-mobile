@@ -138,7 +138,7 @@ const AddListSheet = ({
   const buildInputName = React.useCallback(() => {
     return (
       <BottomSheetTextInput
-        placeholder="Give your new checklist a name"
+        placeholder="Give your new shopping list a name"
         value={inputName}
         onChangeText={text => {
           setInputName(text);

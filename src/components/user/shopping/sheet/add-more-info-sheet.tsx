@@ -55,6 +55,7 @@ import {
   addShoppingListItem,
 } from 'src/redux/slices/ShoppingListSlice';
 import {to_vietnamese} from 'src/utils/currency-str';
+import {getTranslate} from 'src/redux/slices/languageSlice';
 
 interface AddItemSheetProps {
   bottomSheetRef: React.RefObject<BottomSheet>;
@@ -89,6 +90,7 @@ const AddMoreInfoSheet = ({
 
   const [inputPrice, setInputPrice] = React.useState<number>(0);
   const [inputDescription, setInputDescription] = React.useState('');
+  const translate = useSelector(getTranslate);
 
   const shoppingList = useSelector(
     (state: RootState) => state.shoppinglist,
@@ -132,7 +134,9 @@ const AddMoreInfoSheet = ({
     return (
       <View>
         <BottomSheetTextInput
-          placeholder="Give your item a description"
+          placeholder={translate(
+            'shopping_list_cat_detail_add_item_placeholder',
+          )}
           value={description}
           onChangeText={text => {
             setInputDescription(text);
@@ -258,7 +262,7 @@ const AddMoreInfoSheet = ({
                 style={{
                   color: iOSGrayColors.systemGray6.accessibleDark,
                 }}>
-                Add Item Information
+                {translate('checklist_cat_detail_add_item_title')}
               </Text>
               <Text
                 className="text-sm my-3"

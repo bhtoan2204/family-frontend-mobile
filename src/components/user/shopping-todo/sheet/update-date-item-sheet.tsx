@@ -65,6 +65,7 @@ import {
 } from 'src/redux/slices/TodoListSlice';
 import {getIsDarkMode} from 'src/redux/slices/DarkModeSlice';
 import TodoListServices from 'src/services/apiclient/TodoListService';
+import {getTranslate, selectLocale} from 'src/redux/slices/languageSlice';
 
 interface AddItemSheetProps {
   bottomSheetRef: React.RefObject<BottomSheet>;
@@ -96,6 +97,8 @@ const UpdateDateItemSheet = ({
   );
   const [key, setKey] = useState(false);
   const isDarkMode = useSelector(getIsDarkMode);
+  const translate = useSelector(getTranslate);
+  const location = useSelector(selectLocale);
 
   useEffect(() => {
     setKey(prev => !prev);
@@ -127,7 +130,7 @@ const UpdateDateItemSheet = ({
     const month: string = monthNames[date.getMonth()];
     const year: number = date.getFullYear();
 
-    const description: string = `${month} ${year}`;
+    const description: string = translate(month) + ` / ${year}`;
     return description;
   }, []);
 
@@ -297,7 +300,9 @@ const UpdateDateItemSheet = ({
               // setSelectDate(new Date)
               // bottomSheetRef.current?.snapTo(0)
             }}>
-            <Text className="text-white text-base font-semibold">Set Time</Text>
+            <Text className="text-white text-base font-semibold">
+              {translate('Set Time')}
+            </Text>
           </TouchableOpacity>
         </View>
       </BottomSheetView>
