@@ -57,6 +57,29 @@ const categoryIcons = {
   Shopping: 'basket-shopping',
 };
 
+const categoryIconsVN = {
+  'Thực phẩm và mặt hàng phẩm': 'burger',
+  'Tiền thuê': 'house-chimney',
+  'Hóa đơn': 'child-reaching',
+  'Chi phí đi lại': 'car',
+  'Y tế': 'heart-pulse',
+  'Giáo dục': 'school',
+  'Giải trí': 'dice',
+  'Bảo hiểm': 'user-injured',
+  'Thanh toán nợ': 'sack-xmark',
+  'Tiết kiệm': 'money-bill-trend-up',
+  Lương: 'money-bill-transfer',
+  'Dịch vụ': 'briefcase',
+  'Đầu tư': 'landmark',
+  'Cổ tức': 'people-line',
+  'Phí tư vấn': 'people-carry-box',
+  'Tiền bản quyền': 'stamp',
+  'Tài trợ': 'puzzle-piece',
+  Thưởng: 'gift',
+  'Lãi suất': 'handshake-simple',
+  'Mua sắm': 'basket-shopping',
+};
+
 const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
   const expenseType = useSelector(selectExpenseTypes);
   const incomeCategories = useSelector(selectIncomeTypes);
@@ -248,9 +271,12 @@ const CategoryExpenseScreen = ({navigation}: CategoryExpenseScreenProps) => {
         : location === 'vi'
           ? item.income_source_name_vn
           : item.income_source_name;
-
+    console.log(categoryName);
     // Xác định biểu tượng dựa trên tên loại chi phí hoặc thu nhập
-    const iconName = categoryIcons[categoryName] || 'ellipsis-v';
+    const iconName =
+      location === 'vi'
+        ? categoryIconsVN[categoryName] || 'ellipsis-v'
+        : categoryIcons[categoryName] || 'ellipsis-v';
 
     return (
       <TouchableOpacity
