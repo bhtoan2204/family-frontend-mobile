@@ -23,7 +23,7 @@ import { getTranslate } from 'src/redux/slices/languageSlice';
 const screenWidth = Dimensions.get('window').width;
 const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps) => {
   const { id_item, id_family } = route.params
-  console.log(id_item,id_family)
+  // console.log(id_item, id_family)
   const [currentStep, setCurrentStep] = useState(0)
   const [guildLineDetail, setGuildLineDetail] = useState<GuildLineDetail>()
   const [guildLineSteps, setGuildLineSteps] = useState<Step[]>()
@@ -142,8 +142,8 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
   };
 
   const handleSaveAddStep = async () => {
-    const newStep = guildLineSteps?.filter((step, index) => index === currentStep)[0];
-    console.log(inputName, inputDescription)
+    const newStep = guildLineSteps?.find((step, index) => index === currentStep)
+    console.log("input ", inputName, inputDescription)
 
     if (newStep) {
       const newStep2 = {
@@ -151,7 +151,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
         name: inputName,
         description: inputDescription
       }
-      console.log(newStep2)
+      console.log("new step nè" + newStep2)
       const a = await GuildLineService.addStepGuildLine(
         id_item!, id_family!, newStep2
       )
@@ -195,28 +195,50 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
         name: inputName,
         description: inputDescription
       }
-      await GuildLineService.updateGuildLineDetail(
-        "",
-        id_family!,
-        id_item!,
-        newStep2,
-        currentStep
-      )
-      onSucess()
-      setGuildLineSteps((prev) => {
-        return prev?.map((step, index) => {
-          if (index === currentStep) {
-            return {
-              imageUrl: newStep.imageUrl,
-              name: inputName,
-              description: inputDescription,
-            }
-          }
-          return step
-        })
+      let a;
+      if (guildLineSteps) {
+        if (guildLineSteps[0].name == "" && guildLineSteps[0].description == "" && guildLineSteps[0].imageUrl == "") {
+          await GuildLineService.addStepGuildLine(
+            id_item!, id_family!, newStep2
+          )
+          onSucess()
+          setGuildLineSteps((prev) => {
+            return prev?.map((step, index) => {
+              if (index === currentStep) {
+                return {
+                  imageUrl: newStep.imageUrl,
+                  name: inputName,
+                  description: inputDescription,
+                }
+              }
+              return step
+            })
+          })
+        } else {
+          await GuildLineService.updateGuildLineDetail(
+            "",
+            id_family!,
+            id_item!,
+            newStep2,
+            currentStep
+          )
+          onSucess()
+          setGuildLineSteps((prev) => {
+            return prev?.map((step, index) => {
+              if (index === currentStep) {
+                return {
+                  imageUrl: newStep.imageUrl,
+                  name: inputName,
+                  description: inputDescription,
+                }
+              }
+              return step
+            })
+          })
+        }
 
+      }
 
-      })
     }
     setInputDescription("");
     setInputName("");
@@ -265,13 +287,26 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
       if (!result.canceled) {
         console.log(result.assets[0].uri);
         if (!isAdding) {
-          await GuildLineService.updateGuildLineDetail(
-            result.assets[0].uri,
-            id_family!,
-            id_item!,
-            guildLineSteps![currentStep],
-            currentStep
-          )
+          if (guildLineSteps) {
+            if (guildLineSteps[0].name == "" && guildLineSteps[0].description == "" && guildLineSteps[0].imageUrl == "") {
+              const step = {
+                imageUrl: result.assets[0].uri,
+                name: inputName,
+                description: inputDescription
+              }
+              await GuildLineService.addStepGuildLine(
+                id_item!, id_family!, step
+              )
+            } else {
+              await GuildLineService.updateGuildLineDetail(
+                result.assets[0].uri,
+                id_family!,
+                id_item!,
+                guildLineSteps![currentStep],
+                currentStep
+              )
+            }
+          }
         }
         setGuildLineSteps((prev) => {
           return prev?.map((step, index) => {
@@ -305,25 +340,39 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
       if (!result.canceled) {
         console.log(currentStep)
         if (!isAdding) {
-          await GuildLineService.updateGuildLineDetail(
-            result.assets[0].uri,
-            id_family!,
-            id_item!,
-            guildLineSteps![currentStep],
-            currentStep
-          )
-        }
-        setGuildLineSteps((prev) => {
-          return prev?.map((step, index) => {
-            if (index === currentStep) {
-              return {
-                ...step,
-                imageUrl: result.assets[0].uri
+          if (guildLineSteps) {
+            if (guildLineSteps[0].name == "" && guildLineSteps[0].description == "" && guildLineSteps[0].imageUrl == "") {
+              const step = {
+                imageUrl: result.assets[0].uri,
+                name: inputName,
+                description: inputDescription
               }
+              await GuildLineService.addStepGuildLine(
+                id_item!, id_family!, step
+              )
+            } else {
+              await GuildLineService.updateGuildLineDetail(
+                result.assets[0].uri,
+                id_family!,
+                id_item!,
+                guildLineSteps![currentStep],
+                currentStep
+              )
             }
-            return step
+          }
+          setGuildLineSteps((prev) => {
+            return prev?.map((step, index) => {
+              if (index === currentStep) {
+                return {
+                  ...step,
+                  imageUrl: result.assets[0].uri
+                }
+              }
+              return step
+            })
           })
-        })
+        }
+
 
 
       }
@@ -405,6 +454,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
           handleDeleteCurrentStep={handleDeleteCurrentStep}
           handleDeleteGuideline={handleDeleteGuideline}
           item={guildLineDetail!}
+          currentStep={currentStep}
         />
         <KeyboardAvoidingView className=' h-full flex flex-col items-center mt-3  ' behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
           {
@@ -438,8 +488,8 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
 
                     }}>
                       <Text className='text-center px-4 text-2xl font-bold mt-5 ' numberOfLines={2} style={{ color: COLORS.AuroMetalSaurus }}>{
-                          translate("guideline_detail_step_text")
-                        } {currentStep + 1}: {guildLineSteps[currentStep].name != ""
+                        translate("guideline_detail_step_text")
+                      } {currentStep + 1}: {guildLineSteps[currentStep].name != ""
                         &&
                         guildLineSteps[currentStep].name != null
                         ? guildLineSteps[currentStep].name : translate("guideline_detail_empty_step_title_text")}</Text>
@@ -469,7 +519,7 @@ const GuildLineDetailScreen = ({ navigation, route }: GuildLineDetailScreenProps
                     </TouchableOpacity>
                     :
                     <TextInput className='text-center px-4 text-lg mt-5 ' maxLength={50} placeholder='Enter description (optional)' onChangeText={(text) => {
-                      console.log("desc step", text)
+                      // console.log("desc step", text)
                       setInputDescription(text)
                     }}
                       value={inputDescription}

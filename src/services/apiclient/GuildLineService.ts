@@ -122,6 +122,11 @@ const GuildLineService = {
     step: Step,
   ) => {
     const url = baseUrl + GuildlineUrl.addStepGuildLine;
+    console.log("data body",{
+      id_guideline: id_guideline,
+      id_family: id_family,
+      step: step,
+    })
     const createFormData = (uri: string): FormData => {
       let formData = new FormData();
       if (uri != null && uri != '') {
@@ -134,6 +139,8 @@ const GuildLineService = {
           type,
         };
         formData.append('stepImage', file);
+      } else {
+        formData.append('stepImage', '');
       }
       formData.append('id_family', id_family.toString());
       formData.append('id_guideline', id_guideline.toString());
